@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Brasage, cours 2 : vaincre les oxydes, flux, atmosphères et métaux d'apport</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@500;600;700&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F3F6F9; --paper-2:#E6ECF2; --card:#FFFFFF; --ink:#17212B; --muted:#56626F; --line:#C5CFD9;
+  --grid:rgba(40,90,160,.075);
+  --sig:#CF2438; --tau:#8A34B6; --eps:#1B5ED3; --gam:#06849A; --frc:#D46A00; --mat:#26844A; --weld:#9A5B12;
+  --ok:#26844A; --warn:#B86E00; --bad:#C62828;
+  --lv2:#E4EBF2; --hl:#FFF3B0;
+  --font-body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-head:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --font-math:"STIX Two Text","Cambria Math","Cambria","Times New Roman",serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+    --grid:rgba(120,160,220,.07);
+    --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+    --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+  --grid:rgba(120,160,220,.07);
+  --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+  --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+  color-scheme: dark;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0;color:var(--ink);font-family:var(--font-body);font-size:17.5px;line-height:1.62;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;overflow-x:hidden;
+}
+img,svg{max-width:100%}
+.wrap{max-width:800px;margin:0 auto;padding:0 20px}
+.wide{max-width:980px}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.1;margin:0}
+h3{font-size:1.65rem;font-weight:600;margin:2rem 0 .6rem}
+h4{font-size:1.3rem;font-weight:600;margin:1.4rem 0 .4rem}
+p{margin:.7em 0}
+a{color:var(--eps)}
+b,strong{font-weight:700}
+small{font-size:.8em}
+sub{font-size:.72em}
+.m{font-family:var(--font-math);font-size:1.08em;white-space:nowrap}
+.sig{color:var(--sig)} .tau{color:var(--tau)} .eps{color:var(--eps)} .gam{color:var(--gam)} .frc{color:var(--frc)} .mat{color:var(--mat)} .mut{color:var(--muted)} .wcol{color:var(--weld)}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .12em;line-height:1.1}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 .2em .08em}
+.frac>span:last-child{padding:.08em .2em 0}
+ul,ol{padding-left:1.4em}
+li{margin:.25em 0}
+
+/* ---------- en-tête ---------- */
+.hero{padding:34px 0 10px}
+.title-block{border:2.5px solid var(--ink);background:var(--card);display:grid;grid-template-columns:1fr 300px}
+.tb-main{padding:22px 24px;border-right:2.5px solid var(--ink);display:flex;flex-direction:column;justify-content:space-between;gap:14px}
+.tb-series{margin:0 0 .5rem;color:var(--muted);font-size:.95rem}
+.hero h1{font-size:clamp(2.3rem,6vw,4rem);font-weight:700;letter-spacing:-.01em}
+.tb-cells{display:grid;grid-template-rows:repeat(4,auto)}
+.tb-cells>div{padding:9px 16px;border-bottom:1.5px solid var(--ink);display:flex;flex-direction:column;justify-content:center}
+.tb-cells>div:last-child{border-bottom:0}
+.tb-cells small{color:var(--muted);font-size:.78rem}
+.tb-cells b{font-family:var(--font-head);font-size:1.25rem;font-weight:600;line-height:1.15}
+.lede{font-size:1.13rem;max-width:760px;margin:1.2rem 0}
+.theme-btn{align-self:flex-start;font-family:var(--font-body);font-size:.85rem;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
+@media (max-width:760px){.title-block{grid-template-columns:1fr}.tb-main{border-right:0;border-bottom:2.5px solid var(--ink)}.tb-cells{grid-template-rows:none;grid-template-columns:1fr 1fr}.tb-cells>div:nth-child(odd){border-right:1.5px solid var(--ink)}.tb-cells>div:nth-child(3){border-bottom:0}}
+@media (max-width:420px){.tb-cells{grid-template-columns:1fr}.tb-cells>div:nth-child(odd){border-right:0}.tb-cells>div:nth-child(3){border-bottom:1.5px solid var(--ink)}}
+
+/* code couleur */
+.cc{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:stretch;margin:1rem 0 .4rem}
+.cc-box{background:var(--card);border:2px solid var(--line);padding:12px 14px;border-radius:4px}
+.cc-cause{border-color:var(--sig)} .cc-link{border-color:var(--mat)} .cc-eff{border-color:var(--eps)}
+.cc-box small{display:block;color:var(--muted);font-size:.82rem;line-height:1.3}
+.cc-syms{font-family:var(--font-math);font-size:1.7rem;line-height:1.25;display:flex;flex-wrap:wrap;gap:.1em .45em;margin:.2rem 0}
+.cc-box p{margin:0;font-size:.9rem;line-height:1.35}
+.cc-arrow{align-self:center;font-size:1.8rem;color:var(--muted)}
+@media (max-width:700px){.cc{grid-template-columns:1fr}.cc-arrow{transform:rotate(90deg);justify-self:center;line-height:1}}
+.cc-more{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:.5rem 0}
+.cc-more>div{border:2px solid var(--line);background:var(--card);border-radius:4px;padding:6px 10px;font-size:.9rem}
+@media (max-width:640px){.cc-more{grid-template-columns:1fr}}
+
+/* ---------- sommaire ---------- */
+.toc{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-bottom:1.5px solid var(--line);padding-top:env(safe-area-inset-top,0px);margin-top:18px}
+.toc-in{display:flex;gap:6px;overflow-x:auto;padding:9px 20px;max-width:980px;margin:0 auto;scrollbar-width:thin}
+.toc a{flex:none;text-decoration:none;color:var(--ink);font-size:.88rem;padding:4px 11px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);white-space:nowrap}
+.toc a.on{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.toc a:focus-visible,.btn:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--eps);outline-offset:2px}
+
+/* ---------- sections ---------- */
+section.chap{padding:46px 0 10px}
+.cartouche{display:grid;grid-template-columns:86px 1fr 250px;border:2.5px solid var(--ink);background:var(--card);margin-bottom:1.4rem}
+.c-num{font-family:var(--font-head);font-size:3.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;border-right:2.5px solid var(--ink)}
+.c-title{padding:14px 18px;border-right:2.5px solid var(--ink)}
+.c-title h2{font-size:2.1rem;font-weight:700}
+.c-title p{margin:.25rem 0 0;color:var(--muted)}
+.c-img{padding:12px 14px;display:flex;gap:12px;align-items:center;background:var(--paper-2)}
+.c-img .ico{font-size:2.3rem;line-height:1}
+.c-img small{display:block;color:var(--muted);font-size:.78rem}
+.c-img span{font-size:.95rem;line-height:1.3}
+@media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
+
+/* niveaux */
+.lv{margin:1.2rem 0;padding:6px 22px 14px;border-radius:4px}
+.lv1{background:var(--card);border:2px solid var(--ink)}
+.lv2{background:var(--lv2);border-left:6px solid var(--ink)}
+.lv-h{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;font-family:var(--font-head);font-size:1.35rem;font-weight:600;margin:10px 0 4px}
+.lv-h .tag{font-size:.95rem;font-family:var(--font-body);font-weight:400;color:var(--muted)}
+@media (max-width:520px){.lv{padding:6px 14px 12px}}
+
+/* formules et encadrés */
+.fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:600px;text-align:center;border-radius:3px;overflow-x:auto}
+.fx .big{font-family:var(--font-math);font-size:1.9rem;line-height:1.4}
+.fx .cap{font-size:.85rem;color:var(--muted);margin:.3rem 0 0}
+.fx .row{display:flex;flex-wrap:wrap;justify-content:center;gap:.2em 1.4em}
+.syms{margin:.6rem 0;display:grid;grid-template-columns:auto 1fr;gap:.35rem 1rem;align-items:baseline}
+.syms dt{font-family:var(--font-math);font-size:1.25rem;text-align:right;white-space:nowrap}
+.syms dd{margin:0}
+.def{margin:.9rem 0;padding:.5rem .9rem;border-left:3px dotted var(--muted);font-size:.96rem;background:color-mix(in srgb,var(--card) 60%,transparent)}
+.def>b:first-child{font-family:var(--font-head);font-size:1.08rem;font-weight:600}
+.tip{margin:1rem 0;padding:.7rem 1rem;border:1.5px dashed var(--mat);border-radius:4px;font-size:.97rem}
+.warn{margin:1rem 0;padding:.7rem 1rem;border:2px solid var(--bad);border-radius:4px;font-size:.97rem;background:color-mix(in srgb,var(--bad) 7%,transparent)}
+.mnemo{margin:1rem 0;padding:.7rem 1rem;background:var(--hl);border-radius:4px;font-size:.98rem}
+.fun{margin:1.2rem 0;padding:.8rem 1rem;border:2px dashed var(--muted);border-radius:10px;background:var(--card);font-size:.98rem}
+.fun-h{display:block;margin-bottom:.35rem;font-family:var(--font-head);font-size:1.15rem;font-weight:600;letter-spacing:.02em}
+.meta{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--frc);border-radius:4px;background:color-mix(in srgb,var(--frc) 6%,transparent)}
+.weld{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--weld);border-radius:4px;background:color-mix(in srgb,var(--weld) 7%,transparent)}
+.weld>b:first-child{font-family:var(--font-head);font-size:1.15rem;font-weight:600;color:var(--weld)}
+.hp{display:inline-block;font-size:.72rem;font-weight:700;padding:1px 7px;border-radius:9px;background:var(--weld);color:var(--card);vertical-align:middle;margin-left:4px;white-space:nowrap}
+.recall{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:1rem 0}
+.recall>div{background:var(--card);border:1.5px solid var(--line);border-radius:4px;padding:8px 12px;font-size:.92rem}
+.recall .f{font-family:var(--font-math);font-size:1.2rem;margin-bottom:.2rem}
+@media (max-width:640px){.recall{grid-template-columns:1fr}}
+.hist{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:1rem 0}
+.hist>div{background:var(--card);border:1.5px solid var(--weld);border-radius:4px;padding:8px 12px;font-size:.93rem}
+.hist .yr{font-family:var(--font-head);font-size:1.6rem;font-weight:700;color:var(--weld);line-height:1}
+@media (max-width:720px){.hist{grid-template-columns:1fr}}
+
+/* manipulations */
+.lab{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:14px 16px 12px;margin:1.4rem 0}
+.lab-h{font-family:var(--font-head);font-size:1.3rem;font-weight:600;margin:0 0 .2rem}
+.lab-sub{margin:0 0 .6rem;color:var(--muted);font-size:.92rem}
+.lab svg{display:block;width:100%;height:auto;color:var(--ink);font-family:var(--font-body);touch-action:pan-y}
+.ctrl{display:grid;grid-template-columns:minmax(110px,auto) 1fr minmax(92px,auto);gap:4px 12px;align-items:center;margin:.5rem 0}
+.ctrl label{font-size:.95rem}
+.ctrl output{font-family:var(--font-math);font-size:1.08rem;text-align:right;white-space:nowrap}
+@media (max-width:520px){.ctrl{grid-template-columns:1fr auto}.ctrl input[type=range]{grid-column:1/-1;grid-row:2}}
+input[type=range]{width:100%;accent-color:var(--ink);height:28px;margin:0}
+input.r-sig{accent-color:var(--sig)} input.r-tau{accent-color:var(--tau)} input.r-frc{accent-color:var(--frc)} input.r-mat{accent-color:var(--mat)} input.r-eps{accent-color:var(--eps)}
+.btns{display:flex;flex-wrap:wrap;gap:6px;margin:.5rem 0}
+.btn{font-family:var(--font-body);font-size:.9rem;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 13px;cursor:pointer;line-height:1.3}
+.btn:hover{background:var(--paper-2)}
+.btn.on{background:var(--ink);color:var(--paper)}
+.btn.play{border-color:var(--eps);color:var(--eps);font-weight:700}
+.btn:disabled{opacity:.45;cursor:default}
+.readout{font-family:var(--font-math);font-size:1.08rem;background:var(--paper-2);border-radius:4px;padding:.5rem .8rem;margin:.5rem 0;overflow-x:auto;display:flex;flex-wrap:wrap;gap:.2em 1.3em}
+.readout>span{white-space:nowrap}
+.status{font-size:.97rem;margin:.5rem 0;padding:.5rem .8rem;border-left:4px solid var(--eps);background:color-mix(in srgb,var(--eps) 6%,transparent);border-radius:0 4px 4px 0;min-height:2.6em}
+.radios{display:flex;flex-wrap:wrap;gap:6px 14px;margin:.4rem 0;font-size:.95rem}
+.radios label{display:inline-block;cursor:pointer}
+.radios input{margin:0 6px 0 0;vertical-align:middle}
+
+/* svg */
+svg text{fill:currentColor;font-size:13px}
+svg .lbl{font-size:12.5px;fill:var(--muted)}
+svg .mth{font-family:var(--font-math);font-size:16px}
+svg .ttl{font-family:var(--font-head);font-size:15px;font-weight:600}
+svg .axis{stroke:var(--ink);stroke-width:1.4;fill:none}
+svg .tick{stroke:var(--muted);stroke-width:1}
+svg .gridbg{stroke:var(--line);stroke-width:1}
+svg .ref{stroke:var(--muted);stroke-width:1.3;stroke-dasharray:4 3;fill:none}
+.arr line{stroke:currentColor}
+.arr polygon{fill:currentColor}
+
+/* tableaux */
+.tbl-wrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch}
+table.data{border-collapse:collapse;width:100%;font-size:.94rem;background:var(--card)}
+table.data th,table.data td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:middle}
+table.data th{font-family:var(--font-head);font-weight:600;font-size:1.05rem;background:var(--paper-2)}
+table.data td.n{font-family:var(--font-math);white-space:nowrap}
+table.data tr.now td{background:var(--hl)}
+
+/* parcours */
+.route{list-style:none;padding:0;margin:1rem 0;position:relative}
+.route::before{content:"";position:absolute;left:17px;top:10px;bottom:10px;width:4px;background:var(--line);border-radius:2px}
+.route li{position:relative;padding:0 0 14px 52px;margin:0}
+.route li .dot{position:absolute;left:4px;top:0;width:30px;height:30px;border-radius:50%;border:3px solid var(--ink);background:var(--card);font-family:var(--font-head);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+.route li b{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.route li p{margin:.1rem 0 0;font-size:.95rem}
+.series{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:.8rem 0}
+.series>div{background:var(--card);border:1.5px solid var(--line);padding:8px 10px;border-radius:4px;font-size:.88rem}
+.series>div.here{border:2.5px solid var(--ink)}
+.series b{display:block;font-family:var(--font-head);font-size:1.05rem}
+@media (max-width:700px){.series{grid-template-columns:1fr 1fr}}
+
+/* exercices et quiz */
+.exo{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--ink);padding:6px 20px 12px;margin:1.2rem 0;border-radius:4px}
+.exo.defi{border-left-color:var(--weld)}
+.exo h4{margin-top:.8rem}
+.exo .lvtag{font-family:var(--font-body);font-size:.85rem;font-weight:400;color:var(--muted);margin-left:.4rem}
+.exo .q{margin:.25rem 0}
+details{margin:.6rem 0}
+summary{cursor:pointer;font-weight:700;padding:4px 0}
+details .sol{padding:.4rem .9rem;border-left:3px solid var(--mat);margin:.4rem 0}
+details .sol p{margin:.45em 0}
+.qz{background:var(--card);border:1.5px solid var(--line);border-radius:6px;padding:10px 16px;margin:.8rem 0}
+.qz-q{margin:.3rem 0 .6rem}
+.qz-o{display:flex;flex-direction:column;gap:6px}
+.qz-b{text-align:left;font-family:var(--font-body);font-size:.97rem;padding:8px 12px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:5px;cursor:pointer}
+.qz-b:hover{border-color:var(--ink)}
+.qz-b.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--card))}
+.qz-b.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--card))}
+.qz-e{font-size:.94rem;margin:.6rem 0 .2rem}
+.score{position:sticky;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);display:inline-block;background:var(--ink);color:var(--paper);padding:6px 14px;border-radius:999px;font-size:.95rem;margin:.6rem 0}
+
+/* fiche mémoire */
+.fiche{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:2.5px solid var(--ink);background:var(--card);margin:1rem 0}
+.fiche>div{padding:12px 14px;border-right:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}
+.fiche>div:nth-child(3n){border-right:0}
+.fiche>div:nth-last-child(-n+3){border-bottom:0}
+.fiche .ic{font-size:1.9rem;line-height:1}
+.fiche h4{margin:.3rem 0 .2rem;font-size:1.15rem}
+.fiche .f{font-family:var(--font-math);font-size:1.1rem;margin:.2rem 0}
+.fiche p{margin:.2rem 0 0;font-size:.88rem;color:var(--muted)}
+@media (max-width:720px){.fiche{grid-template-columns:1fr 1fr}.fiche>div{border-right:1.5px solid var(--ink)!important;border-bottom:1.5px solid var(--ink)!important}.fiche>div:nth-child(2n){border-right:0!important}.fiche>div:last-child{border-bottom:0!important}}
+@media (max-width:440px){.fiche{grid-template-columns:1fr}.fiche>div{border-right:0!important}}
+.gloss{display:grid;grid-template-columns:minmax(150px,230px) 1fr;gap:0;border-top:1.5px solid var(--line);margin:1rem 0}
+.gloss dt,.gloss dd{border-bottom:1.5px solid var(--line);padding:7px 8px;margin:0}
+.gloss dt{font-weight:700}
+.gloss dd{font-size:.95rem}
+@media (max-width:600px){.gloss{grid-template-columns:1fr}.gloss dt{border-bottom:0;padding-bottom:0}}
+.check label{display:flex;gap:10px;align-items:flex-start;padding:5px 0;cursor:pointer}
+.check input{margin-top:.35em;width:18px;height:18px;accent-color:var(--mat);flex:none}
+footer{padding:40px 0 60px;color:var(--muted);font-size:.9rem}
+hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
+@media (max-width:700px){.m{white-space:normal}.fx{padding:12px 10px}.fx .big{font-size:1.4rem}}
+@media (max-width:400px){body{font-size:16.5px}.wrap{padding:0 14px}.lab{padding:12px 10px}}
+
+/* compléments de la série Rupture */
+.btn.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,var(--card))}
+.btn.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--card))}
+.ctrl[hidden]{display:none}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="wrap wide">
+  <div class="title-block">
+    <div class="tb-main">
+      <div>
+        <p class="tb-series">Brasage fort et brasage tendre, série 1.16 : de la goutte qui mouille au joint qualifié</p>
+        <h1>Vaincre les oxydes : préparation, flux, atmosphères et métaux d'apport</h1>
+      </div>
+      <button class="theme-btn" id="themeBtn" type="button" aria-label="Changer de thème">◐ Thème : automatique</button>
+    </div>
+    <div class="tb-cells">
+      <div><small>Cours</small><b>2 sur 4 : désoxyder, protéger, choisir l'apport</b></div>
+      <div><small>Durée conseillée</small><b>≈ 2 h 30 à 3 h avec les exercices</b></div>
+      <div><small>Prérequis</small><b>cours 1, surtout l'équation de Young (chapitre 2) et la fusion de l'apport (chapitre 5)</b></div>
+      <div><small>À la fin tu sais</small><b>préparer une surface, dire si un oxyde se réduit sous hydrogène ou sous vide, choisir un flux et sa classe, régler une atmosphère, et choisir un apport de brasage fort ou un alliage de brasage tendre</b></div>
+    </div>
+  </div>
+  <p class="lede">Le cours 1 supposait une surface propre. Dans l'atelier, elle ne l'est jamais : une pièce sort de l'usinage huilée, du stock ternie, de la main de l'opérateur marquée d'empreintes. Et surtout, tout métal à l'air se couvre d'une pellicule d'oxyde de quelques nanomètres, que la brasure ne mouille pas. Sur le cuivre, cette pellicule cède facilement. Sur l'aluminium, l'inox ou le titane, elle se reforme dès qu'on l'enlève. Ce cours donne les quatre armes du braseur contre les oxydes : la <b>préparation</b> des surfaces, le <b>flux</b>, l'<b>atmosphère</b> contrôlée et le <b>vide</b>. Puis il apprend à choisir le <b>métal d'apport</b>, en brasage fort comme en brasage tendre.</p>
+
+  <h4>Le code couleur de la série</h4>
+  <div class="cc" role="img" aria-label="Code couleur : les causes en rouge et violet, les paramètres en vert, les effets en bleu">
+    <div class="cc-box cc-cause"><small>Les causes</small><div class="cc-syms"><span class="sig">T</span><span class="tau">H₂O</span><span class="tau">O₂</span></div><p><span class="sig">rouge</span> : la chaleur et la température ; <span class="tau">violet</span> : les ennemis du joint (oxydes, vapeur d'eau, oxygène, graisses)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-link"><small>Les paramètres</small><div class="cc-syms"><span class="mat">T<sub>r</sub></span><span class="mat">x<sub>H₂</sub></span><span class="mat">P</span></div><p>en <span class="mat">vert</span> : ce que l'on choisit et ce qui caractérise les matériaux (point de rosée, teneur en hydrogène, pression du four, classe de flux, composition de l'apport)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-eff"><small>Les effets</small><div class="cc-syms"><span class="eps">θ</span><span class="eps">p<sub>v</sub></span><span class="gam">e</span></div><p><span class="eps">bleu</span> : ce que l'on obtient (surface réduite ou non, mouillage, évaporation) ; <span class="gam">bleu-vert</span> : la métallurgie de l'interface (épaisseur d'oxyde ou d'intermétallique e)</p></div>
+  </div>
+  <div class="cc-more">
+    <div><b class="frc">Orange</b> : les forces motrices : tensions superficielles <span class="frc">γ</span> et enthalpie libre <span class="frc">ΔG°</span>, la « poussée » d'une réaction.</div>
+    <div><b>Noir</b> : la géométrie dessinée (pièces, couches, repères).</div>
+    <div><b class="wcol">Bronze</b> : les encadrés « métier » 🔥, tournés vers l'atelier.</div>
+  </div>
+</div>
+</header>
+
+<nav class="toc" aria-label="Sommaire">
+  <div class="toc-in">
+    <a href="#avant">Avant de commencer</a>
+    <a href="#c1">1 La préparation</a>
+    <a href="#c2">2 Ellingham</a>
+    <a href="#c3">3 Les flux</a>
+    <a href="#c4">4 Atmosphères et vide</a>
+    <a href="#c5">5 Apports forts</a>
+    <a href="#c6">6 Alliages tendres</a>
+    <a href="#exos">Exercices</a>
+    <a href="#quiz-s">Quiz</a>
+    <a href="#fiche">Fiche mémoire</a>
+    <a href="#gloss">Glossaire</a>
+    <a href="#check">Check-list</a>
+  </div>
+</nav>
+
+<main>
+<section class="chap" id="avant">
+<div class="wrap">
+  <h3 style="margin-top:0">Avant de commencer</h3>
+  <h4>Le cours 1 en trois cases</h4>
+  <div class="recall">
+    <div><div class="f">cos <span class="eps">θ</span> = (<span class="frc">γ<sub>SV</sub></span> − <span class="frc">γ<sub>SL</sub></span>)/<span class="frc">γ<sub>LV</sub></span></div>L'équation de Young donne l'angle de contact θ d'une goutte à partir des tensions superficielles γ (« gamma ») solide-vapeur, solide-liquide et liquide-vapeur. Un oxyde abaisse γ<sub>SV</sub> : cos θ chute, la goutte perle.</div>
+    <div><div class="f"><span class="frc">Δp</span> = 2<span class="frc">γ</span> cos <span class="eps">θ</span>/<span class="mat">h</span></div>La capillarité aspire la brasure dans le jeu h, avec une pression Δp ; mais seulement là où la surface est mouillée et chaude. Une zone oxydée arrête le remplissage aussi sûrement qu'une zone froide.</div>
+    <div><div class="f"><span class="mat">T<sub>liq</sub></span> ≤ <span class="sig">T<sub>b</sub></span> &lt; <span class="mat">T<sub>sol</sub></span>(base)</div>On brase à la température T<sub>b</sub>, au-dessus du liquidus de l'apport et sous le solidus du métal de base. Un apport fond d'un coup (eutectique) ou sur un intervalle, avec un risque de liquation si l'on chauffe lentement.</div>
+  </div>
+
+  <div class="def"><b>📘 Correspondance avec le planning et le référentiel</b>. Ce cours poursuit le sujet <b>1.16 « Brasage »</b> du planning de la formation. Dans le module 1.16 <i>Brazing and soldering</i> du référentiel de l'IIW (<i>International Institute of Welding</i>, l'Institut international de la soudure), il couvre l'attendu : « décrire l'influence de la préparation de surface, des types et des caractéristiques des métaux d'apport et des flux employés en brasage fort et en brasage tendre ». Normes et repères (ISO : Organisation internationale de normalisation ; EN : normes européennes) :
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Chapitre du cours</th><th>Ce qu'il apporte à l'IWE</th><th>Normes et repères</th></tr>
+      <tr><td>1 L'oxyde et la préparation</td><td>la gamme de préparation des surfaces</td><td>mode opératoire de brasage (cours 3)</td></tr>
+      <tr><td>2 Le diagramme d'Ellingham</td><td>savoir quels oxydes une atmosphère réduit</td><td>données thermodynamiques usuelles</td></tr>
+      <tr><td>3 Les flux</td><td>choisir un flux, sa classe et ses résidus</td><td>EN 1045, reprise par l'ISO 18496 ; ISO 9454-1</td></tr>
+      <tr><td>4 Atmosphères et vide</td><td>régler un four, éviter les pièges</td><td>points de rosée, pressions de vapeur</td></tr>
+      <tr><td>5 Les apports de brasage fort</td><td>choisir l'apport selon les matériaux et le service</td><td>ISO 17672, ISO 3677, règlement REACH</td></tr>
+      <tr><td>6 Les alliages de brasage tendre</td><td>choisir un alliage d'étain, connaître ses limites</td><td>ISO 9453, directive RoHS</td></tr>
+    </table></div>
+    Les données thermodynamiques sont des valeurs usuelles arrondies ; les modèles des manipulations 1 et 3 sont pédagogiques et signalés comme tels. Pour un cas réel, les fiches techniques et l'enseignement de la formation font foi.
+  </div>
+
+  <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage</b>
+    <p>(Formation IWE : <i>International Welding Engineer</i>, ingénieur international en soudage.) La plupart des joints brasés ratés le sont avant même la chauffe : pièce mal dégraissée, flux inadapté, four trop humide, apport choisi par habitude. Le coordinateur fixe ces choix dans le mode opératoire : gamme de nettoyage, désignation du flux, nature et point de rosée de l'atmosphère, désignation normalisée de l'apport. Il doit aussi connaître les interdits réglementaires (cadmium dans les brasures, plomb dans l'électronique et l'eau potable) et les incompatibilités métallurgiques (cuivre-phosphore sur l'acier, zinc sous vide, cuivre à oxygène sous hydrogène).</p>
+  </div>
+
+  <h4>La série en quatre cours</h4>
+  <div class="series">
+    <div><b>1 Mouiller et remplir</b>Les principes : mouillage, capillarité, jeu, fusion de l'apport, liaison.</div>
+    <div class="here"><b>2 Vaincre les oxydes</b>Préparation, flux, atmosphères, vide et métaux d'apport.</div>
+    <div><b>3 Chauffer et exécuter</b>Les procédés de brasage et le mode opératoire.</div>
+    <div><b>4 Concevoir et contrôler</b>Le joint, les matériaux, les imperfections et les contrôles.</div>
+  </div>
+
+  <h4>Le plan du cours</h4>
+  <ol class="route">
+    <li><span class="dot">1</span><b>L'oxyde et la préparation</b><p>Graisses, oxydes minces, oxydes tenaces : ce que le flux ne fera pas à ta place.</p></li>
+    <li><span class="dot">2</span><b>Le diagramme d'Ellingham</b><p>Quels oxydes l'hydrogène réduit, et pourquoi tout dépend du point de rosée.</p></li>
+    <li><span class="dot">3</span><b>Les flux</b><p>Dissoudre, protéger, s'effacer : plages d'activité, classes FH et FL, résidus.</p></li>
+    <li><span class="dot">4</span><b>Atmosphères et vide</b><p>Gaz réducteurs, gaz inertes, vide : leurs pouvoirs et leurs pièges.</p></li>
+    <li><span class="dot">5</span><b>Les apports de brasage fort</b><p>Aluminium, argent, cuivre-phosphore, cuivre, nickel : à chaque couple son apport.</p></li>
+    <li><span class="dot">6</span><b>Les alliages de brasage tendre</b><p>De l'étain-plomb au sans-plomb : fusion, fluage, peste de l'étain, moustaches.</p></li>
+  </ol>
+</div>
+</section>
+<section class="chap" id="c1">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">1</div>
+    <div class="c-title"><h2>L'oxyde et la préparation</h2><p>Ce que le flux ne fera pas à ta place</p></div>
+    <div class="c-img"><span class="ico">🪟</span><span><small>Image à retenir</small>La vitre givrée : tu la grattes, elle regivre aussitôt. L'aluminium et l'inox refont leur oxyde en un instant</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la vitre givrée</span></div>
+    <p>Pour mouiller, la brasure doit toucher le métal lui-même. Or, entre elle et le métal, deux sortes d'écrans s'interposent.</p>
+    <ul>
+      <li><b>Les salissures organiques</b> : huile de coupe, graisse, empreintes de doigts, marqueur, peinture. Elles brûlent ou se carbonisent à la chauffe et laissent un dépôt que la brasure ne mouille pas. <b>Aucun flux ne les dissout</b> : il faut les enlever avant, par un dégraissage.</li>
+      <li><b>Les oxydes</b> : à l'air, tout métal se couvre d'une pellicule d'oxyde de quelques nanomètres (nm, millionièmes de millimètre), qui s'épaissit avec le temps, l'humidité et surtout la chaleur. Sur le cuivre, l'acier ou le nickel, cette pellicule est mince et cède facilement. Sur l'aluminium (alumine Al<sub>2</sub>O<sub>3</sub>), l'inox (oxyde de chrome Cr<sub>2</sub>O<sub>3</sub>) ou le titane (TiO<sub>2</sub>), elle est <b>tenace</b> : très stable, et reformée en une fraction de seconde dès qu'on la gratte.</li>
+    </ul>
+    <p>D'où la <b>gamme de préparation</b>, à suivre dans l'ordre :</p>
+    <ol>
+      <li><b>dégraisser</b> : solvant, lessive alcaline, bain à ultrasons ;</li>
+      <li><b>décaper</b> : brosse, toile abrasive, sablage, ou bain acide, pour enlever les oxydes épais, la calamine, la rouille ;</li>
+      <li><b>rincer et sécher</b>, pour ne laisser ni sels ni acide ;</li>
+      <li><b>assembler sans toucher</b> les surfaces à braser à mains nues ;</li>
+      <li><b>braser vite</b>, dans les heures qui suivent, avant que l'oxyde ne s'épaississe.</li>
+    </ol>
+    <p>Pour les métaux à oxyde tenace, cette gamme ne suffit pas : l'oxyde revient pendant la chauffe. Il faudra une arme active, un flux adapté (chapitre 3), une atmosphère ou le vide (chapitres 2 et 4).</p>
+  </div>
+
+  <div class="lab" id="m1">
+    <p class="lab-h">Manipulation 1 : la gamme de préparation</p>
+    <p class="lab-sub">Choisis un métal, coche les étapes que tu réalises, puis règle le délai entre la préparation et le brasage. La coupe montre ce qui reste sur la surface, avec l'épaisseur d'oxyde estimée. Modèle pédagogique : croissance logarithmique de l'oxyde à l'air ambiant, épaisseurs de l'ordre de grandeur des valeurs publiées.</p>
+    <div class="btns" id="m1mat">
+      <button class="btn on" data-k="cu" type="button">Cuivre</button>
+      <button class="btn" data-k="acier" type="button">Acier non allié</button>
+      <button class="btn" data-k="inox" type="button">Inox austénitique</button>
+      <button class="btn" data-k="alu" type="button">Aluminium</button>
+      <button class="btn" data-k="ti" type="button">Titane</button>
+    </div>
+    <div class="radios" id="m1steps">
+      <label><input type="checkbox" data-s="deg">1 dégraisser</label>
+      <label><input type="checkbox" data-s="dec">2 décaper</label>
+      <label><input type="checkbox" data-s="rin">3 rincer et sécher</label>
+      <label><input type="checkbox" data-s="gan">4 assembler avec des gants propres</label>
+    </div>
+    <div class="ctrl"><label for="m1d">Délai avant brasage</label><input type="range" id="m1d" class="r-mat" min="0" max="1000" step="1" value="300"><output id="m1do"></output></div>
+    <div class="btns"><button class="btn play" id="m1play" type="button">▶ Dérouler la gamme</button></div>
+    <svg id="m1svg" role="img" aria-label="Coupe de la surface à braser avec les couches de salissures et d'oxyde"></svg>
+    <div class="readout" id="m1r"></div>
+    <p class="status" id="m1msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">choisir les moyens de nettoyage</span></div>
+    <div class="def"><b>📖 Oxyde natif</b> : pellicule d'oxyde formée spontanément à l'air, à température ambiante. Ordres de grandeur : 2 à 5 nm sur l'aluminium, 1 à 3 nm sur l'inox (film « passif » riche en chrome), quelques nanomètres sur le titane, le cuivre et l'acier. À l'ambiante, elle croît à peu près comme le logarithme du temps : vite dans les premières secondes, puis de plus en plus lentement. À chaud, elle croît bien plus vite, en suivant à peu près une loi parabolique, e² ∝ t (∝ : « proportionnel à ») : son épaisseur e est proportionnelle à la racine du temps t, avec une constante qui explose avec la température.</div>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Ce qu'il faut enlever</th><th>Moyens usuels</th><th>Points d'attention</th></tr>
+      <tr><td>Huiles, graisses, empreintes</td><td>solvant, lessive alcaline chaude, bain à ultrasons, dégraissage en phase vapeur</td><td>toujours en premier : un décapage sur une pièce grasse étale la graisse</td></tr>
+      <tr><td>Oxyde mince, ternissure</td><td>brosse métallique, toile abrasive fine, décapage acide léger</td><td>brosse en inox réservée à l'inox et à l'aluminium, pour ne pas y incruster de fer</td></tr>
+      <tr><td>Calamine, rouille, oxyde épais</td><td>sablage, grenaillage, décapage acide</td><td>un abrasif peut s'incruster ; rincer, souffler, et préférer un abrasif propre</td></tr>
+      <tr><td>Résidus de décapage</td><td>rinçage abondant, puis séchage</td><td>des sels ou de l'acide piégés corrodent le joint</td></tr>
+      <tr><td>Oxyde tenace (Al, inox, Ti)</td><td>décapage, puis flux adapté, atmosphère très sèche ou vide</td><td>l'oxyde se reforme en une fraction de seconde : le décapage seul ne suffit pas</td></tr>
+    </table></div>
+    <p>Un dernier recours existe pour les matériaux difficiles : <b>déposer une couche facile à braser</b>. Un <b>nickelage</b> électrolytique ou chimique de quelques micromètres sur un inox, un superalliage chargé en aluminium et en titane, ou une céramique préalablement métallisée, remplace un oxyde tenace par une surface de nickel que les brasures mouillent bien.</p>
+    <p>Le délai compte : sur le cuivre ou l'acier, une pièce décapée le matin se brase sans difficulté l'après-midi ; après quelques jours à l'air humide, la ternissure ou la rouille naissante impose un nouveau brossage. Les modes opératoires fixent souvent un délai maximal entre préparation et brasage.</p>
+    <div class="tip">💡 <b>Le test du film d'eau</b> (rappel du cours 1) : après dégraissage et rinçage, l'eau doit couvrir la surface en film continu pendant quelques secondes. Si elle se rompt en îlots, il reste un film gras.</div>
+    <div class="warn"><b>⚠️ Piège : le flux n'est pas un dégraissant.</b> Il dissout des oxydes, pas des huiles. Une trace de doigt ou d'huile de coupe sous le flux donne une zone non mouillée, même avec le meilleur flux du monde.</div>
+    <div class="warn"><b>⚠️ Piège : décaper trop tôt.</b> Une pièce décapée puis stockée plusieurs jours se ternit de nouveau ; pour l'aluminium, l'inox et le titane, le film natif se reforme de toute façon. Décaper trop tôt, c'est travailler pour rien.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « dégraisse, décape, rince, brase dans la journée »</b>. Et pour les métaux à oxyde tenace : « gratter ne suffit pas, il faut protéger ».</div>
+    <div class="weld"><b>🔥 La gamme écrite</b>
+      <p>La gamme de préparation fait partie du mode opératoire de brasage (cours 3) : produits et concentrations, températures et durées des bains, rinçages, délai maximal avant brasage, port de gants. En série, un dégraissage qui dérive (bain saturé d'huile, rinçage pollué) se voit d'abord par une hausse des fuites au contrôle d'étanchéité, des semaines avant qu'on en trouve la cause.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c2">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">2</div>
+    <div class="c-title"><h2>Le diagramme d'Ellingham</h2><p>Quels oxydes l'hydrogène sait réduire</p></div>
+    <div class="c-img"><span class="ico">🪜</span><span><small>Image à retenir</small>L'échelle d'Ellingham : plus un oxyde est bas, plus il s'accroche à son oxygène ; l'hydrogène ne délivre que ceux qui sont au-dessus de lui</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">l'échelle</span></div>
+    <p>Chaque métal retient son oxygène plus ou moins fort. Range les oxydes sur une échelle : en haut, ceux qui lâchent facilement leur oxygène (oxyde de cuivre, oxyde de nickel) ; au milieu, l'oxyde de fer ; en bas, les plus tenaces (oxydes de chrome, de manganèse, de silicium, de titane, d'aluminium, de magnésium). C'est le <b>diagramme d'Ellingham</b>, du nom du chimiste britannique qui l'a tracé en 1944.</p>
+    <p>Dans un four rempli d'<b>hydrogène</b> H<sub>2</sub>, l'hydrogène cherche à capter l'oxygène des oxydes pour former de la vapeur d'eau H<sub>2</sub>O. Il gagne contre les oxydes situés <b>au-dessus</b> de lui sur l'échelle : l'oxyde se réduit et le métal redevient brillant. Il perd contre les oxydes situés au-dessous.</p>
+    <p>Mais la position de l'hydrogène sur l'échelle dépend de sa pureté : un hydrogène humide, chargé de vapeur d'eau, descend moins bas, et peut même oxyder au lieu de réduire. On mesure cette humidité par le <b>point de rosée</b> : la température à laquelle la vapeur d'eau du gaz commencerait à se condenser. Plus il est bas, plus le gaz est sec. Un point de rosée de −40 °C correspond à environ 127 ppm (parties par million) de vapeur d'eau.</p>
+    <p>Trois conclusions pratiques :</p>
+    <ul>
+      <li>l'oxyde de cuivre, l'oxyde de nickel et l'oxyde de fer se réduisent sans peine, même dans un gaz peu sec : le brasage au cuivre des aciers au four en profite ;</li>
+      <li>l'oxyde de chrome de l'inox exige un hydrogène très sec, de plus en plus sec à mesure que la température baisse ;</li>
+      <li>l'alumine, l'oxyde de titane et la magnésie ne se réduisent jamais dans un four industriel : il faut un flux, ou le vide aidé d'un « piège » chimique.</li>
+    </ul>
+  </div>
+
+  <div class="lab" id="m2">
+    <p class="lab-h">Manipulation 2 : l'échelle d'Ellingham et le point de rosée</p>
+    <p class="lab-sub">Chaque droite donne l'enthalpie libre de formation d'un oxyde, <span class="frc">ΔG°</span>, en fonction de la température. La droite verte en pointillés est le pouvoir oxydant du gaz choisi, fixé par son <span class="mat">point de rosée</span> et sa <span class="mat">teneur en hydrogène</span> : les oxydes dont la droite passe au-dessus d'elle sont réduits, les autres restent. Choisis un oxyde, un gaz, une température et un point de rosée. Données thermodynamiques usuelles, arrondies.</p>
+    <div class="btns" id="m2ox">
+      <button class="btn" data-k="Cu2O" type="button">Cu₂O</button>
+      <button class="btn" data-k="NiO" type="button">NiO</button>
+      <button class="btn" data-k="FeO" type="button">FeO</button>
+      <button class="btn on" data-k="Cr2O3" type="button">Cr₂O₃</button>
+      <button class="btn" data-k="MnO" type="button">MnO</button>
+      <button class="btn" data-k="SiO2" type="button">SiO₂</button>
+      <button class="btn" data-k="TiO2" type="button">TiO₂</button>
+      <button class="btn" data-k="Al2O3" type="button">Al₂O₃</button>
+      <button class="btn" data-k="MgO" type="button">MgO</button>
+    </div>
+    <div class="btns" id="m2gas">
+      <button class="btn on" data-k="1" type="button">H₂ pur</button>
+      <button class="btn" data-k="0.75" type="button">Ammoniac dissocié (75 % H₂)</button>
+      <button class="btn" data-k="0.1" type="button">N₂ + 10 % H₂</button>
+      <button class="btn" data-k="0.05" type="button">N₂ + 5 % H₂</button>
+      <button class="btn" data-k="vide" type="button">Vide (air résiduel)</button>
+    </div>
+    <div class="ctrl"><label for="m2T">Température <span class="sig">T</span></label><input type="range" id="m2T" class="r-sig" min="200" max="1300" step="5" value="1050"><output id="m2To"></output></div>
+    <div class="ctrl" id="m2dc"><label for="m2d">Point de rosée <span class="mat">T<sub>r</sub></span></label><input type="range" id="m2d" class="r-mat" min="-80" max="20" step="1" value="-40"><output id="m2do"></output></div>
+    <div class="ctrl" id="m2pc" hidden><label for="m2p">Pression du vide <span class="mat">P</span></label><input type="range" id="m2p" class="r-mat" min="-6" max="0" step="0.5" value="-5"><output id="m2po"></output></div>
+    <div class="btns"><button class="btn play" id="m2play" type="button">▶ Refroidir sous le même gaz</button></div>
+    <svg id="m2svg" role="img" aria-label="Diagramme d'Ellingham des oxydes avec la droite du gaz choisi"></svg>
+    <div class="readout" id="m2r"></div>
+    <p class="status" id="m2msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">le calcul du point de rosée</span></div>
+    <div class="def"><b>📖 Enthalpie libre standard de formation ΔG°</b> (en kJ par mole de dioxygène O<sub>2</sub>) : énergie libérée quand le métal s'oxyde dans les conditions standard. Plus elle est négative, plus l'oxyde est stable. Elle varie presque linéairement avec la température : ΔG° = A + B·T. Ramener toutes les réactions à une mole d'O<sub>2</sub> permet de les comparer sur un même graphique.</div>
+    <p>L'hydrogène réduit l'oxyde si la réaction MO + H<sub>2</sub> → M + H<sub>2</sub>O est possible, c'est-à-dire si le rapport des pressions partielles de vapeur d'eau et d'hydrogène reste sous sa valeur d'équilibre :</p>
+    <div class="fx"><div class="big">(<span class="tau">p<sub>H₂O</sub></span>/<span class="mat">p<sub>H₂</sub></span>)<sub>max</sub> = exp<span style="font-size:1.1em">(</span><span class="frac"><span><span class="frc">ΔG°<sub>oxyde</sub></span> − <span class="frc">ΔG°<sub>H₂O</sub></span></span><span>2R<span class="sig">T</span></span></span><span style="font-size:1.1em">)</span></div><p class="cap">ΔG° en J par mole d'O<sub>2</sub> ; R = 8,314 J/(mol·K) ; T en kelvins ; exp : exponentielle. Au-dessus de ce rapport, le gaz oxyde au lieu de réduire.</p></div>
+    <p>Le point de rosée T<sub>r</sub> fixe la teneur en vapeur d'eau. Repères (pression atmosphérique) :</p>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Point de rosée</th><th class="n">+20 °C</th><th class="n">0 °C</th><th class="n">−20 °C</th><th class="n">−40 °C</th><th class="n">−50 °C</th><th class="n">−60 °C</th><th class="n">−80 °C</th></tr>
+      <tr><td>Vapeur d'eau (ppm en volume)</td><td class="n">23 000</td><td class="n">6 000</td><td class="n">1 020</td><td class="n">127</td><td class="n">39</td><td class="n">11</td><td class="n">0,5</td></tr>
+    </table></div>
+    <p><b>Exemple : l'inox à 1 100 °C.</b> Pour Cr<sub>2</sub>O<sub>3</sub>, ΔG° ≈ −746,8 + 0,1703·T kJ et, pour la vapeur d'eau, ΔG° ≈ −495,0 + 0,1117·T kJ. À 1 373 K : <span class="m">−513,0 − (−341,6) = −171,4 kJ</span>, d'où <span class="m">(p<sub>H₂O</sub>/p<sub>H₂</sub>)<sub>max</sub> = exp(−171 400/(2 × 8,314 × 1 373)) ≈ 5,5 × 10⁻⁴</span>. Dans de l'hydrogène pur, il faut donc moins de 550 ppm de vapeur d'eau, soit un point de rosée inférieur à −26 °C. Avec un mélange azote + 10 % d'hydrogène, la pression partielle d'hydrogène est dix fois plus faible : il faut 55 ppm, soit −47 °C.</p>
+    <p>À 800 °C, le même calcul donne 25 ppm (−53 °C) dans l'hydrogène pur. C'est pourquoi, en refroidissant dans un gaz insuffisamment sec, l'inox peut se réoxyder et ressortir terni : on refroidit vite, sous un gaz très sec. Les fours de brasage de l'inox travaillent couramment sous un point de rosée de −40 à −60 °C.</p>
+    <h4>Et le vide ?</h4>
+    <p>Un oxyde se dissocie seul si la pression d'oxygène tombe sous sa <b>pression de dissociation</b>, exp(ΔG°/RT). Pour Cr<sub>2</sub>O<sub>3</sub> à 1 100 °C, elle vaut environ 3 × 10⁻²⁰ atm, alors que l'air résiduel d'un vide poussé de 10⁻⁵ mbar contient encore 2 × 10⁻⁹ atm d'oxygène. <b>Le vide ne réduit donc pas l'oxyde de chrome.</b> Il empêche surtout la réoxydation et évacue les gaz ; le mince film d'oxyde disparaît par d'autres voies : réduction par le carbone de l'acier, qui forme du monoxyde de carbone pompé au fur et à mesure, et action des éléments fondants des apports au nickel (bore, silicium).</p>
+    <div class="tip">💡 <b>Lire l'échelle sans calcul</b> : plus la droite d'un oxyde est basse, plus son métal est « avide » d'oxygène. Un métal dont la droite passe sous celle d'un autre réduit l'oxyde de cet autre : c'est pour cela que le magnésium, tout en bas, sert de piège à oxygène dans le brasage sous vide de l'aluminium (chapitre 4).</div>
+    <div class="warn"><b>⚠️ Piège : « sec » ne veut pas dire « sans eau ».</b> Un gaz au point de rosée de −40 °C contient encore 127 ppm de vapeur d'eau : assez pour réoxyder l'inox sous 940 °C environ dans l'hydrogène pur.</div>
+    <div class="warn"><b>⚠️ Piège : la dilution.</b> Diluer l'hydrogène dans l'azote (pour la sécurité ou le coût) abaisse p<sub>H₂</sub> : à point de rosée égal, le gaz devient plus oxydant. Un N<sub>2</sub> + 5 % H<sub>2</sub> demande un gaz vingt fois plus sec que l'hydrogène pur.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « plus bas, plus tenace ; l'hydrogène délivre ceux d'au-dessus »</b>. Et pour l'inox : « en refroidissant, il faut encore plus sec ».</div>
+    <div class="weld"><b>🔥 Trois fours, trois exigences</b>
+      <p>Braser au cuivre des pièces en acier non allié : un four continu sous mélange azote-hydrogène, ou même sous un gaz de combustion peu sec, suffit, car les oxydes de fer et de cuivre se réduisent facilement. Braser de l'inox au nickel ou au cuivre : hydrogène très sec ou vide. Braser de l'aluminium : jamais par réduction, toujours avec un flux ou sous vide avec du magnésium.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c3">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">3</div>
+    <div class="c-title"><h2>Les flux</h2><p>Dissoudre, protéger, s'effacer</p></div>
+    <div class="c-img"><span class="ico">🧹</span><span><small>Image à retenir</small>Le balai : le flux fondu ramasse l'oxyde et le pousse devant la brasure qui avance</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le balai</span></div>
+    <p>À l'air libre, au chalumeau ou par induction, c'est le <b>flux</b> qui débarrasse le joint de ses oxydes. C'est un mélange de sels (borates, fluorures, chlorures), en pâte, en poudre, en liquide, ou en enrobage autour de la baguette. Il a quatre rôles :</p>
+    <ol>
+      <li><b>dissoudre</b> les oxydes présents ;</li>
+      <li><b>protéger</b> la surface de la réoxydation pendant la chauffe, en la couvrant ;</li>
+      <li><b>se laisser chasser</b> par la brasure liquide, qui prend sa place dans le joint ;</li>
+      <li><b>indiquer la température</b> : la pâte bouillonne (son eau s'évapore), sèche en blanc, puis fond en un liquide clair et transparent juste avant la température de brasage. C'est le moment de présenter la baguette.</li>
+    </ol>
+    <p>Un flux n'est actif que dans une <b>plage de température</b>. Il doit être fondu et actif <b>avant</b> que l'apport fonde, et le rester <b>jusqu'à</b> ce que la brasure ait rempli le joint. Il a aussi une capacité limitée : chauffé trop longtemps, il se sature d'oxydes, noircit et ne protège plus. Au chalumeau, quelques minutes suffisent à l'épuiser.</p>
+    <p>Enfin, ses <b>résidus</b>, souvent à base de fluorures et de chlorures, sont corrosifs : on les élimine après brasage, à l'eau chaude et à la brosse, ou par un décapage.</p>
+  </div>
+
+  <div class="lab" id="m3">
+    <p class="lab-h">Manipulation 3 : la fenêtre du flux</p>
+    <p class="lab-sub">Choisis le métal de base, un flux et un apport, puis la vitesse de chauffe et la durée du maintien. La courbe rouge montre la chauffe ; la bande orange, la plage active du flux ; la bande verte, l'intervalle de fusion de l'apport. Le flux doit fondre avant l'apport, tenir jusqu'à la fin, et ne pas s'épuiser. Plages des classes de flux d'après l'EN 1045 ; durée de vie du flux : modèle pédagogique, de l'ordre de quelques minutes au-dessus de sa température d'activité.</p>
+    <div class="btns" id="m3base">
+      <button class="btn on" data-k="cu" type="button">Cuivre ou laiton</button>
+      <button class="btn" data-k="acier" type="button">Acier</button>
+      <button class="btn" data-k="inox" type="button">Inox ou carbure</button>
+      <button class="btn" data-k="alu" type="button">Aluminium</button>
+    </div>
+    <div class="btns" id="m3fx">
+      <button class="btn on" data-k="FH10" type="button">FH10</button>
+      <button class="btn" data-k="FH12" type="button">FH12</button>
+      <button class="btn" data-k="FH20" type="button">FH20</button>
+      <button class="btn" data-k="FH21" type="button">FH21</button>
+      <button class="btn" data-k="FH30" type="button">FH30</button>
+      <button class="btn" data-k="FL10" type="button">FL10</button>
+      <button class="btn" data-k="FL20" type="button">FL20</button>
+    </div>
+    <div class="btns" id="m3ap">
+      <button class="btn on" data-k="ag155" type="button">Ag 155</button>
+      <button class="btn" data-k="cup284" type="button">CuP 284</button>
+      <button class="btn" data-k="ag449" type="button">Ag 449</button>
+      <button class="btn" data-k="cuzn" type="button">Laiton CuZn40</button>
+      <button class="btn" data-k="cu" type="button">Cuivre pur</button>
+      <button class="btn" data-k="alsi" type="button">Al-Si12</button>
+    </div>
+    <div class="ctrl"><label for="m3r">Vitesse de chauffe</label><input type="range" id="m3r" class="r-sig" min="0" max="1000" step="1" value="700"><output id="m3ro"></output></div>
+    <div class="ctrl"><label for="m3h">Maintien à température</label><input type="range" id="m3h" class="r-sig" min="0" max="300" step="5" value="15"><output id="m3ho"></output></div>
+    <div class="btns"><button class="btn play" id="m3play" type="button">▶ Chauffer</button></div>
+    <svg id="m3svg" role="img" aria-label="Courbe de chauffe avec la plage active du flux et l'intervalle de fusion de l'apport"></svg>
+    <div class="readout" id="m3r2"></div>
+    <p class="status" id="m3msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">les classes de flux</span></div>
+    <p>La norme européenne EN 1045, reprise et complétée par l'ISO 18496, range les flux de brasage fort en deux classes : <b>FH</b> pour les métaux « lourds » (aciers, inox, cuivre et alliages, nickel, métaux précieux) et <b>FL</b> pour l'aluminium et ses alliages.</p>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Type</th><th>Plage active</th><th>Constituants</th><th>Emploi</th><th>Résidus</th></tr>
+      <tr><td>FH10</td><td class="n">550 à 800 °C</td><td>composés du bore, fluorures</td><td>usage général, apports à l'argent</td><td>corrosifs</td></tr>
+      <tr><td>FH11</td><td class="n">550 à 800 °C</td><td>idem, plus chlorures</td><td>cupro-aluminiums (bronzes d'aluminium)</td><td>corrosifs</td></tr>
+      <tr><td>FH12</td><td class="n">550 à 850 °C</td><td>composés du bore, bore élémentaire, fluorures</td><td>inox, aciers fortement alliés, carbures</td><td>corrosifs</td></tr>
+      <tr><td>FH20</td><td class="n">750 à 1 000 °C</td><td>composés du bore, fluorures</td><td>usage général, températures plus hautes</td><td>corrosifs</td></tr>
+      <tr><td>FH21</td><td class="n">750 à 1 100 °C</td><td>composés du bore</td><td>laitons, soudobrasage</td><td>non corrosifs, mais durs à enlever</td></tr>
+      <tr><td>FH30</td><td class="n">au-dessus de 1 000 °C</td><td>composés du bore, phosphates, silicates</td><td>apports au cuivre et au nickel</td><td>non corrosifs</td></tr>
+      <tr><td>FH40</td><td class="n">600 à 1 000 °C</td><td>chlorures et fluorures, sans bore</td><td>quand le bore est interdit</td><td>non corrosifs</td></tr>
+      <tr><td>FL10</td><td class="n">au-dessus de 550 °C</td><td>chlorures et fluorures hygroscopiques (lithium)</td><td>aluminium, jusqu'à 3 % de magnésium</td><td>corrosifs</td></tr>
+      <tr><td>FL20</td><td class="n">au-dessus de 550 °C</td><td>fluorures non hygroscopiques</td><td>aluminium, jusqu'à 0,8 % de magnésium</td><td>non corrosifs</td></tr>
+    </table></div>
+    <p class="mut" style="font-size:.9rem">D'après la classification EN 1045 ; « hygroscopique » : qui absorbe l'humidité de l'air. Les plages et les limites exactes d'un produit sont celles de sa fiche technique.</p>
+    <p>Le flux FL20 le plus répandu est un mélange de fluoroaluminates de potassium (connu sous le nom commercial Nocolok), qui fond vers 565 à 572 °C, juste sous l'apport Al-Si (577 °C). Ses résidus, presque insolubles, restent en place sans danger : c'est la base du brasage au four des radiateurs automobiles sous azote, appelé CAB (<i>controlled atmosphere brazing</i>). Le magnésium des alliages d'aluminium l'empoisonne en formant des fluorures de magnésium : au four, on se limite en pratique à quelques dixièmes de pour cent de magnésium.</p>
+    <h4>Les flux de brasage tendre</h4>
+    <p>L'ISO 9454-1 code les flux de brasage tendre par leur type, leur base et leur activation : type 1, les <b>résines</b> (colophone, extraite de la sève de pin, ou résines synthétiques) ; type 2, les <b>organiques</b> (acides organiques, solubles ou non dans l'eau) ; type 3, les <b>inorganiques</b> (sels, comme le chlorure de zinc et le chlorure d'ammonium, ou acides). Chaque type peut être « activé », en particulier par des halogénures (chlorures, bromures), plus efficaces mais plus corrosifs ; par exemple, le code 1.1.2 désigne une colophane activée par des halogénures. En électronique, on emploie des flux à base de résine, souvent « sans nettoyage » (<i>no-clean</i>) aux résidus peu abondants et inertes. En plomberie et en zinguerie, les flux inorganiques au chlorure de zinc sont efficaces mais très corrosifs : rinçage obligatoire.</p>
+    <div class="tip">💡 <b>Mieux vaut trop que pas assez</b> : un excès de flux ne nuit pas au joint et facilite même l'élimination des résidus ; un manque, en revanche, laisse le flux s'épuiser avant la fin et l'oxyde revenir. On en met sur les deux pièces et autour du joint.</div>
+    <div class="warn"><b>⚠️ Piège : le flux noir.</b> Un flux devenu noir et vitreux est saturé ou brûlé : chauffe trop longue ou trop chaude, ou flux inadapté. La brasure ne mouillera plus ; il faut refroidir, nettoyer et recommencer, ou choisir un flux à plage plus haute.</div>
+    <div class="warn"><b>⚠️ Piège : le flux piégé.</b> Si la brasure ne peut pas chasser le flux (jeu trop serré, joint borgne, chauffe mal répartie), il reste prisonnier : inclusion de flux, fuite, corrosion interne (cours 4).</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « fondre avant, tenir après »</b>. Et pour le geste : « blanc, puis clair, puis brasure ».</div>
+    <div class="weld"><b>🔥 Éliminer les résidus</b>
+      <p>Pour les flux corrosifs des apports à l'argent (FH10, FH11, FH12) : tremper la pièce encore chaude dans l'eau (une partie des résidus éclate), puis une trentaine de minutes dans l'eau chaude, et brosser sous l'eau courante. Les résidus tenaces se traitent par un bain acide ou alcalin dilué, avec gants et lunettes. Ceux des flux FH21, vitreux, ne partent souvent que par sablage ou microbillage. Un résidu oublié dans un échangeur ou sous un raccord finit en piqûre de corrosion.</p>
+    </div>
+  </div>
+</div>
+</section>
+<section class="chap" id="c4">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">4</div>
+    <div class="c-title"><h2>Atmosphères et vide</h2><p>Remplacer le flux par le gaz, ou par rien</p></div>
+    <div class="c-img"><span class="ico">🫙</span><span><small>Image à retenir</small>Le bocal sous vide : plus d'air pour oxyder, mais ce qui bout facilement s'échappe</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le bocal sous vide</span></div>
+    <p>Dans un four, on peut se passer de flux : c'est le gaz qui entoure les pièces, ou son absence, qui fait le travail. Trois familles :</p>
+    <ul>
+      <li><b>les gaz inertes</b> (azote N<sub>2</sub>, argon Ar) : ils protègent de l'oxydation, mais ne retirent aucun oxyde ;</li>
+      <li><b>les gaz réducteurs</b> (hydrogène, mélanges azote-hydrogène, gaz issus de la combustion contrôlée du gaz naturel) : ils retirent les oxydes situés au-dessus d'eux sur l'échelle d'Ellingham, à condition d'être assez secs ;</li>
+      <li><b>le vide</b> : plus d'oxygène pour réoxyder, et les gaz qui sortent des pièces sont pompés. Mais un métal dont la vapeur se forme facilement s'évapore : le zinc, le cadmium, le magnésium, le manganèse, et même le cuivre ou l'argent à haute température.</li>
+    </ul>
+    <p>Chaque solution a son piège. Le <b>cuivre à oxygène</b> (cuivre électrolytique ordinaire) se fissure sous hydrogène. Les <b>apports au zinc</b> sont interdits sous vide. L'<b>aluminium</b> ne se réduit dans aucun gaz : sous vide, on ajoute du magnésium à l'apport, qui s'évapore, capte les dernières traces d'oxygène et fait éclater la pellicule d'alumine.</p>
+  </div>
+
+  <div class="lab" id="m4">
+    <p class="lab-h">Manipulation 4 : ce qui s'évapore dans le four</p>
+    <p class="lab-sub">Chaque courbe donne la <span class="eps">pression de vapeur</span> d'un élément pur en fonction de la température (échelle logarithmique). La ligne verte est la <span class="mat">pression du four</span>. Un élément dont la courbe passe au-dessus de cette ligne à la température de brasage s'évapore. Choisis un cas, ou règle la température et la pression. Données des tables usuelles des éléments, prolongées aux faibles pressions.</p>
+    <div class="btns" id="m4pre">
+      <button class="btn" data-k="ag155" type="button">Apport Ag-Cu-Zn à 700 °C</button>
+      <button class="btn" data-k="cd" type="button">Ancien apport au cadmium à 700 °C</button>
+      <button class="btn" data-k="ag272" type="button">Ag72Cu28 à 830 °C</button>
+      <button class="btn on" data-k="cu" type="button">Cuivre à 1 100 °C</button>
+      <button class="btn" data-k="bni" type="button">BNi-2 sur inox à 1 050 °C</button>
+      <button class="btn" data-k="almg" type="button">Al-Si-Mg à 600 °C</button>
+    </div>
+    <div class="ctrl"><label for="m4T">Température <span class="sig">T</span></label><input type="range" id="m4T" class="r-sig" min="300" max="1300" step="5" value="1100"><output id="m4To"></output></div>
+    <div class="ctrl"><label for="m4P">Pression du four <span class="mat">P</span></label><input type="range" id="m4P" class="r-mat" min="-4" max="5" step="0.5" value="-2"><output id="m4Po"></output></div>
+    <div class="btns"><button class="btn play" id="m4play" type="button">▶ Monter en température</button></div>
+    <svg id="m4svg" role="img" aria-label="Pressions de vapeur des éléments en fonction de la température, comparées à la pression du four"></svg>
+    <div class="readout" id="m4r"></div>
+    <p class="status" id="m4msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">choisir et régler une atmosphère</span></div>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Atmosphère</th><th>Composition</th><th>Ce qu'elle réduit</th><th>Emplois typiques</th></tr>
+      <tr><td>Gaz exothermique</td><td>combustion presque complète du gaz naturel : azote, CO<sub>2</sub>, un peu de CO, de H<sub>2</sub> et de vapeur d'eau</td><td>oxydes de cuivre, faiblement ceux du fer</td><td>brasage au cuivre ou au laiton des aciers doux, bon marché</td></tr>
+      <tr><td>Gaz endothermique</td><td>≈ 40 % H<sub>2</sub>, 20 % CO, 40 % N<sub>2</sub></td><td>oxydes de fer et de cuivre</td><td>aciers ; attention à la carburation ou à la décarburation</td></tr>
+      <tr><td>Ammoniac dissocié</td><td>75 % H<sub>2</sub>, 25 % N<sub>2</sub></td><td>jusqu'à Cr<sub>2</sub>O<sub>3</sub> s'il est très sec</td><td>inox, aciers alliés, nickel</td></tr>
+      <tr><td>Hydrogène sec</td><td>H<sub>2</sub>, point de rosée −40 à −60 °C</td><td>jusqu'à Cr<sub>2</sub>O<sub>3</sub>, pas Al<sub>2</sub>O<sub>3</sub> ni TiO<sub>2</sub></td><td>inox, superalliages, brasage au cuivre de l'inox</td></tr>
+      <tr><td>Azote sec</td><td>N<sub>2</sub>, peu d'oxygène, point de rosée ≤ −40 °C</td><td>rien : protection seulement</td><td>aluminium au four avec flux FL20 (CAB)</td></tr>
+      <tr><td>Argon</td><td>Ar</td><td>rien</td><td>titane, métaux réactifs, remplissage partiel des fours sous vide</td></tr>
+      <tr><td>Vide</td><td>10⁻² à 10⁻⁶ mbar (1 à 10⁻⁴ Pa)</td><td>rien en propre ; évite la réoxydation</td><td>inox et superalliages au nickel, titane, aluminium avec magnésium</td></tr>
+    </table></div>
+    <h4>Évaporation sous vide</h4>
+    <p>Un élément s'évapore dès que sa <b>pression de vapeur</b> p<sub>v</sub> à la température de brasage dépasse la pression du four. Sa vitesse d'évaporation maximale, dans un vide parfait, suit la loi de Hertz-Knudsen :</p>
+    <div class="fx"><div class="big"><span class="eps">J</span> = <span class="eps">p<sub>v</sub></span> √(<span class="mat">M</span>/(2π R <span class="sig">T</span>))</div><p class="cap">J : masse évaporée par unité de surface et de temps (kg/(m²·s)) ; p<sub>v</sub> en Pa (pascal) ; M : masse molaire (kg/mol) ; R = 8,314 J/(mol·K) ; T en kelvins ; √ : racine carrée</p></div>
+    <p><b>Exemple : le cuivre à 1 100 °C.</b> Sa pression de vapeur vaut environ 0,08 Pa, au-dessus d'un vide de 10⁻² Pa. <span class="m">J ≈ 0,083 × √(0,0635/(2π × 8,314 × 1 373)) ≈ 7,8 × 10⁻⁵ kg/(m²·s)</span>, soit environ 0,28 kg/(m²·h) : une surface de cuivre libre perdrait de l'ordre de 30 µm par heure, et le métal évaporé se redépose sur les parois froides du four. On brase donc le cuivre sous une <b>pression partielle</b> d'argon ou d'azote, de l'ordre du millibar, qui freine fortement l'évaporation. Le même raisonnement interdit le zinc et le cadmium sous vide (des kilopascals de pression de vapeur à 700 °C) et impose une pression partielle pour les apports et les aciers riches en manganèse.</p>
+    <h4>Trois cas à connaître</h4>
+    <ul>
+      <li><b>Le cuivre à oxygène sous hydrogène.</b> Le cuivre électrolytique ordinaire (Cu-ETP) contient quelques centièmes de pour cent d'oxygène, sous forme de petites inclusions d'oxyde Cu<sub>2</sub>O. Chauffé sous hydrogène au-delà de 400 °C environ, il absorbe de l'hydrogène qui réduit ces inclusions en <b>vapeur d'eau</b>, emprisonnée aux joints de grains : le métal se fissure ou se boursoufle. On brase sous hydrogène des cuivres désoxydés au phosphore (Cu-DHP, celui des tubes) ou sans oxygène (Cu-OF).</li>
+      <li><b>L'aluminium sous vide.</b> L'apport Al-Si contient environ 1 à 1,5 % de magnésium. Vers 550 à 600 °C, le magnésium s'évapore (pression de vapeur de l'ordre de 100 Pa), capte l'oxygène et la vapeur d'eau résiduels, et désorganise la pellicule d'alumine : la brasure mouille sans flux. Le four doit être très étanche (vide de l'ordre de 10⁻⁵ mbar).</li>
+      <li><b>L'inox sous vide.</b> Le film de Cr<sub>2</sub>O<sub>3</sub> ne se dissocie pas (chapitre 2), mais le vide empêche qu'il s'épaississe, et le carbone de l'acier, le bore et le silicium des apports au nickel en viennent à bout : c'est le procédé de référence des échangeurs en inox et des pièces de turbines.</li>
+    </ul>
+    <div class="tip">💡 <b>Le point de rosée se mesure</b> : un hygromètre à miroir refroidi ou à capteur céramique, branché sur le four en sortie de zone chaude, vérifie le gaz en continu. Un point de rosée qui remonte signale une fuite d'air, une entrée d'eau ou des pièces mal séchées.</div>
+    <div class="warn"><b>⚠️ Piège : inerte n'est pas réducteur.</b> L'azote et l'argon protègent une surface déjà propre ; ils ne retirent pas un oxyde présent. Sans flux, une pièce oxydée le reste sous azote.</div>
+    <div class="warn"><b>⚠️ Piège : la sécurité des gaz.</b> L'hydrogène forme avec l'air des mélanges explosifs entre 4 et 75 % environ : on purge le four à l'azote avant de l'introduire et avant d'ouvrir. Les gaz exothermiques et endothermiques contiennent du monoxyde de carbone, toxique.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « sous vide, ni zinc ni cadmium »</b>. Et pour le cuivre : « cuivre à oxygène et hydrogène, c'est le pop-corn ».</div>
+    <div class="weld"><b>🔥 Trois fours de série</b>
+      <p>Le <b>four continu à bande</b>, sous mélange azote-hydrogène, brase au cuivre des milliers de pièces d'acier par heure. Le <b>four sous vide</b>, en charges, sert l'aéronautique, l'inox et les superalliages, avec des cycles de plusieurs heures. Le <b>four CAB</b>, sous azote très pur avec flux FL20, produit les radiateurs et les condenseurs en aluminium des voitures. Le cours 3 détaille ces procédés.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c5">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">5</div>
+    <div class="c-title"><h2>Les apports de brasage fort</h2><p>À chaque couple de matériaux, son apport</p></div>
+    <div class="c-img"><span class="ico">🔑</span><span><small>Image à retenir</small>Le trousseau de clés : une clé par serrure. Aluminium-silicium pour l'aluminium, cuivre-phosphore pour le cuivre, argent presque partout, nickel pour le chaud</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le trousseau</span></div>
+    <p>L'ISO 17672 classe les apports de brasage fort en familles, désignées par leur élément principal et un numéro :</p>
+    <ul>
+      <li><b>Al</b>, aluminium-silicium, vers 580 à 615 °C : l'aluminium et ses alliages ;</li>
+      <li><b>Ag</b>, alliages d'argent avec du cuivre, du zinc, de l'étain, parfois du manganèse et du nickel, vers 620 à 900 °C : la famille universelle (cuivre, laiton, aciers, inox, carbures), au chalumeau ou par induction avec un flux ;</li>
+      <li><b>CuP</b>, cuivre-phosphore, avec ou sans argent, vers 645 à 890 °C : le cuivre, sans flux, et ses alliages avec flux. <b>Jamais</b> sur l'acier ni sur le nickel ;</li>
+      <li><b>Cu</b>, cuivre pur et laitons, vers 870 à 1 085 °C : le cuivre pur au four pour les aciers, les laitons au chalumeau ;</li>
+      <li><b>Ni</b> (et Co), nickel avec du chrome, du bore, du silicium ou du phosphore, vers 900 à 1 150 °C : inox et superalliages, sous vide, pour le service à chaud ;</li>
+      <li><b>Au, Pd</b>, métaux précieux : aéronautique, vide, électronique, quand la corrosion ou la pureté l'exigent.</li>
+    </ul>
+    <p>Les apports se présentent en baguettes nues ou enrobées de flux, en fils, en <b>préformes</b> (anneaux, rondelles découpées à la forme du joint), en feuillards, en poudres, en pâtes (poudre, liant et parfois flux), et pour l'aluminium en <b>tôles plaquées</b> : une tôle d'alliage d'aluminium revêtue, par laminage, d'une fine couche d'apport Al-Si.</p>
+    <p>Les apports au <b>cadmium</b>, autrefois appréciés pour leur bas point de fusion, sont interdits dans l'Union européenne : leurs fumées sont très toxiques.</p>
+  </div>
+
+  <div class="lab" id="m5">
+    <p class="lab-h">Manipulation 5 : choisir l'apport</p>
+    <p class="lab-sub">Choisis le couple de matériaux, le mode de chauffage et la température de service. Les barres placent l'intervalle de fusion de chaque famille ; le petit trait marque sa température de service maximale indicative. Les familles adaptées s'allument, la mieux placée porte une étoile. Règles simplifiées, à confronter aux fiches techniques.</p>
+    <div class="btns" id="m5pair">
+      <button class="btn on" data-k="cucu" type="button">Cuivre-cuivre</button>
+      <button class="btn" data-k="culaiton" type="button">Cuivre-laiton</button>
+      <button class="btn" data-k="cuacier" type="button">Cuivre-acier</button>
+      <button class="btn" data-k="acier" type="button">Acier-acier</button>
+      <button class="btn" data-k="inox" type="button">Inox-inox</button>
+      <button class="btn" data-k="carbure" type="button">Carbure-acier</button>
+      <button class="btn" data-k="alu" type="button">Aluminium</button>
+      <button class="btn" data-k="nisa" type="button">Superalliage de nickel</button>
+    </div>
+    <div class="btns" id="m5proc">
+      <button class="btn on" data-k="flux" type="button">Chalumeau ou induction, sous flux</button>
+      <button class="btn" data-k="atm" type="button">Four sous atmosphère</button>
+      <button class="btn" data-k="vide" type="button">Four sous vide</button>
+    </div>
+    <div class="ctrl"><label for="m5S">Température de service</label><input type="range" id="m5S" class="r-sig" min="-200" max="1000" step="10" value="60"><output id="m5So"></output></div>
+    <div class="btns"><button class="btn play" id="m5play" type="button">▶ Balayer la température de service</button></div>
+    <svg id="m5svg" role="img" aria-label="Intervalles de fusion des familles d'apports de brasage fort, avec les familles adaptées au cas choisi"></svg>
+    <div class="readout" id="m5r"></div>
+    <p class="status" id="m5msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">désignations, rôles et interdits</span></div>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Famille (ISO 17672)</th><th>Exemples</th><th>Fusion</th><th>Matériaux, procédé</th><th>À savoir</th></tr>
+      <tr><td>Al</td><td>Al 112 (Al-Si12), tôles plaquées 4343, 4045</td><td class="n">577 → 582 à 613 °C</td><td>aluminium ; flux FL ou four CAB, vide avec Al-Si-Mg</td><td>fenêtre étroite sous le solidus des alliages de base</td></tr>
+      <tr><td>Ag</td><td>Ag 134, Ag 145, Ag 155 (Ag-Cu-Zn-Sn)</td><td class="n">630 → 730 °C</td><td>cuivre, laiton, aciers ; flux FH10</td><td>contient du zinc : pas sous vide ; service ≲ 200 °C</td></tr>
+      <tr><td>Ag (au Mn, Ni)</td><td>Ag 449 (Ag49CuZnMnNi)</td><td class="n">680 → 705 °C</td><td>carbures, inox, outils ; flux FH12</td><td>le manganèse et le nickel améliorent le mouillage des carbures</td></tr>
+      <tr><td>Ag (sans zinc)</td><td>Ag 272 (Ag72Cu28)</td><td class="n">779 °C</td><td>four sous atmosphère ou vide, électronique de puissance</td><td>eutectique, sans élément volatil</td></tr>
+      <tr><td>CuP</td><td>CuP 179 (Cu-P6), CuP 284 (Cu80Ag15P5)</td><td class="n">645 à 710 → 800 à 890 °C</td><td>cuivre sans flux ; laiton avec flux FH10</td><td>phosphures fragiles sur Fe et Ni ; ni milieux soufrés ; service ≈ −50 à +150 °C</td></tr>
+      <tr><td>Cu</td><td>Cu 141 (Cu pur), laitons CuZn40</td><td class="n">≈ 870 → 1 085 °C</td><td>aciers au four (cuivre pur) ; chalumeau et soudobrasage (laiton, flux FH21)</td><td>Cu pur : jeu quasi nul ; laiton : zinc volatil</td></tr>
+      <tr><td>Ni</td><td>Ni 620 (BNi-2 : Ni-Cr-Si-B-Fe), Ni-Cr-P</td><td class="n">≈ 890 → 1 135 °C</td><td>inox, superalliages ; vide ou hydrogène sec</td><td>service à chaud, bonne tenue à la corrosion ; borures si maintien trop court</td></tr>
+      <tr><td>Au, Pd</td><td>Au82Ni18, Ag-Cu-Pd</td><td class="n">≈ 800 → 1 000 °C</td><td>aéronautique, tubes électroniques, vide</td><td>chers, très ductiles, sans éléments volatils</td></tr>
+    </table></div>
+    <p class="mut" style="font-size:.9rem">Intervalles et températures de service indicatifs ; ceux d'un produit sont sur sa fiche technique.</p>
+    <p><b>Trois systèmes de désignation coexistent.</b> L'<b>ISO 17672</b> donne la famille et un numéro (CuP 284). L'<b>ISO 3677</b> décrit la composition et l'intervalle de fusion : B-Cu80AgP-645/800 (B pour <i>brazing</i>, brasage fort). La spécification américaine <b>AWS A5.8</b> (<i>American Welding Society</i>) emploie un préfixe B et un numéro d'ordre : BCuP-5 pour ce même alliage, BAg-22 pour l'Ag 449, BNi-2 pour le Ni 620.</p>
+    <h4>Le cadmium, un interdit réglementaire</h4>
+    <p>Le règlement européen REACH (enregistrement, évaluation et autorisation des substances chimiques), à l'entrée 23 de son annexe XVII, interdit depuis le 10 décembre 2011 de mettre sur le marché ou d'utiliser des apports de brasage fort contenant 0,01 % de cadmium ou plus. Les seules dérogations concernent la défense, l'aérospatiale et des usages justifiés par la sécurité. Un vieux stock d'apports au cadmium ne doit plus servir.</p>
+    <h4>Choisir, en cinq questions</h4>
+    <ol>
+      <li>Quels matériaux ? Les incompatibilités tranchent d'abord : cuivre-phosphore exclu sur l'acier et le nickel, Al-Si réservé à l'aluminium.</li>
+      <li>Quel procédé ? Sous vide, pas d'élément volatil (zinc, cadmium) ; au four sous atmosphère, des apports sans flux.</li>
+      <li>Quelle température de brasage les pièces supportent-elles ? Solidus du métal de base, revenu ou recuit d'un acier traité, d'un cuivre écroui.</li>
+      <li>Quelle température et quel milieu de service ? Fluage, oxydation, corrosion (eau, soufre, milieu marin).</li>
+      <li>Quel coût ? Parmi les apports à l'argent, prendre la teneur en argent juste nécessaire au point de fusion et à la fluidité visés.</li>
+    </ol>
+    <div class="tip">💡 <b>Le cuivre-phosphore du frigoriste</b> : sur le cuivre, le phosphore réduit l'oxyde ; on brase les tubes de cuivre en CuP sans flux, ce qui évite les résidus dans le circuit. Dès qu'une pièce de laiton est en jeu, il faut un flux ; dès qu'une pièce d'acier apparaît, on passe aux apports à l'argent.</div>
+    <div class="warn"><b>⚠️ Piège : l'apport « qui marche partout ».</b> Un apport à l'argent au zinc, parfait au chalumeau, s'évapore sous vide et contamine le four ; le même sur l'inox au contact de l'eau peut subir une corrosion à l'interface (cours 4). L'apport se choisit pour le couple, le procédé et le service, jamais par habitude.</div>
+    <div class="warn"><b>⚠️ Piège : le cuivre pur sur une pièce en cuivre.</b> Un apport ne peut pas fondre plus haut que le métal de base. Le cuivre pur (1 083 °C) brase l'acier ; il ne brase pas le cuivre.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « Al pour l'alu, P pour le cuivre, Ag partout, Ni pour le chaud »</b>. Et pour l'interdit : « CuP sur fer, joint de verre ».</div>
+    <div class="weld"><b>🔥 Doser et automatiser</b>
+      <p>En série, l'apport arrive sous forme dosée : anneaux posés à l'entrée du joint avant la chauffe, pâtes déposées à la seringue par un robot, feuillards découpés, tôles plaquées pour les échangeurs en aluminium. La quantité juste suffisante limite l'érosion (cours 1), le coût et les coulures ; elle rend aussi le résultat reproductible, ce que recherche le mode opératoire.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c6">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">6</div>
+    <div class="c-title"><h2>Les alliages de brasage tendre</h2><p>De l'étain-plomb au sans-plomb</p></div>
+    <div class="c-img"><span class="ico">🕯️</span><span><small>Image à retenir</small>La bougie tiède : solide, mais elle s'affaisse lentement sous son propre poids. À 20 °C, la brasure à l'étain est déjà « chaude »</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la bougie tiède</span></div>
+    <p>Les alliages de brasage tendre sont presque tous à base d'<b>étain</b> (Sn). L'étain-plomb eutectique (63 % Sn, 37 % Pb, 183 °C) a régné pendant un siècle : bas point de fusion, excellent mouillage, peu cher. Deux réglementations l'ont écarté :</p>
+    <ul>
+      <li>en <b>électronique</b>, la directive européenne RoHS (restriction des substances dangereuses) limite le plomb à 0,1 % depuis 2006 ;</li>
+      <li>pour l'<b>eau potable</b>, le plomb est proscrit : les raccords en cuivre se brasent à l'étain-cuivre ou à l'étain-argent.</li>
+    </ul>
+    <p>Les alliages <b>sans plomb</b> les plus courants sont l'étain-argent-cuivre SAC305 (217 à 220 °C), l'étain-cuivre Sn99,3Cu0,7 (227 °C) et, en plomberie, le Sn97Cu3. Ils fondent 30 à 40 °C plus haut que l'étain-plomb.</p>
+    <p>Leur grande faiblesse : ils fondent si bas qu'à température ambiante, ils sont déjà à plus de la moitié de leur température de fusion, comptée en kelvins. Comme la cire d'une bougie tiède, ils <b>fluent</b> : sous une charge permanente, ils se déforment lentement, et sous des variations de température répétées, ils se fatiguent. Un joint brasé tendre <b>ne doit pas porter de charge mécanique permanente</b> : on assure la tenue mécanique autrement (emboîtement, sertissage, fixation du composant) et la brasure assure l'étanchéité et la conduction.</p>
+  </div>
+
+  <div class="lab" id="m6">
+    <p class="lab-h">Manipulation 6 : la température homologue</p>
+    <p class="lab-sub">La <span class="eps">température homologue</span> T/T<sub>f</sub> compare la température de service à la température de fusion, toutes deux en kelvins. Au-delà de 0,4 à 0,5, le fluage devient sensible. Règle la température de service et la durée de vie, ou choisis un cas d'usage : les barres comparent les alliages tendres à l'aluminium, au cuivre et à l'acier, et la manipulation estime la croissance de l'intermétallique d'un joint SAC305 sur cuivre. Croissance de l'intermétallique : modèle pédagogique, calé sur des ordres de grandeur publiés.</p>
+    <div class="btns" id="m6pre">
+      <button class="btn on" data-k="bureau" type="button">Électronique de bureau (40 °C, 5 ans)</button>
+      <button class="btn" data-k="moteur" type="button">Calculateur sous capot (125 °C, 15 ans)</button>
+      <button class="btn" data-k="froid" type="button">Équipement au grand froid (−40 °C)</button>
+      <button class="btn" data-k="eau" type="button">Eau chaude sanitaire (60 °C, 30 ans)</button>
+    </div>
+    <div class="ctrl"><label for="m6T">Température de service <span class="sig">T</span></label><input type="range" id="m6T" class="r-sig" min="-55" max="150" step="1" value="40"><output id="m6To"></output></div>
+    <div class="ctrl"><label for="m6y">Durée de service</label><input type="range" id="m6y" class="r-mat" min="0" max="30" step="1" value="5"><output id="m6yo"></output></div>
+    <div class="btns"><button class="btn play" id="m6play" type="button">▶ Faire vieillir le joint</button></div>
+    <svg id="m6svg" role="img" aria-label="Températures homologues des alliages de brasage tendre comparées à celles de l'aluminium, du cuivre et de l'acier"></svg>
+    <div class="readout" id="m6r"></div>
+    <p class="status" id="m6msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">choisir un alliage d'étain</span></div>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Alliage (ISO 9453)</th><th>Fusion</th><th>Emplois</th></tr>
+      <tr><td>Sn63Pb37 (n° 101)</td><td class="n">183 °C (eutectique)</td><td>électronique historique, dérogations (aéronautique, défense)</td></tr>
+      <tr><td>Sn96,5Ag3Cu0,5, dit SAC305 (n° 711)</td><td class="n">217 → 220 °C</td><td>électronique sans plomb, refusion</td></tr>
+      <tr><td>Sn99,3Cu0,7 (n° 401)</td><td class="n">227 °C (eutectique)</td><td>brasage à la vague, câblage, bon marché</td></tr>
+      <tr><td>Sn97Cu3 (n° 402)</td><td class="n">227 °C → pâteux au-delà ; brasé vers 230 à 250 °C</td><td>plomberie : eau potable, chauffage jusqu'à 110 °C environ</td></tr>
+      <tr><td>Sn96,5Ag3,5</td><td class="n">221 °C (eutectique)</td><td>plomberie, électronique, meilleure tenue au fluage</td></tr>
+      <tr><td>Sn42Bi58</td><td class="n">138 °C (eutectique)</td><td>composants sensibles à la chaleur, brasage en deux étapes</td></tr>
+      <tr><td>Pb95Sn5</td><td class="n">≈ 300 → 314 °C</td><td>haute température (électronique de puissance), dérogation RoHS des alliages à plus de 85 % de plomb</td></tr>
+      <tr><td>Au80Sn20</td><td class="n">280 °C (eutectique)</td><td>scellements hermétiques, optoélectronique, sans flux</td></tr>
+    </table></div>
+    <p class="mut" style="font-size:.9rem">Les numéros sont ceux de l'ISO 9453 ; les intervalles sont indicatifs.</p>
+    <h4>La température homologue et le fluage</h4>
+    <div class="fx"><div class="big"><span class="eps">T<sub>h</sub></span> = <span class="frac"><span><span class="sig">T</span></span><span><span class="mat">T<sub>f</sub></span></span></span> &nbsp;(en kelvins)</div><p class="cap">T : température de service ; T<sub>f</sub> : température de fusion (le solidus pour un alliage) ; T(K) = T(°C) + 273,15</p></div>
+    <p>Le fluage (déformation lente sous charge constante) devient sensible au-delà de T<sub>h</sub> ≈ 0,4 à 0,5. À 20 °C : étain-plomb <span class="m">293/456 ≈ 0,64</span>, SAC305 <span class="m">293/490 ≈ 0,60</span>, cuivre <span class="m">293/1 358 ≈ 0,22</span>, acier ≈ 0,17. Une brasure tendre à la température ambiante est donc dans la même situation qu'un acier à plus de 800 °C. À 100 °C, l'étain-plomb atteint 0,82.</p>
+    <h4>Les intermétalliques vieillissent</h4>
+    <p>La couche Cu<sub>6</sub>Sn<sub>5</sub> et Cu<sub>3</sub>Sn née au brasage (cours 1) continue de croître en service, à l'état solide, comme la racine du temps : e² = e<sub>0</sub>² + k·t, où e est l'épaisseur, e<sub>0</sub> sa valeur initiale, t le temps et k une constante de croissance qui suit une loi d'Arrhenius, k = k<sub>0</sub>·exp(−Q/RT). L'énergie d'activation Q publiée est de l'ordre de 80 à 85 kJ/mol. Avec une couche initiale de 2 µm et une croissance calée sur 5 µm après 1 000 h à 150 °C, on trouve environ 2 µm (inchangé) après 10 ans à 25 °C, 9 µm après 10 ans à 100 °C, et plus de 20 µm à 125 °C. La chaleur de service vieillit les joints.</p>
+    <h4>Deux curiosités de l'étain, sérieuses</h4>
+    <ul>
+      <li><b>La peste de l'étain</b> : sous 13,2 °C, l'étain blanc (β) peut se transformer en étain gris (α), une poudre friable dont le volume est supérieur d'environ 26 %. La transformation est très lente, plus rapide vers −30 à −40 °C, et freinée par de petites additions de bismuth, d'antimoine ou de plomb. Les alliages très riches en étain y sont exposés au grand froid.</li>
+      <li><b>Les moustaches</b> (<i>whiskers</i>) : de fins filaments d'étain, de quelques micromètres de diamètre mais parfois longs de plusieurs millimètres, poussent spontanément sur les revêtements d'étain pur soumis à des contraintes de compression. Ils provoquent des courts-circuits en électronique. Le plomb les freinait ; on les combat par des sous-couches de nickel, des recuits et des étains mats.</li>
+    </ul>
+    <div class="tip">💡 <b>Une brasure tendre étanche, une forme qui tient</b> : en plomberie, la longueur d'emboîtement des raccords capillaires donne une grande surface brasée, et c'est elle qui porte la pression (cours 4) ; en électronique, ce sont les pattes et la colle qui tiennent le composant lourd.</div>
+    <div class="warn"><b>⚠️ Piège : les degrés Celsius dans T/T<sub>f</sub>.</b> 20/183 ≈ 0,11 laisserait croire l'étain-plomb très loin de sa fusion. En kelvins, le rapport vaut 0,64. Toujours convertir avant de diviser.</div>
+    <div class="warn"><b>⚠️ Piège : le sans-plomb, ce n'est pas qu'un changement d'alliage.</b> 30 à 40 °C de plus à la fusion, c'est un profil de refusion plus chaud pour les composants et les cartes, des flux adaptés, et une dissolution plus forte du cuivre des pistes et des bains de vague (cours 3).</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « à 20 °C, l'étain est déjà chaud »</b>. Et pour le froid : « sous 13 °C, la peste guette ».</div>
+    <div class="weld"><b>🔥 Où le brasage tendre s'arrête</b>
+      <p>Faible résistance (quelques dizaines de MPa en cisaillement), fluage à l'ambiante, tenue limitée en température : dès que la pression, la température ou la sécurité l'exigent (gaz, fluides frigorigènes, chauffage à haute température), on passe au brasage fort. Les règles de l'art des installations précisent, pour chaque fluide, le type de brasage admis.</p>
+    </div>
+  </div>
+</div>
+</section>
+<section class="chap" id="exos">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✎</div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Six exercices et un défi, de la gamme de préparation au four à hydrogène</p></div>
+    <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de musculation : on ne progresse qu'en soulevant soi-même</span></div>
+  </div>
+  <div class="lv lv1"><div class="lv-h">👁 Mode d'emploi <span class="tag">températures en kelvins dans les formules</span></div>
+    <p>Cherche chaque question sur papier avant d'ouvrir la correction. Écris la formule littérale, puis les valeurs avec leurs unités. Les manipulations 1 à 6 permettent de vérifier tes résultats ; le défi se rejoue entièrement dans la manipulation 2.</p>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 1 : trois gammes de préparation <span class="lvtag">N1 · chapitre 1</span></h4>
+    <p class="q"><b>a)</b> Des tubes de cuivre sortent du stock, ternis, encore gras de l'huile de coupe. Quelle gamme avant un brasage à l'argent sous flux ?</p>
+    <p class="q"><b>b)</b> Des pièces en inox ont été décapées à l'acide il y a deux jours. Faut-il recommencer le décapage avant un brasage au chalumeau ? Qu'est-ce qui compte vraiment ?</p>
+    <p class="q"><b>c)</b> Un opérateur brosse soigneusement une tôle d'aluminium, puis la brase trois heures plus tard au chalumeau avec un flux FH10. La brasure perle. Pourquoi ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> Dégraisser d'abord (solvant ou lessive alcaline), car un brossage sur une pièce grasse étale l'huile ; puis brosser ou poncer la ternissure ; rincer et sécher ; assembler avec des gants propres ; braser dans les heures qui suivent, avec un flux FH10.</p>
+      <p><b>b)</b> Le film passif de l'inox se reforme en une fraction de seconde : décaper de nouveau ne changerait presque rien à l'oxyde. En revanche, il faut vérifier que les pièces sont propres (dégraissage, pas de résidus d'acide). Ce qui compte, c'est le <b>flux adapté à l'oxyde de chrome</b> (FH12, au bore), ou un four sous hydrogène sec ou sous vide.</p>
+      <p><b>c)</b> Deux raisons. L'alumine se reforme aussitôt après le brossage : trois heures plus tard, comme trois secondes plus tard, la surface est couverte de son film natif. Surtout, un flux FH10 est fait pour les métaux « lourds » et ne dissout pas l'alumine : il faut un flux de classe <b>FL</b> (FL10 ou FL20) et un apport Al-Si.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 2 : ce que l'hydrogène réduit <span class="lvtag">N2 · chapitre 2</span></h4>
+    <p>Données (kJ par mole d'O<sub>2</sub>, T en K) : Cr<sub>2</sub>O<sub>3</sub> : ΔG° = −746,8 + 0,1703·T ; FeO : −529,8 + 0,1302·T ; Al<sub>2</sub>O<sub>3</sub> : −1 117,1 + 0,2088·T ; H<sub>2</sub>O : −495,0 + 0,1117·T. R = 8,314 J/(mol·K). Points de rosée : 551 ppm ↔ −26 °C ; 55 ppm ↔ −47 °C ; 25 ppm ↔ −53 °C.</p>
+    <p class="q"><b>a)</b> À 1 100 °C, quel rapport p<sub>H₂O</sub>/p<sub>H₂</sub> maximal permet de réduire Cr<sub>2</sub>O<sub>3</sub> ? Quel point de rosée faut-il dans l'hydrogène pur, puis dans N<sub>2</sub> + 10 % H<sub>2</sub> ?</p>
+    <p class="q"><b>b)</b> Même question à 800 °C, dans l'hydrogène pur. Que faut-il en conclure pour le refroidissement ?</p>
+    <p class="q"><b>c)</b> À 1 100 °C, jusqu'à quelle proportion de vapeur d'eau l'hydrogène réduit-il encore l'oxyde de fer FeO ?</p>
+    <p class="q"><b>d)</b> L'alumine peut-elle être réduite par l'hydrogène à 600 °C ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> À 1 373 K : <span class="m">ΔG°(Cr<sub>2</sub>O<sub>3</sub>) = −746,8 + 0,1703 × 1 373 ≈ −513,0 kJ</span> ; <span class="m">ΔG°(H<sub>2</sub>O) = −495,0 + 0,1117 × 1 373 ≈ −341,6 kJ</span>. <span class="m">(p<sub>H₂O</sub>/p<sub>H₂</sub>)<sub>max</sub> = exp(−171 400/(2 × 8,314 × 1 373)) ≈ 5,5 × 10⁻⁴</span>. Dans H<sub>2</sub> pur : 551 ppm, soit un point de rosée inférieur à <b>−26 °C</b>. Dans N<sub>2</sub> + 10 % H<sub>2</sub> : p<sub>H₂</sub> = 0,1 atm, donc 55 ppm, soit <b>−47 °C</b>.</p>
+      <p><b>b)</b> À 1 073 K : <span class="m">ΔG° ≈ −564,1 − (−375,1) = −189,0 kJ</span> ; <span class="m">(p<sub>H₂O</sub>/p<sub>H₂</sub>)<sub>max</sub> = exp(−189 000/(2 × 8,314 × 1 073)) ≈ 2,5 × 10⁻⁵</span>, soit 25 ppm et <b>−53 °C</b>. Plus la température baisse, plus il faut un gaz sec : un inox brasé à 1 100 °C dans un gaz à −40 °C se réoxyde en refroidissant, d'où un refroidissement rapide sous un gaz très sec.</p>
+      <p><b>c)</b> <span class="m">ΔG°(FeO) ≈ −351,0 kJ</span> ; <span class="m">(p<sub>H₂O</sub>/p<sub>H₂</sub>)<sub>max</sub> = exp(−9 400/(2 × 8,314 × 1 373)) ≈ 0,66</span>. La vapeur d'eau peut atteindre <span class="m">0,66/1,66 ≈ 40 %</span> du mélange : l'oxyde de fer se réduit même dans un gaz très humide.</p>
+      <p><b>d)</b> À 873 K : <span class="m">ΔG°(Al<sub>2</sub>O<sub>3</sub>) ≈ −934,8 kJ</span>, <span class="m">ΔG°(H<sub>2</sub>O) ≈ −397,5 kJ</span> ; <span class="m">(p<sub>H₂O</sub>/p<sub>H₂</sub>)<sub>max</sub> ≈ exp(−537 300/14 516) ≈ 8 × 10⁻¹⁷</span>. Aucun gaz industriel n'est aussi sec : <b>non</b>. D'où le flux, ou le vide avec du magnésium.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 3 : choisir le flux <span class="lvtag">N1 · chapitre 3</span></h4>
+    <p>Modèle de la manipulation 3 : un flux FH10 reste efficace environ 4 minutes au-dessus de 550 °C.</p>
+    <p class="q"><b>a)</b> Ag 155 sur cuivre, température de travail 680 °C, flux FH10, maintien de 15 s. Au chalumeau, la pièce chauffe à 5 °C/s ; dans un four à l'air, à 0,2 °C/s. Le flux tient-il dans les deux cas ?</p>
+    <p class="q"><b>b)</b> Un soudobrasage au laiton CuZn40 se travaille vers 910 °C. Peut-on garder le FH10 ? Lequel prendre ?</p>
+    <p class="q"><b>c)</b> Quel flux pour braser une plaquette de carbure avec l'Ag 449 ?</p>
+    <p class="q"><b>d)</b> Quel flux pour braser de l'aluminium avec un Al-Si12 ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> Temps au-dessus de 550 °C : au chalumeau, <span class="m">(680 − 550)/5 + 15 = 41 s</span>, bien moins que 4 min : le flux tient. Au four à l'air, <span class="m">(680 − 550)/0,2 + 15 = 665 s</span>, soit 11 min : le flux s'épuise avant la fin. Pour une chauffe lente, on passe à un four sous atmosphère protectrice (sans flux), ou à une chauffe rapide (induction).</p>
+      <p><b>b)</b> Non : le FH10 n'est actif que jusqu'à 800 °C, il serait brûlé avant que le laiton coule. On prend un <b>FH21</b> (750 à 1 100 °C), dont les résidus ne sont pas corrosifs mais s'enlèvent mécaniquement.</p>
+      <p><b>c)</b> Un <b>FH12</b> (550 à 850 °C), qui contient du bore élémentaire pour attaquer les oxydes des carbures et des aciers alliés.</p>
+      <p><b>d)</b> Un flux de classe <b>FL</b> : FL10 (chlorures et fluorures, résidus corrosifs, jusqu'à 3 % de magnésium) ou FL20 (fluorures non hygroscopiques, résidus non corrosifs, magnésium limité), qui fond juste sous l'apport.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 4 : évaporation sous vide <span class="lvtag">N2 · chapitre 4</span></h4>
+    <p>Pressions de vapeur : zinc à 700 °C ≈ 7,8 kPa ; cuivre à 1 100 °C ≈ 0,083 Pa ; magnésium à 600 °C ≈ 130 Pa. Masse molaire du cuivre : 0,0635 kg/mol ; masse volumique : 8 960 kg/m³.</p>
+    <p class="q"><b>a)</b> Un apport Ag-Cu-Zn peut-il être brasé à 700 °C dans un four sous un vide de 10⁻² Pa (10⁻⁴ mbar) ?</p>
+    <p class="q"><b>b)</b> Calcule la vitesse maximale d'évaporation du cuivre à 1 100 °C dans un vide parfait, en kg/(m²·h) puis en µm/h. Quelle parade ?</p>
+    <p class="q"><b>c)</b> Pourquoi, au contraire, se félicite-t-on que le magnésium s'évapore lors du brasage sous vide de l'aluminium ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">7 800 Pa / 10⁻² Pa ≈ 8 × 10⁵</span> : la pression de vapeur du zinc dépasse de près d'un million de fois celle du four. Le zinc s'évapore massivement, l'apport change de composition, et le four est pollué. <b>Non</b> : sous vide, on prend un apport sans zinc (Ag72Cu28, par exemple).</p>
+      <p><b>b)</b> <span class="m">J = p<sub>v</sub>√(M/(2πRT)) = 0,083 × √(0,0635/(2π × 8,314 × 1 373)) ≈ 7,8 × 10⁻⁵ kg/(m²·s)</span>, soit <span class="m">≈ 0,28 kg/(m²·h)</span>, et <span class="m">0,28/8 960 ≈ 3,1 × 10⁻⁵ m/h ≈ 31 µm/h</span>. Parade : brasage sous une pression partielle d'argon ou d'azote, de l'ordre du millibar, qui freine l'évaporation.</p>
+      <p><b>c)</b> Le magnésium (pression de vapeur ≈ 130 Pa à 600 °C) s'évapore de l'apport, capte l'oxygène et la vapeur d'eau résiduels (sa droite est tout en bas de l'échelle d'Ellingham) et désorganise la pellicule d'alumine : la brasure mouille l'aluminium sans flux.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 5 : six joints, six apports <span class="lvtag">N1 · chapitre 5</span></h4>
+    <p>Propose un apport (famille et exemple de désignation) et, le cas échéant, un flux ou une atmosphère.</p>
+    <p class="q"><b>a)</b> Tubes de cuivre d'un circuit frigorifique, brasés au chalumeau.</p>
+    <p class="q"><b>b)</b> Raccord en laiton sur un tube de cuivre.</p>
+    <p class="q"><b>c)</b> Tube d'acier dans une bride en cuivre.</p>
+    <p class="q"><b>d)</b> Plaquette de carbure sur un corps d'outil en acier.</p>
+    <p class="q"><b>e)</b> Échangeur à plaques en inox, au four sous vide, pour de l'eau à 200 °C.</p>
+    <p class="q"><b>f)</b> Radiateur automobile en aluminium, en grande série.</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> Cuivre-phosphore, par exemple <b>CuP 179</b> ou <b>CuP 284</b> (à 15 % d'argent, plus fluide et plus ductile), <b>sans flux</b> : le phosphore réduit l'oxyde de cuivre et le circuit reste propre.</p>
+      <p><b>b)</b> CuP 284 <b>avec un flux FH10</b> (le laiton forme de l'oxyde de zinc), ou un apport à l'argent Ag 145 ou Ag 155 avec FH10.</p>
+      <p><b>c)</b> Apport à l'argent, <b>Ag 145</b> ou <b>Ag 155</b>, avec un flux <b>FH10</b>. Pas de cuivre-phosphore, qui formerait des phosphures de fer fragiles.</p>
+      <p><b>d)</b> <b>Ag 449</b> (Ag-Cu-Zn-Mn-Ni) avec un flux <b>FH12</b> ; pour les grandes plaquettes, un apport en « sandwich » avec une âme en cuivre (cours 4).</p>
+      <p><b>e)</b> Apport au nickel <b>Ni 620 (BNi-2)</b> sous vide, sans flux ; ou cuivre pur sous pression partielle. Pas d'apport au zinc sous vide.</p>
+      <p><b>f)</b> Tôles plaquées <b>4343 ou 4045</b> (apport Al-Si laminé sur l'alliage de base), brasées au four <b>CAB</b> sous azote avec un flux <b>FL20</b>, ou sous vide avec un apport au magnésium.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 6 : la brasure tendre en service <span class="lvtag">N2 · chapitre 6</span></h4>
+    <p>Fusion : Sn63Pb37 à 183 °C ; SAC305, solidus 217 °C. Croissance de l'intermétallique d'un joint SAC305 sur cuivre (modèle de la manipulation 6) : e² = e<sub>0</sub>² + k·t, avec e<sub>0</sub> = 2 µm, k = 5,83 × 10⁻⁶ µm²/s à 150 °C et Q = 84 kJ/mol ; une année vaut 3,156 × 10⁷ s.</p>
+    <p class="q"><b>a)</b> Calcule la température homologue de l'étain-plomb à 20 °C et à 100 °C, puis celle du SAC305 à 20 °C et à 125 °C.</p>
+    <p class="q"><b>b)</b> Que vaut k à 125 °C ? Quelle épaisseur d'intermétallique après 15 ans de service à 125 °C ?</p>
+    <p class="q"><b>c)</b> Même question pour 5 ans à 40 °C. Conclus.</p>
+    <p class="q"><b>d)</b> Pourquoi un joint brasé tendre ne doit-il pas porter de charge mécanique permanente ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> Étain-plomb : <span class="m">293/456 ≈ 0,64</span> à 20 °C, <span class="m">373/456 ≈ 0,82</span> à 100 °C. SAC305 : <span class="m">293/490 ≈ 0,60</span> à 20 °C, <span class="m">398/490 ≈ 0,81</span> à 125 °C.</p>
+      <p><b>b)</b> <span class="m">k(125 °C) = 5,83 × 10⁻⁶ × exp(−(84 000/8,314)(1/398,15 − 1/423,15)) ≈ 1,3 × 10⁻⁶ µm²/s</span>. Après 15 ans (<span class="m">4,73 × 10⁸ s</span>) : <span class="m">e = √(4 + 1,3 × 10⁻⁶ × 4,73 × 10⁸) ≈ √619 ≈ 25 µm</span>.</p>
+      <p><b>c)</b> <span class="m">k(40 °C) ≈ 1,3 × 10⁻⁹ µm²/s</span> ; après 5 ans, <span class="m">e ≈ √(4 + 0,21) ≈ 2,05 µm</span> : pratiquement inchangée. Mille fois moins de croissance pour 85 °C de moins : c'est la chaleur de service qui vieillit les joints, pas le temps seul.</p>
+      <p><b>d)</b> À température ambiante, la brasure est déjà à 0,6 de sa température de fusion : elle flue sous charge permanente et se fatigue sous les variations de température. La tenue mécanique doit être assurée par la forme du joint (emboîtement, sertissage, fixation du composant).</p>
+    </div></details>
+  </div>
+
+  <div class="exo defi">
+    <h4>🏆 Défi : le four à hydrogène de l'échangeur inox <span class="lvtag">N2 · chapitres 2 et 4, à rejouer dans la manipulation 2</span></h4>
+    <p>Un échangeur en inox est brasé au BNi-2 à 1 050 °C, dans un four sous hydrogène pur dont le point de rosée est de −40 °C (127 ppm).</p>
+    <p class="q"><b>a)</b> L'oxyde de chrome est-il réduit à 1 050 °C ? Quel point de rosée maximal faut-il à cette température ?</p>
+    <p class="q"><b>b)</b> Pendant le refroidissement, sous quelle température Cr<sub>2</sub>O<sub>3</sub> redevient-il stable dans ce gaz ?</p>
+    <p class="q"><b>c)</b> Pour des raisons de sécurité, on propose de remplacer l'hydrogène pur par N<sub>2</sub> + 10 % H<sub>2</sub>, au même point de rosée. Qu'en penses-tu ? Quel point de rosée faudrait-il ?</p>
+    <p class="q"><b>d)</b> Quel point de rosée faudrait-il, dans l'hydrogène pur, pour que Cr<sub>2</sub>O<sub>3</sub> reste instable jusqu'à 700 °C ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> À 1 323 K : <span class="m">ΔG°(Cr<sub>2</sub>O<sub>3</sub>) − ΔG°(H<sub>2</sub>O) ≈ −521,5 − (−347,2) = −174,3 kJ</span>, d'où <span class="m">(p<sub>H₂O</sub>/p<sub>H₂</sub>)<sub>max</sub> = exp(−174 300/(2 × 8,314 × 1 323)) ≈ 3,6 × 10⁻⁴</span>, soit 363 ppm et un point de rosée maximal d'environ <b>−30 °C</b>. Le gaz à −40 °C (127 ppm) est plus sec : <b>l'oxyde est réduit</b>.</p>
+      <p><b>b)</b> Le rapport réel vaut 1,27 × 10⁻⁴. Il égale le rapport d'équilibre vers <b>940 °C</b> : en dessous, Cr<sub>2</sub>O<sub>3</sub> est de nouveau stable et l'inox peut se ternir si le refroidissement est lent.</p>
+      <p><b>c)</b> Avec p<sub>H₂</sub> = 0,1 atm, le rapport réel est dix fois plus grand (1,27 × 10⁻³) : Cr<sub>2</sub>O<sub>3</sub> reste stable sous 1 210 °C environ, donc <b>pendant tout le cycle</b> : la brasure ne mouillerait pas. Il faudrait 36 ppm à 1 050 °C, soit un point de rosée d'environ <b>−51 °C</b>, et plus sec encore pour le refroidissement.</p>
+      <p><b>d)</b> À 973 K, le rapport d'équilibre vaut ≈ 5,9 × 10⁻⁶, soit 5,9 ppm : un point de rosée d'environ <b>−64 °C</b>. En pratique, on combine un gaz très sec et un refroidissement rapide.</p>
+      <p>Dans la manipulation 2 : oxyde Cr<sub>2</sub>O<sub>3</sub>, gaz « H₂ pur » ou « N₂ + 10 % H₂ », température 1 050 °C, point de rosée −40 °C ; la ligne de lecture donne le point de rosée maximal et la température sous laquelle l'oxyde redevient stable.</p>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="quiz-s">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">?</div>
+    <div class="c-title"><h2>Quiz : 12 questions éclair</h2><p>Chaque réponse est expliquée, même quand tu as juste</p></div>
+    <div class="c-img"><span class="ico">🎯</span><span><small>Image à retenir</small>La cible : vise 10 sur 12</span></div>
+  </div>
+  <div id="quiz"></div>
+  <div class="score" id="qzScore" aria-live="polite">Score : 0 / 12</div>
+  <div class="btns"><button class="btn" id="qzReset" type="button">↺ Recommencer le quiz</button></div>
+</div>
+</section>
+
+<section class="chap" id="fiche">
+<div class="wrap wide">
+  <div class="cartouche">
+    <div class="c-num">★</div>
+    <div class="c-title"><h2>Fiche mémoire du cours 2</h2><p>Neuf cases, neuf images : à photographier, puis à redessiner de tête</p></div>
+    <div class="c-img"><span class="ico">💍</span><span><small>Image à retenir</small>Les grains d'or des orfèvres étrusques</span></div>
+  </div>
+  <div class="fiche">
+    <div><div class="ic">🧽</div><h4>La gamme</h4><div class="f">dégraisser → décaper → rincer → braser vite</div><p>Le flux ne dissout pas les graisses. Gants propres, délai court.</p></div>
+    <div><div class="ic">🪟</div><h4>La vitre givrée</h4><div class="f"><span class="tau">Al₂O₃</span>, <span class="tau">Cr₂O₃</span>, <span class="tau">TiO₂</span></div><p>Oxydes tenaces, reformés en un instant : flux adapté, atmosphère sèche ou vide.</p></div>
+    <div><div class="ic">🪜</div><h4>L'échelle d'Ellingham</h4><div class="f"><span class="frc">ΔG°</span> = A + B·<span class="sig">T</span></div><p>Plus bas, plus tenace. L'hydrogène réduit les oxydes au-dessus de sa droite : Cu₂O, NiO, FeO, Cr₂O₃ s'il est très sec.</p></div>
+    <div><div class="ic">💧</div><h4>Le point de rosée</h4><div class="f">−40 °C ≈ 127 ppm</div><p>Inox : −26 °C à 1 100 °C, −53 °C à 800 °C dans H₂ pur ; diluer l'hydrogène exige plus sec.</p></div>
+    <div><div class="ic">🧹</div><h4>Le balai</h4><div class="f">FH10 : 550 → 800 °C</div><p>Fondre avant, tenir après. FH12 : inox et carbures ; FH21 : laitons ; FL : aluminium. Résidus à éliminer.</p></div>
+    <div><div class="ic">🫙</div><h4>Le bocal sous vide</h4><div class="f"><span class="eps">p<sub>v</sub></span>(T) &gt; <span class="mat">P</span> ⇒ évaporation</div><p>Ni zinc ni cadmium sous vide ; cuivre et argent sous pression partielle ; le magnésium aide l'aluminium.</p></div>
+    <div><div class="ic">🍿</div><h4>Le pop-corn</h4><div class="f">Cu₂O + H₂ → 2Cu + H₂O</div><p>Le cuivre à oxygène éclate sous hydrogène : prendre du Cu-DHP ou du Cu-OF.</p></div>
+    <div><div class="ic">🔑</div><h4>Le trousseau</h4><div class="f">Al · Ag · CuP · Cu · Ni</div><p>Al pour l'alu, P pour le cuivre (jamais sur fer), Ag partout, Ni pour le chaud. Cadmium interdit.</p></div>
+    <div><div class="ic">🕯️</div><h4>La bougie tiède</h4><div class="f"><span class="eps">T<sub>h</sub></span> = <span class="sig">T</span>/<span class="mat">T<sub>f</sub></span> ≈ 0,6 à 20 °C</div><p>Étain : fluage à l'ambiante, plomb proscrit (RoHS, eau potable), peste sous 13 °C, moustaches.</p></div>
+  </div>
+  <div class="fun"><span class="fun-h">💍 Fun fact : Le brasage secret des orfèvres étrusques</span>Il y a plus de 2 500 ans, les orfèvres étrusques, en Italie, couvraient leurs bijoux d'or de milliers de grains d'or minuscules, fixés sans aucune trace de brasure visible. Leur méthode, oubliée, n'a été retrouvée qu'en 1933 par l'Anglais H. A. P. Littledale : on pose les grains avec une colle organique mêlée à un sel de cuivre. Au chauffage, la colle se décompose en carbone et crée une atmosphère réductrice ; le composé de cuivre s'y réduit en cuivre métallique juste aux points de contact, où il forme avec l'or un alliage qui fond plus bas que l'or pur (1 064 °C). La brasure est fabriquée sur place, par la réduction d'un oxyde : le genre de réaction que le diagramme d'Ellingham du <a href="#c2">chapitre 2</a> permet de prévoir.</div>
+</div>
+</section>
+
+<section class="chap" id="gloss">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">A–Z</div>
+    <div class="c-title"><h2>Glossaire</h2><p>Les mots, symboles et sigles de ce cours</p></div>
+    <div class="c-img"><span class="ico">📖</span><span><small>Image à retenir</small>Le dictionnaire : un mot flou, un clic</span></div>
+  </div>
+  <dl class="gloss">
+    <dt>Ammoniac dissocié</dt><dd>Gaz obtenu en décomposant l'ammoniac : 75 % d'hydrogène, 25 % d'azote.</dd>
+    <dt>AWS A5.8</dt><dd>Spécification américaine des apports de brasage fort (BAg-, BCuP-, BNi-…).</dd>
+    <dt>CAB</dt><dd><i>Controlled atmosphere brazing</i> : brasage de l'aluminium au four, sous azote sec, avec un flux FL20 non corrosif.</dd>
+    <dt>Cadmium (interdiction)</dt><dd>Apports de brasage fort à 0,01 % de Cd ou plus interdits dans l'Union européenne depuis le 10 décembre 2011 (REACH, annexe XVII, entrée 23), sauf défense, aérospatiale et sécurité.</dd>
+    <dt>Colophane</dt><dd>Résine naturelle extraite de la sève de pin, base des flux de brasage tendre de type 1.</dd>
+    <dt>Cu-ETP, Cu-DHP, Cu-OF</dt><dd>Cuivre électrolytique contenant de l'oxygène ; cuivre désoxydé au phosphore ; cuivre sans oxygène. Seuls les deux derniers supportent l'hydrogène à chaud.</dd>
+    <dt>Dégraissage</dt><dd>Élimination des huiles et graisses (solvant, lessive alcaline, ultrasons), toujours en première étape.</dd>
+    <dt>Décapage</dt><dd>Élimination des oxydes, mécanique (brosse, abrasif, sablage) ou chimique (bain acide).</dd>
+    <dt>e, e<sub>0</sub></dt><dd>Épaisseur d'une couche (oxyde, intermétallique) ; sa valeur initiale.</dd>
+    <dt>Ellingham (diagramme d')</dt><dd>Graphique de l'enthalpie libre de formation des oxydes, par mole d'O<sub>2</sub>, en fonction de la température : plus une droite est basse, plus l'oxyde est stable.</dd>
+    <dt>EN 1045, ISO 18496</dt><dd>Classification des flux de brasage fort (classes FH et FL et leurs types).</dd>
+    <dt>FH10, FH12, FH21, FH30, FL10, FL20…</dt><dd>Types de flux : FH pour les métaux lourds (aciers, inox, cuivre, nickel), FL pour l'aluminium ; le chiffre code la plage de température et la composition.</dd>
+    <dt>Flux</dt><dd>Mélange de sels qui dissout les oxydes, protège la surface, puis est chassé par la brasure.</dd>
+    <dt>Gaz exothermique, endothermique</dt><dd>Atmosphères produites par la combustion contrôlée du gaz naturel ; la seconde, riche en H<sub>2</sub> et CO, est plus réductrice.</dd>
+    <dt>γ</dt><dd>Tension superficielle (N/m) ; γ<sub>SV</sub>, γ<sub>SL</sub>, γ<sub>LV</sub> : solide-vapeur, solide-liquide, liquide-vapeur.</dd>
+    <dt>ΔG°</dt><dd>Enthalpie libre standard de formation d'un oxyde, en kJ par mole d'O<sub>2</sub> : ΔG° = A + B·T.</dd>
+    <dt>Hertz-Knudsen (loi de)</dt><dd>Vitesse maximale d'évaporation sous vide : J = p<sub>v</sub>√(M/(2πRT)).</dd>
+    <dt>Hygroscopique</dt><dd>Qui absorbe l'humidité de l'air.</dd>
+    <dt>Intermétallique</dt><dd>Composé de deux métaux, de composition fixe, dur et fragile (Cu<sub>6</sub>Sn<sub>5</sub>, Cu<sub>3</sub>Sn entre étain et cuivre).</dd>
+    <dt>ISO 17672, ISO 3677</dt><dd>Apports de brasage fort : familles et numéros (Ag 155, CuP 284…) ; désignation par composition et intervalle de fusion (B-Cu80AgP-645/800).</dd>
+    <dt>ISO 9453, ISO 9454-1</dt><dd>Alliages de brasage tendre (avec leurs numéros) ; classification des flux de brasage tendre.</dd>
+    <dt>J, M</dt><dd>Masse évaporée par unité de surface et de temps (kg/(m²·s)) ; masse molaire (kg/mol).</dd>
+    <dt>k, k<sub>0</sub>, Q</dt><dd>Constante de croissance d'une couche (µm²/s), facteur préexponentiel, énergie d'activation (J/mol).</dd>
+    <dt>Moustaches (whiskers)</dt><dd>Filaments d'étain qui poussent spontanément sur l'étain pur sous contrainte et provoquent des courts-circuits.</dd>
+    <dt>Nickelage</dt><dd>Dépôt de nickel (électrolytique ou chimique) qui rend brasable une surface à oxyde tenace.</dd>
+    <dt>no-clean</dt><dd>Flux de brasage tendre « sans nettoyage », aux résidus peu abondants et inertes.</dd>
+    <dt>Oxyde natif</dt><dd>Pellicule d'oxyde formée spontanément à l'air ; quelques nanomètres.</dd>
+    <dt>p<sub>H₂O</sub>, p<sub>H₂</sub>, p<sub>v</sub>, P</dt><dd>Pressions partielles de vapeur d'eau et d'hydrogène ; pression de vapeur d'un élément ; pression totale du four.</dd>
+    <dt>Pa, mbar, ppm</dt><dd>Pascal (1 N/m²), millibar (100 Pa) ; parties par million (10⁻⁴ %).</dd>
+    <dt>Peste de l'étain</dt><dd>Transformation lente, sous 13,2 °C, de l'étain blanc en étain gris pulvérulent, avec un gonflement d'environ 26 %.</dd>
+    <dt>Point de rosée T<sub>r</sub></dt><dd>Température à laquelle la vapeur d'eau d'un gaz commencerait à se condenser ; mesure de son humidité (−40 °C ≈ 127 ppm).</dd>
+    <dt>Pression de dissociation</dt><dd>Pression d'oxygène sous laquelle un oxyde se décompose spontanément : exp(ΔG°/RT).</dd>
+    <dt>Pression partielle (brasage sous)</dt><dd>Remplissage d'un four sous vide avec un peu d'argon ou d'azote pour freiner l'évaporation.</dd>
+    <dt>Préforme, tôle plaquée</dt><dd>Apport découpé à la forme du joint (anneau, rondelle) ; tôle d'aluminium revêtue d'une couche d'apport Al-Si.</dd>
+    <dt>R</dt><dd>Constante des gaz parfaits, 8,314 J/(mol·K).</dd>
+    <dt>REACH</dt><dd>Règlement européen sur l'enregistrement, l'évaluation et l'autorisation des substances chimiques.</dd>
+    <dt>RoHS</dt><dd>Directive européenne de restriction des substances dangereuses dans les équipements électriques et électroniques : plomb ≤ 0,1 %.</dd>
+    <dt>SAC305</dt><dd>Alliage sans plomb Sn96,5Ag3Cu0,5 (n° 711 de l'ISO 9453), 217 à 220 °C.</dd>
+    <dt>T<sub>h</sub>, T<sub>f</sub></dt><dd>Température homologue T/T<sub>f</sub> (en kelvins) ; température de fusion (solidus).</dd>
+  </dl>
+</div>
+</section>
+
+<section class="chap" id="check">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✓</div>
+    <div class="c-title"><h2>Suis-je prêt pour la suite ?</h2><p>Dix points à cocher de tête</p></div>
+    <div class="c-img"><span class="ico">🚦</span><span><small>Image à retenir</small>Le feu passe au vert quand tout est coché</span></div>
+  </div>
+  <p>Coche seulement ce que tu sais faire <b>sans regarder</b>. Tes coches restent enregistrées dans ce navigateur.</p>
+  <div class="check" id="checklist">
+    <label><input type="checkbox" data-c="1"> <span>Je sais écrire une gamme de préparation et dire pourquoi le dégraissage vient en premier.</span></label>
+    <label><input type="checkbox" data-c="2"> <span>Je sais citer les oxydes tenaces et les moyens de les vaincre.</span></label>
+    <label><input type="checkbox" data-c="3"> <span>Je sais lire le diagramme d'Ellingham et dire quels oxydes l'hydrogène réduit.</span></label>
+    <label><input type="checkbox" data-c="4"> <span>Je sais calculer le point de rosée maximal pour réduire un oxyde, et expliquer l'effet de la dilution et du refroidissement.</span></label>
+    <label><input type="checkbox" data-c="5"> <span>Je connais les rôles d'un flux, la règle « fondre avant, tenir après » et les signes d'un flux épuisé.</span></label>
+    <label><input type="checkbox" data-c="6"> <span>Je sais choisir une classe de flux (FH10, FH12, FH21, FH30, FL) et traiter ses résidus.</span></label>
+    <label><input type="checkbox" data-c="7"> <span>Je sais choisir une atmosphère ou le vide, et repérer les éléments qui s'évaporent.</span></label>
+    <label><input type="checkbox" data-c="8"> <span>Je connais les pièges du cuivre à oxygène sous hydrogène et des apports au zinc sous vide.</span></label>
+    <label><input type="checkbox" data-c="9"> <span>Je sais choisir une famille d'apports de brasage fort, la désigner, et je connais l'interdiction du cadmium.</span></label>
+    <label><input type="checkbox" data-c="10"> <span>Je sais choisir un alliage de brasage tendre et expliquer sa température homologue, la peste de l'étain et les moustaches.</span></label>
+  </div>
+  <p class="status" id="checkMsg"></p>
+
+  <div class="meta">🔭 <b>Au prochain épisode, cours 3 : chauffer et exécuter.</b> On a la surface propre, le flux ou l'atmosphère, et l'apport. Reste à chauffer. On passera en revue les procédés de l'ISO 4063 : flamme, induction, résistance, fours continus et sous vide, bains, brasage tendre au fer, à la vague et par refusion, soudobrasage. Pour chacun : principe, paramètres, avantages, limites et domaines d'emploi. Puis on écrira le mode opératoire de brasage et on verra comment le qualifier, ainsi que les braseurs, avant de finir par l'hygiène et la sécurité.</div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="wrap">
+  <p>Cours 2 sur 4 de la série « Brasage fort et brasage tendre : de la goutte qui mouille au joint qualifié » (sujet 1.16 du planning). Vocabulaire aligné sur l'ISO 857-2 et l'ISO 4063 ; pour les notations et les conventions, l'enseignement de ta formation fait foi.</p>
+</div>
+</footer>
+<script>
+(function(){
+"use strict";
+const NS="http://www.w3.org/2000/svg";
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const RM=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function el(tag,attrs,parent){
+  const e=document.createElementNS(NS,tag);
+  if(attrs){for(const k in attrs){const v=attrs[k];if(v===undefined||v===null)continue;
+    if(typeof v==="string"&&v.indexOf("var(")>=0&&k!=="style")e.style.setProperty(k,v);else e.setAttribute(k,v);}}
+  if(parent)parent.appendChild(e);
+  return e;
+}
+function tx(p,x,y,str,attrs){const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);t.textContent=str;return t;}
+function txs(p,x,y,parts,attrs){/* parts: [["σ",""],["max","sub"],[" = 3",""]] */
+  const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);
+  parts.forEach(pt=>{const s=el("tspan",pt[1]==="sub"?{"font-size":"0.72em",dy:"3"}:(pt[2]?{dy:pt[2]}:{}),t);s.textContent=pt[0];
+    if(pt[1]==="sub"){const r=el("tspan",{dy:"-3"},t);r.textContent="\u200b";}});
+  return t;
+}
+function clear(svg){while(svg.firstChild)svg.removeChild(svg.firstChild);}
+function fitText(t,x0,x1,gap){/* garde un texte SVG entre x0 et x1 : il passe de l'autre côté de son repère (écart gap), sinon il glisse */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const a=t.getAttribute("text-anchor")||"start",x=+t.getAttribute("x");
+  if(gap&&a!=="middle"&&(b.x<x0||b.x+b.width>x1)){t.setAttribute("text-anchor",a==="end"?"start":"end");t.setAttribute("x",a==="end"?x+2*gap:x-2*gap);b=t.getBBox();}
+  const nx=+t.getAttribute("x");
+  if(b.x+b.width>x1)t.setAttribute("x",nx-(b.x+b.width-x1));else if(b.x<x0)t.setAttribute("x",nx+(x0-b.x));
+  return t;}
+function arrow(p,x1,y1,x2,y2,color,w,h){
+  w=w||2.4;h=h||10;
+  const g=el("g",{class:"arr"},p);g.style.color=color||"var(--ink)";
+  const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy);
+  if(L<1)return g;
+  const ux=dx/L,uy=dy/L,hh=Math.min(h,L*0.6),bx=x2-ux*hh,by=y2-uy*hh,hw=hh*0.45+w*0.3;
+  el("line",{x1:x1,y1:y1,x2:bx,y2:by,"stroke-width":w,"stroke-linecap":"round"},g);
+  el("polygon",{points:x2+","+y2+" "+(bx-uy*hw)+","+(by+ux*hw)+" "+(bx+uy*hw)+","+(by-ux*hw)},g);
+  return g;
+}
+function darrow(p,x,y1,y2,color,w){/* double flèche verticale */
+  const g=el("g",{},p);const m=(y1+y2)/2;
+  if(Math.abs(y2-y1)<4){el("line",{x1:x-5,y1:y1,x2:x+5,y2:y1,stroke:color,"stroke-width":2},g);return g;}
+  arrow(g,x,m,x,y1,color,w||2,8);arrow(g,x,m,x,y2,color,w||2,8);return g;
+}
+function nf(v,d){
+  if(d===undefined)d=1;
+  if(Math.abs(v)<0.5*Math.pow(10,-d))v=0;
+  return v.toLocaleString("fr-FR",{minimumFractionDigits:d,maximumFractionDigits:d}).replace("-","−").replace(/[\u202f\u2009]/g,"\u00a0");
+}
+const SUP={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function sci(v,d){
+  if(v===0)return "0";
+  if(!isFinite(v))return "∞";
+  let e=Math.floor(Math.log10(Math.abs(v)));
+  let m=v/Math.pow(10,e);
+  const dd=d===undefined?1:d;
+  if(Math.abs(Number(m.toFixed(dd)))>=10){m/=10;e+=1;}
+  return nf(m,dd)+" × 10"+String(e).split("").map(c=>SUP[c]).join("");
+}
+function bigN(v){/* nombre de cycles lisible */
+  if(!isFinite(v))return "∞";
+  if(v===0)return "0";
+  if(v<10)return nf(v,v<1?2:0);
+  if(v<1e5)return nf(Math.round(v),0);
+  return sci(v,1);
+}
+function dur(s){
+  if(!isFinite(s))return "∞";
+  if(s<60)return nf(s,s<10?1:0)+" s";
+  if(s<3600)return nf(s/60,0)+" min";
+  if(s<86400)return nf(s/3600,1)+" h";
+  if(s<86400*365)return nf(s/86400,1)+" jours";
+  return nf(s/(86400*365),1)+" ans";
+}
+function svgW(svg){const r=svg.getBoundingClientRect();return Math.max(290,Math.round(r.width||(svg.parentNode&&svg.parentNode.clientWidth)||600));}
+function setVB(svg,W,H){svg.setAttribute("viewBox","0 0 "+W+" "+H);}
+const redraws=[];
+let rzT=null,lastWW=window.innerWidth;
+window.addEventListener("resize",()=>{if(window.innerWidth===lastWW)return;lastWW=window.innerWidth;clearTimeout(rzT);rzT=setTimeout(()=>redraws.forEach(f=>{try{f();}catch(e){console.error(e);}}),120);});
+
+function niceStep(range,n){const raw=range/(n||5),p=Math.pow(10,Math.floor(Math.log10(raw))),m=raw/p;return (m<1.5?1:m<3?2:m<7?5:10)*p;}
+function setOn(sel,btn){$$(sel+" .btn").forEach(b=>b.classList.toggle("on",b===btn));}
+function fmtmm(mm){return mm<0.1?nf(mm*1000,0)+" µm":mm<10?nf(mm,mm<1?2:1)+" mm":nf(mm,0)+" mm";}
+function axes(svg,x0,x1,y0,y1,xmin,xmax,ymin,ymax,xlab,ylab,xstep,ystep,xfmt,yfmt){
+  const X=v=>x0+(x1-x0)*(v-xmin)/(xmax-xmin),Y=v=>y1-(y1-y0)*(v-ymin)/(ymax-ymin);
+  for(let v=Math.ceil(ymin/ystep-1e-9)*ystep;v<=ymax+1e-9;v+=ystep){el("line",{x1:x0,y1:Y(v),x2:x1,y2:Y(v),class:"gridbg"},svg);tx(svg,x0-5,Y(v)+4,yfmt?yfmt(v):nf(v,ystep<1?1:0),{class:"lbl","text-anchor":"end"});}
+  for(let v=Math.ceil(xmin/xstep-1e-9)*xstep;v<=xmax+1e-9;v+=xstep){el("line",{x1:X(v),y1:y1,x2:X(v),y2:y1+4,class:"tick"},svg);tx(svg,X(v),y1+17,xfmt?xfmt(v):nf(v,xstep<1?1:0),{class:"lbl","text-anchor":"middle"});}
+  el("line",{x1:x0,y1:y1,x2:x1,y2:y1,class:"axis"},svg);el("line",{x1:x0,y1:y0-4,x2:x0,y2:y1,class:"axis"},svg);
+  tx(svg,x0+4,y0-10,ylab,{class:"lbl"});tx(svg,x1,y1+32,xlab,{class:"lbl","text-anchor":"end"});
+  return {X:X,Y:Y};
+}
+function animate(btn,label,dur,onStep,onEnd){
+  let raf=null,run=false;
+  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;btn.textContent=label;}
+  function start(){if(run){stop();return;}if(RM){onStep(1);stop();if(onEnd)onEnd();return;}
+    run=true;btn.textContent="⏸ Pause";const t0=performance.now();
+    const step=now=>{const p=Math.min(1,(now-t0)/dur);onStep(p);if(p>=1){stop();if(onEnd)onEnd();return;}raf=requestAnimationFrame(step);};raf=requestAnimationFrame(step);}
+  btn.addEventListener("click",start);return {stop:stop,running:()=>run};
+}
+
+
+function sig2(v){/* arrondi à deux chiffres significatifs */
+  if(v<=0)return 0;const p=Math.pow(10,Math.floor(Math.log10(v))-1);return Math.round(v/p)*p;}
+function halo(t,svg){/* liseré de fond, puis passage au premier plan */
+  t.setAttribute("paint-order","stroke");t.style.setProperty("stroke","var(--card)");t.setAttribute("stroke-width","4");t.setAttribute("stroke-linejoin","round");if(svg)svg.appendChild(t);return t;}
+function plate(t,svg){/* fond plein derrière une étiquette */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const r=el("rect",{x:b.x-3,y:b.y-1,width:b.width+6,height:b.height+2,fill:"var(--card)",opacity:.92,rx:2});svg.appendChild(r);svg.appendChild(t);return t;}
+function le(n,f){return /^[aeiouyhéèâî]/i.test(n)?"l'"+n:(f?"la ":"le ")+n;}
+function du(n,f){return /^[aeiouyhéèâî]/i.test(n)?"de l'"+n:(f?"de la ":"du ")+n;}
+function fmtG(v){return nf(v,v<0.1?3:2)+" N/m";}
+function fmtPa(p){return p<1000?nf(p,0)+" Pa":p<1e5?nf(p/1000,1)+" kPa":nf(p/1e5,2)+" bar";}
+function fmtLen(m){/* m en mètres */
+  const mm=m*1000;if(mm<1)return nf(mm*1000,0)+" µm";if(mm<10)return nf(mm,1)+" mm";if(mm<1000)return nf(mm,0)+" mm";return nf(m,1)+" m";}
+function fmtT(s){if(!isFinite(s))return "∞";if(s<0.01)return nf(s*1000,1)+" ms";if(s<1)return nf(s,3)+" s";if(s<60)return nf(s,s<10?1:0)+" s";return nf(s/60,s<600?1:0)+" min";}
+
+function spread(items,gap,ymin,ymax){/* écarte verticalement des étiquettes {y} triées */
+  items.sort((a,b)=>a.y-b.y);
+  for(let i=1;i<items.length;i++)if(items[i].y-items[i-1].y<gap)items[i].y=items[i-1].y+gap;
+  if(items.length&&items[items.length-1].y>ymax){items[items.length-1].y=ymax;for(let i=items.length-2;i>=0;i--)if(items[i+1].y-items[i].y<gap)items[i].y=items[i+1].y-gap;}
+  if(items.length&&items[0].y<ymin){items[0].y=ymin;for(let i=1;i<items.length;i++)if(items[i].y-items[i-1].y<gap)items[i].y=items[i-1].y+gap;}
+  return items;}
+function declutter(ts,ymin,ymax){/* décale verticalement les textes qui se chevauchent */
+  const box=t=>{try{return t.getBBox();}catch(e){return null;}};
+  for(let i=1;i<ts.length;i++){const ti=ts[i];if(!ti)continue;
+    for(let pass=0;pass<6;pass++){const bi=box(ti);if(!bi)break;let moved=false;
+      for(let j=0;j<i;j++){const bj=ts[j]&&box(ts[j]);if(!bj)continue;
+        const ix=Math.min(bi.x+bi.width,bj.x+bj.width)-Math.max(bi.x,bj.x),iy=Math.min(bi.y+bi.height,bj.y+bj.height)-Math.max(bi.y,bj.y);
+        if(ix>1&&iy>1){let dy=(bi.y+bi.height/2>=bj.y+bj.height/2)?(bj.y+bj.height-bi.y+1):-(bi.y+bi.height-bj.y+1);
+          if(bi.y+dy<ymin||bi.y+bi.height+dy>ymax)dy=dy>0?-(bi.y+bi.height-bj.y+1):(bj.y+bj.height-bi.y+1);
+          ti.setAttribute("y",+ti.getAttribute("y")+dy);moved=true;break;}}
+      if(!moved)break;}}
+  return ts;}
+const SUPD={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function p10(e){return "10"+String(e).split("").map(c=>SUPD[c]||c).join("");}
+function fmtP(p){/* pression en Pa, lisible */
+  if(p>=1e5)return nf(p/1e5,1)+" bar";if(p>=1000)return nf(p/1000,p<1e4?1:0)+" kPa";if(p>=1)return nf(p,p<10?1:0)+" Pa";return sci(p,1)+" Pa";}
+
+/* =========================================================
+   M1 : la gamme de préparation
+   ========================================================= */
+(function(){
+  const svg=$("#m1svg");if(!svg)return;
+  const sd=$("#m1d"),ro=$("#m1r"),msg=$("#m1msg");
+  const MAT={cu:{n:"cuivre",nat:1,k:1.0,init:30,ten:0,stock:"ternissure de stockage"},
+    acier:{n:"acier non allié",nat:2,k:1.5,init:500,ten:0,stock:"calamine et rouille légère"},
+    inox:{n:"inox austénitique",nat:2,k:0.15,init:4,ten:1,stock:"film passif"},
+    alu:{n:"aluminium",nat:3,k:0.5,init:15,ten:1,stock:"alumine de stockage"},
+    ti:{n:"titane",nat:4,k:0.4,init:12,ten:1,stock:"oxyde de titane"}};
+  let k="cu",anim=false;
+  const on=s=>$('#m1steps input[data-s="'+s+'"]').checked;
+  const tOf=()=>Math.pow(10,1.77815+4.63548*(+sd.value)/1000);/* 1 min à 30 jours */
+  function state(){const m=MAT[k],t=tOf(),dec=on("dec");
+    let d=(dec?m.nat:m.init)+m.k*Math.log10(1+t/60);
+    const rust=k==="acier"&&dec&&t>2*86400;
+    return {m:m,t:t,d:d,grease:!on("deg"),finger:on("deg")&&!on("gan"),resid:dec&&!on("rin"),dec:dec,rust:rust};}
+  function draw(){
+    const W=svgW(svg),H=190;setVB(svg,W,H);clear(svg);
+    const S=state(),m=S.m;$("#m1do").textContent=dur(S.t);
+    const x0=12,x1=W-12,yb=120;
+    el("rect",{x:x0,y:yb,width:x1-x0,height:H-yb-10,fill:"var(--paper-2)",stroke:"var(--ink)","stroke-width":1.4},svg);
+    const lab=[];lab.push([tx(svg,x0+8,H-20,"métal : "+m.n,{"font-size":"12.5"}),0]);
+    const opx=Math.max(3,Math.min(34,4+9*Math.log10(S.d)));
+    let y=yb-opx;
+    el("rect",{x:x0,y:y,width:x1-x0,height:opx,fill:"var(--tau)",opacity:.5},svg);
+    lab.push([tx(svg,x1-8,yb+18,"↑ oxyde ≈ "+(S.d<1000?nf(S.d,S.d<10?1:0)+" nm":nf(S.d/1000,1)+" µm"),{"font-size":"12","text-anchor":"end",fill:"var(--tau)"}),1]);
+    if(S.rust){for(let i=0;i<14;i++){const xx=x0+20+(x1-x0-40)*((i*37)%100)/100;el("circle",{cx:xx,cy:y-3,r:4,fill:"var(--frc)",opacity:.55},svg);}y-=8;}
+    if(S.resid){for(let i=0;i<18;i++){const xx=x0+15+(x1-x0-30)*((i*53)%100)/100;el("rect",{x:xx,y:y-5,width:5,height:5,fill:"var(--muted)",opacity:.8},svg);}
+      lab.push([tx(svg,x1-8,y-9,"résidus de décapage",{"font-size":"11.5",fill:"var(--muted)","text-anchor":"end"}),2]);y-=12;}
+    if(S.grease){el("rect",{x:x0,y:y-16,width:x1-x0,height:16,fill:"var(--tau)",opacity:.18,stroke:"var(--tau)","stroke-dasharray":"5 4"},svg);
+      lab.push([tx(svg,x0+8,y-4,"film d'huile ≈ 1 µm",{"font-size":"12",fill:"var(--tau)"}),3]);y-=16;}
+    else if(S.finger){[0.25,0.55,0.8].forEach((f,i)=>el("ellipse",{cx:x0+(x1-x0)*f,cy:y-5,rx:24,ry:6,fill:"var(--tau)",opacity:.28},svg));
+      lab.push([tx(svg,x0+8,y-14,"empreintes de doigts",{"font-size":"11.5",fill:"var(--tau)"}),3]);y-=12;}
+    /* brasure qui arrive */
+    const ok=!S.grease&&!S.resid&&!(S.d>100);
+    el("path",{d:"M"+(x0+20)+" 40 Q "+(x0+60)+" 8 "+(x0+110)+" 40 Z",fill:"var(--eps)","fill-opacity":.25,stroke:"var(--eps)","stroke-width":1.5},svg);
+    lab.push([tx(svg,x0+120,30,ok&&!m.ten?"brasure : mouillera sous flux":m.ten?"brasure : l'oxyde est revenu":"brasure : elle perlera",{"font-size":"11.5",fill:"var(--eps)"}),4]);
+    lab.forEach(l=>{fitText(l[0],x0+2,x1-2);halo(l[0],svg);});
+    ro.innerHTML="<span>oxyde ≈ <b class='tau'>"+(S.d<1000?nf(S.d,1)+" nm":nf(S.d/1000,1)+" µm")+"</b></span><span>film gras : "+(S.grease?"<b class='tau'>oui</b>":S.finger?"<b class='tau'>empreintes</b>":"non")+"</span><span>résidus : "+(S.resid?"<b class='tau'>oui</b>":"non")+"</span><span>délai : "+dur(S.t)+"</span><span>film natif : "+(m.ten?"&lt; 1 s":"heures, jours")+"</span>";
+    if(anim)return;
+    let t;
+    if(S.grease)t="❌ <b>Pièce grasse</b> : le flux ne dissout pas l'huile, la brasure perlera sur ce film."+(S.dec?" Et décaper une pièce grasse étale la graisse : dégraisse d'abord.":" Commence par dégraisser.");
+    else if(S.finger)t="⚠️ <b>Empreintes de doigts</b> : chacune laissera une tache non mouillée. Assemble avec des gants propres.";
+    else if(S.resid)t="⚠️ <b>Résidus de décapage</b> : sels ou acide piégés, qui corroderont le joint. Rince et sèche.";
+    else if(!S.dec&&!m.ten&&S.d>100)t="⚠️ <b>"+m.stock.charAt(0).toUpperCase()+m.stock.slice(1)+"</b> d'environ "+nf(S.d/1000,1)+" µm : bien trop pour un flux, qui s'épuiserait. Décape d'abord.";
+    else if(m.ten)t="ℹ️ La surface est propre, mais l'<b>oxyde tenace</b> "+du(m.n)+" ("+nf(S.d,1)+" nm) se reforme en moins d'une seconde, quel que soit le délai. Il faudra "+(k==="alu"?"un flux FL ou le vide avec du magnésium":k==="inox"?"un flux FH12, un hydrogène très sec ou le vide":"le vide ou l'argon, avec des apports adaptés")+" (chapitres 2 à 4).";
+    else if(S.rust)t="⚠️ <b>Rouille naissante</b> après "+dur(S.t)+" à l'air : rebrosse avant de braser.";
+    else if(S.t>86400&&!S.dec)t="⚠️ Ternissure installée ("+nf(S.d,1)+" nm). Un brossage avant brasage est préférable.";
+    else if(S.t>86400)t="⚠️ Après "+dur(S.t)+", la ternissure s'est épaissie ("+nf(S.d,1)+" nm) : braser dans la journée, ou rebrosser.";
+    else t="✅ <b>Surface prête</b> : il ne reste que "+nf(S.d,1)+" nm d'oxyde, qu'un flux FH10 dissoudra sans peine.";
+    msg.innerHTML=t;
+  }
+  const STEPS=["deg","dec","rin","gan"],TXT=["1 Dégraisser : l'huile part, la surface reste oxydée.","2 Décaper : l'oxyde de stockage part, un film natif se reforme aussitôt.","3 Rincer et sécher : plus de résidus.","4 Assembler avec des gants : pas d'empreintes."];
+  const A=animate($("#m1play"),"▶ Dérouler la gamme",5200,p=>{anim=true;const n=Math.min(4,Math.floor(p*5));
+      $$("#m1steps input").forEach((c,i)=>{c.checked=i<n;});if(p<0.2){$$("#m1steps input").forEach(c=>c.checked=false);}
+      sd.value=n>=4?384:300;draw();msg.innerHTML=n===0?"La pièce sort du stock : grasse et oxydée.":TXT[n-1];},
+    ()=>{anim=false;sd.value=384;draw();});
+  $$("#m1steps input").forEach(c=>c.addEventListener("change",()=>{A.stop();anim=false;draw();}));
+  sd.addEventListener("input",()=>{A.stop();anim=false;draw();});
+  $$("#m1mat .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();anim=false;k=b.dataset.k;setOn("#m1mat",b);draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M2 : le diagramme d'Ellingham et le point de rosée
+   ========================================================= */
+(function(){
+  const svg=$("#m2svg");if(!svg)return;
+  const sT=$("#m2T"),sd=$("#m2d"),sp=$("#m2p"),ro=$("#m2r"),msg=$("#m2msg"),R=8.314;
+  const OX={Cu2O:{n:"Cu₂O",A:-333.9,B:0.1413},NiO:{n:"NiO",A:-471.2,B:0.1721},FeO:{n:"FeO",A:-529.8,B:0.1302},Cr2O3:{n:"Cr₂O₃",A:-746.8,B:0.1703},MnO:{n:"MnO",A:-769.4,B:0.1456},SiO2:{n:"SiO₂",A:-907.1,B:0.1750},TiO2:{n:"TiO₂",A:-941.0,B:0.1776},Al2O3:{n:"Al₂O₃",A:-1117.1,B:0.2088},MgO:{n:"MgO",A:-1203.2,B:0.2168}};
+  const W0={A:-495.0,B:0.1117};
+  let ko="Cr2O3",gas="1",Tanim=null;
+  const ew=Td=>Td<0?6.112*Math.exp(22.46*Td/(272.62+Td)):6.112*Math.exp(17.62*Td/(243.12+Td));
+  const ppmOf=Td=>ew(Td)/1013.25*1e6;
+  function dpOf(ppm){let lo=-130,hi=100;for(let i=0;i<70;i++){const m=(lo+hi)/2;if(ppmOf(m)<ppm)lo=m;else hi=m;}return (lo+hi)/2;}
+  const G=(o,TK)=>o.A+o.B*TK;
+  function gasLine(){/* potentiel d'oxygène du gaz : a + b·T (kJ) */
+    if(gas==="vide"){const pO2=0.21*Math.pow(10,+sp.value)/1013.25;return {a:0,b:R*Math.log(pO2)/1000,pO2:pO2};}
+    const ratio=ppmOf(+sd.value)*1e-6/(+gas);return {a:W0.A,b:W0.B+2*R*Math.log(ratio)/1000,ratio:ratio};}
+  const fmtR=r=>r>=0.01&&r<1000?nf(r,r<1?3:1):sci(r,1);
+  function draw(){
+    const W=svgW(svg),narrow=W<520,H=narrow?380:400;setVB(svg,W,H);clear(svg);
+    const T=Tanim===null?+sT.value:Tanim,TK=T+273.15,o=OX[ko],g=gasLine();
+    $("#m2To").textContent=nf(T,0)+" °C";$("#m2do").textContent=nf(+sd.value,0)+" °C ("+(ppmOf(+sd.value)<10?nf(ppmOf(+sd.value),1):nf(ppmOf(+sd.value),0))+" ppm)";
+    {const v=+sp.value;$("#m2po").textContent=(Number.isInteger(v)?p10(v):nf(Math.pow(10,v),Math.max(0,-Math.floor(v)+1)))+" mbar";}
+    const x0=narrow?46:58,x1=W-(narrow?52:64),y0=26,y1=H-46;
+    const ax=axes(svg,x0,x1,y0,y1,0,1400,-1250,0,"température (°C)","ΔG° (kJ par mole d'O₂)",narrow?400:200,250,v=>nf(v,0),v=>nf(v,0));
+    const X=ax.X,Y=v=>ax.Y(Math.max(-1250,Math.min(0,v)));
+    const labs=[];
+    Object.keys(OX).forEach(kk=>{const ox=OX[kk],sel=kk===ko;
+      el("line",{x1:X(0),y1:Y(G(ox,273.15)),x2:X(1400),y2:Y(G(ox,1673.15)),stroke:sel?"var(--tau)":"var(--muted)","stroke-width":sel?3:1.3,opacity:sel?1:.75},svg);
+      labs.push({y:Y(G(ox,1673.15))+4,t:ox.n,sel:sel});});
+    /* droite H2/H2O standard */
+    el("line",{x1:X(0),y1:Y(G(W0,273.15)),x2:X(1400),y2:Y(G(W0,1673.15)),stroke:"var(--ink)","stroke-width":1,"stroke-dasharray":"2 3",opacity:.6},svg);
+    labs.push({y:Y(G(W0,1673.15))+4,t:"H₂O (std)",sel:false,ink:1});
+    /* droite du gaz */
+    const gy=TT=>g.a+g.b*TT;let pts="";
+    for(let i=0;i<=60;i++){const Tc=1400*i/60,v=gy(Tc+273.15);if(v<-1250||v>0)continue;pts+=(pts?"L":"M")+X(Tc).toFixed(1)+" "+Y(v).toFixed(1)+" ";}
+    if(pts)el("path",{d:pts,fill:"none",stroke:"var(--mat)","stroke-width":2.6,"stroke-dasharray":"8 5"},svg);
+    const gEnd=gy(1673.15);if(gEnd>-1250&&gEnd<0)labs.push({y:Y(gEnd)+4,t:"gaz",sel:false,gas:1});
+    /* température */
+    el("line",{x1:X(T),y1:y0,x2:X(T),y2:y1,stroke:"var(--sig)","stroke-width":1.4,"stroke-dasharray":"4 3"},svg);
+    const red=G(o,TK)>gy(TK);
+    el("circle",{cx:X(T),cy:Y(G(o,TK)),r:6,fill:red?"var(--eps)":"var(--tau)",stroke:"var(--card)","stroke-width":2},svg);
+    if(gy(TK)>-1250&&gy(TK)<0)el("circle",{cx:X(T),cy:Y(gy(TK)),r:4,fill:"var(--mat)"},svg);
+    /* température de basculement */
+    let Tst=null;const den=o.B-g.b;if(Math.abs(den)>1e-9){const ts=(g.a-o.A)/den-273.15;if(ts>-273&&ts<3000)Tst=ts;}
+    if(Tst!==null&&Tst>=0&&Tst<=1400)el("circle",{cx:X(Tst),cy:Y(G(o,Tst+273.15)),r:4.5,fill:"none",stroke:"var(--tau)","stroke-width":2},svg);
+    spread(labs,15,y0+4,y1).forEach(l=>{const t=tx(svg,x1+5,l.y,l.t,{"font-size":"11.5",fill:l.sel?"var(--tau)":l.gas?"var(--mat)":"var(--muted)","font-weight":l.sel||l.gas?"700":"400"});fitText(t,x1+2,W-2);});
+    const lbl=tx(svg,x0+6,y1-8,red?o.n+" réduit à "+nf(T,0)+" °C":o.n+" stable à "+nf(T,0)+" °C",{"font-size":"12.5",fill:red?"var(--eps)":"var(--tau)","font-weight":"700"});halo(lbl,svg);
+    /* lecture */
+    const dG=G(o,TK),dW=G(W0,TK),rEq=Math.exp((dG-dW)*1000/(2*R*TK));
+    let s="<span>ΔG°("+o.n+") = <b class='frc'>"+nf(dG,0)+" kJ</b></span>";
+    if(gas==="vide"){const pd=Math.exp(dG*1000/(R*TK));
+      s+="<span>p<sub>O₂</sub> du vide ≈ "+sci(g.pO2,1)+" atm</span><span>dissociation ≈ "+sci(pd,1)+" atm</span>";}
+    else{const ppmMax=rEq*(+gas)*1e6;
+      s+="<span>ΔG°(H₂O) = "+nf(dW,0)+" kJ</span><span>(p<sub>H₂O</sub>/p<sub>H₂</sub>)<sub>max</sub> = "+fmtR(rEq)+"</span><span>rapport du gaz = "+fmtR(g.ratio)+"</span><span>rosée max : <b class='mat'>"+(ppmMax>ppmOf(60)?"&gt; +60 °C":ppmMax<ppmOf(-120)?"impossible":nf(dpOf(ppmMax),0)+" °C")+"</b></span>"+(ppmMax<ppmOf(-120)||ppmMax>ppmOf(60)?"":"<span>("+(ppmMax>=1?nf(ppmMax,ppmMax<10?1:0):sci(ppmMax,1))+" ppm)</span>");}
+    s+="<span>"+(Tst===null?"":(o.B>g.b?o.n+" stable sous ≈ <b class='tau'>"+nf(Tst,0)+" °C</b>":o.n+" stable au-dessus de ≈ "+nf(Tst,0)+" °C"))+"</span>";
+    ro.innerHTML=s;
+    if(Tanim!==null){msg.innerHTML="Refroidissement : à "+nf(T,0)+" °C, "+o.n+" est "+(red?"<b>encore réduit</b>.":"<b>de nouveau stable</b> : la surface peut se ternir si le refroidissement traîne.");return;}
+    let m;
+    if(gas==="vide")m=red?"Dans ce vide, "+o.n+" se dissocierait à "+nf(T,0)+" °C.":"❌ Même sous ce vide, "+o.n+" ne se dissocie pas : la pression d'oxygène résiduelle reste immensément supérieure à sa pression de dissociation. Le vide empêche la réoxydation ; d'autres mécanismes doivent éliminer le film (chapitre 4).";
+    else if(red)m="✅ <b>"+o.n+" est réduit</b> à "+nf(T,0)+" °C : la droite de l'oxyde passe au-dessus de celle du gaz."+(Tst!==null&&Tst>0&&o.B>g.b?" Attention au refroidissement : sous ≈ "+nf(Tst,0)+" °C, il redevient stable dans ce gaz.":"");
+    else m="❌ <b>"+o.n+" reste stable</b> à "+nf(T,0)+" °C : ce gaz n'est pas assez sec ou pas assez riche en hydrogène."+(rEq*(+gas)*1e6<ppmOf(-120)?" Aucun gaz industriel ne le réduira : il faut un flux, ou le vide avec un piège à oxygène.":" Il faudrait un point de rosée inférieur à "+nf(dpOf(rEq*(+gas)*1e6),0)+" °C.");
+    msg.innerHTML=m;
+  }
+  const A=animate($("#m2play"),"▶ Refroidir sous le même gaz",4500,p=>{const T0=+sT.value;Tanim=T0-(T0-300)*p;draw();},()=>{const Tl=Tanim;Tanim=null;draw();});
+  [sT,sd,sp].forEach(e=>e.addEventListener("input",()=>{A.stop();Tanim=null;draw();}));
+  $$("#m2ox .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();Tanim=null;ko=b.dataset.k;setOn("#m2ox",b);draw();}));
+  $$("#m2gas .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();Tanim=null;gas=b.dataset.k;setOn("#m2gas",b);$("#m2dc").hidden=gas==="vide";$("#m2pc").hidden=gas!=="vide";draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M3 : la fenêtre du flux
+   ========================================================= */
+(function(){
+  const svg=$("#m3svg");if(!svg)return;
+  const sr=$("#m3r"),sh=$("#m3h"),ro=$("#m3r2"),msg=$("#m3msg");
+  const FX={FH10:{lo:550,hi:800,life:240},FH12:{lo:550,hi:850,life:240,bore:1},FH20:{lo:750,hi:1000,life:300},FH21:{lo:750,hi:1100,life:300},FH30:{lo:1000,hi:1250,life:300},FL10:{lo:550,hi:650,life:240,al:1},FL20:{lo:565,hi:650,life:600,al:1}};
+  const AP={ag155:{n:"Ag 155",s:630,l:660,w:680},cup284:{n:"CuP 284",s:645,l:800,w:700},ag449:{n:"Ag 449",s:680,l:705,w:720},cuzn:{n:"laiton CuZn40",s:870,l:890,w:910},cu:{n:"cuivre pur",s:1083,l:1085,w:1110},alsi:{n:"Al-Si12",s:577,l:582,w:600}};
+  const BASE={cu:{n:"cuivre ou laiton",s:1083},acier:{n:"acier",s:1470},inox:{n:"inox ou carbure",s:1400},alu:{n:"aluminium",s:640}};
+  let kb="cu",kf="FH10",ka="ag155",tcur=null;
+  const rOf=()=>sig2(Math.pow(10,-1.30103+3*(+sr.value)/1000));
+  function calc(){const f=FX[kf],a=AP[ka],b=BASE[kb],r=rOf(),h=+sh.value;
+    const tw=(a.w-20)/r,tlo=(f.lo-20)/r,tact=Math.max(0,(a.w-f.lo)/r)+h,tend=tw+h;
+    return {f:f,a:a,b:b,r:r,h:h,tw:tw,tlo:tlo,tact:tact,tend:tend,tex:f.lo<a.w?tlo+f.life:null};}
+  function verdict(C){const f=C.f,a=C.a,out=[];let bad=0;
+    if(a.w>=C.b.s){out.push("❌ L'apport "+a.n+" se travaille à "+a.w+" °C : "+le(C.b.n)+" fondrait.");bad=2;}
+    if(ka==="cuzn"&&kb==="cu")out.push("⚠️ Possible sur le cuivre, impossible sur une pièce en laiton, qui fondrait vers 900 °C.");
+    if(ka==="alsi"&&kb!=="alu"){out.push("❌ L'Al-Si est réservé à l'aluminium.");bad=2;}
+    if(ka==="cup284"&&(kb==="acier"||kb==="inox")){out.push("❌ Cuivre-phosphore sur "+le(C.b.n)+" : phosphures fragiles.");bad=2;}
+    if(kb==="alu"&&!f.al){out.push("❌ Un flux FH ne dissout pas l'alumine : il faut un flux FL.");bad=2;}
+    if(kb!=="alu"&&f.al){out.push("❌ Les flux FL sont faits pour l'aluminium.");bad=2;}
+    if(kb==="inox"&&(kf==="FH10"||kf==="FH20"))out.push("⚠️ Sur l'inox ou un carbure, un FH12 (au bore) attaque mieux les oxydes de chrome.");
+    if(f.lo>a.s){out.push("❌ Le flux n'est pas encore actif ("+f.lo+" °C) quand l'apport commence à fondre ("+a.s+" °C) : l'apport roule sur l'oxyde.");bad=Math.max(bad,2);}
+    if(a.w>f.hi){out.push("❌ À "+a.w+" °C, le flux est sorti de sa plage (jusqu'à "+f.hi+" °C) : il se décompose avant que la brasure coule.");bad=Math.max(bad,2);}
+    if(C.tact>f.life){out.push("❌ Le flux passe "+dur(C.tact)+" au-dessus de "+f.lo+" °C, pour une durée de vie d'environ "+dur(f.life)+" : il s'épuise et noircit. Chauffe plus vite, ou passe au four sous atmosphère.");bad=Math.max(bad,2);}
+    if(!bad&&out.length===0)out.push("✅ <b>Compatible</b> : le flux est actif dès "+f.lo+" °C, avant la fusion de l'apport ("+a.s+" °C), il le reste à "+a.w+" °C, et il ne travaille que "+dur(C.tact)+" sur environ "+dur(f.life)+" de capacité.");
+    else if(!bad)out.unshift("✅ Fenêtre de température et durée compatibles.");
+    return out.join(" ");}
+  function draw(){
+    const W=svgW(svg),H=280;setVB(svg,W,H);clear(svg);
+    const C=calc();$("#m3ro").textContent=nf(C.r,C.r<1?2:C.r<10?1:0)+" °C/s";$("#m3ho").textContent=C.h+" s";
+    const x0=W<520?46:56,x1=W-30,y0=26,y1=H-46,tmax=Math.max(C.tend*1.12,10),Tmax=1250;
+    const fmtx=v=>tmax>=600?nf(v/60,v/60>=10||v%60===0?0:1)+" min":nf(v,0)+" s";
+    const st=niceStep(tmax,W<520?3:5);
+    const ax=axes(svg,x0,x1,y0,y1,0,tmax,0,Tmax,"temps","T (°C)",st,250,fmtx,v=>nf(v,0));
+    const X=ax.X,Y=ax.Y;
+    el("rect",{x:x0,y:Y(Math.min(Tmax,C.f.hi)),width:x1-x0,height:Y(C.f.lo)-Y(Math.min(Tmax,C.f.hi)),fill:"var(--frc)",opacity:.14},svg);
+    el("rect",{x:x0,y:Y(C.a.l)-1,width:x1-x0,height:Math.max(3,Y(C.a.s)-Y(C.a.l)+2),fill:"var(--mat)",opacity:.45},svg);
+    const L3=[];const tf=tx(svg,x1-4,Y(Math.min(Tmax,C.f.hi))+13,kf,{"font-size":"11.5",fill:"var(--frc)","font-weight":"700","text-anchor":"end"});halo(tf);L3.push(tf);
+    const ta=tx(svg,x0+6,Y(C.a.s)+14,C.a.n,{"font-size":"11.5",fill:"var(--mat)","font-weight":"700"});halo(ta);L3.push(ta);
+    /* courbe de chauffe */
+    const tc=tcur===null?C.tend:Math.min(C.tend,tcur);
+    const Tof=t=>t<C.tw?20+C.r*t:C.a.w;
+    let d="M"+X(0)+" "+Y(20);const n=80;for(let i=1;i<=n;i++){const t=tc*i/n;d+=" L"+X(t).toFixed(1)+" "+Y(Tof(t)).toFixed(1);}
+    el("path",{d:d,fill:"none",stroke:"var(--sig)","stroke-width":2.8},svg);
+    if(C.tlo<tc)el("circle",{cx:X(C.tlo),cy:Y(C.f.lo),r:4.5,fill:"var(--frc)"},svg);
+    if(C.tex!==null&&C.tex<=tc){el("line",{x1:X(C.tex)-6,y1:Y(Tof(C.tex))-6,x2:X(C.tex)+6,y2:Y(Tof(C.tex))+6,stroke:"var(--tau)","stroke-width":3},svg);el("line",{x1:X(C.tex)-6,y1:Y(Tof(C.tex))+6,x2:X(C.tex)+6,y2:Y(Tof(C.tex))-6,stroke:"var(--tau)","stroke-width":3},svg);
+      const te=tx(svg,X(C.tex),Y(Tof(C.tex))+22,"flux épuisé",{"font-size":"11.5",fill:"var(--tau)","text-anchor":"middle","font-weight":"700"});fitText(te,x0,x1);halo(te);L3.push(te);}
+    if(C.tw<=tc){el("circle",{cx:X(C.tw),cy:Y(C.a.w),r:5,fill:"var(--eps)",stroke:"var(--card)","stroke-width":2},svg);
+      const tw=tx(svg,X(C.tw),Y(C.a.w)-10,"brasure",{"font-size":"11.5",fill:"var(--eps)","text-anchor":"middle"});fitText(tw,x0,x1);halo(tw);L3.push(tw);}
+    declutter(L3,y0,y1);
+    ro.innerHTML="<span>chauffe jusqu'à "+C.a.w+" °C : "+dur(C.tw)+"</span><span>temps au-dessus de "+C.f.lo+" °C : <b class='frc'>"+dur(C.tact)+"</b></span><span>capacité du flux ≈ "+dur(C.f.life)+"</span><span>plage "+kf+" : "+C.f.lo+" → "+(C.f.hi>=1250?"&gt; 1 000":C.f.hi)+" °C</span>";
+    if(tcur!==null&&tcur<C.tend){const T=Tof(tcur);msg.innerHTML="t = "+dur(tcur)+", T = "+nf(T,0)+" °C : "+(T<C.f.lo?"le flux sèche (eau évaporée, poudre blanche).":T<C.a.s?"le flux est fondu, clair : il dissout l'oxyde.":T<C.a.w?"l'apport fond.":"la brasure coule dans le joint.");return;}
+    msg.innerHTML=verdict(C);
+  }
+  const A=animate($("#m3play"),"▶ Chauffer",4500,p=>{const C=calc();tcur=p*C.tend;draw();},()=>{tcur=null;draw();});
+  [sr,sh].forEach(e=>e.addEventListener("input",()=>{A.stop();tcur=null;draw();}));
+  $$("#m3base .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();tcur=null;kb=b.dataset.k;setOn("#m3base",b);draw();}));
+  $$("#m3fx .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();tcur=null;kf=b.dataset.k;setOn("#m3fx",b);draw();}));
+  $$("#m3ap .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();tcur=null;ka=b.dataset.k;setOn("#m3ap",b);draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M4 : ce qui s'évapore dans le four
+   ========================================================= */
+(function(){
+  const svg=$("#m4svg");if(!svg)return;
+  const sT=$("#m4T"),sP=$("#m4P"),ro=$("#m4r"),msg=$("#m4msg");
+  const VP={Cd:[530,583,654,745,867,1040],Zn:[610,670,750,852,990,1185],Mg:[701,773,861,971,1132,1361],Pb:[978,1088,1229,1412,1660,2027],Mn:[1228,1347,1493,1691,1955,2333],Ag:[1283,1413,1575,1782,2055,2433],Cu:[1509,1661,1850,2089,2404,2836],Cr:[1656,1807,1991,2223,2530,2942],Ni:[1783,1950,2154,2410,2741,3184]};
+  const PRE={ag155:{T:700,P:-2,hl:["Zn","Ag","Cu"]},cd:{T:700,P:-2,hl:["Cd","Zn","Ag","Cu"]},ag272:{T:830,P:-1,hl:["Ag","Cu"]},cu:{T:1100,P:-2,hl:["Cu"]},bni:{T:1050,P:-2,hl:["Ni","Cr","Mn"]},almg:{T:600,P:-3,hl:["Mg"]}};
+  let pre="cu",hl=PRE.cu.hl.slice(),Tan=null;
+  function logp(e,TK){const Ts=VP[e],xs=Ts.map(t=>1/t),x=1/TK;let i;
+    if(x>=xs[0])i=0;else if(x<=xs[5])i=4;else{i=0;for(let j=0;j<5;j++)if(xs[j]>=x)i=j;}
+    return i+(x-xs[i])/(xs[i+1]-xs[i]);}
+  function draw(){
+    const W=svgW(svg),narrow=W<520,H=narrow?340:360;setVB(svg,W,H);clear(svg);
+    const T=Tan===null?+sT.value:Tan,TK=T+273.15,lP=+sP.value,P=Math.pow(10,lP);
+    $("#m4To").textContent=nf(T,0)+" °C";$("#m4Po").textContent=(Number.isInteger(lP)?p10(lP)+" Pa":nf(P,P<1?4:0)+" Pa")+" ("+(Number.isInteger(lP-2)?p10(lP-2):nf(P/100,Math.max(0,2-Math.floor(lP))))+" mbar)";
+    const x0=narrow?52:62,x1=W-(narrow?34:40),y0=24,y1=H-46;
+    const ax=axes(svg,x0,x1,y0,y1,300,1300,-6,5,"température (°C)","pression de vapeur (Pa, échelle log)",narrow?250:200,1,v=>nf(v,0),v=>p10(Math.round(v)));
+    const X=ax.X,Y=ax.Y;
+    el("line",{x1:x0,y1:Y(lP),x2:x1,y2:Y(lP),stroke:"var(--mat)","stroke-width":2.4,"stroke-dasharray":"8 5"},svg);
+    const tP=tx(svg,x0+6,lP>3.5?Y(lP)+15:Y(lP)-6,"pression du four",{"font-size":"11.5",fill:"var(--mat)","font-weight":"700"});halo(tP);const L4=[tP];
+    el("line",{x1:X(T),y1:y0,x2:X(T),y2:y1,stroke:"var(--sig)","stroke-width":1.4,"stroke-dasharray":"4 3"},svg);
+    const labs=[];
+    Object.keys(VP).forEach(e=>{const on=hl.indexOf(e)>=0;let d="",last=null;
+      for(let i=0;i<=100;i++){const Tc=300+10*i,v=logp(e,Tc+273.15);if(v<-6)continue;if(v>5){if(last){/* sortie par le haut */}break;}d+=(d?"L":"M")+X(Tc).toFixed(1)+" "+Y(v).toFixed(1)+" ";last=[Tc,v];}
+      if(!d)return;el("path",{d:d,fill:"none",stroke:on?"var(--eps)":"var(--muted)","stroke-width":on?2.8:1.3,opacity:on?1:.7},svg);
+      if(last){if(last[0]>=1295)labs.push({y:Y(last[1])+4,x:x1+4,t:e,on:on,right:1});else labs.push({y:Y(last[1]),x:X(last[0]),t:e,on:on,top:1});}
+      if(on){const v=logp(e,TK);if(v>=-6&&v<=5)el("circle",{cx:X(T),cy:Y(v),r:5,fill:v>lP?"var(--bad)":"var(--eps)",stroke:"var(--card)","stroke-width":2},svg);}});
+    spread(labs.filter(l=>l.right),15,y0,y1).forEach(l=>{const t=tx(svg,l.x,l.y,l.t,{"font-size":"11.5",fill:l.on?"var(--eps)":"var(--muted)","font-weight":l.on?"700":"400"});fitText(t,x1,W-2);});
+    labs.filter(l=>l.top).forEach(l=>{const t=tx(svg,l.x-3,Math.max(y0+11,l.y+4),l.t,{"font-size":"11.5",fill:l.on?"var(--eps)":"var(--muted)","font-weight":l.on?"700":"400","text-anchor":"end"});fitText(t,x0,x1);halo(t);L4.push(t);});
+    svg.appendChild(tP);declutter(L4,y0,y1);
+    const rows=hl.map(e=>{const v=logp(e,TK),p=Math.pow(10,v);return {e:e,p:p,ev:v>lP};});
+    ro.innerHTML="<span>T = "+nf(T,0)+" °C</span><span>P du four = "+fmtP(P)+"</span>"+rows.map(r=>"<span>"+r.e+" : <b class='"+(r.ev?"tau":"eps")+"'>"+fmtP(r.p)+"</b>"+(r.ev?" ⇒ s'évapore":"")+"</span>").join("");
+    if(Tan!==null){const evs=rows.filter(r=>r.ev).map(r=>r.e);msg.innerHTML="À "+nf(T,0)+" °C : "+(evs.length?evs.join(", ")+" "+(evs.length>1?"s'évaporent":"s'évapore")+".":"rien ne s'évapore encore.");return;}
+    const ev=rows.filter(r=>r.ev);let m;
+    if(!ev.length)m="✅ À "+nf(T,0)+" °C et "+fmtP(P)+", aucun des éléments surlignés ne s'évapore notablement.";
+    else m="⚠️ "+ev.map(r=>r.e).join(", ")+" : pression de vapeur supérieure à celle du four, "+(ev.length>1?"ces éléments s'évaporent.":"cet élément s'évapore.");
+    const C={ag155:" Le zinc d'un apport Ag-Cu-Zn quitte l'apport par kilopascals : apport interdit sous vide, à garder pour le chalumeau sous flux.",cd:" Le cadmium s'évapore encore plus facilement que le zinc, et ses fumées sont très toxiques : apports interdits.",ag272:" Sans zinc, l'Ag72Cu28 tolère le vide ; à 830 °C l'argent n'a que quelques centièmes de pascal de pression de vapeur : un vide modéré (10⁻³ mbar) suffit, un vide plus poussé commencerait à l'évaporer.",cu:" Le cuivre s'évapore lentement sous vide poussé (de l'ordre de 30 µm/h à 1 100 °C) : on le brase sous une pression partielle d'argon ou d'azote. Monte la pression du four pour voir.",bni:" Le nickel et le chrome tiennent ; le manganèse de l'inox s'évapore sous vide poussé : pression partielle, ou acceptation d'une légère perte superficielle.",almg:" Ici, c'est voulu : le magnésium de l'apport s'évapore, capte l'oxygène résiduel et désorganise l'alumine."};
+    msg.innerHTML=m+(pre&&Math.abs(+sT.value-PRE[pre].T)<1&&Math.abs(+sP.value-PRE[pre].P)<0.01?C[pre]:"");
+  }
+  const A=animate($("#m4play"),"▶ Monter en température",4500,p=>{Tan=300+(+sT.value-300)*p;draw();},()=>{Tan=null;draw();});
+  [sT,sP].forEach(e=>e.addEventListener("input",()=>{A.stop();Tan=null;draw();}));
+  $$("#m4pre .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();Tan=null;pre=b.dataset.k;const q=PRE[pre];sT.value=q.T;sP.value=q.P;hl=q.hl.slice();setOn("#m4pre",b);draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M5 : choisir l'apport
+   ========================================================= */
+(function(){
+  const svg=$("#m5svg");if(!svg)return;
+  const sS=$("#m5S"),ro=$("#m5r"),msg=$("#m5msg");
+  const FAM=[
+    {n:"Al-Si (Al 112, 4343, 4045)",a:577,b:613,svc:150,pairs:{alu:3},proc:{flux:"flux FL10 ou FL20",atm:"four CAB sous azote, flux FL20",vide:"apport Al-Si-Mg sous vide"}},
+    {n:"Ag-Cu-Zn-Sn (Ag 134, 145, 155)",a:630,b:730,svc:200,pairs:{cucu:2,culaiton:2,cuacier:3,acier:2,inox:1},proc:{flux:"flux FH10"}},
+    {n:"Ag-Cu-Zn-Mn-Ni (Ag 449)",a:680,b:705,svc:200,pairs:{carbure:3,inox:2,acier:1},proc:{flux:"flux FH12"}},
+    {n:"CuP, CuAgP (CuP 179, 284)",a:645,b:890,svc:150,pairs:{cucu:3,culaiton:2},proc:{flux:"sans flux sur cuivre, FH10 sur laiton",atm:"four sous atmosphère protectrice"}},
+    {n:"Ag-Cu sans zinc (Ag 272)",a:779,b:779,svc:300,pairs:{cucu:1,cuacier:2,acier:1,inox:2},proc:{flux:"flux FH10",atm:"hydrogène ou N₂-H₂ sec",vide:"vide"}},
+    {n:"Laitons (CuZn40)",a:870,b:890,svc:250,pairs:{acier:2,cuacier:1},proc:{flux:"flux FH21"}},
+    {n:"Cuivre pur (Cu 141)",a:1083,b:1085,svc:400,pairs:{acier:3,inox:2},proc:{atm:"H₂, N₂-H₂ ou gaz endothermique",vide:"vide sous pression partielle"}},
+    {n:"Nickel (Ni 620 = BNi-2…)",a:890,b:1135,svc:900,pairs:{inox:3,nisa:3,acier:1},proc:{atm:"hydrogène très sec",vide:"vide"}},
+    {n:"Or-nickel (Au82Ni18)",a:950,b:950,svc:700,pairs:{nisa:2,inox:1},proc:{vide:"vide"}}];
+  const PAIRN={cucu:"cuivre-cuivre",culaiton:"cuivre-laiton",cuacier:"cuivre-acier",acier:"acier-acier",inox:"inox-inox",carbure:"carbure-acier",alu:"aluminium",nisa:"superalliage de nickel"};
+  const PROCN={flux:"sous flux",atm:"four, atmosphère",vide:"four sous vide"};
+  let kp="cucu",kc="flux";
+  function draw(){
+    const W=svgW(svg),narrow=W<520,rowH=36,H=26+FAM.length*rowH+44;setVB(svg,W,H);clear(svg);
+    const S=+sS.value;$("#m5So").textContent=nf(S,0)+" °C";
+    const x0=12,x1=W-24,X=v=>x0+(x1-x0)*(v-500)/(1200-500),yA=26+FAM.length*rowH;
+    for(let v=500;v<=1200;v+=narrow?200:100){el("line",{x1:X(v),y1:20,x2:X(v),y2:yA,class:"gridbg"},svg);tx(svg,X(v),yA+16,nf(v,0),{class:"lbl","text-anchor":"middle"});}
+    el("line",{x1:x0,y1:yA,x2:x1,y2:yA,class:"axis"},svg);
+    tx(svg,x1,yA+33,"intervalle de fusion (°C)",{class:"lbl","text-anchor":"end"});
+    const C=FAM.map((f,i)=>{const sc=f.pairs[kp]||0,pr=f.proc[kc],ok=sc>0&&!!pr&&S<=f.svc;return {f:f,i:i,sc:sc,ok:ok,why:sc===0?"couple":!pr?"procédé":S>f.svc?"service":""};});
+    let best=null;C.forEach(c=>{if(c.ok&&(!best||c.sc>best.sc))best=c;});
+    C.forEach(c=>{const y=26+c.i*rowH,f=c.f,on=c.ok;
+      const t=tx(svg,x0,y+10,(c===best?"★ ":"")+f.n,{"font-size":narrow?"11.5":"12",fill:on?"var(--ink)":"var(--muted)","font-weight":c===best?"700":"400"});halo(t);
+      const ts=tx(svg,x1,y+10,(narrow?"≤ ":"service ≤ ")+f.svc+" °C",{"font-size":"11",fill:S>f.svc?"var(--bad)":"var(--muted)","text-anchor":"end"});
+      el("rect",{x:X(f.a)-(f.a===f.b?3:0),y:y+15,width:Math.max(6,X(f.b)-X(f.a)),height:11,rx:3,fill:on?"var(--eps)":"var(--muted)",opacity:on?(c===best?1:.6):.25},svg);});
+    const okc=C.filter(c=>c.ok).sort((a,b)=>b.sc-a.sc);
+    ro.innerHTML="<span>couple : <b>"+PAIRN[kp]+"</b></span><span>procédé : "+PROCN[kc]+"</span><span>service : "+nf(S,0)+" °C</span><span>familles adaptées : <b class='eps'>"+okc.length+"</b></span>";
+    let m;
+    if(!okc.length){m="❌ Aucune famille ne convient à ce triplet. ";
+      if(kp==="alu"&&S>150)m+="L'aluminium brasé ne se destine pas au service chaud.";
+      else if(S>400)m+="Au-delà de 400 °C environ, seuls les apports au nickel ou aux métaux précieux, sous vide ou hydrogène sec, tiennent.";
+      else m+="Change de procédé : par exemple, les apports au zinc demandent un flux, et le vide exclut le zinc.";}
+    else{const b=okc[0];m="★ <b>"+b.f.n+"</b>, "+b.f.proc[kc]+".";
+      if(okc.length>1)m+=" Autres possibilités : "+okc.slice(1).map(c=>c.f.n+" ("+c.f.proc[kc]+")").join(" ; ")+".";}
+    const notes=[];
+    if(["cuacier","acier","inox","carbure","nisa"].indexOf(kp)>=0)notes.push("cuivre-phosphore exclu (phosphures de fer ou de nickel fragiles)");
+    if(kc==="vide")notes.push("apports au zinc exclus sous vide");
+    if(kp==="carbure")notes.push("grandes plaquettes : apport en sandwich avec âme en cuivre (cours 4)");
+    if(kp==="inox"&&kc==="flux")notes.push("au contact de l'eau, préférer un apport à l'argent contenant du nickel (corrosion à l'interface, cours 4)");
+    if(kp==="cucu"&&kc==="flux")notes.push("le phosphore désoxyde le cuivre : brasage sans flux, circuit propre");
+    if(S<-50)notes.push("au grand froid, vérifier la ductilité de l'apport sur la fiche (les apports à l'argent tiennent bien)");
+    if(notes.length)m+=" <br>À savoir : "+notes.join(" ; ")+".";
+    msg.innerHTML=m;
+  }
+  const A=animate($("#m5play"),"▶ Balayer la température de service",5000,p=>{sS.value=Math.round((-200+1200*p)/10)*10;draw();},()=>{draw();msg.innerHTML+=" <br>Balayage terminé : au-delà de 400 °C environ, il ne reste que les apports au nickel et aux métaux précieux.";});
+  sS.addEventListener("input",()=>{A.stop();draw();});
+  $$("#m5pair .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();kp=b.dataset.k;setOn("#m5pair",b);draw();}));
+  $$("#m5proc .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();kc=b.dataset.k;setOn("#m5proc",b);draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M6 : la température homologue
+   ========================================================= */
+(function(){
+  const svg=$("#m6svg");if(!svg)return;
+  const sT=$("#m6T"),sy=$("#m6y"),ro=$("#m6r"),msg=$("#m6msg");
+  const MATS=[{n:"Sn42Bi58",tf:138},{n:"Sn63Pb37",tf:183},{n:"SAC305",tf:217,ref:1},{n:"Sn99,3Cu0,7",tf:227},{n:"Au80Sn20",tf:280},{n:"Pb95Sn5",tf:300},{n:"aluminium",tf:660,met:1},{n:"cuivre",tf:1085,met:1},{n:"acier",tf:1500,met:1}];
+  const PRE={bureau:[40,5],moteur:[125,15],froid:[-40,10],eau:[60,30]};
+  const k=Tc=>5.83e-6*Math.exp(-(84000/8.314)*(1/(Tc+273.15)-1/423.15));
+  function draw(){
+    const W=svgW(svg),narrow=W<520,rowH=26,H=30+MATS.length*rowH+40;setVB(svg,W,H);clear(svg);
+    const T=+sT.value,yrs=+sy.value,TK=T+273.15;$("#m6To").textContent=nf(T,0)+" °C";$("#m6yo").textContent=yrs+" an"+(yrs>1?"s":"");
+    const xl=narrow?86:104,x1=W-44,X=v=>xl+(x1-xl)*v,yA=24+MATS.length*rowH;
+    [[0,0.3,"var(--ok)"],[0.3,0.5,"var(--warn)"],[0.5,1,"var(--bad)"]].forEach(z=>el("rect",{x:X(z[0]),y:18,width:X(z[1])-X(z[0]),height:yA-18,fill:z[2],opacity:.08},svg));
+    [0,0.2,0.4,0.6,0.8,1].forEach(v=>{el("line",{x1:X(v),y1:yA,x2:X(v),y2:yA+4,class:"tick"},svg);tx(svg,X(v),yA+17,nf(v,1),{class:"lbl","text-anchor":"middle"});});
+    el("line",{x1:xl,y1:yA,x2:x1,y2:yA,class:"axis"},svg);
+    tx(svg,x1,yA+34,"T/Tf (en kelvins)",{class:"lbl","text-anchor":"end"});
+    const z1=tx(svg,X(0.15),14,"rigide",{"font-size":"11",fill:"var(--ok)","text-anchor":"middle"}),z2=tx(svg,X(0.4),14,narrow?"lent":"fluage lent",{"font-size":"11",fill:"var(--warn)","text-anchor":"middle"}),z3=tx(svg,X(0.75),14,narrow?"fluage":"fluage actif",{"font-size":"11",fill:"var(--bad)","text-anchor":"middle"});
+    MATS.forEach((m,i)=>{const y=24+i*rowH,h=Math.max(0,TK/(m.tf+273.15)),melt=h>=1;
+      const t=tx(svg,xl-6,y+13,m.n,{"font-size":"12","text-anchor":"end",fill:m.met?"var(--muted)":"var(--ink)","font-weight":m.ref?"700":"400"});
+      el("rect",{x:xl,y:y+3,width:X(Math.min(1,h))-xl,height:14,rx:3,fill:melt?"var(--bad)":m.met?"var(--muted)":"var(--eps)",opacity:m.ref?1:.65},svg);
+      tx(svg,X(Math.min(1,h))+5,y+14,melt?"fondu":nf(h,2),{"font-size":"11.5",fill:melt?"var(--bad)":"var(--ink)"});});
+    const sac=TK/490.15,snpb=TK/456.15,e=Math.sqrt(4+k(T)*yrs*3.156e7);
+    ro.innerHTML="<span>T = "+nf(T,0)+" °C = "+nf(TK,0)+" K</span><span>SAC305 : T/T<sub>f</sub> = <b class='eps'>"+nf(sac,2)+"</b></span><span>Sn63Pb37 : "+nf(snpb,2)+"</span><span>acier : "+nf(TK/1773.15,2)+"</span><span>intermétallique SAC/Cu</span><span>après "+yrs+" an"+(yrs>1?"s":"")+" : <b class='gam'>"+nf(e,1)+" µm</b></span>";
+    let m;
+    if(sac>=1)m="❌ Au-delà de 217 °C, le SAC305 fond : ce n'est plus une température de service.";
+    else if(sac>0.75)m="⚠️ <b>Fluage rapide</b> (T/T<sub>f</sub> = "+nf(sac,2)+") : à cette température, une brasure tendre se déforme et se fatigue vite ; il faut une conception sans charge sur les joints et des alliages adaptés.";
+    else if(sac>0.5)m="La brasure est en <b>fluage actif</b> (T/T<sub>f</sub> = "+nf(sac,2)+"), comme un acier vers "+nf(sac*1773-273,0)+" °C : aucune charge permanente sur le joint.";
+    else m="Fluage ralenti (T/T<sub>f</sub> = "+nf(sac,2)+"), mais la brasure reste plus « chaude » que tous les métaux qu'elle assemble.";
+    m+=e>10?" L'intermétallique atteint "+nf(e,1)+" µm : couche épaisse et fragile, à surveiller.":e>4?" L'intermétallique a doublé ("+nf(e,1)+" µm) : vieillissement sensible.":" L'intermétallique reste stable ("+nf(e,1)+" µm).";
+    if(T<13.2)m+=" Sous 13,2 °C, les alliages très riches en étain sont exposés à la <b>peste de l'étain</b> (transformation lente, plus rapide vers −30 à −40 °C).";
+    msg.innerHTML=m;
+  }
+  const A=animate($("#m6play"),"▶ Faire vieillir le joint",4500,p=>{sy.value=Math.round(30*p);draw();},()=>{draw();});
+  [sT,sy].forEach(e=>e.addEventListener("input",()=>{A.stop();setOn("#m6pre",null);draw();}));
+  $$("#m6pre .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();const q=PRE[b.dataset.k];sT.value=q[0];sy.value=q[1];setOn("#m6pre",b);draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   Quiz, check-list, sommaire, thème
+   ========================================================= */
+(function(){
+  const box=$("#quiz");if(!box)return;
+  const Q=[
+    {q:"Le flux de brasage dissout :",o:["les graisses et les huiles","les oxydes","toutes les salissures","rien : il protège seulement"],c:1,e:"Le flux dissout les <b>oxydes</b> et protège la surface ; il ne dissout pas les graisses, qu'il faut enlever avant par un dégraissage."},
+    {q:"Quel oxyde se reforme en une fraction de seconde après décapage ?",o:["l'oxyde de cuivre","l'oxyde de fer","l'alumine de l'aluminium","l'oxyde de nickel"],c:2,e:"L'<b>alumine</b> (comme Cr<sub>2</sub>O<sub>3</sub> sur l'inox et TiO<sub>2</sub> sur le titane) se reforme aussitôt : il faut un flux adapté, une atmosphère sèche ou le vide."},
+    {q:"Sur le diagramme d'Ellingham, un gaz H₂/H₂O réduit les oxydes :",o:["dont la droite passe sous celle du gaz","tous, à haute température","dont la droite passe au-dessus de celle du gaz","aucun"],c:2,e:"Il réduit les oxydes <b>moins stables</b> que l'eau à ce rapport H₂O/H₂, c'est-à-dire ceux dont la droite passe au-dessus de la sienne."},
+    {q:"Un point de rosée de −40 °C correspond à environ :",o:["127 ppm de vapeur d'eau","0 ppm","1 % de vapeur d'eau","40 ppm"],c:0,e:"−40 °C ≈ <b>127 ppm</b> ; −60 °C ≈ 11 ppm. Un gaz « sec » contient toujours un peu d'eau."},
+    {q:"À point de rosée égal, remplacer l'hydrogène pur par N₂ + 10 % H₂ rend le gaz :",o:["plus réducteur","plus oxydant","identique","inerte"],c:1,e:"Le rapport p<sub>H₂O</sub>/p<sub>H₂</sub> est <b>dix fois plus grand</b> : le gaz est plus oxydant, il faut le sécher davantage."},
+    {q:"Sous vide, l'oxyde de chrome d'un inox :",o:["se dissocie spontanément","ne se dissocie pas ; le vide empêche la réoxydation et d'autres mécanismes (carbone, bore, silicium) éliminent le film","rend le brasage impossible","se transforme en alumine"],c:1,e:"Sa pression de dissociation (≈ 10⁻²⁰ atm à 1 100 °C) est très inférieure à l'oxygène résiduel : le vide <b>protège</b>, il ne réduit pas."},
+    {q:"Pour braser un carbure ou un inox avec un apport à l'argent, on choisit un flux :",o:["FL20","FH21","FH30","FH12"],c:3,e:"Le <b>FH12</b> (550 à 850 °C) contient du bore élémentaire, qui attaque les oxydes de chrome et des carbures."},
+    {q:"Un flux FL20, du type des fluoroaluminates de potassium :",o:["sert à braser l'aluminium au four sous azote, avec des résidus non corrosifs","sert aux apports au nickel","sert au brasage tendre de l'électronique","doit être lavé à l'acide"],c:0,e:"C'est le flux du brasage <b>CAB</b> des radiateurs : il fond vers 565 à 572 °C, juste sous l'apport Al-Si, et ses résidus restent en place."},
+    {q:"Sous vide, on évite :",o:["l'Ag72Cu28","les apports contenant du zinc ou du cadmium","le BNi-2","l'argon de remplissage"],c:1,e:"Le zinc et le cadmium ont des pressions de vapeur de plusieurs <b>kilopascals</b> à 700 °C : ils s'évaporent et polluent le four."},
+    {q:"Du cuivre électrolytique Cu-ETP chauffé sous hydrogène :",o:["se fissure : l'hydrogène réduit les inclusions de Cu₂O en vapeur d'eau aux joints de grains","devient plus ductile","se nitrure","ne change pas"],c:0,e:"C'est la fragilisation par l'hydrogène du cuivre à oxygène : on emploie du <b>Cu-DHP</b> ou du <b>Cu-OF</b>."},
+    {q:"Pour braser sans flux des tubes de cuivre d'un circuit frigorifique, on prend :",o:["un Al-Si12","un BNi-2","un cuivre-phosphore (CuP 179, CuP 284)","un Ag 449"],c:2,e:"Le phosphore <b>désoxyde le cuivre</b> : brasage sans flux et circuit propre. Jamais sur l'acier ni sur le nickel."},
+    {q:"La température homologue d'une brasure SAC305 à 20 °C vaut environ :",o:["0,09","0,2","1","0,6"],c:3,e:"293 K / 490 K ≈ <b>0,6</b> : la brasure flue déjà à l'ambiante. En °C, on trouverait 0,09 : toujours raisonner en kelvins."}
+  ];
+  let score=0,done=0;const sc=$("#qzScore");
+  function upd(){let t="Score : "+score+" / "+Q.length;if(done===Q.length)t+=score>=10?"  ·  🎉 prêt pour le cours 3":score>=7?"  ·  relis les explications":"  ·  refais un tour des chapitres";sc.textContent=t;}
+  function render(){box.innerHTML="";score=0;done=0;
+    Q.forEach((it,n)=>{const d=document.createElement("div");d.className="qz";
+      d.innerHTML='<p class="qz-q"><b>'+(n+1)+".</b> "+it.q+'</p><div class="qz-o"></div><div class="qz-e" hidden></div>';
+      const o=d.querySelector(".qz-o"),ex=d.querySelector(".qz-e");let answered=false;
+      it.o.forEach((txt,i)=>{const b=document.createElement("button");b.type="button";b.className="qz-b";b.innerHTML=String.fromCharCode(65+i)+". "+txt;
+        b.addEventListener("click",()=>{if(answered)return;answered=true;done++;const ok=i===it.c;if(ok)score++;b.classList.add(ok?"ok":"ko");o.children[it.c].classList.add("ok");ex.hidden=false;ex.innerHTML=(ok?"✅ <b>Bien joué.</b> ":"❌ <b>Pas tout à fait.</b> ")+it.e;upd();});
+        o.appendChild(b);});
+      box.appendChild(d);});
+    upd();}
+  $("#qzReset").addEventListener("click",render);render();
+})();
+(function(){
+  const boxes=$$("#checklist input[type=checkbox]"),msg=$("#checkMsg"),KEY="procedes-brasage-cours2-check";
+  if(!boxes.length)return;
+  let saved=[];try{saved=JSON.parse(localStorage.getItem(KEY)||"[]")||[];}catch(e){saved=[];}
+  boxes.forEach(b=>{b.checked=saved.indexOf(b.dataset.c)>=0;});
+  function upd(){const on=boxes.filter(b=>b.checked).map(b=>b.dataset.c);try{localStorage.setItem(KEY,JSON.stringify(on));}catch(e){}
+    msg.innerHTML=on.length===boxes.length?"🎉 <b>Tout est coché : tu es prêt pour le cours 3 !</b>":on.length+" / "+boxes.length+" : reviens sur les points non cochés (les manipulations sont faites pour ça).";}
+  boxes.forEach(b=>b.addEventListener("change",upd));upd();
+})();
+(function(){
+  const links=$$(".toc a"),tin=$(".toc-in");
+  if(!links.length||!("IntersectionObserver" in window))return;
+  const map={};links.forEach(a=>{map[a.getAttribute("href").slice(1)]=a;});
+  const obs=new IntersectionObserver(ents=>{ents.forEach(en=>{if(!en.isIntersecting)return;const a=map[en.target.id];if(!a)return;
+    links.forEach(l=>l.classList.toggle("on",l===a));
+    if(tin){const tgt=a.offsetLeft-tin.clientWidth/2+a.offsetWidth/2;try{tin.scrollTo({left:tgt,behavior:RM?"auto":"smooth"});}catch(e){tin.scrollLeft=tgt;}}});},{rootMargin:"-45% 0px -50% 0px"});
+  Object.keys(map).forEach(id=>{const s=document.getElementById(id);if(s)obs.observe(s);});
+})();
+(function(){
+  const b=$("#themeBtn");if(!b)return;const KEY="procedes-theme",root=document.documentElement;
+  const lab={auto:"◐ Thème : automatique",light:"☀️ Thème : clair",dark:"🌙 Thème : sombre"};
+  let t="auto";try{t=localStorage.getItem(KEY)||"auto";}catch(e){}
+  function apply(){if(t==="auto")root.removeAttribute("data-theme");else root.setAttribute("data-theme",t);b.textContent=lab[t];}
+  b.addEventListener("click",()=>{t=t==="auto"?"light":t==="light"?"dark":"auto";try{localStorage.setItem(KEY,t);}catch(e){}apply();});
+  apply();
+})();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1753 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fontes, cours 4 : souder une fonte, la pratique</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@500;600;700&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F3F6F9; --paper-2:#E6ECF2; --card:#FFFFFF; --ink:#17212B; --muted:#56626F; --line:#C5CFD9;
+  --grid:rgba(40,90,160,.075);
+  --sig:#CF2438; --tau:#8A34B6; --eps:#1B5ED3; --gam:#06849A; --frc:#D46A00; --mat:#26844A; --weld:#9A5B12;
+  --ok:#26844A; --warn:#B86E00; --bad:#C62828;
+  --lv2:#E4EBF2; --hl:#FFF3B0;
+  --font-body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-head:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --font-math:"STIX Two Text","Cambria Math","Cambria","Times New Roman",serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+    --grid:rgba(120,160,220,.07);
+    --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+    --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+  --grid:rgba(120,160,220,.07);
+  --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+  --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+  color-scheme: dark;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0;color:var(--ink);font-family:var(--font-body);font-size:17.5px;line-height:1.62;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;overflow-x:hidden;
+}
+img,svg{max-width:100%}
+.wrap{max-width:800px;margin:0 auto;padding:0 20px}
+.wide{max-width:980px}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.1;margin:0}
+h3{font-size:1.65rem;font-weight:600;margin:2rem 0 .6rem}
+h4{font-size:1.3rem;font-weight:600;margin:1.4rem 0 .4rem}
+p{margin:.7em 0}
+a{color:var(--eps)}
+b,strong{font-weight:700}
+small{font-size:.8em}
+sub{font-size:.72em}
+.m{font-family:var(--font-math);font-size:1.08em;white-space:nowrap}
+.sig{color:var(--sig)} .tau{color:var(--tau)} .eps{color:var(--eps)} .gam{color:var(--gam)} .frc{color:var(--frc)} .mat{color:var(--mat)} .mut{color:var(--muted)} .wcol{color:var(--weld)}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .12em;line-height:1.1}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 .2em .08em}
+.frac>span:last-child{padding:.08em .2em 0}
+ul,ol{padding-left:1.4em}
+li{margin:.25em 0}
+
+/* ---------- en-tête ---------- */
+.hero{padding:34px 0 10px}
+.title-block{border:2.5px solid var(--ink);background:var(--card);display:grid;grid-template-columns:1fr 300px}
+.tb-main{padding:22px 24px;border-right:2.5px solid var(--ink);display:flex;flex-direction:column;justify-content:space-between;gap:14px}
+.tb-series{margin:0 0 .5rem;color:var(--muted);font-size:.95rem}
+.hero h1{font-size:clamp(2.3rem,6vw,4rem);font-weight:700;letter-spacing:-.01em}
+.tb-cells{display:grid;grid-template-rows:repeat(4,auto)}
+.tb-cells>div{padding:9px 16px;border-bottom:1.5px solid var(--ink);display:flex;flex-direction:column;justify-content:center}
+.tb-cells>div:last-child{border-bottom:0}
+.tb-cells small{color:var(--muted);font-size:.78rem}
+.tb-cells b{font-family:var(--font-head);font-size:1.25rem;font-weight:600;line-height:1.15}
+.lede{font-size:1.13rem;max-width:760px;margin:1.2rem 0}
+.theme-btn{align-self:flex-start;font-family:var(--font-body);font-size:.85rem;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
+@media (max-width:760px){.title-block{grid-template-columns:1fr}.tb-main{border-right:0;border-bottom:2.5px solid var(--ink)}.tb-cells{grid-template-rows:none;grid-template-columns:1fr 1fr}.tb-cells>div:nth-child(odd){border-right:1.5px solid var(--ink)}.tb-cells>div:nth-child(3){border-bottom:0}}
+@media (max-width:420px){.tb-cells{grid-template-columns:1fr}.tb-cells>div:nth-child(odd){border-right:0}.tb-cells>div:nth-child(3){border-bottom:1.5px solid var(--ink)}}
+
+/* code couleur */
+.cc{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:stretch;margin:1rem 0 .4rem}
+.cc-box{background:var(--card);border:2px solid var(--line);padding:12px 14px;border-radius:4px}
+.cc-cause{border-color:var(--sig)} .cc-link{border-color:var(--mat)} .cc-eff{border-color:var(--eps)}
+.cc-box small{display:block;color:var(--muted);font-size:.82rem;line-height:1.3}
+.cc-syms{font-family:var(--font-math);font-size:1.7rem;line-height:1.25;display:flex;flex-wrap:wrap;gap:.1em .45em;margin:.2rem 0}
+.cc-box p{margin:0;font-size:.9rem;line-height:1.35}
+.cc-arrow{align-self:center;font-size:1.8rem;color:var(--muted)}
+@media (max-width:700px){.cc{grid-template-columns:1fr}.cc-arrow{transform:rotate(90deg);justify-self:center;line-height:1}}
+.cc-more{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:.5rem 0}
+.cc-more>div{border:2px solid var(--line);background:var(--card);border-radius:4px;padding:6px 10px;font-size:.9rem}
+@media (max-width:640px){.cc-more{grid-template-columns:1fr}}
+
+/* ---------- sommaire ---------- */
+.toc{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-bottom:1.5px solid var(--line);padding-top:env(safe-area-inset-top,0px);margin-top:18px}
+.toc-in{display:flex;gap:6px;overflow-x:auto;padding:9px 20px;max-width:980px;margin:0 auto;scrollbar-width:thin}
+.toc a{flex:none;text-decoration:none;color:var(--ink);font-size:.88rem;padding:4px 11px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);white-space:nowrap}
+.toc a.on{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.toc a:focus-visible,.btn:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--eps);outline-offset:2px}
+
+/* ---------- sections ---------- */
+section.chap{padding:46px 0 10px}
+.cartouche{display:grid;grid-template-columns:86px 1fr 250px;border:2.5px solid var(--ink);background:var(--card);margin-bottom:1.4rem}
+.c-num{font-family:var(--font-head);font-size:3.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;border-right:2.5px solid var(--ink)}
+.c-title{padding:14px 18px;border-right:2.5px solid var(--ink)}
+.c-title h2{font-size:2.1rem;font-weight:700}
+.c-title p{margin:.25rem 0 0;color:var(--muted)}
+.c-img{padding:12px 14px;display:flex;gap:12px;align-items:center;background:var(--paper-2)}
+.c-img .ico{font-size:2.3rem;line-height:1}
+.c-img small{display:block;color:var(--muted);font-size:.78rem}
+.c-img span{font-size:.95rem;line-height:1.3}
+@media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
+
+/* niveaux */
+.lv{margin:1.2rem 0;padding:6px 22px 14px;border-radius:4px}
+.lv1{background:var(--card);border:2px solid var(--ink)}
+.lv2{background:var(--lv2);border-left:6px solid var(--ink)}
+.lv-h{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;font-family:var(--font-head);font-size:1.35rem;font-weight:600;margin:10px 0 4px}
+.lv-h .tag{font-size:.95rem;font-family:var(--font-body);font-weight:400;color:var(--muted)}
+@media (max-width:520px){.lv{padding:6px 14px 12px}}
+
+/* formules et encadrés */
+.fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:600px;text-align:center;border-radius:3px;overflow-x:auto}
+.fx .big{font-family:var(--font-math);font-size:1.9rem;line-height:1.4}
+.fx .cap{font-size:.85rem;color:var(--muted);margin:.3rem 0 0}
+.fx .row{display:flex;flex-wrap:wrap;justify-content:center;gap:.2em 1.4em}
+.syms{margin:.6rem 0;display:grid;grid-template-columns:auto 1fr;gap:.35rem 1rem;align-items:baseline}
+.syms dt{font-family:var(--font-math);font-size:1.25rem;text-align:right;white-space:nowrap}
+.syms dd{margin:0}
+.def{margin:.9rem 0;padding:.5rem .9rem;border-left:3px dotted var(--muted);font-size:.96rem;background:color-mix(in srgb,var(--card) 60%,transparent)}
+.def>b:first-child{font-family:var(--font-head);font-size:1.08rem;font-weight:600}
+.tip{margin:1rem 0;padding:.7rem 1rem;border:1.5px dashed var(--mat);border-radius:4px;font-size:.97rem}
+.warn{margin:1rem 0;padding:.7rem 1rem;border:2px solid var(--bad);border-radius:4px;font-size:.97rem;background:color-mix(in srgb,var(--bad) 7%,transparent)}
+.mnemo{margin:1rem 0;padding:.7rem 1rem;background:var(--hl);border-radius:4px;font-size:.98rem}
+.fun{margin:1.2rem 0;padding:.8rem 1rem;border:2px dashed var(--muted);border-radius:10px;background:var(--card);font-size:.98rem}
+.fun-h{display:block;margin-bottom:.35rem;font-family:var(--font-head);font-size:1.15rem;font-weight:600;letter-spacing:.02em}
+.meta{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--frc);border-radius:4px;background:color-mix(in srgb,var(--frc) 6%,transparent)}
+.weld{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--weld);border-radius:4px;background:color-mix(in srgb,var(--weld) 7%,transparent)}
+.weld>b:first-child{font-family:var(--font-head);font-size:1.15rem;font-weight:600;color:var(--weld)}
+.hp{display:inline-block;font-size:.72rem;font-weight:700;padding:1px 7px;border-radius:9px;background:var(--weld);color:var(--card);vertical-align:middle;margin-left:4px;white-space:nowrap}
+.recall{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:1rem 0}
+.recall>div{background:var(--card);border:1.5px solid var(--line);border-radius:4px;padding:8px 12px;font-size:.92rem}
+.recall .f{font-family:var(--font-math);font-size:1.2rem;margin-bottom:.2rem}
+@media (max-width:640px){.recall{grid-template-columns:1fr}}
+.hist{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:1rem 0}
+.hist>div{background:var(--card);border:1.5px solid var(--weld);border-radius:4px;padding:8px 12px;font-size:.93rem}
+.hist .yr{font-family:var(--font-head);font-size:1.6rem;font-weight:700;color:var(--weld);line-height:1}
+@media (max-width:720px){.hist{grid-template-columns:1fr}}
+
+/* manipulations */
+.lab{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:14px 16px 12px;margin:1.4rem 0}
+.lab-h{font-family:var(--font-head);font-size:1.3rem;font-weight:600;margin:0 0 .2rem}
+.lab-sub{margin:0 0 .6rem;color:var(--muted);font-size:.92rem}
+.lab svg{display:block;width:100%;height:auto;color:var(--ink);font-family:var(--font-body);touch-action:pan-y}
+.ctrl{display:grid;grid-template-columns:minmax(110px,auto) 1fr minmax(92px,auto);gap:4px 12px;align-items:center;margin:.5rem 0}
+.ctrl label{font-size:.95rem}
+.ctrl output{font-family:var(--font-math);font-size:1.08rem;text-align:right;white-space:nowrap}
+@media (max-width:520px){.ctrl{grid-template-columns:1fr auto}.ctrl input[type=range]{grid-column:1/-1;grid-row:2}}
+input[type=range]{width:100%;accent-color:var(--ink);height:28px;margin:0}
+input.r-sig{accent-color:var(--sig)} input.r-tau{accent-color:var(--tau)} input.r-frc{accent-color:var(--frc)} input.r-mat{accent-color:var(--mat)} input.r-eps{accent-color:var(--eps)}
+.btns{display:flex;flex-wrap:wrap;gap:6px;margin:.5rem 0}
+.btn{font-family:var(--font-body);font-size:.9rem;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 13px;cursor:pointer;line-height:1.3}
+.btn:hover{background:var(--paper-2)}
+.btn.on{background:var(--ink);color:var(--paper)}
+.btn.play{border-color:var(--eps);color:var(--eps);font-weight:700}
+.btn:disabled{opacity:.45;cursor:default}
+.readout{font-family:var(--font-math);font-size:1.08rem;background:var(--paper-2);border-radius:4px;padding:.5rem .8rem;margin:.5rem 0;overflow-x:auto;display:flex;flex-wrap:wrap;gap:.2em 1.3em}
+.readout>span{white-space:nowrap}
+.status{font-size:.97rem;margin:.5rem 0;padding:.5rem .8rem;border-left:4px solid var(--eps);background:color-mix(in srgb,var(--eps) 6%,transparent);border-radius:0 4px 4px 0;min-height:2.6em}
+.radios{display:flex;flex-wrap:wrap;gap:6px 14px;margin:.4rem 0;font-size:.95rem}
+.radios label{display:inline-block;cursor:pointer}
+.radios input{margin:0 6px 0 0;vertical-align:middle}
+
+/* svg */
+svg text{fill:currentColor;font-size:13px}
+svg .lbl{font-size:12.5px;fill:var(--muted)}
+svg .mth{font-family:var(--font-math);font-size:16px}
+svg .ttl{font-family:var(--font-head);font-size:15px;font-weight:600}
+svg .axis{stroke:var(--ink);stroke-width:1.4;fill:none}
+svg .tick{stroke:var(--muted);stroke-width:1}
+svg .gridbg{stroke:var(--line);stroke-width:1}
+svg .ref{stroke:var(--muted);stroke-width:1.3;stroke-dasharray:4 3;fill:none}
+.arr line{stroke:currentColor}
+.arr polygon{fill:currentColor}
+
+/* tableaux */
+.tbl-wrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch}
+table.data{border-collapse:collapse;width:100%;font-size:.94rem;background:var(--card)}
+table.data th,table.data td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:middle}
+table.data th{font-family:var(--font-head);font-weight:600;font-size:1.05rem;background:var(--paper-2)}
+table.data td.n{font-family:var(--font-math);white-space:nowrap}
+table.data tr.now td{background:var(--hl)}
+
+/* parcours */
+.route{list-style:none;padding:0;margin:1rem 0;position:relative}
+.route::before{content:"";position:absolute;left:17px;top:10px;bottom:10px;width:4px;background:var(--line);border-radius:2px}
+.route li{position:relative;padding:0 0 14px 52px;margin:0}
+.route li .dot{position:absolute;left:4px;top:0;width:30px;height:30px;border-radius:50%;border:3px solid var(--ink);background:var(--card);font-family:var(--font-head);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+.route li b{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.route li p{margin:.1rem 0 0;font-size:.95rem}
+.series{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:.8rem 0}
+.series>div{background:var(--card);border:1.5px solid var(--line);padding:8px 10px;border-radius:4px;font-size:.88rem}
+.series>div.here{border:2.5px solid var(--ink)}
+.series b{display:block;font-family:var(--font-head);font-size:1.05rem}
+@media (max-width:700px){.series{grid-template-columns:1fr 1fr}}
+
+/* exercices et quiz */
+.exo{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--ink);padding:6px 20px 12px;margin:1.2rem 0;border-radius:4px}
+.exo.defi{border-left-color:var(--weld)}
+.exo h4{margin-top:.8rem}
+.exo .lvtag{font-family:var(--font-body);font-size:.85rem;font-weight:400;color:var(--muted);margin-left:.4rem}
+.exo .q{margin:.25rem 0}
+details{margin:.6rem 0}
+summary{cursor:pointer;font-weight:700;padding:4px 0}
+details .sol{padding:.4rem .9rem;border-left:3px solid var(--mat);margin:.4rem 0}
+details .sol p{margin:.45em 0}
+.qz{background:var(--card);border:1.5px solid var(--line);border-radius:6px;padding:10px 16px;margin:.8rem 0}
+.qz-q{margin:.3rem 0 .6rem}
+.qz-o{display:flex;flex-direction:column;gap:6px}
+.qz-b{text-align:left;font-family:var(--font-body);font-size:.97rem;padding:8px 12px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:5px;cursor:pointer}
+.qz-b:hover{border-color:var(--ink)}
+.qz-b.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--card))}
+.qz-b.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--card))}
+.qz-e{font-size:.94rem;margin:.6rem 0 .2rem}
+.score{position:sticky;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);display:inline-block;background:var(--ink);color:var(--paper);padding:6px 14px;border-radius:999px;font-size:.95rem;margin:.6rem 0}
+
+/* fiche mémoire */
+.fiche{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:2.5px solid var(--ink);background:var(--card);margin:1rem 0}
+.fiche>div{padding:12px 14px;border-right:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}
+.fiche>div:nth-child(3n){border-right:0}
+.fiche>div:nth-last-child(-n+3){border-bottom:0}
+.fiche .ic{font-size:1.9rem;line-height:1}
+.fiche h4{margin:.3rem 0 .2rem;font-size:1.15rem}
+.fiche .f{font-family:var(--font-math);font-size:1.1rem;margin:.2rem 0}
+.fiche p{margin:.2rem 0 0;font-size:.88rem;color:var(--muted)}
+@media (max-width:720px){.fiche{grid-template-columns:1fr 1fr}.fiche>div{border-right:1.5px solid var(--ink)!important;border-bottom:1.5px solid var(--ink)!important}.fiche>div:nth-child(2n){border-right:0!important}.fiche>div:last-child{border-bottom:0!important}}
+@media (max-width:440px){.fiche{grid-template-columns:1fr}.fiche>div{border-right:0!important}}
+.gloss{display:grid;grid-template-columns:minmax(150px,230px) 1fr;gap:0;border-top:1.5px solid var(--line);margin:1rem 0}
+.gloss dt,.gloss dd{border-bottom:1.5px solid var(--line);padding:7px 8px;margin:0}
+.gloss dt{font-weight:700}
+.gloss dd{font-size:.95rem}
+@media (max-width:600px){.gloss{grid-template-columns:1fr}.gloss dt{border-bottom:0;padding-bottom:0}}
+.check label{display:flex;gap:10px;align-items:flex-start;padding:5px 0;cursor:pointer}
+.check input{margin-top:.35em;width:18px;height:18px;accent-color:var(--mat);flex:none}
+footer{padding:40px 0 60px;color:var(--muted);font-size:.9rem}
+hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
+@media (max-width:700px){.m{white-space:normal}.fx{padding:12px 10px}.fx .big{font-size:1.4rem}}
+@media (max-width:400px){body{font-size:16.5px}.wrap{padding:0 14px}.lab{padding:12px 10px}}
+
+/* compléments de la série Rupture */
+.btn.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,var(--card))}
+.btn.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--card))}
+.ctrl[hidden]{display:none}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="wrap wide">
+  <div class="title-block">
+    <div class="tb-main">
+      <div>
+        <p class="tb-series">Fontes et soudage des fontes, série 2.17 : comprendre la fonte pour mieux la souder</p>
+        <h1>Souder une fonte : la pratique</h1>
+      </div>
+      <button class="theme-btn" id="themeBtn" type="button" aria-label="Changer de thème">◐ Thème : automatique</button>
+    </div>
+    <div class="tb-cells">
+      <div><small>Cours</small><b>4 sur 4, le dernier de la série : de l'atelier à la qualification</b></div>
+      <div><small>Durée conseillée</small><b>≈ 3 h avec les exercices</b></div>
+      <div><small>Prérequis</small><b>cours 1 à 3 de la série ; procédé 111 et ses électrodes (Électrode enrobée, cours 1 à 5) ; mouillage et soudobrasage (Brasage, cours 1, 3 et 4) ; concentration de contraintes (Fontes, cours 1)</b></div>
+      <div><small>À la fin tu sais</small><b>choisir un procédé pour souder ou soudobraser une fonte ; conduire un soudage au chalumeau en régime chaud ; choisir et désigner un produit d'apport (ISO 1071) et beurrer ; soudobraser ; préparer et réparer une fissure ; goujonner et prévoir une aluminothermie ; qualifier un mode opératoire et réparer un acier moulé</b></div>
+    </div>
+  </div>
+  <p class="lede">Le cours 3 a expliqué ce qui se passe dans une soudure sur fonte. Celui-ci passe à l'atelier : quel procédé pour quelle réparation, comment garder le magnésium d'une GS sous la flamme, comment le beurrage protège la fonte de la dilution, comment un laiton s'accroche sans faire fondre la pièce, comment arrêter une fissure avant de la réparer, comment ancrer une soudure dans la fonte saine ou couler du métal neuf dans une brèche. Pour finir, la qualification des modes opératoires et les aciers moulés, ces cousins des fontes qui se soudent comme des aciers.</p>
+
+  <h4>Le code couleur de la série</h4>
+  <div class="cc" role="img" aria-label="Code couleur : les causes en rouge et violet, les paramètres en vert, les effets en bleu et bleu-vert">
+    <div class="cc-box cc-cause"><small>Les causes</small><div class="cc-syms"><span class="sig">T</span><span class="sig">σ</span><span class="tau">Fe₃C</span><span class="tau">fissure</span></div><p><span class="sig">rouge</span> : ce qui chauffe ou tire (température, contraintes) ; <span class="tau">violet</span> : les ennemis (cémentite, fissures, graphite qui empêche le mouillage, oxydes)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-link"><small>Les paramètres</small><div class="cc-syms"><span class="mat">T<sub>0</sub></span><span class="mat">D</span><span class="mat">Mg</span><span class="mat">d</span></div><p>en <span class="mat">vert</span> : les choix (préchauffage T<sub>0</sub>, dilution D, magnésium de la baguette, diamètre d des trous d'arrêt, couches de beurrage, dimensions)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-eff"><small>Les effets</small><div class="cc-syms"><span class="eps">K<sub>t</sub></span><span class="eps">σ<sub>j</sub></span><span class="eps">θ</span><span class="gam">ZF</span><span class="gam">GS</span></div><p><span class="eps">bleu</span> : ce qu'on mesure (concentration de contrainte K<sub>t</sub>, résistance du joint σ<sub>j</sub>, angle de mouillage θ, masses) ; <span class="gam">bleu-vert</span> : la structure obtenue (zone fondue, forme du graphite)</p></div>
+  </div>
+  <div class="cc-more">
+    <div><b class="frc">Orange</b> : les actions et les forces (flamme, arc, chauffage, charge).</div>
+    <div><b>Noir</b> : la géométrie dessinée (pièces, chanfreins, cotes).</div>
+    <div><b class="wcol">Bronze</b> : les encadrés « métier » 🔥, tournés vers l'atelier de soudage.</div>
+  </div>
+</div>
+</header>
+
+<nav class="toc" aria-label="Sommaire">
+  <div class="toc-in">
+    <a href="#avant">Avant de commencer</a>
+    <a href="#c1">1 Choisir un procédé</a>
+    <a href="#c2">2 Le chalumeau</a>
+    <a href="#c3">3 Électrode et beurrage</a>
+    <a href="#c4">4 Soudobraser</a>
+    <a href="#c5">5 Préparer, réparer</a>
+    <a href="#c6">6 Goujonner, couler</a>
+    <a href="#c7">7 Qualifier, aciers moulés</a>
+    <a href="#exos">Exercices</a>
+    <a href="#quiz-s">Quiz</a>
+    <a href="#fiche">Fiche mémoire</a>
+    <a href="#gloss">Glossaire</a>
+    <a href="#check">Check-list</a>
+  </div>
+</nav>
+
+<main>
+<section class="chap" id="avant">
+<div class="wrap">
+  <h3 style="margin-top:0">Avant de commencer</h3>
+  <h4>Le cours 3 en trois cases</h4>
+  <div class="recall">
+    <div><div class="f">ZF · ZPF · ZAT</div>La zone partiellement fondue refond en fonte blanche, la zone affectée trempe en martensite : c'est là qu'une soudure sur fonte casse.</div>
+    <div><div class="f">Ni, NiFe : D ≤ ≈ 40 %</div>Le nickel rend le carbone en graphite et donne une zone fondue ductile, à condition de diluer peu.</div>
+    <div><div class="f">chaud 500-650 °C · froid</div>Régime chaud avec un apport en fonte, ou régime froid au nickel, en cordons courts martelés ; préchauffage et t<sub>8/5</sub> décident de la dureté.</div>
+  </div>
+
+  <div class="def"><b>📘 Correspondance avec le planning et le référentiel</b>. Ce cours termine le sujet <b>2.17 « Fontes »</b> du planning de la formation :
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Chapitre du cours</th><th>Ce qu'il apporte à l'IWE</th></tr>
+      <tr><td>1 Choisir un procédé</td><td>procédés applicables aux fontes, leurs avantages et leurs limites</td></tr>
+      <tr><td>2 Le chalumeau</td><td>soudage homogène en régime chaud, baguettes en fonte, chalumeau à poudre</td></tr>
+      <tr><td>3 Électrode enrobée, fil fourré, beurrage</td><td>produits d'apport de l'ISO 1071, choix selon la fonte, beurrage</td></tr>
+      <tr><td>4 Soudobraser</td><td>principe, préparation de la surface, laitons d'apport, limites</td></tr>
+      <tr><td>5 Préparer et réparer</td><td>préparations, conception, gougeage, réparation d'une fissure</td></tr>
+      <tr><td>6 Goujonner, ancrer, couler</td><td>goujonnage, renforts, agrafage, aluminothermie, autres procédés</td></tr>
+      <tr><td>7 Qualifier, aciers moulés</td><td>qualification des modes opératoires, contrôles, soudage des aciers moulés</td></tr>
+    </table></div>
+    Dans le référentiel de l'IIW (<i>International Institute of Welding</i>), le module 2.17 demande à l'IWE (<i>International Welding Engineer</i>) d'appliquer aux fontes et aux aciers moulés les procédés, les produits d'apport et les mesures propres à surmonter leurs problèmes de soudage, et de connaître les règles de soudage de production et de réparation des pièces moulées.
+  </div>
+
+  <div class="def"><b>📖 Les normes, sources et sigles de ce cours</b>.
+    <ul>
+      <li><b>ISO 1071</b> : classification des produits d'apport pour le soudage par fusion des fontes ; <b>ISO 4063</b> : numéros des procédés (111 électrode enrobée, 311 chalumeau oxyacétylénique, 131 MIG, 114 fil fourré autoprotégé, 71 aluminothermie…) ; <b>EN 1011-8</b> : recommandations pour le soudage des fontes ; <b>ISO 15614-3</b> : qualification des modes opératoires de soudage des fontes ; <b>ISO 11970</b> : qualification des modes opératoires de soudage de production des pièces moulées en acier ; <b>EN 10213</b> : aciers moulés pour service sous pression ; <b>EN 10027-1</b> : désignation symbolique des aciers.</li>
+      <li>Autres notations courantes : les désignations américaines de l'AWS (<i>American Welding Society</i>) pour les apports (ENi-CI, ENiFe-CI, RCI-B, RBCuZn-A…) et la spécification ASTM A216 pour un exemple de règles de réparation des aciers moulés.</li>
+      <li><b>MB</b>, <b>MA</b> : métal de base, métal d'apport ; <b>ZF</b>, <b>ZPF</b>, <b>ZAT</b> : zone fondue, partiellement fondue, affectée thermiquement ; <b>D</b> : dilution ; <b>T<sub>0</sub></b> : préchauffage ; <b>Mg</b> : magnésium ; <b>K<sub>t</sub></b> : coefficient de concentration de contrainte ; <b>σ<sub>j</sub></b> : résistance du joint ; <b>θ</b> : angle de mouillage ; <b>R<sub>m</sub></b> : résistance à la traction ; <b>DMOS</b> : descriptif de mode opératoire de soudage ; <b>DMOS-P</b> : DMOS préliminaire ; <b>QMOS</b> : qualification de mode opératoire de soudage ; <b>VT</b>, <b>PT</b>, <b>MT</b>, <b>RT</b>, <b>UT</b> : contrôles visuel, par ressuage, par magnétoscopie, par radiographie, par ultrasons ; <b>TTAS</b> : traitement thermique après soudage.</li>
+    </ul>
+    Les modèles des manipulations sont pédagogiques : ils reproduisent les tendances et les ordres de grandeur. Un mode opératoire réel se qualifie.
+  </div>
+
+  <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage</b>
+    <p>Devant un carter fissuré, un bâti cassé ou un défaut de fonderie, le coordinateur en soudage doit décider vite et bien : réparer ou remplacer, souder ou soudobraser, chauffer toute la pièce ou travailler à froid, goujonner, contrôler, qualifier. Une réparation mal choisie fissure à nouveau, parfois en service. Ce cours donne les outils de cette décision, procédé par procédé, puis les règles qui la rendent opposable : le mode opératoire qualifié.</p>
+  </div>
+
+  <h4>La série en quatre cours</h4>
+  <div class="series">
+    <div><b>1 Graphite ou cémentite</b>Ce qu'est une fonte, diagrammes stable et métastable, grise ou blanche, formes du graphite, matrice, propriétés.</div>
+    <div><b>2 La famille des fontes</b>Désignations EN 1560, nuances GL, GV, GS, ADI, malléables, blanches et alliées, traitements thermiques, corrosion.</div>
+    <div><b>3 Souder une fonte : le joint</b>Soudabilité, zones de la soudure, dilution, régimes chaud et froid, préchauffage, refroidissement.</div>
+    <div class="here"><b>4 Souder une fonte : la pratique</b>Procédés et produits d'apport, beurrage, soudobrasage, réparation, goujonnage, qualification, aciers moulés.</div>
+  </div>
+
+  <h4>Le plan du cours</h4>
+  <ol class="route">
+    <li><span class="dot">1</span><b>Choisir un procédé</b><p>Chaque réparation a son outil : la carte des procédés.</p></li>
+    <li><span class="dot">2</span><b>Le chalumeau : baguette en fonte et poudre</b><p>Souder fonte sur fonte en régime chaud, et recharger sans fondre.</p></li>
+    <li><span class="dot">3</span><b>Électrode enrobée, fil fourré et beurrage</b><p>Les apports de l'ISO 1071 et les couches tampons.</p></li>
+    <li><span class="dot">4</span><b>Soudobraser</b><p>Un laiton qui mouille la fonte sans la fondre.</p></li>
+    <li><span class="dot">5</span><b>Préparer et réparer</b><p>Chanfreins, conception, gougeage, et la fissure qu'on arrête avant de la souder.</p></li>
+    <li><span class="dot">6</span><b>Goujonner, ancrer, couler</b><p>Les grosses réparations : goujons, renforts, agrafes, aluminothermie.</p></li>
+    <li><span class="dot">7</span><b>Qualifier, contrôler, et les aciers moulés</b><p>Le mode opératoire qualifié, les contrôles, et les pièces moulées en acier.</p></li>
+  </ol>
+</div>
+</section>
+
+<section class="chap" id="c1">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">1</div>
+    <div class="c-title"><h2>Choisir un procédé</h2><p>Chaque réparation a son outil : la carte des procédés</p></div>
+    <div class="c-img"><span class="ico">🧰</span><span><small>Image à retenir</small>La boîte à outils : on ne visse pas avec un marteau ; on ne répare pas un carter sur place avec un four</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la boîte à outils</span></div>
+    <p>Un bon artisan ne prend pas le même outil pour une vis et pour un clou. Pour une fonte, la boîte à outils se range en deux tiroirs :</p>
+    <ul>
+      <li><b>les procédés qui fondent la fonte</b> : le chalumeau avec une baguette en fonte, l'électrode enrobée, le MIG et le fil fourré, l'aluminothermie. Ils créent une zone fondue, une zone partiellement fondue et une zone affectée (cours 3) ;</li>
+      <li><b>les procédés qui ne la fondent pas</b> : le soudobrasage au laiton, le chalumeau à poudre de nickel, la projection thermique. L'apport fond, la fonte non : pas de fonte blanche, pas de martensite de trempe à la ligne de fusion.</li>
+    </ul>
+    <p>Le choix dépend de cinq questions : <b>quelle fonte</b> (famille, état, propre ou imprégnée) ? <b>quel travail</b> (réparation, assemblage, rechargement, liaison avec un acier) ? <b>quelle pièce</b> (taille, épaisseur, démontable ou non, peut-elle entrer dans un four) ? <b>quelles exigences</b> (résistance, étanchéité, couleur, usinabilité) ? <b>quel coût et quel délai</b> ?</p>
+    <p>Quelques réflexes : si la pièce entre dans un four et doit garder sa couleur et son usinabilité, on soude fonte sur fonte en régime chaud ; si elle reste en place, on soude à froid au nickel ou au nickel-fer ; si elle est ancienne, fragile ou riche en phosphore, on la soudobrase ; si la brèche est énorme, on coule du métal neuf par aluminothermie.</p>
+  </div>
+
+  <div class="lab" id="m1">
+    <p class="lab-h">Manipulation 1 : la carte des procédés</p>
+    <p class="lab-sub">Choisis une situation, puis règle l'épaisseur de la pièce. Sur la carte, chaque procédé est placé selon la chaleur qu'il apporte à la pièce et la part de fonte qu'il fait fondre ; sa couleur dit s'il convient : vert recommandé, bleu possible, gris peu adapté, violet barré à exclure. Les barres classent les procédés. ▶ Épaissir fait passer la pièce de 5 à 150 mm. Aide à la décision pédagogique, pas une règle de norme.</p>
+    <div class="btns" id="m1s">
+      <button class="btn on" data-k="carter" type="button">Carter GL fissuré, sur place</button>
+      <button class="btn" data-k="neuve" type="button">Défaut sur pièce GS neuve</button>
+      <button class="btn" data-k="acier" type="button">Liaison fonte GS – acier</button>
+      <button class="btn" data-k="usure" type="button">Surface usée à recharger</button>
+      <button class="btn" data-k="breche" type="button">Grosse cassure, pièce massive</button>
+      <button class="btn" data-k="ancienne" type="button">Fonte ancienne, riche en P</button>
+    </div>
+    <div class="ctrl"><label for="m1e">Épaisseur <span class="mat">e</span></label><input type="range" id="m1e" class="r-mat" min="5" max="150" step="5" value="20"><output id="m1eo"></output></div>
+    <div class="btns"><button class="btn play" id="m1play" type="button">▶ Épaissir</button></div>
+    <svg id="m1svg" role="img" aria-label="Carte des procédés selon la chaleur apportée et la fusion de la fonte, et classement pour la situation choisie"></svg>
+    <div class="readout" id="m1r"></div>
+    <p class="status" id="m1msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">procédés, numéros ISO 4063, domaines d'emploi</span></div>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Procédé (ISO 4063)</th><th>Régime, apport</th><th>Points forts</th><th>Limites</th></tr>
+      <tr><td>Chalumeau oxyacétylénique (311), baguette en fonte</td><td>chaud, préchauffage ≈ 425 à 675 °C ; baguette en fonte et flux</td><td>joint homogène : même couleur, même usinabilité ; température facile à maîtriser</td><td>pièce entière chaude ; lent ; à plat</td></tr>
+      <tr><td>Chalumeau à poudre</td><td>froid ; poudre à base de nickel</td><td>la fonte ne fond pas (elle reste sous ≈ 750 °C) ; dépôt dense</td><td>lent, coûteux ; dépôt peu ductile ; surtout en rechargement</td></tr>
+      <tr><td>Électrode enrobée (111)</td><td>froid au nickel ou au nickel-fer ; chaud avec électrode en fonte</td><td>plus rapide que le chalumeau ; zone affectée réduite ; sur place</td><td>matériel et soudeurs qualifiés ; dilution à surveiller</td></tr>
+      <tr><td>MIG (131) et fil fourré (114 autoprotégé, 136 sous gaz)</td><td>froid ; fil au nickel ou au nickel-fer</td><td>productivité ; propriétés proches de la fonte</td><td>pénétration à limiter (court-circuit ou grosses gouttes)</td></tr>
+      <tr><td>Soudobrasage (flamme ; arc, 972)</td><td>pas de fusion de la fonte ; laiton ; préchauffage ≥ ≈ 400 °C</td><td>faibles contraintes ; joint souvent plus résistant que la fonte</td><td>couleur différente ; ni chaleur en service ni ammoniaque ; corrosion galvanique</td></tr>
+      <tr><td>Aluminothermie (71)</td><td>coulée de métal neuf dans un moule</td><td>très grosses brèches, sur place, pièces épaisses</td><td>lente et coûteuse ; moule à construire</td></tr>
+      <tr><td>Résistance (2), sous laitier (72)</td><td>fusion locale</td><td>possibles avec précautions</td><td>résistance : chasser le métal liquide, sinon fonte blanche ; courant de post-chauffage pour ralentir le refroidissement</td></tr>
+      <tr><td>Faisceau d'électrons (51), plasma (15)</td><td>énergie concentrée</td><td>plasma : comparable au MIG en court-circuit, sans avantage</td><td>faisceau d'électrons : refroidissement si rapide que la zone fondue devient trop dure</td></tr>
+      <tr><td>Friction (42), diffusion (45)</td><td>à l'état solide</td><td>friction : GS, malléables, et surtout fontes austénitiques ; diffusion possible</td><td>friction inadaptée aux GL : le graphite lubrifie l'interface ; martensite possible en ZAT</td></tr>
+    </table></div>
+    <div class="def"><b>📖 Soudage homogène, hétérogène</b> (cours 3) : avec un apport de même nature que la fonte, ou différent. <b>Soudobrasage</b> : assemblage où l'apport, de température de fusion plus basse, est déposé comme une soudure dans un joint ouvert, sans fusion du métal de base ; il mouille la surface et s'y lie par diffusion. <b>ISO 4063</b> : norme qui numérote les procédés de soudage.</div>
+    <div class="warn"><b>⚠️ Piège : « plus d'énergie concentrée, c'est mieux ».</b> Sur l'acier, le faisceau d'électrons et le laser font des soudures étroites et belles. Sur fonte, leur refroidissement très rapide fige le carbone dans une zone fondue dure et fragile : c'est le contraire de ce qu'on cherche.</div>
+    <div class="tip">💡 <b>La question du four.</b> Avant tout, demande si la pièce peut être démontée, chauffée entière et refroidie lentement. Si oui, le régime chaud ouvre la porte au soudage homogène ; si non, on travaille à froid ou sans fusion.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « four, nickel, laiton, coulée »</b> : quatre réponses pour quatre situations (pièce démontable, réparation sur place, fonte fragile, brèche énorme).</div>
+    <div class="weld"><b>🔥 Réparer ou remplacer ?</b>
+      <p>La première décision n'est pas technique : une pièce de série bon marché se remplace. Une pièce unique, ancienne, longue à refaire ou immobilisant une installation se répare. Le coordinateur pèse délai, coût, risque de nouvelle fissure et conséquences d'une rupture en service, puis choisit le procédé et fait qualifier le mode opératoire si l'enjeu le justifie.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c2">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">2</div>
+    <div class="c-title"><h2>Le chalumeau : baguette en fonte et poudre</h2><p>Souder fonte sur fonte en régime chaud, et recharger sans fondre</p></div>
+    <div class="c-img"><span class="ico">🧴</span><span><small>Image à retenir</small>Le flacon de parfum débouché : laissé ouvert, il s'évente ; laissé liquide trop longtemps, le bain perd son magnésium</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le flacon débouché</span></div>
+    <p>Le chalumeau oxyacétylénique est la méthode historique pour souder les fontes grises. Sa flamme fond une partie de la pièce et une <b>baguette en fonte</b> : le joint est en fonte, de même couleur et de même usinabilité que la pièce. La chaleur, plus douce que celle d'un arc, se règle facilement.</p>
+    <ul>
+      <li>On soude en <b>régime chaud</b> : toute la pièce est préchauffée, entre 425 et 675 °C selon la fonte, et maintenue chaude pendant le soudage, puis refroidie lentement.</li>
+      <li>La flamme est <b>franchement réductrice</b> (excès d'acétylène) : elle protège le carbone, le silicium et le magnésium de l'oxydation. Un <b>flux</b> dissout les oxydes et facilite l'élimination du laitier.</li>
+      <li>La <b>baguette</b> contient un excès de carbone et de silicium, qui s'évaporent ou s'oxydent en partie, et, pour une GS, du <b>magnésium et du cérium</b> pour sphéroïdiser le graphite de la zone fondue.</li>
+    </ul>
+    <p>Le magnésium est volatil, comme le parfum d'un flacon débouché : plus le bain reste liquide longtemps, plus il s'en va. Sous un certain seuil, le graphite de la zone fondue redevient vermiculaire, puis lamellaire (cours 1) : la soudure d'une GS n'est plus une GS.</p>
+    <p>Le <b>chalumeau à poudre</b> travaille autrement, en régime froid : une poudre à base de nickel, additionnée d'éléments qui abaissent sa température de fusion et la rendent fluide, est projetée dans la flamme et fond à la surface sans fondre la fonte, qui reste sous environ 750 °C. Le dépôt est dense, sans oxydes ni porosités. C'est un procédé lent et coûteux, réservé au rechargement, au bouchage de petits défauts et aux fontes fortement alliées.</p>
+  </div>
+
+  <div class="lab" id="m2">
+    <p class="lab-h">Manipulation 2 : garder le magnésium</p>
+    <p class="lab-sub">Choisis la flamme et la baguette, puis règle le préchauffage T<sub>0</sub> et la durée pendant laquelle le bain reste liquide. À gauche, la teneur en magnésium du bain au fil du temps, avec les seuils de forme du graphite ; à droite, la structure de la zone fondue. ▶ Laisser le bain liquide fait défiler 2 minutes. Baguette GS à 0,06 % de magnésium ; modèle pédagogique.</p>
+    <div class="btns" id="m2f">
+      <button class="btn on" data-k="red" type="button">Flamme réductrice</button>
+      <button class="btn" data-k="neu" type="button">Flamme neutre</button>
+      <button class="btn" data-k="oxy" type="button">Flamme oxydante</button>
+    </div>
+    <div class="btns" id="m2b">
+      <button class="btn on" data-k="gs" type="button">Baguette GS (Mg, Ce)</button>
+      <button class="btn" data-k="gl" type="button">Baguette GL</button>
+    </div>
+    <div class="ctrl"><label for="m2T">Préchauffage <span class="mat">T<sub>0</sub></span></label><input type="range" id="m2T" class="r-mat" min="200" max="760" step="10" value="550"><output id="m2To"></output></div>
+    <div class="ctrl"><label for="m2t">Bain liquide <span class="mat">t</span></label><input type="range" id="m2t" class="r-mat" min="0" max="120" step="1" value="30"><output id="m2to"></output></div>
+    <div class="btns"><button class="btn play" id="m2play" type="button">▶ Laisser le bain liquide</button></div>
+    <svg id="m2svg" role="img" aria-label="Teneur en magnésium du bain au cours du temps et structure de la zone fondue"></svg>
+    <div class="readout" id="m2r"></div>
+    <p class="status" id="m2msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">évanouissement du magnésium, préchauffages, préparation</span></div>
+    <p><b>L'évanouissement du magnésium.</b> Le modèle de la manipulation fait décroître le magnésium du bain avec une demi-vie t<sub>½</sub> qui dépend de la flamme :</p>
+    <div class="fx"><div class="big"><span class="mat">Mg</span>(t) = <span class="mat">Mg<sub>0</sub></span>·2<sup>−t/t½</sup></div><p class="cap">Mg<sub>0</sub> : teneur apportée par la baguette (0,06 % dans le modèle) ; t : durée pendant laquelle le bain reste liquide (s) ; t<sub>½</sub> : demi-vie, 60 s en flamme réductrice, 30 s en flamme neutre, 12 s en flamme oxydante (valeurs du modèle). Seuils du cours 1 : graphite lamellaire sous 0,009 %, vermiculaire entre 0,009 et 0,014 %, sphéroïdal complet au-dessus de 0,028 %.</p></div>
+    <p>En flamme neutre, le bain passe sous 0,028 % au bout de <span class="m">t = 30 × log₂(0,06/0,028) ≈ 33 s</span>, sous 0,014 % au bout d'environ 63 s. En flamme réductrice, ces durées doublent. D'où des bains petits, menés sans traîner, et des baguettes surdosées en magnésium.</p>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Fonte de base</th><th>Préchauffage au chalumeau, régime chaud</th></tr>
+      <tr><td>Fontes non alliées</td><td>425 à 650 °C : au-delà de 650 °C, la fonte de base risque de perdre de la dureté</td></tr>
+      <tr><td>Fontes alliées</td><td>jusqu'à 675 °C</td></tr>
+      <tr><td>Fontes ferritiques recuites, de faible dureté</td><td>jusqu'à 760 °C</td></tr>
+    </table></div>
+    <p class="mut" style="font-size:.9rem">Les guides donnent souvent 550 à 650 °C pour le soudage homogène des fontes ; sous environ 425 °C, la zone fondue et la zone partiellement fondue refroidissent trop vite et blanchissent.</p>
+    <p><b>Les baguettes.</b> Dans l'ISO 1071, les apports « semblables » à la fonte portent un symbole commençant par FeC. Autre notation courante, chez l'AWS : RCI (fonte grise), RCI-A (fonte grise alliée), RCI-B (fonte GS, avec magnésium ou cérium). Le silicium et le nickel de la baguette s'ajustent à la dureté voulue dans la zone fondue.</p>
+    <p><b>La préparation.</b> Chanfreins en V ou en X, ouverts à 90° pour les fontes grises et à 75° pour les GS, sans angles vifs ; le X est préférable, soudé alternativement d'un côté puis de l'autre. Pour une pleine pénétration, un support envers en graphite retient le bain très fluide. On soude à plat, en cordons courts et décalés, en couches épaisses décalées ou en couches fines « en cascade ».</p>
+    <div class="def"><b>📖 Flamme réductrice</b> : flamme oxyacétylénique avec un excès d'acétylène ; un panache blanc prolonge le dard. Elle protège le bain de l'oxydation. <b>Flux</b> : poudre ou pâte qui dissout les oxydes et facilite l'élimination du laitier. <b>Rechargement</b> : dépôt d'une couche de métal sur une surface, pour reconstituer une cote ou résister à l'usure.</div>
+    <div class="warn"><b>⚠️ Piège : le bain qui traîne.</b> Un bain trop gros, gardé liquide longtemps, ou une flamme oxydante, et la zone fondue d'une GS perd son magnésium : elle sort à graphite vermiculaire ou lamellaire, moins ductile que la pièce.</div>
+    <div class="tip">💡 <b>Le support en graphite.</b> La fonte liquide est très fluide : un support envers en graphite, qui ne se mouille pas et ne se soude pas, la retient en racine. On s'en sert aussi pour mouler une arête ou reconstituer un angle.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « 425, 650, 760 »</b> : le minimum pour ne pas blanchir, le maximum pour ne pas adoucir, l'exception des fontes ferritiques recuites.</div>
+    <div class="weld"><b>🔥 Souder dans la chaleur</b>
+      <p>En régime chaud, le soudeur travaille au-dessus d'une pièce à 600 °C : écrans réfléchissants, vêtements adaptés, pauses, et souvent une fenêtre découpée dans la couverture isolante qui garde la pièce chaude. Le soudage au chalumeau d'une grosse pièce peut durer des heures, et le refroidissement au four toute une nuit.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c3">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">3</div>
+    <div class="c-title"><h2>Électrode enrobée, fil fourré et beurrage</h2><p>Les apports de l'ISO 1071 et les couches tampons</p></div>
+    <div class="c-img"><span class="ico">🧈</span><span><small>Image à retenir</small>Le beurre sur la tartine : une fine couche qui accroche et protège, sur laquelle on étale ce qu'on veut</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le beurre sur la tartine</span></div>
+    <p>L'électrode enrobée est l'outil de réparation le plus courant : plus rapide que le chalumeau, elle chauffe moins la pièce et donne une zone affectée plus étroite. Il faut un poste, des électrodes adaptées et un soudeur qualifié. Le choix de l'électrode suit la fonte :</p>
+    <ul>
+      <li><b>fontes GS et malléables</b> : électrodes au <b>nickel-fer</b>, de préférence ;</li>
+      <li><b>fontes grises</b> : électrodes au <b>nickel</b> ou au <b>nickel-cuivre</b>, les plus utilisées, tendres et usinables mais moins résistantes ; au nickel-fer pour plus de résistance ; en <b>fonte</b>, avec un préchauffage de 480 à 590 °C, de petit diamètre, en coupant l'arc par allongement ;</li>
+      <li><b>malléables décarburées en surface</b> : électrodes en acier doux, en limitant la pénétration ;</li>
+      <li><b>fontes austénitiques à graphite lamellaire</b> : électrode enrobée déconseillée, la zone affectée fissure ; les austénitiques GS se soudent mieux avec des apports à base de nickel (cours 2).</li>
+    </ul>
+    <p>Le <b>MIG</b> et le <b>fil fourré</b> au nickel ou au nickel-fer apportent la productivité : on limite la pénétration avec un transfert en court-circuit ou en grosses gouttes, et l'on obtient des propriétés proches de celles de la fonte, comme pour la réparation d'un tambour de treuil en fonte grise au fil fourré.</p>
+    <p>Le <b>beurrage</b> ressemble au beurre étalé sur une tartine : on dépose d'abord, à faible énergie, une ou plusieurs couches d'un métal facile à souder (souvent du nickel) sur les bords du chanfrein. Ces couches tampons absorbent la dilution avec la fonte. On remplit ensuite le joint sur le beurre, avec plus d'énergie, voire avec un apport moins cher : il ne voit presque plus la fonte.</p>
+  </div>
+
+  <div class="lab" id="m3">
+    <p class="lab-h">Manipulation 3 : les couches tampons</p>
+    <p class="lab-sub">Règle le nombre de couches de beurrage au nickel (≈ 95 % Ni) et leur dilution, puis la dilution des passes de remplissage et leur apport : nickel-fer (≈ 55 % Ni) ou acier doux (0,08 % C). Chaque couche dilue la précédente : la part de fonte f est divisée à chaque couche. À gauche, la coupe du chanfrein colorée par la part de fonte ; à droite, f couche par couche. ▶ Souder couche par couche dépose les couches. Modèle pédagogique.</p>
+    <div class="btns" id="m3f">
+      <button class="btn on" data-k="acier" type="button">Remplissage acier doux</button>
+      <button class="btn" data-k="nife" type="button">Remplissage nickel-fer</button>
+    </div>
+    <div class="ctrl"><label for="m3n">Couches de beurrage <span class="mat">n</span></label><input type="range" id="m3n" class="r-mat" min="0" max="3" step="1" value="2"><output id="m3no"></output></div>
+    <div class="ctrl"><label for="m3db">Dilution du beurrage <span class="mat">D<sub>b</sub></span></label><input type="range" id="m3db" class="r-mat" min="0.1" max="0.4" step="0.01" value="0.25"><output id="m3dbo"></output></div>
+    <div class="ctrl"><label for="m3dr">Dilution du remplissage <span class="mat">D<sub>r</sub></span></label><input type="range" id="m3dr" class="r-mat" min="0.2" max="0.5" step="0.01" value="0.35"><output id="m3dro"></output></div>
+    <div class="btns"><button class="btn play" id="m3play" type="button">▶ Souder couche par couche</button></div>
+    <svg id="m3svg" role="img" aria-label="Coupe d'un chanfrein beurré et part de fonte dans chaque couche"></svg>
+    <div class="readout" id="m3r"></div>
+    <p class="status" id="m3msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">ISO 1071, coefficient de joint, dilution en cascade</span></div>
+    <p><b>Désigner un apport.</b> L'ISO 1071 classe les électrodes enrobées, fils, baguettes et fils fourrés pour le soudage par fusion des fontes non alliées, d'après la composition des fils et baguettes ou celle du métal déposé pour les électrodes et fils fourrés. Elle distingue les apports semblables à la fonte, qui demandent un préchauffage élevé (typiquement 550 à 650 °C), et les apports différents, qui en demandent peu ou pas. Une électrode au nickel-fer se désigne par exemple <b>E C NiFe-CI</b> : E pour électrode enrobée, C pour fonte, puis le symbole de composition ; les fiches de produits ajoutent un chiffre défini par la norme.</p>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Symbole ISO 1071</th><th>Métal déposé</th><th>Équivalent AWS courant</th><th>Usage</th></tr>
+      <tr><td>FeC-…</td><td>fonte (semblable)</td><td>RCI, RCI-A, RCI-B (baguettes)</td><td>soudage homogène en régime chaud</td></tr>
+      <tr><td>Ni-CI</td><td>nickel (≥ ≈ 85 % Ni)</td><td>ENi-CI</td><td>GL, réparations à froid usinables</td></tr>
+      <tr><td>NiFe-CI</td><td>nickel-fer (≈ 45 à 60 % Ni)</td><td>ENiFe-CI ; fil fourré ENiFeT3-CI</td><td>GS, malléables, fonte-acier, pièces épaisses</td></tr>
+      <tr><td>NiCu</td><td>nickel-cuivre</td><td>ENiCu-A, ENiCu-B</td><td>GL, réparations à froid</td></tr>
+      <tr><td>St</td><td>acier</td><td>ESt</td><td>malléables décarburées, réparations sans exigence</td></tr>
+    </table></div>
+    <p><b>Le coefficient de joint.</b> Avec des électrodes au nickel-fer, un joint atteint environ 91 % de la résistance R<sub>m</sub> du métal de base sur fonte grise, 88 % sur malléable ferritique et 76 % sur GS : une GS est la fonte qu'on soude le mieux, mais c'est aussi celle qui perd le plus en proportion, car sa propre résistance est élevée. Sur EN-GJS-400-15 : <span class="m">σ<sub>j</sub> ≈ 0,76 × 400 ≈ 304 MPa</span>.</p>
+    <p><b>La dilution en cascade.</b> Chaque couche fond une partie D de la couche précédente. La part f de métal venu de la fonte et la teneur X d'un élément suivent :</p>
+    <div class="fx"><div class="row"><div class="big"><span class="eps">f<sub>i</sub></span> = <span class="mat">D<sub>i</sub></span>·f<sub>i−1</sub></div><div class="big"><span class="eps">X<sub>i</sub></span> = <span class="mat">D<sub>i</sub></span>·X<sub>i−1</sub> + (1 − <span class="mat">D<sub>i</sub></span>)·X<sub>MA</sub></div></div><p class="cap">f<sub>0</sub> = 1 (la fonte) ; i : numéro de la couche ; D<sub>i</sub> : sa dilution ; X<sub>MA</sub> : teneur de l'apport. Dans le modèle, le carbone des couches d'acier vient de la fonte : C ≈ 0,08 + 3,32·f (%).</p></div>
+    <p>Deux couches de nickel à 25 % de dilution laissent <span class="m">f = 0,25 × 0,25 ≈ 6 %</span> de fonte ; une passe d'acier diluée à 35 % n'en contient plus que 2 %, soit environ 0,15 % de carbone : un acier doux. Posée directement sur la fonte, la même passe aurait 1,24 % de carbone et tremperait.</p>
+    <div class="def"><b>📖 Beurrage</b> : dépôt, à faible énergie, d'une ou plusieurs couches d'un métal plus facile à souder que le métal de base, sur les faces à assembler, avant le remplissage. Intérêts : moins de dilution avec la fonte, possibilité d'augmenter ensuite l'énergie, fonte moins exposée aux chocs thermiques, remplissage avec des apports moins chers.</div>
+    <div class="warn"><b>⚠️ Piège : beurrer « gros ».</b> Un beurrage déposé avec une forte intensité dilue autant qu'une soudure directe : il n'a plus de beurre que le nom. Petit diamètre, faible intensité, cordons fins.</div>
+    <div class="tip">💡 <b>Le mille-feuille.</b> Une pratique courante commence par deux ou trois couches de nickel, puis intercale deux ou trois couches de nickel-fer pour remonter la résistance. Pour recharger une surface d'usure : nickel en sous-couche, nickel-fer, puis le dépôt dur.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « une couche, un quart »</b> : à 25 % de dilution, chaque couche divise par quatre la part de fonte.</div>
+    <div class="weld"><b>🔥 Les fiches des fabricants</b>
+      <p>Une fiche d'électrode au nickel-fer donne la désignation ISO 1071 et AWS, le courant (souvent continu, électrode au pôle positif), les intensités par diamètre et une consigne fréquente : cordons courts, martelés à petits coups. Le DMOS reprend ces éléments, avec le préchauffage, la température entre passes et l'ordre des passes.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c4">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">4</div>
+    <div class="c-title"><h2>Soudobraser</h2><p>Un laiton qui mouille la fonte sans la fondre</p></div>
+    <div class="c-img"><span class="ico">💧</span><span><small>Image à retenir</small>La goutte sur la vitre : sur une vitre grasse, elle perle ; sur une vitre propre, elle s'étale. Le graphite, c'est la graisse</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la goutte sur la vitre</span></div>
+    <p>Une goutte d'eau perle sur une vitre grasse et s'étale sur une vitre propre. Le soudobrasage repose sur le même phénomène, le <b>mouillage</b>. Un <b>laiton</b> (alliage cuivre-zinc), qui fond vers 890 à 935 °C, bien en dessous de la fonte (vers 1 150 °C), est déposé dans un joint ouvert comme une soudure. Il s'étale sur la surface chaude et propre et s'y lie par diffusion, <b>sans fondre la fonte</b>.</p>
+    <p>Les conséquences sont précieuses pour une fonte : pas de zone fondue en fonte, pas de fonte blanche à la ligne de fusion, une zone affectée mince. Et comme le laiton est ductile, il <b>se déforme plastiquement</b> pendant son retrait au lieu de tirer sur la fonte : les contraintes résiduelles restent faibles. Le joint est souvent plus résistant que la fonte elle-même.</p>
+    <p>Trois conditions :</p>
+    <ul>
+      <li><b>enlever le graphite de surface</b>, que le laiton ne mouille pas : chauffer au rouge sous flamme oxydante pour le brûler, grenailler, ou utiliser des flux ou des bains spéciaux ;</li>
+      <li><b>préchauffer</b> au-dessus d'environ 400 °C, éventuellement localement, puis porter la surface à la température de mouillage, juste au-dessus du liquidus du laiton ;</li>
+      <li><b>protéger</b> par un flux pour laitons et une flamme légèrement oxydante, dont la fine pellicule d'oxyde de zinc freine l'évaporation du zinc.</li>
+    </ul>
+    <p>Ses limites : une couleur jaune différente de la pièce, un risque de corrosion galvanique entre cuivreux et fonte, et pas de service à chaud ni en milieu ammoniacal, qui fissure les laitons.</p>
+  </div>
+
+  <div class="lab" id="m4">
+    <p class="lab-h">Manipulation 4 : mouiller sans fondre</p>
+    <p class="lab-sub">Choisis le laiton, puis règle la température de la surface et la part de graphite éliminée. À gauche, la goutte de laiton sur la fonte : son angle de mouillage θ, et les lamelles de graphite qui la font perler ; à droite, la résistance du joint σ<sub>j</sub> selon la température, comparée à une EN-GJL-250. ▶ Chauffer fait monter la surface de 800 à 1 000 °C. Modèle pédagogique.</p>
+    <div class="btns" id="m4b">
+      <button class="btn" data-k="A" type="button">RBCuZn-A</button>
+      <button class="btn on" data-k="B" type="button">RBCuZn-B</button>
+      <button class="btn" data-k="C" type="button">RBCuZn-C</button>
+      <button class="btn" data-k="D" type="button">RBCuZn-D</button>
+    </div>
+    <div class="ctrl"><label for="m4T">Surface <span class="mat">T</span></label><input type="range" id="m4T" class="r-mat" min="800" max="1000" step="5" value="920"><output id="m4To"></output></div>
+    <div class="ctrl"><label for="m4c">Graphite éliminé <span class="mat">c</span></label><input type="range" id="m4c" class="r-mat" min="0" max="1" step="0.05" value="1"><output id="m4co"></output></div>
+    <div class="btns"><button class="btn play" id="m4play" type="button">▶ Chauffer</button></div>
+    <svg id="m4svg" role="img" aria-label="Goutte de laiton sur une surface de fonte et résistance du joint selon la température"></svg>
+    <div class="readout" id="m4r"></div>
+    <p class="status" id="m4msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">laitons d'apport, fenêtre de température, conception</span></div>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Laiton (désignation AWS)</th><th>Composition</th><th>Particularité</th><th>R<sub>m</sub> min.</th><th>Liquidus</th></tr>
+      <tr><td>RBCuZn-A</td><td>Cu ≈ 57 à 61 %, Zn, Sn ≈ 0,25 à 1 %</td><td>peu de fumées</td><td>275 MPa</td><td>≈ 900 °C</td></tr>
+      <tr><td>RBCuZn-B</td><td>Cu ≈ 56 à 60 %, Zn, Sn, Fe, Mn, Ni ≈ 0,2 à 0,8 %</td><td>meilleure résistance</td><td>344 MPa</td><td>≈ 890 °C</td></tr>
+      <tr><td>RBCuZn-C</td><td>Cu ≈ 56 à 60 %, Zn, Sn, Fe, Mn</td><td>résistance de B, peu de fumées, couleur plus proche de la fonte</td><td>344 MPa</td><td>≈ 890 °C</td></tr>
+      <tr><td>RBCuZn-D</td><td>Cu ≈ 46 à 50 %, Ni ≈ 9 à 11 %, Zn</td><td>maillechort (« nickel-argent ») : plus résistant, couleur très proche de la fonte</td><td>413 MPa</td><td>≈ 935 °C</td></tr>
+    </table></div>
+    <p class="mut" style="font-size:.9rem">En Europe, l'ISO 17672 range ces apports parmi les cuivreux ; le laiton CuZn40 du brasage en est un proche parent. Le flux est de classe FH21 (ISO 18496).</p>
+    <p><b>La fenêtre de température.</b> Trop froid, le laiton n'est pas liquide et ne mouille pas ; trop chaud, le zinc, qui bout à 907 °C, s'évapore en fumées et laisse des porosités. Le modèle de la manipulation écrit :</p>
+    <div class="fx"><div class="row"><div class="big"><span class="eps">θ</span> = 90° − 70°·m(T)</div><div class="big"><span class="eps">σ<sub>j</sub></span> = [1 − 0,3·(1 − <span class="mat">c</span>)]·m(T)·R<sub>m,laiton</sub>·(1 − 0,5·p)</div></div><p class="cap">m(T) : degré de mouillage, qui passe de 0 à 1 entre T<sub>L</sub> − 10 °C et T<sub>L</sub> + 30 °C (T<sub>L</sub> : liquidus du laiton) ; c : part du graphite de surface éliminée (le graphite non éliminé masque 30 % de la surface) ; p : porosité due à la surchauffe, qui passe de 0 à 1 entre T<sub>L</sub> + 60 et T<sub>L</sub> + 120 °C.</p></div>
+    <p>Avec un RBCuZn-B, une surface propre à 920 °C : σ<sub>j</sub> ≈ 344 MPa, plus que les 250 MPa d'une EN-GJL-250 : la rupture se produira dans la fonte. Sans décapage, σ<sub>j</sub> tombe à 0,7 × 344 ≈ 241 MPa.</p>
+    <p><b>La conception.</b> Le chanfrein de soudobrasage est arrondi, en forme de tulipe, sans arête vive : une arête concentre la chaleur, surchauffe et le laiton s'y décolle. Comme le joint ne dissout pas la fonte, le soudobrasage convient aussi pour assembler une fonte à un acier ou à un cuivreux.</p>
+    <div class="def"><b>📖 Mouillage</b> : étalement d'un liquide sur un solide ; on le mesure par l'angle θ entre la surface et le bord de la goutte : mouillage sous 90°, très bon sous environ 30°. <b>Maillechort</b> : laiton au nickel, de couleur argentée. <b>Corrosion galvanique</b> : corrosion du métal le moins noble de deux métaux en contact dans un électrolyte ; ici, la fonte.</div>
+    <div class="warn"><b>⚠️ Piège : la fonte fraîchement usinée.</b> Un usinage ou un meulage étale le graphite sur la surface comme un crayon sur du papier. La surface brille, mais le laiton y perle : il faut la décaper, ou la chauffer au rouge sous flamme oxydante, puis la brosser.</div>
+    <div class="tip">💡 <b>Le bon signe.</b> Sur une surface propre et à bonne température, le laiton « file » devant le bain, en un liseré fin et brillant. S'il roule en gouttes, la surface est sale ou trop froide ; s'il fume blanc et bout, elle est trop chaude.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « propre, chaud, pas trop »</b> : sans graphite, au-dessus du liquidus du laiton, sous la surchauffe qui fait bouillir le zinc.</div>
+    <div class="weld"><b>🔥 Le patrimoine</b>
+      <p>Grilles, colonnes, mobilier urbain et pièces de machines anciennes sont souvent en fonte grise riche en phosphore, fragile et parfois corrodée. Le soudobrasage, qui ne fond pas la fonte et met peu de contraintes, y est souvent la réparation la plus sûre. Les fumées de zinc imposent une aspiration efficace.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c5">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">5</div>
+    <div class="c-title"><h2>Préparer et réparer</h2><p>Chanfreins, conception, gougeage, et la fissure qu'on arrête avant de la souder</p></div>
+    <div class="c-img"><span class="ico">🛑</span><span><small>Image à retenir</small>Le point final : un trou au bout de la fissure l'arrête comme un point arrête une phrase</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le point final</span></div>
+    <p>Une réparation réussie se joue avant l'arc. Les étapes :</p>
+    <ul>
+      <li><b>identifier</b> la fonte (cours 2), <b>nettoyer</b> : dégraisser, chauffer pour brûler l'huile absorbée, enlever la peau de fonderie et la calamine ;</li>
+      <li><b>éliminer le défaut</b> jusqu'au métal sain, par meulage ou gougeage, et le vérifier au ressuage ;</li>
+      <li><b>ouvrir large et arrondir</b> : une excavation ouverte à au moins 90°, à fond arrondi, sans arête vive ; pour un défaut profond, une forme en U ;</li>
+      <li>pour une <b>fissure</b> : repérer ses vraies extrémités au ressuage, car la pointe visible n'est pas la pointe réelle ; percer un petit trou à chaque extrémité ; gouger le long de la fissure ; souder en cordons courts, en partant d'un trou d'arrêt, en pas de pèlerin (cours 3), avec une pause entre deux cordons ;</li>
+      <li>pour reconstituer une partie manquante, retenir le bain très fluide par des plaques de graphite ou un moule en sable.</li>
+    </ul>
+    <p>Pourquoi le trou ? La pointe d'une fissure est infiniment aiguë : elle concentre la contrainte des dizaines de fois. Le retrait de la soudure suffirait à la faire avancer. Un trou remplace cette pointe par un arrondi de quelques millimètres de rayon : la concentration de contrainte chute, la fissure s'arrête.</p>
+  </div>
+
+  <div class="lab" id="m5">
+    <p class="lab-h">Manipulation 5 : arrêter la fissure</p>
+    <p class="lab-sub">Une fissure traverse une plaque en fonte ; ses vraies pointes sont à 3 mm au-delà des pointes visibles. Règle le diamètre d des trous d'arrêt, leur position x par rapport à la pointe visible, et la contrainte σ due au retrait et au service. Le bouton Ressuage révèle les vraies pointes. La fissure repart si K<sub>t</sub>·σ dépasse R<sub>m</sub>. ▶ Mettre en charge fait monter σ. Modèle de matériau fragile, pédagogique.</p>
+    <div class="btns" id="m5L">
+      <button class="btn" data-k="30" type="button">Fissure de 30 mm</button>
+      <button class="btn on" data-k="60" type="button">60 mm</button>
+      <button class="btn" data-k="120" type="button">120 mm</button>
+    </div>
+    <div class="btns" id="m5f">
+      <button class="btn on" data-k="250" type="button">EN-GJL-250</button>
+      <button class="btn" data-k="400" type="button">EN-GJS-400-15</button>
+      <button class="btn" id="m5pt" type="button">Ressuage</button>
+    </div>
+    <div class="ctrl"><label for="m5d">Diamètre <span class="mat">d</span></label><input type="range" id="m5d" class="r-mat" min="0" max="12" step="1" value="4"><output id="m5do"></output></div>
+    <div class="ctrl"><label for="m5x">Position <span class="mat">x</span></label><input type="range" id="m5x" class="r-mat" min="-2" max="8" step="1" value="0"><output id="m5xo"></output></div>
+    <div class="ctrl"><label for="m5s">Contrainte <span class="mat">σ</span></label><input type="range" id="m5s" class="r-mat" min="10" max="80" step="5" value="30"><output id="m5so"></output></div>
+    <div class="btns"><button class="btn play" id="m5play" type="button">▶ Mettre en charge</button></div>
+    <svg id="m5svg" role="img" aria-label="Plaque fissurée avec trous d'arrêt, et contrainte maximale comparée à la résistance de la fonte"></svg>
+    <div class="readout" id="m5r"></div>
+    <p class="status" id="m5msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">formule d'Inglis, préparations, coupage et gougeage</span></div>
+    <p><b>La concentration de contrainte.</b> Pour une entaille elliptique de demi-longueur a et de rayon en fond ρ, dans une plaque tendue par σ, la formule d'Inglis donne :</p>
+    <div class="fx"><div class="row"><div class="big"><span class="eps">K<sub>t</sub></span> = 1 + 2·√(a/ρ)</div><div class="big"><span class="eps">σ<sub>max</sub></span> = <span class="eps">K<sub>t</sub></span>·<span class="sig">σ</span></div></div><p class="cap">K<sub>t</sub> : coefficient de concentration de contrainte (cours 1) ; a : demi-longueur de l'entaille (mm) ; ρ : rayon en fond d'entaille (mm). Pointe de fissure : ρ ≈ 0,05 mm dans le modèle ; avec un trou d'arrêt de rayon r qui contient la vraie pointe : ρ = r et a = demi-longueur visible + x + r.</p></div>
+    <p>Fissure visible de 60 mm, vraies pointes à 3 mm plus loin : sans trou, <span class="m">K<sub>t</sub> = 1 + 2√(33/0,05) ≈ 52</span> ; sous 30 MPa, la pointe voit plus de 1 500 MPa. Avec un trou de 6 mm centré sur la vraie pointe (x = 3 mm) : <span class="m">a = 30 + 3 + 3 = 36 mm</span>, <span class="m">K<sub>t</sub> = 1 + 2√(36/3) ≈ 7,9</span>, σ<sub>max</sub> ≈ 238 MPa, sous les 250 MPa d'une EN-GJL-250. Un trou qui manque la vraie pointe ne sert à rien.</p>
+    <svg id="f5svg" role="img" aria-label="Préparations : excavation d'un défaut peu profond, d'un défaut profond, chanfrein de soudobrasage, soudure sortie d'un angle" style="display:block;width:100%;height:auto"></svg>
+    <p class="mut" style="font-size:.9rem;text-align:center">Excavations ouvertes à 90° au moins et arrondies ; chanfrein en tulipe pour le soudobrasage ; soudure déplacée hors de l'angle, là où la contrainte se concentre.</p>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Situation</th><th>Préparation</th></tr>
+      <tr><td>Soudage à l'arc</td><td>comme pour les aciers, mais talons réduits et écartements augmentés pour limiter la dilution</td></tr>
+      <tr><td>Soudage au chalumeau</td><td>V ou X à 90° (fontes grises), 75° (GS)</td></tr>
+      <tr><td>Soudobrasage</td><td>chanfrein arrondi en tulipe, sans arête</td></tr>
+      <tr><td>Défaut sous la peau (refus, sable, laitier)</td><td>excavation peu profonde ouverte à 90° au moins</td></tr>
+      <tr><td>Défaut profond</td><td>excavation en U, ouverte à 90° au moins, fond arrondi</td></tr>
+      <tr><td>Conception d'un assemblage</td><td>éloigner la soudure des angles et des changements de section ; ajouter un cordon d'angle pour éviter la flexion</td></tr>
+    </table></div>
+    <p><b>Couper et gouger une fonte.</b> L'oxycoupage ordinaire marche mal : le carbone et le silicium s'oxydent en premier, et les oxydes de fer et de silicium forment un laitier pâteux qui fait écran. On s'en sert surtout pour démolir de grosses pièces, avec un préchauffage de 425 à 565 °C, des mouvements oscillants, ou un ajout de poudre ou de fil d'acier doux dans la flamme. Pour préparer une réparation, on préfère le <b>gougeage à l'arc-air</b> (électrode de carbone et air comprimé, qui chasse le métal fondu), le coupage à l'électrode creuse sous oxygène, ou le coupage plasma.</p>
+    <div class="def"><b>📖 Trou d'arrêt</b> : trou percé à l'extrémité d'une fissure pour en arrondir la pointe. <b>Gougeage</b> : creusement d'une rainure par fusion et expulsion du métal. <b>Ressuage (PT)</b> : contrôle où un liquide pénétrant, révélé par un développeur, dessine les fissures débouchantes.</div>
+    <div class="warn"><b>⚠️ Piège : percer au bout visible.</b> La fissure continue, invisible, quelques millimètres plus loin. Un trou percé exactement à la pointe visible peut la manquer : on cherche d'abord la vraie pointe au ressuage, et l'on perce un peu au-delà.</div>
+    <div class="tip">💡 <b>Partir du trou.</b> On commence chaque séquence au trou d'arrêt, en cordons courts (de l'ordre de 25 mm) déposés en pas de pèlerin, avec une pause et un martelage entre deux cordons : la chaleur ne s'accumule pas et le retrait de chaque cordon se répartit.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « voir, percer, gouger, souder »</b> : ressuage, trous d'arrêt, rainure, cordons courts.</div>
+    <div class="weld"><b>🔥 L'excavation contrôlée</b>
+      <p>Après gougeage, la rainure est meulée pour enlever la couche carburée et durcie par l'arc-air, puis contrôlée au ressuage : on ne soude que quand plus aucune indication n'apparaît. Sur une pièce imprégnée d'huile, on chauffe et on recommence le contrôle : l'huile qui ressort fausse le ressuage.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c6">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">6</div>
+    <div class="c-title"><h2>Goujonner, ancrer, couler</h2><p>Les grosses réparations : goujons, renforts, agrafes, aluminothermie</p></div>
+    <div class="c-img"><span class="ico">⚓</span><span><small>Image à retenir</small>L'ancre : les goujons accrochent la soudure dans la fonte saine, au-delà de la zone fragile</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">l'ancre</span></div>
+    <p>Sur une grosse cassure, la liaison entre la soudure et la fonte passe par la zone partiellement fondue et la zone affectée, les plus fragiles (cours 3). Pour ne pas tout confier à cette mince couche, on <b>ancre</b> la soudure plus loin, dans la fonte saine :</p>
+    <ul>
+      <li><b>le goujonnage</b> : on perce et taraude les faces du chanfrein, on y visse des goujons en acier, en quinconce, qui dépassent de quelques millimètres ; on les enrobe d'abord de soudure, puis on remplit le joint. Les goujons portent une partie de l'effort au-delà de la zone fragile ;</li>
+      <li><b>les renforts</b> : une tôle d'acier soudée sur le joint, éventuellement sur des goujons ;</li>
+      <li><b>les ancrages</b> : des fers ronds coudés logés dans des rainures, ou des pièces découpées en forme d'os ou de double queue d'aronde ;</li>
+      <li><b>l'agrafage à froid</b>, sans soudure : des clés métalliques et des pions vissés traversent la fissure, sans aucune chaleur ;</li>
+      <li><b>le rechargement préalable des bords</b>, en cordons parallèles qui créent une rugosité.</li>
+    </ul>
+    <p>Quand la brèche est énorme, on peut <b>couler du métal neuf</b> : c'est l'<b>aluminothermie</b>. Un moule réfractaire est construit autour de la cavité ; un mélange de poudre d'aluminium et d'oxyde de fer, allumé dans un creuset, réagit violemment et produit de la fonte ou de l'acier liquide, qui coule dans le moule, fond les bords préchauffés et se lie à la pièce. C'est lent et coûteux, mais irremplaçable pour les grandes réparations sur place, sur des pièces épaisses ou inaccessibles à d'autres procédés.</p>
+  </div>
+
+  <div class="lab" id="m6">
+    <p class="lab-h">Manipulation 6 : remplir la brèche par aluminothermie</p>
+    <p class="lab-sub">Règle l'écartement de la brèche, l'épaisseur et la largeur de la pièce, et le coefficient k qui ajoute les masselottes et les pertes. La manipulation calcule le métal à couler, la masse de mélange Fe₂O₃ + 2 Al et la chaleur dégagée. Le type de mélange change le métal obtenu. ▶ Allumer déclenche la coulée. Mélange supposé stœchiométrique, sans additions.</p>
+    <div class="btns" id="m6m">
+      <button class="btn on" data-k="fonte" type="button">Mélange pour fonte grise</button>
+      <button class="btn" data-k="acier" type="button">Mélange pour acier au silicium</button>
+    </div>
+    <div class="ctrl"><label for="m6g">Écartement <span class="mat">g</span></label><input type="range" id="m6g" class="r-mat" min="10" max="60" step="5" value="30"><output id="m6go"></output></div>
+    <div class="ctrl"><label for="m6e">Épaisseur <span class="mat">e</span></label><input type="range" id="m6e" class="r-mat" min="20" max="200" step="10" value="80"><output id="m6eo"></output></div>
+    <div class="ctrl"><label for="m6w">Largeur <span class="mat">w</span></label><input type="range" id="m6w" class="r-mat" min="50" max="400" step="10" value="120"><output id="m6wo"></output></div>
+    <div class="ctrl"><label for="m6k">Coefficient <span class="mat">k</span></label><input type="range" id="m6k" class="r-mat" min="1" max="2.5" step="0.1" value="1.5"><output id="m6ko"></output></div>
+    <div class="btns"><button class="btn play" id="m6play" type="button">▶ Allumer</button></div>
+    <svg id="m6svg" role="img" aria-label="Creuset, moule et brèche remplie par aluminothermie, avec les masses et la chaleur dégagée"></svg>
+    <div class="readout" id="m6r"></div>
+    <p class="status" id="m6msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">bilan de l'aluminothermie, goujonnage, autres renforts</span></div>
+    <p><b>La réaction.</b> L'aluminium, plus avide d'oxygène que le fer, lui prend son oxyde :</p>
+    <div class="fx"><div class="big">Fe₂O₃ + 2 Al → 2 Fe + Al₂O₃ ; ΔH ≈ −851,5 kJ</div><p class="cap">Masses molaires : Fe₂O₃ 159,7 g/mol ; Al 27,0 g/mol ; Fe 55,8 g/mol. 213,7 g de mélange donnent 111,7 g de fer, soit 52 %, et dégagent 851,5 kJ, soit ≈ 3,99 kJ par gramme de mélange. Les produits peuvent atteindre environ 2 500 °C. L'alumine, plus légère, surnage en laitier.</p></div>
+    <p>Pour une brèche de 30 × 80 × 120 mm : <span class="m">V = 3 × 8 × 12 = 288 cm³</span>, soit environ 2,0 kg de métal (7 g/cm³) ; avec k = 1,5 pour les masselottes et les pertes : 3,0 kg de métal, donc <span class="m">3,0/0,523 ≈ 5,8 kg</span> de mélange, qui dégagent <span class="m">5,8 × 3,99 ≈ 23 MJ</span>.</p>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Mélange</th><th>Métal obtenu</th><th>Comportement</th></tr>
+      <tr><td>pour fonte grise</td><td>fonte grise : le graphite précipite selon la vitesse de refroidissement</td><td>faible retrait, usinage facile</td></tr>
+      <tr><td>aluminium, additions et ≈ 3 % de ferrosilicium</td><td>acier au silicium</td><td>retrait plus important que la fonte ; traitement de détente possible</td></tr>
+    </table></div>
+    <svg id="f6svg" role="img" aria-label="Goujons en quinconce sur les faces d'un chanfrein, renfort par tôle soudée sur goujons, agrafe en forme d'os" style="display:block;width:100%;height:auto"></svg>
+    <p class="mut" style="font-size:.9rem;text-align:center">Goujons vissés en quinconce sur les faces du chanfrein ; renfort par tôle soudée sur goujons ; agrafe en os logée dans une empreinte usinée à travers la fissure.</p>
+    <p><b>Le goujonnage en pratique.</b> Les guides proposent des goujons d'acier de quelques millimètres à une douzaine de millimètres de diamètre, vissés en quinconce, sur une ou plusieurs rangées selon l'épaisseur, et dépassant de 3 à 6 mm. On soude d'abord autour de chaque goujon, en couvrant les faces du chanfrein, puis on remplit. Trop de goujons, trop gros, affaiblissent la section de fonte : ils se dosent.</p>
+    <div class="def"><b>📖 Goujonnage</b> : insertion de goujons d'acier dans les faces à souder d'une fonte, pour ancrer la soudure dans le métal sain. <b>Agrafage</b> (<i>metal stitching</i>) : réparation à froid par clés et pions métalliques insérés à travers une fissure. <b>Aluminothermie</b> : procédé 71 de l'ISO 4063, où le métal d'apport est produit et fondu par la réduction d'un oxyde métallique par l'aluminium.</div>
+    <div class="warn"><b>⚠️ Piège : le goujon qui chauffe trop.</b> Souder longtemps autour d'un goujon, c'est réchauffer la même zone de fonte : on alterne les goujons, en cordons courts, comme en régime froid.</div>
+    <div class="tip">💡 <b>L'agrafage sans chaleur.</b> Pour une fonte très fragile, imprégnée ou qu'on ne peut pas chauffer (un bloc moteur en place, une pièce de patrimoine), l'agrafage à froid évite tout problème de métallurgie : aucune zone fondue, aucune zone affectée.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « la moitié en fer »</b> : un mélange aluminothermique donne environ la moitié de sa masse en fer, et à peu près 4 kJ par gramme.</div>
+    <div class="weld"><b>🔥 L'aluminothermie sur chantier</b>
+      <p>Le même principe soude les rails des voies ferrées, dans des moules préfabriqués. Pour une pièce de fonte, le moule est fait sur mesure, les bords sont préchauffés, et une équipe spécialisée prépare la coulée. Projections, fumées et métal à près de 2 500 °C imposent un périmètre de sécurité et des équipements de protection.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c7">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">7</div>
+    <div class="c-title"><h2>Qualifier, contrôler, et les aciers moulés</h2><p>Le mode opératoire qualifié, les contrôles, et les pièces moulées en acier</p></div>
+    <div class="c-img"><span class="ico">📜</span><span><small>Image à retenir</small>Le passeport : un mode opératoire qualifié voyage partout, mais seulement dans les limites inscrites dessus</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le passeport</span></div>
+    <p>Une réparation de fonte qui doit tenir sous pression, porter une charge ou passer une inspection ne se fait pas « au savoir-faire » seulement. On la <b>qualifie</b> : on écrit un DMOS préliminaire, on soude un assemblage d'essai dans les conditions prévues, on le contrôle et on l'essaie ; si tout est conforme, un procès-verbal de qualification valide le mode opératoire, dans un domaine défini. Pour les fontes non alliées et faiblement alliées, c'est l'<b>ISO 15614-3</b>, qui couvre le soudage de production et de réparation des pièces selon l'EN 1561 à l'EN 1564, et dont les principes s'appliquent au soudage fonte-acier. Les recommandations de l'<b>EN 1011-8</b> aident à écrire le DMOS.</p>
+    <p>Après la réparation, on contrôle : examen visuel, ressuage ou magnétoscopie pour chercher les fissures le long de la ligne de fusion, dureté si l'usinage compte, parfois radiographie, ultrasons ou épreuve d'étanchéité.</p>
+    <p>Les <b>aciers moulés</b> sont les cousins des fontes : des pièces coulées, mais en acier. Ils se désignent comme les aciers, précédés de la lettre G : G20Mn5, ou GP240GH (P pour appareils à pression, 240 MPa de limite d'élasticité, GH pour les températures élevées). Ils se soudent comme les aciers laminés, avec les mêmes règles de carbone équivalent, de préchauffage et de traitement après soudage, et les mêmes défauts, à une exception près : sans laminage, pas d'arrachement lamellaire. Mais ils ont leurs défauts de fonderie : hétérogénéités de composition, microretassures, porosités. Les zones à souder ou à usiner doivent être saines.</p>
+    <p>En fonderie d'acier, souder pour réparer les défauts de coulée est une étape normale de la fabrication : c'est le <b>soudage de production</b>, avant livraison, qualifié selon l'<b>ISO 11970</b>. Le soudage effectué après livraison est une <b>réparation</b>. Les spécifications de produits fixent quand une réparation devient importante et ce qu'elle impose.</p>
+  </div>
+
+  <div class="lab" id="m7">
+    <p class="lab-h">Manipulation 7 : réparer un acier moulé</p>
+    <p class="lab-sub">Une pièce en acier moulé présente un défaut. Règle l'épaisseur de paroi e, la profondeur h de l'excavation et sa surface A, et indique si la pièce a fui à l'épreuve hydraulique. Exemple de règle, celle de la spécification américaine ASTM A216 : une réparation plus profonde que 20 % de la paroi ou que 25 mm (la plus petite des deux limites), ou plus étendue qu'environ 65 cm², ou qui corrige une fuite, impose un traitement thermique après soudage. ▶ Creuser approfondit l'excavation.</p>
+    <div class="btns" id="m7f">
+      <button class="btn on" data-k="0" type="button">Pas de fuite</button>
+      <button class="btn" data-k="1" type="button">Fuite à l'épreuve hydraulique</button>
+    </div>
+    <div class="ctrl"><label for="m7e">Paroi <span class="mat">e</span></label><input type="range" id="m7e" class="r-mat" min="10" max="200" step="5" value="60"><output id="m7eo"></output></div>
+    <div class="ctrl"><label for="m7h">Profondeur <span class="mat">h</span></label><input type="range" id="m7h" class="r-mat" min="1" max="100" step="1" value="10"><output id="m7ho"></output></div>
+    <div class="ctrl"><label for="m7A">Surface <span class="mat">A</span></label><input type="range" id="m7A" class="r-mat" min="5" max="150" step="5" value="40"><output id="m7Ao"></output></div>
+    <div class="btns"><button class="btn play" id="m7play" type="button">▶ Creuser</button></div>
+    <svg id="m7svg" role="img" aria-label="Coupe de la paroi avec l'excavation et vue de dessus de sa surface, comparées aux limites de réparation importante"></svg>
+    <div class="readout" id="m7r"></div>
+    <p class="status" id="m7msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">qualification, désignation, carbone équivalent</span></div>
+    <p><b>Le parcours de qualification.</b> DMOS-P (le mode opératoire proposé) → assemblage d'essai soudé devant un examinateur → contrôles non destructifs et essais destructifs prévus par la norme → procès-verbal de QMOS → DMOS de production, appliqué dans le domaine de validité de la qualification (matériaux, épaisseurs, procédé, apports, préchauffage, traitement thermique…). Les essais déjà faits selon d'anciennes normes nationales restent valables.</p>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Pièces</th><th>Qualification des modes opératoires</th><th>Recommandations</th></tr>
+      <tr><td>Fontes EN 1561 à EN 1564 (GL, malléables, GS, ADI), production et réparation</td><td>ISO 15614-3</td><td>EN 1011-8</td></tr>
+      <tr><td>Aciers moulés, soudage de production</td><td>ISO 11970</td><td>EN 1011-2 (aciers ferritiques)</td></tr>
+    </table></div>
+    <p><b>Les aciers moulés.</b> Normes de produits : EN 10213 (service sous pression), EN 10293 (usage général), EN 10340 (construction). Leur soudabilité s'évalue comme celle des aciers, par le carbone équivalent de l'IIW :</p>
+    <div class="fx"><div class="big"><span class="mat">CEV</span> = C + <span class="frac"><span>Mn</span><span>6</span></span> + <span class="frac"><span>Cr + Mo + V</span><span>5</span></span> + <span class="frac"><span>Ni + Cu</span><span>15</span></span></div><p class="cap">Teneurs en % massique. GP240GH (C ≤ 0,23 %, Mn ≤ 1,20 %) : CEV ≤ 0,43 ; G20Mn5 (C ≤ 0,23 %, Mn ≤ 1,60 %, Ni ≤ 0,80 %) : CEV ≤ ≈ 0,55. Plus le CEV est élevé, plus il faut préchauffer (méthodes de l'EN 1011-2).</p></div>
+    <p><b>Les réparations importantes.</b> Les spécifications d'aciers moulés distinguent les réparations courantes des réparations importantes, qui demandent souvent l'accord de l'acheteur, une cartographie des soudures, des contrôles volumiques et un traitement thermique. Dans l'ASTM A216, par exemple, une réparation dont la profondeur dépasse 20 % de la paroi ou 25 mm, la plus petite des deux, ou dont la surface dépasse environ 65 cm², ou qui corrige une fuite à l'épreuve hydraulique, impose un détensionnement ou un traitement thermique après soudage ; ces mêmes réparations sont radiographiées si l'acheteur a demandé l'exigence supplémentaire correspondante.</p>
+    <div class="def"><b>📖 DMOS, DMOS-P, QMOS</b> : descriptif de mode opératoire de soudage (en anglais WPS) ; sa version préliminaire, avant qualification (pWPS) ; qualification du mode opératoire, attestée par un procès-verbal (WPQR). <b>Soudage de production</b> : soudage réalisé par le fondeur pendant la fabrication, avant livraison ; <b>soudage de réparation</b> : après livraison.</div>
+    <div class="warn"><b>⚠️ Piège : souder un acier moulé comme une fonte.</b> Un acier moulé n'est pas une fonte : pas de nickel-fer ni de régime froid, mais un apport d'acier adapté à la nuance, un préchauffage calculé sur le carbone équivalent, et souvent un traitement thermique après soudage.</div>
+    <div class="tip">💡 <b>La cartographie.</b> Le fondeur reporte sur un plan chaque zone réparée, sa profondeur et son étendue : en cas d'incident en service, on sait où regarder.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « G comme coulé »</b> : la lettre G marque les pièces moulées, pour les aciers (G20Mn5) comme pour les fontes (EN-GJS).</div>
+    <div class="weld"><b>🔥 Le rôle du coordinateur</b>
+      <p>Pour une réparation de fonte ou d'acier moulé, le coordinateur en soudage vérifie que la nuance est identifiée, que le DMOS est qualifié et couvre le cas, que le soudeur est qualifié, que les préchauffages et les températures entre passes sont mesurés, que les contrôles sont faits et enregistrés, et, pour les aciers moulés, que la cartographie et les traitements thermiques sont tenus à jour.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="exos">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✎</div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Six exercices et un défi, du choix du procédé à l'acier moulé</p></div>
+    <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de musculation : on ne progresse qu'en soulevant soi-même</span></div>
+  </div>
+  <div class="lv lv1"><div class="lv-h">👁 Mode d'emploi <span class="tag">formule littérale, puis valeurs, puis unités</span></div>
+    <p>Cherche chaque question sur papier avant d'ouvrir la correction. Les valeurs viennent des formules du cours et des modèles des manipulations ; le défi se rejoue dans la manipulation 5.</p>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 1 : le bon outil <span class="lvtag">N1 · chapitres 1 et 3</span></h4>
+    <p class="q"><b>a)</b> Un corps de pompe en EN-GJL-250, fissuré, doit être réparé sur place. Procédé, apport, régime ?</p>
+    <p class="q"><b>b)</b> Un défaut de fonderie doit être rebouché sur un bâti neuf en GS, qui sera usiné et doit garder sa couleur. Que proposes-tu ?</p>
+    <p class="q"><b>c)</b> Une bride en GS doit être soudée à un tube en acier. Quel apport, et quelle précaution côté fonte ?</p>
+    <p class="q"><b>d)</b> Quelle résistance attendre d'un joint au nickel-fer sur EN-GJL-250, sur EN-GJMB-350-10 et sur EN-GJS-400-15 ?</p>
+    <p class="q"><b>e)</b> Pourquoi le faisceau d'électrons ne convient-il pas ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> Électrode enrobée au nickel (E C Ni-CI, usinable) ou au nickel-fer (plus résistante), en <b>régime froid</b> : petit diamètre, faible intensité, cordons courts martelés, zone à peine tiède entre deux cordons. Trous d'arrêt aux extrémités de la fissure (chapitre 5).</p>
+      <p><b>b)</b> Soudage <b>homogène en régime chaud</b> : pièce entière vers 550 à 650 °C, chalumeau avec une baguette pour GS (magnésium, cérium) ou électrode en fonte, flamme réductrice, refroidissement lent au four. Le joint aura la couleur et l'usinabilité de la pièce.</p>
+      <p><b>c)</b> <b>Nickel-fer</b> (E C NiFe-CI), avec un <b>beurrage</b> de la face en fonte à faible énergie, puis un remplissage qui ne voit plus que le beurre et l'acier.</p>
+      <p><b>d)</b> <span class="m">σ<sub>j</sub> ≈ 0,91 × 250 ≈ 228 MPa</span> ; <span class="m">0,88 × 350 ≈ 308 MPa</span> ; <span class="m">0,76 × 400 ≈ 304 MPa</span>.</p>
+      <p><b>e)</b> Son refroidissement est extrêmement rapide : la zone fondue fige le carbone en constituants durs et fragiles.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 2 : le magnésium du bain <span class="lvtag">N2 · chapitre 2</span></h4>
+    <p>Baguette GS à Mg<sub>0</sub> = 0,06 % ; demi-vies du modèle : 60 s (flamme réductrice), 30 s (neutre), 12 s (oxydante).</p>
+    <p class="q"><b>a)</b> En flamme neutre, au bout de combien de temps le bain passe-t-il sous 0,028 % ? sous 0,014 % ?</p>
+    <p class="q"><b>b)</b> Même question en flamme réductrice.</p>
+    <p class="q"><b>c)</b> En flamme oxydante, quelle teneur après 20 s de bain liquide ? Quelle forme de graphite ?</p>
+    <p class="q"><b>d)</b> Le soudeur préchauffe à 380 °C ; un autre, à 700 °C, une GS perlitique. Commente.</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">t = t<sub>½</sub>·log₂(Mg<sub>0</sub>/Mg)</span> : <span class="m">30 × log₂(0,06/0,028) ≈ 30 × 1,10 ≈ 33 s</span> ; <span class="m">30 × log₂(0,06/0,014) ≈ 30 × 2,10 ≈ 63 s</span>.</p>
+      <p><b>b)</b> Deux fois plus : <b>66 s</b> et <b>126 s</b>.</p>
+      <p><b>c)</b> <span class="m">0,06 × 2<sup>−20/12</sup> ≈ 0,06 × 0,315 ≈ 0,019 %</span> : entre 0,014 et 0,028 %, le graphite n'est plus qu'en partie sphéroïdal (environ 28 % dans le modèle), le reste vermiculaire.</p>
+      <p><b>d)</b> À 380 °C, sous 425 °C, la zone fondue et la zone partiellement fondue refroidissent trop vite et blanchissent. À 700 °C, au-dessus de 650 °C, la GS perlitique risque de perdre sa dureté ; seules les fontes ferritiques recuites tolèrent jusqu'à 760 °C.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 3 : les couches tampons <span class="lvtag">N2 · chapitre 3</span></h4>
+    <p>Fonte à 3,4 % de carbone ; nickel à 95 % Ni ; nickel-fer à 55 % Ni ; acier doux à 0,08 % C ; dans le modèle, C ≈ 0,08 + 3,32·f.</p>
+    <p class="q"><b>a)</b> Une passe d'acier doux diluée à 35 % est déposée directement sur la fonte. Part de fonte et carbone ?</p>
+    <p class="q"><b>b)</b> Même passe sur deux couches de beurrage au nickel diluées à 25 % ?</p>
+    <p class="q"><b>c)</b> Et sur une seule couche de beurrage ?</p>
+    <p class="q"><b>d)</b> Un nickel-fer dilué à 45 % est-il stable directement sur la fonte ? Et sur les deux couches de nickel ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> f = 0,35 ; <span class="m">C ≈ 0,08 + 3,32 × 0,35 ≈ 1,24 %</span> : trempe, fissures.</p>
+      <p><b>b)</b> <span class="m">f₁ = 0,25</span>, <span class="m">f₂ = 0,25 × 0,25 = 0,0625</span>, passe d'acier : <span class="m">f = 0,35 × 0,0625 ≈ 0,022</span> ; <span class="m">C ≈ 0,08 + 3,32 × 0,022 ≈ 0,15 %</span> : un acier doux.</p>
+      <p><b>c)</b> <span class="m">f = 0,35 × 0,25 ≈ 0,088</span> ; <span class="m">C ≈ 0,37 %</span> : un acier mi-dur, qui peut tremper. Deux couches valent mieux qu'une.</p>
+      <p><b>d)</b> Directement : <span class="m">Ni = 0,55 × 55 ≈ 30 %</span>, sous 32 % : instable. Sur le beurrage : <span class="m">Ni₁ = 0,75 × 95 ≈ 71 %</span>, <span class="m">Ni₂ = 0,25 × 71,25 + 0,75 × 95 ≈ 89 %</span>, puis <span class="m">0,45 × 89 + 0,55 × 55 ≈ 70 %</span> : stable. Le beurrage autorise une dilution, donc une énergie, plus fortes.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 4 : mouiller sans fondre <span class="lvtag">N1 et N2 · chapitre 4</span></h4>
+    <p>Modèle de la manipulation 4 ; fonte EN-GJL-250 (R<sub>m</sub> = 250 MPa).</p>
+    <p class="q"><b>a)</b> RBCuZn-B, surface décapée, 920 °C : angle de mouillage et résistance du joint ? Où cassera l'assemblage ?</p>
+    <p class="q"><b>b)</b> Même cas sans décapage du graphite.</p>
+    <p class="q"><b>c)</b> Même laiton à 870 °C ?</p>
+    <p class="q"><b>d)</b> Même laiton à 980 °C ?</p>
+    <p class="q"><b>e)</b> À partir de quelle température un RBCuZn-D mouille-t-il complètement ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> T<sub>L</sub> = 890 °C ; 920 °C ≥ T<sub>L</sub> + 30 : mouillage complet, <span class="m">θ = 90 − 70 = 20°</span>, <span class="m">σ<sub>j</sub> = 344 MPa</span> &gt; 250 MPa : la rupture se produira dans la fonte.</p>
+      <p><b>b)</b> <span class="m">σ<sub>j</sub> = (1 − 0,3) × 344 ≈ 241 MPa</span> : le joint devient le maillon faible.</p>
+      <p><b>c)</b> Sous le liquidus : le laiton n'est pas liquide, θ = 90°, aucune liaison.</p>
+      <p><b>d)</b> 980 °C = T<sub>L</sub> + 90 : surchauffe, p = 0,5 ; <span class="m">σ<sub>j</sub> ≈ 344 × (1 − 0,25) = 258 MPa</span>, et des fumées de zinc.</p>
+      <p><b>e)</b> T<sub>L</sub> + 30 = 935 + 30 = <b>965 °C</b> : σ<sub>j</sub> ≈ 413 MPa. À 920 °C, il ne mouille pas du tout.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 5 : la coulée aluminothermique <span class="lvtag">N2 · chapitre 6</span></h4>
+    <p>Mélange Fe₂O₃ + 2 Al : 52,3 % de fer, 3,99 kJ/g ; métal coulé : 7,0 g/cm³.</p>
+    <p class="q"><b>a)</b> Brèche de 25 × 60 × 100 mm, k = 1,5 : volume, masse de métal, masse de mélange, chaleur dégagée ?</p>
+    <p class="q"><b>b)</b> Brèche de 40 × 150 × 300 mm, k = 1,8 ?</p>
+    <p class="q"><b>c)</b> Quel mélange choisir pour une pièce en fonte grise à usiner après réparation ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">V = 2,5 × 6 × 10 = 150 cm³</span> ; métal : <span class="m">150 × 7,0 × 1,5 ≈ 1 575 g ≈ 1,6 kg</span> ; mélange : <span class="m">1,575/0,523 ≈ 3,0 kg</span> ; chaleur : <span class="m">3,0 × 3,99 ≈ 12 MJ</span>.</p>
+      <p><b>b)</b> <span class="m">V = 4 × 15 × 30 = 1 800 cm³</span> ; métal ≈ 22,7 kg ; mélange ≈ 43,4 kg ; chaleur ≈ 173 MJ.</p>
+      <p><b>c)</b> Le mélange pour fonte grise : faible retrait, graphite qui précipite au refroidissement, usinage facile. Le mélange pour acier au silicium se rétracte davantage.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 6 : l'acier moulé <span class="lvtag">N1 et N2 · chapitre 7</span></h4>
+    <p class="q"><b>a)</b> Décode GP240GH et G20Mn5.</p>
+    <p class="q"><b>b)</b> Calcule le CEV d'un G20Mn5 à C 0,20 %, Mn 1,30 %, Ni 0,30 %.</p>
+    <p class="q"><b>c)</b> Selon la règle de l'ASTM A216, ces réparations sont-elles importantes ? Paroi 60 mm, excavation de 15 mm sur 40 cm² ; paroi 200 mm, 20 mm sur 80 cm² ; paroi 200 mm, 20 mm sur 40 cm².</p>
+    <p class="q"><b>d)</b> Quelle norme qualifie le mode opératoire pour la réparation d'un carter en GS ? pour le soudage de production d'un corps de vanne en acier moulé ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> G : pièce moulée ; GP240GH : acier pour appareils à pression (P), limite d'élasticité minimale 240 MPa, pour températures élevées (GH) ; G20Mn5 : environ 0,20 % de carbone et 5/4 = 1,25 % de manganèse.</p>
+      <p><b>b)</b> <span class="m">CEV = 0,20 + 1,30/6 + 0,30/15 ≈ 0,20 + 0,217 + 0,020 ≈ 0,44</span>.</p>
+      <p><b>c)</b> 60 mm : limite = min(0,2 × 60 ; 25) = 12 mm ; 15 &gt; 12 : <b>importante</b>, traitement thermique après soudage. 200 mm, 80 cm² : la surface dépasse 65 cm² : <b>importante</b>. 200 mm, 20 mm sur 40 cm² : limite 25 mm, <b>courante</b>.</p>
+      <p><b>d)</b> ISO 15614-3 pour la fonte GS ; ISO 11970 pour le soudage de production d'un acier moulé.</p>
+    </div></details>
+  </div>
+
+  <div class="exo defi">
+    <h4>🏆 Défi : le plus petit trou qui arrête la fissure <span class="lvtag">N2 · chapitre 5 · manipulation 5</span></h4>
+    <p>Fissure visible de 60 mm, vraies pointes à 3 mm au-delà. Règle le diamètre par pas de 1 mm.</p>
+    <p class="q"><b>a)</b> EN-GJL-250, σ = 30 MPa, trous centrés sur les vraies pointes (x = 3 mm) : diamètre minimal ?</p>
+    <p class="q"><b>b)</b> Sans ressuage, on perce à la pointe visible (x = 0) un trou de 4 mm. Puis de 10 mm. Que se passe-t-il ?</p>
+    <p class="q"><b>c)</b> EN-GJS-400-15, σ = 60 MPa, x = 3 mm : diamètre minimal ?</p>
+    <p class="q"><b>d)</b> Pourquoi ce modèle est-il prudent pour une GS ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <b>d = 6 mm</b> : <span class="m">a = 30 + 3 + 3 = 36 mm</span>, <span class="m">K<sub>t</sub> = 1 + 2√12 ≈ 7,9</span>, σ<sub>max</sub> ≈ 238 MPa ≤ 250 MPa. À 5 mm : K<sub>t</sub> ≈ 8,5 et 256 MPa, la fissure repart.</p>
+      <p><b>b)</b> 4 mm à x = 0 : le trou (rayon 2 mm) manque la vraie pointe, 3 mm plus loin ; la pointe reste aiguë, K<sub>t</sub> ≈ 52, la fissure repart. 10 mm : le trou englobe la pointe, <span class="m">a = 30 + 0 + 5 = 35 mm</span>, K<sub>t</sub> ≈ 6,3, σ<sub>max</sub> ≈ 189 MPa : arrêtée, mais au prix d'un gros trou à reboucher. Mieux vaut chercher la pointe au ressuage.</p>
+      <p><b>c)</b> <b>d = 10 mm</b> : K<sub>t</sub> ≈ 6,5, σ<sub>max</sub> ≈ 391 MPa ≤ 400 MPa. À 9 mm : ≈ 406 MPa.</p>
+      <p><b>d)</b> Le modèle compare un pic élastique à R<sub>m</sub>, comme pour un matériau fragile. Une GS ferritique se plastifie en fond d'entaille, ce qui émousse le pic : elle résiste mieux que le modèle ne le dit.</p>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="quiz-s">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">?</div>
+    <div class="c-title"><h2>Quiz : 12 questions éclair</h2><p>Chaque réponse est expliquée, même quand tu as juste</p></div>
+    <div class="c-img"><span class="ico">🎯</span><span><small>Image à retenir</small>La cible : vise 10 sur 12 pour clore la série</span></div>
+  </div>
+  <div id="quiz"></div>
+  <div class="score" id="qzScore" aria-live="polite">Score : 0 / 12</div>
+  <div class="btns"><button class="btn" id="qzReset" type="button">↺ Recommencer le quiz</button></div>
+</div>
+</section>
+
+<section class="chap" id="fiche">
+<div class="wrap wide">
+  <div class="cartouche">
+    <div class="c-num">★</div>
+    <div class="c-title"><h2>Fiche mémoire du cours 4</h2><p>Neuf cases, neuf images : à photographier, puis à redessiner de tête</p></div>
+    <div class="c-img"><span class="ico">🌋</span><span><small>Image à retenir</small>La poudre qui voulait fabriquer du chrome pur, et qui a fini par souder les rails</span></div>
+  </div>
+  <div class="fiche">
+    <div><div class="ic">🧰</div><h4>La boîte à outils</h4><div class="f">four · nickel · laiton · coulée</div><p>Pièce démontable : régime chaud ; sur place : nickel à froid ; fonte fragile : soudobrasage ; brèche énorme : aluminothermie.</p></div>
+    <div><div class="ic">🧴</div><h4>Le flacon débouché</h4><div class="f"><span class="mat">Mg</span>(t) = <span class="mat">Mg<sub>0</sub></span>·2<sup>−t/t½</sup></div><p>Flamme réductrice, bain court, baguette au Mg-Ce ; préchauffage 425 à 650 °C, V ou X à 90° (GL) ou 75° (GS).</p></div>
+    <div><div class="ic">🏷️</div><h4>L'étiquette</h4><div class="f">E C NiFe-CI</div><p>Ni pour les GL usinables, NiFe pour GS, malléables et fonte-acier ; joint ≈ 91 % (GL), 88 % (malléable), 76 % (GS) de R<sub>m</sub>.</p></div>
+    <div><div class="ic">🧈</div><h4>Le beurre</h4><div class="f"><span class="eps">f<sub>i</sub></span> = <span class="mat">D</span>·f<sub>i−1</sub></div><p>Une couche à 25 % divise la part de fonte par quatre : deux couches de nickel, puis remplissage plus énergique ou moins cher.</p></div>
+    <div><div class="ic">💧</div><h4>La goutte</h4><div class="f"><span class="eps">θ</span> &lt; 90° · <span class="eps">σ<sub>j</sub></span> &gt; R<sub>m</sub> fonte</div><p>Laiton sur fonte propre, sans graphite, au-dessus de son liquidus, sous la surchauffe ; flux FH21 ; pas d'ammoniaque.</p></div>
+    <div><div class="ic">🛑</div><h4>Le point final</h4><div class="f"><span class="eps">K<sub>t</sub></span> = 1 + 2·√(a/ρ)</div><p>Voir (ressuage), percer au-delà de la vraie pointe, gouger, souder en cordons courts depuis les trous.</p></div>
+    <div><div class="ic">⚓</div><h4>L'ancre</h4><div class="f">goujons en quinconce, 3 à 6 mm</div><p>Ancrer la soudure dans la fonte saine ; renforts, ancrages, agrafage à froid pour les fontes qu'on ne peut pas chauffer.</p></div>
+    <div><div class="ic">🔥</div><h4>La coulée</h4><div class="f">Fe₂O₃ + 2 Al → 2 Fe + Al₂O₃</div><p>52 % de fer, ≈ 4 kJ/g, ≈ 2 500 °C : un moule, une coulée, pour les très grosses brèches.</p></div>
+    <div><div class="ic">📜</div><h4>Le passeport</h4><div class="f">ISO 15614-3 · ISO 11970</div><p>Fontes et aciers moulés ; acier moulé : G20Mn5, CEV ; réparation importante si &gt; 20 % ou 25 mm, &gt; 65 cm² (ASTM A216).</p></div>
+  </div>
+  <div class="fun"><span class="fun-h">🌋 Fun fact : la poudre qui voulait fabriquer du chrome pur</span>En 1893, le chimiste allemand Hans Goldschmidt cherche à produire des métaux très purs, sans carbone, comme le chrome ou le manganèse : les procédés de l'époque réduisent leurs oxydes au carbone, qui reste dans le métal. Son idée est de les réduire avec de la poudre d'aluminium. Une fois allumée, la réaction s'entretient seule et dégage une chaleur énorme ; il dépose un brevet en 1895. Très vite, cette chaleur l'intéresse autant que le métal pur : en 1899, la première application commerciale de sa « thermite » sert à souder des rails de tramway à Essen. Le procédé devient la méthode classique de soudage des rails, et répare encore aujourd'hui de grosses pièces en fonte et en acier. L'aluminothermie est au <a href="#c6">chapitre 6</a>.</div>
+</div>
+</section>
+
+<section class="chap" id="gloss">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">A–Z</div>
+    <div class="c-title"><h2>Glossaire</h2><p>Les mots, symboles et sigles de ce cours</p></div>
+    <div class="c-img"><span class="ico">📖</span><span><small>Image à retenir</small>Le dictionnaire : un mot flou, un clic</span></div>
+  </div>
+  <dl class="gloss">
+    <dt>a, ρ, r</dt><dd>Demi-longueur d'une entaille ou d'une fissure (mm) ; rayon en fond d'entaille (mm) ; rayon d'un trou d'arrêt (mm).</dd>
+    <dt>Agrafage</dt><dd>Réparation à froid d'une fissure par des clés et des pions métalliques insérés à travers elle (<i>metal stitching</i>).</dd>
+    <dt>Aluminothermie</dt><dd>Procédé 71 de l'ISO 4063 : un mélange d'oxyde de fer et d'aluminium réagit, produit du métal liquide qui coule dans un moule et soude les bords.</dd>
+    <dt>Arc-air (gougeage)</dt><dd>Gougeage par un arc entre une électrode de carbone et la pièce, le métal fondu étant chassé par un jet d'air comprimé.</dd>
+    <dt>AWS, ASTM</dt><dd><i>American Welding Society</i>, qui publie notamment les classifications américaines des produits d'apport ; <i>ASTM International</i>, qui publie des spécifications de matériaux, dont l'ASTM A216 des aciers moulés pour service sous pression.</dd>
+    <dt>Beurrage</dt><dd>Dépôt préalable, à faible énergie, de couches d'un métal facile à souder sur les faces à assembler.</dd>
+    <dt>c</dt><dd>Part du graphite de surface éliminée avant soudobrasage, dans le modèle de la manipulation 4.</dd>
+    <dt>CEV</dt><dd>Carbone équivalent de l'IIW pour les aciers : C + Mn/6 + (Cr + Mo + V)/5 + (Ni + Cu)/15.</dd>
+    <dt>Chalumeau à poudre</dt><dd>Procédé où une poudre métallique, souvent à base de nickel, est fondue dans une flamme et déposée sans fondre le métal de base.</dd>
+    <dt>Coefficient de joint</dt><dd>Rapport entre la résistance d'un joint soudé et celle du métal de base.</dd>
+    <dt>Corrosion galvanique</dt><dd>Corrosion du métal le moins noble de deux métaux en contact dans un électrolyte.</dd>
+    <dt>D, D<sub>b</sub>, D<sub>r</sub>, f</dt><dd>Dilution ; dilution des couches de beurrage ; dilution des passes de remplissage ; part de métal venu de la fonte dans une couche.</dd>
+    <dt>DMOS, DMOS-P, QMOS</dt><dd>Descriptif de mode opératoire de soudage (WPS) ; DMOS préliminaire (pWPS) ; qualification de mode opératoire de soudage, attestée par un procès-verbal (WPQR).</dd>
+    <dt>E C Ni-CI, E C NiFe-CI</dt><dd>Électrodes enrobées pour fontes de l'ISO 1071, au nickel et au nickel-fer ; en notation AWS : ENi-CI, ENiFe-CI.</dd>
+    <dt>EN 1011-2, EN 1011-8</dt><dd>Recommandations pour le soudage à l'arc des aciers ferritiques ; pour le soudage des fontes.</dd>
+    <dt>EN 10027-1, EN 10213, EN 10293, EN 10340</dt><dd>Désignation symbolique des aciers ; aciers moulés pour service sous pression ; pour usage général ; pour la construction.</dd>
+    <dt>Fil fourré</dt><dd>Fil-électrode tubulaire rempli d'une poudre ; autoprotégé (procédé 114) ou sous gaz (136).</dd>
+    <dt>Flamme réductrice, neutre, oxydante</dt><dd>Flamme oxyacétylénique avec excès d'acétylène, mélange équilibré, ou excès d'oxygène.</dd>
+    <dt>Flux, FH21</dt><dd>Produit qui dissout les oxydes et protège le bain ; FH21 : classe de flux de l'ISO 18496 pour le brasage et le soudobrasage aux laitons.</dd>
+    <dt>Gougeage</dt><dd>Creusement d'une rainure par fusion et expulsion du métal.</dd>
+    <dt>Goujonnage</dt><dd>Insertion de goujons d'acier dans les faces à souder d'une fonte pour ancrer la soudure dans le métal sain.</dd>
+    <dt>GP240GH, G20Mn5</dt><dd>Aciers moulés de l'EN 10213 : G pièce moulée, P appareils à pression, 240 MPa de limite d'élasticité minimale, GH températures élevées ; G20Mn5 : ≈ 0,20 % C et ≈ 1,25 % Mn.</dd>
+    <dt>IIW, IWE</dt><dd><i>International Institute of Welding</i> ; <i>International Welding Engineer</i>, ingénieur international en soudage.</dd>
+    <dt>Inglis (formule d')</dt><dd>K<sub>t</sub> = 1 + 2√(a/ρ) : concentration de contrainte au fond d'une entaille elliptique.</dd>
+    <dt>ISO 1071, ISO 4063</dt><dd>Classification des produits d'apport pour le soudage des fontes ; numérotation des procédés de soudage.</dd>
+    <dt>ISO 11970, ISO 15614-3</dt><dd>Qualification des modes opératoires de soudage de production des pièces moulées en acier ; des fontes non alliées et faiblement alliées.</dd>
+    <dt>ISO 17672, ISO 18496</dt><dd>Métaux d'apport de brasage ; flux de brasage.</dd>
+    <dt>k</dt><dd>Coefficient qui ajoute au métal de la brèche les masselottes et les pertes, dans le modèle de la manipulation 6.</dd>
+    <dt>K<sub>t</sub>, σ, σ<sub>max</sub></dt><dd>Coefficient de concentration de contrainte ; contrainte nominale (MPa) ; contrainte maximale en fond d'entaille (MPa).</dd>
+    <dt>Laiton, maillechort</dt><dd>Alliage de cuivre et de zinc ; laiton au nickel, de couleur argentée (« nickel-argent »).</dd>
+    <dt>Liquidus T<sub>L</sub></dt><dd>Température au-dessus de laquelle un alliage est entièrement liquide.</dd>
+    <dt>Masselotte</dt><dd>Réserve de métal liquide qui alimente une pièce coulée pendant son retrait.</dd>
+    <dt>MB, MA, ZF, ZPF, ZAT</dt><dd>Métal de base, métal d'apport ; zone fondue, partiellement fondue, affectée thermiquement.</dd>
+    <dt>Mg, Mg<sub>0</sub>, t<sub>½</sub></dt><dd>Teneur en magnésium du bain ; teneur apportée par la baguette ; demi-vie de cette teneur (s), dans le modèle de la manipulation 2.</dd>
+    <dt>MIG</dt><dd>Soudage à l'arc sous gaz inerte avec fil-électrode fusible (procédé 131).</dd>
+    <dt>Mouillage, θ</dt><dd>Étalement d'un liquide sur un solide ; angle entre la surface et le bord de la goutte.</dd>
+    <dt>Oxycoupage</dt><dd>Coupage par combustion du fer dans un jet d'oxygène ; difficile sur fonte.</dd>
+    <dt>p</dt><dd>Porosité due à la surchauffe du laiton, dans le modèle de la manipulation 4.</dd>
+    <dt>Projection thermique</dt><dd>Dépôt d'un revêtement par projection de particules fondues (flamme, arc, plasma), lié mécaniquement à une surface rugueuse.</dd>
+    <dt>Quinconce</dt><dd>Disposition en rangées décalées, comme les points d'un dé à cinq.</dd>
+    <dt>RBCuZn-A à -D</dt><dd>Laitons d'apport de soudobrasage selon l'AWS.</dd>
+    <dt>RCI, RCI-A, RCI-B</dt><dd>Baguettes en fonte grise, grise alliée, et pour GS (avec magnésium ou cérium), selon l'AWS.</dd>
+    <dt>Rechargement</dt><dd>Dépôt d'une couche de métal sur une surface pour reconstituer une cote ou résister à l'usure.</dd>
+    <dt>R<sub>m</sub>, σ<sub>j</sub></dt><dd>Résistance à la traction (MPa) ; résistance du joint (MPa).</dd>
+    <dt>Soudage de production, de réparation</dt><dd>Soudage réalisé par le fondeur pendant la fabrication, avant livraison ; soudage effectué après livraison.</dd>
+    <dt>Soudobrasage</dt><dd>Assemblage par un apport de plus bas point de fusion déposé comme une soudure dans un joint ouvert, sans fusion du métal de base.</dd>
+    <dt>Support envers</dt><dd>Pièce placée sous la racine pour retenir le bain ; en graphite pour les fontes.</dd>
+    <dt>T, T<sub>0</sub></dt><dd>Température de la surface ; température de préchauffage.</dd>
+    <dt>TTAS</dt><dd>Traitement thermique après soudage.</dd>
+    <dt>Trou d'arrêt</dt><dd>Trou percé à l'extrémité d'une fissure pour en arrondir la pointe.</dd>
+    <dt>VT, PT, MT, RT, UT</dt><dd>Contrôles visuel, par ressuage, par magnétoscopie, par radiographie, par ultrasons.</dd>
+    <dt>e, h, A, g, w</dt><dd>Épaisseur de paroi ; profondeur d'une excavation ; surface d'une excavation ; écartement d'une brèche ; largeur de la pièce.</dd>
+  </dl>
+</div>
+</section>
+
+<section class="chap" id="check">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✓</div>
+    <div class="c-title"><h2>Suis-je prêt pour la suite ?</h2><p>Dix points à cocher de tête, pour clore la série</p></div>
+    <div class="c-img"><span class="ico">🧭</span><span><small>Image à retenir</small>La boussole : quand tout est coché, la série Fontes est bouclée</span></div>
+  </div>
+  <p>Coche seulement ce que tu sais faire <b>sans regarder</b>. Tes coches restent enregistrées dans ce navigateur.</p>
+  <div class="check" id="checklist">
+    <label><input type="checkbox" data-c="1"> <span>Je sais choisir un procédé pour réparer, assembler ou recharger une fonte, et dire pourquoi certains sont exclus.</span></label>
+    <label><input type="checkbox" data-c="2"> <span>Je sais conduire un soudage au chalumeau en régime chaud : préchauffage, flamme, baguette, préparation.</span></label>
+    <label><input type="checkbox" data-c="3"> <span>Je sais expliquer la perte de magnésium du bain et ses conséquences sur une GS.</span></label>
+    <label><input type="checkbox" data-c="4"> <span>Je sais choisir et désigner une électrode selon l'ISO 1071 et estimer un coefficient de joint.</span></label>
+    <label><input type="checkbox" data-c="5"> <span>Je sais expliquer et calculer l'effet d'un beurrage sur la dilution.</span></label>
+    <label><input type="checkbox" data-c="6"> <span>Je sais préparer et réussir un soudobrasage, et connais ses limites.</span></label>
+    <label><input type="checkbox" data-c="7"> <span>Je sais préparer une réparation et arrêter une fissure par des trous d'arrêt bien placés.</span></label>
+    <label><input type="checkbox" data-c="8"> <span>Je sais décrire le goujonnage, les renforts, l'agrafage et dimensionner une coulée aluminothermique.</span></label>
+    <label><input type="checkbox" data-c="9"> <span>Je sais décrire le parcours de qualification d'un mode opératoire de soudage de fonte.</span></label>
+    <label><input type="checkbox" data-c="10"> <span>Je sais désigner un acier moulé, évaluer sa soudabilité et reconnaître une réparation importante.</span></label>
+  </div>
+  <p class="status" id="checkMsg"></p>
+
+  <div class="meta">🏁 <b>Fin de la série « Fontes et soudage des fontes ».</b> Tu as parcouru le chemin complet : ce qu'est une fonte et pourquoi son carbone hésite entre graphite et cémentite (cours 1), la famille des nuances et leurs traitements (cours 2), ce qui se passe dans une soudure sur fonte (cours 3), et la pratique, du choix du procédé à la qualification, sans oublier les aciers moulés (cours 4). Pour réviser, rejoue les manipulations des quatre cours et refais les défis : ce sont eux qui ancrent les réflexes de l'examen et de l'atelier.</div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="wrap">
+  <p>Cours 4 sur 4, dernier de la série « Fontes et soudage des fontes » (sujet 2.17 du planning). Produits d'apport selon l'ISO 1071 ; numéros de procédés selon l'ISO 4063 ; qualification selon l'ISO 15614-3 et l'ISO 11970 ; aciers moulés selon l'EN 10213 ; exemple de règles de réparation tiré de l'ASTM A216. Les modèles des manipulations sont pédagogiques ; pour les notations et les conventions, l'enseignement de ta formation fait foi.</p>
+</div>
+</footer>
+
+
+<script>
+(function(){
+"use strict";
+const NS="http://www.w3.org/2000/svg";
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const RM=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function el(tag,attrs,parent){
+  const e=document.createElementNS(NS,tag);
+  if(attrs){for(const k in attrs){const v=attrs[k];if(v===undefined||v===null)continue;
+    if(typeof v==="string"&&v.indexOf("var(")>=0&&k!=="style")e.style.setProperty(k,v);else e.setAttribute(k,v);}}
+  if(parent)parent.appendChild(e);
+  return e;
+}
+function tx(p,x,y,str,attrs){const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);t.textContent=str;return t;}
+function txs(p,x,y,parts,attrs){/* parts: [["σ",""],["max","sub"],[" = 3",""]] */
+  const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);
+  parts.forEach(pt=>{const s=el("tspan",pt[1]==="sub"?{"font-size":"0.72em",dy:"3"}:(pt[2]?{dy:pt[2]}:{}),t);s.textContent=pt[0];
+    if(pt[1]==="sub"){const r=el("tspan",{dy:"-3"},t);r.textContent="\u200b";}});
+  return t;
+}
+function clear(svg){while(svg.firstChild)svg.removeChild(svg.firstChild);}
+function fitText(t,x0,x1,gap){/* garde un texte SVG entre x0 et x1 : il passe de l'autre côté de son repère (écart gap), sinon il glisse */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const a=t.getAttribute("text-anchor")||"start",x=+t.getAttribute("x");
+  if(gap&&a!=="middle"&&(b.x<x0||b.x+b.width>x1)){t.setAttribute("text-anchor",a==="end"?"start":"end");t.setAttribute("x",a==="end"?x+2*gap:x-2*gap);b=t.getBBox();}
+  const nx=+t.getAttribute("x");
+  if(b.x+b.width>x1)t.setAttribute("x",nx-(b.x+b.width-x1));else if(b.x<x0)t.setAttribute("x",nx+(x0-b.x));
+  return t;}
+function arrow(p,x1,y1,x2,y2,color,w,h){
+  w=w||2.4;h=h||10;
+  const g=el("g",{class:"arr"},p);g.style.color=color||"var(--ink)";
+  const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy);
+  if(L<1)return g;
+  const ux=dx/L,uy=dy/L,hh=Math.min(h,L*0.6),bx=x2-ux*hh,by=y2-uy*hh,hw=hh*0.45+w*0.3;
+  el("line",{x1:x1,y1:y1,x2:bx,y2:by,"stroke-width":w,"stroke-linecap":"round"},g);
+  el("polygon",{points:x2+","+y2+" "+(bx-uy*hw)+","+(by+ux*hw)+" "+(bx+uy*hw)+","+(by-ux*hw)},g);
+  return g;
+}
+function darrow(p,x,y1,y2,color,w){/* double flèche verticale */
+  const g=el("g",{},p);const m=(y1+y2)/2;
+  if(Math.abs(y2-y1)<4){el("line",{x1:x-5,y1:y1,x2:x+5,y2:y1,stroke:color,"stroke-width":2},g);return g;}
+  arrow(g,x,m,x,y1,color,w||2,8);arrow(g,x,m,x,y2,color,w||2,8);return g;
+}
+function nf(v,d){
+  if(d===undefined)d=1;
+  if(Math.abs(v)<0.5*Math.pow(10,-d))v=0;
+  return v.toLocaleString("fr-FR",{minimumFractionDigits:d,maximumFractionDigits:d}).replace("-","−").replace(/[\u202f\u2009]/g,"\u00a0");
+}
+const SUP={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function sci(v,d){
+  if(v===0)return "0";
+  if(!isFinite(v))return "∞";
+  let e=Math.floor(Math.log10(Math.abs(v)));
+  let m=v/Math.pow(10,e);
+  const dd=d===undefined?1:d;
+  if(Math.abs(Number(m.toFixed(dd)))>=10){m/=10;e+=1;}
+  return nf(m,dd)+" × 10"+String(e).split("").map(c=>SUP[c]).join("");
+}
+function bigN(v){/* nombre de cycles lisible */
+  if(!isFinite(v))return "∞";
+  if(v===0)return "0";
+  if(v<10)return nf(v,v<1?2:0);
+  if(v<1e5)return nf(Math.round(v),0);
+  return sci(v,1);
+}
+function dur(s){
+  if(!isFinite(s))return "∞";
+  if(s<60)return nf(s,s<10?1:0)+" s";
+  if(s<3600)return nf(s/60,0)+" min";
+  if(s<86400)return nf(s/3600,1)+" h";
+  if(s<86400*365)return nf(s/86400,1)+" jours";
+  return nf(s/(86400*365),1)+" ans";
+}
+function svgW(svg){const r=svg.getBoundingClientRect();return Math.max(290,Math.round(r.width||(svg.parentNode&&svg.parentNode.clientWidth)||600));}
+function setVB(svg,W,H){svg.setAttribute("viewBox","0 0 "+W+" "+H);}
+const redraws=[];
+let rzT=null,lastWW=window.innerWidth;
+window.addEventListener("resize",()=>{if(window.innerWidth===lastWW)return;lastWW=window.innerWidth;clearTimeout(rzT);rzT=setTimeout(()=>redraws.forEach(f=>{try{f();}catch(e){console.error(e);}}),120);});
+
+function niceStep(range,n){const raw=range/(n||5),p=Math.pow(10,Math.floor(Math.log10(raw))),m=raw/p;return (m<1.5?1:m<3?2:m<7?5:10)*p;}
+function setOn(sel,btn){$$(sel+" .btn").forEach(b=>b.classList.toggle("on",b===btn));}
+function fmtmm(mm){return mm<0.1?nf(mm*1000,0)+" µm":mm<10?nf(mm,mm<1?2:1)+" mm":nf(mm,0)+" mm";}
+function axes(svg,x0,x1,y0,y1,xmin,xmax,ymin,ymax,xlab,ylab,xstep,ystep,xfmt,yfmt){
+  const X=v=>x0+(x1-x0)*(v-xmin)/(xmax-xmin),Y=v=>y1-(y1-y0)*(v-ymin)/(ymax-ymin);
+  for(let v=Math.ceil(ymin/ystep-1e-9)*ystep;v<=ymax+1e-9;v+=ystep){el("line",{x1:x0,y1:Y(v),x2:x1,y2:Y(v),class:"gridbg"},svg);tx(svg,x0-5,Y(v)+4,yfmt?yfmt(v):nf(v,ystep<1?1:0),{class:"lbl","text-anchor":"end"});}
+  for(let v=Math.ceil(xmin/xstep-1e-9)*xstep;v<=xmax+1e-9;v+=xstep){el("line",{x1:X(v),y1:y1,x2:X(v),y2:y1+4,class:"tick"},svg);tx(svg,X(v),y1+17,xfmt?xfmt(v):nf(v,xstep<1?1:0),{class:"lbl","text-anchor":"middle"});}
+  el("line",{x1:x0,y1:y1,x2:x1,y2:y1,class:"axis"},svg);el("line",{x1:x0,y1:y0-4,x2:x0,y2:y1,class:"axis"},svg);
+  tx(svg,x0+4,y0-10,ylab,{class:"lbl"});tx(svg,x1,y1+32,xlab,{class:"lbl","text-anchor":"end"});
+  return {X:X,Y:Y};
+}
+function animate(btn,label,dur,onStep,onEnd){
+  let raf=null,run=false;
+  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;btn.textContent=label;}
+  function start(){if(run){stop();return;}if(RM){onStep(1);stop();if(onEnd)onEnd();return;}
+    run=true;btn.textContent="⏸ Pause";const t0=performance.now();
+    const step=now=>{const p=Math.min(1,(now-t0)/dur);onStep(p);if(p>=1){stop();if(onEnd)onEnd();return;}raf=requestAnimationFrame(step);};raf=requestAnimationFrame(step);}
+  btn.addEventListener("click",start);return {stop:stop,running:()=>run};
+}
+
+
+function sig2(v){/* arrondi à deux chiffres significatifs */
+  if(v<=0)return 0;const p=Math.pow(10,Math.floor(Math.log10(v))-1);return Math.round(v/p)*p;}
+function halo(t,svg){/* liseré de fond, puis passage au premier plan */
+  t.setAttribute("paint-order","stroke");t.style.setProperty("stroke","var(--card)");t.setAttribute("stroke-width","4");t.setAttribute("stroke-linejoin","round");if(svg)svg.appendChild(t);return t;}
+function plate(t,svg){/* fond plein derrière une étiquette */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const r=el("rect",{x:b.x-3,y:b.y-1,width:b.width+6,height:b.height+2,fill:"var(--card)",opacity:.92,rx:2});svg.appendChild(r);svg.appendChild(t);return t;}
+function le(n,f){return /^[aeiouyhéèâî]/i.test(n)?"l'"+n:(f?"la ":"le ")+n;}
+function du(n,f){return /^[aeiouyhéèâî]/i.test(n)?"de l'"+n:(f?"de la ":"du ")+n;}
+function fmtG(v){return nf(v,v<0.1?3:2)+" N/m";}
+function fmtPa(p){return p<1000?nf(p,0)+" Pa":p<1e5?nf(p/1000,1)+" kPa":nf(p/1e5,2)+" bar";}
+function fmtLen(m){/* m en mètres */
+  const mm=m*1000;if(mm<1)return nf(mm*1000,0)+" µm";if(mm<10)return nf(mm,1)+" mm";if(mm<1000)return nf(mm,0)+" mm";return nf(m,1)+" m";}
+function fmtT(s){if(!isFinite(s))return "∞";if(s<0.01)return nf(s*1000,1)+" ms";if(s<1)return nf(s,3)+" s";if(s<60)return nf(s,s<10?1:0)+" s";return nf(s/60,s<600?1:0)+" min";}
+
+function spread(items,gap,ymin,ymax){/* écarte verticalement des étiquettes {y} triées */
+  items.sort((a,b)=>a.y-b.y);
+  for(let i=1;i<items.length;i++)if(items[i].y-items[i-1].y<gap)items[i].y=items[i-1].y+gap;
+  if(items.length&&items[items.length-1].y>ymax){items[items.length-1].y=ymax;for(let i=items.length-2;i>=0;i--)if(items[i+1].y-items[i].y<gap)items[i].y=items[i+1].y-gap;}
+  if(items.length&&items[0].y<ymin){items[0].y=ymin;for(let i=1;i<items.length;i++)if(items[i].y-items[i-1].y<gap)items[i].y=items[i-1].y+gap;}
+  return items;}
+function declutter(ts,ymin,ymax){/* décale verticalement les textes qui se chevauchent */
+  const box=t=>{try{return t.getBBox();}catch(e){return null;}};
+  for(let i=1;i<ts.length;i++){const ti=ts[i];if(!ti)continue;
+    for(let pass=0;pass<6;pass++){const bi=box(ti);if(!bi)break;let moved=false;
+      for(let j=0;j<i;j++){const bj=ts[j]&&box(ts[j]);if(!bj)continue;
+        const ix=Math.min(bi.x+bi.width,bj.x+bj.width)-Math.max(bi.x,bj.x),iy=Math.min(bi.y+bi.height,bj.y+bj.height)-Math.max(bi.y,bj.y);
+        if(ix>1&&iy>1){let dy=(bi.y+bi.height/2>=bj.y+bj.height/2)?(bj.y+bj.height-bi.y+1):-(bi.y+bi.height-bj.y+1);
+          if(bi.y+dy<ymin||bi.y+bi.height+dy>ymax)dy=dy>0?-(bi.y+bi.height-bj.y+1):(bj.y+bj.height-bi.y+1);
+          ti.setAttribute("y",+ti.getAttribute("y")+dy);moved=true;break;}}
+      if(!moved)break;}}
+  return ts;}
+const SUPD={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function p10(e){return "10"+String(e).split("").map(c=>SUPD[c]||c).join("");}
+function fmtP(p){/* pression en Pa, lisible */
+  if(p>=1e5)return nf(p/1e5,1)+" bar";if(p>=1000)return nf(p/1000,p<1e4?1:0)+" kPa";if(p>=1)return nf(p,p<10?1:0)+" Pa";return sci(p,1)+" Pa";}
+
+
+
+function rng(seed){/* générateur pseudo-aléatoire reproductible */
+  let a=seed>>>0;return ()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296;};}
+
+
+
+/* =========================================================
+   Utilitaires communs du cours : unités, formats, dessins
+   ========================================================= */
+const nbsp=s=>s.replace(/(\d) (°C\/h|°C|kJ\/g|kJ\/mm|J\/mm|MPa|GPa|MJ|kg|cm³|cm²|mm²|mm|µm|%|HB|HV|min|h|s|K)(?=[\s.,;:)<·/]|$)/g,"$1 $2");
+function fitSize(t,maxW,min){let b;try{b=t.getBBox();}catch(e){return t;}let fs=parseFloat(getComputedStyle(t).fontSize)||13;
+  while(b.width>maxW&&fs>(min||9)){fs-=0.5;t.style.fontSize=fs+"px";b=t.getBBox();}return t;}
+const pts=P=>P.map(p=>p[0].toFixed(2)+","+p[1].toFixed(2)).join(" ");
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function sstep(a,b,x){const u=clamp((x-a)/(b-a),0,1);return u*u*(3-2*u);}
+function fsz(t,px){t.style.fontSize=px+"px";return t;}
+function hatch(svg,id,color,gap,w){let d=svg.querySelector("defs");if(!d)d=el("defs",{},svg);
+  const p=el("pattern",{id:id,width:gap,height:gap,patternUnits:"userSpaceOnUse",patternTransform:"rotate(45)"},d);
+  el("line",{x1:0,y1:0,x2:0,y2:gap,stroke:color,"stroke-width":w||1.4},p);return "url(#"+id+")";}
+function flake(p,x,y,a,L,col,w){return el("line",{x1:x-Math.cos(a)*L/2,y1:y-Math.sin(a)*L/2,x2:x+Math.cos(a)*L/2,y2:y+Math.sin(a)*L/2,stroke:col||"var(--ink)","stroke-width":w||1.3,"stroke-linecap":"round"},p);}
+function mix(col,pc){return "color-mix(in srgb,"+col+" "+Math.round(clamp(pc,0,100))+"%,var(--card))";}
+
+/* =========================================================
+   M1 : la carte des procédés
+   ========================================================= */
+(function(){
+  const svg=$("#m1svg");if(!svg)return;
+  const se=$("#m1e"),ro=$("#m1r"),msg=$("#m1msg");
+  const P=[
+    {k:"chf",n:"Chalumeau, baguette fonte",s:"chalumeau fonte",x:.86,y:.56,why:"joint homogène, même couleur et même usinabilité, mais pièce entière chaude et refroidie au four"},
+    {k:"chp",n:"Chalumeau à poudre",s:"poudre Ni",x:.36,y:.02,why:"la fonte ne fond pas ; idéal pour recharger ou boucher de petits défauts, mais lent et coûteux"},
+    {k:"een",n:"Électrode Ni ou NiFe",s:"électrode Ni/NiFe",x:.2,y:.3,why:"à froid, sur place, peu de chaleur, zone affectée étroite"},
+    {k:"eef",n:"Électrode en fonte",s:"électrode fonte",x:.74,y:.44,why:"joint homogène, mais préchauffage de 480 à 590 °C"},
+    {k:"mig",n:"MIG, fil fourré NiFe",s:"MIG / fil fourré",x:.3,y:.42,why:"productif, pénétration à limiter en court-circuit"},
+    {k:"sb",n:"Soudobrasage",s:"soudobrasage",x:.55,y:.02,why:"pas de fusion de la fonte, faibles contraintes, mais couleur et service limités"},
+    {k:"at",n:"Aluminothermie",s:"aluminothermie",x:.95,y:.9,why:"coulée de métal neuf : pour les très grosses brèches"},
+    {k:"fe",n:"Faisceau d'électrons",s:"faisceau d'électrons",x:.08,y:.78,why:"refroidissement trop rapide : zone fondue dure et fragile"}];
+  const M={carter:{chf:.5,chp:1,een:3,eef:.5,mig:2,sb:2,at:.5,fe:0},
+    neuve:{chf:3,chp:1.5,een:2,eef:2.5,mig:1.5,sb:.5,at:.5,fe:0},
+    acier:{chf:.5,chp:0,een:3,eef:.5,mig:2.5,sb:2,at:0,fe:0},
+    usure:{chf:1,chp:3,een:2,eef:.5,mig:2,sb:1,at:0,fe:0},
+    breche:{chf:1.5,chp:0,een:2.5,eef:1,mig:2,sb:1,at:3,fe:0},
+    ancienne:{chf:1,chp:1,een:2,eef:.5,mig:1,sb:3,at:.5,fe:0}};
+  const SN={carter:"carter GL fissuré, sur place",neuve:"défaut sur pièce GS neuve",acier:"liaison fonte GS – acier",usure:"surface usée à recharger",breche:"grosse cassure, pièce massive",ancienne:"fonte ancienne riche en phosphore"};
+  let sit="carter";
+  function score(p,e){let s=M[sit][p.k];if(p.k==="fe")return 0;
+    if(p.k==="at"&&s>0){if(e<40)s-=2;else if(e>=80)s+=.5;}
+    if((p.k==="chf"||p.k==="chp"||p.k==="sb")&&e>60&&s>0)s-=1;
+    if(p.k==="mig"&&e>=30&&s>0)s+=.5;
+    return clamp(s,0,3);}
+  const cat=s=>s>=2.5?["recommandé","var(--mat)"]:s>=1.5?["possible","var(--eps)"]:s>0?["peu adapté","var(--muted)"]:["à exclure","var(--tau)"];
+  function draw(){
+    const W=svgW(svg),n=W<560,H=n?470:300;setVB(svg,W,H);clear(svg);
+    const e=+se.value;$("#m1eo").textContent=nf(e,0)+" mm";
+    const S=P.map(p=>({p:p,s:score(p,e)}));
+    /* carte */
+    const x0=n?10:12,x1=n?W-12:Math.round(W*0.56),y0=40,y1=n?250:H-40;
+    tx(svg,8,15,"La carte des procédés",{class:"ttl"});
+    el("rect",{x:x0,y:y0,width:x1-x0,height:y1-y0,fill:"none",stroke:"var(--ink)","stroke-width":1.2},svg);
+    el("rect",{x:x0,y:y1-(y1-y0)*0.12,width:x1-x0,height:(y1-y0)*0.12,fill:"var(--gam)",opacity:.1},svg);
+    const tq=fsz(tx(svg,x1-4,y1-(y1-y0)*0.12-4,"sans fusion de la fonte",{class:"lbl","text-anchor":"end",fill:"var(--gam)"}),10.5);halo(tq,svg);
+    const ax=fsz(tx(svg,x1,y1+16,"chaleur apportée à la pièce →",{class:"lbl","text-anchor":"end"}),11);fitSize(ax,x1-x0,8);
+    const ay=fsz(tx(svg,x0+4,y0+13,"↑ fusion de la fonte",{class:"lbl"}),11);halo(ay,svg);
+    const labs=[];
+    S.forEach(o=>{const X=x0+12+(x1-x0-24)*o.p.x,Y=y1-10-(y1-y0-20)*o.p.y,c=cat(o.s);
+      el("circle",{cx:X,cy:Y,r:o.s>=2.5?9:7,fill:c[1],opacity:o.s>0?0.85:0.5},svg);
+      if(o.s===0){el("line",{x1:X-8,y1:Y-8,x2:X+8,y2:Y+8,stroke:"var(--tau)","stroke-width":2.4},svg);el("line",{x1:X-8,y1:Y+8,x2:X+8,y2:Y-8,stroke:"var(--tau)","stroke-width":2.4},svg);}
+      const right=o.p.x<0.7&&o.p.k!=="chp",t=fsz(tx(svg,right?X+12:X-12,Y+4,o.p.s,{class:"lbl","text-anchor":right?"start":"end",fill:o.s>0?"var(--ink)":"var(--tau)","font-weight":o.s>=2.5?"700":"400"}),n?10.5:11);
+      fitText(t,x0+2,x1-2,0);labs.push(t);});
+    declutter(labs,y0+4,y1-4);labs.forEach(t=>halo(t,svg));
+    /* classement */
+    const bx0=n?120:Math.round(W*0.56)+118,bx1=W-(n?40:40),by0=n?y1+56:52,dy=n?20:28;
+    tx(svg,n?8:Math.round(W*0.56)+20,n?y1+34:15,"Classement pour : "+SN[sit],{class:"ttl"});
+    const tt=svg.lastChild;fitSize(tt,W-(n?16:Math.round(W*0.56)+28),8);
+    S.slice().sort((a,b)=>b.s-a.s).forEach((o,i)=>{const y=by0+i*dy,c=cat(o.s);
+      const tl=fsz(tx(svg,bx0-8,y+4,o.p.s,{class:"lbl","text-anchor":"end",fill:o.s>0?"var(--ink)":"var(--tau)"}),n?10.5:11.5);fitSize(tl,bx0-16,8);
+      el("rect",{x:bx0,y:y-7,width:bx1-bx0,height:13,fill:"var(--card)",stroke:"var(--muted)","stroke-width":.7},svg);
+      el("rect",{x:bx0,y:y-7,width:Math.max(1,(bx1-bx0)*o.s/3),height:13,fill:c[1],opacity:.8},svg);
+      fsz(tx(svg,bx1+5,y+4,nf(o.s,1),{class:"lbl","font-weight":"700",fill:c[1]}),11);});
+    /* lectures et commentaire */
+    const top=S.slice().sort((a,b)=>b.s-a.s),best=top.filter(o=>o.s>=2.5),poss=top.filter(o=>o.s>=1.5&&o.s<2.5);
+    const SS={carter:"carter GL sur place",neuve:"pièce GS neuve",acier:"fonte GS – acier",usure:"rechargement",breche:"grosse cassure",ancienne:"fonte ancienne"};
+    ro.innerHTML=nbsp("<span><b class='mat'>"+SS[sit]+"</b></span><span>e = <b class='mat'>"+nf(e,0)+" mm</b></span>"+(best.length?best.map(o=>"<span>✔ <b class='eps'>"+o.p.s+"</b></span>").join(""):"<span>aucun recommandé</span>"));
+    let s=(best.length?best:top.slice(0,1)).map(o=>o.p.n+" : "+o.p.why).join(". ")+".";
+    if(poss.length)s+=" Possible aussi : "+poss.map(o=>o.p.s).join(", ")+".";
+    if(sit==="breche"&&e<40)s+=" Sous 40 mm, l'aluminothermie ne vaut pas son moule.";
+    if(e>60&&(sit==="neuve"||sit==="ancienne"))s+=" Au-delà de 60 mm, la flamme peine à chauffer la pièce.";
+    s+=" Le faisceau d'électrons est exclu : zone fondue trop dure.";
+    msg.innerHTML=nbsp(s);
+  }
+  const A=animate($("#m1play"),"▶ Épaissir",7000,p=>{se.value=5+Math.round(29*p)*5;draw();},null);
+  $$("#m1s .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();sit=b.dataset.k;setOn("#m1s",b);draw();}));
+  se.addEventListener("input",()=>{A.stop();draw();});
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M2 : garder le magnésium
+   ========================================================= */
+(function(){
+  const svg=$("#m2svg");if(!svg)return;
+  const sT=$("#m2T"),st=$("#m2t"),ro=$("#m2r"),msg=$("#m2msg");
+  const HL={red:60,neu:30,oxy:12},FN={red:"réductrice",neu:"neutre",oxy:"oxydante"},M0=0.06;
+  const NOD=(function(){const R=rng(948),A=[];for(let i=0;i<40;i++)A.push([R(),R(),R()*Math.PI,0.6+0.8*R(),R()]);return A;})();
+  let fl="red",rod="gs";
+  function draw(){
+    const W=svgW(svg),n=W<560,H=n?540:300;setVB(svg,W,H);clear(svg);
+    const T0=+sT.value,t=+st.value,m0=rod==="gs"?M0:0,mg=m0*Math.pow(2,-t/HL[fl]),nod=rod==="gs"?sstep(0.014,0.028,mg):0;
+    $("#m2To").textContent=nf(T0,0)+" °C";$("#m2to").textContent=nf(t,0)+" s";
+    const form=mg<0.009?"lamellaire":mg<0.014?"vermiculaire":nod<0.99?"en partie sphéroïdal":"sphéroïdal";
+    const white=1-sstep(300,425,T0);
+    /* courbe */
+    const x0=56,x1=n?W-14:Math.round(W*0.58)-16,y0=44,y1=n?250:H-44;
+    tx(svg,8,15,"Magnésium du bain",{class:"ttl"});
+    const A=axes(svg,x0,x1,y0,y1,0,120,0,0.07,"durée du bain liquide t (s)","Mg (%)",n?30:20,0.01,v=>nf(v,0),v=>nf(v,2));
+    [[0,0.009,"lamellaire",.05],[0.009,0.014,"vermiculaire",.12],[0.014,0.028,"mixte",.2],[0.028,0.07,"sphéroïdal",.3]].forEach(b=>{
+      el("rect",{x:x0,y:A.Y(b[1]),width:x1-x0,height:A.Y(b[0])-A.Y(b[1]),fill:"var(--gam)",opacity:b[3]},svg);
+      const tb=fsz(tx(svg,x1-4,(A.Y(b[0])+A.Y(b[1]))/2+4,b[2],{class:"lbl","text-anchor":"end",fill:"var(--gam)","font-weight":"700"}),b[2]==="lamellaire"||b[2]==="vermiculaire"?9.5:10.5);halo(tb,svg);});
+    Object.keys(HL).forEach(k=>{const on=k===fl,Pp=[];for(let i=0;i<=120;i+=2)Pp.push([A.X(i),A.Y(M0*Math.pow(2,-i/HL[k]))]);
+      if(rod==="gs"||!on)el("polyline",{points:pts(Pp),fill:"none",stroke:on?"var(--eps)":"var(--muted)","stroke-width":on?3:1.3,"stroke-dasharray":on?"":"4 3",opacity:on?1:.8},svg);});
+    if(rod==="gl")el("line",{x1:x0,y1:A.Y(0),x2:x1,y2:A.Y(0),stroke:"var(--eps)","stroke-width":3},svg);
+    el("line",{x1:A.X(t),y1:y0,x2:A.X(t),y2:y1,stroke:"var(--mat)","stroke-width":1.6,"stroke-dasharray":"5 3"},svg);
+    el("circle",{cx:A.X(t),cy:A.Y(mg),r:6.5,fill:"var(--sig)"},svg);
+    const tl=fsz(tx(svg,x0+6,y0+12,"plein : flamme "+FN[fl]+" · pointillés : autres flammes",{class:"lbl"}),10.5);fitSize(tl,x1-x0-60,8);halo(tl,svg);
+    /* micrographie */
+    const R=n?Math.min(96,W/2-30):Math.min(108,(W*0.42)/2-14,(H-70)/2),cx=n?W/2:Math.round(W*0.79),cy=n?y1+60+R:H/2+12;
+    tx(svg,n?8:Math.round(W*0.6),n?y1+40:15,"Zone fondue (schéma)",{class:"ttl"});
+    const cp=el("clipPath",{id:"m2c"},svg);el("circle",{cx:cx,cy:cy,r:R},cp);const g=el("g",{"clip-path":"url(#m2c)"},svg);
+    el("circle",{cx:cx,cy:cy,r:R,fill:mix("var(--gam)",10)},g);
+    if(white>0.02){const Rw=rng(5);for(let i=0;i<Math.round(16*white);i++){const x=cx+(Rw()*2-1)*R*.85,y=cy+(Rw()*2-1)*R*.85,s=R*.18;
+      el("polygon",{points:pts([[x-s,y-s*.3],[x+s*.4,y-s],[x+s,y+s*.3],[x-s*.3,y+s]]),fill:"var(--tau)",opacity:.45},g);}}
+    NOD.forEach((q,i)=>{const x=cx+(q[0]*2-1)*R*.9,y=cy+(q[1]*2-1)*R*.9;if(white>0.95&&i%3)return;
+      if(q[4]<nod)el("circle",{cx:x,cy:y,r:R*0.05*q[3],fill:"var(--ink)"},g);
+      else if(mg>=0.009&&rod==="gs"){const a=q[2],L=R*0.13*q[3];el("path",{d:"M"+(x-Math.cos(a)*L)+","+(y-Math.sin(a)*L)+" Q"+(x+Math.sin(a)*L*.6)+","+(y-Math.cos(a)*L*.6)+" "+(x+Math.cos(a)*L)+","+(y+Math.sin(a)*L),fill:"none",stroke:"var(--ink)","stroke-width":3,"stroke-linecap":"round"},g);}
+      else flake(g,x,y,q[2],R*0.32*q[3],"var(--ink)",1.6);});
+    el("circle",{cx:cx,cy:cy,r:R,fill:"none",stroke:"var(--ink)","stroke-width":1.5},svg);
+    const tf=fsz(tx(svg,cx,cy+R+18,"graphite "+form+(white>0.5?" · matrice blanchie":""),{class:"lbl","text-anchor":"middle","font-weight":"700",fill:"var(--gam)"}),11.5);fitSize(tf,n?W-16:W*0.4,8);
+    /* lectures et commentaire */
+    ro.innerHTML=nbsp("<span>flamme <b class='mat'>"+FN[fl]+"</b></span><span>t<sub>½</sub> = "+HL[fl]+" s</span><span>Mg ≈ <b class='eps'>"+nf(mg,3)+" %</b></span><span>graphite <b class='gam'>"+form+"</b></span>"+(rod==="gs"&&mg>=0.009?"<span>sphéroïdal ≈ "+nf(nod*100,0)+" %</span>":"")+"<span>T<sub>0</sub> = <b class='mat'>"+nf(T0,0)+" °C</b></span>");
+    let s;
+    if(rod==="gl")s="Baguette pour GL : pas de magnésium, le graphite de la zone fondue est lamellaire. C'est ce qu'on veut sur une fonte grise.";
+    else if(nod>=0.99)s="Après "+nf(t,0)+" s de bain liquide, il reste "+nf(mg,3)+" % de magnésium : la zone fondue est une vraie GS.";
+    else if(mg>=0.009)s="Le magnésium tombe à "+nf(mg,3)+" % : le graphite n'est plus qu'en partie sphéroïdal ("+nf(nod*100,0)+" %). Bain plus court ou flamme plus réductrice !";
+    else s="Plus que "+nf(mg,3)+" % de magnésium : le graphite est redevenu "+form+". La zone fondue n'a plus la ductilité d'une GS.";
+    if(T0<425)s+=" Préchauffage sous 425 °C : la zone fondue refroidit trop vite et blanchit.";
+    else if(T0>650)s+=" Au-delà de 650 °C, la fonte de base risque de perdre sa dureté (sauf fonte ferritique recuite, jusqu'à 760 °C).";
+    if(fl==="oxy")s+=" La flamme oxydante brûle aussi le carbone et le silicium.";
+    msg.innerHTML=nbsp(s);
+  }
+  const A=animate($("#m2play"),"▶ Laisser le bain liquide",7000,p=>{st.value=Math.round(120*p);draw();},null);
+  $$("#m2f .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();fl=b.dataset.k;setOn("#m2f",b);draw();}));
+  $$("#m2b .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();rod=b.dataset.k;setOn("#m2b",b);draw();}));
+  [sT,st].forEach(r=>r.addEventListener("input",()=>{A.stop();draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M3 : les couches tampons
+   ========================================================= */
+(function(){
+  const svg=$("#m3svg");if(!svg)return;
+  const sn=$("#m3n"),sb=$("#m3db"),sr=$("#m3dr"),ro=$("#m3r"),msg=$("#m3msg");
+  const FL=(function(){const R=rng(77),A=[];for(let i=0;i<40;i++)A.push([R(),R(),R()*Math.PI,0.6+0.8*R()]);return A;})();
+  let fill="acier",prog=null;
+  function layers(){const nb=+sn.value,Db=+sb.value,Dr=+sr.value,L=[];let f=1,Ni=0;
+    for(let i=0;i<nb;i++){f=Db*f;Ni=Db*Ni+(1-Db)*95;L.push({nm:"Ni "+(i+1),f:f,Ni:Ni});}
+    f=Dr*f;if(fill==="nife"){Ni=Dr*Ni+(1-Dr)*55;L.push({nm:"remplissage",f:f,Ni:Ni});}else L.push({nm:"remplissage",f:f,C:0.08+3.32*f});
+    return L;}
+  function draw(){
+    const W=svgW(svg),n=W<560,H=n?470:290;setVB(svg,W,H);clear(svg);
+    const L=layers(),shown=prog===null?L.length:Math.min(L.length,Math.floor(prog*(L.length+0.999))),last=L[L.length-1];
+    $("#m3no").textContent=nf(+sn.value,0);$("#m3dbo").textContent=nf(+sb.value*100,0)+" %";$("#m3dro").textContent=nf(+sr.value*100,0)+" %";
+    /* coupe */
+    const pw=n?W-16:Math.round(W*0.5),px=8,y0=60,y1=n?220:H-56,xf0=px+pw*0.12,xf1=px+pw*0.32,xs=px+pw*0.84,tl=Math.min(pw*0.07,18);
+    tx(svg,8,15,"Coupe : fonte beurrée, puis remplissage",{class:"ttl"});
+    el("polygon",{points:pts([[px,y0],[xf0,y0],[xf1,y1],[px,y1]]),fill:mix("var(--gam)",14),stroke:"var(--ink)","stroke-width":1.3},svg);
+    const g=el("g",{},svg);FL.forEach(q=>{const yy=y0+5+q[1]*(y1-y0-10),xr=xf0+(xf1-xf0)*(yy-y0)/(y1-y0),x=px+5+q[0]*(xr-px-12);flake(g,x,yy,q[2],8*q[3]);});
+    el("rect",{x:xs,y:y0,width:px+pw-xs,height:y1-y0,fill:hatch(svg,"m3h","var(--muted)",6,1),stroke:"var(--ink)","stroke-width":1.3},svg);
+    const lab=(x,y,s,c)=>{const t=fsz(tx(svg,x,y,s,{class:"lbl","text-anchor":"middle","font-weight":"700",fill:c||"var(--ink)"}),n?10.5:11);halo(t,svg);return t;};
+    lab((px+xf0)/2,y1+16,"fonte","var(--gam)");lab((xs+px+pw)/2,y1+16,"acier");
+    let xc0=0;
+    L.forEach((ly,i)=>{if(i>=shown)return;const fil=i===L.length-1,a=fil?xs:null;
+      const xa0=xf0+i*tl,xa1=xf1+i*tl,xb0=fil?xs:xf0+(i+1)*tl,xb1=fil?xs:xf1+(i+1)*tl;
+      const col=fil&&fill==="acier"?mix("var(--muted)",45):mix("var(--eps)",18+30*(i+1)/L.length);
+      el("polygon",{points:pts([[xa0,y0],[xb0,y0],[xb1,y1],[xa1,y1]]),fill:col,stroke:"var(--ink)","stroke-width":1},svg);
+      el("polygon",{points:pts([[xa0,y0],[xb0,y0],[xb1,y1],[xa1,y1]]),fill:"var(--gam)",opacity:clamp(0.85*Math.pow(ly.f,0.5),0,0.85)},svg);
+      if(!fil){const t=fsz(tx(svg,(xa0+xa1)/2+tl/2,y0-6,String(i+1),{class:"lbl","text-anchor":"middle","font-weight":"700",fill:"var(--eps)"}),10.5);halo(t,svg);}
+      else lab((xa0+xa1+xb0+xb1)/4,(y0+y1)/2,"remplissage");});
+    if(+sn.value>0){const t=fsz(tx(svg,xf0+tl*(+sn.value)/2,y0-20,"beurrage",{class:"lbl","text-anchor":"middle",fill:"var(--eps)"}),10.5);halo(t,svg);fitText(t,px,px+pw,0);}
+    /* part de fonte par couche */
+    const bx0=n?60:Math.round(W*0.5)+70,bx1=W-(n?26:24),by0=n?y1+80:52,by1=n?H-34:H-44;
+    tx(svg,n?8:Math.round(W*0.5)+24,n?y1+52:15,"Part de fonte f, couche par couche",{class:"ttl"});
+    const lx=v=>bx0+(bx1-bx0)*(Math.log10(v)+1)/3;
+    const all=[{nm:"fonte",f:1}].concat(L),bh=Math.min(26,(by1-by0)/all.length-6);
+    [0.1,1,10,100].forEach(v=>{el("line",{x1:lx(v),y1:by0-6,x2:lx(v),y2:by1,class:"gridbg"},svg);fsz(tx(svg,lx(v),by1+14,nf(v,v<1?1:0)+" %",{class:"lbl","text-anchor":"middle"}),10.5);});
+    all.forEach((ly,i)=>{const y=by0+i*(bh+6),vis=i===0||i-1<shown;
+      const tlb=fsz(tx(svg,bx0-6,y+bh/2+4,ly.nm,{class:"lbl","text-anchor":"end",fill:i===0?"var(--gam)":"var(--ink)"}),n?10.5:11);fitSize(tlb,bx0-10,8);
+      if(!vis)return;
+      el("rect",{x:bx0,y:y,width:Math.max(1,lx(clamp(ly.f*100,0.1,100))-bx0),height:bh,fill:i===0?"var(--gam)":"var(--eps)",opacity:.75},svg);
+      const tv=fsz(tx(svg,lx(clamp(ly.f*100,0.1,100))+5,y+bh/2+4,(ly.f*100<1?nf(ly.f*100,2):nf(ly.f*100,1))+" %",{class:"lbl","font-weight":"700"}),11);fitText(tv,bx0,W-4,5);halo(tv,svg);});
+    /* lectures et commentaire */
+    const ok=fill==="acier"?last.C<=0.25:last.Ni>=32;
+    ro.innerHTML=nbsp("<span>couches de beurrage : <b class='mat'>"+nf(+sn.value,0)+"</b></span><span>f (remplissage) ≈ <b class='eps'>"+(last.f*100<1?nf(last.f*100,2):nf(last.f*100,1))+" %</b></span><span>"+(fill==="acier"?"C ≈ <b class='eps'>"+nf(last.C,2)+" %</b>":"Ni ≈ <b class='eps'>"+nf(last.Ni,1)+" %</b>")+"</span><span>→ "+(ok?"remplissage sain":"<b class='tau'>remplissage à risque</b>")+"</span>");
+    let s;
+    if(fill==="acier")s=+sn.value===0?"Acier directement sur la fonte : "+nf(last.f*100,0)+" % de fonte dans la passe, "+nf(last.C,2)+" % de carbone. Il trempe et fissure.":last.C<=0.25?"Le beurrage a absorbé la dilution : la passe d'acier ne contient que "+(last.f*100<1?nf(last.f*100,2):nf(last.f*100,1))+" % de fonte, soit "+nf(last.C,2)+" % de carbone. Un acier doux, bon marché, qui ne trempe pas.":"Encore "+nf(last.f*100,1)+" % de fonte dans la passe d'acier ("+nf(last.C,2)+" % C) : ajoute une couche de beurrage ou dilue moins.";
+    else s=last.Ni>=32?"Le remplissage au nickel-fer garde "+nf(last.Ni,1)+" % de nickel : austénite stable"+(+sn.value>0?", même avec une dilution plus forte, donc une énergie plus élevée.":"."):"Directement sur la fonte, le nickel-fer tombe à "+nf(last.Ni,1)+" % de nickel, sous 32 % : l'austénite n'est plus stable. Un beurrage au nickel règle le problème.";
+    msg.innerHTML=nbsp(s);
+  }
+  const A=animate($("#m3play"),"▶ Souder couche par couche",6000,p=>{prog=p;draw();},()=>{prog=null;draw();});
+  $$("#m3f .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;fill=b.dataset.k;setOn("#m3f",b);draw();}));
+  [sn,sb,sr].forEach(r=>r.addEventListener("input",()=>{A.stop();prog=null;draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M4 : mouiller sans fondre
+   ========================================================= */
+(function(){
+  const svg=$("#m4svg");if(!svg)return;
+  const sT=$("#m4T"),sc=$("#m4c"),ro=$("#m4r"),msg=$("#m4msg");
+  const BR={A:[900,275,"RBCuZn-A"],B:[890,344,"RBCuZn-B"],C:[890,344,"RBCuZn-C"],D:[935,413,"RBCuZn-D"]},RMF=250;
+  const GR=(function(){const R=rng(1722),A=[];for(let i=0;i<26;i++)A.push([R(),R(),R()*Math.PI*0.8+0.1,0.6+0.8*R(),R()]);return A;})();
+  let br="B";
+  function model(b,T,c){const TL=BR[b][0],R=BR[b][1],wet=sstep(TL-10,TL+30,T),p=sstep(TL+60,TL+120,T),w=(1-0.3*(1-c))*wet;return {TL:TL,wet:wet,p:p,w:w,s:w*R*(1-0.5*p),th:90-70*wet};}
+  function draw(){
+    const W=svgW(svg),n=W<560,H=n?480:290;setVB(svg,W,H);clear(svg);
+    const T=+sT.value,c=+sc.value,m=model(br,T,c);
+    $("#m4To").textContent=nf(T,0)+" °C";$("#m4co").textContent=nf(c*100,0)+" %";
+    /* la goutte */
+    const pw=n?W-16:Math.round(W*0.46),px=8,ys=n?150:170,cx=px+pw/2;
+    tx(svg,8,15,"La goutte de laiton sur la fonte",{class:"ttl"});
+    el("rect",{x:px,y:ys,width:pw,height:n?60:80,fill:mix("var(--gam)",14),stroke:"var(--ink)","stroke-width":1.3},svg);
+    const g=el("g",{},svg);
+    GR.forEach(q=>{const x=px+6+q[0]*(pw-12),y=ys+6+q[1]*((n?60:80)-12);flake(g,x,y,q[2],12*q[3]);});
+    const surf=[];GR.forEach((q,i)=>{if(q[4]>(1-c)*1.0&&i%1===0)return;const x=px+8+((i*37)%100)/100*(pw-16);surf.push(x);el("rect",{x:x-5,y:ys-2,width:10,height:3,fill:"var(--tau)",opacity:.8},svg);});
+    const th=m.th*Math.PI/180,wd=Math.min(pw*0.62,(n?150:170))*(0.62+0.38*m.wet),hh=(wd/2)*Math.tan(th/2);
+    const Rr=(wd/2)/Math.sin(Math.max(th,0.2));
+    el("path",{d:"M"+(cx-wd/2)+","+ys+" A"+Rr+","+Rr+" 0 "+(th>Math.PI/2?1:0)+" 1 "+(cx+wd/2)+","+ys+"Z",fill:"color-mix(in srgb,var(--weld) 55%,var(--card))",stroke:"var(--weld)","stroke-width":1.8},svg);
+    /* angle de mouillage */
+    const ax=cx+wd/2,L=Math.min(46,wd/2);
+    el("line",{x1:ax,y1:ys,x2:ax-Math.cos(th)*L,y2:ys-Math.sin(th)*L,stroke:"var(--eps)","stroke-width":2},svg);
+    el("line",{x1:ax,y1:ys,x2:ax-L,y2:ys,stroke:"var(--eps)","stroke-width":1,"stroke-dasharray":"3 2"},svg);
+    const tlt=fsz(tx(svg,cx,ys-hh-10,"laiton",{class:"lbl","text-anchor":"middle","font-weight":"700",fill:"var(--weld)"}),11.5);halo(tlt,svg);
+    const tth=fsz(tx(svg,Math.min(ax+8,px+pw-4),ys-12,"θ = "+nf(m.th,0)+"°",{class:"lbl","font-weight":"700",fill:"var(--eps)"}),12.5);fitText(tth,px,px+pw,0);halo(tth,svg);
+    if(m.p>0.05){const Rp=rng(3);for(let i=0;i<Math.round(10*m.p);i++)el("circle",{cx:cx+(Rp()-0.5)*wd*0.7,cy:ys-Rp()*hh*0.7-2,r:2+Rp()*2.5,fill:"var(--card)",stroke:"var(--tau)","stroke-width":1},svg);
+      for(let i=0;i<3;i++){const fx=cx-20+i*20;el("path",{d:"M"+fx+","+(ys-hh-8)+" q-6,-10 0,-20 q6,-10 0,-20",fill:"none",stroke:"var(--muted)","stroke-width":2,opacity:.7},svg);}}
+    const tg=fsz(tx(svg,px+4,ys+(n?60:80)+16,"violet : graphite resté en surface (non mouillé)",{class:"lbl"}),10.5);fitSize(tg,pw-8,8);
+    /* résistance du joint */
+    const cx0=n?54:Math.round(W*0.46)+62,cx1=W-(n?24:20),cy0=n?ys+(n?60:80)+76:44,cy1=H-44;
+    tx(svg,n?8:Math.round(W*0.46)+20,n?cy0-30:15,"Résistance du joint σj selon la température",{class:"ttl"});
+    const A=axes(svg,cx0,cx1,cy0,cy1,800,1000,0,450,"température de la surface T (°C)","σj (MPa)",50,100,v=>nf(v,0),v=>nf(v,0));
+    el("rect",{x:A.X(m.TL),y:cy0,width:A.X(Math.min(1000,m.TL+60))-A.X(m.TL),height:cy1-cy0,fill:"var(--mat)",opacity:.1},svg);
+    const tw=fsz(tx(svg,(A.X(m.TL)+A.X(Math.min(1000,m.TL+60)))/2,cy0+12,"fenêtre",{class:"lbl","text-anchor":"middle",fill:"var(--mat)","font-weight":"700"}),10.5);halo(tw,svg);
+    el("line",{x1:cx0,y1:A.Y(RMF),x2:cx1,y2:A.Y(RMF),stroke:"var(--gam)","stroke-width":1.6,"stroke-dasharray":"6 4"},svg);
+    const tr=fsz(tx(svg,cx0+4,A.Y(RMF)-5,"EN-GJL-250 : 250 MPa",{class:"lbl",fill:"var(--gam)"}),10.5);halo(tr,svg);
+    const Pp=[];for(let v=800;v<=1000;v+=2)Pp.push([A.X(v),A.Y(model(br,v,c).s)]);
+    el("polyline",{points:pts(Pp),fill:"none",stroke:"var(--eps)","stroke-width":3},svg);
+    el("circle",{cx:A.X(T),cy:A.Y(m.s),r:6.5,fill:"var(--sig)"},svg);
+    /* lectures et commentaire */
+    ro.innerHTML=nbsp("<span>"+BR[br][2]+" · liquidus ≈ "+nf(m.TL,0)+" °C</span><span>θ ≈ <b class='eps'>"+nf(m.th,0)+"°</b></span><span>surface liée ≈ <b class='eps'>"+nf(m.w*100,0)+" %</b></span><span>σ<sub>j</sub> ≈ <b class='eps'>"+nf(m.s,0)+" MPa</b></span><span>→ "+(m.s>=RMF?"rupture dans la fonte":m.s>0?"<b class='tau'>joint plus faible que la fonte</b>":"<b class='tau'>aucune liaison</b>")+"</span>");
+    let s;
+    if(m.wet<0.01)s="À "+nf(T,0)+" °C, sous le liquidus du "+BR[br][2]+" (≈ "+nf(m.TL,0)+" °C), le laiton n'est pas liquide : il ne mouille pas, aucune liaison.";
+    else if(m.p>0.05)s="Surchauffe : le zinc bout (907 °C) et s'évapore en fumées ; des porosités affaiblissent le joint (σj ≈ "+nf(m.s,0)+" MPa). Redescends dans la fenêtre.";
+    else if(m.wet<0.99)s="Mouillage partiel (θ ≈ "+nf(m.th,0)+"°) : chauffe un peu plus, jusqu'à ≈ "+nf(m.TL+30,0)+" °C.";
+    else s="Bon mouillage (θ ≈ "+nf(m.th,0)+"°).";
+    if(m.wet>0.01&&c<0.99)s+=" Le graphite resté en surface masque "+nf(30*(1-c),0)+" % de la liaison : décape-le.";
+    if(m.wet>0.99&&m.p<0.05)s+=m.s>=RMF?" Joint ≈ "+nf(m.s,0)+" MPa, plus résistant que la fonte : c'est elle qui cassera.":" Joint ≈ "+nf(m.s,0)+" MPa, plus faible que la fonte.";
+    msg.innerHTML=nbsp(s.replace(/σj/g,"σ<sub>j</sub>"));
+  }
+  const A=animate($("#m4play"),"▶ Chauffer",7000,p=>{sT.value=800+Math.round(40*p)*5;draw();},null);
+  $$("#m4b .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();br=b.dataset.k;setOn("#m4b",b);draw();}));
+  [sT,sc].forEach(r=>r.addEventListener("input",()=>{A.stop();draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M5 : arrêter la fissure
+   ========================================================= */
+(function(){
+  const svg=$("#m5svg");if(!svg)return;
+  const sd=$("#m5d"),sx=$("#m5x"),sS=$("#m5s"),ro=$("#m5r"),msg=$("#m5msg"),bpt=$("#m5pt");
+  const DL=3,RHO=0.05;
+  const JIT=(function(){const R=rng(60),A=[];for(let i=0;i<200;i++)A.push(R()*2-1);return A;})();
+  let L=60,Rm=250,pt=false;
+  function kt(d,x){const r=d/2;if(d>0&&Math.abs(x-DL)<=r+1e-9){const a=L/2+x+r;return {k:1+2*Math.sqrt(a/r),ok:true,a:a};}const a=L/2+DL;return {k:1+2*Math.sqrt(a/RHO),ok:false,a:a};}
+  function draw(){
+    const W=svgW(svg),n=W<560,H=n?330:290;setVB(svg,W,H);clear(svg);
+    const d=+sd.value,x=+sx.value,s=+sS.value,K=kt(d,x),smax=K.k*s,run=smax>Rm;
+    $("#m5do").textContent=d?nf(d,0)+" mm":"aucun";$("#m5xo").textContent=(x>0?"+":"")+nf(x,0)+" mm";$("#m5so").textContent=nf(s,0)+" MPa";
+    bpt.classList.toggle("on",pt);
+    tx(svg,8,15,"La plaque fissurée, vue de dessus",{class:"ttl"});
+    /* plaque */
+    const y0=34,y1=n?178:170,span=L+2*(DL+16),ppm=(W-16)/span,cx=W/2,cy=(y0+y1)/2;
+    const X=mm=>cx+mm*ppm;
+    el("rect",{x:8,y:y0,width:W-16,height:y1-y0,fill:mix("var(--gam)",12),stroke:"var(--ink)","stroke-width":1.4},svg);
+    arrow(svg,cx,y0+14,cx,y0-6,"var(--sig)",2.4,9);arrow(svg,cx,y1-14,cx,y1+6,"var(--sig)",2.4,9);
+    const tsg=fsz(tx(svg,cx+8,y0+14,"σ",{class:"lbl",fill:"var(--sig)","font-weight":"700"}),13);halo(tsg,svg);
+    if(pt){el("rect",{x:X(-L/2-DL-2),y:cy-6,width:(L+2*DL+4)*ppm,height:12,rx:6,fill:"var(--eps)",opacity:.18},svg);}
+    const P=[];const nseg=Math.max(10,Math.round(L*ppm/7));for(let i=0;i<=nseg;i++){const u=-L/2+L*i/nseg;P.push([X(u),cy+(i===0||i===nseg?0:JIT[i]*3)]);}
+    el("polyline",{points:pts(P),fill:"none",stroke:"var(--tau)","stroke-width":2.4,"stroke-linejoin":"round"},svg);
+    [-1,1].forEach(sg=>{
+      if(pt){el("line",{x1:X(sg*L/2),y1:cy,x2:X(sg*(L/2+DL)),y2:cy,stroke:"var(--eps)","stroke-width":2.2},svg);el("circle",{cx:X(sg*(L/2+DL)),cy:cy,r:2.5,fill:"var(--eps)"},svg);}
+      if(d>0){el("circle",{cx:X(sg*(L/2+x)),cy:cy,r:Math.max(1.5,d/2*ppm),fill:"var(--card)",stroke:"var(--ink)","stroke-width":1.6},svg);}
+      if(run){const xs=K.ok?X(sg*(L/2+x+d/2)):X(sg*(L/2+DL)),xe=sg>0?W-10:10,Q=[];const m=8;for(let i=0;i<=m;i++){Q.push([xs+(xe-xs)*i/m,cy+(i&&i<m?JIT[50+i+(sg>0?10:0)]*3:0)]);}
+        el("polyline",{points:pts(Q),fill:"none",stroke:"var(--tau)","stroke-width":2,"stroke-dasharray":"5 3"},svg);}});
+    const tL=fsz(tx(svg,cx,cy-12,"fissure visible : "+nf(L,0)+" mm",{class:"lbl","text-anchor":"middle","font-weight":"700",fill:"var(--tau)"}),11.5);halo(tL,svg);
+    if(pt){const tp=fsz(tx(svg,X(L/2+DL),cy+20,"vraie pointe",{class:"lbl","text-anchor":"middle",fill:"var(--eps)","font-weight":"700"}),10.5);fitText(tp,10,W-10,0);halo(tp,svg);}
+    if(run){const tr=fsz(tx(svg,W-14,y1-8,"la fissure repart",{class:"lbl","text-anchor":"end",fill:"var(--tau)","font-weight":"700"}),11.5);halo(tr,svg);}
+    /* jauge logarithmique */
+    const gy=y1+(n?56:54),gx0=n?70:110,gx1=W-(n?16:30),LM=[50,3000];
+    const G=v=>gx0+(gx1-gx0)*(Math.log10(clamp(v,LM[0],LM[1]))-Math.log10(LM[0]))/(Math.log10(LM[1])-Math.log10(LM[0]));
+    tx(svg,8,gy-36,"Contrainte maximale en fond de fissure ou de trou",{class:"ttl"});
+    const tg=fsz(tx(svg,gx0-8,gy+5,"σmax",{class:"lbl","text-anchor":"end",fill:"var(--eps)","font-weight":"700"}),12);
+    el("rect",{x:gx0,y:gy-9,width:gx1-gx0,height:18,fill:"var(--card)",stroke:"var(--muted)","stroke-width":.8},svg);
+    el("rect",{x:gx0,y:gy-9,width:Math.max(1,G(smax)-gx0),height:18,fill:run?"var(--tau)":"var(--eps)",opacity:.75},svg);
+    const xr=G(Rm);el("line",{x1:xr,y1:gy-15,x2:xr,y2:gy+15,stroke:"var(--gam)","stroke-width":2.4},svg);
+    const trm=fsz(tx(svg,xr,gy-19,"Rm = "+nf(Rm,0)+" MPa",{class:"lbl","text-anchor":"middle",fill:"var(--gam)","font-weight":"700"}),11);fitText(trm,gx0,W-4,0);halo(trm,svg);
+    const ay=gy+24;el("line",{x1:gx0,y1:ay,x2:gx1,y2:ay,class:"axis"},svg);
+    [50,100,300,1000,3000].forEach(v=>{el("line",{x1:G(v),y1:ay,x2:G(v),y2:ay+4,class:"tick"},svg);fsz(tx(svg,G(v),ay+16,nf(v,0),{class:"lbl","text-anchor":"middle"}),10.5);});
+    const ta=fsz(tx(svg,gx1,ay+30,"MPa, échelle log",{class:"lbl","text-anchor":"end"}),10.5);
+    /* lectures et commentaire */
+    ro.innerHTML=nbsp("<span>trous : <b class='mat'>"+(d?nf(d,0)+" mm à "+(x>0?"+":"")+nf(x,0)+" mm":"aucun")+"</b></span><span>"+(d===0?"pointe aiguë":K.ok?"le trou contient la vraie pointe":"<b class='tau'>le trou manque la vraie pointe</b>")+"</span><span>K<sub>t</sub> ≈ <b class='eps'>"+nf(K.k,K.k<20?1:0)+"</b></span><span>σ<sub>max</sub> ≈ <b class='eps'>"+nf(smax,0)+" MPa</b></span><span>→ "+(run?"<b class='tau'>la fissure repart</b>":"fissure arrêtée")+"</span>");
+    let m;
+    if(d===0)m="Sans trou, la pointe de fissure (rayon ≈ 0,05 mm) concentre la contrainte : K<sub>t</sub> ≈ "+nf(K.k,0)+", σ<sub>max</sub> ≈ "+nf(smax,0)+" MPa. Elle avance au moindre retrait.";
+    else if(!K.ok)m="Le trou manque la vraie pointe, "+nf(Math.abs(x-DL)-d/2,1)+" mm plus loin : elle reste aiguë (K<sub>t</sub> ≈ "+nf(K.k,0)+") et la fissure repart."+(pt?" Recentre le trou sur la vraie pointe.":" Fais un ressuage pour voir où elle s'arrête vraiment.");
+    else if(run)m="Le trou contient la pointe : K<sub>t</sub> ≈ "+nf(K.k,1)+". Mais σ<sub>max</sub> ≈ "+nf(smax,0)+" MPa dépasse R<sub>m</sub> = "+nf(Rm,0)+" MPa : trou trop petit pour cette contrainte.";
+    else m="Fissure arrêtée : le trou de "+nf(d,0)+" mm arrondit la pointe, K<sub>t</sub> ≈ "+nf(K.k,1)+", σ<sub>max</sub> ≈ "+nf(smax,0)+" MPa ≤ R<sub>m</sub>. On peut gouger et souder.";
+    msg.innerHTML=nbsp(m);
+  }
+  const A=animate($("#m5play"),"▶ Mettre en charge",7000,p=>{sS.value=10+Math.round(14*p)*5;draw();},null);
+  $$("#m5L .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();L=+b.dataset.k;setOn("#m5L",b);draw();}));
+  $$("#m5f .btn[data-k]").forEach(b=>b.addEventListener("click",()=>{A.stop();Rm=+b.dataset.k;$$("#m5f .btn[data-k]").forEach(o=>o.classList.toggle("on",o===b));draw();}));
+  bpt.addEventListener("click",()=>{A.stop();pt=!pt;draw();});
+  [sd,sx,sS].forEach(r=>r.addEventListener("input",()=>{A.stop();draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   Figure du chapitre 5 : les préparations
+   ========================================================= */
+(function(){
+  const svg=$("#f5svg");if(!svg)return;
+  function draw(){
+    const W=svgW(svg),n=W<560,cols=n?2:4,cw=(W-16)/cols,rh=n?150:160,H=(n?2:1)*rh+18;setVB(svg,W,H);clear(svg);
+    const T=[["Défaut peu profond","ouvert à 90° au moins"],["Défaut profond","en U, fond arrondi"],["Soudobrasage","tulipe, sans arête"],["Conception","soudure hors de l'angle"]];
+    const FC=mix("var(--gam)",14);
+    T.forEach((tt,i)=>{const col=i%cols,row=Math.floor(i/cols),x=8+col*cw+8,w=cw-16,yT=row*rh+18,top=yT+30,h=rh-74;
+      const t1=tx(svg,x+w/2,yT,tt[0],{class:"ttl","text-anchor":"middle"});fitSize(t1,w,8);
+      if(i===0){el("path",{d:"M"+x+","+top+" L"+(x+w*.22)+","+top+" L"+(x+w*.38)+","+(top+h*.24)+" L"+(x+w*.62)+","+(top+h*.24)+" L"+(x+w*.78)+","+top+" L"+(x+w)+","+top+" L"+(x+w)+","+(top+h)+" L"+x+","+(top+h)+"Z",fill:FC,stroke:"var(--ink)","stroke-width":1.4},svg);
+        el("path",{d:"M"+(x+w*.3)+","+(top+h*.12)+" Q"+(x+w*.5)+","+(top+h*.32)+" "+(x+w*.7)+","+(top+h*.12),fill:"none",stroke:"var(--mat)","stroke-width":1.6},svg);}
+      else if(i===1){el("path",{d:"M"+x+","+top+" L"+(x+w*.18)+","+top+" L"+(x+w*.36)+","+(top+h*.42)+" Q"+(x+w*.5)+","+(top+h*.66)+" "+(x+w*.64)+","+(top+h*.42)+" L"+(x+w*.82)+","+top+" L"+(x+w)+","+top+" L"+(x+w)+","+(top+h)+" L"+x+","+(top+h)+"Z",fill:FC,stroke:"var(--ink)","stroke-width":1.4},svg);
+        el("path",{d:"M"+(x+w*.27)+","+(top+h*.2)+" Q"+(x+w*.5)+","+(top+h*.42)+" "+(x+w*.73)+","+(top+h*.2),fill:"none",stroke:"var(--mat)","stroke-width":1.6},svg);}
+      else if(i===2){const g=w*.06,r=h*.38;
+        el("path",{d:"M"+x+","+top+" L"+(x+w/2-g-r)+","+top+" Q"+(x+w/2-g)+","+top+" "+(x+w/2-g)+","+(top+r)+" L"+(x+w/2-g)+","+(top+h)+" L"+x+","+(top+h)+"Z",fill:FC,stroke:"var(--ink)","stroke-width":1.4},svg);
+        el("path",{d:"M"+(x+w)+","+top+" L"+(x+w/2+g+r)+","+top+" Q"+(x+w/2+g)+","+top+" "+(x+w/2+g)+","+(top+r)+" L"+(x+w/2+g)+","+(top+h)+" L"+(x+w)+","+(top+h)+"Z",fill:FC,stroke:"var(--ink)","stroke-width":1.4},svg);}
+      else{const th=h*.3;
+        el("path",{d:"M"+x+","+top+" L"+(x+w*.3)+","+top+" L"+(x+w*.3)+","+(top+h-th)+" L"+(x+w)+","+(top+h-th)+" L"+(x+w)+","+(top+h)+" L"+x+","+(top+h)+"Z",fill:FC,stroke:"var(--ink)","stroke-width":1.4},svg);
+        const xw=x+w*.7;el("path",{d:"M"+(xw-8)+","+(top+h-th)+" L"+xw+","+(top+h)+" L"+(xw+8)+","+(top+h-th)+"Z",fill:"var(--muted)",stroke:"var(--ink)","stroke-width":1},svg);
+        el("circle",{cx:x+w*.3,cy:top+h-th,r:7,fill:"none",stroke:"var(--sig)","stroke-width":2},svg);
+        const ts=fsz(tx(svg,x+w*.3+10,top+h-th-10,"σ concentrée",{class:"lbl",fill:"var(--sig)"}),10);fitText(ts,x,x+w,0);halo(ts,svg);}
+      const t2=fsz(tx(svg,x+w/2,top+h+18,tt[1],{class:"lbl","text-anchor":"middle","font-weight":"700"}),11);fitSize(t2,w,8);});
+  }
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M6 : remplir la brèche par aluminothermie
+   ========================================================= */
+(function(){
+  const svg=$("#m6svg");if(!svg)return;
+  const sg=$("#m6g"),se=$("#m6e"),sw=$("#m6w"),sk=$("#m6k"),ro=$("#m6r"),msg=$("#m6msg");
+  const RHO=7.0,YFE=0.5228,QS=3.985;
+  let mixt="fonte",prog=null;
+  function draw(){
+    const W=svgW(svg),n=W<560,H=n?470:290;setVB(svg,W,H);clear(svg);
+    const g=+sg.value,e=+se.value,w=+sw.value,k=+sk.value,V=g*e*w/1000,mm=V*RHO*k/1000,mx=mm/YFE,Q=mx*QS;
+    $("#m6go").textContent=nf(g,0)+" mm";$("#m6eo").textContent=nf(e,0)+" mm";$("#m6wo").textContent=nf(w,0)+" mm";$("#m6ko").textContent=nf(k,1);
+    const p=prog===null?1:prog,glow=sstep(0,0.3,p),fillv=sstep(0.35,1,p),pour=p>0.3&&p<0.98;
+    /* scène */
+    const pw=n?W-16:Math.round(W*0.52),px=8,cx=px+pw/2;
+    tx(svg,8,15,"Creuset, moule et brèche",{class:"ttl"});
+    const yb=n?120:126,hb=n?80:110,gpx=clamp(g*1.4,10,pw*0.22),bw=(pw-gpx)/2-14;
+    const hp=hatch(svg,"m6h","var(--muted)",6,1.1);
+    el("rect",{x:cx-gpx/2-14,y:yb-24,width:gpx+28,height:hb+38,fill:hp,stroke:"var(--ink)","stroke-width":1.2},svg);
+    el("rect",{x:px,y:yb,width:bw,height:hb,fill:mix("var(--gam)",16),stroke:"var(--ink)","stroke-width":1.4},svg);
+    el("rect",{x:px+pw-bw,y:yb,width:bw,height:hb,fill:mix("var(--gam)",16),stroke:"var(--ink)","stroke-width":1.4},svg);
+    el("rect",{x:cx-gpx/2,y:yb-22,width:gpx,height:hb+22,fill:"var(--card)",stroke:"var(--ink)","stroke-width":1},svg);
+    const lvl=(hb+22)*fillv;
+    if(lvl>0)el("rect",{x:cx-gpx/2,y:yb+hb-lvl,width:gpx,height:lvl,fill:mixt==="fonte"?"color-mix(in srgb,var(--sig) 70%,var(--frc))":"var(--sig)",opacity:.85},svg);
+    if(fillv>0.98)el("rect",{x:cx-gpx/2,y:yb-22,width:gpx,height:6,fill:"var(--muted)"},svg);
+    /* creuset */
+    const cy0=34,cy1=yb-34,cw=Math.min(70,pw*0.3);
+    el("path",{d:"M"+(cx-cw/2)+","+cy0+" L"+(cx+cw/2)+","+cy0+" L"+(cx+cw/5)+","+cy1+" L"+(cx-cw/5)+","+cy1+"Z",fill:"color-mix(in srgb,var(--sig) "+Math.round(10+70*glow*(1-fillv*0.8))+"%,var(--card))",stroke:"var(--ink)","stroke-width":1.4},svg);
+    if(pour)el("line",{x1:cx,y1:cy1,x2:cx,y2:yb+hb-lvl,stroke:"var(--sig)","stroke-width":Math.max(3,gpx*0.3),"stroke-linecap":"round",opacity:.85},svg);
+    const tc=fsz(tx(svg,cx+cw/2+6,cy0+14,"Fe₂O₃ + 2 Al",{class:"lbl","font-weight":"700",fill:"var(--sig)"}),11);fitText(tc,px,px+pw,0);halo(tc,svg);
+    const tm=fsz(tx(svg,cx,yb+hb+30,"moule réfractaire autour de la brèche",{class:"lbl","text-anchor":"middle"}),10.5);fitSize(tm,pw,8);
+    /* bilan matière */
+    const bx0=n?8:Math.round(W*0.52)+20,bx1=W-(n?12:16),by=n?yb+hb+64:52;
+    tx(svg,bx0,n?by-14:15,"Bilan de la coulée",{class:"ttl"});
+    const bw2=bx1-bx0,rows=[["mélange : "+nf(mx,mx<10?2:1)+" kg",[[0.747,"Fe₂O₃","var(--tau)"],[0.253,"Al","var(--muted)"]]],["produits",[[YFE,"fer "+nf(mx*YFE,mx<10?2:1)+" kg","var(--sig)"],[1-YFE,"Al₂O₃ (laitier)","var(--muted)"]]]];
+    rows.forEach((r,i)=>{const y=by+12+i*50;fsz(tx(svg,bx0,y,r[0],{class:"lbl","font-weight":"700"}),11.5);let xx=bx0;
+      r[1].forEach(sgm=>{const ww=bw2*sgm[0];el("rect",{x:xx,y:y+6,width:ww,height:18,fill:sgm[2],opacity:.55,stroke:"var(--ink)","stroke-width":.6},svg);
+        const t=fsz(tx(svg,xx+ww/2,y+19,sgm[1],{class:"lbl","text-anchor":"middle","font-weight":"700"}),10.5);fitSize(t,ww-4,7.5);xx+=ww;});});
+    const yq=by+122;
+    [["brèche : "+nf(V,0)+" cm³",""],["métal à couler : "+nf(mm,mm<10?2:1)+" kg (k = "+nf(k,1)+")",""],["chaleur dégagée : "+nf(Q,Q<10?1:0)+" MJ","var(--sig)"]].forEach((r,i)=>{
+      const t=fsz(tx(svg,bx0,yq+i*20,r[0],{class:"lbl","font-weight":"700",fill:r[1]||"var(--ink)"}),12);fitSize(t,bw2,8);});
+    /* lectures et commentaire */
+    ro.innerHTML=nbsp("<span>V ≈ <b class='mat'>"+nf(V,0)+" cm³</b></span><span>métal ≈ <b class='eps'>"+nf(mm,mm<10?2:1)+" kg</b></span><span>mélange ≈ <b class='eps'>"+nf(mx,mx<10?2:1)+" kg</b></span><span>chaleur ≈ <b class='eps'>"+nf(Q,Q<10?1:0)+" MJ</b></span><span>→ "+(mixt==="fonte"?"fonte grise":"acier au silicium")+"</span>");
+    let s="Il faut ≈ "+nf(mx,mx<10?2:1)+" kg de mélange pour couler "+nf(mm,mm<10?2:1)+" kg de métal : la moitié de la masse seulement devient du fer, le reste part en laitier d'alumine. La réaction dégage ≈ "+nf(Q,Q<10?1:0)+" MJ.";
+    s+=mixt==="fonte"?" Mélange pour fonte grise : faible retrait, graphite qui précipite au refroidissement, usinage facile.":" Mélange pour acier au silicium : retrait plus fort que la fonte, traitement de détente possible.";
+    if(V<100)s+=" Petite brèche : un moule et une coulée pour si peu ? L'électrode ou le soudobrasage sont souvent plus simples.";
+    if(prog!==null&&p<0.35)s="Allumage : la réaction démarre dans le creuset et s'entretient seule.";
+    msg.innerHTML=nbsp(s);
+  }
+  const A=animate($("#m6play"),"▶ Allumer",6000,p=>{prog=p;draw();},()=>{prog=null;draw();});
+  $$("#m6m .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;mixt=b.dataset.k;setOn("#m6m",b);draw();}));
+  [sg,se,sw,sk].forEach(r=>r.addEventListener("input",()=>{A.stop();prog=null;draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   Figure du chapitre 6 : goujons, renfort, agrafe
+   ========================================================= */
+(function(){
+  const svg=$("#f6svg");if(!svg)return;
+  function draw(){
+    const W=svgW(svg),n=W<560,cw=(W-16)/3,H=n?200:200;setVB(svg,W,H);clear(svg);
+    const FC=mix("var(--gam)",14),T=[["Goujons en quinconce","dépassent de 3 à 6 mm"],["Renfort sur goujons","tôle d'acier soudée"],["Agrafe en os","à froid, sans soudure"]];
+    T.forEach((tt,i)=>{const x=8+i*cw+6,w=cw-12,top=n?42:36,h=H-(n?102:96);
+      const TT=n?[["Goujons","en quinconce"],["Renfort","sur goujons"],["Agrafe","en os"]][i]:[tt[0]];
+      TT.forEach((s1,j)=>{const t1=tx(svg,x+w/2,n?13+j*14:20,s1,{class:"ttl","text-anchor":"middle"});fitSize(t1,w,8);});
+      if(i===0){const gb=w*.08,gt=w*.42;
+        el("path",{d:"M"+x+","+top+" L"+(x+w/2-gt/2)+","+top+" L"+(x+w/2-gb/2)+","+(top+h)+" L"+x+","+(top+h)+"Z",fill:FC,stroke:"var(--ink)","stroke-width":1.3},svg);
+        el("path",{d:"M"+(x+w)+","+top+" L"+(x+w/2+gt/2)+","+top+" L"+(x+w/2+gb/2)+","+(top+h)+" L"+(x+w)+","+(top+h)+"Z",fill:FC,stroke:"var(--ink)","stroke-width":1.3},svg);
+        [[.25,-1],[.6,-1],[.42,1],[.78,1]].forEach(q=>{const sgn=q[1],yy=top+h*q[0],xf=sgn<0?x+w/2-gt/2+(gt-gb)/2*q[0]:x+w/2+gt/2-(gt-gb)/2*q[0];
+          const ang=Math.atan2(h,(gt-gb)/2),nx=-sgn*Math.sin(ang),ny=-Math.cos(ang)*0.0;const L=12,Lin=10;
+          el("line",{x1:xf-nx*Lin,y1:yy-ny*Lin,x2:xf+nx*L*0.6,y2:yy+ny*L*0.6,stroke:"var(--ink)","stroke-width":4,"stroke-linecap":"round"},svg);});
+        const ts=fsz(tx(svg,x+w/2,top+h+16,"faces du chanfrein",{class:"lbl","text-anchor":"middle"}),10);fitSize(ts,w,7.5);}
+      else if(i===1){const yj=top+h*.35;
+        el("rect",{x:x,y:yj,width:w/2-2,height:h*.65,fill:FC,stroke:"var(--ink)","stroke-width":1.3},svg);
+        el("rect",{x:x+w/2+2,y:yj,width:w/2-2,height:h*.65,fill:FC,stroke:"var(--ink)","stroke-width":1.3},svg);
+        el("rect",{x:x+w*.12,y:yj-10,width:w*.76,height:10,fill:hatch(svg,"f6h","var(--muted)",5,1),stroke:"var(--ink)","stroke-width":1.2},svg);
+        [.22,.78].forEach(f=>{el("line",{x1:x+w*f,y1:yj-10,x2:x+w*f,y2:yj+14,stroke:"var(--ink)","stroke-width":3.5},svg);});
+        [x+w*.12,x+w*.88].forEach(xx=>el("path",{d:"M"+(xx-6*(xx<x+w/2?1:-1))+","+yj+" L"+xx+","+(yj-10)+" L"+xx+","+yj+"Z",fill:"var(--muted)",stroke:"var(--ink)","stroke-width":1},svg));
+        el("path",{d:"M"+(x+w/2-5)+","+(top+h)+" L"+(x+w/2)+","+(top+h-12)+" L"+(x+w/2+5)+","+(top+h)+"Z",fill:"var(--muted)",stroke:"var(--ink)","stroke-width":1},svg);}
+      else{el("rect",{x:x,y:top,width:w,height:h,fill:FC,stroke:"var(--ink)","stroke-width":1.3},svg);
+        const P=[];for(let k=0;k<=10;k++)P.push([x+w/2+(k%2?3:-3),top+h*k/10]);el("polyline",{points:pts(P),fill:"none",stroke:"var(--tau)","stroke-width":2},svg);
+        [h*.3,h*.7].forEach(yy=>{const r=Math.min(8,w*.06),dx=w*.2;
+          el("circle",{cx:x+w/2-dx,cy:top+yy,r:r,fill:"var(--muted)",stroke:"var(--ink)","stroke-width":1.2},svg);
+          el("circle",{cx:x+w/2+dx,cy:top+yy,r:r,fill:"var(--muted)",stroke:"var(--ink)","stroke-width":1.2},svg);
+          el("rect",{x:x+w/2-dx,y:top+yy-r*.45,width:2*dx,height:r*.9,fill:"var(--muted)",stroke:"var(--ink)","stroke-width":1.2},svg);});}
+      const t2=fsz(tx(svg,x+w/2,H-14,tt[1],{class:"lbl","text-anchor":"middle","font-weight":"700"}),11);fitSize(t2,w,8);});
+  }
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M7 : réparer un acier moulé
+   ========================================================= */
+(function(){
+  const svg=$("#m7svg");if(!svg)return;
+  const se=$("#m7e"),sh=$("#m7h"),sA=$("#m7A"),ro=$("#m7r"),msg=$("#m7msg");
+  let leak=false;
+  function draw(){
+    const W=svgW(svg),n=W<560,H=n?420:270;setVB(svg,W,H);clear(svg);
+    const e=+se.value;let h=+sh.value;const through=h>=e;if(h>e)h=e;const A=+sA.value,lim=Math.min(0.2*e,25),dep=h>lim,ar=A>65,major=dep||ar||leak;
+    $("#m7eo").textContent=nf(e,0)+" mm";$("#m7ho").textContent=nf(+sh.value,0)+" mm";$("#m7Ao").textContent=nf(A,0)+" cm²";
+    /* coupe de la paroi */
+    const pw=n?W-16:Math.round(W*0.58),px=8,y0=40,y1=n?200:H-50,sc=(y1-y0)/Math.max(e,40),cx=px+pw/2;
+    tx(svg,8,15,"Coupe de la paroi",{class:"ttl"});
+    const ye=y0+e*sc;
+    el("rect",{x:px,y:y0,width:pw,height:ye-y0,fill:mix("var(--muted)",22),stroke:"var(--ink)","stroke-width":1.4},svg);
+    const D=2*Math.sqrt(A/Math.PI)*10,hs=pw/260,cw=Math.min(pw-20,D*hs),ch=h*sc;
+    el("path",{d:"M"+(cx-cw/2)+","+y0+" L"+(cx-cw/2+Math.min(cw*.2,ch*.6))+","+(y0+ch*.85)+" Q"+cx+","+(y0+ch*1.08)+" "+(cx+cw/2-Math.min(cw*.2,ch*.6))+","+(y0+ch*.85)+" L"+(cx+cw/2)+","+y0+"Z",fill:major?mix("var(--tau)",40):mix("var(--eps)",30),stroke:"var(--ink)","stroke-width":1.2},svg);
+    [[0.2*e,"20 % de e"],[25,"25 mm"]].forEach(q=>{if(q[0]>=e)return;const yy=y0+q[0]*sc,on=Math.abs(q[0]-lim)<1e-9;
+      el("line",{x1:px,y1:yy,x2:px+pw,y2:yy,stroke:on?"var(--sig)":"var(--muted)","stroke-width":on?1.8:1.1,"stroke-dasharray":"6 4"},svg);
+      const t=fsz(tx(svg,px+pw-4,yy-4,q[1]+(on?" (limite)":""),{class:"lbl","text-anchor":"end",fill:on?"var(--sig)":"var(--muted)","font-weight":on?"700":"400"}),10.5);halo(t,svg);});
+    const tE=fsz(tx(svg,px+4,ye+16,"paroi e = "+nf(e,0)+" mm",{class:"lbl","font-weight":"700"}),11);
+    if(leak){for(let i=0;i<3;i++)el("path",{d:"M"+(cx-14+i*14)+","+(ye+6)+" q-5,9 0,13 q5,-4 0,-13Z",fill:"var(--eps)",opacity:.8},svg);
+      const tl=fsz(tx(svg,cx+30,ye+16,"fuite",{class:"lbl",fill:"var(--eps)","font-weight":"700"}),11);halo(tl,svg);}
+    /* vue de dessus */
+    const vx=n?W/2:Math.round(W*0.58)+(W-Math.round(W*0.58))/2,vy=n?y1+(H-y1)/2+8:H/2+10,Rm=n?Math.min(70,(H-y1)/2-24):Math.min(80,(W-W*0.58)/2-14);
+    tx(svg,n?8:Math.round(W*0.58)+14,n?y1+36:15,"Vue de dessus",{class:"ttl"});
+    const k=Rm/Math.sqrt(150/Math.PI),r65=Math.sqrt(65/Math.PI)*k,rA=Math.sqrt(A/Math.PI)*k;
+    el("circle",{cx:vx,cy:vy,r:rA,fill:ar?mix("var(--tau)",40):mix("var(--eps)",30),stroke:"var(--ink)","stroke-width":1.2},svg);
+    el("circle",{cx:vx,cy:vy,r:r65,fill:"none",stroke:"var(--sig)","stroke-width":1.8,"stroke-dasharray":"6 4"},svg);
+    const t6=fsz(tx(svg,vx,vy-r65-6,"65 cm²",{class:"lbl","text-anchor":"middle",fill:"var(--sig)","font-weight":"700"}),11);halo(t6,svg);
+    const tA=fsz(tx(svg,vx,vy+4,"A = "+nf(A,0)+" cm²",{class:"lbl","text-anchor":"middle","font-weight":"700"}),11.5);halo(tA,svg);
+    /* lectures et commentaire */
+    ro.innerHTML=nbsp("<span>e = <b class='mat'>"+nf(e,0)+" mm</b></span><span>h = <b class='mat'>"+nf(h,0)+" mm</b></span><span>limite = <b class='eps'>"+nf(lim,lim%1?1:0)+" mm</b></span><span>A = <b class='mat'>"+nf(A,0)+" cm²</b></span><span>→ "+(major?"<b class='tau'>réparation importante</b>":"réparation courante")+"</span>");
+    const why=[];if(dep)why.push("profondeur "+nf(h,0)+" mm > "+nf(lim,lim%1?1:0)+" mm");if(ar)why.push("surface "+nf(A,0)+" cm² > 65 cm²");if(leak)why.push("fuite à l'épreuve hydraulique");
+    let s="Limite de profondeur : la plus petite de 20 % de "+nf(e,0)+" mm et de 25 mm, soit "+nf(lim,lim%1?1:0)+" mm. ";s+=major?"Réparation importante ("+why.join(" ; ")+") : traitement thermique après soudage (détensionnement ou traitement complet), radiographie si l'acheteur l'a demandée, et en pratique accord de l'acheteur et cartographie.":"Réparation courante : profondeur "+nf(h,0)+" mm ≤ "+nf(lim,lim%1?1:0)+" mm et surface ≤ 65 cm². Mode opératoire qualifié (ISO 11970), contrôle de l'excavation et de la soudure.";
+    if(through)s+=" L'excavation traverse la paroi : c'est une reconstruction.";
+    s+=" Règle de l'ASTM A216, citée en exemple.";
+    msg.innerHTML=nbsp(s);
+  }
+  const A_=animate($("#m7play"),"▶ Creuser",6000,p=>{sh.value=1+Math.round(Math.min(99,+se.value-1)*p);draw();},null);
+  $$("#m7f .btn").forEach(b=>b.addEventListener("click",()=>{A_.stop();leak=b.dataset.k==="1";setOn("#m7f",b);draw();}));
+  [se,sh,sA].forEach(r=>r.addEventListener("input",()=>{A_.stop();draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   Quiz, check-list, sommaire, thème
+   ========================================================= */
+(function(){
+  const box=$("#quiz");if(!box)return;
+  const Q=[
+    {q:"Quel procédé assemble une fonte sans la fondre ?",o:["le chalumeau avec baguette en fonte","le soudobrasage au laiton","l'électrode enrobée au nickel","l'aluminothermie"],c:1,e:"Le <b>soudobrasage</b> : le laiton fond vers 890 à 935 °C, mouille la fonte et s'y lie par diffusion, sans la fondre. Pas de fonte blanche."},
+    {q:"Le faisceau d'électrons ne convient pas aux fontes parce que :",o:["il ne pénètre pas assez","son refroidissement très rapide rend la zone fondue trop dure","il exige un apport en fonte","il fait fondre le graphite"],c:1,e:"Énergie concentrée, refroidissement très rapide : la zone fondue fige le carbone en <b>constituants durs et fragiles</b>."},
+    {q:"Pour souder une GS au chalumeau avec un joint en GS, la baguette doit contenir :",o:["du chrome","du magnésium et du cérium","du soufre","du phosphore"],c:1,e:"<b>Magnésium et cérium</b> sphéroïdisent le graphite de la zone fondue ; la baguette en contient un excès, car ils s'évaporent."},
+    {q:"Avec une flamme oxydante, le magnésium du bain :",o:["se conserve mieux","disparaît plus vite, et le graphite redevient vermiculaire ou lamellaire","se transforme en cérium","n'a aucune importance"],c:1,e:"La flamme oxydante accélère l'<b>évanouissement du magnésium</b> ; on soude les GS en flamme <b>réductrice</b>, avec un bain court."},
+    {q:"En régime chaud au chalumeau, une fonte non alliée se préchauffe :",o:["à 100 °C","entre 425 et 650 °C environ","à 900 °C","jamais"],c:1,e:"<b>425 à 650 °C</b> : en dessous, la zone fondue blanchit ; au-dessus de 650 °C, la fonte de base risque de perdre sa dureté (760 °C toléré pour les fontes ferritiques recuites)."},
+    {q:"Pour une GS ou une malléable, on choisit de préférence une électrode :",o:["en acier doux","au nickel-fer (E C NiFe-CI)","au cuivre","en fonte blanche"],c:1,e:"<b>Nickel-fer</b> : plus résistant que le nickel, de dilatation proche de la fonte, adapté aux GS, aux malléables et à la liaison fonte-acier."},
+    {q:"Le beurrage sert surtout à :",o:["colorer le joint","absorber la dilution avec la fonte dans des couches tampons","durcir la zone affectée","remplacer le préchauffage dans tous les cas"],c:1,e:"Les couches de beurrage <b>absorbent la dilution</b> : à 25 %, chaque couche divise par quatre la part de fonte. On peut ensuite souder plus fort ou avec un apport moins cher."},
+    {q:"Un laiton de soudobrasage perle sur une fonte fraîchement usinée parce que :",o:["la fonte est trop dure","du graphite étalé en surface empêche le mouillage","le laiton est trop riche en cuivre","la fonte fond"],c:1,e:"L'usinage <b>étale le graphite</b>, que le laiton ne mouille pas. On décape, ou on chauffe au rouge sous flamme oxydante avant de soudobraser."},
+    {q:"Où percer un trou d'arrêt ?",o:["exactement à la pointe visible","sur la vraie pointe, repérée au ressuage, un peu au-delà de la pointe visible","au milieu de la fissure","sur le bord de la pièce"],c:1,e:"La fissure continue, invisible, au-delà de la pointe visible : on la repère au <b>ressuage</b> et on centre le trou sur la vraie pointe."},
+    {q:"Les goujons d'un goujonnage servent à :",o:["décorer la soudure","ancrer la soudure dans la fonte saine, au-delà de la zone fragile","remplacer l'apport","refroidir plus vite le joint"],c:1,e:"Ils portent une partie de l'effort <b>au-delà de la zone partiellement fondue et de la zone affectée</b>, les plus fragiles."},
+    {q:"Un mélange aluminothermique Fe₂O₃ + 2 Al donne en fer environ :",o:["10 % de sa masse","52 % de sa masse","90 % de sa masse","100 % de sa masse"],c:1,e:"111,7 g de fer pour 213,7 g de mélange : <b>≈ 52 %</b> ; le reste forme le laitier d'alumine. La réaction dégage ≈ 4 kJ par gramme."},
+    {q:"Le soudage de production d'une pièce en acier moulé se qualifie selon :",o:["l'ISO 1071","l'ISO 15614-3","l'ISO 11970","l'EN 1560"],c:2,e:"<b>ISO 11970</b> pour les aciers moulés ; l'ISO 15614-3 est celle des fontes, l'ISO 1071 classe les apports pour fontes, l'EN 1560 désigne les fontes."}
+  ];
+  let score=0,done=0;const sc=$("#qzScore");
+  function upd(){let t="Score : "+score+" / "+Q.length;if(done===Q.length)t+=score>=10?"  ·  🎉 série Fontes bouclée":score>=7?"  ·  relis les explications":"  ·  refais un tour des chapitres";sc.textContent=t;}
+  function render(){box.innerHTML="";score=0;done=0;
+    Q.forEach((it,n)=>{const d=document.createElement("div");d.className="qz";
+      d.innerHTML='<p class="qz-q"><b>'+(n+1)+".</b> "+it.q+'</p><div class="qz-o"></div><div class="qz-e" hidden></div>';
+      const o=d.querySelector(".qz-o"),ex=d.querySelector(".qz-e");let answered=false;
+      it.o.forEach((txt,i)=>{const b=document.createElement("button");b.type="button";b.className="qz-b";b.innerHTML=String.fromCharCode(65+i)+". "+txt;
+        b.addEventListener("click",()=>{if(answered)return;answered=true;done++;const ok=i===it.c;if(ok)score++;b.classList.add(ok?"ok":"ko");o.children[it.c].classList.add("ok");ex.hidden=false;ex.innerHTML=(ok?"✅ <b>Bien joué.</b> ":"❌ <b>Pas tout à fait.</b> ")+it.e;upd();});
+        o.appendChild(b);});
+      box.appendChild(d);});
+    upd();}
+  $("#qzReset").addEventListener("click",render);render();
+})();
+(function(){
+  const boxes=$$("#checklist input[type=checkbox]"),msg=$("#checkMsg"),KEY="fontes-cours4-check";
+  if(!boxes.length)return;
+  let saved=[];try{saved=JSON.parse(localStorage.getItem(KEY)||"[]")||[];}catch(e){saved=[];}
+  boxes.forEach(b=>{b.checked=saved.indexOf(b.dataset.c)>=0;});
+  function upd(){const on=boxes.filter(b=>b.checked).map(b=>b.dataset.c);try{localStorage.setItem(KEY,JSON.stringify(on));}catch(e){}
+    msg.innerHTML=on.length===boxes.length?"🎉 <b>Tout est coché : la série Fontes est bouclée, bravo !</b>":on.length+" / "+boxes.length+" : reviens sur les points non cochés (les manipulations sont faites pour ça).";}
+  boxes.forEach(b=>b.addEventListener("change",upd));upd();
+})();
+
+
+(function(){
+  const links=$$(".toc a"),tin=$(".toc-in");
+  if(!links.length||!("IntersectionObserver" in window))return;
+  const map={};links.forEach(a=>{map[a.getAttribute("href").slice(1)]=a;});
+  const obs=new IntersectionObserver(ents=>{ents.forEach(en=>{if(!en.isIntersecting)return;const a=map[en.target.id];if(!a)return;
+    links.forEach(l=>l.classList.toggle("on",l===a));
+    if(tin){const tgt=a.offsetLeft-tin.clientWidth/2+a.offsetWidth/2;try{tin.scrollTo({left:tgt,behavior:RM?"auto":"smooth"});}catch(e){tin.scrollLeft=tgt;}}});},{rootMargin:"-45% 0px -50% 0px"});
+  Object.keys(map).forEach(id=>{const s=document.getElementById(id);if(s)obs.observe(s);});
+})();
+(function(){
+  const b=$("#themeBtn");if(!b)return;const KEY="fontes-theme",root=document.documentElement;
+  const lab={auto:"◐ Thème : automatique",light:"☀️ Thème : clair",dark:"🌙 Thème : sombre"};
+  let t="auto";try{t=localStorage.getItem(KEY)||"auto";}catch(e){}
+  function apply(){if(t==="auto")root.removeAttribute("data-theme");else root.setAttribute("data-theme",t);b.textContent=lab[t];}
+  b.addEventListener("click",()=>{t=t==="auto"?"light":t==="light"?"dark":"auto";try{localStorage.setItem(KEY,t);}catch(e){}apply();});
+  apply();
+})();
+})();
+</script>
+</body>
+</html>

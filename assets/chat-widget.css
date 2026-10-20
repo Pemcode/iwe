@@ -1,0 +1,148 @@
+/* Assistant de révision (S25) : chargé dans la racine fantôme du widget, isolé des styles des cours.
+   Les couleurs reprennent les jetons --wiki-* de wiki.css, qui suivent déjà le thème clair ou sombre. */
+:host { all:initial; }
+*, *::before, *::after { box-sizing:border-box; }
+[hidden] { display:none!important; }
+.launcher, .panel { font:15px/1.5 var(--wiki-font, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif); color:var(--wiki-ink, #172c37);
+  color-scheme:var(--wiki-scheme, light); -webkit-font-smoothing:antialiased; }
+button, select, textarea { font:inherit; color:inherit; }
+:focus-visible { outline:3px solid var(--wiki-focus, #d86632); outline-offset:2px; }
+.sr { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+
+/* Bouton discret : au-dessus du bouton « Menu » sur téléphone (position calculée par le script). */
+.launcher { position:fixed; right:calc(14px + env(safe-area-inset-right, 0px)); bottom:16px; z-index:885; display:inline-flex; align-items:center; gap:7px;
+  min-height:42px; margin:0; padding:0 16px 0 12px; border:1px solid var(--wiki-rule, #d8e0df); border-radius:999px; background:var(--wiki-surface, #fff);
+  font-weight:650; box-shadow:var(--wiki-shadow, 0 12px 32px rgba(15,30,40,.2)); cursor:pointer; }
+.launcher:hover { border-color:var(--wiki-accent, #a93a15); color:var(--wiki-accent, #a93a15); }
+.launcher svg { flex:none; }
+
+.panel { position:fixed; right:16px; bottom:16px; z-index:885; display:flex; flex-direction:column; width:min(420px, calc(100vw - 32px));
+  height:min(660px, calc(100vh - 32px)); max-height:calc(100dvh - 32px); overflow:hidden; border:1px solid var(--wiki-rule, #d8e0df); border-radius:14px;
+  background:var(--wiki-panel-bg, #fbfbf8); box-shadow:var(--wiki-shadow, 0 12px 32px rgba(15,30,40,.2)); }
+@media (max-width:640px) {
+  .panel { inset:0; width:auto; height:auto; max-height:none; border:0; border-radius:0; }
+}
+
+.icon-button { display:inline-grid; place-items:center; flex:none; width:36px; height:36px; margin:0; padding:0; border:0; border-radius:8px; background:none; cursor:pointer; }
+.icon-button:hover { background:var(--wiki-hover, rgba(23,44,55,.065)); }
+.icon-button.small { width:28px; height:28px; }
+.icon-button.small svg { width:16px; height:16px; }
+/* Sans en-tête : le titre reste pour les lecteurs d’écran, la fermeture flotte dans le coin. */
+.close { position:absolute; top:6px; right:6px; z-index:2; width:32px; height:32px; border-radius:50%; background:var(--wiki-panel-bg, #fbfbf8);
+  color:var(--wiki-muted, #536774); }
+.close svg { width:18px; height:18px; }
+.link-button { margin:0; padding:2px 0; border:0; background:none; font-size:13px; color:var(--wiki-muted, #536774); text-decoration:underline; text-underline-offset:3px; cursor:pointer; }
+.link-button:hover { color:var(--wiki-accent, #a93a15); }
+
+.log { flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; padding:42px 16px 12px; }
+.hint { margin:0; color:var(--wiki-muted, #536774); font-size:14px; }
+.exchange + .exchange { margin-top:18px; padding-top:14px; border-top:1px dashed var(--wiki-rule, #d8e0df); }
+.question { margin-left:auto; max-width:88%; width:fit-content; padding:8px 12px; border-radius:12px 12px 4px 12px; background:var(--wiki-tint, #eaf0ec);
+  border:1px solid var(--wiki-tint-line, #c9d6cf); }
+.question p { margin:0; white-space:pre-wrap; overflow-wrap:anywhere; }
+.tag { display:block; font-size:11px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--wiki-green, #316d61); }
+.answer { margin-top:10px; }
+.md { overflow-wrap:anywhere; }
+.md p, .md ul, .md ol, .md pre { margin:0 0 8px; }
+.md ul, .md ol { padding-left:22px; }
+.md li + li { margin-top:3px; }
+.md .heading { margin-top:10px; }
+.md code { padding:1px 4px; border-radius:4px; background:var(--wiki-tint, #eaf0ec); font:13px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.md pre { max-width:100%; overflow-x:auto; padding:10px; border-radius:8px; background:var(--wiki-tint, #eaf0ec); }
+.md pre code { padding:0; background:none; white-space:pre; }
+a { color:var(--wiki-accent, #a93a15); text-underline-offset:3px; }
+.cite { white-space:normal; font-size:.92em; }
+.cite a { font-weight:650; }
+.unverified { display:inline-block; padding:0 6px; border:1px solid currentColor; border-radius:999px; font-size:11px; line-height:1.5; font-weight:650;
+  color:var(--wiki-accent, #a93a15); vertical-align:1px; }
+.badge { display:inline-block; margin:0 0 6px; padding:1px 9px; border-radius:999px; background:var(--wiki-accent, #a93a15); color:var(--wiki-paper, #f7f7f2);
+  font-size:12px; font-weight:700; letter-spacing:.03em; }
+.wait { color:var(--wiki-muted, #536774); font-style:italic; }
+.note { margin:6px 0 0; font-size:13px; color:var(--wiki-muted, #536774); }
+.error { margin:6px 0 0; padding:8px 10px; border-left:3px solid var(--wiki-accent, #a93a15); border-radius:4px; background:var(--wiki-active, rgba(169,58,21,.1)); font-size:14px; }
+.label { margin:8px 0 2px; font-size:12px; font-weight:700; color:var(--wiki-muted, #536774); }
+.sources { margin:0; padding-left:18px; font-size:13px; overflow-wrap:anywhere; }
+.sent { margin-top:8px; font-size:12px; color:var(--wiki-muted, #536774); }
+.sent summary { cursor:pointer; width:fit-content; }
+.sent ul { margin:4px 0 0; padding-left:18px; overflow-wrap:anywhere; }
+.usage { display:flex; flex-wrap:wrap; align-items:center; gap:2px 12px; margin:6px 0 0; font-size:11.5px; color:var(--wiki-muted, #536774); }
+
+.primary, .secondary { display:inline-flex; align-items:center; justify-content:center; min-height:38px; margin:0; padding:0 14px; border-radius:9px; font-weight:650; cursor:pointer; }
+.primary { border:1px solid var(--wiki-ink, #172c37); background:var(--wiki-ink, #172c37); color:var(--wiki-panel-bg, #fbfbf8); }
+.primary:hover { background:var(--wiki-accent, #a93a15); border-color:var(--wiki-accent, #a93a15); }
+.secondary { border:1px solid var(--wiki-rule, #d8e0df); background:var(--wiki-surface, #fff); }
+.secondary:hover { border-color:var(--wiki-accent, #a93a15); }
+.primary:disabled, .secondary:disabled { opacity:.55; cursor:default; }
+.verify { display:inline-flex; align-items:center; gap:4px; font-size:12px; }
+.verify svg { width:14px; height:14px; }
+
+.login { flex:1 1 auto; overflow-y:auto; padding:16px; }
+.login .login-title { margin-right:36px; font-size:17px; font-weight:700; line-height:1.3; }
+.login p { margin:0 0 12px; }
+.login .primary { width:100%; margin:4px 0 14px; }
+.small { font-size:12px; color:var(--wiki-muted, #536774); }
+.status { margin:0; padding:0 16px; font-size:13px; color:var(--wiki-green, #316d61); }
+.status:not(:empty) { padding-top:8px; }
+
+.chip { display:flex; align-items:flex-start; gap:6px; margin:8px 16px 0; padding:6px 6px 6px 10px; border:1px solid var(--wiki-tint-line, #c9d6cf); border-radius:10px;
+  background:var(--wiki-tint, #eaf0ec); font-size:13px; }
+.chip-label { flex:none; max-width:45%; font-weight:650; color:var(--wiki-green, #316d61); }
+.chip-text { flex:1 1 auto; min-width:0; overflow-wrap:anywhere; font-style:italic; }
+
+/* S32 : réglages actifs, images jointes, consignes. */
+.settings { display:flex; flex-wrap:wrap; gap:4px 8px; margin:6px 16px 0; font-size:12px; color:var(--wiki-green, #316d61); }
+.settings > span { padding:0 8px; border:1px solid var(--wiki-tint-line, #c9d6cf); border-radius:999px; background:var(--wiki-tint, #eaf0ec); line-height:1.7; }
+.tray { display:flex; flex-wrap:wrap; gap:10px; margin:4px 0 10px; padding:0; list-style:none; }
+.tray li { position:relative; }
+.tray img, .thumbs img { display:block; width:auto; height:56px; max-width:110px; object-fit:cover; border:1px solid var(--wiki-rule, #d8e0df); border-radius:6px; background:#fff; }
+.tray .icon-button { position:absolute; top:-9px; right:-9px; width:24px; height:24px; border:1px solid var(--wiki-rule, #d8e0df); border-radius:50%;
+  background:var(--wiki-surface, #fff); }
+.tray .icon-button svg { width:14px; height:14px; }
+.tray-note { margin:0 0 8px; font-size:13px; color:var(--wiki-accent, #a93a15); }
+.thumbs { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:6px; margin:2px 0 6px; }
+.thumbs img { height:48px; }
+.editor { flex:1 1 auto; min-height:0; display:flex; flex-direction:column; gap:8px; overflow-y:auto; padding:12px 16px; }
+.editor p { margin:0; }
+.editor-title { margin-right:36px; font-weight:700; }
+.editor textarea { flex:1 1 auto; display:block; width:100%; min-height:160px; margin:0; padding:9px 11px; resize:vertical; border:1px solid var(--wiki-rule, #d8e0df);
+  border-radius:10px; background:var(--wiki-surface, #fff); font:13px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.editor-actions { display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end; gap:8px; }
+
+/* Zone de saisie : le champ et sa taskbar dans un même cadre, comme une barre d’outils discrète. */
+.composer { position:relative; padding:8px 12px calc(12px + env(safe-area-inset-bottom, 0px)); }
+.box { border:1px solid var(--wiki-rule, #d8e0df); border-radius:14px; background:var(--wiki-surface, #fff); }
+.box:focus-within { border-color:var(--wiki-focus, #d86632); }
+.composer.drop .box { border-color:var(--wiki-accent, #a93a15); outline:2px dashed var(--wiki-accent, #a93a15); outline-offset:2px; }
+.box textarea { display:block; width:100%; min-height:48px; max-height:180px; margin:0; padding:10px 12px 4px; resize:none; border:0; border-radius:14px 14px 0 0;
+  background:none; line-height:1.45; }
+.box textarea:focus-visible { outline:none; }
+.taskbar { display:flex; align-items:center; gap:2px; padding:2px 6px 6px; color:var(--wiki-muted, #536774); }
+.taskbar .icon-button { width:32px; height:32px; }
+.taskbar .icon-button svg { width:18px; height:18px; }
+.toggle { display:inline-flex; align-items:center; gap:5px; flex:none; height:28px; margin:0 2px; padding:0 9px 0 7px; border:1px solid var(--wiki-rule, #d8e0df);
+  border-radius:999px; background:none; font-size:12.5px; font-weight:650; color:inherit; cursor:pointer; }
+.toggle svg { width:15px; height:15px; }
+.toggle:hover { border-color:var(--wiki-green, #316d61); color:var(--wiki-green, #316d61); }
+.toggle[aria-checked="true"] { border-color:var(--wiki-green, #316d61); background:var(--wiki-green, #316d61); color:var(--wiki-panel-bg, #fbfbf8); }
+.taskbar select { min-width:0; max-width:150px; flex:0 1 auto; height:28px; padding:0 4px; border:0; border-radius:8px; background:none; font-size:12.5px;
+  color:inherit; text-overflow:ellipsis; cursor:pointer; }
+.taskbar select:hover { background:var(--wiki-hover, rgba(23,44,55,.065)); }
+.taskbar select option { color:var(--wiki-ink, #172c37); background:var(--wiki-surface, #fff); }
+.spacer { flex:1 1 auto; }
+.send { display:inline-grid; place-items:center; flex:none; width:32px; height:32px; margin:0 0 0 2px; padding:0; border:0; border-radius:50%;
+  background:var(--wiki-ink, #172c37); color:var(--wiki-panel-bg, #fbfbf8); cursor:pointer; }
+.send svg { width:18px; height:18px; }
+.send:hover { background:var(--wiki-accent, #a93a15); }
+.send:disabled { opacity:.45; cursor:default; }
+.send:disabled:hover { background:var(--wiki-ink, #172c37); }
+
+/* Menu « … » : au-dessus de la taskbar, aligné à droite. */
+.menu { position:absolute; right:12px; bottom:calc(100% - 4px); z-index:3; width:min(270px, calc(100% - 24px)); padding:6px;
+  border:1px solid var(--wiki-rule, #d8e0df); border-radius:12px; background:var(--wiki-surface, #fff); box-shadow:var(--wiki-shadow, 0 12px 32px rgba(15,30,40,.2)); }
+.item { display:flex; align-items:center; gap:10px; width:100%; margin:0; padding:8px 10px; border:0; border-radius:8px; background:none; font-size:14px;
+  color:var(--wiki-ink, #172c37); text-align:left; text-decoration:none; cursor:pointer; }
+.item svg { flex:none; width:18px; height:18px; color:var(--wiki-muted, #536774); }
+.item:hover { background:var(--wiki-hover, rgba(23,44,55,.065)); color:var(--wiki-accent, #a93a15); }
+.menu .notice { margin:6px 4px 2px; padding:8px 6px 2px; border-top:1px solid var(--wiki-rule, #d8e0df); font-size:11.5px; line-height:1.4; color:var(--wiki-muted, #536774); }
+
+@media print { .launcher, .panel { display:none!important; } }

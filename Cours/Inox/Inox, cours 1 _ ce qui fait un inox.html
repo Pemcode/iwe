@@ -1,0 +1,1890 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Inox, cours 1 : ce qui fait un inox</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@500;600;700&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F3F6F9; --paper-2:#E6ECF2; --card:#FFFFFF; --ink:#17212B; --muted:#56626F; --line:#C5CFD9;
+  --grid:rgba(40,90,160,.075);
+  --sig:#CF2438; --tau:#8A34B6; --eps:#1B5ED3; --gam:#06849A; --frc:#D46A00; --mat:#26844A; --weld:#9A5B12;
+  --ok:#26844A; --warn:#B86E00; --bad:#C62828;
+  --lv2:#E4EBF2; --hl:#FFF3B0;
+  --font-body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-head:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --font-math:"STIX Two Text","Cambria Math","Cambria","Times New Roman",serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+    --grid:rgba(120,160,220,.07);
+    --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+    --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+  --grid:rgba(120,160,220,.07);
+  --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+  --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+  color-scheme: dark;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0;color:var(--ink);font-family:var(--font-body);font-size:17.5px;line-height:1.62;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;overflow-x:hidden;
+}
+img,svg{max-width:100%}
+.wrap{max-width:800px;margin:0 auto;padding:0 20px}
+.wide{max-width:980px}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.1;margin:0}
+h3{font-size:1.65rem;font-weight:600;margin:2rem 0 .6rem}
+h4{font-size:1.3rem;font-weight:600;margin:1.4rem 0 .4rem}
+p{margin:.7em 0}
+a{color:var(--eps)}
+b,strong{font-weight:700}
+small{font-size:.8em}
+sub{font-size:.72em}
+.m{font-family:var(--font-math);font-size:1.08em;white-space:nowrap}
+.sig{color:var(--sig)} .tau{color:var(--tau)} .eps{color:var(--eps)} .gam{color:var(--gam)} .frc{color:var(--frc)} .mat{color:var(--mat)} .mut{color:var(--muted)} .wcol{color:var(--weld)}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .12em;line-height:1.1}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 .2em .08em}
+.frac>span:last-child{padding:.08em .2em 0}
+ul,ol{padding-left:1.4em}
+li{margin:.25em 0}
+
+/* ---------- en-tête ---------- */
+.hero{padding:34px 0 10px}
+.title-block{border:2.5px solid var(--ink);background:var(--card);display:grid;grid-template-columns:1fr 300px}
+.tb-main{padding:22px 24px;border-right:2.5px solid var(--ink);display:flex;flex-direction:column;justify-content:space-between;gap:14px}
+.tb-series{margin:0 0 .5rem;color:var(--muted);font-size:.95rem}
+.hero h1{font-size:clamp(2.3rem,6vw,4rem);font-weight:700;letter-spacing:-.01em}
+.tb-cells{display:grid;grid-template-rows:repeat(4,auto)}
+.tb-cells>div{padding:9px 16px;border-bottom:1.5px solid var(--ink);display:flex;flex-direction:column;justify-content:center}
+.tb-cells>div:last-child{border-bottom:0}
+.tb-cells small{color:var(--muted);font-size:.78rem}
+.tb-cells b{font-family:var(--font-head);font-size:1.25rem;font-weight:600;line-height:1.15}
+.lede{font-size:1.13rem;max-width:760px;margin:1.2rem 0}
+.theme-btn{align-self:flex-start;font-family:var(--font-body);font-size:.85rem;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
+@media (max-width:760px){.title-block{grid-template-columns:1fr}.tb-main{border-right:0;border-bottom:2.5px solid var(--ink)}.tb-cells{grid-template-rows:none;grid-template-columns:1fr 1fr}.tb-cells>div:nth-child(odd){border-right:1.5px solid var(--ink)}.tb-cells>div:nth-child(3){border-bottom:0}}
+@media (max-width:420px){.tb-cells{grid-template-columns:1fr}.tb-cells>div:nth-child(odd){border-right:0}.tb-cells>div:nth-child(3){border-bottom:1.5px solid var(--ink)}}
+
+/* code couleur */
+.cc{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:stretch;margin:1rem 0 .4rem}
+.cc-box{background:var(--card);border:2px solid var(--line);padding:12px 14px;border-radius:4px}
+.cc-cause{border-color:var(--sig)} .cc-link{border-color:var(--mat)} .cc-eff{border-color:var(--eps)}
+.cc-box small{display:block;color:var(--muted);font-size:.82rem;line-height:1.3}
+.cc-syms{font-family:var(--font-math);font-size:1.7rem;line-height:1.25;display:flex;flex-wrap:wrap;gap:.1em .45em;margin:.2rem 0}
+.cc-box p{margin:0;font-size:.9rem;line-height:1.35}
+.cc-arrow{align-self:center;font-size:1.8rem;color:var(--muted)}
+@media (max-width:700px){.cc{grid-template-columns:1fr}.cc-arrow{transform:rotate(90deg);justify-self:center;line-height:1}}
+.cc-more{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:.5rem 0}
+.cc-more>div{border:2px solid var(--line);background:var(--card);border-radius:4px;padding:6px 10px;font-size:.9rem}
+@media (max-width:640px){.cc-more{grid-template-columns:1fr}}
+
+/* ---------- sommaire ---------- */
+.toc{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-bottom:1.5px solid var(--line);padding-top:env(safe-area-inset-top,0px);margin-top:18px}
+.toc-in{display:flex;gap:6px;overflow-x:auto;padding:9px 20px;max-width:980px;margin:0 auto;scrollbar-width:thin}
+.toc a{flex:none;text-decoration:none;color:var(--ink);font-size:.88rem;padding:4px 11px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);white-space:nowrap}
+.toc a.on{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.toc a:focus-visible,.btn:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--eps);outline-offset:2px}
+
+/* ---------- sections ---------- */
+section.chap{padding:46px 0 10px}
+.cartouche{display:grid;grid-template-columns:86px 1fr 250px;border:2.5px solid var(--ink);background:var(--card);margin-bottom:1.4rem}
+.c-num{font-family:var(--font-head);font-size:3.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;border-right:2.5px solid var(--ink)}
+.c-title{padding:14px 18px;border-right:2.5px solid var(--ink)}
+.c-title h2{font-size:2.1rem;font-weight:700}
+.c-title p{margin:.25rem 0 0;color:var(--muted)}
+.c-img{padding:12px 14px;display:flex;gap:12px;align-items:center;background:var(--paper-2)}
+.c-img .ico{font-size:2.3rem;line-height:1}
+.c-img small{display:block;color:var(--muted);font-size:.78rem}
+.c-img span{font-size:.95rem;line-height:1.3}
+@media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
+
+/* niveaux */
+.lv{margin:1.2rem 0;padding:6px 22px 14px;border-radius:4px}
+.lv1{background:var(--card);border:2px solid var(--ink)}
+.lv2{background:var(--lv2);border-left:6px solid var(--ink)}
+.lv-h{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;font-family:var(--font-head);font-size:1.35rem;font-weight:600;margin:10px 0 4px}
+.lv-h .tag{font-size:.95rem;font-family:var(--font-body);font-weight:400;color:var(--muted)}
+@media (max-width:520px){.lv{padding:6px 14px 12px}}
+
+/* formules et encadrés */
+.fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:600px;text-align:center;border-radius:3px;overflow-x:auto}
+.fx .big{font-family:var(--font-math);font-size:1.9rem;line-height:1.4}
+.fx .cap{font-size:.85rem;color:var(--muted);margin:.3rem 0 0}
+.fx .row{display:flex;flex-wrap:wrap;justify-content:center;gap:.2em 1.4em}
+.syms{margin:.6rem 0;display:grid;grid-template-columns:auto 1fr;gap:.35rem 1rem;align-items:baseline}
+.syms dt{font-family:var(--font-math);font-size:1.25rem;text-align:right;white-space:nowrap}
+.syms dd{margin:0}
+.def{margin:.9rem 0;padding:.5rem .9rem;border-left:3px dotted var(--muted);font-size:.96rem;background:color-mix(in srgb,var(--card) 60%,transparent)}
+.def>b:first-child{font-family:var(--font-head);font-size:1.08rem;font-weight:600}
+.tip{margin:1rem 0;padding:.7rem 1rem;border:1.5px dashed var(--mat);border-radius:4px;font-size:.97rem}
+.warn{margin:1rem 0;padding:.7rem 1rem;border:2px solid var(--bad);border-radius:4px;font-size:.97rem;background:color-mix(in srgb,var(--bad) 7%,transparent)}
+.mnemo{margin:1rem 0;padding:.7rem 1rem;background:var(--hl);border-radius:4px;font-size:.98rem}
+.fun{margin:1.2rem 0;padding:.8rem 1rem;border:2px dashed var(--muted);border-radius:10px;background:var(--card);font-size:.98rem}
+.fun-h{display:block;margin-bottom:.35rem;font-family:var(--font-head);font-size:1.15rem;font-weight:600;letter-spacing:.02em}
+.meta{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--frc);border-radius:4px;background:color-mix(in srgb,var(--frc) 6%,transparent)}
+.weld{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--weld);border-radius:4px;background:color-mix(in srgb,var(--weld) 7%,transparent)}
+.weld>b:first-child{font-family:var(--font-head);font-size:1.15rem;font-weight:600;color:var(--weld)}
+.hp{display:inline-block;font-size:.72rem;font-weight:700;padding:1px 7px;border-radius:9px;background:var(--weld);color:var(--card);vertical-align:middle;margin-left:4px;white-space:nowrap}
+.recall{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:1rem 0}
+.recall>div{background:var(--card);border:1.5px solid var(--line);border-radius:4px;padding:8px 12px;font-size:.92rem}
+.recall .f{font-family:var(--font-math);font-size:1.2rem;margin-bottom:.2rem}
+@media (max-width:640px){.recall{grid-template-columns:1fr}}
+.hist{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:1rem 0}
+.hist>div{background:var(--card);border:1.5px solid var(--weld);border-radius:4px;padding:8px 12px;font-size:.93rem}
+.hist .yr{font-family:var(--font-head);font-size:1.6rem;font-weight:700;color:var(--weld);line-height:1}
+@media (max-width:720px){.hist{grid-template-columns:1fr}}
+
+/* manipulations */
+.lab{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:14px 16px 12px;margin:1.4rem 0}
+.lab-h{font-family:var(--font-head);font-size:1.3rem;font-weight:600;margin:0 0 .2rem}
+.lab-sub{margin:0 0 .6rem;color:var(--muted);font-size:.92rem}
+.lab svg{display:block;width:100%;height:auto;color:var(--ink);font-family:var(--font-body);touch-action:pan-y}
+.ctrl{display:grid;grid-template-columns:minmax(110px,auto) 1fr minmax(92px,auto);gap:4px 12px;align-items:center;margin:.5rem 0}
+.ctrl label{font-size:.95rem}
+.ctrl output{font-family:var(--font-math);font-size:1.08rem;text-align:right;white-space:nowrap}
+@media (max-width:520px){.ctrl{grid-template-columns:1fr auto}.ctrl input[type=range]{grid-column:1/-1;grid-row:2}}
+input[type=range]{width:100%;accent-color:var(--ink);height:28px;margin:0}
+input.r-sig{accent-color:var(--sig)} input.r-tau{accent-color:var(--tau)} input.r-frc{accent-color:var(--frc)} input.r-mat{accent-color:var(--mat)} input.r-eps{accent-color:var(--eps)}
+.btns{display:flex;flex-wrap:wrap;gap:6px;margin:.5rem 0}
+.btn{font-family:var(--font-body);font-size:.9rem;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 13px;cursor:pointer;line-height:1.3}
+.btn:hover{background:var(--paper-2)}
+.btn.on{background:var(--ink);color:var(--paper)}
+.btn.play{border-color:var(--eps);color:var(--eps);font-weight:700}
+.btn:disabled{opacity:.45;cursor:default}
+.readout{font-family:var(--font-math);font-size:1.08rem;background:var(--paper-2);border-radius:4px;padding:.5rem .8rem;margin:.5rem 0;overflow-x:auto;display:flex;flex-wrap:wrap;gap:.2em 1.3em}
+.readout>span{white-space:nowrap}
+.status{font-size:.97rem;margin:.5rem 0;padding:.5rem .8rem;border-left:4px solid var(--eps);background:color-mix(in srgb,var(--eps) 6%,transparent);border-radius:0 4px 4px 0;min-height:2.6em}
+.radios{display:flex;flex-wrap:wrap;gap:6px 14px;margin:.4rem 0;font-size:.95rem}
+.radios label{display:inline-block;cursor:pointer}
+.radios input{margin:0 6px 0 0;vertical-align:middle}
+
+/* svg */
+svg text{fill:currentColor;font-size:13px}
+svg .lbl{font-size:12.5px;fill:var(--muted)}
+svg .mth{font-family:var(--font-math);font-size:16px}
+svg .ttl{font-family:var(--font-head);font-size:15px;font-weight:600}
+svg .axis{stroke:var(--ink);stroke-width:1.4;fill:none}
+svg .tick{stroke:var(--muted);stroke-width:1}
+svg .gridbg{stroke:var(--line);stroke-width:1}
+svg .ref{stroke:var(--muted);stroke-width:1.3;stroke-dasharray:4 3;fill:none}
+.arr line{stroke:currentColor}
+.arr polygon{fill:currentColor}
+
+/* tableaux */
+.tbl-wrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch}
+table.data{border-collapse:collapse;width:100%;font-size:.94rem;background:var(--card)}
+table.data th,table.data td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:middle}
+table.data th{font-family:var(--font-head);font-weight:600;font-size:1.05rem;background:var(--paper-2)}
+table.data td.n{font-family:var(--font-math);white-space:nowrap}
+table.data tr.now td{background:var(--hl)}
+
+/* parcours */
+.route{list-style:none;padding:0;margin:1rem 0;position:relative}
+.route::before{content:"";position:absolute;left:17px;top:10px;bottom:10px;width:4px;background:var(--line);border-radius:2px}
+.route li{position:relative;padding:0 0 14px 52px;margin:0}
+.route li .dot{position:absolute;left:4px;top:0;width:30px;height:30px;border-radius:50%;border:3px solid var(--ink);background:var(--card);font-family:var(--font-head);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+.route li b{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.route li p{margin:.1rem 0 0;font-size:.95rem}
+.series{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:.8rem 0}
+.series>div{background:var(--card);border:1.5px solid var(--line);padding:8px 10px;border-radius:4px;font-size:.88rem}
+.series>div.here{border:2.5px solid var(--ink)}
+.series b{display:block;font-family:var(--font-head);font-size:1.05rem}
+@media (max-width:700px){.series{grid-template-columns:1fr 1fr}}
+
+/* exercices et quiz */
+.exo{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--ink);padding:6px 20px 12px;margin:1.2rem 0;border-radius:4px}
+.exo.defi{border-left-color:var(--weld)}
+.exo h4{margin-top:.8rem}
+.exo .lvtag{font-family:var(--font-body);font-size:.85rem;font-weight:400;color:var(--muted);margin-left:.4rem}
+.exo .q{margin:.25rem 0}
+details{margin:.6rem 0}
+summary{cursor:pointer;font-weight:700;padding:4px 0}
+details .sol{padding:.4rem .9rem;border-left:3px solid var(--mat);margin:.4rem 0}
+details .sol p{margin:.45em 0}
+.qz{background:var(--card);border:1.5px solid var(--line);border-radius:6px;padding:10px 16px;margin:.8rem 0}
+.qz-q{margin:.3rem 0 .6rem}
+.qz-o{display:flex;flex-direction:column;gap:6px}
+.qz-b{text-align:left;font-family:var(--font-body);font-size:.97rem;padding:8px 12px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:5px;cursor:pointer}
+.qz-b:hover{border-color:var(--ink)}
+.qz-b.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--card))}
+.qz-b.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--card))}
+.qz-e{font-size:.94rem;margin:.6rem 0 .2rem}
+.score{position:sticky;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);display:inline-block;background:var(--ink);color:var(--paper);padding:6px 14px;border-radius:999px;font-size:.95rem;margin:.6rem 0}
+
+/* fiche mémoire */
+.fiche{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:2.5px solid var(--ink);background:var(--card);margin:1rem 0}
+.fiche>div{padding:12px 14px;border-right:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}
+.fiche>div:nth-child(3n){border-right:0}
+.fiche>div:nth-last-child(-n+3){border-bottom:0}
+.fiche .ic{font-size:1.9rem;line-height:1}
+.fiche h4{margin:.3rem 0 .2rem;font-size:1.15rem}
+.fiche .f{font-family:var(--font-math);font-size:1.1rem;margin:.2rem 0}
+.fiche p{margin:.2rem 0 0;font-size:.88rem;color:var(--muted)}
+@media (max-width:720px){.fiche{grid-template-columns:1fr 1fr}.fiche>div{border-right:1.5px solid var(--ink)!important;border-bottom:1.5px solid var(--ink)!important}.fiche>div:nth-child(2n){border-right:0!important}.fiche>div:last-child{border-bottom:0!important}}
+@media (max-width:440px){.fiche{grid-template-columns:1fr}.fiche>div{border-right:0!important}}
+.gloss{display:grid;grid-template-columns:minmax(150px,230px) 1fr;gap:0;border-top:1.5px solid var(--line);margin:1rem 0}
+.gloss dt,.gloss dd{border-bottom:1.5px solid var(--line);padding:7px 8px;margin:0}
+.gloss dt{font-weight:700}
+.gloss dd{font-size:.95rem}
+@media (max-width:600px){.gloss{grid-template-columns:1fr}.gloss dt{border-bottom:0;padding-bottom:0}}
+.check label{display:flex;gap:10px;align-items:flex-start;padding:5px 0;cursor:pointer}
+.check input{margin-top:.35em;width:18px;height:18px;accent-color:var(--mat);flex:none}
+footer{padding:40px 0 60px;color:var(--muted);font-size:.9rem}
+hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
+@media (max-width:700px){.m{white-space:normal}.fx{padding:12px 10px}.fx .big{font-size:1.4rem}}
+@media (max-width:400px){body{font-size:16.5px}.wrap{padding:0 14px}.lab{padding:12px 10px}}
+
+/* compléments de la série Rupture */
+.btn.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,var(--card))}
+.btn.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--card))}
+.ctrl[hidden]{display:none}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="wrap wide">
+  <div class="title-block">
+    <div class="tb-main">
+      <div>
+        <p class="tb-series">Aciers inoxydables, série 2.15 : les connaître pour bien les souder</p>
+        <h1>Ce qui fait un inox</h1>
+      </div>
+      <button class="theme-btn" id="themeBtn" type="button" aria-label="Changer de thème">◐ Thème : automatique</button>
+    </div>
+    <div class="tb-cells">
+      <div><small>Cours</small><b>1 sur 4 : la couche passive, les réseaux du fer, la boucle γ, les éléments d'alliage, Cr<sub>eq</sub> et Ni<sub>eq</sub>, les désignations</b></div>
+      <div><small>Durée conseillée</small><b>≈ 3 h avec les exercices</b></div>
+      <div><small>Prérequis</small><b>diagramme fer-carbone, ferrite et austénite (Métallurgie, cours 1) ; éléments d'addition, trempe et martensite (Métallurgie, cours 2 et 3)</b></div>
+      <div><small>À la fin tu sais</small><b>expliquer la passivité et ses limites ; prévoir avec la boucle γ qui peut prendre la trempe ; classer les éléments d'alliage ; calculer Cr<sub>eq</sub> et Ni<sub>eq</sub> ; décoder une désignation EN, AISI ou ISO/TR 15608</b></div>
+    </div>
+  </div>
+  <p class="lede">Un acier inoxydable n'est pas un acier qui ne rouille jamais : c'est un acier qui se protège lui-même, grâce à une pellicule d'oxyde de chrome de quelques nanomètres. Ce cours remonte à la source : comment le chrome fabrique cette pellicule et quand elle cède, comment les atomes de fer s'empilent, pourquoi quelques % de nickel, de carbone ou d'azote changent complètement la structure, et comment on résume tout cela en deux nombres. On termine par le décodage des noms de nuances, pour lire une fiche matière ou un mode opératoire sans hésiter.</p>
+
+  <h4>Le code couleur de la série</h4>
+  <div class="cc" role="img" aria-label="Code couleur : les causes en rouge et violet, les paramètres en vert, les effets en bleu et bleu-vert">
+    <div class="cc-box cc-cause"><small>Les causes</small><div class="cc-syms"><span class="sig">T</span><span class="sig">ε</span><span class="tau">Cl⁻</span><span class="tau">e⁻</span></div><p><span class="sig">rouge</span> : ce qui sollicite le métal (température T, déformation ε) ; <span class="tau">violet</span> : les ennemis (chlorures Cl⁻, rayures, courant galvanique, carbures, piqûres)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-link"><small>Les paramètres</small><div class="cc-syms"><span class="mat">%Cr</span><span class="mat">%Ni</span><span class="mat">Cr<sub>eq</sub></span><span class="mat">Ni<sub>eq</sub></span></div><p>en <span class="mat">vert</span> : ce qu'on choisit (composition, équivalents, nuance, surfaces en contact)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-eff"><small>Les effets</small><div class="cc-syms"><span class="eps">v</span><span class="eps">PREN</span><span class="gam">α</span><span class="gam">γ</span><span class="gam">Cr₂O₃</span></div><p><span class="eps">bleu</span> : ce qu'on mesure ou calcule (vitesse de corrosion v, indice PREN, fractions de phases) ; <span class="gam">bleu-vert</span> : les phases et structures (ferrite α, austénite γ, martensite, couche passive)</p></div>
+  </div>
+  <div class="cc-more">
+    <div><b class="frc">Orange</b> : les actions de l'atelier (rayer, trempe, nettoyage) et les efforts.</div>
+    <div><b>Noir</b> : la géométrie dessinée (mailles, coupes, tôles).</div>
+    <div><b class="wcol">Bronze</b> : les encadrés « métier » 🔥, tournés vers l'atelier.</div>
+  </div>
+</div>
+</header>
+
+<nav class="toc" aria-label="Sommaire">
+  <div class="toc-in">
+    <a href="#avant">Avant de commencer</a>
+    <a href="#c1">1 Couche passive</a>
+    <a href="#c2">2 Réseaux du fer</a>
+    <a href="#c3">3 Boucle γ</a>
+    <a href="#c4">4 Éléments</a>
+    <a href="#c5">5 Équivalents</a>
+    <a href="#c6">6 Désignations</a>
+    <a href="#exos">Exercices</a>
+    <a href="#quiz-s">Quiz</a>
+    <a href="#fiche">Fiche mémoire</a>
+    <a href="#gloss">Glossaire</a>
+    <a href="#check">Check-list</a>
+  </div>
+</nav>
+
+<main>
+<section class="chap" id="avant">
+<div class="wrap">
+  <h3 style="margin-top:0">Avant de commencer</h3>
+  <h4>Ce que tu sais déjà, en trois cases</h4>
+  <div class="recall">
+    <div><div class="f"><span class="gam">α</span> cc · <span class="gam">γ</span> cfc</div>Le fer pur est cubique centré (ferrite α) jusqu'à 912 °C, cubique à faces centrées (austénite γ) jusqu'à 1 394 °C, puis à nouveau cubique centré (ferrite δ) jusqu'à la fusion (Métallurgie, cours 1).</div>
+    <div><div class="f"><span class="mat">Cr</span> → α · <span class="mat">Ni</span> → γ</div>Les éléments d'addition favorisent la ferrite (alphagènes) ou l'austénite (gammagènes) et déplacent les températures de transformation (Métallurgie, cours 2).</div>
+    <div><div class="f">γ → M, sans diffusion</div>Une austénite trempée devient martensite dès qu'elle passe sous M<sub>s</sub> ; le carbone piégé la rend dure (Métallurgie, cours 3).</div>
+  </div>
+
+  <div class="def"><b>📘 Correspondance avec le planning et le référentiel</b>. Ce cours ouvre le sujet <b>2.15 « Aciers inoxydables »</b> du planning de la formation. Il sert aussi au sujet <b>2.14 « Introduction à la corrosion »</b> (chapitre 1) et au sujet <b>2.4 « Classification des aciers »</b> (chapitre 6).
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Chapitre du cours</th><th>Ce qu'il apporte à l'IWE</th></tr>
+      <tr><td>1 La couche passive</td><td>passivité, seuil de 10,5 % de chrome, piqûres, corrosion galvanique, contaminations</td></tr>
+      <tr><td>2 Les réseaux du fer</td><td>ferrite, austénite, martensites ; sites interstitiels ; magnétisme</td></tr>
+      <tr><td>3 Le fer-chrome et la boucle γ</td><td>diagramme fer-chrome, effet du nickel, du carbone et de l'azote ; qui peut prendre la trempe</td></tr>
+      <tr><td>4 Alphagènes, gammagènes, carburigènes</td><td>rôle de chaque élément d'alliage, stabilisation au titane et au niobium</td></tr>
+      <tr><td>5 Cr<sub>eq</sub>, Ni<sub>eq</sub> et diagrammes prédictifs</td><td>équivalents de Schaeffler, DeLong et Schneider ; carte des familles</td></tr>
+      <tr><td>6 Désigner un inox</td><td>EN 10027-1 et -2, AISI, ancienne norme française, groupes ISO/TR 15608</td></tr>
+    </table></div>
+    Dans le référentiel de l'IIW (<i>International Institute of Welding</i>) pour la formation IWE (<i>International Welding Engineer</i>), ce cours répond aux attendus sur les aciers inoxydables : définir un inox, expliquer le rôle des éléments d'alliage, relier la composition à la structure, et lire les désignations normalisées et les groupes de matériaux utilisés pour qualifier les modes opératoires.
+  </div>
+
+  <div class="def"><b>📖 Les sigles et notations de ce cours</b>.
+    <ul>
+      <li><b>α</b> (alpha) : la ferrite, cubique centrée (<b>cc</b>) ; <b>δ</b> (delta) : la ferrite de haute température, même structure ; <b>γ</b> (gamma) : l'austénite, cubique à faces centrées (<b>cfc</b>) ; <b>α'</b> et <b>ε</b> : deux martensites, quadratique centrée et hexagonale compacte (<b>hc</b>). Sur les cartes, on écrit aussi A (austénite), F (ferrite) et M (martensite).</li>
+      <li><b>Cr<sub>eq</sub></b>, <b>Ni<sub>eq</sub></b> : chrome et nickel équivalents (chapitre 5) ; <b>PREN</b> (<i>Pitting Resistance Equivalent Number</i>) : indice de résistance aux piqûres (chapitre 1) ; <b>M<sub>s</sub></b> : température de début de transformation martensitique.</li>
+      <li><b>EN</b> : norme européenne ; <b>AISI</b> : <i>American Iron and Steel Institute</i> ; <b>ISO/TR</b> : rapport technique de l'ISO ; <b>nm</b> : nanomètre, un millionième de millimètre.</li>
+      <li>Sauf mention contraire, toutes les teneurs sont en <b>% massique</b>.</li>
+    </ul>
+    Les compositions des exemples sont des analyses types ; les modèles des manipulations sont pédagogiques, calés sur des ordres de grandeur publiés.
+  </div>
+
+  <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage</b>
+    <p>Souder, c'est refondre et réchauffer un alliage. Pour prévoir ce que deviendra un inox, il faut savoir d'où vient sa résistance à la corrosion (et ce qui la détruit à l'atelier), quelle structure il a et pourquoi, et lire sans erreur sa désignation sur un certificat matière ou un mode opératoire de soudage. Les groupes ISO/TR 15608 décident même de l'étendue de validité d'une qualification : un mode opératoire qualifié sur un groupe 8.1 ne couvre pas un groupe 10.</p>
+  </div>
+
+  <h4>La série en quatre cours</h4>
+  <div class="series">
+    <div class="here"><b>1 Ce qui fait un inox</b>Passivité, réseaux du fer, boucle γ, éléments d'alliage, équivalents, désignations.</div>
+    <div><b>2 Les familles d'inox</b>Ferritiques, martensitiques, durcis par précipitation, austénitiques, duplex : propriétés et applications.</div>
+    <div><b>3 La carte des dangers et les fissurations</b>Schaeffler et Bystram, modes de solidification, fissuration à chaud, liquation, fissuration à froid, gros grains.</div>
+    <div><b>4 Ce qui précipite quand l'inox s'attarde au chaud</b>Diagramme fer-chrome, phase σ, courbes TTP, fragilisation à 475 °C, sensibilisation, rochage.</div>
+  </div>
+  <p class="mut" style="font-size:.92rem">Déjà vu : fer-carbone, éléments d'addition et martensite (Métallurgie, cours 1 à 3). Voir aussi : les essais de traction et de dureté (Essais, cours 1 et 2).</p>
+
+  <h4>Le plan du cours</h4>
+  <ol class="route">
+    <li><span class="dot">1</span><b>La couche passive</b><p>Quelques nanomètres d'oxyde de chrome, qui se referment seuls… presque toujours.</p></li>
+    <li><span class="dot">2</span><b>Les réseaux du fer</b><p>Cubique centré, cubique à faces centrées, et les martensites : où se glisse le carbone.</p></li>
+    <li><span class="dot">3</span><b>Le fer-chrome et la boucle γ</b><p>Le chrome referme l'île d'austénite, le nickel, le carbone et l'azote la font gonfler.</p></li>
+    <li><span class="dot">4</span><b>Alphagènes, gammagènes, carburigènes</b><p>Le rôle de chaque élément d'alliage, et les stabilisants.</p></li>
+    <li><span class="dot">5</span><b>Cr<sub>eq</sub>, Ni<sub>eq</sub> et diagrammes prédictifs</b><p>Deux nombres pour prévoir une structure.</p></li>
+    <li><span class="dot">6</span><b>Désigner un inox</b><p>X5CrNi18-10, 1.4301, 304 : trois noms pour un même acier.</p></li>
+  </ol>
+</div>
+</section>
+
+<section class="chap" id="c1">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">1</div>
+    <div class="c-title"><h2>La couche passive</h2><p>Quelques nanomètres d'oxyde de chrome, qui se referment seuls… presque toujours</p></div>
+    <div class="c-img"><span class="ico">🛡️</span><span><small>Image à retenir</small>Le film étirable : une pellicule invisible qui se referme toute seule quand on la déchire, sauf si le sel s'en mêle</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">un bouclier qui se répare</span></div>
+    <p>Un acier ordinaire rouille parce que sa rouille ne le protège pas : les oxydes de fer (FeO, Fe₃O₄, Fe₂O₃) forment des couches épaisses, poreuses, qui laissent passer l'oxygène et l'eau. La corrosion continue en dessous, jusqu'à percer la tôle.</p>
+    <p>Ajoutons du chrome. Le chrome a une très grande affinité pour l'oxygène : il s'oxyde avant le fer et forme un oxyde, Cr₂O₃, compact et sans pores. Avec un peu de chrome, cet oxyde reste en îlots dispersés dans la rouille. Avec <b>au moins 10,5 % de chrome</b>, il forme une pellicule <b>continue</b>, épaisse de quelques nanomètres seulement (environ 1 à 5 nm, soit dix mille fois moins qu'un cheveu). Cette pellicule est une barrière : l'acier est dit <b>passif</b>. C'est la définition d'un acier inoxydable selon l'EN 10088-1 : au moins 10,5 % de chrome et au plus 1,2 % de carbone.</p>
+    <p>Son grand atout : elle <b>se reforme seule</b>. Une rayure met le métal à nu ; si l'oxygène de l'air ou de l'eau est présent, le chrome exposé se réoxyde en quelques instants. C'est la <b>repassivation</b>.</p>
+    <p>Mais un inox n'est pas inoxydable partout ni toujours :</p>
+    <ul>
+      <li>les <b>chlorures</b> (eau de mer, sels de déneigement, produits de nettoyage) attaquent la pellicule en des points précis : une <b>piqûre</b> se creuse avant que la couche ne se referme ;</li>
+      <li>des <b>copeaux ou des particules d'acier ordinaire</b> (meulage, brosse, outil) déposés sur l'inox rouillent et amorcent la corrosion ;</li>
+      <li>au <b>contact d'un autre métal</b>, dans un liquide conducteur, un courant électrique circule : c'est la <b>corrosion galvanique</b>, qui attaque le moins noble des deux, d'autant plus vite que sa surface est petite.</li>
+    </ul>
+  </div>
+
+  <div class="lab" id="m1">
+    <p class="lab-h">Manipulation 1 : le bouclier de chrome</p>
+    <p class="lab-sub">Trois situations, un même schéma en coupe. « La couche » : fais varier le chrome et regarde les oxydes se réorganiser, avec la perte de masse en atmosphère. « La rayure » : choisis une nuance et un milieu, puis lance la rayure : la couche se referme, ou une piqûre se creuse. « Lancer » anime la situation choisie. « Le couple » : deux métaux en contact dans l'eau salée ; règle le rapport des surfaces. Modèles pédagogiques, calés sur des ordres de grandeur publiés.</p>
+    <div class="btns" id="m1m">
+      <button class="btn on" data-k="layer" type="button">La couche</button>
+      <button class="btn" data-k="scratch" type="button">La rayure</button>
+      <button class="btn" data-k="couple" type="button">Le couple</button>
+    </div>
+    <div class="ctrl" id="m1cc"><label for="m1c">Chrome <span class="mat">%Cr</span></label><input type="range" id="m1c" class="r-mat" min="0" max="20" step="0.5" value="12"><output id="m1co"></output></div>
+    <div class="btns" id="m1g">
+      <button class="btn" data-k="410" type="button">410</button>
+      <button class="btn" data-k="430" type="button">430</button>
+      <button class="btn on" data-k="304L" type="button">304L</button>
+      <button class="btn" data-k="316L" type="button">316L</button>
+      <button class="btn" data-k="2205" type="button">2205</button>
+      <button class="btn" data-k="2507" type="button">2507</button>
+    </div>
+    <div class="btns" id="m1e">
+      <button class="btn" data-k="air" type="button">Air intérieur</button>
+      <button class="btn on" data-k="tap" type="button">Eau du robinet</button>
+      <button class="btn" data-k="brack" type="button">Eau saumâtre</button>
+      <button class="btn" data-k="sea" type="button">Eau de mer</button>
+      <button class="btn" data-k="sea40" type="button">Eau de mer à 40 °C</button>
+    </div>
+    <div class="btns" id="m1p">
+      <button class="btn on" data-k="steel" type="button">Inox + acier au carbone</button>
+      <button class="btn" data-k="alu" type="button">Inox + aluminium</button>
+      <button class="btn" data-k="cu" type="button">Inox + cuivre</button>
+    </div>
+    <div class="ctrl" id="m1ac"><label for="m1a">Surfaces <span class="mat">A<sub>c</sub>/A<sub>a</sub></span></label><input type="range" id="m1a" class="r-mat" min="-3" max="3" step="0.1" value="0"><output id="m1ao"></output></div>
+    <div class="btns"><button class="btn play" id="m1play" type="button">▶ Lancer</button></div>
+    <svg id="m1svg" role="img" aria-label="Coupe de la surface d'un acier avec ses oxydes, rayure et repassivation, ou couple galvanique"></svg>
+    <div class="readout" id="m1r"></div>
+    <p class="status" id="m1msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">passivité, piqûres, PREN, couples galvaniques</span></div>
+    <h4>De la rouille à la couche passive</h4>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Teneur en chrome</th><th>Ce qui se forme en surface</th><th>Comportement</th></tr>
+      <tr><td class="n">0 %</td><td>FeO, Fe₃O₄, Fe₂O₃ en couches épaisses et poreuses</td><td>la corrosion progresse sous la rouille</td></tr>
+      <tr><td class="n">quelques %</td><td>îlots d'oxyde mixte FeCr₂O₄ (une spinelle) et de Cr₂O₃ dans les oxydes de fer</td><td>corrosion ralentie, mais pas arrêtée</td></tr>
+      <tr><td class="n">≥ 10,5 à 12 %</td><td>pellicule continue riche en chrome, 1 à 5 nm</td><td>passivité : la corrosion devient extrêmement lente</td></tr>
+    </table></div>
+    <p>La pellicule passive n'est pas du Cr₂O₃ pur : c'est un oxyde et hydroxyde mixte, enrichi en chrome par rapport au métal. Elle ne se forme et ne se répare qu'en présence d'un oxydant (oxygène de l'air ou dissous dans l'eau). Un recoin confiné, sans renouvellement d'oxygène, ne se repassive pas : c'est l'origine de la <b>corrosion caverneuse</b> (sous un joint, un dépôt, dans un recouvrement de tôles).</p>
+
+    <h4>Les piqûres et l'indice PREN</h4>
+    <p>Un ion chlorure Cl⁻ peut percer localement la pellicule. Au fond du trou, le métal se dissout ; les ions métalliques s'hydrolysent et rendent la solution acide, ce qui accélère la dissolution : la piqûre s'auto-entretient. Pour classer les nuances, on utilise l'indice de résistance aux piqûres :</p>
+    <div class="fx"><div class="big"><span class="eps">PREN</span> = %Cr + 3,3·%Mo + 16·%N</div><p class="cap">Teneurs en % massique. Exemples : 304L ≈ 19,5 ; 316L ≈ 24,9 ; 2205 ≈ 35,5 ; 2507 ≈ 41,9</p></div>
+    <p>Le PREN n'a pas de signification physique en valeur absolue : il sert à <b>comparer</b> des nuances entre elles. En règle générale, une nuance de PREN inférieur à environ 35 ne convient pas à l'eau de mer, et l'on vise plus de 40 (super duplex, super austénitiques) pour les applications marines. D'autres critères existent : le potentiel de piqûration E<sub>pit</sub>, mesuré par un essai électrochimique, et la température critique de piqûration (CPT), au-dessus de laquelle la nuance pique dans un milieu donné.</p>
+    <p>Dans la manipulation 1, la sévérité du milieu est traduite par un PREN requis : <span class="m">PREN<sub>requis</sub> ≈ 10 + 8·log<sub>10</sub>(c<sub>Cl</sub>/10) + 0,25·(T − 20)</span>, avec c<sub>Cl</sub> en mg/L de chlorures et T en °C. Ce modèle pédagogique retrouve les règles ci-dessus : environ 16 pour l'eau du robinet, 36 pour l'eau de mer à 20 °C, 41 à 40 °C.</p>
+
+    <h4>La corrosion galvanique</h4>
+    <p>Deux métaux différents en contact, dans un liquide conducteur (l'électrolyte), forment une pile. Le plus noble devient la <b>cathode</b>, où l'oxygène est réduit ; le moins noble devient l'<b>anode</b>, qui se dissout. La série galvanique en eau de mer classe les métaux (potentiels approximatifs, par rapport à l'électrode au calomel saturé) :</p>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Métal</th><th>Potentiel approximatif</th><th>Au contact d'un inox passif</th></tr>
+      <tr><td>Inox passif (316)</td><td class="n">≈ −0,05 V</td><td>cathode : protégé</td></tr>
+      <tr><td>Cuivre</td><td class="n">≈ −0,35 V</td><td>anode, attaque modérée</td></tr>
+      <tr><td>Acier au carbone</td><td class="n">≈ −0,6 V</td><td>anode, attaque nette</td></tr>
+      <tr><td>Alliages d'aluminium</td><td class="n">≈ −0,8 V</td><td>anode, attaque forte</td></tr>
+    </table></div>
+    <p>Le courant produit par toute la surface cathodique A<sub>c</sub> se concentre sur la surface anodique A<sub>a</sub>. La vitesse d'attaque de l'anode croît donc avec le rapport A<sub>c</sub>/A<sub>a</sub> :</p>
+    <div class="fx"><div class="big"><span class="eps">v</span>/v<sub>0</sub> ≈ 1 + (<span class="mat">A<sub>c</sub>/A<sub>a</sub></span>)·ΔE/(0,3 V)</div><p class="cap">Modèle pédagogique de la manipulation : v<sub>0</sub> vitesse de corrosion de l'anode seule, ΔE écart de potentiel entre les deux métaux</p></div>
+    <p>Un rivet en acier au carbone dans une grande tôle d'inox est dévoré ; un rivet en inox dans une grande tôle d'acier ne change presque rien. Le même raisonnement vaut à l'intérieur d'un même métal : des <b>hétérogénéités de composition</b> (une zone appauvrie en chrome, une inclusion) jouent le rôle de petites anodes.</p>
+    <div class="def"><b>📖 Passivité</b> : état d'un métal protégé par une pellicule d'oxyde très mince qui ralentit fortement la corrosion. <b>Repassivation</b> : reformation spontanée de cette pellicule après une rayure, en présence d'oxygène. <b>Piqûre</b> : cavité de corrosion localisée, étroite et profonde. <b>Électrolyte</b> : liquide conducteur où circulent des ions (eau, eau salée).</div>
+    <div class="tip">💡 <b>Le bon réflexe</b> : avant de choisir une nuance pour un milieu chloruré, compare son PREN à celui des nuances qui ont fait leurs preuves dans ce milieu. Et pour un assemblage de deux métaux, place le moins noble en grande surface, ou isole-les électriquement.</div>
+    <div class="warn"><b>⚠️ Piège : « inoxydable » ne veut pas dire « inaltérable ».</b> Un 304 tient parfaitement dans une cuisine, mais pique en bord de mer ; un 316L tient en eau douce, mais pas en eau de mer chaude. Et n'importe quel inox rouille sous des particules d'acier ordinaire laissées par une brosse ou un disque.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « 10,5 pour être inox, PREN 40 pour la mer »</b>.</div>
+    <div class="weld"><b>🔥 À l'atelier</b>
+      <ul>
+        <li>Outils réservés à l'inox (brosses, disques, pinces), stockage séparé des aciers au carbone, protection contre les projections de meulage.</li>
+        <li>Pas de marquage avec des produits chlorés ; rinçage après dégraissage.</li>
+        <li>Après soudage, les teintes d'oxydation sont des zones où la couche passive est dégradée : on les élimine (cours 4, rochage).</li>
+        <li>Pour un assemblage inox sur acier au carbone, on protège l'acier (peinture, revêtement) en débordant sur l'inox, pour ne pas laisser une petite surface d'acier face à une grande surface d'inox.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c2">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">2</div>
+    <div class="c-title"><h2>Les réseaux du fer</h2><p>Cubique centré, cubique à faces centrées, et les martensites : où se glisse le carbone</p></div>
+    <div class="c-img"><span class="ico">🍊</span><span><small>Image à retenir</small>Les oranges sur l'étal : empilées autrement, elles laissent des trous de tailles différentes, et le carbone cherche le plus grand</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">deux empilements et des trous</span></div>
+    <p>Dans un métal, les atomes s'empilent comme des oranges sur un étal, selon un motif qui se répète : la <b>maille</b>. Le fer et ses alliages en connaissent deux à l'équilibre :</p>
+    <ul>
+      <li>la <b>ferrite</b> (α, ou δ à haute température) : <b>cubique centrée</b> (cc), un atome à chaque coin du cube et un au centre. Elle est <b>ferromagnétique</b> : un aimant la colle, au-dessous de sa température de Curie (770 °C pour le fer pur) ;</li>
+      <li>l'<b>austénite</b> (γ) : <b>cubique à faces centrées</b> (cfc), un atome à chaque coin et un au centre de chaque face. Elle n'est <b>pas magnétique</b>.</li>
+    </ul>
+    <p>Paradoxe : l'austénite est plus compacte (74 % du volume occupé par les atomes, contre 68 %), et pourtant elle offre le plus grand « trou » entre ses atomes, au centre du cube. Le carbone, petit atome qui se glisse entre les atomes de fer (on dit <b>interstitiel</b>), y tient bien mieux : l'austénite dissout jusqu'à 2,1 % de carbone, la ferrite à peine 0,02 %.</p>
+    <p>Hors d'équilibre apparaissent deux <b>martensites</b> :</p>
+    <ul>
+      <li>la martensite <b>α'</b> : une austénite trempée n'a pas le temps de rejeter son carbone ; le réseau devient cubique centré, mais le carbone piégé l'étire dans une direction : la maille devient <b>quadratique centrée</b>, d'autant plus étirée qu'il y a de carbone. C'est la martensite des aciers trempés et des inox martensitiques ;</li>
+      <li>la martensite <b>ε</b>, <b>hexagonale compacte</b> : elle se forme quand on déforme à froid une austénite peu stable, par exemple en pliant un inox 301 ou 304.</li>
+    </ul>
+    <p>Test d'atelier : un aimant colle à un ferritique, un martensitique ou un duplex (qui contient de la ferrite), pas à un austénitique… sauf là où il a été fortement déformé à froid, car il y a formé de la martensite α' magnétique (cours 2).</p>
+  </div>
+
+  <div class="lab" id="m2">
+    <p class="lab-h">Manipulation 2 : le cristal à la loupe</p>
+    <p class="lab-sub">Une maille de chaque structure, en perspective. Active « Sites interstitiels » pour voir le plus grand trou de la maille et le comparer à un atome de carbone. En martensite α', fais varier le carbone : la maille s'allonge (déformation exagérée cinq fois pour la rendre visible). « Tourner » fait pivoter la maille.</p>
+    <div class="btns" id="m2s">
+      <button class="btn on" data-k="bcc" type="button">Ferrite (cc)</button>
+      <button class="btn" data-k="fcc" type="button">Austénite (cfc)</button>
+      <button class="btn" data-k="mart" type="button">Martensite α'</button>
+      <button class="btn" data-k="hcp" type="button">Martensite ε (hc)</button>
+    </div>
+    <div class="btns" id="m2o">
+      <button class="btn" data-k="sites" type="button">Sites interstitiels</button>
+    </div>
+    <div class="ctrl"><label for="m2c">Carbone <span class="mat">%C</span></label><input type="range" id="m2c" class="r-mat" min="0" max="1.2" step="0.05" value="0.4"><output id="m2co"></output></div>
+    <div class="btns"><button class="btn play" id="m2play" type="button">▶ Tourner</button></div>
+    <svg id="m2svg" role="img" aria-label="Maille cristalline du fer en perspective, avec ses sites interstitiels"></svg>
+    <div class="readout" id="m2r"></div>
+    <p class="status" id="m2msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">géométrie des mailles, sites, quadraticité</span></div>
+    <h4>Les mailles en chiffres</h4>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Structure</th><th>Atomes par maille</th><th>Voisins (coordinence)</th><th>Compacité</th><th>Paramètre du fer</th><th>Plus grand site</th></tr>
+      <tr><td>cc (ferrite)</td><td class="n">2</td><td class="n">8</td><td class="n">π√3/8 ≈ 0,68</td><td class="n">a ≈ 0,287 nm</td><td>octaédrique aplati, r ≈ 0,019 nm ; tétraédrique r ≈ 0,036 nm</td></tr>
+      <tr><td>cfc (austénite)</td><td class="n">4</td><td class="n">12</td><td class="n">π/(3√2) ≈ 0,74</td><td class="n">a ≈ 0,359 nm (à 912 °C)</td><td>octaédrique, r ≈ 0,053 nm</td></tr>
+      <tr><td>hc (martensite ε)</td><td class="n">6 (prisme)</td><td class="n">12</td><td class="n">≈ 0,74</td><td class="n">a ≈ 0,254 nm ; c ≈ 0,41 nm</td><td>octaédrique</td></tr>
+    </table></div>
+    <p>Dans un réseau cc, les atomes se touchent le long de la grande diagonale du cube : <span class="m">4R = a√3</span>. Dans un réseau cfc, le long de la diagonale d'une face : <span class="m">4R = a√2</span>. Le site octaédrique de l'austénite, au centre du cube, a pour rayon <span class="m">r = a/2 − R ≈ 0,414·R</span> : environ 0,053 nm. L'atome de carbone, de rayon environ 0,077 nm, y entre en écartant un peu ses voisins. Dans la ferrite, le plus grand site ne mesure que 0,036 nm : le carbone y déforme fortement le réseau, d'où sa très faible solubilité.</p>
+    <h4>La martensite quadratique</h4>
+    <p>Une trempe piège le carbone dans les sites octaédriques d'une seule orientation du réseau cc : la maille s'allonge selon cette direction (paramètre c) et se contracte un peu dans les deux autres (paramètre a).</p>
+    <div class="fx"><div class="big">c/a ≈ 1 + 0,045·%C</div><p class="cap">Relation classique de Roberts (1953). À 0,1 % de carbone, c/a ≈ 1,005 : la martensite paraît presque cubique ; à 1 %, c/a ≈ 1,045</p></div>
+    <p>Plus le carbone est élevé, plus la maille est distordue et plus la martensite est dure : c'est pourquoi la dureté d'un inox martensitique dépend d'abord de son carbone (cours 2). La transformation se fait <b>sans diffusion</b>, par un cisaillement coordonné des atomes : elle ne dépend que de la température atteinte, pas du temps de maintien.</p>
+    <div class="def"><b>📖 Maille</b> : plus petit motif qui, répété dans les trois directions, reproduit le cristal. <b>Coordinence</b> : nombre de plus proches voisins d'un atome. <b>Compacité</b> : fraction du volume occupée par les atomes, assimilés à des sphères. <b>Site interstitiel</b> : espace vide entre les atomes du réseau, où peut se loger un petit atome (C, N, H). <b>Température de Curie</b> : température au-dessus de laquelle un matériau ferromagnétique perd son aimantation spontanée.</div>
+    <div class="tip">💡 <b>Le bon réflexe</b> : l'aimant ne dit pas « inox ou pas inox », il dit « cubique centré ou pas ». Un ferritique 430 colle, un austénitique 304 neuf ne colle pas, un 304 embouti colle un peu.</div>
+    <div class="warn"><b>⚠️ Piège : compacité et solubilité.</b> On croit souvent que le réseau le plus compact laisse le moins de place au carbone. C'est l'inverse : les sites du cfc sont moins nombreux mais plus grands que ceux du cc.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « cubique Centré : ça Colle ; Faces centrées : Fini l'aimant »</b>, et « 8 voisins en cc, 12 en cfc ».</div>
+    <div class="weld"><b>🔥 Pourquoi le soudeur s'y intéresse</b>
+      <p>La structure fixe la soudabilité. Le cfc ne connaît pas de transition ductile-fragile : un austénitique reste tenace jusqu'aux températures cryogéniques. Le cc devient fragile à froid et voit ses grains grossir dans la zone affectée. La martensite α' est dure et sensible à l'hydrogène. Et le carbone, très soluble dans l'austénite de la zone affectée, se retrouve piégé ou rejeté au refroidissement : tout le cours 3 en découle.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c3">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">3</div>
+    <div class="c-title"><h2>Le fer-chrome et la boucle γ</h2><p>Le chrome referme l'île d'austénite, le nickel, le carbone et l'azote la font gonfler</p></div>
+    <div class="c-img"><span class="ico">🏝️</span><span><small>Image à retenir</small>L'île d'austénite : le chrome fait monter la mer et la rétrécit, le nickel, le carbone et l'azote l'agrandissent</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">qui peut prendre la trempe</span></div>
+    <p>Le diagramme fer-chrome porte la teneur en chrome en abscisse et la température en ordonnée. Le fer pur passe par l'austénite entre 912 et 1 394 °C. Le chrome, alphagène, rétrécit ce domaine : il forme une petite <b>boucle γ</b>, comme une île collée à l'axe du fer. Au-delà d'environ <b>12 % de chrome</b>, il n'y a plus d'austénite seule ; au-delà d'environ <b>13 %</b>, plus d'austénite du tout. L'alliage reste ferritique de la solidification à l'ambiante.</p>
+    <p>Conséquence directe pour les familles d'inox :</p>
+    <ul>
+      <li><b>dans l'île</b> (environ 12 % de chrome avec un peu de carbone) : l'acier devient austénitique à 1 000 °C ; trempé, il devient martensite. Ce sont les <b>martensitiques</b> (410, 420) ;</li>
+      <li><b>hors de l'île</b> (17 % de chrome, peu de carbone) : jamais d'austénite, donc ni trempe ni affinage du grain par traitement thermique. Ce sont les <b>ferritiques</b> (430, 439) ;</li>
+      <li><b>avec du nickel</b>, l'île <b>gonfle</b> : vers 18 % de chrome et 8 à 10 % de nickel, elle englobe tout le domaine utile, et l'austénite reste même stable à l'ambiante. Ce sont les <b>austénitiques</b> (304, 316). Entre les deux, une île qui couvre juste la moitié du chemin donne les <b>duplex</b> (2205), moitié ferrite, moitié austénite ;</li>
+      <li><b>avec du carbone et de l'azote</b>, très gammagènes, la bande où ferrite et austénite coexistent s'élargit beaucoup. Un 430 à 0,05 % de carbone s'austénitise donc en partie aux joints de grains vers 1 000 °C, ce qui lui donne de la martensite aux joints après un refroidissement rapide, en soudage notamment (cours 2).</li>
+    </ul>
+  </div>
+
+  <div class="lab" id="m3">
+    <p class="lab-h">Manipulation 3 : l'île qui gonfle</p>
+    <p class="lab-sub">La partie haute du diagramme fer-chrome (de 750 à 1 400 °C) : boucle γ (austénite seule) et bande α + γ. Le nickel et ses semblables (« Ni + 0,5 Mn ») gonflent l'île ; le carbone et l'azote (« C + N ») élargissent surtout la bande α + γ. Choisis une nuance ou règle la composition : la verticale est l'alliage, le point sa température. « Chauffer puis tremper » austénitise à 1 050 °C puis trempe. Modèle simplifié d'après les coupes publiées.</p>
+    <div class="btns" id="m3g">
+      <button class="btn" data-k="420" type="button">420</button>
+      <button class="btn on" data-k="410" type="button">410</button>
+      <button class="btn" data-k="430" type="button">430</button>
+      <button class="btn" data-k="439" type="button">439 (Ti)</button>
+      <button class="btn" data-k="431" type="button">431</button>
+      <button class="btn" data-k="304L" type="button">304L</button>
+      <button class="btn" data-k="2205" type="button">2205</button>
+    </div>
+    <div class="ctrl"><label for="m3c">Chrome <span class="mat">Cr + Mo</span></label><input type="range" id="m3c" class="r-mat" min="0" max="30" step="0.1" value="12.5"><output id="m3co"></output></div>
+    <div class="ctrl"><label for="m3n">Nickel <span class="mat">Ni + 0,5 Mn</span></label><input type="range" id="m3n" class="r-mat" min="0" max="12" step="0.05" value="0.6"><output id="m3no"></output></div>
+    <div class="ctrl"><label for="m3k">Carbone et azote <span class="mat">C + N</span></label><input type="range" id="m3k" class="r-mat" min="0.005" max="0.25" step="0.005" value="0.14"><output id="m3ko"></output></div>
+    <div class="ctrl"><label for="m3t">Température <span class="sig">T</span></label><input type="range" id="m3t" class="r-sig" min="750" max="1400" step="5" value="1050"><output id="m3to"></output></div>
+    <div class="btns"><button class="btn play" id="m3play" type="button">▶ Chauffer puis tremper</button></div>
+    <svg id="m3svg" role="img" aria-label="Boucle gamma du diagramme fer-chrome, déformée par le nickel, le carbone et l'azote, avec la verticale de la nuance"></svg>
+    <div class="readout" id="m3r"></div>
+    <p class="status" id="m3msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">la boucle en chiffres, coupes, levier</span></div>
+    <h4>Le binaire fer-chrome, partie haute</h4>
+    <ul>
+      <li>Boucle γ entre <b>912 et 1 394 °C</b> sur l'axe du fer, avec un minimum vers <b>830 à 850 °C</b> autour de 7 % de chrome (selon les évaluations).</li>
+      <li>Austénite seule jusqu'à environ <b>11 à 12 %</b> de chrome ; bande α + γ jusqu'à environ <b>13 à 13,5 %</b>.</li>
+      <li>Au-delà, ferrite de la solidification à l'ambiante (la ferrite δ de haute température et la ferrite α de basse température se rejoignent). Plus bas apparaissent la phase σ et la lacune α + α' (cours 4).</li>
+    </ul>
+    <h4>Les coupes à nickel ou à carbone fixé</h4>
+    <p>Un acier réel contient d'autres éléments : on trace alors des <b>coupes</b> du diagramme ternaire à teneur fixée en nickel, ou à teneur fixée en carbone + azote. Ordres de grandeur, avec 0,1 % de carbone : l'austénite seule s'étend jusqu'à environ 11 à 12 % de chrome sans nickel, environ 16 à 17 % avec 4 % de nickel, environ 22 % avec 8 % de nickel. Le carbone et l'azote élargissent surtout la bande α + γ : avec 0,13 % de C + N, de l'austénite apparaît encore vers 19 à 22 % de chrome, à haute température.</p>
+    <p>Le modèle de la manipulation 3 résume ces coupes. En notant Ni<sub>*</sub> = Ni + 0,5·Mn et (C + N) en % :</p>
+    <div class="fx"><div class="row"><span class="big">x<sub>γ</sub> ≈ 11,6 + 1,3·<span class="mat">Ni<sub>*</sub></span> + 10·<span class="mat">(C + N)</span></span><span class="big">x<sub>α</sub> ≈ 13,4 + 1,3·<span class="mat">Ni<sub>*</sub></span> + 45·<span class="mat">(C + N)</span></span></div><p class="cap">x<sub>γ</sub> : extension maximale de l'austénite seule ; x<sub>α</sub> : de la bande α + γ, en % de Cr + Mo (le terme en C + N ne compte qu'au-delà de 0,01 %) ; le titane et le niobium neutralisent le carbone et l'azote qu'ils fixent</p></div>
+    <p>Dans la bande α + γ, la règle du levier donne la fraction d'austénite : <span class="m">f<sub>γ</sub> = (x<sub>α</sub>(T) − x)/(x<sub>α</sub>(T) − x<sub>γ</sub>(T))</span>, où x est la teneur en Cr + Mo de l'alliage et x<sub>α</sub>(T), x<sub>γ</sub>(T) les deux frontières lues à la température T.</p>
+    <h4>Tremper, c'est transformer l'austénite</h4>
+    <p>Seule l'austénite présente à la température de chauffage peut devenir martensite. Encore faut-il que sa température M<sub>s</sub> soit au-dessus de l'ambiante. Pour les aciers fortement alliés, la formule de Pickering donne un ordre de grandeur :</p>
+    <div class="fx"><div class="big">M<sub>s</sub> (°C) ≈ 502 − 810·C − 1 230·N − 13·Mn − 30·Ni − 12·Cr − 54·Cu − 46·Mo</div><p class="cap">Teneurs en %. Un 410 a un M<sub>s</sub> bien au-dessus de l'ambiante : il prend la trempe. Un 304L a un M<sub>s</sub> vers −100 °C : son austénite reste à l'ambiante. Établie sur des aciers riches en nickel, elle sous-estime M<sub>s</sub> des martensitiques chargés en carbone (420) : pour eux, on lui préfère la formule d'Andrews (cours 2)</p></div>
+    <div class="def"><b>📖 Boucle γ</b> : domaine fermé d'austénite d'un diagramme fer-élément alphagène. <b>Coupe (pseudo-binaire)</b> : section d'un diagramme à trois constituants ou plus, à teneur fixée d'un ou plusieurs éléments. <b>Austénitiser</b> : chauffer dans le domaine de l'austénite. <b>Normalisation</b> : austénitisation suivie d'un refroidissement à l'air, qui régénère un grain fin.</div>
+    <div class="tip">💡 <b>Le bon réflexe</b> : pour savoir si une nuance peut prendre la trempe ou être normalisée, trace sa verticale sur la boucle correspondant à son nickel et à son carbone. Dans l'île : oui. Dans la bande : en partie. Hors de l'île : non.</div>
+    <div class="warn"><b>⚠️ Piège : l'austénite d'un 304 n'est pas « stable » à l'ambiante au sens de l'équilibre.</b> À basse température, l'équilibre prévoit de la ferrite ; mais la transformation est si lente qu'elle ne se produit jamais. L'austénite est <b>métastable</b> : une forte déformation à froid peut la transformer en martensite (cours 2).</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « 12 pour l'île, 13 pour la plage »</b> : jusqu'à 12 % de chrome, de l'austénite seule ; jusqu'à 13 %, encore un peu d'austénite avec la ferrite.</div>
+    <div class="weld"><b>🔥 En soudage</b>
+      <p>La zone affectée d'un ferritique est chauffée au-dessus de 1 000 °C : si sa verticale traverse la bande α + γ, il s'y forme de l'austénite aux joints, qui devient martensite au refroidissement rapide du soudage. D'où l'intérêt des nuances stabilisées (439, 441) dont le titane ou le niobium fixent le carbone : leur verticale sort de la boucle, la zone affectée reste entièrement ferritique.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c4">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">4</div>
+    <div class="c-title"><h2>Alphagènes, gammagènes, carburigènes</h2><p>Deux équipes qui tirent la structure, et des voleurs de carbone</p></div>
+    <div class="c-img"><span class="ico">🪢</span><span><small>Image à retenir</small>Le tir à la corde : les alphagènes tirent vers la ferrite, les gammagènes vers l'austénite, et les carburigènes emportent le carbone</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">qui tire de quel côté</span></div>
+    <p>Chaque élément d'alliage joue dans une équipe :</p>
+    <ul>
+      <li>les <b>alphagènes</b> favorisent la ferrite et rétrécissent la boucle γ : <b>chrome</b>, <b>molybdène</b>, <b>silicium</b>, <b>aluminium</b>, <b>titane</b>, <b>niobium</b>, <b>vanadium</b>, <b>tungstène</b> ;</li>
+      <li>les <b>gammagènes</b> favorisent l'austénite et agrandissent la boucle : <b>nickel</b>, <b>carbone</b>, <b>azote</b>, <b>manganèse</b> (et, plus faiblement, cuivre et cobalt).</li>
+    </ul>
+    <p>Une troisième famille traverse les deux équipes : les <b>carburigènes</b>, qui forment des carbures avec le carbone. Par affinité croissante : manganèse, chrome, molybdène et tungstène, vanadium, niobium et titane. Le chrome est carburigène : en formant des carbures, il quitte la solution solide, et c'est autant de chrome en moins pour la couche passive. D'où l'astuce des aciers <b>stabilisés</b> : on ajoute du titane ou du niobium, plus avides de carbone que le chrome, qui forment des carbures MC et laissent le chrome en paix (cours 4, sensibilisation).</p>
+    <p>Chaque élément a aussi ses « talents » propres :</p>
+    <ul>
+      <li>soufre, phosphore, sélénium : meilleure <b>usinabilité</b> (mais mauvais pour la soudabilité, cours 3) ;</li>
+      <li>silicium, aluminium : meilleure tenue à l'<b>oxydation par les gaz chauds</b> (nuances réfractaires) ;</li>
+      <li>molybdène : meilleure tenue aux <b>chlorures</b> et aux acides réducteurs, et au <b>fluage</b> avec le bore ;</li>
+      <li>manganèse : meilleure aptitude au <b>formage à chaud</b>, car il fixe le soufre en sulfures MnS, plus stables que les sulfures de chrome ;</li>
+      <li>terres rares (scandium, yttrium, lanthanides) : meilleure aptitude au <b>forgeage</b> ;</li>
+      <li>cuivre, aluminium associé au nickel : <b>durcissement structural</b> par de fins précipités (cours 2).</li>
+    </ul>
+  </div>
+
+  <div class="lab" id="m4">
+    <p class="lab-h">Manipulation 4 : la table des éléments</p>
+    <p class="lab-sub">On part d'un ferritique 430 (16,5 % de chrome, 0,05 % de carbone et 0,04 % d'azote). Choisis un élément et dose-le : la boucle γ et la verticale de l'alliage se déplacent, et la carte d'identité de l'élément s'affiche. Même modèle que la manipulation 3, avec les coefficients de Schneider pour les alphagènes secondaires. Modèle pédagogique. « ▶ Doser » ajoute l'élément peu à peu.</p>
+    <div class="btns" id="m4e">
+      <button class="btn on" data-k="Ni" type="button">Ni</button>
+      <button class="btn" data-k="Mn" type="button">Mn</button>
+      <button class="btn" data-k="C" type="button">C</button>
+      <button class="btn" data-k="N" type="button">N</button>
+      <button class="btn" data-k="Cu" type="button">Cu</button>
+      <button class="btn" data-k="Cr" type="button">Cr</button>
+      <button class="btn" data-k="Mo" type="button">Mo</button>
+      <button class="btn" data-k="Si" type="button">Si</button>
+      <button class="btn" data-k="Al" type="button">Al</button>
+      <button class="btn" data-k="Ti" type="button">Ti</button>
+      <button class="btn" data-k="Nb" type="button">Nb</button>
+      <button class="btn" data-k="V" type="button">V</button>
+      <button class="btn" data-k="W" type="button">W</button>
+    </div>
+    <div class="ctrl"><label for="m4q">Ajout de l'élément <span class="mat">Δ%</span></label><input type="range" id="m4q" class="r-mat" min="0" max="100" step="1" value="0"><output id="m4qo"></output></div>
+    <div class="btns"><button class="btn play" id="m4play" type="button">▶ Doser</button></div>
+    <svg id="m4svg" role="img" aria-label="Effet d'un élément d'alliage sur la boucle gamma et carte d'identité de l'élément"></svg>
+    <div class="readout" id="m4r"></div>
+    <p class="status" id="m4msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">tableau de référence, stabilisation</span></div>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Élément</th><th>Alphagène</th><th>Gammagène</th><th>Carburigène</th><th>Autres effets</th></tr>
+      <tr><td>Cr</td><td>✔</td><td></td><td>✔</td><td>passivité, oxydation à chaud</td></tr>
+      <tr><td>Mo</td><td>✔</td><td></td><td>✔</td><td>chlorures, acides réducteurs, fluage ; favorise σ</td></tr>
+      <tr><td>Si</td><td>✔</td><td></td><td></td><td>oxydation à chaud, désoxydant, usinabilité</td></tr>
+      <tr><td>Al</td><td>✔</td><td></td><td></td><td>oxydation à chaud ; avec Ni, durcissement structural</td></tr>
+      <tr><td>Ti, Nb</td><td>✔</td><td></td><td>✔ (très fort)</td><td>stabilisation : carbures MC, moins de grossissement de grain</td></tr>
+      <tr><td>V, W</td><td>✔</td><td></td><td>✔</td><td>dureté à chaud, résistance à l'usure</td></tr>
+      <tr><td>Ni</td><td></td><td>✔</td><td></td><td>ténacité, ductilité, austénite stable</td></tr>
+      <tr><td>Mn</td><td></td><td>✔</td><td>✔ (faible)</td><td>fixe le soufre (MnS), formage à chaud</td></tr>
+      <tr><td>C</td><td></td><td>✔ (très fort)</td><td></td><td>dureté de la martensite ; carbures de chrome</td></tr>
+      <tr><td>N</td><td></td><td>✔ (très fort)</td><td></td><td>résistance mécanique, piqûres (PREN) ; retarde σ</td></tr>
+      <tr><td>Cu</td><td></td><td>✔ (faible)</td><td></td><td>durcissement structural, acide sulfurique</td></tr>
+    </table></div>
+    <h4>La stabilisation, en masses</h4>
+    <p>Pour fixer le carbone en carbure TiC, il faut un atome de titane par atome de carbone, soit en masse <span class="m">47,9/12,0 ≈ 4</span> fois plus de titane que de carbone ; pour NbC, <span class="m">92,9/12,0 ≈ 7,7</span> fois plus de niobium. Le titane fixe aussi l'azote (TiN). Les normes de produit imposent donc des minimums avec une marge, par exemple <b>Ti ≥ 5 × C</b> pour un 321 et <b>Nb ≥ 10 × C</b> pour un 347 (EN 10088). Le modèle de la manipulation retient le carbone et l'azote « libres » : (C + N) − Ti/4 − Nb/8.</p>
+    <div class="def"><b>📖 Alphagène</b> : élément qui stabilise la ferrite (α, δ). <b>Gammagène</b> : élément qui stabilise l'austénite (γ). <b>Carburigène</b> : élément qui forme des carbures. <b>Stabilisé</b> : se dit d'une nuance dont le carbone est fixé par du titane ou du niobium. <b>Carbure MC</b> : carbure d'un métal M (Ti, Nb) avec un atome de carbone par atome de métal.</div>
+    <div class="tip">💡 <b>Le bon réflexe</b> : pour deviner l'effet d'un élément sur la structure, demande-toi d'abord dans quelle équipe il joue, puis s'il vole du carbone. Le titane, par exemple, est alphagène deux fois : par lui-même, et parce qu'il retire du jeu le carbone et l'azote, deux puissants gammagènes.</div>
+    <div class="warn"><b>⚠️ Piège : soufre et usinabilité.</b> Les nuances « décolletage » (303, 430F) contiennent volontairement du soufre ou du sélénium. Elles s'usinent mieux, mais se soudent mal : fissuration à chaud assurée (cours 3). On ne les choisit pas pour une pièce soudée.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « Nicolas Mange du Carbone et de l'aZote » pour les gammagènes</b> (Ni, Mn, C, N) ; tous les autres éléments courants de l'inox jouent pour la ferrite.</div>
+    <div class="weld"><b>🔥 Lire un certificat matière</b>
+      <p>Sur un certificat 3.1, repère d'abord le chrome et le nickel (la famille), puis le carbone (L ou pas), le molybdène (piqûres), l'azote (duplex, résistance), le titane ou le niobium (stabilisé). Le soufre, s'il dépasse 0,015 à 0,03 %, est un signal d'alerte pour la soudabilité.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c5">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">5</div>
+    <div class="c-title"><h2>Cr<sub>eq</sub>, Ni<sub>eq</sub> et diagrammes prédictifs</h2><p>Deux nombres pour prévoir une structure</p></div>
+    <div class="c-img"><span class="ico">⚖️</span><span><small>Image à retenir</small>La balance de l'apothicaire : les alphagènes d'un côté, les gammagènes de l'autre, et l'aiguille indique la famille</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">une balance à deux plateaux</span></div>
+    <p>Un inox contient une dizaine d'éléments ; impossible de tracer un diagramme à dix dimensions. L'astuce : remplacer le vrai alliage par un alliage fer-chrome-nickel fictif, qui aurait la même structure. On additionne tous les alphagènes, chacun pesé selon sa force par rapport au chrome : c'est le <b>chrome équivalent</b> <span class="mat">Cr<sub>eq</sub></span>. On additionne de même les gammagènes par rapport au nickel : c'est le <b>nickel équivalent</b> <span class="mat">Ni<sub>eq</sub></span>.</p>
+    <p>Ces deux nombres placent l'acier sur une carte, la plus connue étant celle de <b>Schaeffler</b> (1949) : austénite en haut, ferrite à droite, martensite en bas à gauche, et des zones mixtes entre elles. Les familles d'inox s'y rangent naturellement : les austénitiques en haut, les duplex en diagonale dans le domaine austénite + ferrite, les ferritiques en bas à droite, les martensitiques à gauche.</p>
+    <p>Deux mises en garde : les <b>coefficients sont empiriques</b>, tirés d'essais, et chaque diagramme a les siens ; ils ne valent que pour les conditions de leur établissement. Schaeffler a tracé sa carte pour du <b>métal fondu</b> refroidi à la vitesse d'un cordon de soudure : sur une tôle laminée et traitée, elle donne une tendance, pas une prévision exacte.</p>
+  </div>
+
+  <div class="lab" id="m5">
+    <p class="lab-h">Manipulation 5 : la balance</p>
+    <p class="lab-sub">Premier schéma : une balance, avec à gauche les alphagènes et à droite les gammagènes, chacun en bloc proportionnel à son poids dans l'équivalent. Second schéma : la carte de Schaeffler (lignes de phases et d'iso-ferrite) avec les zones typiques des familles. Choisis une nuance, ajuste sa composition, change de jeu d'équivalents. « ▶ Ajouter du nickel » fait monter le nickel de 0 à 25 % : regarde la balance basculer et le point traverser la carte.</p>
+    <div class="btns" id="m5g">
+      <button class="btn" data-k="410" type="button">410</button>
+      <button class="btn" data-k="431" type="button">431</button>
+      <button class="btn" data-k="430" type="button">430</button>
+      <button class="btn on" data-k="304L" type="button">304L</button>
+      <button class="btn" data-k="316L" type="button">316L</button>
+      <button class="btn" data-k="2304" type="button">2304</button>
+      <button class="btn" data-k="2205" type="button">2205</button>
+      <button class="btn" data-k="2507" type="button">2507</button>
+    </div>
+    <div class="btns" id="m5f">
+      <button class="btn on" data-k="S" type="button">Schaeffler</button>
+      <button class="btn" data-k="D" type="button">DeLong (+ azote)</button>
+      <button class="btn" data-k="K" type="button">Schneider</button>
+    </div>
+    <div class="ctrl"><label for="m5cr">Chrome <span class="mat">Cr</span></label><input type="range" id="m5cr" class="r-mat" min="10" max="30" step="0.1" value="18.2"><output id="m5cro"></output></div>
+    <div class="ctrl"><label for="m5ni">Nickel <span class="mat">Ni</span></label><input type="range" id="m5ni" class="r-mat" min="0" max="25" step="0.1" value="9.2"><output id="m5nio"></output></div>
+    <div class="ctrl"><label for="m5mo">Molybdène <span class="mat">Mo</span></label><input type="range" id="m5mo" class="r-mat" min="0" max="5" step="0.1" value="0.1"><output id="m5moo"></output></div>
+    <div class="ctrl"><label for="m5c">Carbone <span class="mat">C</span></label><input type="range" id="m5c" class="r-mat" min="0.01" max="0.4" step="0.01" value="0.02"><output id="m5co"></output></div>
+    <div class="ctrl"><label for="m5n">Azote <span class="mat">N</span></label><input type="range" id="m5n" class="r-mat" min="0" max="0.35" step="0.01" value="0.06"><output id="m5no"></output></div>
+    <div class="btns"><button class="btn play" id="m5play" type="button">▶ Ajouter du nickel</button></div>
+    <svg id="m5svg" role="img" aria-label="Balance des éléments alphagènes et gammagènes et carte de Schaeffler avec les familles d'inox"></svg>
+    <div class="readout" id="m5r"></div>
+    <p class="status" id="m5msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">les jeux d'équivalents</span></div>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Diagramme</th><th>Cr<sub>eq</sub></th><th>Ni<sub>eq</sub></th><th>Domaine d'emploi</th></tr>
+      <tr><td>Schaeffler (1949)</td><td>Cr + Mo + 1,5·Si + 0,5·Nb</td><td>Ni + 30·C + 0,5·Mn</td><td>métal fondu de soudage ; carte A, F, M</td></tr>
+      <tr><td>DeLong (années 1950, révisé en 1973)</td><td>Cr + Mo + 1,5·Si + 0,5·Nb</td><td>Ni + 30·(C + N) + 0,5·Mn</td><td>métal fondu austénitique, azote compté ; ferrite en FN</td></tr>
+      <tr><td>WRC-1992</td><td>Cr + Mo + 0,7·Nb</td><td>Ni + 35·C + 20·N + 0,25·Cu</td><td>austénitiques et duplex soudés ; ferrite en FN</td></tr>
+      <tr><td>Schneider (1960)</td><td>Cr + 2·Si + 1,5·Mo + 5·V + 5,5·Al + 1,75·Nb + 1,5·Ti + 0,75·W</td><td>Ni + Co + 0,5·Mn + 0,3·Cu + 25·N + 30·C</td><td>aciers moulés et nuances martensitiques ; nombreux éléments</td></tr>
+    </table></div>
+    <p>Exemple, 304L (C 0,02 ; Mn 1,5 ; Si 0,4 ; Cr 18,2 ; Ni 9,2 ; Mo 0,1 ; N 0,06) avec Schaeffler : <span class="m">Cr<sub>eq</sub> = 18,2 + 0,1 + 0,6 = 18,9</span> et <span class="m">Ni<sub>eq</sub> = 9,2 + 0,6 + 0,75 = 10,55</span>. Avec DeLong, l'azote ajoute 30 × 0,06 = 1,8 : <span class="m">Ni<sub>eq</sub> = 12,35</span>, le point monte et la ferrite prévue baisse.</p>
+    <p>Le rapport <span class="m">Cr<sub>eq</sub>/Ni<sub>eq</sub></span> résume la balance : environ 1,4 à 1,8 pour un métal fondu austénitique avec un peu de ferrite, 2,5 à 4 pour un duplex, bien plus pour un ferritique. Il sert à prévoir la solidification (cours 3).</p>
+    <div class="def"><b>📖 Diagramme de constitution</b> : carte qui donne la structure d'un alliage, brut de solidification et refroidi à une vitesse donnée, en fonction de deux équivalents ; ce n'est pas un diagramme d'équilibre. <b>Pseudo-ternaire</b> : diagramme d'un alliage réel ramené à trois constituants fictifs (fer, chrome équivalent, nickel équivalent).</div>
+    <div class="tip">💡 <b>Le bon réflexe</b> : calcule toujours les équivalents avec les coefficients du diagramme que tu lis. Les équivalents de Schneider portés sur la carte de Schaeffler, ou l'inverse, donnent un point faux.</div>
+    <div class="warn"><b>⚠️ Piège : oublier l'azote.</b> Un duplex 2205 contient 0,17 % d'azote. Sans lui (Schaeffler), le point tombe vers 80 % de ferrite ; avec lui (DeLong), vers 30 %. Pour les nuances azotées, on utilise un jeu d'équivalents qui le compte.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « 30 fois le carbone »</b> : dans tous les jeux d'équivalents, 0,1 % de carbone pèse autant que 3 % de nickel.</div>
+    <div class="weld"><b>🔥 Un outil de soudeur avant tout</b>
+      <p>Ces diagrammes ont été inventés pour choisir les produits d'apport : prévoir la structure d'un métal fondu, surtout quand il mélange un inox et un acier au carbone. Le cours 3 les utilise pour placer les zones de danger de soudage et calculer la dilution.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c6">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">6</div>
+    <div class="c-title"><h2>Désigner un inox</h2><p>X5CrNi18-10, 1.4301, 304 : trois noms pour un même acier</p></div>
+    <div class="c-img"><span class="ico">🪪</span><span><small>Image à retenir</small>La carte d'identité : le nom symbolique dit la composition, le numéro identifie la nuance, comme un numéro d'immatriculation</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">lire un nom de nuance</span></div>
+    <p>On peut classer les aciers par leur structure, leur composition ou leurs propriétés. Pour s'y retrouver parmi des centaines de nuances, il faut une <b>normalisation</b>. Trois systèmes cohabitent dans les ateliers :</p>
+    <ul>
+      <li>la <b>désignation symbolique européenne</b> (EN 10027-1). Pour un acier fortement allié (au moins un élément au-dessus de 5 %), elle décrit la composition : <b>X</b>, puis <b>100 fois le carbone</b>, puis les symboles des éléments par teneurs décroissantes, puis leurs teneurs moyennes arrondies. <b>X5CrNi18-10</b> : 0,05 % de carbone, 18 % de chrome, 10 % de nickel. Pour les aciers de construction, elle décrit l'emploi et les propriétés : <b>S355J2</b> = acier de construction, limite d'élasticité minimale 355 MPa, 27 J à −20 °C ;</li>
+      <li>la <b>désignation numérique européenne</b> (EN 10027-2) : un numéro unique <b>1.xxxx</b>. Le 1 désigne l'acier, les deux chiffres suivants le <b>groupe</b> (40 à 49 pour les inox et réfractaires), les deux derniers l'ordre d'enregistrement. <b>1.4301</b> est le 304 ;</li>
+      <li>la <b>désignation américaine</b> AISI : <b>3xx</b> pour les austénitiques, <b>4xx</b> pour les ferritiques et martensitiques, suffixe <b>L</b> pour le bas carbone (C ≤ 0,03 %).</li>
+    </ul>
+    <p>On croise encore l'<b>ancienne norme française</b> : <b>Z6CNUD15-4</b> (Z = fortement allié, 6 = 0,06 % de carbone, C, N, U, D = chrome, nickel, cuivre, molybdène, 15-4 = teneurs de chrome et de nickel). Et le soudeur utilise les <b>groupes ISO/TR 15608</b>, qui rangent les matériaux pour qualifier les modes opératoires.</p>
+  </div>
+
+  <div class="lab" id="m6">
+    <p class="lab-h">Manipulation 6 : le décodeur de nuances</p>
+    <p class="lab-sub">« Décoder » : choisis une désignation, chaque morceau est expliqué, avec le numéro EN, l'équivalent AISI et le groupe ISO/TR 15608. « Construire » : règle une composition, le décodeur fabrique le nom symbolique selon la règle générale, le groupe du numéro EN et le groupe ISO/TR 15608 (la famille est estimée avec le modèle de la manipulation 3). « ▶ Défiler les nuances » passe les désignations en revue.</p>
+    <div class="btns" id="m6m">
+      <button class="btn on" data-k="dec" type="button">Décoder</button>
+      <button class="btn" data-k="bld" type="button">Construire</button>
+    </div>
+    <div class="btns" id="m6g">
+      <button class="btn on" data-k="X5CrNi18-10" type="button">X5CrNi18-10</button>
+      <button class="btn" data-k="X2CrNiMo17-12-2" type="button">X2CrNiMo17-12-2</button>
+      <button class="btn" data-k="X6CrNiTi18-10" type="button">X6CrNiTi18-10</button>
+      <button class="btn" data-k="X6Cr17" type="button">X6Cr17</button>
+      <button class="btn" data-k="X12Cr13" type="button">X12Cr13</button>
+      <button class="btn" data-k="X2CrNiMoN22-5-3" type="button">X2CrNiMoN22-5-3</button>
+      <button class="btn" data-k="X5CrNiCuNb16-4" type="button">X5CrNiCuNb16-4</button>
+      <button class="btn" data-k="Z6CNUD15-4" type="button">Z6CNUD15-4</button>
+      <button class="btn" data-k="S355J2" type="button">S355J2</button>
+    </div>
+    <div class="ctrl" id="m6cc"><label for="m6c">Carbone <span class="mat">C</span></label><input type="range" id="m6c" class="r-mat" min="0.01" max="0.4" step="0.01" value="0.02"><output id="m6co"></output></div>
+    <div class="ctrl" id="m6crc"><label for="m6cr">Chrome <span class="mat">Cr</span></label><input type="range" id="m6cr" class="r-mat" min="10.5" max="30" step="0.1" value="22.4"><output id="m6cro"></output></div>
+    <div class="ctrl" id="m6nic"><label for="m6ni">Nickel <span class="mat">Ni</span></label><input type="range" id="m6ni" class="r-mat" min="0" max="25" step="0.1" value="5.4"><output id="m6nio"></output></div>
+    <div class="ctrl" id="m6moc"><label for="m6mo">Molybdène <span class="mat">Mo</span></label><input type="range" id="m6mo" class="r-mat" min="0" max="5" step="0.1" value="3.1"><output id="m6moo"></output></div>
+    <div class="btns" id="m6a">
+      <button class="btn" data-k="none" type="button">Sans addition</button>
+      <button class="btn on" data-k="N" type="button">+ azote</button>
+      <button class="btn" data-k="Ti" type="button">+ titane</button>
+      <button class="btn" data-k="Nb" type="button">+ niobium</button>
+      <button class="btn" data-k="CuNb" type="button">+ cuivre et niobium</button>
+    </div>
+    <div class="btns"><button class="btn play" id="m6play" type="button">▶ Défiler les nuances</button></div>
+    <svg id="m6svg" role="img" aria-label="Désignation d'une nuance décomposée en morceaux expliqués, avec son numéro, son équivalent américain et son groupe de soudage"></svg>
+    <div class="readout" id="m6r"></div>
+    <p class="status" id="m6msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">les groupes EN 10027-2 et ISO/TR 15608</span></div>
+    <h4>Les groupes du numéro EN (inox et réfractaires)</h4>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Numéro</th><th>Groupe</th><th>Exemples</th></tr>
+      <tr><td class="n">1.40xx</td><td>Ni &lt; 2,5 %, sans Mo, Nb ni Ti</td><td>1.4016 (430), 1.4006 (410), 1.4057 (431)</td></tr>
+      <tr><td class="n">1.41xx</td><td>Ni &lt; 2,5 %, avec Mo, sans Nb ni Ti</td><td>1.4125 (440C)</td></tr>
+      <tr><td class="n">1.43xx</td><td>Ni ≥ 2,5 %, sans Mo, Nb ni Ti</td><td>1.4301 (304), 1.4307 (304L), 1.4362 (2304)</td></tr>
+      <tr><td class="n">1.44xx</td><td>Ni ≥ 2,5 %, avec Mo, sans Nb ni Ti</td><td>1.4404 (316L), 1.4462 (2205), 1.4410 (2507)</td></tr>
+      <tr><td class="n">1.45xx</td><td>avec additions particulières (Ti, Nb, Cu…)</td><td>1.4541 (321), 1.4550 (347), 1.4512 (409), 1.4542 (17-4PH)</td></tr>
+      <tr><td class="n">1.46xx à 1.49xx</td><td>nuances au nickel pour hautes températures et produits chimiques, réfractaires, nuances pour températures élevées</td><td>1.4762 (446), 1.4845 (310S)</td></tr>
+    </table></div>
+    <h4>Les groupes ISO/TR 15608 (inox)</h4>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Groupe</th><th>Contenu</th><th>Sous-groupes</th></tr>
+      <tr><td class="n">7</td><td>ferritiques, martensitiques ou durcis par précipitation, C ≤ 0,35 % et 10,5 % ≤ Cr ≤ 30 %</td><td>7.1 ferritiques ; 7.2 martensitiques ; 7.3 durcis par précipitation</td></tr>
+      <tr><td class="n">8</td><td>austénitiques, Ni ≤ 35 %</td><td>8.1 Cr ≤ 19 % ; 8.2 Cr &gt; 19 % ; 8.3 au manganèse, 4 % ≤ Mn ≤ 12 %</td></tr>
+      <tr><td class="n">10</td><td>austéno-ferritiques (duplex)</td><td>10.1 Cr ≤ 24 % ; 10.2 Cr &gt; 24 % (édition 2017 : sous-groupe pour les duplex à Ni ≤ 4 %)</td></tr>
+    </table></div>
+    <p>Ces groupes servent à définir le domaine de validité d'une qualification de mode opératoire de soudage (série ISO 15614) ou d'un soudeur (ISO 9606-1).</p>
+    <h4>Le cas des aciers de construction</h4>
+    <p>Pour les aciers non alliés désignés par leur emploi : lettre d'emploi (S construction, P appareils à pression, L tubes de conduite, B béton, Y béton précontraint, R rails, D produits plats pour formage à froid, H haute résistance pour formage à froid, T emballage, M électrique), puis la limite d'élasticité minimale en MPa pour la plus petite épaisseur, puis des précisions. Pour les aciers de construction, la ténacité : J, K ou L pour 27, 40 ou 60 J, suivis de la température d'essai (R = 20 °C, 0 = 0 °C, 2 = −20 °C… 6 = −60 °C). Préfixes : G pour les pièces moulées, PM pour la métallurgie des poudres.</p>
+    <div class="def"><b>📖 Désignation symbolique</b> : nom de nuance formé de lettres et de chiffres qui décrivent la composition ou l'emploi. <b>Désignation numérique</b> : numéro unique attribué à chaque nuance. <b>Groupe de matériaux</b> : ensemble de nuances de soudabilité voisine, utilisé pour qualifier les modes opératoires.</div>
+    <div class="tip">💡 <b>Le bon réflexe</b> : sur un plan ou un certificat, vérifie le <b>numéro</b> 1.4xxx plutôt que le nom AISI : 304 et 304L, ou 316 et 316L, ne sont pas interchangeables en soudage, alors que leurs numéros (1.4301 et 1.4307, 1.4401 et 1.4404) ne prêtent pas à confusion.</div>
+    <div class="warn"><b>⚠️ Piège : le X du nom n'est pas un multiplicateur.</b> Dans X5CrNi18-10, « 5 » vaut 0,05 % de carbone (100 fois la teneur), mais 18 et 10 sont des teneurs directes. Dans l'ancienne norme française, les teneurs des aciers faiblement alliés étaient multipliées par 4 ou 10 : 42CD4 contient 1 % de chrome, pas 4 %.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « 3 pour l'austénite, 4 pour le reste »</b> chez les Américains ; « 43 sans Mo, 44 avec Mo » chez les Européens, pour les austénitiques et les duplex.</div>
+    <div class="weld"><b>🔥 Le groupe décide de la qualification</b>
+      <p>Un mode opératoire qualifié sur un 316L (groupe 8.1) couvre les autres nuances de ce groupe, selon les règles de la norme de qualification, mais pas un duplex (groupe 10) ni un ferritique (groupe 7.1). Identifier le bon groupe est donc la première étape d'une qualification : on la fait à partir de la composition réelle du certificat.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="exos">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✎</div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Six exercices et un défi, de la couche passive au nom de la nuance</p></div>
+    <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de musculation : on ne progresse qu'en soulevant soi-même</span></div>
+  </div>
+  <div class="lv lv1"><div class="lv-h">👁 Mode d'emploi <span class="tag">formule littérale, puis valeurs, puis unités</span></div>
+    <p>Cherche chaque question sur papier avant d'ouvrir la correction. Les teneurs sont en % massique. Les exercices 1 et 2 se vérifient dans la manipulation 1, l'exercice 3 dans la manipulation 2, l'exercice 4 dans la manipulation 3, l'exercice 5 dans la manipulation 5, l'exercice 6 dans la manipulation 6, et le défi se rejoue dans les manipulations 5 et 6.</p>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 1 : quelle nuance pour quelle eau ? <span class="lvtag">N1 · chapitre 1</span></h4>
+    <p>Analyses : 304L (Cr 18,2 ; Mo 0,1 ; N 0,06), 316L (Cr 17,2 ; Mo 2,1 ; N 0,05), 2205 (Cr 22,5 ; Mo 3,1 ; N 0,17), 2507 (Cr 25,0 ; Mo 3,8 ; N 0,27).</p>
+    <p class="q"><b>a)</b> Calcule le PREN de chaque nuance.</p>
+    <p class="q"><b>b)</b> Avec le modèle PREN<sub>requis</sub> ≈ 10 + 8·log<sub>10</sub>(c<sub>Cl</sub>/10) + 0,25·(T − 20), calcule le PREN requis pour l'eau du robinet (50 mg/L, 20 °C), l'eau saumâtre (2 000 mg/L, 20 °C), l'eau de mer (19 000 mg/L) à 20 °C puis à 40 °C.</p>
+    <p class="q"><b>c)</b> Quelles nuances conviennent à chaque eau ? Vérifie dans la manipulation 1 (« La rayure »).</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">PREN = Cr + 3,3·Mo + 16·N</span> : 304L : 18,2 + 0,33 + 0,96 ≈ <b>19,5</b> ; 316L : 17,2 + 6,93 + 0,80 ≈ <b>24,9</b> ; 2205 : 22,5 + 10,23 + 2,72 ≈ <b>35,5</b> ; 2507 : 25,0 + 12,54 + 4,32 ≈ <b>41,9</b>.</p>
+      <p><b>b)</b> Robinet : 10 + 8 × log<sub>10</sub>(5) ≈ <b>15,6</b> ; saumâtre : 10 + 8 × log<sub>10</sub>(200) ≈ <b>28,4</b> ; mer à 20 °C : 10 + 8 × log<sub>10</sub>(1 900) ≈ <b>36,2</b> ; à 40 °C : 36,2 + 0,25 × 20 ≈ <b>41,2</b>.</p>
+      <p><b>c)</b> Eau du robinet : les quatre. Eau saumâtre : 2205 et 2507 seulement. Eau de mer à 20 °C : le 2507 ; le 2205 (35,5) est juste en dessous, conformément à la règle « PREN &lt; 35 environ : inapte aux applications marines ». À 40 °C, le 2507 garde une marge très faible : on regarde alors les super austénitiques ou d'autres matériaux.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 2 : rivets et tôles <span class="lvtag">N2 · chapitre 1</span></h4>
+    <p>Une tôle d'inox de 2 m² est assemblée par des rivets dont la surface mouillée totale est 20 cm². Le milieu est de l'eau salée. Modèle : <span class="m">v/v<sub>0</sub> ≈ 1 + (A<sub>c</sub>/A<sub>a</sub>)·ΔE/(0,3 V)</span>, inox passif ≈ −0,05 V, acier ≈ −0,6 V.</p>
+    <p class="q"><b>a)</b> Rivets en acier au carbone : quel est le rapport A<sub>c</sub>/A<sub>a</sub>, et le facteur d'accélération de la corrosion des rivets ?</p>
+    <p class="q"><b>b)</b> Même calcul pour l'assemblage inverse : tôle d'acier de 2 m², rivets en inox.</p>
+    <p class="q"><b>c)</b> Que conseilles-tu ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> 2 m² = 20 000 cm², donc <span class="m">A<sub>c</sub>/A<sub>a</sub> = 20 000/20 = 1 000</span> ; ΔE ≈ −0,05 − (−0,6) = 0,55 V ; <span class="m">v/v<sub>0</sub> ≈ 1 + 1 000 × 0,55/0,3 ≈ 1 834</span>. Les rivets sont dévorés.</p>
+      <p><b>b)</b> <span class="m">A<sub>c</sub>/A<sub>a</sub> = 20/20 000 = 0,001</span> : v/v<sub>0</sub> ≈ 1 + 0,001 × 1,83 ≈ <b>1,002</b>. La tôle d'acier corrode comme si l'inox n'était pas là.</p>
+      <p><b>c)</b> Toujours la petite pièce dans le métal le plus noble (rivets en inox), ou bien isoler électriquement les deux métaux, ou peindre l'ensemble en débordant sur l'inox. Jamais de petite surface d'acier face à une grande surface d'inox.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 3 : des trous dans les mailles <span class="lvtag">N2 · chapitre 2</span></h4>
+    <p>Paramètres : ferrite a = 0,2866 nm ; austénite a = 0,3591 nm (à 912 °C). Rayon de l'atome de carbone : 0,077 nm.</p>
+    <p class="q"><b>a)</b> Calcule le rayon R de l'atome de fer dans chaque réseau.</p>
+    <p class="q"><b>b)</b> Calcule le rayon du site octaédrique de l'austénite (r = a/2 − R) et du site tétraédrique de la ferrite (r = a·√5/4 − R).</p>
+    <p class="q"><b>c)</b> Compare au carbone. Que dire de la solubilité ?</p>
+    <p class="q"><b>d)</b> Calcule c/a d'une martensite à 0,2 % puis à 1 % de carbone. Vérifie dans la manipulation 2.</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> cc : <span class="m">R = a·√3/4 = 0,2866 × 0,433 ≈ 0,124 nm</span> ; cfc : <span class="m">R = a·√2/4 = 0,3591 × 0,354 ≈ 0,127 nm</span>.</p>
+      <p><b>b)</b> Austénite : <span class="m">r = 0,1796 − 0,1270 ≈ 0,053 nm</span> ; ferrite : <span class="m">r = 0,2866 × 0,559 − 0,1241 ≈ 0,036 nm</span>.</p>
+      <p><b>c)</b> Le carbone est 1,5 fois trop gros pour le site de l'austénite, 2,1 fois pour celui de la ferrite : il distord beaucoup plus la ferrite, d'où une solubilité de 0,02 % au plus contre 2,1 % dans l'austénite.</p>
+      <p><b>d)</b> <span class="m">c/a ≈ 1 + 0,045·%C</span> : <b>1,009</b> à 0,2 % ; <b>1,045</b> à 1 %.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 4 : trempera, trempera pas <span class="lvtag">N2 · chapitre 3</span></h4>
+    <p>Modèle de la boucle : x<sub>γ</sub> ≈ 11,6 + 1,3·Ni<sub>*</sub> + 10·(C + N − 0,01) et x<sub>α</sub> ≈ 13,4 + 1,3·Ni<sub>*</sub> + 45·(C + N − 0,01), avec Ni<sub>*</sub> = Ni + 0,5·Mn.</p>
+    <p class="q"><b>a)</b> 430 (Cr 16,5 ; Ni 0,3 ; Mn 0,5 ; C 0,05 ; N 0,04) : calcule x<sub>γ</sub> et x<sub>α</sub>. Où se trouve sa verticale ?</p>
+    <p class="q"><b>b)</b> Dans la manipulation 3, relève la part d'austénite du 430 à 1 050 °C et la martensite après trempe.</p>
+    <p class="q"><b>c)</b> 439 (Cr 17,5 ; Ti 0,35 ; C + N 0,03) : que devient la boucle ? Conclusion pour le soudage ?</p>
+    <p class="q"><b>d)</b> Avec la formule de Pickering, calcule M<sub>s</sub> d'un 410 (C 0,11 ; N 0,03 ; Mn 0,6 ; Ni 0,3 ; Cr 12,5) et d'un 304L (C 0,02 ; N 0,06 ; Mn 1,5 ; Ni 9,2 ; Cr 18,2 ; Mo 0,1).</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> Ni<sub>*</sub> = 0,3 + 0,25 = 0,55 ; C + N − 0,01 = 0,08. <span class="m">x<sub>γ</sub> ≈ 11,6 + 0,72 + 0,8 ≈ 13,1 %</span> ; <span class="m">x<sub>α</sub> ≈ 13,4 + 0,72 + 3,6 ≈ 17,7 %</span>. À 16,5 %, la verticale traverse la bande α + γ.</p>
+      <p><b>b)</b> Environ <b>24 %</b> d'austénite à 1 050 °C (règle du levier dans la bande α + γ), qui devient martensite à la trempe : de la martensite aux joints de grains d'une zone affectée de soudure.</p>
+      <p><b>c)</b> Le titane fixe le carbone et l'azote : C + N libres ≈ 0,03 − 0,35/4 &lt; 0, ramenés au minimum du modèle (0,005). Alors x<sub>α</sub> ≈ 13,4 + 0,72 ≈ 14,1 % : la verticale à 17,5 % sort de la boucle. Le 439 reste entièrement ferritique : pas de martensite en zone affectée.</p>
+      <p><b>d)</b> 410 : <span class="m">M<sub>s</sub> ≈ 502 − 89 − 37 − 8 − 9 − 150 ≈ 209 °C</span> : il prend la trempe. 304L : <span class="m">M<sub>s</sub> ≈ 502 − 16 − 74 − 20 − 276 − 218 − 5 ≈ −107 °C</span> : son austénite reste à l'ambiante.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 5 : trois balances pour un duplex <span class="lvtag">N1 · chapitre 5</span></h4>
+    <p>Duplex 2304 : C 0,02 ; Mn 1,5 ; Si 0,4 ; Cr 23,0 ; Ni 4,5 ; Mo 0,3 ; N 0,12.</p>
+    <p class="q"><b>a)</b> Calcule Cr<sub>eq</sub> et Ni<sub>eq</sub> de Schaeffler.</p>
+    <p class="q"><b>b)</b> Même calcul avec DeLong, puis avec Schneider.</p>
+    <p class="q"><b>c)</b> Dans la manipulation 5, relève la ferrite prévue sur la carte avec Schaeffler et avec DeLong. Commente.</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">Cr<sub>eq</sub> = 23,0 + 0,3 + 1,5 × 0,4 = 23,9</span> ; <span class="m">Ni<sub>eq</sub> = 4,5 + 30 × 0,02 + 0,5 × 1,5 = 5,85</span>.</p>
+      <p><b>b)</b> DeLong : Ni<sub>eq</sub> = 5,85 + 30 × 0,12 = <b>9,45</b> (Cr<sub>eq</sub> inchangé, 23,9). Schneider : <span class="m">Cr<sub>eq</sub> = 23,0 + 2 × 0,4 + 1,5 × 0,3 = 24,25</span> ; <span class="m">Ni<sub>eq</sub> = 4,5 + 0,75 + 25 × 0,12 + 30 × 0,02 = 8,85</span>.</p>
+      <p><b>c)</b> Schaeffler : le point (23,9 ; 5,85) tombe dans la zone A + M + F, comme si de la martensite pouvait se former. DeLong : A + F avec environ <b>37 %</b> de ferrite (Schneider, à titre indicatif : environ 46 %). Sans l'azote, très gammagène, la carte se trompe de domaine pour une nuance azotée ; avec lui, on retrouve un duplex.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 6 : lire les noms <span class="lvtag">N1 · chapitre 6</span></h4>
+    <p class="q"><b>a)</b> Décode X2CrNiMo17-12-2 et son numéro 1.4404.</p>
+    <p class="q"><b>b)</b> Décode X6CrNiTi18-10 (1.4541). Pourquoi le titane n'a-t-il pas de chiffre ?</p>
+    <p class="q"><b>c)</b> Décode Z6CNUD15-4 (ancienne norme française) et S355J2.</p>
+    <p class="q"><b>d)</b> Donne le groupe ISO/TR 15608 de : 316L, 2205, 430, 410, 17-4PH, 310S (Cr 25 %).</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> X : fortement allié ; 2 : 0,02 % de carbone ; Cr, Ni, Mo par teneurs décroissantes ; 17-12-2 : 17 % Cr, 12 % Ni, 2 % Mo. 1.4404 : 1 = acier, 44 = Ni ≥ 2,5 % avec Mo, sans Nb ni Ti ; c'est le 316L.</p>
+      <p><b>b)</b> 0,06 % de carbone, 18 % Cr, 10 % Ni, avec du titane en petite quantité (de l'ordre de 0,4 à 0,7 %), d'où pas de chiffre ; groupe 45 (additions particulières) : c'est le 321, austénitique stabilisé.</p>
+      <p><b>c)</b> Z6CNUD15-4 : Z = fortement allié, 0,06 % de carbone, chrome, nickel, cuivre, molybdène, 15 % Cr et 4 % Ni. S355J2 : acier de construction, limite d'élasticité minimale 355 MPa, 27 J à −20 °C.</p>
+      <p><b>d)</b> 316L : 8.1 ; 2205 : 10.1 ; 430 : 7.1 ; 410 : 7.2 ; 17-4PH : 7.3 ; 310S : 8.2.</p>
+    </div></details>
+  </div>
+
+  <div class="exo defi">
+    <h4>🏆 Défi : la nuance mystère <span class="lvtag">N2 · chapitres 1, 5 et 6, à rejouer dans les manipulations 5 et 6</span></h4>
+    <p>Un certificat porte l'analyse suivante, sans nom de nuance : C 0,020 ; Mn 1,5 ; Si 0,4 ; Cr 22,4 ; Ni 5,4 ; Mo 3,1 ; N 0,17.</p>
+    <p class="q"><b>a)</b> Calcule Cr<sub>eq</sub> et Ni<sub>eq</sub> avec Schaeffler, puis avec DeLong. Dans la manipulation 5 (nuance 2205, puis règle la composition), relève la structure et la ferrite prévues.</p>
+    <p class="q"><b>b)</b> Quelle famille ? Construis son nom symbolique et le groupe de son numéro EN (manipulation 6, « Construire », + azote).</p>
+    <p class="q"><b>c)</b> Quel groupe ISO/TR 15608 ? Quel équivalent courant ?</p>
+    <p class="q"><b>d)</b> Calcule son PREN. Convient-il à l'eau de mer à 20 °C ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> Schaeffler : <span class="m">Cr<sub>eq</sub> = 22,4 + 3,1 + 0,6 = 26,1</span> ; <span class="m">Ni<sub>eq</sub> = 5,4 + 0,6 + 0,75 = 6,75</span> : A + F, ferrite ≈ <b>85 %</b>. DeLong : Ni<sub>eq</sub> = 6,75 + 5,1 = <b>11,85</b> : ferrite ≈ <b>32 %</b>.</p>
+      <p><b>b)</b> Un austéno-ferritique (duplex) : environ moitié ferrite, moitié austénite. Nom construit : <b>X2CrNiMoN22-5-3</b> ; numéro du groupe <b>1.44xx</b> (Ni ≥ 2,5 % avec Mo) : c'est le 1.4462.</p>
+      <p><b>c)</b> Groupe <b>10.1</b> (duplex, Cr ≤ 24 %) ; équivalent courant : 2205 (UNS S32205).</p>
+      <p><b>d)</b> <span class="m">PREN = 22,4 + 3,3 × 3,1 + 16 × 0,17 = 35,35</span> : un peu sous le seuil d'environ 36 du modèle pour l'eau de mer à 20 °C. Pour l'eau de mer, on préfère un super duplex (PREN &gt; 40).</p>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="quiz-s">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">?</div>
+    <div class="c-title"><h2>Quiz : 12 questions éclair</h2><p>Chaque réponse est expliquée, même quand tu as juste</p></div>
+    <div class="c-img"><span class="ico">🎯</span><span><small>Image à retenir</small>La cible : vise 10 sur 12 avant de passer au cours 2</span></div>
+  </div>
+  <div id="quiz"></div>
+  <div class="score" id="qzScore" aria-live="polite">Score : 0 / 12</div>
+  <div class="btns"><button class="btn" id="qzReset" type="button">↺ Recommencer le quiz</button></div>
+</div>
+</section>
+
+<section class="chap" id="fiche">
+<div class="wrap wide">
+  <div class="cartouche">
+    <div class="c-num">★</div>
+    <div class="c-title"><h2>Fiche mémoire du cours 1</h2><p>Neuf cases, neuf images : à photographier, puis à redessiner de tête</p></div>
+    <div class="c-img"><span class="ico">🍴</span><span><small>Image à retenir</small>Le couteau qui ne tachait pas</span></div>
+  </div>
+  <div class="fiche">
+    <div><div class="ic">🛡️</div><h4>Inoxydable</h4><div class="f"><span class="mat">Cr</span> ≥ 10,5 % · C ≤ 1,2 %</div><p>Une pellicule riche en chrome de 1 à 5 nm, qui se reforme seule en présence d'oxygène.</p></div>
+    <div><div class="ic">🧂</div><h4>Les piqûres</h4><div class="f"><span class="eps">PREN</span> = Cr + 3,3Mo + 16N</div><p>Les chlorures percent la couche ; PREN &gt; 40 environ pour l'eau de mer.</p></div>
+    <div><div class="ic">🔋</div><h4>Le couple</h4><div class="f">v/v₀ ≈ 1 + (A<sub>c</sub>/A<sub>a</sub>)·ΔE/0,3</div><p>Petite anode, grande cathode : attaque rapide. Outils réservés à l'inox.</p></div>
+    <div><div class="ic">🍊</div><h4>Les réseaux</h4><div class="f">cc 0,68 · cfc 0,74 · r<sub>cfc</sub> ≈ 0,053 nm</div><p>Le cfc a le plus grand site : il dissout le carbone ; il n'est pas magnétique.</p></div>
+    <div><div class="ic">📏</div><h4>La martensite</h4><div class="f">c/a ≈ 1 + 0,045·%C</div><p>Trempe sans diffusion : le carbone piégé étire la maille et durcit l'acier.</p></div>
+    <div><div class="ic">🏝️</div><h4>La boucle γ</h4><div class="f">γ ≤ 12 % Cr · α + γ ≤ 13 %</div><p>Dans l'île : trempe possible (martensitiques) ; hors de l'île : ferritiques.</p></div>
+    <div><div class="ic">🪢</div><h4>Les équipes</h4><div class="f">γ : Ni, Mn, C, N · α : Cr, Mo, Si, Ti, Nb…</div><p>Ti et Nb fixent le carbone : nuances stabilisées (Ti ≥ 5C, Nb ≥ 10C).</p></div>
+    <div><div class="ic">⚖️</div><h4>Les équivalents</h4><div class="f">Cr<sub>eq</sub> = Cr + Mo + 1,5Si + 0,5Nb · Ni<sub>eq</sub> = Ni + 30C + 0,5Mn</div><p>Schaeffler ; DeLong ajoute 30N ; chaque diagramme a ses coefficients.</p></div>
+    <div><div class="ic">🪪</div><h4>Les noms</h4><div class="f">X5CrNi18-10 · 1.4301 · 304 · 8.1</div><p>Nom = composition ; numéro = identité ; AISI 3xx/4xx ; groupe ISO/TR 15608.</p></div>
+  </div>
+  <div class="fun"><span class="fun-h">🍴 Fun fact : le couteau qui ne tachait pas</span>À Sheffield, en août 1913, le métallurgiste Harry Brearley cherche un acier qui résiste mieux à l'érosion dans les canons de fusil. Il coule un acier à 12,8 % de chrome et 0,24 % de carbone, et remarque qu'il résiste aux attaques chimiques qu'il utilise d'ordinaire pour observer les aciers au microscope. Il pense aussitôt à la coutellerie, où les lames tachées de rouille sont le cauchemar de chaque cuisine, et fait forger des couteaux par un coutelier de la ville, R. F. Mosley. Brearley appelle son acier « rustless steel », l'acier qui ne rouille pas. C'est Ernest Stuart, responsable chez Mosley, qui aurait proposé un nom plus vendeur après l'avoir mis à l'épreuve du vinaigre : « stainless steel », l'acier qui ne se tache pas. En 1914, la coutellerie George Ibberson &amp; Co, à Sheffield, parvient à en tirer des lames de couteau. C'était un inox martensitique, la famille du 420 de nos couteaux actuels. La passivité est au <a href="#c1">chapitre 1</a>, la martensite au <a href="#c2">chapitre 2</a>.</div>
+</div>
+</section>
+
+<section class="chap" id="gloss">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">A–Z</div>
+    <div class="c-title"><h2>Glossaire</h2><p>Les mots, symboles et sigles de ce cours</p></div>
+    <div class="c-img"><span class="ico">📖</span><span><small>Image à retenir</small>Le dictionnaire : un mot flou, un clic</span></div>
+  </div>
+  <dl class="gloss">
+    <dt>α, δ, γ, α', ε</dt><dd>Ferrite (cubique centrée) ; ferrite de haute température ; austénite (cubique à faces centrées) ; martensite quadratique centrée de trempe ; martensite hexagonale compacte formée par déformation.</dd>
+    <dt>AISI</dt><dd><i>American Iron and Steel Institute</i> : désignation américaine, 3xx austénitiques, 4xx ferritiques et martensitiques, suffixe L pour C ≤ 0,03 %.</dd>
+    <dt>Alphagène, gammagène</dt><dd>Élément qui stabilise la ferrite ; élément qui stabilise l'austénite.</dd>
+    <dt>Anode, cathode</dt><dd>Dans une pile de corrosion : le métal qui se dissout (anode) ; celui où l'oxygène est réduit, protégé (cathode).</dd>
+    <dt>Boucle γ</dt><dd>Domaine fermé d'austénite du diagramme fer-chrome, jusqu'à environ 12 à 13 % de chrome.</dd>
+    <dt>Carburigène</dt><dd>Élément qui forme des carbures (Mn, Cr, Mo, W, V, Nb, Ti, par affinité croissante).</dd>
+    <dt>cc, cfc, hc</dt><dd>Cubique centré ; cubique à faces centrées ; hexagonal compact.</dd>
+    <dt>Compacité, coordinence</dt><dd>Fraction du volume occupée par les atomes ; nombre de plus proches voisins.</dd>
+    <dt>Corrosion caverneuse</dt><dd>Corrosion dans un recoin confiné (sous un joint, un dépôt) où l'oxygène ne se renouvelle pas.</dd>
+    <dt>Corrosion galvanique</dt><dd>Corrosion accélérée du moins noble de deux métaux en contact dans un électrolyte.</dd>
+    <dt>Coupe (pseudo-binaire)</dt><dd>Section d'un diagramme à trois constituants ou plus, à teneur fixée d'un élément.</dd>
+    <dt>Cr<sub>eq</sub>, Ni<sub>eq</sub></dt><dd>Chrome et nickel équivalents : sommes pondérées des alphagènes et des gammagènes ; coefficients propres à chaque diagramme (Schaeffler, DeLong, WRC-1992, Schneider).</dd>
+    <dt>c/a</dt><dd>Rapport des paramètres d'une maille quadratique ; mesure de la distorsion de la martensite.</dd>
+    <dt>Désignation symbolique, numérique</dt><dd>Nom de nuance (EN 10027-1) ; numéro unique 1.xxxx (EN 10027-2), dont les deux chiffres après le point donnent le groupe.</dd>
+    <dt>Diagramme de constitution</dt><dd>Carte de la structure d'un alliage en fonction de deux équivalents, pour une vitesse de refroidissement donnée ; pas un diagramme d'équilibre.</dd>
+    <dt>E<sub>pit</sub>, CPT</dt><dd>Potentiel de piqûration ; température critique de piqûration.</dd>
+    <dt>Électrolyte</dt><dd>Liquide conducteur où circulent des ions.</dd>
+    <dt>EN 10088, EN 10027</dt><dd>Normes européennes : liste et compositions des aciers inoxydables ; systèmes de désignation des aciers.</dd>
+    <dt>Ferromagnétique, température de Curie</dt><dd>Attiré par un aimant ; température au-dessus de laquelle ce comportement disparaît (770 °C pour le fer pur).</dd>
+    <dt>ISO/TR 15608</dt><dd>Rapport technique qui range les matériaux en groupes (7, 8, 10 pour les inox) pour la qualification des modes opératoires et des soudeurs.</dd>
+    <dt>log<sub>10</sub>, √</dt><dd>Logarithme décimal ; racine carrée.</dd>
+    <dt>Maille</dt><dd>Plus petit motif qui, répété, reproduit le cristal.</dd>
+    <dt>M<sub>s</sub></dt><dd>Température de début de transformation martensitique au refroidissement.</dd>
+    <dt>Métastable</dt><dd>Stable en pratique, mais pas à l'équilibre : l'austénite d'un 304 à l'ambiante.</dd>
+    <dt>nm</dt><dd>Nanomètre : 10⁻⁹ m, un millionième de millimètre.</dd>
+    <dt>Normalisation</dt><dd>Austénitisation suivie d'un refroidissement à l'air, qui affine le grain.</dd>
+    <dt>Passivité, repassivation</dt><dd>Protection par une pellicule d'oxyde très mince ; reformation spontanée de cette pellicule après une rayure.</dd>
+    <dt>Piqûre</dt><dd>Cavité de corrosion localisée, étroite et profonde, souvent amorcée par les chlorures.</dd>
+    <dt>PREN</dt><dd><i>Pitting Resistance Equivalent Number</i> : %Cr + 3,3·%Mo + 16·%N ; sert à comparer les nuances face aux piqûres.</dd>
+    <dt>Site interstitiel (octaédrique, tétraédrique)</dt><dd>Vide entre les atomes du réseau, entouré de six ou de quatre atomes, où se logent C, N, H.</dd>
+    <dt>Stabilisé</dt><dd>Nuance dont le carbone est fixé par du titane ou du niobium.</dd>
+  </dl>
+</div>
+</section>
+
+<section class="chap" id="check">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✓</div>
+    <div class="c-title"><h2>Suis-je prêt pour la suite ?</h2><p>Dix points à cocher de tête</p></div>
+    <div class="c-img"><span class="ico">🚦</span><span><small>Image à retenir</small>Le feu vert : on passe au cours 2 quand tout est coché</span></div>
+  </div>
+  <p>Coche seulement ce que tu sais faire <b>sans regarder</b>. Tes coches restent enregistrées dans ce navigateur.</p>
+  <div class="check" id="checklist">
+    <label><input type="checkbox" data-c="b1"> <span>Je sais expliquer la passivité et donner le seuil de 10,5 % de chrome.</span></label>
+    <label><input type="checkbox" data-c="b2"> <span>Je sais calculer un PREN et l'utiliser pour comparer des nuances face aux chlorures.</span></label>
+    <label><input type="checkbox" data-c="b3"> <span>Je sais expliquer la corrosion galvanique et la règle des surfaces.</span></label>
+    <label><input type="checkbox" data-c="b4"> <span>Je sais décrire les réseaux cc et cfc, leurs sites interstitiels et leur magnétisme.</span></label>
+    <label><input type="checkbox" data-c="b5"> <span>Je sais expliquer la martensite α' et la martensite ε.</span></label>
+    <label><input type="checkbox" data-c="b6"> <span>Je sais lire la boucle γ et dire si une nuance peut prendre la trempe.</span></label>
+    <label><input type="checkbox" data-c="b7"> <span>Je sais classer les éléments en alphagènes, gammagènes et carburigènes, et expliquer la stabilisation.</span></label>
+    <label><input type="checkbox" data-c="b8"> <span>Je sais calculer Cr<sub>eq</sub> et Ni<sub>eq</sub> avec Schaeffler, DeLong et Schneider.</span></label>
+    <label><input type="checkbox" data-c="b9"> <span>Je sais décoder une désignation EN symbolique et numérique, AISI ou ancienne française.</span></label>
+    <label><input type="checkbox" data-c="b10"> <span>Je sais donner le groupe ISO/TR 15608 d'une nuance.</span></label>
+  </div>
+  <p class="status" id="checkMsg"></p>
+
+  <div class="meta">➡️ <b>La suite : cours 2, les familles d'inox.</b> Ce cours a posé les briques : la couche passive, les réseaux, la boucle γ, les éléments d'alliage et les noms. Le suivant les assemble en cinq familles, ferritiques, martensitiques, durcis par précipitation, austénitiques et duplex, avec leurs propriétés, leurs nuances courantes et leurs applications.</div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="wrap">
+  <p>Cours 1 sur 4 de la série « Aciers inoxydables : les connaître pour bien les souder » (sujet 2.15 du planning). Diagramme fer-chrome et coupes redessinés d'après les évaluations publiées ; équivalents de Schaeffler, DeLong, WRC-1992 et Schneider ; désignations selon l'EN 10027-1, l'EN 10027-2 et l'ISO/TR 15608 ; les modèles des manipulations sont pédagogiques. Pour les notations et les conventions, l'enseignement de ta formation fait foi.</p>
+</div>
+</footer>
+
+
+<script>
+(function(){
+"use strict";
+const NS="http://www.w3.org/2000/svg";
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const RM=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function el(tag,attrs,parent){
+  const e=document.createElementNS(NS,tag);
+  if(attrs){for(const k in attrs){const v=attrs[k];if(v===undefined||v===null)continue;
+    if(typeof v==="string"&&v.indexOf("var(")>=0&&k!=="style")e.style.setProperty(k,v);else e.setAttribute(k,v);}}
+  if(parent)parent.appendChild(e);
+  return e;
+}
+function tx(p,x,y,str,attrs){const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);t.textContent=str;return t;}
+function txs(p,x,y,parts,attrs){/* parts: [["σ",""],["max","sub"],[" = 3",""]] */
+  const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);
+  parts.forEach(pt=>{const s=el("tspan",pt[1]==="sub"?{"font-size":"0.72em",dy:"3"}:(pt[2]?{dy:pt[2]}:{}),t);s.textContent=pt[0];
+    if(pt[1]==="sub"){const r=el("tspan",{dy:"-3"},t);r.textContent="\u200b";}});
+  return t;
+}
+function clear(svg){while(svg.firstChild)svg.removeChild(svg.firstChild);}
+function fitText(t,x0,x1,gap){/* garde un texte SVG entre x0 et x1 : il passe de l'autre côté de son repère (écart gap), sinon il glisse */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const a=t.getAttribute("text-anchor")||"start",x=+t.getAttribute("x");
+  if(gap&&a!=="middle"&&(b.x<x0||b.x+b.width>x1)){t.setAttribute("text-anchor",a==="end"?"start":"end");t.setAttribute("x",a==="end"?x+2*gap:x-2*gap);b=t.getBBox();}
+  const nx=+t.getAttribute("x");
+  if(b.x+b.width>x1)t.setAttribute("x",nx-(b.x+b.width-x1));else if(b.x<x0)t.setAttribute("x",nx+(x0-b.x));
+  return t;}
+function arrow(p,x1,y1,x2,y2,color,w,h){
+  w=w||2.4;h=h||10;
+  const g=el("g",{class:"arr"},p);g.style.color=color||"var(--ink)";
+  const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy);
+  if(L<1)return g;
+  const ux=dx/L,uy=dy/L,hh=Math.min(h,L*0.6),bx=x2-ux*hh,by=y2-uy*hh,hw=hh*0.45+w*0.3;
+  el("line",{x1:x1,y1:y1,x2:bx,y2:by,"stroke-width":w,"stroke-linecap":"round"},g);
+  el("polygon",{points:x2+","+y2+" "+(bx-uy*hw)+","+(by+ux*hw)+" "+(bx+uy*hw)+","+(by-ux*hw)},g);
+  return g;
+}
+function darrow(p,x,y1,y2,color,w){/* double flèche verticale */
+  const g=el("g",{},p);const m=(y1+y2)/2;
+  if(Math.abs(y2-y1)<4){el("line",{x1:x-5,y1:y1,x2:x+5,y2:y1,stroke:color,"stroke-width":2},g);return g;}
+  arrow(g,x,m,x,y1,color,w||2,8);arrow(g,x,m,x,y2,color,w||2,8);return g;
+}
+function nf(v,d){
+  if(d===undefined)d=1;
+  if(Math.abs(v)<0.5*Math.pow(10,-d))v=0;
+  return v.toLocaleString("fr-FR",{minimumFractionDigits:d,maximumFractionDigits:d}).replace("-","−").replace(/[\u202f\u2009]/g,"\u00a0");
+}
+const SUP={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function sci(v,d){
+  if(v===0)return "0";
+  if(!isFinite(v))return "∞";
+  let e=Math.floor(Math.log10(Math.abs(v)));
+  let m=v/Math.pow(10,e);
+  const dd=d===undefined?1:d;
+  if(Math.abs(Number(m.toFixed(dd)))>=10){m/=10;e+=1;}
+  return nf(m,dd)+" × 10"+String(e).split("").map(c=>SUP[c]).join("");
+}
+function bigN(v){/* nombre de cycles lisible */
+  if(!isFinite(v))return "∞";
+  if(v===0)return "0";
+  if(v<10)return nf(v,v<1?2:0);
+  if(v<1e5)return nf(Math.round(v),0);
+  return sci(v,1);
+}
+function dur(s){
+  if(!isFinite(s))return "∞";
+  if(s<60)return nf(s,s<10?1:0)+" s";
+  if(s<3600)return nf(s/60,0)+" min";
+  if(s<86400)return nf(s/3600,1)+" h";
+  if(s<86400*365)return nf(s/86400,1)+" jours";
+  return nf(s/(86400*365),1)+" ans";
+}
+function svgW(svg){const r=svg.getBoundingClientRect();return Math.max(290,Math.round(r.width||(svg.parentNode&&svg.parentNode.clientWidth)||600));}
+function setVB(svg,W,H){svg.setAttribute("viewBox","0 0 "+W+" "+H);}
+const redraws=[];
+let rzT=null,lastWW=window.innerWidth;
+window.addEventListener("resize",()=>{if(window.innerWidth===lastWW)return;lastWW=window.innerWidth;clearTimeout(rzT);rzT=setTimeout(()=>redraws.forEach(f=>{try{f();}catch(e){console.error(e);}}),120);});
+
+function niceStep(range,n){const raw=range/(n||5),p=Math.pow(10,Math.floor(Math.log10(raw))),m=raw/p;return (m<1.5?1:m<3?2:m<7?5:10)*p;}
+function setOn(sel,btn){$$(sel+" .btn").forEach(b=>b.classList.toggle("on",b===btn));}
+function fmtmm(mm){return mm<0.1?nf(mm*1000,0)+" µm":mm<10?nf(mm,mm<1?2:1)+" mm":nf(mm,0)+" mm";}
+function axes(svg,x0,x1,y0,y1,xmin,xmax,ymin,ymax,xlab,ylab,xstep,ystep,xfmt,yfmt){
+  const X=v=>x0+(x1-x0)*(v-xmin)/(xmax-xmin),Y=v=>y1-(y1-y0)*(v-ymin)/(ymax-ymin);
+  for(let v=Math.ceil(ymin/ystep-1e-9)*ystep;v<=ymax+1e-9;v+=ystep){el("line",{x1:x0,y1:Y(v),x2:x1,y2:Y(v),class:"gridbg"},svg);tx(svg,x0-5,Y(v)+4,yfmt?yfmt(v):nf(v,ystep<1?1:0),{class:"lbl","text-anchor":"end"});}
+  for(let v=Math.ceil(xmin/xstep-1e-9)*xstep;v<=xmax+1e-9;v+=xstep){el("line",{x1:X(v),y1:y1,x2:X(v),y2:y1+4,class:"tick"},svg);tx(svg,X(v),y1+17,xfmt?xfmt(v):nf(v,xstep<1?1:0),{class:"lbl","text-anchor":"middle"});}
+  el("line",{x1:x0,y1:y1,x2:x1,y2:y1,class:"axis"},svg);el("line",{x1:x0,y1:y0-4,x2:x0,y2:y1,class:"axis"},svg);
+  tx(svg,x0+4,y0-10,ylab,{class:"lbl"});tx(svg,x1,y1+32,xlab,{class:"lbl","text-anchor":"end"});
+  return {X:X,Y:Y};
+}
+function animate(btn,label,dur,onStep,onEnd){
+  let raf=null,run=false;
+  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;btn.textContent=label;}
+  function start(){if(run){stop();return;}if(RM){onStep(1);stop();if(onEnd)onEnd();return;}
+    run=true;btn.textContent="⏸ Pause";const t0=performance.now();
+    const step=now=>{const p=Math.min(1,(now-t0)/dur);onStep(p);if(p>=1){stop();if(onEnd)onEnd();return;}raf=requestAnimationFrame(step);};raf=requestAnimationFrame(step);}
+  btn.addEventListener("click",start);return {stop:stop,running:()=>run};
+}
+
+
+function sig2(v){/* arrondi à deux chiffres significatifs */
+  if(v<=0)return 0;const p=Math.pow(10,Math.floor(Math.log10(v))-1);return Math.round(v/p)*p;}
+function halo(t,svg){/* liseré de fond, puis passage au premier plan */
+  t.setAttribute("paint-order","stroke");t.style.setProperty("stroke","var(--card)");t.setAttribute("stroke-width","4");t.setAttribute("stroke-linejoin","round");if(svg)svg.appendChild(t);return t;}
+function plate(t,svg){/* fond plein derrière une étiquette */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const r=el("rect",{x:b.x-3,y:b.y-1,width:b.width+6,height:b.height+2,fill:"var(--card)",opacity:.92,rx:2});svg.appendChild(r);svg.appendChild(t);return t;}
+function le(n,f){return /^[aeiouyhéèâî]/i.test(n)?"l'"+n:(f?"la ":"le ")+n;}
+function du(n,f){return /^[aeiouyhéèâî]/i.test(n)?"de l'"+n:(f?"de la ":"du ")+n;}
+function fmtG(v){return nf(v,v<0.1?3:2)+" N/m";}
+function fmtPa(p){return p<1000?nf(p,0)+" Pa":p<1e5?nf(p/1000,1)+" kPa":nf(p/1e5,2)+" bar";}
+function fmtLen(m){/* m en mètres */
+  const mm=m*1000;if(mm<1)return nf(mm*1000,0)+" µm";if(mm<10)return nf(mm,1)+" mm";if(mm<1000)return nf(mm,0)+" mm";return nf(m,1)+" m";}
+function fmtT(s){if(!isFinite(s))return "∞";if(s<0.01)return nf(s*1000,1)+" ms";if(s<1)return nf(s,3)+" s";if(s<60)return nf(s,s<10?1:0)+" s";return nf(s/60,s<600?1:0)+" min";}
+
+function spread(items,gap,ymin,ymax){/* écarte verticalement des étiquettes {y} triées */
+  items.sort((a,b)=>a.y-b.y);
+  for(let i=1;i<items.length;i++)if(items[i].y-items[i-1].y<gap)items[i].y=items[i-1].y+gap;
+  if(items.length&&items[items.length-1].y>ymax){items[items.length-1].y=ymax;for(let i=items.length-2;i>=0;i--)if(items[i+1].y-items[i].y<gap)items[i].y=items[i+1].y-gap;}
+  if(items.length&&items[0].y<ymin){items[0].y=ymin;for(let i=1;i<items.length;i++)if(items[i].y-items[i-1].y<gap)items[i].y=items[i-1].y+gap;}
+  return items;}
+function declutter(ts,ymin,ymax){/* décale verticalement les textes qui se chevauchent */
+  const box=t=>{try{return t.getBBox();}catch(e){return null;}};
+  for(let i=1;i<ts.length;i++){const ti=ts[i];if(!ti)continue;
+    for(let pass=0;pass<6;pass++){const bi=box(ti);if(!bi)break;let moved=false;
+      for(let j=0;j<i;j++){const bj=ts[j]&&box(ts[j]);if(!bj)continue;
+        const ix=Math.min(bi.x+bi.width,bj.x+bj.width)-Math.max(bi.x,bj.x),iy=Math.min(bi.y+bi.height,bj.y+bj.height)-Math.max(bi.y,bj.y);
+        if(ix>1&&iy>1){let dy=(bi.y+bi.height/2>=bj.y+bj.height/2)?(bj.y+bj.height-bi.y+1):-(bi.y+bi.height-bj.y+1);
+          if(bi.y+dy<ymin||bi.y+bi.height+dy>ymax)dy=dy>0?-(bi.y+bi.height-bj.y+1):(bj.y+bj.height-bi.y+1);
+          ti.setAttribute("y",+ti.getAttribute("y")+dy);moved=true;break;}}
+      if(!moved)break;}}
+  return ts;}
+const SUPD={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function p10(e){return "10"+String(e).split("").map(c=>SUPD[c]||c).join("");}
+function fmtP(p){/* pression en Pa, lisible */
+  if(p>=1e5)return nf(p/1e5,1)+" bar";if(p>=1000)return nf(p/1000,p<1e4?1:0)+" kPa";if(p>=1)return nf(p,p<10?1:0)+" Pa";return sci(p,1)+" Pa";}
+
+
+
+function rng(seed){/* générateur pseudo-aléatoire reproductible */
+  let a=seed>>>0;return ()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296;};}
+
+
+
+/* =========================================================
+   Outils communs du cours : formats, couleurs, modèles partagés
+   ========================================================= */
+const nbsp=s=>s.replace(/(\d) (%|°C|mm|µm|nm|MPa|mg\/L|V|h|s|min|J)(?=[\s.,;:)<·/]|$)/g,"$1 $2");
+function fitSize(t,maxW,min){let b;try{b=t.getBBox();}catch(e){return t;}let fs=parseFloat(getComputedStyle(t).fontSize)||13;
+  while(b.width>maxW&&fs>(min||9)){fs-=0.5;t.style.fontSize=fs+"px";b=t.getBBox();}return t;}
+const pts=P=>P.map(p=>p[0].toFixed(2)+","+p[1].toFixed(2)).join(" ");
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const PH={g:"color-mix(in srgb,var(--gam) 50%,var(--card))",gl:"color-mix(in srgb,var(--gam) 22%,var(--card))",d:"color-mix(in srgb,var(--eps) 50%,var(--card))",
+  dl:"color-mix(in srgb,var(--eps) 15%,var(--card))",m:"color-mix(in srgb,var(--eps) 55%,var(--tau))",ag:"color-mix(in srgb,var(--gam) 28%,var(--eps) 26%)",
+  ox:"color-mix(in srgb,var(--gam) 75%,var(--ink))",metal:"color-mix(in srgb,var(--muted) 42%,var(--card))"};
+function svgPt(svg,ev){const p=svg.createSVGPoint();p.x=ev.clientX;p.y=ev.clientY;const m=svg.getScreenCTM();return m?p.matrixTransform(m.inverse()):{x:0,y:0};}
+function frame(svg,x0,x1,y0,y1){el("rect",{x:x0,y:y0,width:x1-x0,height:y1-y0,fill:"none",stroke:"var(--ink)","stroke-width":1.2},svg);}
+function hide(e,h){if(e)e.style.display=h?"none":"";}
+function bar(svg,x,y,w,parts,legend){/* barre de fractions [[fraction,couleur,étiquette]] */
+  let xx=x;parts.forEach(q=>{const ww=w*q[0];if(ww>0.4)el("rect",{x:xx,y:y,width:ww,height:14,fill:q[1],stroke:"var(--ink)","stroke-width":0.7},svg);xx+=ww;});
+  el("rect",{x:x,y:y,width:w,height:14,fill:"none",stroke:"var(--ink)","stroke-width":1.1},svg);
+  if(legend){let lx=x;parts.forEach(q=>{if(q[0]<=0.0005)return;el("rect",{x:lx,y:y+21,width:10,height:10,fill:q[1],stroke:"var(--ink)","stroke-width":0.7},svg);
+    const t=tx(svg,lx+14,y+30,q[2]+" "+nf(q[0]*100,0)+" %",{class:"lbl"});let bb;try{bb=t.getBBox();}catch(e){bb={width:60};}lx+=14+bb.width+12;});}
+}
+/* nuances : analyses types (% massique) */
+const GR={
+  "409":{C:0.02,Mn:0.5,Si:0.5,Cr:11.2,Ni:0.2,N:0.015,Ti:0.2},
+  "410":{C:0.11,Mn:0.6,Si:0.4,Cr:12.5,Ni:0.3,N:0.03},
+  "420":{C:0.30,Mn:0.6,Si:0.4,Cr:13.0,Ni:0.3,N:0.03},
+  "430":{C:0.05,Mn:0.5,Si:0.4,Cr:16.5,Ni:0.3,N:0.04},
+  "439":{C:0.015,Mn:0.5,Si:0.5,Cr:17.5,Ni:0.3,N:0.015,Ti:0.35},
+  "431":{C:0.17,Mn:0.6,Si:0.4,Cr:16.0,Ni:2.0,N:0.03},
+  "304L":{C:0.02,Mn:1.5,Si:0.4,Cr:18.2,Ni:9.2,Mo:0.1,N:0.06},
+  "316L":{C:0.02,Mn:1.5,Si:0.4,Cr:17.2,Ni:10.2,Mo:2.1,N:0.05},
+  "2304":{C:0.02,Mn:1.5,Si:0.4,Cr:23.0,Ni:4.5,Mo:0.3,N:0.12},
+  "2205":{C:0.02,Mn:1.5,Si:0.4,Cr:22.5,Ni:5.7,Mo:3.1,N:0.17},
+  "2507":{C:0.02,Mn:0.8,Si:0.4,Cr:25.0,Ni:7.0,Mo:3.8,N:0.27}
+};
+const gv=(c,k)=>c[k]||0;
+const PREN=c=>gv(c,"Cr")+3.3*gv(c,"Mo")+16*gv(c,"N");
+
+/* ---------- la boucle γ (modèle pédagogique d'après les coupes publiées) ---------- */
+const LOOP=(function(){
+  const OUT=[[0,912],[2,882],[4,858],[7,831],[9.5,840],[11.5,866],[12.7,905],[13.3,960],[13.4,1030],[13.1,1110],[12.2,1200],[10.4,1290],[7.2,1355],[3.5,1385],[0,1394]];
+  const INN=[[0,912],[2,884],[4,861],[7,832.5],[9.2,842],[10.6,868],[11.3,905],[11.6,960],[11.6,1030],[11.3,1110],[10.5,1200],[8.8,1290],[6,1355],[2.8,1386],[0,1394]];
+  function lim(nl,cn){const e=Math.max(0,cn-0.01);return {xg:11.6+1.3*nl+10*e,xa:13.4+1.3*nl+45*e};}
+  function dT(T,nl){return T>1100?12*nl*(T-1100)/294:-8*nl*(1100-T)/269;}
+  function polys(nl,cn){const L=lim(nl,cn),sc=(P,s)=>P.map(p=>[p[0]*s,p[1]+dT(p[1],nl)]);return {L,out:sc(OUT,L.xa/13.4),inn:sc(INN,L.xg/11.6)};}
+  function inPoly(x,T,P){let c=false;for(let i=0,j=P.length-1;i<P.length;j=i++){const[xi,yi]=P[i],[xj,yj]=P[j];if((yi>T)!==(yj>T)&&x<(xj-xi)*(T-yi)/(yj-yi)+xi)c=!c;}return c;}
+  function cuts(P,T){const o=[];for(let i=0,j=P.length-1;i<P.length;j=i++){const[xi,yi]=P[i],[xj,yj]=P[j];if((yi>T)!==(yj>T))o.push(xi+(xj-xi)*(T-yi)/(yj-yi));}return o.sort((a,b)=>a-b);}
+  function state(x,T,nl,cn){
+    const Q=polys(nl,cn);
+    if(inPoly(x,T,Q.inn))return {k:"g",fg:1,Q};
+    if(!inPoly(x,T,Q.out))return {k:"a",fg:0,Q};
+    const ci=cuts(Q.inn,T).filter(v=>v>1e-6),co=cuts(Q.out,T).filter(v=>v>1e-6);
+    if(!co.length)return {k:"ag",fg:0.5,Q};
+    const xa=co[co.length-1];
+    if(!ci.length)return {k:"ag",fg:clamp((xa-x)/xa,0,1),xa,Q};
+    const right=x>ci[ci.length-1];
+    if(right){const xg=ci[ci.length-1];return {k:"ag",fg:clamp((xa-x)/(xa-xg),0,1),xg,xa,Q};}
+    const xg=ci[0],xl=co[0];return {k:"ag",fg:clamp((x-xl)/(xg-xl),0,1),xg,xa:xl,Q};
+  }
+  function ms(x,nl,cn){return 540-450*cn-35*nl-13*x;}
+  return {OUT,INN,lim,polys,state,ms,inPoly,cuts};
+})();
+function compoLoop(c){/* composition → paramètres du modèle de boucle */
+  const x=gv(c,"Cr")+gv(c,"Mo")+2*Math.max(0,gv(c,"Si")-0.4)+5.5*gv(c,"Al")+5*gv(c,"V")+0.75*gv(c,"W")+1.5*gv(c,"Ti")+1.75*gv(c,"Nb");
+  const nl=gv(c,"Ni")+0.5*gv(c,"Mn")+0.3*gv(c,"Cu");
+  const cn=Math.max(0.005,gv(c,"C")+gv(c,"N")-gv(c,"Ti")/4-gv(c,"Nb")/8);
+  return {x,nl,cn};}
+function loopPlot(svg,R,nl,cn,x,T,opt){/* dessine la boucle dans le rectangle R ; renvoie l'état */
+  opt=opt||{};const xmax=opt.xmax||30,T0=opt.T0||750,T1=opt.T1||1400;
+  const X=v=>R.x0+(R.x1-R.x0)*v/xmax,Y=t=>R.y1-(R.y1-R.y0)*(t-T0)/(T1-T0);
+  const id="lpc"+(opt.id||""),defs=el("defs",null,svg),cp=el("clipPath",{id:id},defs);el("rect",{x:R.x0,y:R.y0,width:R.x1-R.x0,height:R.y1-R.y0},cp);
+  const g=el("g",{"clip-path":"url(#"+id+")"},svg);
+  el("rect",{x:R.x0,y:R.y0,width:R.x1-R.x0,height:R.y1-R.y0,fill:PH.dl},g);
+  const Q=LOOP.polys(nl,cn),P=A=>pts(A.map(p=>[X(p[0]),Y(p[1])]));
+  el("polygon",{points:P(Q.out),fill:PH.ag,stroke:"var(--ink)","stroke-width":1.2},g);
+  el("polygon",{points:P(Q.inn),fill:PH.g,stroke:"var(--ink)","stroke-width":1},g);
+  if(opt.ref){const B=LOOP.polys(0,0.005);el("polygon",{points:P(B.out),fill:"none",stroke:"var(--muted)","stroke-width":1.2,"stroke-dasharray":"4 3"},g);}
+  const gs=opt.small?xmax/3:5;for(let c=gs;c<xmax;c+=gs)el("line",{x1:X(c),y1:R.y0,x2:X(c),y2:R.y1,class:"gridbg",opacity:.35},g);
+  for(let t=800;t<T1;t+=100)el("line",{x1:R.x0,y1:Y(t),x2:R.x1,y2:Y(t),class:"gridbg",opacity:.35},g);
+  frame(svg,R.x0,R.x1,R.y0,R.y1);
+  const st=LOOP.state(x,T,nl,cn);
+  /* étiquettes des domaines */
+  const xg=Q.L.xg,xa=Q.L.xa,lab=(s,cx,ct,o)=>{const t=tx(svg,X(cx),Y(ct),s,Object.assign({"text-anchor":"middle","font-weight":"700"},o||{}));return halo(t,svg);};
+  if(xg>3)lab("γ",Math.min(xg*0.45,xmax*0.4),1030);
+  if(xa-xg>1.2&&X(xa)-X(xg)>22)lab("α + γ",Math.min((xg+xa)/2,xmax-2),opt.small?1040:1060,{class:"lbl"});
+  {const t=tx(svg,R.x1-6,Y(T1)+16,"α (ferrite)",{class:"lbl","text-anchor":"end","font-weight":"700"});halo(t,svg);}
+  /* axes */
+  const st2=opt.small?(xmax>20?10:5):5;for(let c=0;c<=xmax+1e-9;c+=st2){el("line",{x1:X(c),y1:R.y1,x2:X(c),y2:R.y1+4,class:"tick"},svg);tx(svg,X(c),R.y1+16,nf(c,0),{class:"lbl","text-anchor":"middle"});}
+  {const sp=opt.small?200:100;for(let t=Math.ceil(T0/sp)*sp;t<=T1;t+=sp)tx(svg,R.x0-5,Y(t)+4,nf(t,0),{class:"lbl","text-anchor":"end"});}
+  tx(svg,R.x0,R.y0-8,"T (°C)",{class:"lbl"});
+  tx(svg,R.x1,R.y1+31,opt.xlab||"Cr + Mo (%)",{class:"lbl","text-anchor":"end"});
+  /* verticale, isotherme et point */
+  el("line",{x1:X(x),y1:R.y0,x2:X(x),y2:R.y1,stroke:"var(--mat)","stroke-width":1.6,"stroke-dasharray":"5 3"},svg);
+  if(st.k==="ag"&&st.xg!==undefined){el("line",{x1:X(st.xg),y1:Y(T),x2:X(st.xa),y2:Y(T),stroke:"var(--ink)","stroke-width":2},svg);
+    [st.xg,st.xa].forEach(v=>el("circle",{cx:X(v),cy:Y(T),r:3.5,fill:"var(--card)",stroke:"var(--ink)","stroke-width":1.5},svg));}
+  el("circle",{cx:X(x),cy:Y(T),r:6,fill:"var(--sig)",stroke:"var(--card)","stroke-width":2},svg);
+  return {st,X,Y,Q};
+}
+
+/* =========================================================
+   M1 : le bouclier de chrome (couche, rayure, couple)
+   ========================================================= */
+const ENV={air:{n:"air intérieur",cl:0,T:20},tap:{n:"eau du robinet (≈ 50 mg/L de chlorures, 20 °C)",cl:50,T:20},brack:{n:"eau saumâtre (≈ 2 g/L, 20 °C)",cl:2000,T:20},
+  sea:{n:"eau de mer (≈ 19 g/L, 20 °C)",cl:19000,T:20},sea40:{n:"eau de mer à 40 °C",cl:19000,T:40}};
+const prenReq=e=>e.cl<=0?0:10+8*Math.log10(e.cl/10)+0.25*(e.T-20);
+const PAIR={steel:{n:"acier au carbone",E:-0.6},alu:{n:"alliage d'aluminium",E:-0.8},cu:{n:"cuivre",E:-0.35}};
+const E_INOX=-0.05;
+(function(){
+  const svg=$("#m1svg");if(!svg)return;
+  const ro=$("#m1r"),msg=$("#m1msg"),sC=$("#m1c"),sA=$("#m1a");
+  let mode="layer",gk="304L",ek="tap",pk="steel",prog=null;
+  function showCtl(){hide($("#m1cc"),mode!=="layer");hide($("#m1g"),mode!=="scratch");hide($("#m1e"),mode!=="scratch");hide($("#m1p"),mode!=="couple");hide($("#m1ac"),mode!=="couple");}
+  function geo(){const W=svgW(svg),n=W<560;
+    if(!n){const H=290,mid=Math.round(W*0.55);return {W,H,n,A:{x0:8,x1:mid,y0:24,y1:H-18},B:{x0:mid+52,x1:W-14,y0:24,y1:H-40}};}
+    const ah=Math.round(W*0.62);return {W,H:ah+24+40+170,n,A:{x0:6,x1:W-6,y0:24,y1:24+ah},B:{x0:48,x1:W-14,y0:ah+24+44,y1:ah+24+44+130}};}
+  const lossRel=cr=>1/(1+Math.pow(cr/2.6,3));
+  function drawLayer(G,cr){
+    const A=G.A,w=A.x1-A.x0,top=A.y0+18,tot=clamp(100*Math.exp(-cr/3.4),0,100),cont=clamp((cr-8)/3,0,1);
+    const base=A.y1-10,metalTop=top+tot+16;
+    el("rect",{x:A.x0,y:metalTop,width:w,height:base-metalTop,fill:PH.metal,stroke:"var(--ink)","stroke-width":1},svg);
+    /* couches d'oxydes de fer */
+    if(tot>2){const f=[0.18,0.27,0.55],cols=["color-mix(in srgb,var(--frc) 55%,var(--card))","color-mix(in srgb,var(--frc) 35%,var(--ink) 25%)","color-mix(in srgb,var(--frc) 30%,var(--card))"],names=["Fe₂O₃","Fe₃O₄","FeO"];
+      let y=top+16;f.forEach((q,i)=>{const h=tot*q;el("rect",{x:A.x0,y:y,width:w,height:h,fill:cols[i],stroke:"var(--ink)","stroke-width":0.5},svg);
+        if(h>12){const t=tx(svg,A.x1-6,y+h/2+4,names[i],{"text-anchor":"end",class:"lbl"});halo(t,svg);}y+=h;});
+      /* pores */
+      const r=rng(3),np=Math.round(12*clamp(1-cr/10,0,1));for(let i=0;i<np;i++){const px=A.x0+w*r(),py=top+16+tot*r();el("line",{x1:px,y1:py,x2:px+3,y2:py+8,stroke:"var(--ink)","stroke-width":1,opacity:.5},svg);}}
+    /* spinelle et oxyde de chrome dispersés */
+    if(cr>1&&cont<1){const r=rng(9),n=Math.round(clamp(cr*4,0,40)*(1-cont));const yb=metalTop-Math.max(8,tot*0.5);
+      for(let i=0;i<n;i++){const px=A.x0+6+(w-12)*r(),py=yb+(metalTop-yb)*r();el("polygon",{points:pts([[px,py-3],[px+4,py],[px,py+3],[px-4,py]]),fill:PH.ox},svg);}}
+    /* pellicule continue */
+    if(cont>0){const h=3+3*cont;el("rect",{x:A.x0,y:metalTop-h,width:w,height:h,fill:PH.ox,opacity:0.3+0.7*cont},svg);
+      const t=tx(svg,A.x0+6,metalTop-h-6,cont>=1?"pellicule passive continue (Cr₂O₃, 1 à 5 nm)":"film d'oxyde de chrome discontinu",{"font-weight":"700",fill:"var(--gam)"});fitSize(t,w-12,9);halo(t,svg);}
+    else if(cr>1){const t=tx(svg,A.x0+6,metalTop+16,"îlots de FeCr₂O₄ et Cr₂O₃ sous la rouille",{class:"lbl"});halo(t,svg);}
+    tx(svg,A.x0+6,base-8,cr<10.5?"acier (Fe"+(cr>0?", Cr":"")+")":"acier inoxydable (Fe, Cr)",{class:"lbl"});
+    tx(svg,A.x0,A.y0-8,"coupe de la surface (épaisseurs schématiques)",{class:"lbl"});
+    /* courbe de perte de masse */
+    const B=G.B,X=v=>B.x0+(B.x1-B.x0)*v/20,Y=v=>B.y1-(B.y1-B.y0)*v;
+    el("rect",{x:X(10.5),y:B.y0,width:B.x1-X(10.5),height:B.y1-B.y0,fill:"color-mix(in srgb,var(--ok) 10%,transparent)"},svg);
+    [0,0.5,1].forEach(v=>{el("line",{x1:B.x0,y1:Y(v),x2:B.x1,y2:Y(v),class:"gridbg"},svg);tx(svg,B.x0-5,Y(v)+4,nf(v,1),{class:"lbl","text-anchor":"end"});});
+    [0,5,10,15,20].forEach(v=>tx(svg,X(v),B.y1+16,nf(v,0),{class:"lbl","text-anchor":"middle"}));
+    el("line",{x1:B.x0,y1:B.y1,x2:B.x1,y2:B.y1,class:"axis"},svg);el("line",{x1:B.x0,y1:B.y0,x2:B.x0,y2:B.y1,class:"axis"},svg);
+    const P=[];for(let i=0;i<=80;i++){const v=20*i/80;P.push([X(v),Y(lossRel(v))]);}el("polyline",{points:pts(P),fill:"none",stroke:"var(--eps)","stroke-width":2.4},svg);
+    el("line",{x1:X(10.5),y1:B.y0,x2:X(10.5),y2:B.y1,stroke:"var(--ok)","stroke-width":1.4,"stroke-dasharray":"4 3"},svg);
+    el("circle",{cx:X(cr),cy:Y(lossRel(cr)),r:5.5,fill:"var(--eps)",stroke:"var(--card)","stroke-width":1.5},svg);
+    tx(svg,B.x0+4,B.y0-8,"perte de masse relative (allure)",{class:"lbl"});tx(svg,B.x1,B.y1+31,"chrome (%)",{class:"lbl","text-anchor":"end"});
+    {const t=tx(svg,X(10.5)+4,B.y0+14,"≥ 10,5 % : inox",{class:"lbl",fill:"var(--ok)"});halo(t,svg);}
+  }
+  function drawScratch(G,p){
+    const A=G.A,w=A.x1-A.x0,c=GR[gk],e=ENV[ek],pr=PREN(c),req=prenReq(e),ok=pr>=req;
+    const sy=A.y0+70,base=A.y1-10,cx=(A.x0+A.x1)/2;
+    el("rect",{x:A.x0,y:A.y0+10,width:w,height:sy-A.y0-10,fill:e.cl>0?"color-mix(in srgb,var(--eps) 12%,var(--card))":"var(--card)"},svg);
+    fitSize(tx(svg,A.x0+6,A.y0+26,e.cl>0?"milieu : "+e.n:"milieu : air intérieur",{class:"lbl"}),w-12,8.5);
+    const sc=clamp(p/0.25,0,1),depth=18,gw=16;
+    /* métal avec rainure */
+    const groove=sc>0.05;const M=[[A.x0,sy],[cx-gw,sy]];if(groove){M.push([cx,sy+depth*sc]);}M.push([cx+gw,sy],[A.x1,sy],[A.x1,base],[A.x0,base]);
+    el("polygon",{points:pts(M),fill:PH.metal,stroke:"var(--ink)","stroke-width":1},svg);
+    /* piqûre */
+    const ev=clamp((p-0.25)/0.75,0,1);
+    if(!ok&&ev>0){const r=8+70*ev;el("path",{d:"M"+(cx-r*0.9)+" "+(sy+depth)+" A "+r*0.9+" "+r+" 0 0 0 "+(cx+r*0.9)+" "+(sy+depth)+" Z",fill:"color-mix(in srgb,var(--tau) 30%,var(--card))",stroke:"var(--tau)","stroke-width":1.6},svg);
+      for(let i=0;i<5;i++){const a=Math.PI*(0.15+0.7*i/4);const t=tx(svg,cx+Math.cos(a)*r*0.55,sy+depth+Math.sin(a)*r*0.55+4,"Cl⁻",{"text-anchor":"middle",fill:"var(--tau)","font-weight":"700"});t.style.fontSize="11px";}
+      const t=tx(svg,cx+r*0.9+8,sy+depth+r*0.5,"piqûre",{"font-weight":"700",fill:"var(--tau)"});fitText(t,A.x0+4,A.x1-4,0);halo(t,svg);}
+    /* pellicule passive */
+    const film=(x0,x1)=>el("line",{x1:x0,y1:sy-1.5,x2:x1,y2:sy-1.5,stroke:PH.ox,"stroke-width":3},svg);
+    film(A.x0,cx-gw);film(cx+gw,A.x1);
+    if(!groove)film(cx-gw,cx+gw);
+    else if(ok&&ev>0){const k=ev;el("polyline",{points:pts([[cx-gw,sy-1.5],[cx,sy+depth*sc-1.5],[cx+gw,sy-1.5]]),fill:"none",stroke:PH.ox,"stroke-width":3,opacity:k},svg);
+      if(k>0.6){const t=tx(svg,cx+gw+8,sy+20,"repassivation",{"font-weight":"700",fill:"var(--gam)"});fitText(t,A.x0+4,A.x1-4,0);halo(t,svg);}}
+    /* outil */
+    if(p>0&&p<0.3){const tx0=A.x0+w*(0.25+0.5*sc);arrow(svg,tx0-24,sy-40,tx0,sy+depth*0.3,"var(--frc)",2.4,9);}
+    tx(svg,A.x0,A.y0-8,"coupe : pellicule passive et rayure",{class:"lbl"});
+    tx(svg,A.x0+6,base-8,"nuance "+gk,{class:"lbl"});
+    /* jauge PREN */
+    const B=G.B,Y=v=>B.y1-(B.y1-B.y0)*v/50,bx=(B.x0+B.x1)/2-18;
+    [0,10,20,30,40,50].forEach(v=>{el("line",{x1:B.x0,y1:Y(v),x2:B.x1,y2:Y(v),class:"gridbg"},svg);tx(svg,B.x0-5,Y(v)+4,nf(v,0),{class:"lbl","text-anchor":"end"});});
+    el("rect",{x:bx,y:Y(pr),width:36,height:B.y1-Y(pr),fill:ok?"color-mix(in srgb,var(--ok) 45%,var(--card))":"color-mix(in srgb,var(--bad) 40%,var(--card))",stroke:"var(--ink)","stroke-width":1},svg);
+    const tPr=halo(tx(svg,bx+18,Y(pr)-6,"PREN "+nf(pr,1),{"text-anchor":"middle","font-weight":"700"}),svg);
+    if(req>0){el("line",{x1:B.x0,y1:Y(req),x2:B.x1,y2:Y(req),stroke:"var(--tau)","stroke-width":2,"stroke-dasharray":"6 3"},svg);
+      const t=tx(svg,B.x1-2,Y(req)-5,"requis ≈ "+nf(req,0),{class:"lbl","text-anchor":"end",fill:"var(--tau)"});halo(t,svg);declutter([tPr,t],B.y0-14,B.y1);svg.appendChild(tPr);}
+    el("line",{x1:B.x0,y1:B.y1,x2:B.x1,y2:B.y1,class:"axis"},svg);el("line",{x1:B.x0,y1:B.y0,x2:B.x0,y2:B.y1,class:"axis"},svg);
+    tx(svg,B.x0+4,B.y0-8,"indice PREN",{class:"lbl"});
+    return {pr,req,ok};
+  }
+  function drawCouple(G,lr){
+    const A=G.A,w=A.x1-A.x0,pr=PAIR[pk],ratio=Math.pow(10,lr),dE=E_INOX-pr.E,fac=1+ratio*dE/0.3;
+    const wy=A.y0+40,ly=A.y0+70,base=A.y1-12;
+    el("rect",{x:A.x0,y:ly,width:w,height:base-ly,fill:"color-mix(in srgb,var(--eps) 13%,var(--card))",stroke:"var(--line)"},svg);
+    tx(svg,A.x0+6,base-8,"eau salée (électrolyte)",{class:"lbl"});
+    const tot=w-60,wc=tot*ratio/(1+ratio),wa=tot-wc,gap=20;
+    const cx0=A.x0+20,ax0=cx0+wc+gap;
+    const ph=(base-ly)*0.55,py=ly+12;
+    el("rect",{x:cx0,y:py,width:Math.max(3,wc),height:ph,fill:PH.gl,stroke:"var(--ink)","stroke-width":1.2},svg);
+    el("rect",{x:ax0,y:py,width:Math.max(3,wa),height:ph,fill:PH.metal,stroke:"var(--ink)","stroke-width":1.2},svg);
+    /* fil et électrons */
+    const c1=cx0+Math.max(3,wc)/2,a1=ax0+Math.max(3,wa)/2;
+    el("polyline",{points:pts([[c1,py],[c1,wy],[a1,wy],[a1,py]]),fill:"none",stroke:"var(--ink)","stroke-width":1.6},svg);
+    arrow(svg,a1-8,wy,Math.min(a1-8,c1+40),wy,"var(--tau)",2,8);
+    {const t=tx(svg,(a1+c1)/2,wy-6,"électrons",{class:"lbl","text-anchor":"middle",fill:"var(--tau)"});halo(t,svg);}
+    /* dissolution */
+    const r=rng(4),nd=Math.round(clamp(Math.log10(fac)*6,1,20));for(let i=0;i<nd;i++){const px=ax0+Math.max(3,wa)*r(),py2=py+ph+6+r()*20;el("circle",{cx:px,cy:py2,r:2.2,fill:"var(--tau)"},svg);}
+    const lc=tx(svg,cx0,py-8,"inox : cathode",{class:"lbl",fill:"var(--gam)"}),la=tx(svg,ax0+Math.max(3,wa),py-8,pr.n+" : anode",{class:"lbl","text-anchor":"end",fill:"var(--tau)"});
+    fitText(lc,A.x0+2,A.x1-2);fitText(la,A.x0+2,A.x1-2);declutter([lc,la],A.y0+2,ly-2);
+    tx(svg,A.x0,A.y0-8,"couple galvanique (surfaces en proportion)",{class:"lbl"});
+    /* facteur d'accélération, échelle log */
+    const B=G.B,Y=v=>B.y1-(B.y1-B.y0)*Math.log10(Math.max(1,v))/4;
+    [1,10,100,1000,10000].forEach((v,i)=>{el("line",{x1:B.x0,y1:Y(v),x2:B.x1,y2:Y(v),class:"gridbg"},svg);tx(svg,B.x0-5,Y(v)+4,["1","10","100","10³","10⁴"][i],{class:"lbl","text-anchor":"end"});});
+    const bx=(B.x0+B.x1)/2-18;el("rect",{x:bx,y:Y(fac),width:36,height:B.y1-Y(fac),fill:fac>10?"color-mix(in srgb,var(--bad) 40%,var(--card))":"color-mix(in srgb,var(--ok) 40%,var(--card))",stroke:"var(--ink)","stroke-width":1},svg);
+    {const t=tx(svg,bx+18,Y(fac)-6,"× "+(fac<10?nf(fac,fac<1.1?3:1):bigN(fac)),{"text-anchor":"middle","font-weight":"700"});halo(t,svg);}
+    el("line",{x1:B.x0,y1:B.y1,x2:B.x1,y2:B.y1,class:"axis"},svg);el("line",{x1:B.x0,y1:B.y0,x2:B.x0,y2:B.y1,class:"axis"},svg);
+    tx(svg,B.x0+4,B.y0-8,"vitesse de l'anode v/v₀",{class:"lbl"});
+    return {ratio,dE,fac};
+  }
+  function upd(){
+    showCtl();const G=geo();setVB(svg,G.W,G.H);clear(svg);
+    let r="",t="";
+    if(mode==="layer"){const cr=prog===null?+sC.value:20*prog;drawLayer(G,cr);
+      $("#m1co").textContent=nf(cr,1)+" %";
+      r="<span>Cr = <b class='mat'>"+nf(cr,1)+" %</b></span><span>perte relative ≈ <b class='eps'>"+nf(lossRel(cr),2)+"</b></span><span>"+(cr>=10.5?"inoxydable (≥ 10,5 %)":"pas inoxydable")+"</span>";
+      t=cr<2?"Acier ordinaire : couches épaisses et poreuses d'oxydes de fer ; la corrosion continue dessous.":cr<10.5?"Le chrome forme des îlots d'oxyde mixte (FeCr₂O₄) et de Cr₂O₃ : la corrosion ralentit, mais la protection n'est pas continue.":"Au-delà de 10,5 % environ, une pellicule continue riche en chrome, de quelques nanomètres, rend l'acier passif.";}
+    else if(mode==="scratch"){const p=prog===null?1:prog,R=drawScratch(G,p);
+      r="<span>nuance <b>"+gk+"</b></span><span>PREN = <b class='eps'>"+nf(R.pr,1)+"</b></span><span>PREN requis ≈ <b class='tau'>"+nf(R.req,1)+"</b></span><span>marge "+(R.pr-R.req>=0?"+":"−")+nf(Math.abs(R.pr-R.req),1)+"</span>";
+      t=ek==="air"?"À l'air, la rayure se repassive en quelques instants : rien à craindre.":R.ok?"La pellicule se reforme au fond de la rayure avant que les chlorures ne l'attaquent : repassivation.":"Les chlorures percent la pellicule au fond de la rayure : une piqûre se creuse et s'auto-entretient (milieu acide au fond). Il faut une nuance de PREN plus élevé.";}
+    else{const lr=prog===null?+sA.value:-3+6*prog,R=drawCouple(G,lr);
+      $("#m1ao").textContent=(R.ratio>=10||R.ratio<0.1)?p10(Math.round(lr)):nf(R.ratio,R.ratio<1?2:1);
+      r="<span>A<sub>c</sub>/A<sub>a</sub> = <b class='mat'>"+(R.ratio>=100?nf(R.ratio,0):nf(R.ratio,R.ratio<1?3:1))+"</b></span><span>ΔE ≈ <b>"+nf(R.dE,2)+" V</b></span><span>v/v₀ ≈ <b class='eps'>"+(R.fac<10?nf(R.fac,R.fac<1.1?3:1):nf(R.fac,0))+"</b></span>";
+      t=R.fac>100?"Petite anode, grande cathode : tout le courant se concentre sur "+le(PAIR[pk].n)+", qui est dévoré.":R.fac>3?"L'attaque "+du(PAIR[pk].n)+" est nettement accélérée par le contact avec l'inox.":"Grande anode, petite cathode : le courant se répartit, l'accélération reste faible.";}
+    ro.innerHTML=nbsp(r);msg.innerHTML=nbsp(t);
+  }
+  const A=animate($("#m1play"),"▶ Lancer",6000,p=>{prog=Math.max(0,p);upd();},()=>{prog=null;upd();});
+  function setMode(m){mode=m;setOn("#m1m",$("#m1m .btn[data-k='"+m+"']"));}
+  $$("#m1m .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;setMode(b.dataset.k);upd();}));
+  $$("#m1g .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;setMode("scratch");gk=b.dataset.k;setOn("#m1g",b);upd();}));
+  $$("#m1e .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;setMode("scratch");ek=b.dataset.k;setOn("#m1e",b);upd();}));
+  $$("#m1p .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;setMode("couple");pk=b.dataset.k;setOn("#m1p",b);upd();}));
+  sC.addEventListener("input",()=>{A.stop();prog=null;setMode("layer");upd();});
+  sA.addEventListener("input",()=>{A.stop();prog=null;setMode("couple");upd();});
+  redraws.push(upd);upd();
+})();
+
+/* =========================================================
+   M2 : le cristal à la loupe
+   ========================================================= */
+(function(){
+  const svg=$("#m2svg");if(!svg)return;
+  const ro=$("#m2r"),msg=$("#m2msg"),sC=$("#m2c");
+  let kind="bcc",sites=false,phi=0.55,prog=null;
+  const RFE=0.124,RC=0.077;
+  const DATA={bcc:{n:"ferrite α (cubique centrée)",a:0.2866,Z:2,co:8,comp:0.68,site:0.036,sn:"tétraédrique",mag:"ferromagnétique"},
+    fcc:{n:"austénite γ (cubique à faces centrées)",a:0.3591,Z:4,co:12,comp:0.74,site:0.053,sn:"octaédrique",mag:"non magnétique"},
+    mart:{n:"martensite α' (quadratique centrée)",a:0.2866,Z:2,co:8,comp:0.68,site:0.019,sn:"occupé par C",mag:"ferromagnétique"},
+    hcp:{n:"martensite ε (hexagonale compacte)",a:0.254,c:0.41,Z:6,co:12,comp:0.74,site:0.053,sn:"octaédrique",mag:"non magnétique"}};
+  function cell(){/* points en coordonnées réduites et arêtes */
+    if(kind==="hcp"){const P=[],E=[];const hx=k=>[Math.cos(Math.PI/3*k),Math.sin(Math.PI/3*k)];
+      for(let z=0;z<=1;z++){for(let k=0;k<6;k++)P.push({p:[...hx(k),z],t:"fe"});P.push({p:[0,0,z],t:"fe"});}
+      for(let k=0;k<3;k++){const a=Math.PI/3*(2*k)+Math.PI/6;P.push({p:[Math.cos(a)/Math.sqrt(3),Math.sin(a)/Math.sqrt(3),0.5],t:"fe"});}
+      for(let z=0;z<=1;z++)for(let k=0;k<6;k++)E.push([z*7+k,z*7+(k+1)%6]);for(let k=0;k<6;k++)E.push([k,7+k]);return {P,E,sx:1,sy:1,sz:1.62};}
+    const P=[],E=[];const C=[[0,0,0],[1,0,0],[1,1,0],[0,1,0],[0,0,1],[1,0,1],[1,1,1],[0,1,1]];C.forEach(p=>P.push({p,t:"fe"}));
+    [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]].forEach(e=>E.push(e));
+    if(kind==="fcc"){[[.5,.5,0],[.5,.5,1],[.5,0,.5],[.5,1,.5],[0,.5,.5],[1,.5,.5]].forEach(p=>P.push({p,t:"fe"}));}
+    else P.push({p:[.5,.5,.5],t:"fe"});
+    if(kind==="mart"){const C0=+sC.value,k=Math.min(6,Math.round(C0*5));[[0,0,.5],[1,0,.5],[1,1,.5],[0,1,.5],[.5,.5,0],[.5,.5,1]].forEach((p,i)=>P.push({p,t:i<k?"c":"cs"}));
+      return {P,E,sx:1,sy:1,sz:1+0.045*C0*5};}
+    return {P,E,sx:1,sy:1,sz:1};
+  }
+  function geo(){const W=svgW(svg),n=W<560;if(!n){const H=300;return {W,H,n,C:{x0:8,x1:Math.round(W*0.56),y0:10,y1:H-10},I:{x0:Math.round(W*0.56)+20,x1:W-12,y0:20,y1:H-20}};}
+    const ch=Math.round(W*0.78);return {W,H:ch+20+170,n,C:{x0:6,x1:W-6,y0:10,y1:10+ch},I:{x0:10,x1:W-10,y0:ch+30,y1:ch+30+150}};}
+  function draw(){
+    const G=geo();setVB(svg,G.W,G.H);clear(svg);const D=DATA[kind],K=cell(),C=G.C;
+    const cx=(C.x0+C.x1)/2,cy=(C.y0+C.y1)/2,sz=Math.min(C.x1-C.x0,C.y1-C.y0)*(kind==="hcp"?0.30:0.42)/(kind==="mart"?Math.max(1,K.sz*0.92):1);
+    const th=0.38,cp=Math.cos(phi),sp=Math.sin(phi),ct=Math.cos(th),st=Math.sin(th);
+    const off=kind==="hcp"?[0,0,0.5]:[0.5,0.5,0.5];
+    const prj=p=>{const x=(p[0]-off[0])*K.sx,y=(p[1]-off[1])*K.sy,z=(p[2]-off[2])*K.sz;const xr=x*cp-y*sp,yr=x*sp+y*cp;const Xs=cx+sz*xr,Ys=cy-sz*(z*ct-yr*st)*(kind==="hcp"?0.95:1);return [Xs,Ys,yr*ct+z*st];};
+    const Q=K.P.map(a=>({...a,s:prj(a.p)}));
+    K.E.forEach(e=>{const a=Q[e[0]].s,b=Q[e[1]].s;el("line",{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:"var(--ink)","stroke-width":1.2,opacity:.75},svg);});
+    if(sites){const sp2=kind==="hcp"?[0,1/Math.sqrt(3),0.25]:kind==="fcc"?[.5,.5,.5]:kind==="mart"?[.5,.5,0]:[.5,.25,0];const s=prj(sp2),rr=sz*D.site/D.a;
+      el("circle",{cx:s[0],cy:s[1],r:Math.max(3,rr),fill:"color-mix(in srgb,var(--mat) 35%,transparent)",stroke:"var(--mat)","stroke-width":1.5},svg);}
+    Q.sort((a,b)=>a.s[2]-b.s[2]).forEach(a=>{const dep=0.85+0.15*clamp(a.s[2]+0.6,0,1.2);
+      if(a.t==="fe")el("circle",{cx:a.s[0],cy:a.s[1],r:sz*0.115*dep,fill:kind==="fcc"||kind==="hcp"?PH.g:PH.d,stroke:"var(--ink)","stroke-width":1},svg);
+      else if(a.t==="c")el("circle",{cx:a.s[0],cy:a.s[1],r:sz*0.055,fill:"var(--ink)"},svg);
+      else el("circle",{cx:a.s[0],cy:a.s[1],r:sz*0.05,fill:"none",stroke:"var(--ink)","stroke-width":1,"stroke-dasharray":"2 2"},svg);});
+    {const t=tx(svg,C.x0+4,C.y0+14,D.n,{"font-weight":"700"});fitSize(t,C.x1-C.x0-8,9);halo(t,svg);}
+    if(kind==="mart"){const t=tx(svg,C.x0+4,C.y1-6,"allongement selon c exagéré × 5",{class:"lbl"});halo(t,svg);}
+    /* encart : tailles réelles comparées */
+    const I=G.I,iw=I.x1-I.x0,u=Math.min(iw*0.15/RFE,(I.y1-I.y0-50)/(2*RFE));
+    {const t=tx(svg,I.x0,I.y0,"à l'échelle : fer, plus grand site, carbone",{class:"lbl"});fitSize(t,iw,9);}
+    const yC=I.y0+20+u*RFE,items=[[RFE,"Fe",kind==="fcc"||kind==="hcp"?PH.g:PH.d],[D.site,"site",null],[RC,"C","var(--ink)"]];
+    items.forEach((q,i)=>{const xx=I.x0+iw*[0.17,0.5,0.83][i],rr=u*q[0];
+      if(q[2])el("circle",{cx:xx,cy:yC,r:rr,fill:q[2],stroke:"var(--ink)","stroke-width":1},svg);
+      else el("circle",{cx:xx,cy:yC,r:Math.max(2,rr),fill:"color-mix(in srgb,var(--mat) 35%,transparent)",stroke:"var(--mat)","stroke-width":1.5},svg);
+      const t=tx(svg,xx,yC+u*RFE+18,q[1]+" "+nf(q[0],3)+" nm",{class:"lbl","text-anchor":"middle"});fitText(t,I.x0,I.x1);});
+  }
+  function upd(){
+    const C0=+sC.value;draw();$("#m2co").textContent=nf(C0,2)+" %";
+    const D=DATA[kind],ca=kind==="mart"?1+0.045*C0:(kind==="hcp"?D.c/D.a:1);
+    let r="<span>atomes/maille <b>"+D.Z+"</b></span><span>coordinence <b>"+D.co+"</b></span><span>compacité <b>"+nf(D.comp,2)+"</b></span><span>a ≈ <b>"+nf(D.a,3)+" nm</b></span>";
+    r+=kind==="hcp"?"<span>c ≈ "+nf(D.c,2)+" nm</span>":kind==="mart"?"<span>c/a = <b class='eps'>"+nf(ca,3)+"</b></span>":"";
+    r+="<span>plus grand site r ≈ <b class='mat'>"+nf(D.site,3)+" nm</b></span><span>("+D.sn+")</span><span>"+D.mag+"</span>";
+    ro.innerHTML=nbsp(r);
+    const T={bcc:"Ferrite : 8 voisins, compacité 0,68, mais des sites minuscules (0,036 nm au plus) : le carbone (0,077 nm) n'y entre presque pas (0,02 % au plus).",
+      fcc:"Austénite : plus compacte (0,74), et pourtant son site octaédrique, au centre du cube, mesure 0,053 nm : le carbone s'y loge en écartant un peu ses voisins, jusqu'à 2,1 %.",
+      mart:"Martensite α' : le carbone piégé par la trempe occupe des sites orientés selon c et étire la maille : c/a ≈ 1 + 0,045·%C, soit "+nf(ca,3)+" ici. Plus de carbone, maille plus distordue, martensite plus dure.",
+      hcp:"Martensite ε : hexagonale compacte, formée par déformation à froid d'une austénite peu stable ; elle précède souvent la martensite α'."};
+    msg.innerHTML=nbsp(T[kind]+(sites?" Le cercle vert montre le plus grand site, à l'échelle de la maille dessinée.":""));
+  }
+  const A=animate($("#m2play"),"▶ Tourner",8000,p=>{prog=Math.max(0,p);phi=0.55+2*Math.PI*prog;upd();},()=>{prog=null;phi=0.55;upd();});
+  $$("#m2s .btn").forEach(b=>b.addEventListener("click",()=>{kind=b.dataset.k;setOn("#m2s",b);upd();}));
+  $$("#m2o .btn").forEach(b=>b.addEventListener("click",()=>{sites=!sites;b.classList.toggle("on",sites);upd();}));
+  sC.addEventListener("input",()=>{if(kind!=="mart"){kind="mart";setOn("#m2s",$("#m2s .btn[data-k='mart']"));}upd();});
+  redraws.push(upd);upd();
+})();
+
+/* =========================================================
+   M3 : l'île qui gonfle (boucle γ, nickel, carbone et azote)
+   ========================================================= */
+(function(){
+  const svg=$("#m3svg");if(!svg)return;
+  const ro=$("#m3r"),msg=$("#m3msg"),sC=$("#m3c"),sN=$("#m3n"),sK=$("#m3k"),sT=$("#m3t");
+  let gk="410",prog=null;
+  function geo(){const W=svgW(svg),n=W<560,x0=n?44:50,x1=W-12,pw=x1-x0,ph=Math.round(pw*(n?0.8:0.5)),y0=24,y1=y0+ph;return {W,H:y1+(n?110:96),n,R:{x0,x1,y0,y1}};}
+  function setGrade(k){const c=GR[k],L=compoLoop(c);sC.value=L.x.toFixed(1);sN.value=(gv(c,"Ni")+0.5*gv(c,"Mn")).toFixed(2);sK.value=L.cn.toFixed(3);}
+  function upd(){
+    const x=+sC.value,nl=+sN.value,cn=+sK.value;let T=+sT.value,quenched=false;
+    if(prog!==null){if(prog<0.7)T=750+(1050-750)*prog/0.7;else{T=1050;quenched=true;}}
+    const G=geo();setVB(svg,G.W,G.H);clear(svg);
+    const P=loopPlot(svg,G.R,nl,cn,x,T,{ref:true,id:"m3"});const st=P.st,L=LOOP.lim(nl,cn);
+    {const t=tx(svg,P.X(0.3),P.Y(772),"pointillé : fer-chrome pur",{class:"lbl"});fitText(t,G.R.x0+2,G.R.x1-2);halo(t,svg);}
+    const ms=LOOP.ms(x,nl,cn),fg=st.fg;
+    const by=G.R.y1+44,bw=(G.R.x1-G.R.x0);
+    const qm=ms>20?fg:0,qr=ms>20?0:fg;
+    const half=G.n?bw:bw/2-10;
+    tx(svg,G.R.x0,by-6,"à "+nf(T,0)+" °C",{class:"lbl"});
+    bar(svg,G.R.x0,by,half,[[1-fg,PH.d,"α"],[fg,PH.g,"γ"]],!G.n);
+    const qx=G.n?G.R.x0:G.R.x0+half+20,qy=G.n?by+40:by;
+    tx(svg,qx,qy-6,"après trempe depuis "+nf(T,0)+" °C",{class:"lbl"});
+    bar(svg,qx,qy,half,[[1-fg,PH.d,"α"],[qm,PH.m,"martensite"],[qr,PH.g,"γ conservée"]],!G.n);
+    $("#m3co").textContent=nf(x,1)+" %";$("#m3no").textContent=nf(nl,2)+" %";$("#m3ko").textContent=nf(cn,3)+" %";$("#m3to").textContent=nf(T,0)+" °C";
+    const dom=st.k==="g"?"austénite seule":st.k==="a"?"ferrite seule":"ferrite + austénite";
+    ro.innerHTML=nbsp("<span>x<sub>γ</sub> = <b class='mat'>"+nf(L.xg,1)+" %</b></span><span>x<sub>α</sub> = <b class='mat'>"+nf(L.xa,1)+" %</b></span><span>à "+nf(T,0)+" °C : <b class='gam'>"+dom+"</b>, γ "+nf(fg*100,0)+" %</span><span>M<sub>s</sub> "+(ms>20?"&gt;":"&lt;")+" 20 °C</span><span>après trempe : martensite <b class='eps'>"+nf(qm*100,0)+" %</b></span>");
+    let t;
+    if(fg>=0.98)t=ms>20?"Dans l'île : tout est austénite à cette température, et la trempe donne une martensite complète. C'est un martensitique.":"L'île a tellement gonflé que l'austénite est stable à chaud et reste à l'ambiante (M<sub>s</sub> sous l'ambiante) : c'est un austénitique.";
+    else if(fg<=0.02)t=T<850&&x<13?"Sous la boucle : ferrite (avec des carbures à l'équilibre). Chauffe davantage pour austénitiser.":"Hors de l'île : ferrite seule, aucune transformation possible. Ni trempe, ni normalisation : c'est un ferritique.";
+    else t=ms>20?"Dans la bande α + γ : seule la part austénitique ("+nf(fg*100,0)+" %) devient martensite à la trempe. C'est le cas d'un 430 non stabilisé : martensite aux joints de grains après soudage.":"Ferrite et austénite coexistent et l'austénite reste à l'ambiante : structure biphasée, celle d'un duplex.";
+    if(quenched)t="Trempe depuis 1 050 °C. "+t;
+    msg.innerHTML=nbsp(t);
+  }
+  const A=animate($("#m3play"),"▶ Chauffer puis tremper",7000,p=>{prog=Math.max(0,p);upd();},()=>{prog=null;sT.value=1050;upd();});
+  $$("#m3g .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;gk=b.dataset.k;setGrade(gk);setOn("#m3g",b);upd();}));
+  [sC,sN,sK].forEach(s=>s.addEventListener("input",()=>{A.stop();prog=null;setOn("#m3g",null);upd();}));
+  sT.addEventListener("input",()=>{A.stop();prog=null;upd();});
+  setGrade(gk);redraws.push(upd);upd();
+})();
+/* ---------- la carte de Schaeffler (droites) et les zones de Bystram ---------- */
+const SCH=(function(){
+  const L1=[[0,25.3],[25.9,4.5]],L2=[[0,19.0],[20.3,2.6]],L3=[[7.7,0],[34.4,30]],L4=[[12.9,0],[40,9.1]],L5=[[0,7.3],[2.8,0]];
+  const ly=(L,x)=>L[0][1]+(L[1][1]-L[0][1])*(x-L[0][0])/(L[1][0]-L[0][0]);
+  const lx=(L,y)=>L[0][0]+(L[1][0]-L[0][0])*(y-L[0][1])/(L[1][1]-L[0][1]);
+  function inter(A,B){const[x1,y1]=A[0],[x2,y2]=A[1],[x3,y3]=B[0],[x4,y4]=B[1],d=(x1-x2)*(y3-y4)-(y1-y2)*(x3-x4);
+    return [((x1*y2-y1*x2)*(x3-x4)-(x1-x2)*(x3*y4-y3*x4))/d,((x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4))/d];}
+  const P13=inter(L1,L3),P23=inter(L2,L3),P14=inter(L1,L4),P24=inter(L2,L4);
+  const on2=x=>[x,ly(L2,x)];
+  const ISO={5:[on2(14.98),[32,24.6]],10:[on2(15.64),[31.98,21.96]],20:[on2(16.68),[32.03,18.68]],40:[on2(17.71),[31.90,14.68]],80:[on2(18.91),[31.78,10.44]]};
+  const PS=[0,5,10,20,40,80,100];
+  const isoY=(p,x)=>p===0?ly(L3,x):p===100?ly(L4,x):ly(ISO[p],x);
+  function ferrite(cr,ni){const y0=isoY(0,cr),y1=isoY(100,cr);if(ni>=y0)return 0;if(ni<=y1)return 100;
+    for(let i=0;i<PS.length-1;i++){const a=isoY(PS[i],cr),b=isoY(PS[i+1],cr);if(ni<=a&&ni>=b)return PS[i]+(PS[i+1]-PS[i])*(a-ni)/(a-b);}return 100;}
+  function phase(cr,ni){
+    if(cr>L4[0][0]&&ni<=ly(L4,cr))return "F";
+    if(cr<=2.8&&ni<=ly(L5,cr))return "F+M";
+    const a1=ni>ly(L1,cr),a2=ni>ly(L2,cr),a3=ni>ly(L3,cr);
+    if(a3)return a1?"A":a2?"A+M":"M";
+    return a1?"A+F":a2?"A+M+F":"M+F";}
+  const SAFE=[[17.6,11.15],[21.3,15.3],[23.8,7.3]];
+  const SIG=[[21.3,15.3],[22.7,18],[24.4,30],[40,30],[40,12.4],[30.8,12.1],[23.8,7.3]];
+  const GG=[[11.4,0],[23.8,7.3],[30.8,12.1],[40,12.4],[40,0]];
+  const HOT=[[0,30],[34.4,30],P13,P23,[0,19.0]];
+  const COLD=[[0,25.3],P13,P14,P24,[12.9,0],[0,0]];
+  function dangers(cr,ni){
+    if(pip([cr,ni],SAFE))return ["sure"];
+    const ph=phase(cr,ni),o=[];
+    if(ph==="A"||ph==="A+M")o.push("chaud");
+    if(ph.indexOf("M")>=0)o.push("froid");
+    if(pip([cr,ni],SIG))o.push("sigma");
+    if(pip([cr,ni],GG))o.push("grain");
+    return o;}
+  const REG={A:[[0,25.3],P13,[34.4,30],[0,30]],"A+M":[[0,25.3],P13,P23,[0,19.0]],M:[[0,19.0],P23,[7.7,0],[2.8,0],[0,7.3]],"F+M":[[0,0],[2.8,0],[0,7.3]],
+    "M+F":[[7.7,0],P23,P24,[12.9,0]],"A+M+F":[P23,P13,P14,P24],"A+F":[P13,[34.4,30],[40,30],[40,9.1],P14],F:[[12.9,0],[40,0],[40,9.1]]};
+  return {L1,L2,L3,L4,L5,ly,lx,ISO,PS,isoY,ferrite,phase,dangers,SAFE,SIG,GG,HOT,COLD,REG,P13,P23,P14,P24};
+})();
+
+/* =========================================================
+   M4 : la table des éléments
+   ========================================================= */
+const ELT={
+  Ni:{n:"nickel",max:12,team:"g",carb:0,cr:0,ni:1,sk:"Ni : 1 (Ni<sub>eq</sub>)",o:"ténacité et ductilité, austénite stable à l'ambiante ; élément cher"},
+  Mn:{n:"manganèse",max:10,team:"g",carb:1,cr:0,ni:0.5,sk:"Mn : 0,5 (Ni<sub>eq</sub>)",o:"fixe le soufre en MnS, plus stable que CrS : meilleur formage à chaud ; remplace en partie le nickel (série 200)"},
+  C:{n:"carbone",max:0.3,team:"g",carb:0,cr:0,ni:30,sk:"C : 30 (Ni<sub>eq</sub>)",o:"dureté de la martensite ; mais forme des carbures de chrome qui appauvrissent la couche passive"},
+  N:{n:"azote",max:0.3,team:"g",carb:0,cr:0,ni:30,sk:"N : 30 (DeLong), 25 (Schneider)",o:"résistance mécanique et tenue aux piqûres (PREN) ; retarde la phase σ des duplex"},
+  Cu:{n:"cuivre",max:4,team:"g",carb:0,cr:0,ni:0.3,sk:"Cu : 0,3 (Schneider)",o:"durcissement structural (17-4PH) ; tenue en acide sulfurique"},
+  Cr:{n:"chrome",max:12,team:"a",carb:2,cr:1,ni:0,sk:"Cr : 1 (Cr<sub>eq</sub>)",o:"passivité (≥ 10,5 %), tenue à l'oxydation à chaud ; carburigène"},
+  Mo:{n:"molybdène",max:4,team:"a",carb:3,cr:1,ni:0,sk:"Mo : 1 (Schaeffler), 1,5 (Schneider)",o:"tenue aux chlorures et aux acides réducteurs (PREN : 3,3 × Mo), fluage ; favorise σ"},
+  Si:{n:"silicium",max:3,team:"a",carb:0,cr:1.5,ni:0,sk:"Si : 1,5 (Schaeffler), 2 (Schneider)",o:"tenue à l'oxydation par les gaz chauds, désoxydant ; usinabilité"},
+  Al:{n:"aluminium",max:2,team:"a",carb:0,cr:5.5,ni:0,sk:"Al : 5,5 (Schneider)",o:"tenue à l'oxydation à chaud (446, réfractaires) ; avec Ni, durcissement structural (17-7PH)"},
+  Ti:{n:"titane",max:1,team:"a",carb:5,cr:1.5,ni:0,sk:"Ti : 1,5 (Schneider)",o:"stabilisant : fixe C et N en TiC et TiN (Ti ≥ 5 × C) ; limite le grossissement de grain"},
+  Nb:{n:"niobium",max:1.5,team:"a",carb:5,cr:0.5,ni:0,sk:"Nb : 0,5 (Schaeffler), 1,75 (Schneider)",o:"stabilisant : fixe C en NbC (Nb ≥ 10 × C) ; tenue au fluage"},
+  V:{n:"vanadium",max:2,team:"a",carb:4,cr:5,ni:0,sk:"V : 5 (Schneider)",o:"carbures durs, résistance à l'usure (aciers à outils, coutellerie)"},
+  W:{n:"tungstène",max:3,team:"a",carb:3,cr:0.75,ni:0,sk:"W : 0,75 (Schneider)",o:"dureté à chaud, fluage"}
+};
+const BASE430={C:0.05,N:0.04,Mn:0.5,Si:0.4,Cr:16.5,Ni:0.3};
+(function(){
+  const svg=$("#m4svg");if(!svg)return;
+  const ro=$("#m4r"),msg=$("#m4msg"),sQ=$("#m4q");
+  let ek="Ni";
+  function geo(){const W=svgW(svg),n=W<560;
+    if(!n){const H=330,mid=Math.round(W*0.56);return {W,H,n,R:{x0:50,x1:mid,y0:24,y1:H-62},K:{x0:mid+22,x1:W-10,y0:18,y1:H-16}};}
+    const rh=Math.round((W-62)*0.78);return {W,H:rh+24+62+210,n,R:{x0:44,x1:W-12,y0:24,y1:24+rh},K:{x0:8,x1:W-8,y0:rh+24+60,y1:rh+24+60+200}};}
+  function upd(){
+    const e=ELT[ek],q=+sQ.value/100*e.max,c=Object.assign({},BASE430);c[ek]=(c[ek]||0)+q;
+    const L=compoLoop(c),L0=compoLoop(BASE430),G=geo();setVB(svg,G.W,G.H);clear(svg);
+    const P=loopPlot(svg,G.R,L.nl,L.cn,L.x,1050,{id:"m4",small:true,xmax:30});
+    el("line",{x1:P.X(L0.x),y1:G.R.y0,x2:P.X(L0.x),y2:G.R.y1,stroke:"var(--muted)","stroke-width":1.2,"stroke-dasharray":"2 3"},svg);
+    {const t=tx(svg,P.X(L0.x)-4,G.R.y1-8,"430",{class:"lbl","text-anchor":"end"});halo(t,svg);}
+    const st=P.st;
+    /* carte d'identité */
+    const K=G.K,kw=K.x1-K.x0;
+    el("rect",{x:K.x0,y:K.y0,width:kw,height:K.y1-K.y0,rx:8,fill:"var(--card)",stroke:"var(--line)","stroke-width":1.5},svg);
+    const sym=tx(svg,K.x0+14,K.y0+46,ek,{"font-weight":"800",fill:e.team==="a"?"var(--eps)":"var(--gam)"});sym.style.fontSize="38px";
+    {const t=tx(svg,K.x0+86,K.y0+28,e.n,{class:"ttl"});fitSize(t,kw-96,10);}
+    {const t=tx(svg,K.x0+86,K.y0+48,e.team==="a"?"alphagène : favorise la ferrite":"gammagène : favorise l'austénite",{class:"lbl"});fitSize(t,kw-96,9);}
+    /* barres : force alpha/gamma, carburigène */
+    const bars=[["vers la ferrite",e.team==="a"?clamp(Math.log10(1+e.cr)/Math.log10(7),0.15,1):0,"var(--eps)"],["vers l'austénite",e.team==="g"?clamp(Math.log10(1+e.ni)/Math.log10(31),0.15,1):0,"var(--gam)"],["carburigène",e.carb/5,"var(--tau)"]];
+    let by=K.y0+70;bars.forEach(b=>{tx(svg,K.x0+12,by+11,b[0],{class:"lbl"});const bx=K.x0+Math.min(130,kw*0.42),bw=kw-(bx-K.x0)-14;
+      el("rect",{x:bx,y:by,width:bw,height:12,fill:"var(--paper-2)",stroke:"var(--line)"},svg);if(b[1]>0)el("rect",{x:bx,y:by,width:bw*b[1],height:12,fill:b[2]},svg);by+=22;});
+    {const t=txs(svg,K.x0+12,by+14,[["coefficient : ",""],[e.sk.replace(/<sub>|<\/sub>/g,"").replace("Nieq","Ni eq"),""]],{class:"lbl"});fitSize(t,kw-24,8.5);}
+    /* autres effets, sur deux lignes au plus */
+    const words=e.o.split(" ");let line="",ly=by+38,lines=0;const maxc=Math.max(24,Math.floor((kw-24)/6.6));
+    words.forEach(w=>{if((line+" "+w).trim().length>maxc&&lines<3){const t=tx(svg,K.x0+12,ly,line.trim(),{});t.style.fontSize="12.5px";fitSize(t,kw-24,9);ly+=17;lines++;line=w;}else line+=" "+w;});
+    if(line.trim()){const t=tx(svg,K.x0+12,ly,line.trim(),{});t.style.fontSize="12.5px";fitSize(t,kw-24,9);}
+    $("#m4qo").textContent="+ "+nf(q,e.max<1?2:1)+" %";
+    const fg=st.fg,ms=LOOP.ms(L.x,L.nl,L.cn);
+    ro.innerHTML=nbsp("<span>Cr + Mo équivalent ≈ <b class='mat'>"+nf(L.x,1)+" %</b></span><span>Ni + 0,5 Mn… ≈ <b class='mat'>"+nf(L.nl,2)+" %</b></span><span>C + N libres ≈ <b class='mat'>"+nf(L.cn,3)+" %</b></span><span>à 1 050 °C : γ <b class='gam'>"+nf(fg*100,0)+" %</b></span><span>M<sub>s</sub> "+(ms>20?"&gt;":"&lt;")+" 20 °C</span>");
+    let t;
+    if(q<1e-9)t="Le 430 de départ : à 1 050 °C, environ "+nf(fg*100,0)+" % d'austénite aux joints, qui devient martensite à la trempe. Choisis un élément et dose-le.";
+    else if(ek==="Ti"||ek==="Nb")t="Le "+e.n+" est doublement alphagène : par lui-même, et parce qu'il fixe le carbone et l'azote (C + N libres : "+nf(L.cn,3)+" %). L'austénite à 1 050 °C tombe à "+nf(fg*100,0)+" %"+(fg<0.02?" : le 430 devient entièrement ferritique, comme un 439 stabilisé.":".");
+    else if(e.team==="g")t="Gammagène : la boucle gonfle. À 1 050 °C, "+nf(fg*100,0)+" % d'austénite"+(fg>=0.98?(ms>20?" : l'acier devient trempable en entier (martensitique).":" et elle reste à l'ambiante : l'acier devient austénitique."):".")+(ek==="C"||ek==="N"?" Le carbone et l'azote élargissent surtout la bande α + γ.":"");
+    else t="Alphagène : la verticale de l'alliage s'éloigne de l'île. À 1 050 °C, "+nf(fg*100,0)+" % d'austénite"+(fg<0.02?" : plus aucune, l'acier est entièrement ferritique.":".");
+    msg.innerHTML=nbsp(t);
+  }
+  $$("#m4e .btn").forEach(b=>b.addEventListener("click",()=>{ek=b.dataset.k;setOn("#m4e",b);sQ.value=0;upd();}));
+  sQ.addEventListener("input",upd);
+  {const Ap=animate($("#m4play"),"▶ Doser",6000,p=>{sQ.value=Math.round(100*p);upd();});
+    $$("#m4 .btn:not(.play)").forEach(b=>b.addEventListener("click",()=>Ap.stop()));
+    $$("#m4 input[type=range]").forEach(s=>s.addEventListener("input",()=>Ap.stop()));}
+  redraws.push(upd);upd();
+})();
+
+/* =========================================================
+   M5 : la balance (équivalents et carte de Schaeffler)
+   ========================================================= */
+function eqSet(c,f){
+  if(f==="K")return {cr:[["Cr",gv(c,"Cr")],["Mo ×1,5",1.5*gv(c,"Mo")],["Si ×2",2*gv(c,"Si")],["Nb ×1,75",1.75*gv(c,"Nb")],["Ti ×1,5",1.5*gv(c,"Ti")]],
+    ni:[["Ni",gv(c,"Ni")],["C ×30",30*gv(c,"C")],["N ×25",25*gv(c,"N")],["Mn ×0,5",0.5*gv(c,"Mn")],["Cu ×0,3",0.3*gv(c,"Cu")]]};
+  const ni=[["Ni",gv(c,"Ni")],["C ×30",30*gv(c,"C")],["Mn ×0,5",0.5*gv(c,"Mn")]];if(f==="D")ni.splice(2,0,["N ×30",30*gv(c,"N")]);
+  return {cr:[["Cr",gv(c,"Cr")],["Mo",gv(c,"Mo")],["Si ×1,5",1.5*gv(c,"Si")],["Nb ×0,5",0.5*gv(c,"Nb")]],ni};}
+const FAMZ=[["austénitiques",17,30,10,25],["duplex",22,30,5,9.5],["ferritiques",11,30,0,3],["martensitiques",9,17,3,10]];
+(function(){
+  const svg=$("#m5svg");if(!svg)return;
+  const ro=$("#m5r"),msg=$("#m5msg"),S=SCH;
+  const sl={Cr:$("#m5cr"),Ni:$("#m5ni"),Mo:$("#m5mo"),C:$("#m5c"),N:$("#m5n")};
+  let gk="304L",f="S",extra={Mn:1.5,Si:0.4};
+  function setGrade(k){const c=GR[k];Object.keys(sl).forEach(e=>{sl[e].value=gv(c,e);});extra={Mn:gv(c,"Mn"),Si:gv(c,"Si")};}
+  function compo(){const c={Mn:extra.Mn,Si:extra.Si};Object.keys(sl).forEach(e=>{c[e]=+sl[e].value;});return c;}
+  function geo(){const W=svgW(svg),n=W<560;
+    if(!n){const H=330,bw=Math.round(W*0.4);return {W,H,n,B:{x0:8,x1:bw,y0:20,y1:H-20},M:{x0:bw+46,x1:W-10,y0:22,y1:H-42}};}
+    const bh=250,mh=Math.round((W-56)*0.75);return {W,H:bh+mh+90,n,B:{x0:6,x1:W-6,y0:16,y1:16+bh},M:{x0:44,x1:W-10,y0:bh+50,y1:bh+50+mh}};}
+  function drawBalance(B,E,cr,ni){
+    const cx=(B.x0+B.x1)/2,py=B.y0+40,arm=(B.x1-B.x0)*0.36,ang=clamp(14*Math.log2((cr/Math.max(ni,0.5))/1.6),-14,14)*Math.PI/180;
+    el("polygon",{points:pts([[cx,py],[cx-14,B.y1-24],[cx+14,B.y1-24]]),fill:"var(--paper-2)",stroke:"var(--ink)","stroke-width":1.2},svg);
+    el("rect",{x:cx-40,y:B.y1-24,width:80,height:8,fill:"var(--paper-2)",stroke:"var(--ink)"},svg);
+    const lx=cx-arm*Math.cos(ang),lyy=py+arm*Math.sin(ang),rx=cx+arm*Math.cos(ang),ryy=py-arm*Math.sin(ang);
+    el("line",{x1:lx,y1:lyy,x2:rx,y2:ryy,stroke:"var(--ink)","stroke-width":3},svg);el("circle",{cx:cx,cy:py,r:4,fill:"var(--ink)"},svg);
+    const avail=Math.min(lyy,ryy)+18-(B.y0+24),k=Math.min(4.2,avail/Math.max(cr,ni,1)),pw=Math.min(78,arm*0.9);
+    function pan(x,y,items,col,label){
+      el("line",{x1:x,y1:y,x2:x-pw/2,y2:y+18,stroke:"var(--ink)"},svg);el("line",{x1:x,y1:y,x2:x+pw/2,y2:y+18,stroke:"var(--ink)"},svg);
+      let yy=y+18;const top=[];
+      items.forEach((it,i)=>{const h=it[1]*k;if(h<0.5)return;yy+=0;el("rect",{x:x-pw/2,y:yy-h+0,width:pw,height:h,fill:"color-mix(in srgb,"+col+" "+(70-12*i)+"%,var(--card))",stroke:"var(--ink)","stroke-width":0.6},svg);
+        if(h>=13){const t=tx(svg,x,yy-h/2+4,it[0],{"text-anchor":"middle"});t.style.fontSize="11px";fitSize(t,pw-4,8);}yy-=h;top.push(yy);});
+      el("line",{x1:x-pw/2,y1:y+18,x2:x+pw/2,y2:y+18,stroke:"var(--ink)","stroke-width":2},svg);
+      const t=tx(svg,x,y+36,label,{"text-anchor":"middle","font-weight":"700"});fitSize(t,pw+40,9);halo(t,svg);
+    }
+    /* les blocs s'empilent au-dessus du plateau : on dessine le plateau sous le bras */
+    pan(lx,lyy,E.cr,"var(--eps)","Cr eq "+nf(cr,1));pan(rx,ryy,E.ni,"var(--gam)","Ni eq "+nf(ni,1));
+    const t=tx(svg,cx,B.y0+12,"Cr eq / Ni eq = "+nf(cr/Math.max(ni,0.01),2),{"text-anchor":"middle","font-weight":"700"});halo(t,svg);
+  }
+  function drawMap(M,P,showZ){
+    const X=v=>M.x0+(M.x1-M.x0)*v/40,Y=v=>M.y1-(M.y1-M.y0)*v/30;
+    const defs=el("defs",null,svg),cp=el("clipPath",{id:"m5clip"},defs);el("rect",{x:M.x0,y:M.y0,width:M.x1-M.x0,height:M.y1-M.y0},cp);const g=el("g",{"clip-path":"url(#m5clip)"},svg);
+    const FILL={A:PH.g,F:PH.d,M:PH.m,"A+M":"color-mix(in srgb,var(--gam) 30%,"+PH.m+")","A+F":"color-mix(in srgb,var(--gam) 50%,var(--eps))","M+F":"color-mix(in srgb,var(--eps) 50%,"+PH.m+")","A+M+F":"color-mix(in srgb,var(--gam) 34%,"+PH.m+")","F+M":"color-mix(in srgb,var(--eps) 40%,"+PH.m+")"};
+    Object.keys(S.REG).forEach(k=>el("polygon",{points:pts(S.REG[k].map(p=>[X(p[0]),Y(p[1])])),fill:FILL[k],opacity:.28},g));
+    [S.L1,S.L2,S.L3,S.L4,S.L5].forEach(L=>{const a=L[0],b=L===S.L3?[S.lx(L,30),30]:L===S.L4?[40,S.ly(L,40)]:L[1];el("line",{x1:X(a[0]),y1:Y(a[1]),x2:X(b[0]),y2:Y(b[1]),stroke:"var(--ink)","stroke-width":1.4},g);});
+    [10,40,80].forEach(p=>{const L=S.ISO[p],yE=S.ly(L,40),xE=yE>30?S.lx(L,30):40;el("line",{x1:X(L[0][0]),y1:Y(L[0][1]),x2:X(xE),y2:Y(Math.min(30,yE)),stroke:"var(--eps)","stroke-width":1,"stroke-dasharray":"5 3",opacity:.8},g);});
+    if(showZ)FAMZ.forEach(z=>{el("rect",{x:X(z[1]),y:Y(z[4]),width:X(z[2])-X(z[1]),height:Y(z[3])-Y(z[4]),rx:6,fill:"none",stroke:"var(--weld)","stroke-width":1.8,"stroke-dasharray":"7 4"},g);});
+    frame(svg,M.x0,M.x1,M.y0,M.y1);
+    const labs=[];
+    if(showZ)FAMZ.forEach(z=>{const t=tx(svg,X((z[1]+z[2])/2),Y((z[3]+z[4])/2)+4,z[0],{"text-anchor":"middle","font-weight":"700",fill:"var(--weld)"});halo(t,svg);fitText(t,M.x0+2,M.x1-2);labs.push(t);});
+    [["A",8,27],["M",4,9.5],["F",36,3.2]].forEach(r=>{const t=tx(svg,X(r[1]),Y(r[2]),r[0],{class:"ttl","text-anchor":"middle"});halo(t,svg);labs.push(t);});
+    const n=(M.x1-M.x0)<420;for(let c=0;c<=40;c+=(n?10:5)){el("line",{x1:X(c),y1:M.y1,x2:X(c),y2:M.y1+4,class:"tick"},svg);tx(svg,X(c),M.y1+16,String(c),{class:"lbl","text-anchor":"middle"});}
+    for(let v=0;v<=30;v+=(n?10:5))tx(svg,M.x0-5,Y(v)+4,String(v),{class:"lbl","text-anchor":"end"});
+    txs(svg,M.x1,M.y1+32,[["Cr",""],["eq","sub"]],{class:"lbl","text-anchor":"end"});txs(svg,M.x0,M.y0-8,[["Ni",""],["eq","sub"]],{class:"lbl"});
+    const out=P[0]<0||P[0]>40||P[1]<0||P[1]>30,qx=X(clamp(P[0],0,40)),qy=Y(clamp(P[1],0,30));
+    el("circle",{cx:qx,cy:qy,r:7,fill:out?"var(--card)":"var(--mat)",stroke:"var(--ink)","stroke-width":2},svg);
+    const py=qy-9<M.y0+14?qy+20:qy-9;const pt=tx(svg,qx+(P[0]<30?11:-11),py,(gk||"point")+(out?" (hors carte)":""),{"font-weight":"700","text-anchor":P[0]<30?"start":"end"});halo(pt,svg);fitText(pt,M.x0+2,M.x1-2);
+    const bb=t=>{try{return t.getBBox();}catch(e){return null;}},b=bb(pt);
+    labs.forEach(s=>{const a=bb(s);if(a&&b&&Math.min(a.x+a.width,b.x+b.width)-Math.max(a.x,b.x)>1&&Math.min(a.y+a.height,b.y+b.height)-Math.max(a.y,b.y)>1)s.remove();});
+  }
+  function upd(){
+    const c=compo(),E=eqSet(c,f),cr=E.cr.reduce((s,q)=>s+q[1],0),ni=E.ni.reduce((s,q)=>s+q[1],0);
+    const G=geo();setVB(svg,G.W,G.H);clear(svg);
+    drawBalance(G.B,E,cr,ni);drawMap(G.M,[cr,ni],f==="S");
+    Object.keys(sl).forEach(e=>{$("#m5"+(e==="Cr"?"cr":e==="Ni"?"ni":e==="Mo"?"mo":e.toLowerCase())+"o").textContent=nf(+sl[e].value,e==="C"||e==="N"?2:1)+" %";});
+    const ph=S.phase(cr,ni),fe=S.ferrite(cr,ni);
+    let fam="";if(f==="S")FAMZ.forEach(z=>{if(cr>=z[1]&&cr<=z[2]&&ni>=z[3]&&ni<=z[4])fam=z[0];});
+    const FN={S:"Schaeffler",D:"DeLong",K:"Schneider"};
+    ro.innerHTML=nbsp("<span>"+FN[f]+" : Cr<sub>eq</sub> = <b class='mat'>"+nf(cr,2)+"</b></span><span>Ni<sub>eq</sub> = <b class='mat'>"+nf(ni,2)+"</b></span><span>rapport <b>"+nf(cr/Math.max(ni,0.01),2)+"</b></span><span>carte : <b class='gam'>"+ph.replace(/\+/g," + ")+"</b>"+(ph.indexOf("F")>=0&&ph.indexOf("M")<0?", ferrite ≈ "+nf(fe,0)+" %":"")+"</span>"+(fam?"<span>zone des "+fam+"</span>":"")+"<span>(Mn "+nf(extra.Mn,1)+" ; Si "+nf(extra.Si,1)+")</span>");
+    let t=(gk?"Nuance "+gk+" : ":"Composition libre : ")+"la balance penche du côté des alphagènes quand Cr<sub>eq</sub>/Ni<sub>eq</sub> dépasse environ 1,6. ";
+    if(f==="S")t+=fam?"Le point tombe dans la zone typique des "+fam+" (zones tracées avec les équivalents de Schaeffler).":"Le point est hors des zones typiques des familles de tôles.";
+    else if(f==="D")t+="DeLong compte l'azote (30 × N) : le point monte de "+nf(30*gv(c,"N"),1)+" et la ferrite prévue baisse.";
+    else t+="Schneider pèse davantage le silicium et le molybdène et compte de nombreux éléments : adapté aux moulages et aux martensitiques. Le point n'est qu'indicatif sur la carte de Schaeffler.";
+    msg.innerHTML=nbsp(t);
+  }
+  $$("#m5g .btn").forEach(b=>b.addEventListener("click",()=>{gk=b.dataset.k;setGrade(gk);setOn("#m5g",b);upd();}));
+  $$("#m5f .btn").forEach(b=>b.addEventListener("click",()=>{f=b.dataset.k;setOn("#m5f",b);upd();}));
+  Object.values(sl).forEach(s=>s.addEventListener("input",()=>{gk=null;setOn("#m5g",null);upd();}));
+  {const Ap=animate($("#m5play"),"▶ Ajouter du nickel",7000,p=>{if(gk){gk=null;setOn("#m5g",null);}sl.Ni.value=(+sl.Ni.min+(sl.Ni.max-sl.Ni.min)*p).toFixed(1);upd();});
+    $$("#m5 .btn:not(.play)").forEach(b=>b.addEventListener("click",()=>Ap.stop()));
+    $$("#m5 input[type=range]").forEach(s=>s.addEventListener("input",()=>Ap.stop()));}
+  setGrade(gk);redraws.push(upd);upd();
+})();
+
+/* =========================================================
+   M6 : le décodeur de nuances
+   ========================================================= */
+const DEC={
+  "X5CrNi18-10":{s:[["X","acier fortement allié (au moins un élément ≥ 5 %)"],["5","0,05 % de carbone (100 × %C)"],["CrNi","éléments principaux par teneurs décroissantes : chrome, nickel"],["18-10","teneurs moyennes arrondies : 18 % Cr, 10 % Ni"]],num:"1.4301",g:"43",aisi:"304",iso:"8.1",fam:"austénitique, Cr ≤ 19 %"},
+  "X2CrNiMo17-12-2":{s:[["X","acier fortement allié"],["2","0,02 % de carbone : nuance bas carbone"],["CrNiMo","chrome, nickel, molybdène"],["17-12-2","17 % Cr, 12 % Ni, 2 % Mo"]],num:"1.4404",g:"44",aisi:"316L",iso:"8.1",fam:"austénitique, Cr ≤ 19 %"},
+  "X6CrNiTi18-10":{s:[["X","acier fortement allié"],["6","0,06 % de carbone"],["CrNiTi","chrome, nickel, titane (sans chiffre : petite addition, ici le stabilisant)"],["18-10","18 % Cr, 10 % Ni"]],num:"1.4541",g:"45",aisi:"321",iso:"8.1",fam:"austénitique stabilisé, Cr ≤ 19 %"},
+  "X6Cr17":{s:[["X","acier fortement allié"],["6","0,06 % de carbone"],["Cr","chrome seul"],["17","17 % Cr"]],num:"1.4016",g:"40",aisi:"430",iso:"7.1",fam:"ferritique"},
+  "X12Cr13":{s:[["X","acier fortement allié"],["12","0,12 % de carbone : assez pour une martensite dure"],["Cr","chrome seul"],["13","13 % Cr"]],num:"1.4006",g:"40",aisi:"410",iso:"7.2",fam:"martensitique"},
+  "X2CrNiMoN22-5-3":{s:[["X","acier fortement allié"],["2","0,02 % de carbone"],["CrNiMoN","chrome, nickel, molybdène, azote (sans chiffre)"],["22-5-3","22 % Cr, 5 % Ni, 3 % Mo"]],num:"1.4462",g:"44",aisi:"2205 (UNS S32205)",iso:"10.1",fam:"austéno-ferritique (duplex), Cr ≤ 24 %"},
+  "X5CrNiCuNb16-4":{s:[["X","acier fortement allié"],["5","0,05 % de carbone"],["CrNiCuNb","chrome, nickel, cuivre, niobium"],["16-4","16 % Cr, 4 % Ni (le cuivre, 3 à 5 %, n'est pas chiffré)"]],num:"1.4542",g:"45",aisi:"17-4PH (630)",iso:"7.3",fam:"martensitique durci par précipitation"},
+  "Z6CNUD15-4":{s:[["Z","ancienne norme française : acier fortement allié"],["6","0,06 % de carbone (100 × %C)"],["CNUD","lettres des éléments : C chrome, N nickel, U cuivre, D molybdène"],["15-4","teneurs des deux premiers : 15 % Cr, 4 % Ni"]],num:"—",g:"",aisi:"—",iso:"7.2 ou 7.3 selon l'état",fam:"martensitique au cuivre"},
+  "S355J2":{s:[["S","acier de construction (désignation par l'emploi)"],["355","limite d'élasticité minimale 355 MPa (plus faibles épaisseurs)"],["J2","ténacité : 27 J à −20 °C (essai Charpy)"]],num:"1.0577",g:"",aisi:"—",iso:"1.2",fam:"acier non allié de construction, 275 MPa < R<sub>eH</sub> ≤ 360 MPa"}
+};
+const GRP={"40":"Ni < 2,5 %, sans Mo, Nb ni Ti","41":"Ni < 2,5 %, avec Mo, sans Nb ni Ti","43":"Ni ≥ 2,5 %, sans Mo, Nb ni Ti","44":"Ni ≥ 2,5 %, avec Mo, sans Nb ni Ti","45":"avec additions particulières (Ti, Nb, Cu…)"};
+const ISOG={"7.1":"ferritique","7.2":"martensitique","7.3":"durci par précipitation","8.1":"austénitique, Cr ≤ 19 %","8.2":"austénitique, Cr > 19 %","10.1":"duplex, Cr ≤ 24 %","10.2":"duplex, Cr > 24 %"};
+const AISI=[["409",{C:0.02,Cr:11.2,Ni:0.2,Ti:0.2}],["410",{C:0.11,Cr:12.5,Ni:0.3}],["420",{C:0.3,Cr:13,Ni:0.3}],["430",{C:0.05,Cr:16.5,Ni:0.3}],["439",{C:0.015,Cr:17.5,Ni:0.3,Ti:0.35}],
+  ["431",{C:0.17,Cr:16,Ni:2}],["304",{C:0.05,Cr:18.2,Ni:8.1}],["304L",{C:0.02,Cr:18.2,Ni:9.2}],["316L",{C:0.02,Cr:17.2,Ni:10.2,Mo:2.1}],["321",{C:0.05,Cr:17.5,Ni:9.5,Ti:0.4}],
+  ["347",{C:0.05,Cr:17.5,Ni:10,Nb:0.6}],["2304",{C:0.02,Cr:23,Ni:4.5,Mo:0.3,N:0.12}],["2205",{C:0.02,Cr:22.5,Ni:5.7,Mo:3.1,N:0.17}],["2507",{C:0.02,Cr:25,Ni:7,Mo:3.8,N:0.27}],
+  ["17-4PH",{C:0.05,Cr:16,Ni:4,Cu:4,Nb:0.3}],["310S",{C:0.05,Cr:25,Ni:20}]];
+function buildGrade(c){
+  const r1=v=>Math.round(v);
+  const main=[["Cr",c.Cr],["Ni",c.Ni],["Mo",c.Mo],["Cu",c.Cu||0]].filter(q=>q[1]>=1).sort((a,b)=>b[1]-a[1]);
+  const minor=[["Ti",c.Ti||0],["Nb",c.Nb||0],["N",c.N>=0.1?c.N:0]].filter(q=>q[1]>0);
+  const syms=main.map(q=>q[0]).concat(minor.map(q=>q[0])).join("");
+  const nums=main.filter(q=>q[0]!=="Cu").map(q=>r1(q[1])).join("-");
+  const cs=String(Math.max(1,Math.round(c.C*100)));
+  const hasStab=(c.Ti||0)>0||(c.Nb||0)>0||(c.Cu||0)>=1;
+  const g=hasStab?"45":c.Ni>=2.5?(c.Mo>=0.5?"44":"43"):(c.Mo>=0.5?"41":"40");
+  const L=compoLoop({C:c.C,N:c.N,Cr:c.Cr,Mo:c.Mo,Ni:c.Ni,Mn:c.Ni>=3?1.5:0.6,Ti:c.Ti,Nb:c.Nb,Cu:c.Cu});
+  const st=LOOP.state(L.x,1050,L.nl,L.cn),ms=LOOP.ms(L.x,L.nl,L.cn);let iso;
+  if((c.Cu||0)>=2&&c.Ni>=3)iso="7.3";
+  else if(st.fg>=0.9&&ms<20)iso=c.Cr>19?"8.2":"8.1";
+  else if(st.fg>=0.2&&ms<20&&c.Ni>=3)iso=c.Cr>24?"10.2":"10.1";
+  else if(st.fg>=0.5&&ms>=20)iso="7.2";
+  else iso="7.1";
+  let best=null;AISI.forEach(a=>{const q=a[1];const d=Math.abs(q.Cr-c.Cr)+Math.abs(q.Ni-c.Ni)+2*Math.abs((q.Mo||0)-c.Mo)+30*Math.abs(q.C-c.C)+3*(((q.Ti||0)>0)!==((c.Ti||0)>0))+3*(((q.Nb||0)>0)!==((c.Nb||0)>0))+3*(((q.Cu||0)>0)!==((c.Cu||0)>0))+3*(((q.N||0)>=0.1)!==(c.N>=0.1));if(!best||d<best[1])best=[a[0],d];});
+  return {s:[["X","acier fortement allié"],[cs,nf(c.C,2)+" % de carbone (100 × %C)"],[syms,"éléments par teneurs décroissantes"+(minor.length?" ; "+minor.map(q=>q[0]).join(", ")+" sans chiffre (petites additions)":"")],[nums,"teneurs arrondies : "+main.filter(q=>q[0]!=="Cu").map(q=>r1(q[1])+" % "+q[0]).join(", ")]],
+    num:"1.4"+g.charAt(1)+"xx",g,aisi:best[0]+(best[1]>2.5?" (approché)":""),iso,fam:ISOG[iso],st,L};
+}
+(function(){
+  const svg=$("#m6svg");if(!svg)return;
+  const ro=$("#m6r"),msg=$("#m6msg"),sl={C:$("#m6c"),Cr:$("#m6cr"),Ni:$("#m6ni"),Mo:$("#m6mo")};
+  let mode="dec",dk="X5CrNi18-10",ad="N";
+  function showCtl(){["#m6cc","#m6crc","#m6nic","#m6moc","#m6a"].forEach(s=>hide($(s),mode!=="bld"));hide($("#m6g"),mode!=="dec");}
+  function compo(){const c={C:+sl.C.value,Cr:+sl.Cr.value,Ni:+sl.Ni.value,Mo:+sl.Mo.value,N:0.04,Ti:0,Nb:0,Cu:0};
+    if(ad==="N")c.N=0.17;if(ad==="Ti")c.Ti=Math.round((5*c.C+0.15)*100)/100;if(ad==="Nb")c.Nb=Math.round((10*c.C+0.1)*100)/100;if(ad==="CuNb"){c.Cu=4;c.Nb=0.3;}return c;}
+  const COL=["var(--sig)","var(--mat)","var(--eps)","var(--frc)"];
+  function wrapRow(x,y,head,body,maxW){/* une ligne « titre : texte », coupée en deux si elle est trop longue */
+    const t=txs(svg,x,y,[[head,""],[body,""]],{});t.firstChild.setAttribute("font-weight","700");t.style.fontSize="13px";
+    let b;try{b=t.getBBox();}catch(e){b={width:0};}if(b.width<=maxW)return y+22;
+    const w=body.split(" ");let cut=Math.ceil(w.length/2);
+    t.lastChild.textContent=w.slice(0,cut).join(" ");const t2=tx(svg,x+12,y+17,w.slice(cut).join(" "),{});t2.style.fontSize="13px";
+    fitSize(t,maxW,8.5);fitSize(t2,maxW-12,8.5);return y+39;}
+  function upd(){
+    showCtl();const W=svgW(svg),n=W<560;const D=mode==="dec"?DEC[dk]:buildGrade(compo());
+    const rows=D.s.length,H=78+rows*40+3*40+16;setVB(svg,W,H);clear(svg);
+    /* la désignation en gros, morceau par morceau */
+    let fs=n?24:32;const y0=46,gap=n?3:5;let segs=[];
+    function lay(){segs=[];let x=0;Array.from(svg.querySelectorAll("text.dseg")).forEach(e=>e.remove());
+      D.s.forEach((q,i)=>{const t=tx(svg,0,y0,q[0],{"font-weight":"800",fill:COL[i%4],class:"dseg"});t.style.fontSize=fs+"px";t.style.fontFamily="var(--font-math)";let b;try{b=t.getBBox();}catch(e){b={width:fs*0.6*q[0].length};}segs.push([t,x,b.width]);x+=b.width+gap;});return x-gap;}
+    let tw=lay();while(tw>W-20&&fs>12){fs-=2;tw=lay();}
+    const ox=(W-tw)/2;segs.forEach(s=>{s[0].setAttribute("x",ox+s[1]);});
+    segs.forEach((s,i)=>{const cx=ox+s[1]+s[2]/2,yb=y0+10;el("line",{x1:ox+s[1],y1:yb,x2:ox+s[1]+s[2],y2:yb,stroke:COL[i%4],"stroke-width":3},svg);
+      el("circle",{cx:cx,cy:yb+12,r:8,fill:COL[i%4]},svg);const t=tx(svg,cx,yb+16,String(i+1),{"text-anchor":"middle","font-weight":"700",fill:"var(--card)"});t.style.fontSize="11px";});
+    let y=y0+48;
+    D.s.forEach((q,i)=>{el("circle",{cx:16,cy:y-4,r:7,fill:COL[i%4]},svg);const tn=tx(svg,16,y,String(i+1),{"text-anchor":"middle","font-weight":"700",fill:"var(--card)"});tn.style.fontSize="10px";
+      y=wrapRow(30,y,q[0]+" : ",q[1].replace(/<sub>|<\/sub>/g,""),W-40);});
+    y+=4;el("line",{x1:10,y1:y-12,x2:W-10,y2:y-12,stroke:"var(--line)"},svg);
+    const lines=[["N° EN : ",D.num+(D.g&&GRP[D.g]?" → groupe "+D.g+" : "+GRP[D.g]:"")],["AISI : ",D.aisi],["ISO/TR 15608 : ",D.iso+" ("+String(D.fam).replace(/<sub>|<\/sub>/g,"")+")"]];
+    lines.forEach(l=>{y=wrapRow(12,y,l[0],l[1],W-24);});
+    svg.setAttribute("viewBox","0 0 "+W+" "+(y-4));
+    if(mode==="bld"){const c=compo();["C","Cr","Ni","Mo"].forEach(e=>{$("#m6"+(e==="C"?"c":e.toLowerCase())+"o").textContent=nf(c[e],e==="C"?2:1)+" %";});}
+    const name=D.s.map(q=>q[0]).join("");
+    if(mode==="dec")ro.innerHTML=nbsp("<span style='white-space:normal;overflow-wrap:anywhere'>nom : <b>"+dk+"</b></span><span>numéro : <b class='mat'>"+D.num+"</b></span><span>AISI : <b>"+D.aisi+"</b></span><span>ISO/TR 15608 : <b class='eps'>"+D.iso+"</b></span>");
+    else{const c=compo();ro.innerHTML=nbsp("<span style='white-space:normal;overflow-wrap:anywhere'>nom : <b>"+name+"</b></span><span>numéro : <b class='mat'>"+D.num+"</b></span><span style='white-space:normal'>famille estimée : <b class='gam'>"+D.fam+"</b></span><span>γ à 1 050 °C : "+nf(D.st.fg*100,0)+" %</span><span>ISO/TR 15608 : <b class='eps'>"+D.iso+"</b></span><span>proche de : <b>"+D.aisi+"</b></span><span>PREN ≈ "+nf(PREN(c),1)+"</span>");}
+    let t;
+    if(mode==="dec")t=dk.charAt(0)==="Z"?"Ancienne norme française : les lettres remplacent les symboles chimiques. On la rencontre encore sur d'anciens plans.":dk.charAt(0)==="S"?"Désignation par l'emploi : S pour la construction, la limite d'élasticité minimale, puis la ténacité. Rien sur la composition.":"Le nom dit la composition, le numéro identifie la nuance sans ambiguïté, le groupe ISO/TR 15608 sert à la qualification des modes opératoires.";
+    else t="Nom construit selon la règle générale de l'EN 10027-1 : le nom officiel d'une nuance est celui de sa norme de produit (EN 10088), qui peut arrondir autrement. La famille, et donc le groupe ISO/TR 15608, est estimée avec le modèle de boucle γ de la manipulation 3.";
+    msg.innerHTML=nbsp(t);
+  }
+  function setMode(m){mode=m;setOn("#m6m",$("#m6m .btn[data-k='"+m+"']"));}
+  $$("#m6m .btn").forEach(b=>b.addEventListener("click",()=>{setMode(b.dataset.k);upd();}));
+  $$("#m6g .btn").forEach(b=>b.addEventListener("click",()=>{setMode("dec");dk=b.dataset.k;setOn("#m6g",b);upd();}));
+  $$("#m6a .btn").forEach(b=>b.addEventListener("click",()=>{setMode("bld");ad=b.dataset.k;setOn("#m6a",b);upd();}));
+  Object.values(sl).forEach(s=>s.addEventListener("input",()=>{setMode("bld");upd();}));
+  {const Ap=animate($("#m6play"),"▶ Défiler les nuances",8500,p=>{const bs=$$("#m6g .btn"),i=Math.min(bs.length-1,Math.floor(p*bs.length));if(mode!=="dec"||dk!==bs[i].dataset.k){setMode("dec");dk=bs[i].dataset.k;setOn("#m6g",bs[i]);}upd();});
+    $$("#m6 .btn:not(.play)").forEach(b=>b.addEventListener("click",()=>Ap.stop()));
+    $$("#m6 input[type=range]").forEach(s=>s.addEventListener("input",()=>Ap.stop()));}
+  redraws.push(upd);upd();
+})();
+
+/* =========================================================
+   Quiz, check-list, sommaire, thème
+   ========================================================= */
+(function(){
+  const box=$("#quiz");if(!box)return;
+  const Q=[
+    {q:"Selon l'EN 10088-1, un acier est inoxydable s'il contient au moins :",o:["5 % de nickel","10,5 % de chrome et au plus 1,2 % de carbone","18 % de chrome et 8 % de nickel","2 % de molybdène"],c:1,e:"Au moins <b>10,5 % de chrome</b> (et au plus 1,2 % de carbone) : de quoi former une pellicule passive continue."},
+    {q:"La couche passive d'un inox mesure environ :",o:["1 à 5 nanomètres","1 à 5 micromètres","1 à 5 millimètres","elle n'a pas d'épaisseur"],c:0,e:"Quelques <b>nanomètres</b> : invisible, mais continue et compacte, elle bloque la corrosion et se reforme seule."},
+    {q:"Un rivet en acier au carbone posé sur une grande tôle d'inox, en milieu humide salé :",o:["ne risque rien","se corrode très vite","protège l'inox et dure longtemps","devient inoxydable"],c:1,e:"<b>Petite anode, grande cathode</b> : tout le courant galvanique se concentre sur le rivet, qui est dévoré."},
+    {q:"Le PREN se calcule par :",o:["Cr + Ni + Mo","Cr + 3,3·Mo + 16·N","Ni + 30·C + 0,5·Mn","Cr + Mo + 1,5·Si"],c:1,e:"<b>PREN = %Cr + 3,3·%Mo + 16·%N</b>. Il sert à comparer les nuances face aux piqûres ; on vise plus de 40 en eau de mer."},
+    {q:"L'austénite dissout beaucoup plus de carbone que la ferrite parce que :",o:["elle est moins compacte","son plus grand site interstitiel est plus grand","elle est magnétique","elle contient du nickel"],c:1,e:"Le cfc est plus compact (0,74 contre 0,68), mais son <b>site octaédrique</b> (≈ 0,053 nm) est bien plus grand que ceux du cc (≈ 0,036 nm au plus)."},
+    {q:"Un austénitique 304 neuf, à l'aimant :",o:["colle fortement","ne colle pas, sauf là où il a été fortement déformé à froid","colle seulement à chaud","colle toujours un peu, car il est cubique centré"],c:1,e:"L'austénite (cfc) n'est <b>pas magnétique</b> ; une forte déformation à froid y crée de la martensite α' magnétique."},
+    {q:"Dans le diagramme fer-chrome, l'austénite seule disparaît au-delà d'environ :",o:["2 % de chrome","12 % de chrome","25 % de chrome","50 % de chrome"],c:1,e:"La <b>boucle γ</b> s'arrête vers 12 % (austénite seule) et 13 % (austénite et ferrite). Au-delà, pas de trempe possible."},
+    {q:"Pour rendre austénitique à l'ambiante un acier à 18 % de chrome, on ajoute surtout :",o:["du molybdène","du nickel (8 à 10 %)","du silicium","du titane"],c:1,e:"Le <b>nickel</b>, gammagène, fait gonfler la boucle γ ; avec 8 à 10 %, l'austénite reste même à l'ambiante (M<sub>s</sub> sous zéro)."},
+    {q:"Lequel de ces éléments est gammagène ?",o:["le molybdène","le titane","l'azote","le silicium"],c:2,e:"L'<b>azote</b>, comme le carbone, le nickel et le manganèse, favorise l'austénite. Mo, Ti et Si sont alphagènes."},
+    {q:"Dans un 321, le titane sert surtout à :",o:["augmenter la dureté","fixer le carbone en TiC pour laisser le chrome en solution","abaisser M<sub>s</sub>","colorer la pellicule passive"],c:1,e:"Le titane, plus <b>carburigène</b> que le chrome, fixe le carbone (Ti ≥ 5 × C) : le chrome reste disponible pour la passivité."},
+    {q:"Avec Schaeffler, le nickel équivalent vaut :",o:["Ni + 30·C + 0,5·Mn","Ni + Mo + 1,5·Si","Ni + 3,3·Mo","Ni + Cr"],c:0,e:"<b>Ni<sub>eq</sub> = Ni + 30·C + 0,5·Mn</b> ; DeLong y ajoute 30·N."},
+    {q:"Le numéro 1.4404 désigne une nuance :",o:["ferritique sans nickel","à Ni ≥ 2,5 % avec molybdène (316L)","au titane","non alliée de construction"],c:1,e:"Groupe <b>44</b> : Ni ≥ 2,5 %, avec Mo, sans Nb ni Ti. C'est le 316L (X2CrNiMo17-12-2)."}
+  ];
+  let score=0,done=0;const sc=$("#qzScore");
+  function upd(){let t="Score : "+score+" / "+Q.length;if(done===Q.length)t+=score>=10?"  ·  🎉 prêt pour le cours 2":score>=7?"  ·  relis les explications":"  ·  refais un tour des chapitres";sc.textContent=t;}
+  function render(){box.innerHTML="";score=0;done=0;
+    Q.forEach((it,n)=>{const d=document.createElement("div");d.className="qz";
+      d.innerHTML='<p class="qz-q"><b>'+(n+1)+".</b> "+it.q+'</p><div class="qz-o"></div><div class="qz-e" hidden></div>';
+      const o=d.querySelector(".qz-o"),ex=d.querySelector(".qz-e");let answered=false;
+      it.o.forEach((txt,i)=>{const b=document.createElement("button");b.type="button";b.className="qz-b";b.innerHTML=String.fromCharCode(65+i)+". "+txt;
+        b.addEventListener("click",()=>{if(answered)return;answered=true;done++;const ok=i===it.c;if(ok)score++;b.classList.add(ok?"ok":"ko");o.children[it.c].classList.add("ok");ex.hidden=false;ex.innerHTML=(ok?"✅ <b>Bien joué.</b> ":"❌ <b>Pas tout à fait.</b> ")+it.e;upd();});
+        o.appendChild(b);});
+      box.appendChild(d);});
+    upd();}
+  $("#qzReset").addEventListener("click",render);render();
+})();
+(function(){
+  const boxes=$$("#checklist input[type=checkbox]"),msg=$("#checkMsg"),KEY="inox-cours1-check";
+  if(!boxes.length)return;
+  let saved=[];try{saved=JSON.parse(localStorage.getItem(KEY)||"[]")||[];}catch(e){saved=[];}
+  boxes.forEach(b=>{b.checked=saved.indexOf(b.dataset.c)>=0;});
+  function upd(){const on=boxes.filter(b=>b.checked).map(b=>b.dataset.c);try{localStorage.setItem(KEY,JSON.stringify(on));}catch(e){}
+    msg.innerHTML=on.length===boxes.length?"🎉 <b>Tout est coché : tu es prêt pour le cours 2, les familles d'inox.</b>":on.length+" / "+boxes.length+" : reviens sur les points non cochés (les manipulations sont faites pour ça).";}
+  boxes.forEach(b=>b.addEventListener("change",upd));upd();
+})();
+
+(function(){
+  const links=$$(".toc a"),tin=$(".toc-in");
+  if(!links.length||!("IntersectionObserver" in window))return;
+  const map={};links.forEach(a=>{map[a.getAttribute("href").slice(1)]=a;});
+  const obs=new IntersectionObserver(ents=>{ents.forEach(en=>{if(!en.isIntersecting)return;const a=map[en.target.id];if(!a)return;
+    links.forEach(l=>l.classList.toggle("on",l===a));
+    if(tin){const tgt=a.offsetLeft-tin.clientWidth/2+a.offsetWidth/2;try{tin.scrollTo({left:tgt,behavior:RM?"auto":"smooth"});}catch(e){tin.scrollLeft=tgt;}}});},{rootMargin:"-45% 0px -50% 0px"});
+  Object.keys(map).forEach(id=>{const s=document.getElementById(id);if(s)obs.observe(s);});
+})();
+(function(){
+  const b=$("#themeBtn");if(!b)return;const KEY="inox-theme",root=document.documentElement;
+  const lab={auto:"◐ Thème : automatique",light:"☀️ Thème : clair",dark:"🌙 Thème : sombre"};
+  let t="auto";try{t=localStorage.getItem(KEY)||"auto";}catch(e){}
+  function apply(){if(t==="auto")root.removeAttribute("data-theme");else root.setAttribute("data-theme",t);b.textContent=lab[t];}
+  b.addEventListener("click",()=>{t=t==="auto"?"light":t==="light"?"dark":"auto";try{localStorage.setItem(KEY,t);}catch(e){}apply();});
+  apply();
+})();
+})();
+</script>
+</body>
+</html>

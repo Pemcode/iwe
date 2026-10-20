@@ -1,0 +1,1557 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fatigue, cours 2 : la courbe de Wöhler</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@500;600;700&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F3F6F9; --paper-2:#E6ECF2; --card:#FFFFFF; --ink:#17212B; --muted:#56626F; --line:#C5CFD9;
+  --grid:rgba(40,90,160,.075);
+  --sig:#CF2438; --tau:#8A34B6; --eps:#1B5ED3; --gam:#06849A; --frc:#D46A00; --mat:#26844A; --weld:#9A5B12;
+  --ok:#26844A; --warn:#B86E00; --bad:#C62828;
+  --lv2:#E4EBF2; --hl:#FFF3B0;
+  --font-body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-head:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --font-math:"STIX Two Text","Cambria Math","Cambria","Times New Roman",serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+    --grid:rgba(120,160,220,.07);
+    --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+    --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+  --grid:rgba(120,160,220,.07);
+  --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+  --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+  color-scheme: dark;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0;color:var(--ink);font-family:var(--font-body);font-size:17.5px;line-height:1.62;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;overflow-x:hidden;
+}
+img,svg{max-width:100%}
+.wrap{max-width:800px;margin:0 auto;padding:0 20px}
+.wide{max-width:980px}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.1;margin:0}
+h3{font-size:1.65rem;font-weight:600;margin:2rem 0 .6rem}
+h4{font-size:1.3rem;font-weight:600;margin:1.4rem 0 .4rem}
+p{margin:.7em 0}
+a{color:var(--eps)}
+b,strong{font-weight:700}
+small{font-size:.8em}
+sub{font-size:.72em}
+.m{font-family:var(--font-math);font-size:1.08em;white-space:nowrap}
+.sig{color:var(--sig)} .tau{color:var(--tau)} .eps{color:var(--eps)} .gam{color:var(--gam)} .frc{color:var(--frc)} .mat{color:var(--mat)} .mut{color:var(--muted)} .wcol{color:var(--weld)}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .12em;line-height:1.1}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 .2em .08em}
+.frac>span:last-child{padding:.08em .2em 0}
+ul,ol{padding-left:1.4em}
+li{margin:.25em 0}
+
+/* ---------- en-tête ---------- */
+.hero{padding:34px 0 10px}
+.title-block{border:2.5px solid var(--ink);background:var(--card);display:grid;grid-template-columns:1fr 300px}
+.tb-main{padding:22px 24px;border-right:2.5px solid var(--ink);display:flex;flex-direction:column;justify-content:space-between;gap:14px}
+.tb-series{margin:0 0 .5rem;color:var(--muted);font-size:.95rem}
+.hero h1{font-size:clamp(2.3rem,6vw,4rem);font-weight:700;letter-spacing:-.01em}
+.tb-cells{display:grid;grid-template-rows:repeat(4,auto)}
+.tb-cells>div{padding:9px 16px;border-bottom:1.5px solid var(--ink);display:flex;flex-direction:column;justify-content:center}
+.tb-cells>div:last-child{border-bottom:0}
+.tb-cells small{color:var(--muted);font-size:.78rem}
+.tb-cells b{font-family:var(--font-head);font-size:1.25rem;font-weight:600;line-height:1.15}
+.lede{font-size:1.13rem;max-width:760px;margin:1.2rem 0}
+.theme-btn{align-self:flex-start;font-family:var(--font-body);font-size:.85rem;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
+@media (max-width:760px){.title-block{grid-template-columns:1fr}.tb-main{border-right:0;border-bottom:2.5px solid var(--ink)}.tb-cells{grid-template-rows:none;grid-template-columns:1fr 1fr}.tb-cells>div:nth-child(odd){border-right:1.5px solid var(--ink)}.tb-cells>div:nth-child(3){border-bottom:0}}
+@media (max-width:420px){.tb-cells{grid-template-columns:1fr}.tb-cells>div:nth-child(odd){border-right:0}.tb-cells>div:nth-child(3){border-bottom:1.5px solid var(--ink)}}
+
+/* code couleur */
+.cc{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:stretch;margin:1rem 0 .4rem}
+.cc-box{background:var(--card);border:2px solid var(--line);padding:12px 14px;border-radius:4px}
+.cc-cause{border-color:var(--sig)} .cc-link{border-color:var(--mat)} .cc-eff{border-color:var(--eps)}
+.cc-box small{display:block;color:var(--muted);font-size:.82rem;line-height:1.3}
+.cc-syms{font-family:var(--font-math);font-size:1.7rem;line-height:1.25;display:flex;flex-wrap:wrap;gap:.1em .45em;margin:.2rem 0}
+.cc-box p{margin:0;font-size:.9rem;line-height:1.35}
+.cc-arrow{align-self:center;font-size:1.8rem;color:var(--muted)}
+@media (max-width:700px){.cc{grid-template-columns:1fr}.cc-arrow{transform:rotate(90deg);justify-self:center;line-height:1}}
+.cc-more{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:.5rem 0}
+.cc-more>div{border:2px solid var(--line);background:var(--card);border-radius:4px;padding:6px 10px;font-size:.9rem}
+@media (max-width:640px){.cc-more{grid-template-columns:1fr}}
+
+/* ---------- sommaire ---------- */
+.toc{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-bottom:1.5px solid var(--line);padding-top:env(safe-area-inset-top,0px);margin-top:18px}
+.toc-in{display:flex;gap:6px;overflow-x:auto;padding:9px 20px;max-width:980px;margin:0 auto;scrollbar-width:thin}
+.toc a{flex:none;text-decoration:none;color:var(--ink);font-size:.88rem;padding:4px 11px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);white-space:nowrap}
+.toc a.on{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.toc a:focus-visible,.btn:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--eps);outline-offset:2px}
+
+/* ---------- sections ---------- */
+section.chap{padding:46px 0 10px}
+.cartouche{display:grid;grid-template-columns:86px 1fr 250px;border:2.5px solid var(--ink);background:var(--card);margin-bottom:1.4rem}
+.c-num{font-family:var(--font-head);font-size:3.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;border-right:2.5px solid var(--ink)}
+.c-title{padding:14px 18px;border-right:2.5px solid var(--ink)}
+.c-title h2{font-size:2.1rem;font-weight:700}
+.c-title p{margin:.25rem 0 0;color:var(--muted)}
+.c-img{padding:12px 14px;display:flex;gap:12px;align-items:center;background:var(--paper-2)}
+.c-img .ico{font-size:2.3rem;line-height:1}
+.c-img small{display:block;color:var(--muted);font-size:.78rem}
+.c-img span{font-size:.95rem;line-height:1.3}
+@media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
+
+/* niveaux */
+.lv{margin:1.2rem 0;padding:6px 22px 14px;border-radius:4px}
+.lv1{background:var(--card);border:2px solid var(--ink)}
+.lv2{background:var(--lv2);border-left:6px solid var(--ink)}
+.lv-h{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;font-family:var(--font-head);font-size:1.35rem;font-weight:600;margin:10px 0 4px}
+.lv-h .tag{font-size:.95rem;font-family:var(--font-body);font-weight:400;color:var(--muted)}
+@media (max-width:520px){.lv{padding:6px 14px 12px}}
+
+/* formules et encadrés */
+.fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:600px;text-align:center;border-radius:3px;overflow-x:auto}
+.fx .big{font-family:var(--font-math);font-size:1.9rem;line-height:1.4}
+.fx .cap{font-size:.85rem;color:var(--muted);margin:.3rem 0 0}
+.fx .row{display:flex;flex-wrap:wrap;justify-content:center;gap:.2em 1.4em}
+.syms{margin:.6rem 0;display:grid;grid-template-columns:auto 1fr;gap:.35rem 1rem;align-items:baseline}
+.syms dt{font-family:var(--font-math);font-size:1.25rem;text-align:right;white-space:nowrap}
+.syms dd{margin:0}
+.def{margin:.9rem 0;padding:.5rem .9rem;border-left:3px dotted var(--muted);font-size:.96rem;background:color-mix(in srgb,var(--card) 60%,transparent)}
+.def>b:first-child{font-family:var(--font-head);font-size:1.08rem;font-weight:600}
+.tip{margin:1rem 0;padding:.7rem 1rem;border:1.5px dashed var(--mat);border-radius:4px;font-size:.97rem}
+.warn{margin:1rem 0;padding:.7rem 1rem;border:2px solid var(--bad);border-radius:4px;font-size:.97rem;background:color-mix(in srgb,var(--bad) 7%,transparent)}
+.mnemo{margin:1rem 0;padding:.7rem 1rem;background:var(--hl);border-radius:4px;font-size:.98rem}
+.fun{margin:1.2rem 0;padding:.8rem 1rem;border:2px dashed var(--muted);border-radius:10px;background:var(--card);font-size:.98rem}
+.fun-h{display:block;margin-bottom:.35rem;font-family:var(--font-head);font-size:1.15rem;font-weight:600;letter-spacing:.02em}
+.meta{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--frc);border-radius:4px;background:color-mix(in srgb,var(--frc) 6%,transparent)}
+.weld{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--weld);border-radius:4px;background:color-mix(in srgb,var(--weld) 7%,transparent)}
+.weld>b:first-child{font-family:var(--font-head);font-size:1.15rem;font-weight:600;color:var(--weld)}
+.hp{display:inline-block;font-size:.72rem;font-weight:700;padding:1px 7px;border-radius:9px;background:var(--weld);color:var(--card);vertical-align:middle;margin-left:4px;white-space:nowrap}
+.recall{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:1rem 0}
+.recall>div{background:var(--card);border:1.5px solid var(--line);border-radius:4px;padding:8px 12px;font-size:.92rem}
+.recall .f{font-family:var(--font-math);font-size:1.2rem;margin-bottom:.2rem}
+@media (max-width:640px){.recall{grid-template-columns:1fr}}
+.hist{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:1rem 0}
+.hist>div{background:var(--card);border:1.5px solid var(--weld);border-radius:4px;padding:8px 12px;font-size:.93rem}
+.hist .yr{font-family:var(--font-head);font-size:1.6rem;font-weight:700;color:var(--weld);line-height:1}
+@media (max-width:720px){.hist{grid-template-columns:1fr}}
+
+/* manipulations */
+.lab{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:14px 16px 12px;margin:1.4rem 0}
+.lab-h{font-family:var(--font-head);font-size:1.3rem;font-weight:600;margin:0 0 .2rem}
+.lab-sub{margin:0 0 .6rem;color:var(--muted);font-size:.92rem}
+.lab svg{display:block;width:100%;height:auto;color:var(--ink);font-family:var(--font-body);touch-action:pan-y}
+.ctrl{display:grid;grid-template-columns:minmax(110px,auto) 1fr minmax(92px,auto);gap:4px 12px;align-items:center;margin:.5rem 0}
+.ctrl label{font-size:.95rem}
+.ctrl output{font-family:var(--font-math);font-size:1.08rem;text-align:right;white-space:nowrap}
+@media (max-width:520px){.ctrl{grid-template-columns:1fr auto}.ctrl input[type=range]{grid-column:1/-1;grid-row:2}}
+input[type=range]{width:100%;accent-color:var(--ink);height:28px;margin:0}
+input.r-sig{accent-color:var(--sig)} input.r-tau{accent-color:var(--tau)} input.r-frc{accent-color:var(--frc)} input.r-mat{accent-color:var(--mat)} input.r-eps{accent-color:var(--eps)}
+.btns{display:flex;flex-wrap:wrap;gap:6px;margin:.5rem 0}
+.btn{font-family:var(--font-body);font-size:.9rem;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 13px;cursor:pointer;line-height:1.3}
+.btn:hover{background:var(--paper-2)}
+.btn.on{background:var(--ink);color:var(--paper)}
+.btn.play{border-color:var(--eps);color:var(--eps);font-weight:700}
+.btn:disabled{opacity:.45;cursor:default}
+.readout{font-family:var(--font-math);font-size:1.08rem;background:var(--paper-2);border-radius:4px;padding:.5rem .8rem;margin:.5rem 0;overflow-x:auto;display:flex;flex-wrap:wrap;gap:.2em 1.3em}
+.readout>span{white-space:nowrap}
+.status{font-size:.97rem;margin:.5rem 0;padding:.5rem .8rem;border-left:4px solid var(--eps);background:color-mix(in srgb,var(--eps) 6%,transparent);border-radius:0 4px 4px 0;min-height:2.6em}
+.radios{display:flex;flex-wrap:wrap;gap:6px 14px;margin:.4rem 0;font-size:.95rem}
+.radios label{display:inline-block;cursor:pointer}
+.radios input{margin:0 6px 0 0;vertical-align:middle}
+
+/* svg */
+svg text{fill:currentColor;font-size:13px}
+svg .lbl{font-size:12.5px;fill:var(--muted)}
+svg .mth{font-family:var(--font-math);font-size:16px}
+svg .ttl{font-family:var(--font-head);font-size:15px;font-weight:600}
+svg .axis{stroke:var(--ink);stroke-width:1.4;fill:none}
+svg .tick{stroke:var(--muted);stroke-width:1}
+svg .gridbg{stroke:var(--line);stroke-width:1}
+svg .ref{stroke:var(--muted);stroke-width:1.3;stroke-dasharray:4 3;fill:none}
+.arr line{stroke:currentColor}
+.arr polygon{fill:currentColor}
+
+/* tableaux */
+.tbl-wrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch}
+table.data{border-collapse:collapse;width:100%;font-size:.94rem;background:var(--card)}
+table.data th,table.data td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:middle}
+table.data th{font-family:var(--font-head);font-weight:600;font-size:1.05rem;background:var(--paper-2)}
+table.data td.n{font-family:var(--font-math);white-space:nowrap}
+table.data tr.now td{background:var(--hl)}
+
+/* parcours */
+.route{list-style:none;padding:0;margin:1rem 0;position:relative}
+.route::before{content:"";position:absolute;left:17px;top:10px;bottom:10px;width:4px;background:var(--line);border-radius:2px}
+.route li{position:relative;padding:0 0 14px 52px;margin:0}
+.route li .dot{position:absolute;left:4px;top:0;width:30px;height:30px;border-radius:50%;border:3px solid var(--ink);background:var(--card);font-family:var(--font-head);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+.route li b{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.route li p{margin:.1rem 0 0;font-size:.95rem}
+.series{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:.8rem 0}
+.series>div{background:var(--card);border:1.5px solid var(--line);padding:8px 10px;border-radius:4px;font-size:.88rem}
+.series>div.here{border:2.5px solid var(--ink)}
+.series b{display:block;font-family:var(--font-head);font-size:1.05rem}
+@media (max-width:700px){.series{grid-template-columns:1fr 1fr}}
+
+/* exercices et quiz */
+.exo{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--ink);padding:6px 20px 12px;margin:1.2rem 0;border-radius:4px}
+.exo.defi{border-left-color:var(--weld)}
+.exo h4{margin-top:.8rem}
+.exo .lvtag{font-family:var(--font-body);font-size:.85rem;font-weight:400;color:var(--muted);margin-left:.4rem}
+.exo .q{margin:.25rem 0}
+details{margin:.6rem 0}
+summary{cursor:pointer;font-weight:700;padding:4px 0}
+details .sol{padding:.4rem .9rem;border-left:3px solid var(--mat);margin:.4rem 0}
+details .sol p{margin:.45em 0}
+.qz{background:var(--card);border:1.5px solid var(--line);border-radius:6px;padding:10px 16px;margin:.8rem 0}
+.qz-q{margin:.3rem 0 .6rem}
+.qz-o{display:flex;flex-direction:column;gap:6px}
+.qz-b{text-align:left;font-family:var(--font-body);font-size:.97rem;padding:8px 12px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:5px;cursor:pointer}
+.qz-b:hover{border-color:var(--ink)}
+.qz-b.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--card))}
+.qz-b.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--card))}
+.qz-e{font-size:.94rem;margin:.6rem 0 .2rem}
+.score{position:sticky;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);display:inline-block;background:var(--ink);color:var(--paper);padding:6px 14px;border-radius:999px;font-size:.95rem;margin:.6rem 0}
+
+/* fiche mémoire */
+.fiche{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:2.5px solid var(--ink);background:var(--card);margin:1rem 0}
+.fiche>div{padding:12px 14px;border-right:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}
+.fiche>div:nth-child(3n){border-right:0}
+.fiche>div:nth-last-child(-n+3){border-bottom:0}
+.fiche .ic{font-size:1.9rem;line-height:1}
+.fiche h4{margin:.3rem 0 .2rem;font-size:1.15rem}
+.fiche .f{font-family:var(--font-math);font-size:1.1rem;margin:.2rem 0}
+.fiche p{margin:.2rem 0 0;font-size:.88rem;color:var(--muted)}
+@media (max-width:720px){.fiche{grid-template-columns:1fr 1fr}.fiche>div{border-right:1.5px solid var(--ink)!important;border-bottom:1.5px solid var(--ink)!important}.fiche>div:nth-child(2n){border-right:0!important}.fiche>div:last-child{border-bottom:0!important}}
+@media (max-width:440px){.fiche{grid-template-columns:1fr}.fiche>div{border-right:0!important}}
+.gloss{display:grid;grid-template-columns:minmax(150px,230px) 1fr;gap:0;border-top:1.5px solid var(--line);margin:1rem 0}
+.gloss dt,.gloss dd{border-bottom:1.5px solid var(--line);padding:7px 8px;margin:0}
+.gloss dt{font-weight:700}
+.gloss dd{font-size:.95rem}
+@media (max-width:600px){.gloss{grid-template-columns:1fr}.gloss dt{border-bottom:0;padding-bottom:0}}
+.check label{display:flex;gap:10px;align-items:flex-start;padding:5px 0;cursor:pointer}
+.check input{margin-top:.35em;width:18px;height:18px;accent-color:var(--mat);flex:none}
+footer{padding:40px 0 60px;color:var(--muted);font-size:.9rem}
+hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
+@media (max-width:700px){.m{white-space:normal}.fx{padding:12px 10px}.fx .big{font-size:1.4rem}}
+@media (max-width:400px){body{font-size:16.5px}.wrap{padding:0 14px}.lab{padding:12px 10px}}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="wrap wide">
+  <div class="title-block">
+    <div class="tb-main">
+      <div>
+        <p class="tb-series">Fatigue des métaux, série 1 : la vie d'une fissure</p>
+        <h1>La courbe de Wöhler : l'espérance de vie d'une pièce</h1>
+      </div>
+      <button class="theme-btn" id="themeBtn" type="button" aria-label="Changer de thème">◐ Thème : automatique</button>
+    </div>
+    <div class="tb-cells">
+      <div><small>Cours</small><b>2 sur 4 : la courbe d'endurance</b></div>
+      <div><small>Durée conseillée</small><b>≈ 2 h 30 à 3 h avec les exercices</b></div>
+      <div><small>Prérequis</small><b>cours 1 : σ<sub>m</sub>, σ<sub>a</sub>, Δσ et R ; les puissances de 10</b></div>
+      <div><small>À la fin tu sais</small><b>lire et mettre en équation une courbe de Wöhler, et vérifier un détail soudé avec sa classe FAT</b></div>
+    </div>
+  </div>
+  <p class="lede">Combien de cycles une pièce peut-elle encaisser avant de casser ? Pour le savoir, on fait vibrer des éprouvettes jusqu'à la rupture, à différents niveaux de contrainte, et on reporte chaque résultat sur un graphique. Le nuage de points dessine une courbe en forme de <b>toboggan</b> : la <b>courbe de Wöhler</b>. Elle répond à deux questions de bureau d'études : « à cette contrainte, combien de cycles ? » et « pour tant de cycles, quelle contrainte au maximum ? ». C'est l'outil de base de tout calcul en fatigue, et les classes FAT des soudures n'en sont qu'un catalogue.</p>
+
+  <h4>Le code couleur de la série</h4>
+  <div class="cc" role="img" aria-label="Code couleur : la contrainte en rouge, la courbe et ses paramètres en vert, la durée de vie en bleu">
+    <div class="cc-box cc-cause"><small>Les causes</small><div class="cc-syms"><span class="sig">σ<sub>a</sub></span><span class="sig">Δσ</span><span class="tau">σ<sub>m</sub></span><span class="tau">K<sub>f</sub></span></div><p><span class="sig">rouge</span> : la contrainte qui varie et use la pièce ; <span class="tau">violet</span> : ce qui aggrave (niveau moyen, entailles, défauts, contraintes résiduelles)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-link"><small>Les liens et paramètres</small><div class="cc-syms"><span class="mat">σ<sub>D</sub></span><span class="mat">k</span><span class="mat">C</span><span class="mat">γ<sub>Mf</sub></span></div><p>en <span class="mat">vert</span> : la courbe de Wöhler elle-même, qui relie la cause à l'effet, et tout ce qui la définit (limite d'endurance, pente, classe FAT, coefficients)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-eff"><small>Les effets</small><div class="cc-syms"><span class="eps">N<sub>r</sub></span><span class="eps">N</span></div><p><span class="eps">bleu</span> : la durée de vie, comptée en cycles ; <span class="gam">bleu-vert</span> : les déformations</p></div>
+  </div>
+  <div class="cc-more">
+    <div><b class="frc">Orange</b> : les actions extérieures, forces et moments.</div>
+    <div><b>Noir</b> : les vecteurs et la géométrie dessinée (axes, contours).</div>
+    <div><b class="wcol">Bronze</b> : les encadrés « métier » 🔥, tournés vers le soudage.</div>
+  </div>
+</div>
+</header>
+
+<nav class="toc" aria-label="Sommaire">
+  <div class="toc-in">
+    <a href="#avant">Avant de commencer</a>
+    <a href="#c1">1 L'essai</a>
+    <a href="#c2">2 L'échelle log</a>
+    <a href="#c3">3 Trois domaines</a>
+    <a href="#c4">4 La limite σ<sub>D</sub></a>
+    <a href="#c5">5 Basquin</a>
+    <a href="#c6">6 La dispersion</a>
+    <a href="#c7">7 Soudures et FAT</a>
+    <a href="#exos">Exercices</a>
+    <a href="#quiz-s">Quiz</a>
+    <a href="#fiche">Fiche mémoire</a>
+    <a href="#gloss">Glossaire</a>
+    <a href="#check">Check-list</a>
+  </div>
+</nav>
+
+<main>
+<section class="chap" id="avant">
+<div class="wrap">
+  <h3 style="margin-top:0">Avant de commencer</h3>
+  <h4>Le cours 1 en trois cases</h4>
+  <div class="recall">
+    <div><div class="f"><span class="sig">Δσ</span> = 2<span class="sig">σ<sub>a</sub></span></div>Un cycle va de σ<sub>min</sub> à σ<sub>max</sub> (σ : contrainte normale, en MPa, positive en traction). L'<b>amplitude</b> σ<sub>a</sub> = (σ<sub>max</sub> − σ<sub>min</sub>)/2 va de la moyenne σ<sub>m</sub> à la crête ; l'<b>étendue</b> Δσ va du creux à la crête.</div>
+    <div><div class="f"><span class="mat">R</span> = <span class="sig">σ<sub>min</sub></span>/<span class="sig">σ<sub>max</sub></span></div>Le <b>rapport de charge</b> range les cycles en familles : R = −1 alterné symétrique (flexion rotative), R = 0 répété, 0 &lt; R &lt; 1 ondulé.</div>
+    <div><div class="f"><span class="eps">N</span> = <span class="mat">f</span>·<span class="mat">t</span></div>Le nombre de cycles N vaut la fréquence f (en Hz) fois la durée t (en s). Les soudures se calculent en Δσ, et une <b>classe FAT</b> est l'étendue supportée pendant 2 × 10⁶ cycles.</div>
+  </div>
+
+  <div class="def"><b>🔎 Quatre remarques de lecture</b>
+    <p><b>1. σ<sub>a</sub> ou Δσ en ordonnée ?</b> Les courbes de Wöhler des matériaux portent en général l'<b>amplitude</b> σ<sub>a</sub>. Les courbes des soudures (EN 1993-1-9, IIW) portent l'<b>étendue</b> Δσ = 2σ<sub>a</sub>. Avant de lire une valeur, regarde toujours l'étiquette de l'axe.</p>
+    <p><b>2. « La rupture ne se produit jamais »</b> sous σ<sub>D</sub> : c'est vrai dans le domaine des essais classiques (jusqu'à 10⁷ cycles environ). Des essais gigacycliques, menés au-delà de 10⁸ à 10⁹ cycles, ont montré des ruptures sous σ<sub>D</sub> dans certains aciers, à partir d'inclusions internes (chapitre 4).</p>
+    <p><b>3. Cubique centré et limite d'endurance.</b> Le lien entre structure cubique centrée et palier d'endurance est une règle d'usage, pas une loi. En milieu corrosif, un acier perd sa limite d'endurance ; et certains alliages non cubiques centrés (titane) présentent un palier apparent.</p>
+    <p><b>4. N<sub>r</sub> ou 2N<sub>r</sub> ?</b> Ce cours compte des <b>cycles</b> N<sub>r</sub>. La loi de Basquin, dans sa forme d'origine, compte des <b>alternances</b> 2N<sub>r</sub> (deux par cycle). Le chapitre 5 montre comment passer de l'une à l'autre.</p>
+  </div>
+
+  <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage</b>
+    <p>(IWE : <i>International Welding Engineer</i>, ingénieur international en soudage.) Chaque type d'assemblage soudé (cordon bout à bout, raidisseur, gousset…) a été testé en laboratoire jusqu'à rupture, des centaines de fois. Les résultats forment des courbes de Wöhler, rangées dans un catalogue : les <b>classes FAT</b> de l'Eurocode 3 partie 1-9 (norme <b>EN 1993-1-9</b>) et des recommandations de l'<b>IIW</b> (<i>International Institute of Welding</i>, l'Institut international de la soudure). Savoir lire, mettre en équation et utiliser une courbe de Wöhler, c'est savoir vérifier un assemblage soudé en fatigue.</p>
+  </div>
+
+  <h4>La série en quatre cours</h4>
+  <div class="series">
+    <div><b>1 Le cycle</b>Le décor : décrire ce qui se répète.</div>
+    <div class="here"><b>2 Wöhler</b>L'espérance de vie d'une pièce, et les classes FAT des soudures.</div>
+    <div><b>3 L'amorçage</b>La naissance d'une fissure, grain par grain.</div>
+    <div><b>4 Paris</b>La croissance de la fissure jusqu'à la rupture.</div>
+  </div>
+
+  <h4>Le plan du cours</h4>
+  <ol class="route">
+    <li><span class="dot">1</span><b>L'essai de fatigue</b><p>Une éprouvette, une machine, un compteur : un essai donne un point.</p></li>
+    <li><span class="dot">2</span><b>Lire une échelle logarithmique</b><p>La règle à décades, indispensable pour lire la courbe.</p></li>
+    <li><span class="dot">3</span><b>Les trois domaines</b><p>Fatigue oligocyclique, endurance limitée, endurance illimitée.</p></li>
+    <li><span class="dot">4</span><b>La limite d'endurance</b><p>Les aciers ont une plage, l'aluminium glisse toujours ; et l'effet de σ<sub>m</sub>.</p></li>
+    <li><span class="dot">5</span><b>Mettre la courbe en équation</b><p>La loi de Basquin : une droite sur papier log-log.</p></li>
+    <li><span class="dot">6</span><b>La dispersion</b><p>Aucun essai ne tombe deux fois au même endroit : probabilités et valeurs caractéristiques.</p></li>
+    <li><span class="dot">7</span><b>Des éprouvettes aux soudures</b><p>Entailles, état de surface, et vérification d'un détail soudé par sa classe FAT.</p></li>
+  </ol>
+</div>
+</section>
+<section class="chap" id="c1">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">1</div>
+    <div class="c-title"><h2>L'essai de fatigue</h2><p>Un essai, un point ; dix essais, une courbe</p></div>
+    <div class="c-img"><span class="ico">🔧</span><span><small>Image à retenir</small>Le banc d'essai : on secoue jusqu'à la casse, on note un point, on recommence plus bas</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le banc d'essai</span></div>
+    <p>On prend une <b>éprouvette</b> : un petit barreau de métal usiné et poli, aminci en son milieu pour que la rupture se produise là. On la monte sur une machine qui lui impose un cycle sinusoïdal bien réglé : une amplitude <span class="sig">σ<sub>a</sub></span> fixe, autour d'une moyenne <span class="tau">σ<sub>m</sub></span> fixe. Un compteur tourne. Quand l'éprouvette casse, on note le nombre de cycles atteint : c'est sa <b>durée de vie</b> <span class="eps">N<sub>r</sub></span> (r comme rupture).</p>
+    <p><b>Un essai donne un seul point</b> : un couple (σ<sub>a</sub>, N<sub>r</sub>). On recommence avec une autre éprouvette, un peu moins chargée : elle dure plus longtemps. Encore moins chargée : encore plus longtemps. En reportant tous les points sur un graphique, σ<sub>a</sub> en ordonnée et N<sub>r</sub> en abscisse, on voit apparaître la <b>courbe d'endurance</b>, ou <b>courbe de Wöhler</b>, du nom de l'ingénieur ferroviaire allemand August Wöhler qui l'a établie pour des essieux dans les années 1850-1860.</p>
+    <p>Quand une éprouvette tient très longtemps (par exemple dix millions de cycles) sans casser, on arrête l'essai : on ne va pas attendre éternellement. On note le point avec une petite <b>flèche →</b> : « non rompue, la durée de vie réelle est plus grande ».</p>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Type de machine</th><th>Fréquence</th><th>10⁷ cycles durent…</th></tr>
+      <tr><td>Flexion rotative (la machine de Wöhler, modernisée)</td><td class="n">≈ 50 Hz</td><td class="n">≈ 2,3 jours</td></tr>
+      <tr><td>Servo-hydraulique (un vérin piloté)</td><td class="n">1 à 100 Hz</td><td class="n">1 à 116 jours</td></tr>
+      <tr><td>Machine à résonance (l'éprouvette vibre sur sa fréquence propre)</td><td class="n">50 à 300 Hz</td><td class="n">9 h à 2,3 jours</td></tr>
+      <tr><td>Machine à ultrasons</td><td class="n">≈ 20 000 Hz</td><td class="n">≈ 8 min</td></tr>
+    </table></div>
+  </div>
+
+  <div class="lab" id="m1">
+    <p class="lab-h">Manipulation 1 : le banc d'essai virtuel</p>
+    <p class="lab-sub">Choisis l'amplitude <span class="sig">σ<sub>a</sub></span> et lance un essai : le compteur tourne jusqu'à la rupture, puis le point se pose sur le graphique. Les essais sont arrêtés à 10⁷ cycles (flèche →). Chaque éprouvette est un peu différente : deux essais au même niveau ne donnent pas tout à fait le même résultat (chapitre 6).</p>
+    <div class="radios" role="radiogroup" aria-label="Matériau">
+      <label><input type="radio" name="m1mat" value="acier" checked>acier (R<sub>m</sub> = 600 MPa)</label>
+      <label><input type="radio" name="m1mat" value="alu">alliage d'aluminium (R<sub>m</sub> = 470 MPa)</label>
+    </div>
+    <div class="ctrl"><label for="m1s">Amplitude <span class="sig">σ<sub>a</sub></span></label><input type="range" id="m1s" class="r-sig" min="150" max="560" step="5" value="350"><output id="m1so"></output></div>
+    <div class="btns"><button class="btn play" id="m1go" type="button">▶ Lancer un essai</button><button class="btn" id="m1auto" type="button">⏩ Campagne de 15 essais</button><button class="btn" id="m1clr" type="button">↺ Effacer</button><button class="btn" id="m1curve" type="button">Afficher la courbe médiane</button></div>
+    <svg id="m1svg" role="img" aria-label="Diagramme de Wöhler : amplitude de contrainte en fonction du nombre de cycles à rupture, avec les points d'essai"></svg>
+    <div class="readout" id="m1r"></div>
+    <p class="status" id="m1msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">le protocole</span></div>
+    <div class="def"><b>📖 Durée de vie N<sub>r</sub></b> : nombre de cycles à rupture d'une éprouvette sous un chargement cyclique donné. <b>Courbe d'endurance</b>, ou <b>courbe de Wöhler</b>, ou <b>courbe S-N</b> (de l'anglais <i>Stress-Number of cycles</i>) : courbe donnant σ<sub>a</sub> en fonction de N<sub>r</sub>, <b>pour une contrainte moyenne σ<sub>m</sub> donnée</b>.</div>
+    <p>La démarche : on <b>simule</b> les conditions réelles par des essais simplifiés (traction-compression, flexion, torsion), le plus souvent avec des sollicitations sinusoïdales, et on compte le nombre de cycles à rupture pour divers niveaux de contrainte, la contrainte maximale restant inférieure à la résistance R<sub>m</sub> du matériau. Un protocole typique :</p>
+    <ul>
+      <li>4 à 6 <b>niveaux</b> de contrainte, du plus fort (rupture en quelques milliers de cycles) au plus faible (éprouvettes non rompues) ;</li>
+      <li>plusieurs <b>éprouvettes par niveau</b> (3 au minimum, souvent davantage), à cause de la dispersion (chapitre 6) ;</li>
+      <li>une <b>limite d'arrêt</b> : souvent 10⁷ cycles pour les aciers, 10⁸ ou plus pour les alliages d'aluminium ;</li>
+      <li>une contrainte moyenne σ<sub>m</sub> (ou un rapport R) <b>fixée</b> pour toute la courbe.</li>
+    </ul>
+    <div class="tip"><b>💡 Une courbe par contrainte moyenne.</b> Une courbe de Wöhler n'est valable que pour la σ<sub>m</sub> (ou le R) de ses essais. Une contrainte moyenne de traction abaisse la courbe : à amplitude égale, la pièce dure moins longtemps (chapitre 4). La courbe de référence la plus courante est celle de la flexion rotative : σ<sub>m</sub> = 0, R = −1.</div>
+    <div class="warn"><b>⚠️ Piège : la cause est en ordonnée.</b> D'habitude, on met la cause en abscisse et l'effet en ordonnée. La courbe de Wöhler fait l'inverse : la <span class="sig">contrainte</span> (la cause) est verticale, le <span class="eps">nombre de cycles</span> (l'effet) horizontal. Pour lire « combien de cycles à telle contrainte », on part de l'axe vertical, on va jusqu'à la courbe, puis on descend sur l'axe horizontal.</div>
+    <div class="warn"><b>⚠️ Piège : quelle contrainte sur l'axe ?</b> σ<sub>a</sub>, σ<sub>max</sub> ou Δσ selon les ouvrages. Avec R = −1, σ<sub>max</sub> = σ<sub>a</sub> ; mais Δσ = 2σ<sub>a</sub> toujours. Une erreur d'étiquette, c'est un facteur 2 sur la contrainte, et donc un facteur énorme sur la durée de vie (chapitre 5).</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique :</b> « <b>un essai, un point ; une flèche, un survivant</b> ». Le point dit quand l'éprouvette est morte, la flèche dit qu'elle vivait encore quand on a arrêté.</div>
+    <div class="weld"><b>🔥 Les essais d'assemblages soudés</b>
+      <p>Les éprouvettes soudées sont de vraies petites structures : une tôle avec son cordon, son raidisseur ou son gousset, telle qu'elle sort de l'atelier, sans polissage. On les essaie le plus souvent en traction ondulée (R = 0,1 environ) et on trace l'<b>étendue</b> Δσ nominale en fonction de N. Comme la durée de vie d'une soudure est presque entièrement une durée de propagation (cours 1), ces essais mesurent surtout la vitesse à laquelle une fissure traverse la tôle.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c2">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">2</div>
+    <div class="c-title"><h2>Lire une échelle logarithmique</h2><p>De 1 à 100 millions sur une seule règle</p></div>
+    <div class="c-img"><span class="ico">📏</span><span><small>Image à retenir</small>La règle à décades : chaque graduation vaut dix fois la précédente</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la règle à décades</span></div>
+    <p>Les durées de vie vont de quelques cycles à des centaines de millions. Sur un axe ordinaire (<b>linéaire</b>), où chaque centimètre ajoute la même quantité, impossible de tout montrer : si l'axe va de 0 à 100 millions, tout ce qui se passe avant un million est écrasé dans le premier centième de l'axe.</p>
+    <p>La solution : une <b>échelle logarithmique</b>, où chaque graduation vaut <b>dix fois</b> la précédente : 1, 10, 100, 1 000, 10 000… L'intervalle entre deux graduations s'appelle une <b>décade</b>, et toutes les décades ont la même longueur. Aller de 10 à 100 prend autant de place qu'aller de 1 million à 10 millions.</p>
+    <p>Imagine un immeuble magique dont chaque étage est dix fois plus haut que le précédent : sur le dessin d'architecte « logarithmique », tous les étages ont la même taille. Tu connais déjà de telles échelles : l'échelle de Richter des séismes, les décibels du son, le pH.</p>
+    <p><b>Lire entre deux graduations.</b> Sur une échelle logarithmique, les nombres ne sont pas régulièrement répartis dans une décade : le 2 est à 30 % de la décade, le 3 à 48 %, le 5 à 70 %. La moitié de la décade ne correspond pas à 5, mais à environ 3,2.</p>
+  </div>
+
+  <div class="lab" id="m2">
+    <p class="lab-h">Manipulation 2 : linéaire contre logarithmique</p>
+    <p class="lab-sub">Le curseur place un nombre de cycles N sur deux règles de même longueur : en haut une règle linéaire de 0 à 10⁸, en bas une règle logarithmique de 1 à 10⁸. Les boutons placent quelques durées de vie typiques.</p>
+    <div class="ctrl"><label for="m2n">Exposant de <span class="eps">N</span></label><input type="range" id="m2n" class="r-eps" min="0" max="8" step="0.01" value="5"><output id="m2no"></output></div>
+    <div class="btns" id="m2ex"><button class="btn" data-v="1.18" type="button">Trombone (15)</button><button class="btn" data-v="4.7" type="button">Fuselage (5 × 10⁴)</button><button class="btn" data-v="6.301" type="button">Référence FAT (2 × 10⁶)</button><button class="btn" data-v="7" type="button">Arrêt d'essai (10⁷)</button></div>
+    <svg id="m2svg" role="img" aria-label="Comparaison d'une règle linéaire et d'une règle logarithmique"></svg>
+    <div class="readout" id="m2r"></div>
+    <p class="status" id="m2msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">le logarithme décimal</span></div>
+    <div class="def"><b>📖 Logarithme décimal</b> : le logarithme décimal de N, noté log N (ou log<sub>10</sub> N), est l'exposant x tel que 10<sup>x</sup> = N. Exemples : log 1 000 = 3, car 10³ = 1 000 ; log 1 = 0 ; log 2 ≈ 0,301.</div>
+    <div class="fx"><div class="big"><span class="mat">x</span> = log <span class="eps">N</span> &nbsp;⟺&nbsp; <span class="eps">N</span> = 10<sup><span class="mat">x</span></sup></div><p class="cap">⟺ : « équivaut à »</p></div>
+    <p>Trois règles de calcul suffisent pour tout ce cours :</p>
+    <div class="fx"><div class="row big" style="font-size:1.35rem">
+      <span>log(a·b) = log a + log b</span><span>log(a/b) = log a − log b</span><span>log(a<sup>k</sup>) = k·log a</span></div>
+      <p class="cap">un produit devient une somme, un quotient une différence, une puissance une multiplication</p></div>
+    <p>Valeurs à connaître : <span class="m">log 2 ≈ 0,301</span> ; <span class="m">log 3 ≈ 0,477</span> ; <span class="m">log 5 ≈ 0,699</span>. Exemple : <span class="m">log(2 × 10⁶) = log 2 + log 10⁶ = 0,301 + 6 = 6,301</span>.</p>
+    <h4>Placer un point sur un axe logarithmique</h4>
+    <p>Sur un axe de longueur L qui va de N<sub>min</sub> à N<sub>max</sub>, la position d'une valeur N, mesurée depuis l'origine de l'axe, vaut :</p>
+    <div class="fx"><div class="big" style="font-size:1.5rem">position = L · <span class="frac"><span>log <span class="eps">N</span> − log N<sub>min</sub></span><span>log N<sub>max</sub> − log N<sub>min</sub></span></span></div></div>
+    <p><b>Exemple.</b> Axe de 16 cm allant de 1 à 10⁸ (8 décades, donc 2 cm par décade) ; où placer 3 × 10⁶ ? <span class="m">log(3 × 10⁶) = 6,477</span>, donc <span class="m">position = 16 × 6,477/8 = 12,95 cm</span>.</p>
+    <h4>Le papier log-log</h4>
+    <p>Quand les deux axes sont logarithmiques (diagramme « log-log »), une loi en puissance du type y = C·x<sup>p</sup> devient une <b>droite</b>, puisque log y = log C + p·log x. C'est pour cela que la partie centrale de la courbe de Wöhler devient une droite en log-log (chapitre 5).</p>
+    <div class="warn"><b>⚠️ Piège : pas de zéro.</b> Une échelle logarithmique ne contient ni 0 ni nombre négatif : log 0 n'existe pas. L'axe des N<sub>r</sub> commence à 1 (ou 10, ou 100), jamais à 0.</div>
+    <div class="warn"><b>⚠️ Piège : « un peu à droite », c'est beaucoup.</b> Un décalage d'une demi-décade vers la droite multiplie la durée de vie par √10 ≈ 3,2. Lire une courbe de Wöhler « à l'œil » demande de la précision.</div>
+    <div class="tip"><b>💡 Le nombre de décades</b> entre deux valeurs vaut log(N<sub>2</sub>/N<sub>1</sub>). Entre 10⁴ et 2 × 10⁶ : log 200 = 2,3 décades.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique :</b> « <b>2 à 30, 5 à 70</b> » : dans une décade, le 2 est à 30 % et le 5 à 70 % du chemin.</div>
+  </div>
+</div>
+</section>
+<section class="chap" id="c3">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">3</div>
+    <div class="c-title"><h2>Les trois domaines</h2><p>Oligocyclique, endurance limitée, endurance illimitée</p></div>
+    <div class="c-img"><span class="ico">🛝</span><span><small>Image à retenir</small>Le toboggan : le palier de départ, la grande descente, puis la plage</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le toboggan</span></div>
+    <p>Trace la courbe de Wöhler d'un acier en échelle logarithmique : elle a la forme d'un <b>toboggan</b>.</p>
+    <ul>
+      <li><b>Le palier de départ</b>, en haut à gauche : la <b>fatigue oligocyclique</b> (du grec <i>oligos</i>, « peu »). La contrainte dépasse la limite d'élasticité R<sub>e</sub> : à chaque cycle, toute la section se déforme plastiquement, comme le trombone qu'on plie. La rupture arrive vite, en moins de 10⁴ cycles environ.</li>
+      <li><b>La grande descente</b> : l'<b>endurance limitée</b>. La contrainte est sous R<sub>e</sub>, la pièce reste élastique dans son ensemble ; seuls quelques grains plastifient localement (en surface, près des défauts, des inclusions). La durée de vie s'allonge très vite quand la contrainte baisse. C'est le domaine de la plupart des pièces de machines et des structures.</li>
+      <li><b>La plage</b> : l'<b>endurance illimitée</b>. Pour certains métaux, comme les aciers, il existe un niveau de contrainte, la <span class="mat"><b>limite d'endurance σ<sub>D</sub></b></span>, en dessous duquel la rupture ne se produit plus. La courbe devient horizontale.</li>
+    </ul>
+    <p>On appelle les deux derniers domaines la fatigue « vibratoire » (élastique), objet principal de la série ; la fatigue plastique oligocyclique demande une approche à part, en déformation imposée.</p>
+  </div>
+
+  <div class="lab" id="m3">
+    <p class="lab-h">Manipulation 3 : lire le toboggan</p>
+    <p class="lab-sub">Choisis une amplitude σ<sub>a</sub> : le pointeur part de l'axe vertical, rejoint la courbe, puis descend lire N<sub>r</sub>. Le domaine traversé s'allume. Change de matériau pour voir l'aluminium, qui n'a pas de plage.</p>
+    <div class="radios" role="radiogroup" aria-label="Matériau">
+      <label><input type="radio" name="m3mat" value="acier" checked>acier</label>
+      <label><input type="radio" name="m3mat" value="alu">alliage d'aluminium</label>
+    </div>
+    <div class="ctrl"><label for="m3s">Amplitude <span class="sig">σ<sub>a</sub></span></label><input type="range" id="m3s" class="r-sig" min="100" max="600" step="5" value="320"><output id="m3so"></output></div>
+    <div class="btns" id="m3ex"><button class="btn" data-v="500" type="button">500 MPa</button><button class="btn" data-v="350" type="button">350 MPa</button><button class="btn" data-v="280" type="button">280 MPa</button><button class="btn" data-v="250" type="button">250 MPa</button></div>
+    <svg id="m3svg" role="img" aria-label="Courbe de Wöhler avec ses trois domaines et la lecture de la durée de vie"></svg>
+    <div class="readout" id="m3r"></div>
+    <p class="status" id="m3msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">les trois domaines</span></div>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Domaine</th><th>Contrainte</th><th>Durée de vie</th><th>Déformation plastique</th></tr>
+      <tr><td><b>Fatigue plastique oligocyclique</b></td><td>σ<sub>a</sub> &gt; R<sub>e</sub></td><td class="n">≲ 10⁴ cycles</td><td>macroscopique : toute la section, à chaque cycle</td></tr>
+      <tr><td><b>Endurance limitée</b></td><td>σ<sub>D</sub> &lt; σ<sub>a</sub> &lt; R<sub>e</sub></td><td class="n">10⁴ à 10⁶–10⁷ cycles</td><td>localisée : quelques grains en surface, près des défauts et des inclusions</td></tr>
+      <tr><td><b>Endurance illimitée</b></td><td>σ<sub>a</sub> &lt; σ<sub>D</sub></td><td class="n">pas de rupture</td><td>trop faible pour amorcer une fissure qui se propage</td></tr>
+    </table></div>
+    <p class="mut" style="font-size:.9rem">≲ : « inférieur ou de l'ordre de ». Les frontières sont des ordres de grandeur : la transition oligocyclique se situe entre 10³ et 10⁵ cycles selon les matériaux.</p>
+    <p>Deux repères aident à lire l'axe vertical : <b>≈ R<sub>m</sub></b> à N<sub>r</sub> ≈ 1 (une contrainte égale à R<sub>m</sub> casse la pièce dès le premier chargement, en un quart de cycle) et <b>≈ R<sub>e</sub></b> vers 10⁴ cycles, à la sortie du domaine oligocyclique.</p>
+    <div class="def"><b>📖 Résistance à la fatigue à N cycles</b>, notée σ<sub>D</sub>(N) ou σ<sub>N</sub> : l'amplitude qui conduit à la rupture au bout de N cycles. C'est la lecture « à l'envers » de la courbe : on part de N et on remonte jusqu'à la contrainte.</div>
+    <div class="tip"><b>💡 Ordre de grandeur</b> : pour les aciers, la limite d'endurance en flexion rotative vaut souvent 0,4 à 0,5 fois R<sub>m</sub>. Un acier de R<sub>m</sub> = 600 MPa a donc σ<sub>D</sub> ≈ 240 à 300 MPa ; le modèle des manipulations prend 270 MPa.</div>
+    <div class="tip"><b>💡 Contrainte ou déformation imposée ?</b> En endurance, on pilote l'essai en <b>contrainte</b>. En oligocyclique, la matière plastifie et la contrainte n'est plus un bon repère : on pilote l'essai en <b>déformation</b> imposée et on trace l'amplitude de déformation en fonction de N<sub>r</sub> (loi de Manson-Coffin).</div>
+    <div class="warn"><b>⚠️ Piège :</b> « endurance limitée » ne veut pas dire « pièce de mauvaise qualité ». Elle veut dire que la durée de vie est <b>finie</b> et qu'il faut la calculer : c'est le cas normal de la plupart des structures, et de presque toutes les soudures.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique :</b> « <b>palier, pente, plage</b> » : les trois P du toboggan, de gauche à droite.</div>
+    <div class="weld"><b>🔥 Et les structures soudées ?</b>
+      <p>Elles travaillent presque toujours en <b>endurance limitée</b> : contraintes nominales bien inférieures à R<sub>e</sub>, millions de cycles. Le domaine oligocyclique concerne des cas particuliers : séismes, appareils à pression qui subissent quelques milliers de mises en pression, pièces chauffées et refroidies (fatigue thermique).</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c4">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">4</div>
+    <div class="c-title"><h2>La limite d'endurance</h2><p>La plage de l'acier, la pente sans fin de l'aluminium</p></div>
+    <div class="c-img"><span class="ico">🏖️</span><span><small>Image à retenir</small>L'acier finit sur la plage ; l'aluminium glisse toujours, et on choisit où l'arrêter</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">plage ou pente sans fin</span></div>
+    <p>Les métaux sont faits de petits cristaux, les <b>grains</b>, dans lesquels les atomes sont rangés selon un motif qui se répète. Deux motifs nous intéressent ici :</p>
+    <ul>
+      <li><b>cubique centré (CC)</b> : un atome à chaque coin d'un cube et un au centre. C'est le cas du fer à température ambiante, donc des aciers de construction ;</li>
+      <li><b>cubique à faces centrées (CFC)</b> : un atome à chaque coin et un au centre de chaque face. C'est le cas de l'aluminium, du cuivre, du nickel et des aciers inoxydables austénitiques.</li>
+    </ul>
+    <p>Les métaux du premier type, comme les aciers, ont souvent une vraie <b>plage</b> : sous σ<sub>D</sub>, plus de rupture. Ceux du second type, comme l'aluminium, n'en ont pas : la courbe <b>continue de descendre</b>, doucement mais sans fin. Pour eux, on définit une <b>limite d'endurance conventionnelle</b> : la contrainte qui conduit à la rupture au bout d'un nombre de cycles choisi, 10⁶, 10⁷, 10⁸ ou 10⁹, au moins égal au nombre de cycles que la pièce verra en service.</p>
+    <p>Image : un forfait téléphonique. L'acier a un forfait <b>illimité</b> sous σ<sub>D</sub>. L'aluminium n'a que des forfaits <b>à N cycles</b> : il faut choisir le bon forfait pour l'usage prévu.</p>
+  </div>
+
+  <div class="lab" id="m4">
+    <p class="lab-h">Manipulation 4 : acier contre aluminium</p>
+    <p class="lab-sub">Les deux courbes médianes sur le même diagramme. Choisis le nombre de cycles de la limite conventionnelle de l'aluminium, puis active le domaine gigacyclique de l'acier.</p>
+    <div class="btns" id="m4N"><button class="btn" data-n="6" type="button">10⁶</button><button class="btn on" data-n="7" type="button">10⁷</button><button class="btn" data-n="8" type="button">10⁸</button><button class="btn" data-n="9" type="button">10⁹</button></div>
+    <div class="btns"><button class="btn" id="m4giga" type="button">Domaine gigacyclique de l'acier : masqué</button></div>
+    <svg id="m4svg" role="img" aria-label="Courbes de Wöhler d'un acier avec limite d'endurance et d'un alliage d'aluminium sans limite"></svg>
+    <div class="readout" id="m4r"></div>
+    <p class="status" id="m4msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">σ<sub>D</sub> et ses nuances</span></div>
+    <div class="def"><b>📖 Limite d'endurance σ<sub>D</sub></b> : plus grande amplitude de contrainte qu'une éprouvette supporte sans rompre, quel que soit le nombre de cycles. <b>Limite d'endurance conventionnelle σ<sub>D</sub>(N)</b> : amplitude qui conduit à la rupture au bout de N cycles, N étant fixé par convention (10⁶ à 10⁹) et au moins égal au nombre de cycles en service.</div>
+    <p><b>Pourquoi une plage pour les aciers ?</b> L'explication la plus citée : dans le fer cubique centré, de petits atomes de carbone et d'azote logés entre les atomes de fer viennent « épingler » les défauts du cristal qui permettent le glissement (les dislocations, cours 3). Sous une contrainte faible, les glissements restent bloqués et aucune fissure ne naît. Dans l'aluminium, rien n'épingle durablement ces défauts : chaque cycle, même petit, fait un peu de dégât.</p>
+    <p><b>Trois nuances importantes.</b></p>
+    <ul>
+      <li><b>Corrosion</b> : en eau de mer ou en atmosphère agressive, l'acier perd sa plage ; sa courbe continue de descendre comme celle de l'aluminium.</li>
+      <li><b>Domaine gigacyclique</b> (au-delà de 10⁸ cycles) : des essais sur machines à ultrasons (10⁹ cycles en quelques heures) ont montré que certains aciers rompent sous σ<sub>D</sub>, à partir d'une inclusion interne. La cassure montre alors un « œil de poisson » (<i>fish-eye</i>) : une zone claire et ronde autour de l'inclusion.</li>
+      <li><b>Chargement variable</b> : quelques grands cycles peuvent amorcer une fissure que les petits cycles, même sous σ<sub>D</sub>, font ensuite grandir. C'est pourquoi l'EN 1993-1-9 prolonge ses courbes sous la limite à amplitude constante (chapitre 7).</li>
+    </ul>
+
+    <h4>Et si la contrainte moyenne n'est pas nulle ? <span class="hp">complément</span></h4>
+    <p>σ<sub>D</sub> est d'ordinaire mesurée à σ<sub>m</sub> = 0. Une contrainte moyenne de traction réduit l'amplitude admissible. On le représente sur le <b>diagramme de Haigh</b> : σ<sub>m</sub> en abscisse, σ<sub>a</sub> en ordonnée. Deux critères classiques relient le point (0, σ<sub>D</sub>) au point (R<sub>m</sub>, 0) :</p>
+    <div class="fx"><div class="row big" style="font-size:1.4rem">
+      <span>Goodman : <span class="sig">σ<sub>a</sub></span> = <span class="mat">σ<sub>D</sub></span>(1 − <span class="tau">σ<sub>m</sub></span>/R<sub>m</sub>)</span>
+      <span>Gerber : <span class="sig">σ<sub>a</sub></span> = <span class="mat">σ<sub>D</sub></span>(1 − (<span class="tau">σ<sub>m</sub></span>/R<sub>m</sub>)²)</span></div>
+      <p class="cap">la droite de Goodman est prudente ; la parabole de Gerber est plus proche des résultats d'essais sur aciers ductiles</p></div>
+    <p><b>Exemple.</b> Acier de σ<sub>D</sub> = 270 MPa et R<sub>m</sub> = 600 MPa, sous σ<sub>m</sub> = 150 MPa. Goodman : <span class="m">σ<sub>a</sub> = 270 × (1 − 150/600) = 270 × 0,75 = 202,5 MPa</span>. Gerber : <span class="m">σ<sub>a</sub> = 270 × (1 − 0,25²) = 253 MPa</span>.</p>
+  </div>
+
+  <div class="lab" id="m4b">
+    <p class="lab-h">Manipulation 4 bis : le diagramme de Haigh</p>
+    <p class="lab-sub">Place un cycle (σ<sub>m</sub>, σ<sub>a</sub>) sur le diagramme. Sous la courbe choisie, il est en endurance illimitée ; au-dessus, il casse un jour. L'acier a σ<sub>D</sub> = 270 MPa, R<sub>e</sub> = 400 MPa et R<sub>m</sub> = 600 MPa.</p>
+    <div class="ctrl"><label for="m4bm">Moyenne <span class="tau">σ<sub>m</sub></span></label><input type="range" id="m4bm" class="r-tau" min="-200" max="550" step="5" value="150"><output id="m4bmo"></output></div>
+    <div class="ctrl"><label for="m4ba">Amplitude <span class="sig">σ<sub>a</sub></span></label><input type="range" id="m4ba" class="r-sig" min="0" max="350" step="5" value="200"><output id="m4bao"></output></div>
+    <svg id="m4bsvg" role="img" aria-label="Diagramme de Haigh avec les critères de Goodman et de Gerber"></svg>
+    <div class="readout" id="m4br"></div>
+    <p class="status" id="m4bmsg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2, suite <span class="tag">pièges et métier</span></div>
+    <div class="warn"><b>⚠️ Piège : une limite conventionnelle sans son N ne veut rien dire.</b> « σ<sub>D</sub> = 150 MPa » pour un aluminium n'a de sens qu'avec « à 10⁸ cycles ». Dans la manipulation 4, la valeur passe de 221 à 125 MPa entre 10⁶ et 10⁹ cycles.</div>
+    <div class="warn"><b>⚠️ Piège : à quelles conditions a-t-on mesuré σ<sub>D</sub> ?</b> Flexion rotative (R = −1) sur éprouvette polie, le plus souvent. Pour une pièce réelle, il faut la corriger : contrainte moyenne (Goodman), entailles, état de surface, taille (chapitre 7).</div>
+    <div class="warn"><b>⚠️ Piège : Goodman en compression.</b> Les deux critères ne s'appliquent qu'aux contraintes moyennes de traction. Une σ<sub>m</sub> de compression n'aggrave pas la fatigue (la fissure se referme, cours 1) : par prudence, on garde σ<sub>D</sub> sans la majorer.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique :</b> « <b>Cubique Centré, Chemin Certain vers la plage</b> ; <b>Faces Centrées, Forfait à Fixer</b> ».</div>
+    <div class="weld"><b>🔥 Pas de Goodman pour les soudures brutes</b>
+      <p>Dans un assemblage soudé brut, les contraintes résiduelles proches de R<sub>e</sub> calent le cycle local juste sous R<sub>e</sub>, quelle que soit la σ<sub>m</sub> nominale (cours 1). La correction de Goodman n'a donc pas de sens : on raisonne directement en Δσ. Le diagramme de Haigh sert pour les pièces usinées, forgées ou les soudures détensionnées.</p>
+    </div>
+  </div>
+</div>
+</section>
+<section class="chap" id="c5">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">5</div>
+    <div class="c-title"><h2>Mettre la courbe en équation</h2><p>La loi de Basquin</p></div>
+    <div class="c-img"><span class="ico">📐</span><span><small>Image à retenir</small>La règle posée sur le papier log-log : la descente du toboggan devient une droite</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">une droite et un levier</span></div>
+    <p>Retrace la courbe de Wöhler avec <b>les deux axes</b> en échelle logarithmique : la grande descente, celle de l'endurance limitée, devient presque une <b>droite</b>. Deux points suffisent alors pour la tracer, et une équation simple la décrit : c'est la <b>loi de Basquin</b> (du nom de l'ingénieur américain O. H. Basquin, 1910).</p>
+    <p>Cette droite cache un <b>levier puissant</b>. Pour une éprouvette d'acier lisse, la pente correspond à un exposant k ≈ 10 : si tu baisses la contrainte de 10 %, la durée de vie est multipliée par (1/0,9)¹⁰ ≈ 2,9 ; si tu la divises par 2, la durée de vie est multipliée par 2¹⁰ ≈ 1 000. Petite cause, énorme effet.</p>
+    <p>Pour une soudure, l'exposant vaut 3 : diviser Δσ par 2 multiplie la durée de vie par 2³ = 8. Le levier est plus faible, mais il reste le premier outil du concepteur : <b>baisser la contrainte</b> (épaissir, mieux placer la soudure) paie toujours.</p>
+  </div>
+
+  <div class="lab" id="m5">
+    <p class="lab-h">Manipulation 5 : la droite de Basquin</p>
+    <p class="lab-sub">Deux essais définissent la droite : règle leurs contraintes et leurs durées de vie. L'exposant k et la constante C se calculent en direct. Le troisième curseur demande une prévision.</p>
+    <div class="ctrl"><label for="m5s1">Essai 1 : <span class="sig">σ<sub>a1</sub></span></label><input type="range" id="m5s1" class="r-sig" min="200" max="500" step="5" value="400"><output id="m5s1o"></output></div>
+    <div class="ctrl"><label for="m5n1">Essai 1 : log <span class="eps">N<sub>1</sub></span></label><input type="range" id="m5n1" class="r-eps" min="3" max="5" step="0.05" value="4"><output id="m5n1o"></output></div>
+    <div class="ctrl"><label for="m5s2">Essai 2 : <span class="sig">σ<sub>a2</sub></span></label><input type="range" id="m5s2" class="r-sig" min="100" max="350" step="5" value="250"><output id="m5s2o"></output></div>
+    <div class="ctrl"><label for="m5n2">Essai 2 : log <span class="eps">N<sub>2</sub></span></label><input type="range" id="m5n2" class="r-eps" min="5" max="7" step="0.05" value="6"><output id="m5n2o"></output></div>
+    <div class="ctrl"><label for="m5p">Prévision à <span class="sig">σ<sub>a</sub></span></label><input type="range" id="m5p" class="r-sig" min="100" max="500" step="5" value="300"><output id="m5po"></output></div>
+    <div class="btns"><button class="btn" id="m5half" type="button">Diviser σ<sub>a</sub> par 2</button><button class="btn" id="m5weld" type="button">Pente des soudures (k = 3)</button><button class="btn" id="m5ex" type="button">↺ Exemple du cours</button></div>
+    <svg id="m5svg" role="img" aria-label="Droite de Basquin sur un diagramme log-log passant par deux points d'essai"></svg>
+    <div class="readout" id="m5r"></div>
+    <p class="status" id="m5msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">deux écritures de la même loi</span></div>
+    <p>Dans le domaine d'endurance limitée, la loi de Basquin s'écrit, dans sa forme « ingénieur » :</p>
+    <div class="fx"><div class="big"><span class="sig">σ<sub>a</sub></span><sup><span class="mat">k</span></sup> · <span class="eps">N<sub>r</sub></span> = <span class="mat">C</span></div><p class="cap">valable entre la sortie du domaine oligocyclique et la limite d'endurance</p></div>
+    <dl class="syms">
+      <dt class="mat">k</dt><dd>exposant de la courbe, sans unité : environ 8 à 15 pour une éprouvette lisse en acier, 3 pour une soudure</dd>
+      <dt class="mat">C</dt><dd>constante du matériau (et des conditions d'essai), en MPa<sup>k</sup> : une unité bizarre, on l'utilise surtout via des rapports</dd>
+    </dl>
+    <p>En prenant le logarithme : <span class="m">log N<sub>r</sub> = log C − k·log σ<sub>a</sub></span>. Sur le papier log-log, c'est une droite. Sur le diagramme de Wöhler (log N<sub>r</sub> en abscisse, log σ<sub>a</sub> en ordonnée), sa pente vaut −1/k.</p>
+    <h4>La forme d'origine, avec les alternances</h4>
+    <div class="fx"><div class="big"><span class="sig">σ<sub>a</sub></span> = <span class="mat">σ′<sub>f</sub></span> · (2<span class="eps">N<sub>r</sub></span>)<sup><span class="mat">b</span></sup></div><p class="cap">2N<sub>r</sub> : nombre d'alternances (deux par cycle)</p></div>
+    <dl class="syms">
+      <dt class="mat">σ′<sub>f</sub></dt><dd>coefficient de résistance à la fatigue, en MPa (de l'ordre de R<sub>m</sub> à 2R<sub>m</sub> pour les aciers)</dd>
+      <dt class="mat">b</dt><dd>exposant de Basquin, négatif et sans unité : environ −0,05 à −0,12</dd>
+    </dl>
+    <p>Les deux formes sont équivalentes avec <span class="m"><b>k = −1/b</b></span> : en élevant la seconde à la puissance −1/b, on trouve σ<sub>a</sub><sup>k</sup>·2N<sub>r</sub> = σ′<sub>f</sub><sup>k</sup>, soit σ<sub>a</sub><sup>k</sup>·N<sub>r</sub> = σ′<sub>f</sub><sup>k</sup>/2 = C.</p>
+    <h4>Ce qu'on fait avec en pratique</h4>
+    <p><b>Trouver k à partir de deux essais</b> (σ<sub>a1</sub>, N<sub>1</sub>) et (σ<sub>a2</sub>, N<sub>2</sub>) : en écrivant σ<sub>a1</sub><sup>k</sup>N<sub>1</sub> = σ<sub>a2</sub><sup>k</sup>N<sub>2</sub> puis en prenant le logarithme :</p>
+    <div class="fx"><div class="big" style="font-size:1.6rem"><span class="mat">k</span> = <span class="frac"><span>log(<span class="eps">N<sub>2</sub></span>/<span class="eps">N<sub>1</sub></span>)</span><span>log(<span class="sig">σ<sub>a1</sub></span>/<span class="sig">σ<sub>a2</sub></span>)</span></span></div></div>
+    <p><b>Prévoir une durée de vie</b> à partir d'un point connu, sans même calculer C :</p>
+    <div class="fx"><div class="big" style="font-size:1.6rem"><span class="eps">N</span> = <span class="eps">N<sub>1</sub></span> · <span style="font-size:1.25em">(</span><span class="frac"><span><span class="sig">σ<sub>a1</sub></span></span><span><span class="sig">σ<sub>a</sub></span></span></span><span style="font-size:1.25em">)</span><sup><span class="mat">k</span></sup></div></div>
+    <p><b>Exemple</b> (réglage initial de la manipulation). Essais : 400 MPa → 10⁴ cycles et 250 MPa → 10⁶ cycles.</p>
+    <ul>
+      <li><span class="m">k = log(10⁶/10⁴)/log(400/250) = 2/0,2041 = <b>9,80</b></span>, soit b = −1/9,80 = −0,102.</li>
+      <li>À 300 MPa : <span class="m">N = 10⁴ × (400/300)<sup>9,80</sup> = 10⁴ × 16,8 ≈ <b>1,7 × 10⁵ cycles</b></span>.</li>
+      <li><span class="m">σ′<sub>f</sub> = σ<sub>a1</sub>/(2N<sub>1</sub>)<sup>b</sup> = 400 × (2 × 10⁴)<sup>0,102</sup> ≈ 1 100 MPa</span>.</li>
+    </ul>
+    <div class="warn"><b>⚠️ Piège : l'extrapolation.</b> La droite ne vaut que dans le domaine d'endurance limitée. Prolongée vers la gauche, elle surestime la contrainte supportée en oligocyclique ; prolongée sous σ<sub>D</sub>, elle prédit une rupture qui n'aura pas lieu pour un acier, ou une durée de vie trop optimiste en chargement variable.</div>
+    <div class="warn"><b>⚠️ Piège : N<sub>r</sub> ou 2N<sub>r</sub>.</b> Avec la forme σ′<sub>f</sub>(2N<sub>r</sub>)<sup>b</sup>, oublier le 2 décale toute la courbe d'un facteur 2 en durée de vie.</div>
+    <div class="tip"><b>💡 Le réflexe des rapports.</b> Avec la forme σ<sub>a</sub><sup>k</sup>N = C, multiplier la contrainte par λ divise la durée de vie par λ<sup>k</sup>. Pas besoin de connaître C pour comparer deux situations.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique :</b> « <b>la contrainte à la puissance k, fois N, c'est constant</b> » : <b>σ<sup>k</sup>·N = C</b>, comme un produit qu'on ne peut pas augmenter.</div>
+    <div class="weld"><b>🔥 Les soudures : k = 3 partout</b>
+      <p>Les courbes de l'EN 1993-1-9 et de l'IIW s'écrivent <span class="m">Δσ<sup>m</sup>·N = constante</span> avec <b>m = 3</b> (la lettre m est celle des normes ; c'est notre k). Cette valeur vient directement de la loi de propagation de Paris, dont l'exposant vaut environ 3 pour les aciers (cours 4) : une soudure, c'est surtout de la propagation. Conséquence : réduire Δσ de 20 % multiplie la durée de vie par (1/0,8)³ ≈ 1,95.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c6">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">6</div>
+    <div class="c-title"><h2>La dispersion</h2><p>Une courbe de Wöhler est une probabilité</p></div>
+    <div class="c-img"><span class="ico">🎯</span><span><small>Image à retenir</small>La pluie de fléchettes : le même lanceur ne touche jamais deux fois le même point</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la pluie de fléchettes</span></div>
+    <p>Lance dix fléchettes en visant le même point : elles se groupent, mais aucune ne tombe exactement au même endroit. Les essais de fatigue font pareil. Dix éprouvettes « identiques », au même niveau de contrainte, donnent dix durées de vie différentes, parfois dans un rapport de 1 à 10. Chaque éprouvette a ses propres petits défauts : rayures, inclusions, grains plus ou moins bien orientés. Et la fatigue démarre toujours au point le plus faible.</p>
+    <p>Conséquence : la « courbe de Wöhler » tracée dans un catalogue est en général la <b>courbe médiane</b> (la moitié des éprouvettes casse avant, la moitié après). Pour concevoir une pièce, on ne peut pas accepter qu'une pièce sur deux casse avant la date prévue : on utilise une courbe décalée vers la gauche, qui correspond à une forte <b>probabilité de survie</b>, par exemple 97,7 %.</p>
+  </div>
+
+  <div class="lab" id="m6">
+    <p class="lab-h">Manipulation 6 : le nuage d'essais</p>
+    <p class="lab-sub">Huit éprouvettes par niveau, quatre niveaux. Le curseur choisit la probabilité de survie de la courbe de calcul ; l'histogramme montre la répartition des durées de vie au niveau sélectionné, en échelle logarithmique.</p>
+    <div class="ctrl"><label for="m6p">Probabilité de survie</label><input type="range" id="m6p" class="r-mat" min="0" max="5" step="1" value="3"><output id="m6po"></output></div>
+    <div class="ctrl"><label for="m6s">Écart-type <span class="mat">s</span> (en décades)</label><input type="range" id="m6s" class="r-mat" min="0.05" max="0.4" step="0.01" value="0.2"><output id="m6so"></output></div>
+    <div class="btns" id="m6lv"><button class="btn" data-l="0" type="button">Niveau 380 MPa</button><button class="btn" data-l="1" type="button">340 MPa</button><button class="btn on" data-l="2" type="button">310 MPa</button><button class="btn" data-l="3" type="button">290 MPa</button><button class="btn play" id="m6new" type="button">🎲 Nouveau tirage</button></div>
+    <svg id="m6svg" role="img" aria-label="Nuage de résultats d'essais de fatigue avec la courbe médiane et la courbe de calcul"></svg>
+    <svg id="m6hist" role="img" aria-label="Histogramme des logarithmes des durées de vie au niveau choisi"></svg>
+    <div class="readout" id="m6r"></div>
+    <p class="status" id="m6msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">la loi log-normale</span></div>
+    <p>À contrainte fixée, on observe que ce n'est pas N<sub>r</sub> mais <b>log N<sub>r</sub></b> qui se répartit selon une <b>loi normale</b> (la courbe en cloche de Gauss) : on dit que N<sub>r</sub> suit une <b>loi log-normale</b>. Deux nombres la résument :</p>
+    <dl class="syms">
+      <dt class="mat">μ</dt><dd>« mu » : la moyenne des log N<sub>r</sub> ; 10<sup>μ</sup> est la durée de vie <b>médiane</b> N<sub>50</sub></dd>
+      <dt class="mat">s</dt><dd>l'<b>écart-type</b> des log N<sub>r</sub> : la largeur typique du nuage, en décades. s = √[Σ(x<sub>i</sub> − μ)²/(n − 1)], où Σ (« sigma » majuscule) désigne la somme sur les n essais et x<sub>i</sub> = log N<sub>i</sub></dd>
+    </dl>
+    <p>La durée de vie atteinte avec une probabilité de survie P<sub>s</sub> s'écrit :</p>
+    <div class="fx"><div class="big"><span class="eps">N<sub>Ps</sub></span> = 10<sup><span class="mat">μ</span> − <span class="mat">z</span>·<span class="mat">s</span></sup></div><p class="cap">z dépend de la probabilité de survie choisie (tableau ci-dessous)</p></div>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Probabilité de survie P<sub>s</sub></th><td class="n">50 %</td><td class="n">90 %</td><td class="n">95 %</td><td class="n">97,7 %</td><td class="n">99,9 %</td></tr>
+      <tr><th>z</th><td class="n">0</td><td class="n">1,28</td><td class="n">1,645</td><td class="n">2</td><td class="n">3,09</td></tr>
+    </table></div>
+    <p><b>Exemple.</b> μ = 5,2 et s = 0,2 : la durée de vie médiane est 10<sup>5,2</sup> ≈ 1,6 × 10⁵ cycles ; à 97,7 % de survie, <span class="m">N = 10<sup>5,2 − 2 × 0,2</sup> = 10<sup>4,8</sup> ≈ 6,3 × 10⁴ cycles</span>, soit 2,5 fois moins que la médiane.</p>
+    <h4>La méthode de l'escalier, pour mesurer σ<sub>D</sub></h4>
+    <p>La limite d'endurance aussi est dispersée. Pour la mesurer, on utilise souvent la <b>méthode de l'escalier</b> : on essaie une éprouvette à un niveau σ ; si elle casse avant 10⁷ cycles, la suivante est essayée un cran d'amplitude d plus bas ; si elle survit, un cran plus haut. Après 15 à 30 éprouvettes, les niveaux oscillent autour de la limite d'endurance médiane, dont on calcule la moyenne et l'écart-type.</p>
+    <div class="warn"><b>⚠️ Piège : moyenner les logarithmes, pas les N.</b> La moyenne arithmétique de 10⁴ et 10⁶ vaut 505 000 ; la moyenne de leurs logarithmes (4 et 6) vaut 5, soit 10⁵ cycles. C'est la seconde qui représente la médiane d'une loi log-normale.</div>
+    <div class="warn"><b>⚠️ Piège : ne jamais concevoir sur la médiane.</b> Une courbe médiane, c'est une pièce sur deux qui casse avant la date prévue.</div>
+    <div class="tip"><b>💡 Ordres de grandeur de s</b> : environ 0,1 à 0,3 décade pour des éprouvettes lisses, de l'ordre de 0,2 pour les assemblages soudés. La dispersion augmente quand on s'approche de σ<sub>D</sub>.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique :</b> « <b>deux écarts-types à gauche, 97,7 % de survivants</b> ».</div>
+    <div class="weld"><b>🔥 Valeurs caractéristiques des normes</b>
+      <p>Les courbes FAT de l'EN 1993-1-9 ne sont pas des courbes médianes : ce sont des valeurs <b>caractéristiques</b>, qui correspondent à une probabilité de survie de 95 % avec un niveau de confiance de 75 %, compte tenu de l'écart-type et du nombre d'essais disponibles. Les recommandations IIW reposent elles aussi sur des valeurs caractéristiques à forte probabilité de survie. Un coefficient partiel de sécurité γ<sub>Mf</sub> s'ajoute encore par-dessus (chapitre 7).</p>
+    </div>
+  </div>
+</div>
+</section>
+<section class="chap" id="c7">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">7</div>
+    <div class="c-title"><h2>Des éprouvettes aux soudures</h2><p>Entailles, état de surface et classes FAT</p></div>
+    <div class="c-img"><span class="ico">🏷️</span><span><small>Image à retenir</small>L'étiquette FAT : chaque détail soudé porte son prix en MPa, à deux millions de cycles</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">du laboratoire à l'atelier</span></div>
+    <p>L'éprouvette de laboratoire est une star de concours : petite, polie, sans entaille, dans un air sec. La pièce réelle est plus rugueuse, plus grosse, percée, filetée, soudée, parfois mouillée. Chaque différence <b>abaisse la courbe</b>. On réalise donc aussi des essais sur éprouvettes à forte concentration de contrainte, entaillées, préfissurées, ou directement sur des pièces réelles.</p>
+    <p>Pour les assemblages soudés, on est allé jusqu'au bout de cette logique : on a testé chaque <b>type de détail</b> (cordon bout à bout arasé ou non, raidisseur transversal, gousset, attache longitudinale…) tel qu'il sort de l'atelier, puis on a rangé les résultats dans un catalogue de courbes. Chaque détail reçoit une <b>étiquette</b>, sa classe FAT : l'étendue de contrainte, en MPa, qu'il supporte pendant 2 millions de cycles. FAT 160 pour une tôle laminée sans soudure, FAT 36 pour les détails les plus sévères : un rapport de plus de 4 en contrainte, donc de plus de 80 en durée de vie (4,4³ ≈ 88).</p>
+    <p>Fait remarquable : la classe FAT ne dépend pas de la nuance d'acier. Un S690 soudé n'a pas une meilleure tenue en fatigue qu'un S235 soudé, parce que la vie d'une soudure est une durée de propagation, et que les fissures se propagent à peu près à la même vitesse dans tous les aciers.</p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">entailles et état de surface</span></div>
+    <div class="def"><b>📖 Coefficient effectif d'entaille K<sub>f</sub></b> : rapport entre la limite d'endurance d'une éprouvette lisse et celle d'une éprouvette entaillée. Il est toujours compris entre 1 et le coefficient théorique K<sub>t</sub> (rapport entre la contrainte au fond de l'entaille et la contrainte nominale, cours 1).</div>
+    <div class="fx"><div class="row big" style="font-size:1.5rem"><span><span class="tau">K<sub>f</sub></span> = 1 + <span class="mat">q</span>(<span class="tau">K<sub>t</sub></span> − 1)</span><span><span class="mat">σ<sub>D,entaillée</sub></span> = <span class="frac"><span><span class="mat">σ<sub>D</sub></span></span><span><span class="tau">K<sub>f</sub></span></span></span></span></div>
+      <p class="cap">q : sensibilité à l'entaille, entre 0 (insensible) et 1 (pleinement sensible)</p></div>
+    <p>La sensibilité q est proche de 1 pour les aciers à haute résistance et les grandes entailles, plus faible pour les métaux doux et les entailles très aiguës. <b>Exemple</b> : K<sub>t</sub> = 2,5 et q = 0,8 donnent <span class="m">K<sub>f</sub> = 1 + 0,8 × 1,5 = 2,2</span> ; un acier de σ<sub>D</sub> = 270 MPa n'a plus que <span class="m">270/2,2 ≈ 123 MPa</span> au fond de cette entaille, exprimés en contrainte nominale.</p>
+    <p><b>État de surface et taille</b> : on multiplie encore σ<sub>D</sub> par des coefficients inférieurs à 1. Ordres de grandeur du coefficient de surface pour un acier de R<sub>m</sub> ≈ 600 MPa : poli 1 ; rectifié ≈ 0,9 ; usiné ≈ 0,8 ; laminé à chaud ≈ 0,6 ; brut de forge ≈ 0,5. Plus la pièce est grosse, plus elle a de chances de contenir un défaut critique : le coefficient de taille descend de 1 à environ 0,8 pour un diamètre de 50 mm.</p>
+    <div class="warn"><b>⚠️ Piège : on ne corrige pas une classe FAT par K<sub>t</sub>.</b> La classe FAT d'un détail soudé contient déjà l'effet de sa géométrie, de son pied de cordon et de ses défauts usuels. On l'applique à la contrainte <b>nominale</b>, sans multiplier par un K<sub>t</sub> de soudure (sauf méthodes particulières, comme la contrainte au point chaud, qui utilisent d'autres courbes).</div>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">les courbes de l'EN 1993-1-9</span> <span class="hp">complément</span></div>
+    <p>Chaque catégorie de détail est repérée par <span class="mat"><b>Δσ<sub>C</sub></b></span> (C comme catégorie), le nombre de la classe FAT : 160, 140, 125, 112, 100, 90, 80, 71, 63, 56, 50, 45, 40 ou 36 MPa. La courbe de résistance Δσ<sub>R</sub>(N) a trois morceaux :</p>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Nombre de cycles et loi</th><th>Repère</th></tr>
+      <tr><td><b>N ≤ 5 × 10⁶</b><br><span class="m">Δσ<sub>R</sub>³·N = Δσ<sub>C</sub>³ × 2 × 10⁶</span></td><td>pente m = 3, passe par Δσ<sub>C</sub> à 2 × 10⁶ cycles</td></tr>
+      <tr><td><b>5 × 10⁶ &lt; N ≤ 10⁸</b><br><span class="m">Δσ<sub>R</sub>⁵·N = Δσ<sub>D</sub>⁵ × 5 × 10⁶</span></td><td>pente m = 5 ; Δσ<sub>D</sub> = 0,737 Δσ<sub>C</sub> est la limite d'endurance à amplitude constante</td></tr>
+      <tr><td><b>N &gt; 10⁸</b><br><span class="m">Δσ<sub>R</sub> = Δσ<sub>L</sub></span></td><td>Δσ<sub>L</sub> = 0,405 Δσ<sub>C</sub> : limite de troncature, en dessous de laquelle les cycles ne comptent plus</td></tr>
+    </table></div>
+    <p class="mut" style="font-size:.9rem">D'où viennent 0,737 et 0,405 ? Δσ<sub>D</sub> = Δσ<sub>C</sub>·(2/5)<sup>1/3</sup> = 0,737 Δσ<sub>C</sub> ; Δσ<sub>L</sub> = Δσ<sub>D</sub>·(5/100)<sup>1/5</sup> = 0,549 Δσ<sub>D</sub> = 0,405 Δσ<sub>C</sub>.</p>
+    <p><b>Vérification</b> d'un détail sous un chargement d'amplitude constante Δσ répété N fois :</p>
+    <div class="fx"><div class="big" style="font-size:1.6rem"><span class="mat">γ<sub>Ff</sub></span>·<span class="sig">Δσ</span> ≤ <span class="frac"><span><span class="mat">Δσ<sub>R</sub></span>(<span class="eps">N</span>)</span><span><span class="mat">γ<sub>Mf</sub></span></span></span></div>
+      <p class="cap">γ<sub>Ff</sub> (« gamma ») : coefficient partiel sur les actions de fatigue, 1,0 recommandé ; γ<sub>Mf</sub> : coefficient partiel sur la résistance en fatigue</p></div>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>γ<sub>Mf</sub> recommandé (EN 1993-1-9)</th><th>Conséquences faibles</th><th>Conséquences élevées</th></tr>
+      <tr><td>Tolérance aux dommages (structure inspectée, redondante)</td><td class="n">1,00</td><td class="n">1,15</td></tr>
+      <tr><td>Durée de vie sûre (pas d'inspection prévue)</td><td class="n">1,15</td><td class="n">1,35</td></tr>
+    </table></div>
+    <p><b>Exemple.</b> Détail FAT 71 sous Δσ = 50 MPa, 3 × 10⁶ cycles (on reste sous 5 × 10⁶ : pente 3). <span class="m">Δσ<sub>R</sub> = 71 × (2 × 10⁶/3 × 10⁶)<sup>1/3</sup> = 71 × 0,874 = 62,0 MPa</span>. Avec γ<sub>Mf</sub> = 1,15 : 62,0/1,15 = 53,9 MPa ≥ 50 ✅. Avec γ<sub>Mf</sub> = 1,35 : 45,9 MPa &lt; 50 ❌.</p>
+    <div class="tip"><b>💡 Les recommandations IIW</b> utilisent les mêmes classes FAT et la même pente m = 3, mais placent le coude à 10⁷ cycles (au lieu de 5 × 10⁶), avec une suite de courbe différente selon que l'amplitude est constante ou variable. Toujours vérifier quel référentiel le projet impose.</div>
+  </div>
+
+  <div class="lab" id="m7">
+    <p class="lab-h">Manipulation 7 : vérifier un détail soudé</p>
+    <p class="lab-sub">Choisis la classe FAT du détail, l'étendue appliquée Δσ, le nombre de cycles N et le coefficient γ<sub>Mf</sub>. Le point bleu doit rester sous la courbe de calcul (en tirets). En gris : une éprouvette d'acier lisse et polie, pour comparaison.</p>
+    <div class="ctrl"><label for="m7c">Classe <span class="mat">FAT</span></label><input type="range" id="m7c" class="r-mat" min="0" max="13" step="1" value="7"><output id="m7co"></output></div>
+    <div class="ctrl"><label for="m7d">Étendue <span class="sig">Δσ</span></label><input type="range" id="m7d" class="r-sig" min="10" max="300" step="1" value="60"><output id="m7do"></output></div>
+    <div class="ctrl"><label for="m7n">log <span class="eps">N</span> demandé</label><input type="range" id="m7n" class="r-eps" min="4" max="9" step="0.01" value="6.6"><output id="m7no"></output></div>
+    <div class="btns" id="m7g"><button class="btn" data-g="1" type="button">γ<sub>Mf</sub> = 1,00</button><button class="btn on" data-g="1.15" type="button">1,15</button><button class="btn" data-g="1.35" type="button">1,35</button></div>
+    <svg id="m7svg" role="img" aria-label="Courbe de résistance en fatigue d'une classe FAT, point de chargement et vérification"></svg>
+    <div class="readout" id="m7r"></div>
+    <p class="status" id="m7msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2, fin <span class="tag">pièges et métier</span></div>
+    <div class="warn"><b>⚠️ Piège : choisir le bon morceau de courbe.</b> La formule Δσ<sub>R</sub> = Δσ<sub>C</sub>(2 × 10⁶/N)<sup>1/3</sup> n'est valable que jusqu'à 5 × 10⁶ cycles. Au-delà, il faut passer à la pente 5, puis à la troncature. Et en amplitude constante, si Δσ·γ<sub>Mf</sub> reste sous Δσ<sub>D</sub>, la durée de vie est illimitée.</div>
+    <div class="warn"><b>⚠️ Piège : comparer une soudure à l'acier de base.</b> La courbe grise de la manipulation est tracée en Δσ = 2σ<sub>a</sub> pour pouvoir la comparer : à 2 × 10⁶ cycles, l'acier poli supporte Δσ = 540 MPa, un détail FAT 80 seulement 80 MPa. Près de sept fois moins.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique :</b> « <b>3, 5, 8</b> » : pente <b>3</b> jusqu'à <b>5</b> millions de cycles, pente 5 jusqu'à 10<sup><b>8</b></sup>, puis plus rien.</div>
+    <div class="weld"><b>🔥 Les leviers du concepteur</b>
+      <p>Pour faire passer un détail qui ne passe pas : baisser Δσ (augmenter la section, déplacer la soudure vers une zone moins sollicitée) ; choisir un détail de meilleure classe (cordon bout à bout arasé plutôt que raidisseur, attache plus courte, raccordements progressifs) ; améliorer le pied de cordon (meulage, refusion TIG, martelage : les recommandations IIW accordent alors un bonus sous conditions) ; ou passer en tolérance aux dommages avec un plan d'inspection, pour bénéficier d'un γ<sub>Mf</sub> plus faible.</p>
+    </div>
+  </div>
+</div>
+</section>
+<section class="chap" id="exos">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✎</div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Six exercices et un défi, du tableau d'essais à la poutre soudée</p></div>
+    <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de musculation : on ne progresse qu'en soulevant soi-même</span></div>
+  </div>
+  <div class="lv lv1"><div class="lv-h">👁 Mode d'emploi <span class="tag">calculatrice avec touche « log »</span></div>
+    <p>Cherche chaque question sur papier avant d'ouvrir la correction. Écris la formule littérale, puis les valeurs avec leurs unités. Les manipulations 3, 5 et 7 permettent de vérifier tes résultats.</p>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 1 : lire une campagne d'essais <span class="lvtag">N1 · chapitres 1 et 3</span></h4>
+    <p>Un acier (R<sub>e</sub> = 400 MPa, R<sub>m</sub> = 600 MPa) a été essayé en flexion rotative (R = −1). Les essais sont arrêtés à 10⁷ cycles.</p>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>σ<sub>a</sub> (MPa)</th><td class="n">500</td><td class="n">420</td><td class="n">350</td><td class="n">300</td><td class="n">280</td><td class="n">270</td><td class="n">260</td></tr>
+      <tr><th>N<sub>r</sub> (cycles)</th><td class="n">120</td><td class="n">3 600</td><td class="n">6,4 × 10⁴</td><td class="n">4,6 × 10⁵</td><td class="n">1,3 × 10⁶</td><td class="n">&gt; 10⁷ →</td><td class="n">&gt; 10⁷ →</td></tr>
+    </table></div>
+    <p class="q"><b>a)</b> Dans quel domaine se trouve chaque essai ?</p>
+    <p class="q"><b>b)</b> Que signifie « &gt; 10⁷ → » ? Estime la limite d'endurance σ<sub>D</sub>.</p>
+    <p class="q"><b>c)</b> Calcule le rapport σ<sub>D</sub>/R<sub>m</sub> et commente-le.</p>
+    <p class="q"><b>d)</b> Combien de temps dure un essai arrêté à 10⁷ cycles sur une machine à 50 Hz ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> 500 et 420 MPa sont au-dessus de R<sub>e</sub> = 400 MPa, avec des durées de vie inférieures à 10⁴ cycles : <b>fatigue oligocyclique</b>. 350, 300 et 280 MPa sont sous R<sub>e</sub> avec une rupture : <b>endurance limitée</b>. 270 et 260 MPa : pas de rupture en 10⁷ cycles, <b>endurance illimitée</b> (probable).</p>
+      <p><b>b)</b> La flèche indique une éprouvette <b>non rompue</b> : l'essai a été arrêté, la durée de vie réelle est supérieure à 10⁷. La limite se situe entre 270 (non rompue) et 280 MPa (rompue) : <b>σ<sub>D</sub> ≈ 270 MPa</b>. Avec si peu d'éprouvettes, c'est une estimation ; la méthode de l'escalier (chapitre 6) la préciserait.</p>
+      <p><b>c)</b> <span class="m">σ<sub>D</sub>/R<sub>m</sub> = 270/600 = <b>0,45</b></span> : dans la fourchette habituelle de 0,4 à 0,5 pour les aciers.</p>
+      <p><b>d)</b> <span class="m">t = N/f = 10⁷/50 = 2 × 10⁵ s ≈ 55,6 h ≈ <b>2,3 jours</b></span> par éprouvette non rompue.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 2 : apprivoiser les logarithmes <span class="lvtag">N1 · chapitre 2</span></h4>
+    <p class="q"><b>a)</b> Donne log 1, log 10, log 1 000 et log 10⁷.</p>
+    <p class="q"><b>b)</b> Sachant que log 2 = 0,301 et log 5 = 0,699, où se placent 2 × 10⁵ et 5 × 10⁵ dans la décade qui va de 10⁵ à 10⁶ ?</p>
+    <p class="q"><b>c)</b> Un axe de 16 cm va de 1 à 10⁸ cycles. À quelle distance de l'origine placer 3 × 10⁶ (log 3 = 0,477) ?</p>
+    <p class="q"><b>d)</b> Combien de décades séparent 10⁴ et 2 × 10⁶ ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> log 1 = <b>0</b> ; log 10 = <b>1</b> ; log 1 000 = <b>3</b> ; log 10⁷ = <b>7</b>.</p>
+      <p><b>b)</b> <span class="m">log(2 × 10⁵) = 5,301</span> : à <b>30 %</b> de la décade. <span class="m">log(5 × 10⁵) = 5,699</span> : à <b>70 %</b>.</p>
+      <p><b>c)</b> <span class="m">log(3 × 10⁶) = 6,477</span>. L'axe compte 8 décades sur 16 cm, soit 2 cm par décade : <span class="m">position = 6,477 × 2 = <b>12,95 cm</b></span>.</p>
+      <p><b>d)</b> <span class="m">log(2 × 10⁶/10⁴) = log 200 = log 2 + log 100 = 0,301 + 2 = <b>2,3 décades</b></span>.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 3 : la droite de Basquin <span class="lvtag">N2 · chapitre 5</span></h4>
+    <p>Deux essais en endurance limitée : σ<sub>a1</sub> = 400 MPa donne N<sub>1</sub> = 10⁴ cycles ; σ<sub>a2</sub> = 250 MPa donne N<sub>2</sub> = 10⁶ cycles.</p>
+    <p class="q"><b>a)</b> Calcule l'exposant k de la loi σ<sub>a</sub><sup>k</sup>·N = C, puis l'exposant de Basquin b.</p>
+    <p class="q"><b>b)</b> Prévois la durée de vie à σ<sub>a</sub> = 300 MPa.</p>
+    <p class="q"><b>c)</b> Calcule le coefficient σ′<sub>f</sub> de la forme σ<sub>a</sub> = σ′<sub>f</sub>(2N)<sup>b</sup>, et vérifie qu'on retrouve 250 MPa à 10⁶ cycles.</p>
+    <p class="q"><b>d)</b> De combien la durée de vie est-elle multipliée si la contrainte baisse de 10 % ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">k = log(N<sub>2</sub>/N<sub>1</sub>)/log(σ<sub>a1</sub>/σ<sub>a2</sub>) = log(100)/log(1,6) = 2/0,2041 = <b>9,80</b></span>. <span class="m">b = −1/k = <b>−0,102</b></span>.</p>
+      <p><b>b)</b> <span class="m">N = N<sub>1</sub>(σ<sub>a1</sub>/σ<sub>a</sub>)<sup>k</sup> = 10⁴ × (400/300)<sup>9,80</sup></span>. Avec les logarithmes : 9,80 × log(1,333) = 9,80 × 0,1249 = 1,224, et 10<sup>1,224</sup> = 16,8. Donc <span class="m">N ≈ <b>1,7 × 10⁵ cycles</b></span>.</p>
+      <p><b>c)</b> <span class="m">σ′<sub>f</sub> = σ<sub>a1</sub>/(2N<sub>1</sub>)<sup>b</sup> = 400 × (2 × 10⁴)<sup>0,102</sup></span> ; log(2 × 10⁴) × 0,102 = 4,301 × 0,102 = 0,439, et 10<sup>0,439</sup> = 2,75 : <span class="m">σ′<sub>f</sub> ≈ <b>1 100 MPa</b></span>. Vérification : <span class="m">1 100 × (2 × 10⁶)<sup>−0,102</sup></span> ; 6,301 × 0,102 = 0,643, 10<sup>−0,643</sup> = 0,228 ; 1 100 × 0,228 ≈ 250 MPa ✅.</p>
+      <p><b>d)</b> <span class="m">N'/N = (1/0,9)<sup>9,80</sup> = 10<sup>9,80 × 0,0458</sup> = 10<sup>0,448</sup> ≈ <b>2,8</b></span> : 10 % de contrainte en moins, presque trois fois plus de vie.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 4 : limite conventionnelle et contrainte moyenne <span class="lvtag">N2 · chapitre 4</span></h4>
+    <p class="q"><b>a)</b> Un alliage d'aluminium suit, au-delà de 10⁴ cycles, la loi σ<sub>a</sub> = 325 × (N/10⁴)<sup>−1/12</sup> (en MPa). Calcule sa limite d'endurance conventionnelle à 10⁶, 10⁷ et 10⁸ cycles.</p>
+    <p class="q"><b>b)</b> Un acier a σ<sub>D</sub> = 270 MPa (à σ<sub>m</sub> = 0) et R<sub>m</sub> = 600 MPa. Avec le critère de Goodman, quelle amplitude peut-il supporter indéfiniment sous σ<sub>m</sub> = 150 MPa ?</p>
+    <p class="q"><b>c)</b> Quel est le rapport R de ce cycle limite ?</p>
+    <p class="q"><b>d)</b> Compare avec le critère de Gerber.</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> À 10⁶ : (10²)<sup>−1/12</sup> = 10<sup>−0,167</sup> = 0,681, d'où <span class="m">σ = <b>221 MPa</b></span>. À 10⁷ : 10<sup>−0,25</sup> = 0,562, <span class="m">σ = <b>183 MPa</b></span>. À 10⁸ : 10<sup>−0,333</sup> = 0,464, <span class="m">σ = <b>151 MPa</b></span>. Chaque décade supplémentaire coûte environ 17 % de contrainte : sans le nombre de cycles associé, la valeur ne veut rien dire.</p>
+      <p><b>b)</b> <span class="m">σ<sub>a</sub> = σ<sub>D</sub>(1 − σ<sub>m</sub>/R<sub>m</sub>) = 270 × (1 − 150/600) = 270 × 0,75 = <b>202,5 MPa</b></span>.</p>
+      <p><b>c)</b> <span class="m">σ<sub>max</sub> = 150 + 202,5 = 352,5 MPa</span> ; <span class="m">σ<sub>min</sub> = 150 − 202,5 = −52,5 MPa</span> ; <span class="m">R = −52,5/352,5 = <b>−0,15</b></span> (alternée asymétrique). σ<sub>max</sub> reste sous R<sub>e</sub> = 400 MPa : pas de plastification d'ensemble.</p>
+      <p><b>d)</b> Gerber : <span class="m">σ<sub>a</sub> = 270 × (1 − 0,25²) = 270 × 0,9375 = <b>253 MPa</b></span>. Goodman est plus prudent de 50 MPa environ.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 5 : huit éprouvettes, une probabilité <span class="lvtag">N2 · chapitre 6</span></h4>
+    <p>Huit éprouvettes essayées au même niveau ont donné (en cycles) : 132 000 ; 204 000 ; 112 000 ; 263 000 ; 158 000 ; 89 000 ; 229 000 ; 186 000.</p>
+    <p class="q"><b>a)</b> Calcule les log N<sub>i</sub>, leur moyenne μ et la durée de vie médiane.</p>
+    <p class="q"><b>b)</b> Calcule l'écart-type s des log N<sub>i</sub>.</p>
+    <p class="q"><b>c)</b> Quelle durée de vie retenir avec 97,7 % de probabilité de survie ?</p>
+    <p class="q"><b>d)</b> Pourquoi ne pas utiliser la moyenne arithmétique des N<sub>i</sub> ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> log N<sub>i</sub> : 5,121 ; 5,310 ; 5,049 ; 5,420 ; 5,199 ; 4,949 ; 5,360 ; 5,270. Somme : 41,678 ; <span class="m">μ = 41,678/8 = <b>5,210</b></span>. Médiane : <span class="m">N<sub>50</sub> = 10<sup>5,210</sup> ≈ <b>1,62 × 10⁵ cycles</b></span>.</p>
+      <p><b>b)</b> Écarts à la moyenne : −0,089 ; 0,100 ; −0,161 ; 0,210 ; −0,011 ; −0,261 ; 0,150 ; 0,060. Somme des carrés ≈ 0,182 ; divisée par n − 1 = 7 : 0,0260 ; racine : <span class="m">s ≈ <b>0,161 décade</b></span>.</p>
+      <p><b>c)</b> <span class="m">N<sub>97,7</sub> = 10<sup>μ − 2s</sup> = 10<sup>5,210 − 0,322</sup> = 10<sup>4,888</sup> ≈ <b>7,7 × 10⁴ cycles</b></span>, environ deux fois moins que la médiane.</p>
+      <p><b>d)</b> La moyenne arithmétique (≈ 1,72 × 10⁵) est tirée vers le haut par les plus longues durées de vie : la loi est log-normale, c'est donc sur les logarithmes qu'il faut faire la moyenne.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 6 : l'entaille et le détail soudé <span class="lvtag">N2 · chapitre 7</span></h4>
+    <p class="q"><b>a)</b> Un arbre en acier (σ<sub>D</sub> = 270 MPa sur éprouvette polie) présente une gorge de K<sub>t</sub> = 2,5, avec une sensibilité q = 0,8. Calcule K<sub>f</sub> et la limite d'endurance nominale au droit de la gorge.</p>
+    <p class="q"><b>b)</b> Un détail soudé FAT 71 subit Δσ = 50 MPa pendant 3 × 10⁶ cycles. Calcule Δσ<sub>R</sub>(N).</p>
+    <p class="q"><b>c)</b> Vérifie le détail avec γ<sub>Mf</sub> = 1,15, puis avec γ<sub>Mf</sub> = 1,35.</p>
+    <p class="q"><b>d)</b> Combien de cycles ce détail supporte-t-il sous Δσ = 80 MPa (sans coefficient partiel) ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">K<sub>f</sub> = 1 + q(K<sub>t</sub> − 1) = 1 + 0,8 × 1,5 = <b>2,2</b></span> ; <span class="m">σ<sub>D,gorge</sub> = 270/2,2 ≈ <b>123 MPa</b></span>.</p>
+      <p><b>b)</b> N = 3 × 10⁶ ≤ 5 × 10⁶ : pente 3. <span class="m">Δσ<sub>R</sub> = 71 × (2 × 10⁶/3 × 10⁶)<sup>1/3</sup> = 71 × 0,874 = <b>62,0 MPa</b></span>.</p>
+      <p><b>c)</b> γ<sub>Mf</sub> = 1,15 : <span class="m">62,0/1,15 = 53,9 MPa ≥ 50 MPa</span> ✅. γ<sub>Mf</sub> = 1,35 : <span class="m">62,0/1,35 = 45,9 MPa &lt; 50 MPa</span> ❌. Le même détail passe ou ne passe pas selon la stratégie d'inspection et les conséquences d'une rupture.</p>
+      <p><b>d)</b> <span class="m">N = 2 × 10⁶ × (71/80)³ = 2 × 10⁶ × 0,699 ≈ <b>1,4 × 10⁶ cycles</b></span> (on reste bien sous 5 × 10⁶, la pente 3 s'applique).</p>
+    </div></details>
+  </div>
+
+  <div class="exo defi">
+    <h4>🏆 Défi : la poutre de roulement, suite <span class="lvtag">N2 · chapitres 5 à 7</span></h4>
+    <p>On reprend la poutre du défi du cours 1 : un raidisseur soudé de classe <b>FAT 80</b> subit Δσ = 60 MPa, 4 × 10⁶ fois en 25 ans. La structure n'est pas inspectée régulièrement mais elle est redondante : on retient γ<sub>Mf</sub> = 1,15 et γ<sub>Ff</sub> = 1,0.</p>
+    <p class="q"><b>a)</b> Calcule Δσ<sub>R</sub> à 4 × 10⁶ cycles et vérifie le détail.</p>
+    <p class="q"><b>b)</b> De combien faut-il augmenter le module de flexion W de la poutre pour que le détail passe ?</p>
+    <p class="q"><b>c)</b> Quelle classe FAT minimale faudrait-il, à section inchangée ? Quelle classe normalisée choisir ?</p>
+    <p class="q"><b>d)</b> Sans rien changer, au bout de combien d'années la durée de vie de calcul est-elle atteinte ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">Δσ<sub>R</sub> = 80 × (2 × 10⁶/4 × 10⁶)<sup>1/3</sup> = 80 × 0,794 = <b>63,5 MPa</b></span> ; résistance de calcul : <span class="m">63,5/1,15 = <b>55,2 MPa</b> &lt; 60 MPa</span> ❌. Le détail ne passe pas, alors qu'il passait sans coefficient au cours 1.</p>
+      <p><b>b)</b> Δσ est proportionnelle à 1/W : il faut <span class="m">60/55,2 = 1,087</span>, soit <b>W augmenté d'environ 9 %</b>.</p>
+      <p><b>c)</b> Il faut <span class="m">Δσ<sub>C</sub> × 0,794/1,15 ≥ 60</span>, soit <span class="m">Δσ<sub>C</sub> ≥ 60 × 1,15/0,794 = <b>86,9 MPa</b></span>. La classe normalisée immédiatement supérieure est <b>FAT 90</b> : 90 × 0,794/1,15 = 62,1 MPa ≥ 60 ✅.</p>
+      <p><b>d)</b> On cherche N tel que <span class="m">1,15 × 60 = 69 MPa = 80 × (2 × 10⁶/N)<sup>1/3</sup></span> : <span class="m">N = 2 × 10⁶ × (80/69)³ = 2 × 10⁶ × 1,559 ≈ 3,1 × 10⁶ cycles</span>. Au rythme de 4 × 10⁶ cycles en 25 ans : <span class="m">25 × 3,1/4 ≈ <b>19,5 ans</b></span>. Il faudrait prévoir des inspections, ou une réparation, avant cette date.</p>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="quiz-s">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">?</div>
+    <div class="c-title"><h2>Quiz : 12 questions éclair</h2><p>Chaque réponse est expliquée, même quand tu as juste</p></div>
+    <div class="c-img"><span class="ico">🎯</span><span><small>Image à retenir</small>La cible : vise 10 sur 12</span></div>
+  </div>
+  <div id="quiz"></div>
+  <div class="score" id="qzScore" aria-live="polite">Score : 0 / 12</div>
+  <div class="btns"><button class="btn" id="qzReset" type="button">↺ Recommencer le quiz</button></div>
+</div>
+</section>
+
+<section class="chap" id="fiche">
+<div class="wrap wide">
+  <div class="cartouche">
+    <div class="c-num">★</div>
+    <div class="c-title"><h2>Fiche mémoire du cours 2</h2><p>Neuf cases, neuf images : à photographier, puis à redessiner de tête</p></div>
+    <div class="c-img"><span class="ico">📊</span><span><small>Image à retenir</small>Des tableaux de nombres devenus courbe de Wöhler</span></div>
+  </div>
+  <div class="fiche">
+    <div><div class="ic">🔧</div><h4>Le banc d'essai</h4><div class="f">(<span class="sig">σ<sub>a</sub></span>, <span class="eps">N<sub>r</sub></span>) : un point</div><p>Un essai, un point ; une flèche → pour une éprouvette non rompue. Une courbe par σ<sub>m</sub>.</p></div>
+    <div><div class="ic">📏</div><h4>La règle à décades</h4><div class="f">log(a·b) = log a + log b</div><p>Chaque graduation vaut dix fois la précédente. Le 2 à 30 %, le 5 à 70 % de la décade.</p></div>
+    <div><div class="ic">🛝</div><h4>Le toboggan</h4><div class="f">palier · pente · plage</div><p>Oligocyclique (σ<sub>a</sub> &gt; R<sub>e</sub>, ≲ 10⁴ cycles), endurance limitée, endurance illimitée.</p></div>
+    <div><div class="ic">🏖️</div><h4>La plage</h4><div class="f"><span class="mat">σ<sub>D</sub></span> ≈ 0,4 à 0,5 R<sub>m</sub></div><p>Les aciers ont une plage ; l'aluminium non : limite conventionnelle à N cycles (10⁶ à 10⁹).</p></div>
+    <div><div class="ic">⚖️</div><h4>La balance de Goodman</h4><div class="f"><span class="sig">σ<sub>a</sub></span> = <span class="mat">σ<sub>D</sub></span>(1 − <span class="tau">σ<sub>m</sub></span>/R<sub>m</sub>)</div><p>Une moyenne de traction réduit l'amplitude admissible. Pas pour les soudures brutes.</p></div>
+    <div><div class="ic">📐</div><h4>La règle de Basquin</h4><div class="f"><span class="sig">σ<sub>a</sub></span><sup><span class="mat">k</span></sup>·<span class="eps">N</span> = <span class="mat">C</span></div><p>Une droite en log-log. Contrainte × λ ⇒ vie ÷ λ<sup>k</sup>. k ≈ 10 lisse, 3 soudé.</p></div>
+    <div><div class="ic">🎯</div><h4>Les fléchettes</h4><div class="f"><span class="eps">N<sub>Ps</sub></span> = 10<sup>μ − z·s</sup></div><p>Log-normale : deux écarts-types à gauche, 97,7 % de survivants. Jamais la médiane.</p></div>
+    <div><div class="ic">🔪</div><h4>L'entaille</h4><div class="f"><span class="tau">K<sub>f</sub></span> = 1 + <span class="mat">q</span>(<span class="tau">K<sub>t</sub></span> − 1)</div><p>σ<sub>D</sub> divisée par K<sub>f</sub>, puis par la surface et la taille. Pas de K<sub>t</sub> sur une classe FAT.</p></div>
+    <div><div class="ic">🏷️</div><h4>L'étiquette FAT</h4><div class="f"><span class="sig">Δσ</span>³·<span class="eps">N</span> = <span class="mat">Δσ<sub>C</sub></span>³ × 2 × 10⁶</div><p>« 3, 5, 8 » ; vérifier γ<sub>Ff</sub>·Δσ ≤ Δσ<sub>R</sub>/γ<sub>Mf</sub>.</p></div>
+  </div>
+  <div class="fun"><span class="fun-h">📊 Fun fact : Wöhler n'a jamais tracé de « courbe de Wöhler »</span>August Wöhler, ingénieur des chemins de fer allemands, a mené ses essais d'essieux entre 1858 et 1870, et il les a publiés… sous forme de tableaux de nombres. Le premier à les dessiner est Spangenberg, en 1875, avec des axes ordinaires, à graduations régulières. Il faut attendre 1910 pour que l'Américain Basquin porte ces points sur des échelles logarithmiques (<a href="#c2">chapitre 2</a>) et y découvre une droite, la loi du <a href="#c5">chapitre 5</a>. Quant au nom de « courbe de Wöhler », il ne s'impose que vers 1936, plus de vingt ans après la mort de Wöhler.</div>
+</div>
+</section>
+
+<section class="chap" id="gloss">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">A–Z</div>
+    <div class="c-title"><h2>Glossaire</h2><p>Les mots, symboles et sigles de ce cours</p></div>
+    <div class="c-img"><span class="ico">📖</span><span><small>Image à retenir</small>Le dictionnaire : un mot flou, un clic</span></div>
+  </div>
+  <dl class="gloss">
+    <dt>Alternance</dt><dd>Demi-cycle (une montée ou une descente). 2N<sub>r</sub> est le nombre d'alternances à rupture.</dd>
+    <dt>b</dt><dd>Exposant de Basquin, négatif et sans unité (≈ −0,05 à −0,12) ; b = −1/k.</dd>
+    <dt>C</dt><dd>Constante de la loi σ<sub>a</sub><sup>k</sup>·N = C, en MPa<sup>k</sup>.</dd>
+    <dt>CC, CFC</dt><dd>Cubique centré (fer à l'ambiante, aciers ferritiques) ; cubique à faces centrées (aluminium, cuivre, nickel, inox austénitiques).</dd>
+    <dt>Courbe de Wöhler (S-N)</dt><dd>Courbe d'endurance : σ<sub>a</sub> (ou Δσ) en fonction de N<sub>r</sub>, à σ<sub>m</sub> ou R fixé. S-N : <i>Stress-Number of cycles</i>.</dd>
+    <dt>Courbe médiane</dt><dd>Courbe à 50 % de probabilité de survie.</dd>
+    <dt>Décade</dt><dd>Intervalle entre deux puissances de 10 successives sur un axe logarithmique.</dd>
+    <dt>Δσ, Δσ<sub>C</sub>, Δσ<sub>D</sub>, Δσ<sub>L</sub>, Δσ<sub>R</sub></dt><dd>Étendue de contrainte (= 2σ<sub>a</sub>) ; catégorie de détail (classe FAT, à 2 × 10⁶ cycles) ; limite d'endurance à amplitude constante (0,737 Δσ<sub>C</sub>, à 5 × 10⁶) ; limite de troncature (0,405 Δσ<sub>C</sub>, à 10⁸) ; résistance à N cycles.</dd>
+    <dt>Diagramme de Haigh</dt><dd>Diagramme σ<sub>a</sub> en fonction de σ<sub>m</sub> qui délimite les cycles supportés indéfiniment.</dd>
+    <dt>Dislocation</dt><dd>Défaut linéaire du cristal dont le déplacement permet le glissement plastique (cours 3).</dd>
+    <dt>Durée de vie N<sub>r</sub></dt><dd>Nombre de cycles à rupture.</dd>
+    <dt>Écart-type s</dt><dd>Mesure de la largeur d'une distribution ; ici, celle des log N<sub>r</sub>, en décades.</dd>
+    <dt>EN 1993-1-9</dt><dd>Eurocode 3, partie 1-9 : calcul en fatigue des structures en acier.</dd>
+    <dt>Endurance limitée, illimitée</dt><dd>Domaines où la durée de vie est finie (σ<sub>D</sub> &lt; σ<sub>a</sub> &lt; R<sub>e</sub>), ou infinie (σ<sub>a</sub> &lt; σ<sub>D</sub>).</dd>
+    <dt>Éprouvette</dt><dd>Petit échantillon de matériau à la forme normalisée, préparé pour un essai.</dd>
+    <dt>FAT (classe)</dt><dd>Catégorie de détail soudé : étendue Δσ supportée pendant 2 × 10⁶ cycles, en MPa (valeur caractéristique).</dd>
+    <dt>Fatigue oligocyclique</dt><dd>Fatigue à σ<sub>a</sub> &gt; R<sub>e</sub>, avec déformation plastique de toute la section, rupture en moins de 10⁴ cycles environ.</dd>
+    <dt>Gigacyclique</dt><dd>Domaine au-delà de 10⁸ à 10⁹ cycles, exploré avec des machines à ultrasons.</dd>
+    <dt>γ<sub>Ff</sub>, γ<sub>Mf</sub></dt><dd>« Gamma » : coefficients partiels de sécurité sur les actions de fatigue et sur la résistance en fatigue.</dd>
+    <dt>Hz</dt><dd>Hertz : un cycle par seconde.</dd>
+    <dt>IIW, IWE</dt><dd><i>International Institute of Welding</i> ; <i>International Welding Engineer</i>.</dd>
+    <dt>k (ou m dans les normes)</dt><dd>Exposant de la courbe σ<sup>k</sup>·N = C : ≈ 8 à 15 pour l'acier lisse, 3 pour les soudures.</dd>
+    <dt>K<sub>t</sub>, K<sub>f</sub>, q</dt><dd>Coefficient théorique de concentration de contrainte ; coefficient effectif d'entaille en fatigue ; sensibilité à l'entaille (0 à 1).</dd>
+    <dt>Limite d'endurance σ<sub>D</sub></dt><dd>Amplitude sous laquelle il n'y a pas de rupture, quel que soit le nombre de cycles ; conventionnelle σ<sub>D</sub>(N) : à N cycles fixés.</dd>
+    <dt>log</dt><dd>Logarithme décimal : log N = x ⟺ N = 10<sup>x</sup>.</dd>
+    <dt>Loi de Basquin</dt><dd>σ<sub>a</sub> = σ′<sub>f</sub>(2N<sub>r</sub>)<sup>b</sup>, ou σ<sub>a</sub><sup>k</sup>·N<sub>r</sub> = C : droite en log-log dans le domaine d'endurance limitée.</dd>
+    <dt>Loi log-normale</dt><dd>Loi d'une grandeur dont le logarithme suit une loi normale (en cloche).</dd>
+    <dt>Méthode de l'escalier</dt><dd>Procédure d'essai qui monte ou descend d'un cran selon que l'éprouvette précédente a survécu ou cassé, pour mesurer σ<sub>D</sub>.</dd>
+    <dt>MPa</dt><dd>Mégapascal : 1 MPa = 1 N/mm².</dd>
+    <dt>μ</dt><dd>« Mu » : moyenne des log N<sub>r</sub> ; 10<sup>μ</sup> est la durée de vie médiane.</dd>
+    <dt>P<sub>s</sub>, z</dt><dd>Probabilité de survie ; nombre d'écarts-types correspondant (z = 2 pour 97,7 %).</dd>
+    <dt>R</dt><dd>Rapport de charge σ<sub>min</sub>/σ<sub>max</sub>.</dd>
+    <dt>R<sub>e</sub>, R<sub>m</sub></dt><dd>Limite d'élasticité et résistance à la traction, en MPa.</dd>
+    <dt>Σ</dt><dd>« Sigma » majuscule : somme d'une série de termes.</dd>
+    <dt>σ<sub>a</sub>, σ<sub>m</sub>, σ<sub>max</sub>, σ<sub>min</sub></dt><dd>Amplitude, moyenne, maximum et minimum du cycle, en MPa.</dd>
+    <dt>σ′<sub>f</sub></dt><dd>Coefficient de résistance à la fatigue de la loi de Basquin, en MPa.</dd>
+    <dt>Valeur caractéristique</dt><dd>Valeur statistique prudente (forte probabilité de survie) utilisée par les normes à la place de la médiane.</dd>
+    <dt>≲, ⟺</dt><dd>« Inférieur ou de l'ordre de » ; « équivaut à ».</dd>
+  </dl>
+</div>
+</section>
+
+<section class="chap" id="check">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✓</div>
+    <div class="c-title"><h2>Suis-je prêt pour la suite ?</h2><p>Dix points à cocher de tête</p></div>
+    <div class="c-img"><span class="ico">🧳</span><span><small>Image à retenir</small>La valise bouclée avant le départ pour le cours 3</span></div>
+  </div>
+  <p>Coche seulement ce que tu sais faire <b>sans regarder</b>. Tes coches restent enregistrées dans ce navigateur.</p>
+  <div class="check" id="checklist">
+    <label><input type="checkbox" data-c="1"> <span>Je sais décrire un essai de fatigue et ce que représente un point avec une flèche.</span></label>
+    <label><input type="checkbox" data-c="2"> <span>Je sais placer et lire une valeur sur un axe logarithmique, et compter des décades.</span></label>
+    <label><input type="checkbox" data-c="3"> <span>Je sais situer et décrire les trois domaines de la courbe de Wöhler.</span></label>
+    <label><input type="checkbox" data-c="4"> <span>Je sais expliquer la différence entre limite d'endurance et limite conventionnelle (acier contre aluminium).</span></label>
+    <label><input type="checkbox" data-c="5"> <span>Je sais corriger σ<sub>D</sub> pour une contrainte moyenne avec Goodman, et dire quand ne pas le faire.</span></label>
+    <label><input type="checkbox" data-c="6"> <span>Je sais calculer k à partir de deux essais et prévoir une durée de vie avec Basquin.</span></label>
+    <label><input type="checkbox" data-c="7"> <span>Je sais passer de la forme σ′<sub>f</sub>(2N)<sup>b</sup> à la forme σ<sup>k</sup>·N = C.</span></label>
+    <label><input type="checkbox" data-c="8"> <span>Je sais calculer une durée de vie à une probabilité de survie donnée à partir de μ et s.</span></label>
+    <label><input type="checkbox" data-c="9"> <span>Je sais calculer K<sub>f</sub> et la limite d'endurance au fond d'une entaille.</span></label>
+    <label><input type="checkbox" data-c="10"> <span>Je sais vérifier un détail soudé avec sa classe FAT, la bonne pente et γ<sub>Mf</sub>.</span></label>
+  </div>
+  <p class="status" id="checkMsg"></p>
+
+  <div class="meta">🔭 <b>Au prochain épisode, cours 3 : l'amorçage.</b> On entre dans la matière, grain par grain, pour comprendre ce qui se passe sur la première moitié du toboggan : les microglissements à 45°, les bandes de glissement, les intrusions et les extrusions, la microfissure qui naît puis tourne pour devenir perpendiculaire à l'effort. On verra aussi la courbe de Wöhler à l'amorçage, les mystérieuses fissures « dormantes » et les critères d'amorçage.</div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="wrap">
+  <p>Cours 2 sur 4 de la série « Fatigue des métaux : la vie d'une fissure ». Pour les notations et les conventions, l'enseignement de ta formation fait foi.</p>
+</div>
+</footer>
+<script>
+(function(){
+"use strict";
+const NS="http://www.w3.org/2000/svg";
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const RM=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function el(tag,attrs,parent){
+  const e=document.createElementNS(NS,tag);
+  if(attrs){for(const k in attrs){const v=attrs[k];if(v===undefined||v===null)continue;
+    if(typeof v==="string"&&v.indexOf("var(")>=0&&k!=="style")e.style.setProperty(k,v);else e.setAttribute(k,v);}}
+  if(parent)parent.appendChild(e);
+  return e;
+}
+function tx(p,x,y,str,attrs){const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);t.textContent=str;return t;}
+function txs(p,x,y,parts,attrs){/* parts: [["σ",""],["max","sub"],[" = 3",""]] */
+  const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);
+  parts.forEach(pt=>{const s=el("tspan",pt[1]==="sub"?{"font-size":"0.72em",dy:"3"}:(pt[2]?{dy:pt[2]}:{}),t);s.textContent=pt[0];
+    if(pt[1]==="sub"){const r=el("tspan",{dy:"-3"},t);r.textContent="\u200b";}});
+  return t;
+}
+function clear(svg){while(svg.firstChild)svg.removeChild(svg.firstChild);}
+function arrow(p,x1,y1,x2,y2,color,w,h){
+  w=w||2.4;h=h||10;
+  const g=el("g",{class:"arr"},p);g.style.color=color||"var(--ink)";
+  const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy);
+  if(L<1)return g;
+  const ux=dx/L,uy=dy/L,hh=Math.min(h,L*0.6),bx=x2-ux*hh,by=y2-uy*hh,hw=hh*0.45+w*0.3;
+  el("line",{x1:x1,y1:y1,x2:bx,y2:by,"stroke-width":w,"stroke-linecap":"round"},g);
+  el("polygon",{points:x2+","+y2+" "+(bx-uy*hw)+","+(by+ux*hw)+" "+(bx+uy*hw)+","+(by-ux*hw)},g);
+  return g;
+}
+function darrow(p,x,y1,y2,color,w){/* double flèche verticale */
+  const g=el("g",{},p);const m=(y1+y2)/2;
+  if(Math.abs(y2-y1)<4){el("line",{x1:x-5,y1:y1,x2:x+5,y2:y1,stroke:color,"stroke-width":2},g);return g;}
+  arrow(g,x,m,x,y1,color,w||2,8);arrow(g,x,m,x,y2,color,w||2,8);return g;
+}
+function nf(v,d){
+  if(d===undefined)d=1;
+  if(Math.abs(v)<0.5*Math.pow(10,-d))v=0;
+  return v.toLocaleString("fr-FR",{minimumFractionDigits:d,maximumFractionDigits:d}).replace("-","−").replace(/[\u202f\u2009]/g,"\u00a0");
+}
+const SUP={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function sci(v,d){
+  if(v===0)return "0";
+  if(!isFinite(v))return "∞";
+  let e=Math.floor(Math.log10(Math.abs(v)));
+  let m=v/Math.pow(10,e);
+  const dd=d===undefined?1:d;
+  if(Math.abs(Number(m.toFixed(dd)))>=10){m/=10;e+=1;}
+  return nf(m,dd)+" × 10"+String(e).split("").map(c=>SUP[c]).join("");
+}
+function bigN(v){/* nombre de cycles lisible */
+  if(!isFinite(v))return "∞";
+  if(v===0)return "0";
+  if(v<10)return nf(v,v<1?2:0);
+  if(v<1e5)return nf(Math.round(v),0);
+  return sci(v,1);
+}
+function dur(s){
+  if(!isFinite(s))return "∞";
+  if(s<60)return nf(s,s<10?1:0)+" s";
+  if(s<3600)return nf(s/60,0)+" min";
+  if(s<86400)return nf(s/3600,1)+" h";
+  if(s<86400*365)return nf(s/86400,1)+" jours";
+  return nf(s/(86400*365),1)+" ans";
+}
+function svgW(svg){const r=svg.getBoundingClientRect();return Math.max(290,Math.round(r.width||(svg.parentNode&&svg.parentNode.clientWidth)||600));}
+function setVB(svg,W,H){svg.setAttribute("viewBox","0 0 "+W+" "+H);}
+const redraws=[];
+let rzT=null,lastWW=window.innerWidth;
+window.addEventListener("resize",()=>{if(window.innerWidth===lastWW)return;lastWW=window.innerWidth;clearTimeout(rzT);rzT=setTimeout(()=>redraws.forEach(f=>{try{f();}catch(e){console.error(e);}}),120);});
+function family(sm,sa){
+  const eps=1e-6*Math.max(1,Math.abs(sm),Math.abs(sa));
+  if(sa<=eps)return {k:"stat",n:"statique (R = 1)",d:"plus rien ne varie : ce n'est plus de la fatigue."};
+  if(Math.abs(sm)<=eps)return {k:"a",n:"(a) alternée symétrique",d:"autant de traction que de compression, comme une balançoire."};
+  if(sm>0){
+    if(Math.abs(sm-sa)<=eps)return {k:"c",n:"(c) répétée de traction",d:"on charge puis on revient à zéro, comme un crochet de grue."};
+    if(sm<sa)return {k:"b",n:"(b) alternée asymétrique",d:"la traction domine, avec un passage en compression, comme un plongeoir."};
+    return {k:"d",n:"(d) ondulée de traction",d:"toujours tendu, comme une corde de guitare qui vibre."};
+  }
+  if(Math.abs(-sm-sa)<=eps)return {k:"cr",n:"répétée de compression",d:"σ<sub>max</sub> = 0 : R n'est pas défini. On écrase puis on relâche, comme une butée."};
+  if(-sm<sa)return {k:"ca",n:"alternée à dominante de compression",d:"R &lt; −1 : un peu de traction, beaucoup de compression, comme une bielle de moteur."};
+  return {k:"co",n:"ondulée de compression",d:"R &gt; 1 : toujours comprimé, comme un appui de pont sous le trafic."};
+}
+function Rtxt(smax,smin){if(Math.abs(smax)<1e-9)return "non défini";return nf(smin/smax,2);}
+
+/* =========================================================
+   Modèles de matériaux et repère de Wöhler communs
+   ========================================================= */
+const MAT={
+  acier:{nom:"acier",Rm:600,Re:400,sD:270,Nk:2e6,lim:true,s:0.18},
+  alu:{nom:"alliage d'aluminium",Rm:470,Re:325,k:12,lim:false,s:0.22}
+};
+MAT.acier.k=Math.log10(MAT.acier.Nk/1e4)/Math.log10(MAT.acier.Re/MAT.acier.sD);
+function sOfN(m,N){
+  if(N<=1)return m.Rm;
+  if(N<=1e4)return m.Rm-(m.Rm-m.Re)*Math.log10(N)/4;
+  if(m.lim&&N>=m.Nk)return m.sD;
+  return m.Re*Math.pow(N/1e4,-1/m.k);
+}
+function NofS(m,s){
+  if(s>=m.Rm)return 1;
+  if(s>=m.Re)return Math.pow(10,4*(m.Rm-s)/(m.Rm-m.Re));
+  if(m.lim&&s<=m.sD)return Infinity;
+  return 1e4*Math.pow(m.Re/s,m.k);
+}
+function supE(e){return String(e).split("").map(c=>SUP[c]||c).join("");}
+function p10(e){return e===0?"1":(e===1?"10":"10"+supE(e));}
+function gauss(){let u=0,v=0;while(u===0)u=Math.random();while(v===0)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+/* repère : abscisse log N, ordonnée linéaire ou logarithmique */
+function frame(svg,o){
+  const g=el("g",{},svg);
+  const lx=v=>Math.log10(v);
+  const X=N=>o.x0+(o.x1-o.x0)*(lx(N)-o.nMin)/(o.nMax-o.nMin);
+  const Y=o.logY?(s=>o.y1-(o.y1-o.y0)*(lx(s)-lx(o.sMin))/(lx(o.sMax)-lx(o.sMin))):(s=>o.y1-(o.y1-o.y0)*(s-o.sMin)/(o.sMax-o.sMin));
+  const every=o.xEvery||1;
+  for(let e=o.nMin;e<=o.nMax;e++){
+    const x=X(Math.pow(10,e));
+    el("line",{x1:x,y1:o.y0,x2:x,y2:o.y1,class:"gridbg",opacity:.7},g);
+    if(o.minor&&e<o.nMax)for(let k=2;k<=9;k++){const xm=X(k*Math.pow(10,e));el("line",{x1:xm,y1:o.y1,x2:xm,y2:o.y1-4,class:"tick"},g);}
+    if((e-o.nMin)%every===0)tx(g,x,o.y1+16,p10(e),{class:"lbl","text-anchor":"middle"});
+  }
+  if(o.logY){(o.yTicks||[10,20,50,100,200,500,1000]).forEach(s=>{if(s<o.sMin-1e-9||s>o.sMax+1e-9)return;const y=Y(s);el("line",{x1:o.x0,y1:y,x2:o.x1,y2:y,class:"gridbg",opacity:.7},g);tx(g,o.x0-6,y+4,nf(s,0),{class:"lbl","text-anchor":"end"});});}
+  else{for(let s=Math.ceil(o.sMin/o.yStep)*o.yStep;s<=o.sMax+1e-9;s+=o.yStep){const y=Y(s);el("line",{x1:o.x0,y1:y,x2:o.x1,y2:y,class:"gridbg",opacity:.7},g);tx(g,o.x0-6,y+4,nf(s,0),{class:"lbl","text-anchor":"end"});}}
+  el("line",{x1:o.x0,y1:o.y1,x2:o.x1,y2:o.y1,class:"axis"},g);
+  el("line",{x1:o.x0,y1:o.y0,x2:o.x0,y2:o.y1,class:"axis"},g);
+  if(o.yLabel)txs(g,o.x0-6,o.y0-10,o.yLabel,{class:"lbl"});
+  if(o.xLabel)txs(g,o.x1,o.y1+31,o.xLabel,{class:"lbl","text-anchor":"end"});
+  return {X:X,Y:Y,g:g};
+}
+function curvePath(fr,f,n0,n1,steps){let d="";const st=steps||300;for(let i=0;i<=st;i++){const e=n0+(n1-n0)*i/st,N=Math.pow(10,e),s=f(N);if(!isFinite(s))continue;d+=(d?"L":"M")+fr.X(N).toFixed(1)+" "+fr.Y(s).toFixed(1)+" ";}return d;}
+
+/* =========================================================
+   M1 : le banc d'essai virtuel
+   ========================================================= */
+(function(){
+  const svg=$("#m1svg");if(!svg)return;
+  const sl=$("#m1s"),ro=$("#m1r"),msg=$("#m1msg");
+  let mat="acier",pts=[],anim=null,showC=false,busy=false;
+  function run1(s,m){
+    const M=MAT[m],z=gauss();
+    let N,ro_=false;
+    if(M.lim){
+      const sDi=M.sD*(1+0.035*gauss());
+      if(s<=sDi){N=1e7;ro_=true;}
+      else{let N50=NofS(M,s);if(!isFinite(N50)||N50>M.Nk)N50=M.Nk*Math.pow(10,Math.max(0,(M.sD-s))/(M.sD*0.035)*0.6);
+        N=N50*Math.pow(10,(s>=M.Re?0.08:M.s)*z);}
+    }else{N=NofS(M,s)*Math.pow(10,(s>=M.Re?0.08:M.s)*z);}
+    if(N>=1e7){N=1e7;ro_=true;}
+    if(N<1)N=1;
+    return {s:s,N:N,ro:ro_,m:m};
+  }
+  function draw(cur){
+    const W=svgW(svg),H=W<520?300:330;setVB(svg,W,H);clear(svg);
+    const M=MAT[mat];
+    const fr=frame(svg,{x0:48,x1:W-14,y0:28,y1:H-40,nMin:0,nMax:8,sMin:0,sMax:650,yStep:100,xEvery:W<520?2:1,yLabel:[["σ",""],["a","sub"],[" (MPa)",""]],xLabel:[["N",""],["r","sub"],[" (cycles, échelle log)",""]]});
+    [["R",M.Rm,"m"],["R",M.Re,"e"]].forEach(r=>{el("line",{x1:fr.X(1),y1:fr.Y(r[1]),x2:fr.X(1e8),y2:fr.Y(r[1]),class:"ref"},svg);txs(svg,fr.X(1e8)-4,fr.Y(r[1])-5,[["R",""],[r[2],"sub"],[" = "+r[1],""]],{class:"lbl","text-anchor":"end"});});
+    el("line",{x1:fr.X(1e7),y1:28,x2:fr.X(1e7),y2:H-40,stroke:"var(--muted)","stroke-width":1.2,"stroke-dasharray":"2 4"},svg);
+    tx(svg,fr.X(1e7)-4,H-48,"arrêt à 10⁷",{class:"lbl","text-anchor":"end"});
+    if(showC){el("path",{d:curvePath(fr,N=>sOfN(M,N),0,8),fill:"none",stroke:"var(--mat)","stroke-width":2.6},svg);
+      if(M.lim){txs(svg,fr.X(1e8)-4,fr.Y(M.sD)-6,[["σ",""],["D","sub"],[" = "+M.sD,""]],{fill:"var(--mat)","text-anchor":"end","font-weight":"700","font-size":"12.5"});}}
+    pts.filter(p=>p.m===mat).forEach(p=>{const x=fr.X(p.N),y=fr.Y(p.s);
+      if(p.ro){el("circle",{cx:x,cy:y,r:4.5,fill:"var(--card)",stroke:"var(--eps)","stroke-width":2},svg);arrow(svg,x+5,y,x+20,y,"var(--eps)",1.8,6);}
+      else el("circle",{cx:x,cy:y,r:4.5,fill:"var(--eps)",stroke:"var(--card)","stroke-width":1},svg);});
+    /* essai en cours */
+    const s=+sl.value;
+    el("line",{x1:fr.X(1),y1:fr.Y(s),x2:fr.X(1e8),y2:fr.Y(s),stroke:"var(--sig)","stroke-width":1.2,opacity:.5},svg);
+    if(cur){el("circle",{cx:fr.X(Math.max(1,cur)),cy:fr.Y(s),r:6,fill:"var(--sig)"},svg);}
+    $("#m1so").textContent=s+" MPa";
+    const mine=pts.filter(p=>p.m===mat);
+    ro.innerHTML="<span>matériau : "+M.nom+"</span><span class='sig'>σ<sub>a</sub> = "+s+" MPa</span><span class='eps'>"+(cur?"N = "+bigN(cur)+" cycles…":"essais : "+mine.length+" dont "+mine.filter(p=>p.ro).length+" non rompu(s)")+"</span>";
+  }
+  function launch(s,cb,fast){
+    const r=run1(s,mat);busy=true;
+    const T=fast?220:1500,t0=performance.now(),eN=Math.log10(r.N);
+    const step=now=>{const p=Math.min(1,(now-t0)/T),N=Math.pow(10,eN*p);draw(N);
+      if(p<1){anim=requestAnimationFrame(step);}else{pts.push(r);busy=false;draw();cb&&cb(r);}};
+    if(RM){pts.push(r);busy=false;draw();cb&&cb(r);return;}
+    anim=requestAnimationFrame(step);
+  }
+  function comment(r){
+    const M=MAT[mat];
+    if(r.ro)return "→ Éprouvette <b>non rompue</b> à 10⁷ cycles (2,3 jours à 50 Hz) : on arrête l'essai et on dessine une flèche."+(M.lim?" On est probablement sous la limite d'endurance σ<sub>D</sub>.":" Pour l'aluminium, elle aurait sans doute cassé plus tard : pas de vraie limite.");
+    let t="💥 Rupture à <b>N<sub>r</sub> = "+bigN(r.N)+" cycles</b> sous σ<sub>a</sub> = "+r.s+" MPa. ";
+    if(r.s>=M.Re)t+="Au-dessus de R<sub>e</sub> : toute la section plastifie, c'est la fatigue <b>oligocyclique</b>.";
+    else t+="Sous R<sub>e</sub> : <b>endurance limitée</b>. Refais un essai au même niveau : le résultat ne sera pas identique (dispersion).";
+    return t;
+  }
+  $("#m1go").addEventListener("click",()=>{if(busy)return;launch(+sl.value,r=>{msg.innerHTML=comment(r);});});
+  $("#m1auto").addEventListener("click",()=>{if(busy)return;
+    const L=mat==="acier"?[500,420,380,350,320,300,290,280,275,270,265,260,330,310,285]:[400,350,300,260,230,210,200,190,180,170,165,160,250,220,175];
+    let i=0;const next=()=>{if(i>=L.length){showC=true;$("#m1curve").textContent="Masquer la courbe médiane";draw();
+      msg.innerHTML="✅ Campagne terminée. La courbe médiane (en vert) passe au milieu du nuage."+(mat==="acier"?" Les flèches s'alignent vers 270 MPa : c'est la <b>limite d'endurance σ<sub>D</sub></b>.":" Les points continuent de descendre : <b>pas de limite d'endurance</b>, il faudra en choisir une conventionnelle.");return;}
+      sl.value=L[i++];launch(+sl.value,()=>setTimeout(next,60),true);};
+    msg.innerHTML="⏳ Campagne de 15 essais en cours…";next();});
+  $("#m1clr").addEventListener("click",()=>{pts=pts.filter(p=>p.m!==mat);draw();msg.innerHTML="Diagramme effacé. Lance un essai.";});
+  $("#m1curve").addEventListener("click",()=>{showC=!showC;$("#m1curve").textContent=showC?"Masquer la courbe médiane":"Afficher la courbe médiane";draw();});
+  sl.addEventListener("input",()=>{if(!busy)draw();});
+  $$("input[name=m1mat]").forEach(r=>r.addEventListener("change",()=>{if(r.checked&&!busy){mat=r.value;draw();msg.innerHTML="Matériau : <b>"+MAT[mat].nom+"</b> (R<sub>e</sub> = "+MAT[mat].Re+" MPa, R<sub>m</sub> = "+MAT[mat].Rm+" MPa). Lance des essais à plusieurs niveaux.";}}));
+  redraws.push(()=>draw());draw();
+  msg.innerHTML="Lance un premier essai à 350 MPa, puis descends par paliers : 300, 280, 270… Où les éprouvettes cessent-elles de casser ?";
+})();
+
+/* =========================================================
+   M2 : linéaire contre logarithmique
+   ========================================================= */
+(function(){
+  const svg=$("#m2svg");if(!svg)return;
+  const sl=$("#m2n"),ro=$("#m2r"),msg=$("#m2msg");
+  function draw(){
+    const W=svgW(svg),H=210;setVB(svg,W,H);clear(svg);
+    const x=+sl.value,N=Math.pow(10,x),a=24,b=W-24;
+    /* règle linéaire */
+    const y1=62;tx(svg,a,y1-30,"Règle linéaire : de 0 à 10⁸",{class:"ttl"});
+    el("rect",{x:a,y:y1-10,width:b-a,height:20,fill:"var(--paper-2)",stroke:"var(--ink)","stroke-width":1.2},svg);
+    for(let i=0;i<=5;i++){const xx=a+(b-a)*i/5;el("line",{x1:xx,y1:y1+10,x2:xx,y2:y1+16,class:"tick"},svg);
+      if(W>=480||i%5===0||i===1||i===3)tx(svg,xx,y1+29,i===0?"0":(i===5?"10⁸":nf(2*i,0)+" × 10⁷"),{class:"lbl","text-anchor":"middle"});}
+    const pl=N/1e8,xl=a+(b-a)*pl;
+    el("rect",{x:a,y:y1-10,width:Math.max(0.5,xl-a),height:20,fill:"var(--eps)",opacity:.75},svg);
+    el("line",{x1:xl,y1:y1-16,x2:xl,y2:y1+12,stroke:"var(--sig)","stroke-width":2.5},svg);
+    /* règle log */
+    const y2=150;tx(svg,a,y2-30,"Règle logarithmique : de 1 à 10⁸",{class:"ttl"});
+    el("rect",{x:a,y:y2-10,width:b-a,height:20,fill:"var(--paper-2)",stroke:"var(--ink)","stroke-width":1.2},svg);
+    for(let e=0;e<=8;e++){const xx=a+(b-a)*e/8;el("line",{x1:xx,y1:y2-10,x2:xx,y2:y2+16,stroke:"var(--ink)","stroke-width":1.2},svg);
+      if(W>=420||e%2===0)tx(svg,xx,y2+29,p10(e),{class:"lbl","text-anchor":"middle"});
+      if(e<8)for(let k=2;k<=9;k++){const xm=a+(b-a)*(e+Math.log10(k))/8;el("line",{x1:xm,y1:y2+4,x2:xm,y2:y2+10,class:"tick"},svg);}}
+    const pg=x/8,xg=a+(b-a)*pg;
+    el("rect",{x:a,y:y2-10,width:Math.max(0.5,xg-a),height:20,fill:"var(--eps)",opacity:.75},svg);
+    el("line",{x1:xg,y1:y2-16,x2:xg,y2:y2+12,stroke:"var(--sig)","stroke-width":2.5},svg);
+    /* sorties */
+    $("#m2no").textContent=nf(x,2);
+    ro.innerHTML="<span class='eps'>N = 10<sup>"+nf(x,2)+"</sup> ≈ "+bigN(N)+" cycles</span><span class='mat'>log N = "+nf(x,2)+"</span><span>règle linéaire : "+(pl<0.001?"&lt; 0,1":nf(pl*100,1))+" %</span><span>règle log : "+nf(pg*100,1)+" %</span>";
+    const dec=Math.floor(x),frac=x-dec;
+    let m="Sur la règle logarithmique, N est dans la décade de "+p10(dec)+" à "+p10(dec+1)+", à "+Math.round(frac*100)+" % de son chemin";
+    m+=frac>0.28&&frac<0.32?" : c'est là qu'on trouve le <b>2</b> (log 2 = 0,301).":frac>0.68&&frac<0.72?" : c'est là qu'on trouve le <b>5</b> (log 5 = 0,699).":".";
+    if(pl<0.01)m+=" Sur la règle linéaire, il est écrasé contre le zéro ("+(pl<0.001?"moins d'un millième":"moins d'un centième")+" de la longueur) : illisible.";
+    msg.innerHTML=m;
+  }
+  sl.addEventListener("input",draw);
+  $$("#m2ex .btn").forEach(b=>b.addEventListener("click",()=>{sl.value=b.dataset.v;draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M3 : lire le toboggan
+   ========================================================= */
+(function(){
+  const svg=$("#m3svg");if(!svg)return;
+  const sl=$("#m3s"),ro=$("#m3r"),msg=$("#m3msg");
+  let mat="acier";
+  function draw(){
+    const W=svgW(svg),H=W<520?310:340;setVB(svg,W,H);clear(svg);
+    const M=MAT[mat],s=+sl.value,N=NofS(M,s);
+    const o={x0:48,x1:W-14,y0:30,y1:H-42,nMin:0,nMax:9,sMin:0,sMax:650,yStep:100,xEvery:W<520?3:1,yLabel:[["σ",""],["a","sub"],[" (MPa)",""]],xLabel:[["N",""],["r","sub"],[" (cycles)",""]]};
+    const X0=N=>o.x0+(o.x1-o.x0)*Math.log10(N)/9;
+    const dom=s>=M.Re?0:(M.lim&&s<=M.sD?2:1);
+    const bands=M.lim?[[1,1e4,"palier : oligocyclique"],[1e4,M.Nk,"pente : endurance limitée"],[M.Nk,1e9,"plage : illimitée"]]:[[1,1e4,"oligocyclique"],[1e4,1e9,"endurance limitée (sans plage)"]];
+    bands.forEach((b,i)=>{el("rect",{x:X0(b[0]),y:o.y0,width:X0(b[1])-X0(b[0]),height:o.y1-o.y0,fill:i===dom?"var(--hl)":"var(--paper-2)",opacity:i===dom?.85:.35},svg);});
+    const fr=frame(svg,o);
+    bands.forEach((b,i)=>{const cx=(X0(b[0])+X0(b[1]))/2,short=W<520;tx(svg,cx,o.y0-8,short?["palier","pente","plage"][M.lim?i:(i?1:0)]:b[2],{class:"lbl","text-anchor":"middle","font-weight":i===dom?"700":"400"});});
+    [["m",M.Rm],["e",M.Re]].forEach(r=>{el("line",{x1:o.x0,y1:fr.Y(r[1]),x2:o.x1,y2:fr.Y(r[1]),class:"ref"},svg);txs(svg,o.x1-4,fr.Y(r[1])-5,[["R",""],[r[0],"sub"],[" = "+r[1],""]],{class:"lbl","text-anchor":"end"});});
+    el("path",{d:curvePath(fr,n=>sOfN(M,n),0,9),fill:"none",stroke:"var(--mat)","stroke-width":3},svg);
+    if(M.lim)txs(svg,o.x1-4,fr.Y(M.sD)+16,[["σ",""],["D","sub"],[" = "+M.sD+" MPa",""]],{fill:"var(--mat)","text-anchor":"end","font-weight":"700","font-size":"12.5"});
+    /* lecture */
+    const y=fr.Y(s);
+    if(isFinite(N)){const x=fr.X(Math.max(1,N));arrow(svg,o.x0,y,x-2,y,"var(--sig)",2.2,9);arrow(svg,x,y,x,o.y1-2,"var(--eps)",2.2,9);
+      el("circle",{cx:x,cy:y,r:5.5,fill:"var(--ink)"},svg);}
+    else{arrow(svg,o.x0,y,o.x1-4,y,"var(--sig)",2.2,9);tx(svg,o.x1-8,y-7,"jamais de rupture",{fill:"var(--sig)","font-size":"12","text-anchor":"end"});}
+    $("#m3so").textContent=s+" MPa";
+    const names=["fatigue oligocyclique","endurance limitée","endurance illimitée"];
+    ro.innerHTML="<span class='sig'>σ<sub>a</sub> = "+s+" MPa</span><span class='eps'>N<sub>r</sub> = "+(isFinite(N)?bigN(N)+" cycles":"∞")+"</span><span>"+(isFinite(N)?"durée à 50 Hz : "+dur(N/50):"")+"</span><span><b>"+names[dom]+"</b></span>";
+    let m;
+    if(s>=M.Rm)m="σ<sub>a</sub> atteint R<sub>m</sub> : la pièce casse dès le premier chargement.";
+    else if(dom===0)m="<b>Palier : fatigue oligocyclique.</b> σ<sub>a</sub> &gt; R<sub>e</sub> = "+M.Re+" MPa : toute la section plastifie à chaque cycle. Rupture en "+bigN(N)+" cycles, comme le trombone.";
+    else if(dom===1)m="<b>Pente : endurance limitée.</b> La pièce reste élastique dans l'ensemble ; seuls quelques grains plastifient. Durée de vie finie : "+bigN(N)+" cycles."+(M.lim?"":" Pour l'aluminium, cette pente ne s'arrête jamais.");
+    else m="<b>Plage : endurance illimitée.</b> Sous σ<sub>D</sub> = "+M.sD+" MPa, l'acier ne casse plus, quel que soit le nombre de cycles (dans le domaine des essais classiques).";
+    msg.innerHTML=m;
+  }
+  sl.addEventListener("input",draw);
+  $$("#m3ex .btn").forEach(b=>b.addEventListener("click",()=>{sl.value=b.dataset.v;draw();}));
+  $$("input[name=m3mat]").forEach(r=>r.addEventListener("change",()=>{if(r.checked){mat=r.value;draw();}}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M4 : acier contre aluminium
+   ========================================================= */
+(function(){
+  const svg=$("#m4svg");if(!svg)return;
+  const ro=$("#m4r"),msg=$("#m4msg"),bG=$("#m4giga");
+  let nC=7,giga=false;
+  function draw(){
+    const W=svgW(svg),H=W<520?300:330;setVB(svg,W,H);clear(svg);
+    const nMax=giga?10:9;
+    const fr=frame(svg,{x0:48,x1:W-14,y0:30,y1:H-42,nMin:0,nMax:nMax,sMin:0,sMax:650,yStep:100,xEvery:W<520?3:1,yLabel:[["σ",""],["a","sub"],[" (MPa)",""]],xLabel:[["N",""],["r","sub"],[" (cycles)",""]]});
+    const A=MAT.acier,L=MAT.alu;
+    el("path",{d:curvePath(fr,n=>sOfN(A,n),0,giga?8:nMax),fill:"none",stroke:"var(--mat)","stroke-width":3},svg);
+    if(giga){
+      el("line",{x1:fr.X(1e8),y1:fr.Y(A.sD),x2:fr.X(1e10),y2:fr.Y(A.sD),stroke:"var(--mat)","stroke-width":1.5,"stroke-dasharray":"3 4",opacity:.6},svg);
+      el("path",{d:curvePath(fr,n=>A.sD*Math.pow(n/1e8,-0.04),8,10,40),fill:"none",stroke:"var(--mat)","stroke-width":3,"stroke-dasharray":"8 5"},svg);
+      tx(svg,W-18,fr.Y(A.sD)-24,"rupture interne",{fill:"var(--mat)","font-size":"12","text-anchor":"end"});
+      tx(svg,W-18,fr.Y(A.sD)-10,"« œil de poisson »",{fill:"var(--mat)","font-size":"12","text-anchor":"end"});
+    }
+    el("path",{d:curvePath(fr,n=>sOfN(L,n),0,nMax),fill:"none",stroke:"var(--mat)","stroke-width":3,"stroke-dasharray":"10 5"},svg);
+    tx(svg,fr.X(30),fr.Y(sOfN(A,30))-10,"acier",{fill:"var(--mat)","font-weight":"700","font-size":"13"});
+    tx(svg,fr.X(3),fr.Y(260),W<560?"alu (tirets)":"aluminium (tirets)",{fill:"var(--mat)","font-weight":"700","font-size":"13"});
+    /* limite conventionnelle */
+    const Nc=Math.pow(10,nC),sc=sOfN(L,Nc),xc=fr.X(Nc),yc=fr.Y(sc);
+    el("line",{x1:xc,y1:fr.Y(0),x2:xc,y2:yc,stroke:"var(--eps)","stroke-width":1.8,"stroke-dasharray":"5 4"},svg);
+    arrow(svg,xc,yc,fr.X(1)+3,yc,"var(--sig)",1.8,8);
+    el("circle",{cx:xc,cy:yc,r:5.5,fill:"var(--ink)"},svg);
+    txs(svg,fr.X(1)+8,yc-6,[["σ",""],["D","sub"],["("+p10(nC)+") = "+nf(sc,0)+" MPa",""]],{fill:"var(--sig)","font-size":"12.5","font-weight":"700"});
+    
+    ro.innerHTML="<span class='mat'>acier : σ<sub>D</sub> = 270 MPa (vraie limite)</span><span class='sig'>aluminium : σ<sub>D</sub>("+p10(nC)+") = "+nf(sc,0)+" MPa</span><span>rapport aluminium/R<sub>m</sub> = "+nf(sc/L.Rm,2)+"</span>";
+    msg.innerHTML="La limite conventionnelle de l'aluminium dépend du nombre de cycles choisi : "+nf(sOfN(L,1e6),0)+" MPa à 10⁶, "+nf(sOfN(L,1e7),0)+" à 10⁷, "+nf(sOfN(L,1e8),0)+" à 10⁸, "+nf(sOfN(L,1e9),0)+" à 10⁹. Il faut toujours l'annoncer avec son N."+(giga?" <b>Domaine gigacyclique :</b> au-delà de 10⁸ cycles, certains aciers recommencent à casser sous σ<sub>D</sub>, à partir d'une inclusion interne.":"");
+    bG.textContent="Domaine gigacyclique de l'acier : "+(giga?"affiché":"masqué");
+  }
+  $$("#m4N .btn").forEach(b=>b.addEventListener("click",()=>{nC=+b.dataset.n;$$("#m4N .btn").forEach(x=>x.classList.toggle("on",x===b));draw();}));
+  bG.addEventListener("click",()=>{giga=!giga;bG.classList.toggle("on",giga);draw();});
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M4 bis : le diagramme de Haigh
+   ========================================================= */
+(function(){
+  const svg=$("#m4bsvg");if(!svg)return;
+  const sm_=$("#m4bm"),sa_=$("#m4ba"),ro=$("#m4br"),msg=$("#m4bmsg");
+  const sD=270,Rm=600,Re=400;
+  function draw(){
+    const W=svgW(svg),H=W<520?290:320;setVB(svg,W,H);clear(svg);
+    const x0=48,x1=W-14,y0=30,y1=H-42,mMin=-200,mMax=650,aMax=350;
+    const X=m=>x0+(x1-x0)*(m-mMin)/(mMax-mMin),Y=a=>y1-(y1-y0)*a/aMax;
+    for(let m=-200;m<=600;m+=100){el("line",{x1:X(m),y1:y0,x2:X(m),y2:y1,class:"gridbg",opacity:.7},svg);if(W>=480||m%200===0)tx(svg,X(m),y1+16,nf(m,0),{class:"lbl","text-anchor":"middle"});}
+    for(let a=0;a<=aMax;a+=100){el("line",{x1:x0,y1:Y(a),x2:x1,y2:Y(a),class:"gridbg",opacity:.7},svg);tx(svg,x0-6,Y(a)+4,nf(a,0),{class:"lbl","text-anchor":"end"});}
+    el("line",{x1:x0,y1:y1,x2:x1,y2:y1,class:"axis"},svg);el("line",{x1:X(0),y1:y0,x2:X(0),y2:y1,class:"axis"},svg);
+    txs(svg,X(0)+6,y0-10,[["σ",""],["a","sub"],[" (MPa)",""]],{class:"lbl"});txs(svg,x1,y1+31,[["σ",""],["m","sub"],[" (MPa)",""]],{class:"lbl","text-anchor":"end"});
+    /* zone sûre Goodman */
+    el("path",{d:"M"+X(mMin)+" "+Y(sD)+" L"+X(0)+" "+Y(sD)+" L"+X(Rm)+" "+Y(0)+" L"+X(mMin)+" "+Y(0)+" Z",fill:"var(--mat)",opacity:.1},svg);
+    el("line",{x1:X(mMin),y1:Y(sD),x2:X(0),y2:Y(sD),stroke:"var(--mat)","stroke-width":2.6},svg);
+    el("line",{x1:X(0),y1:Y(sD),x2:X(Rm),y2:Y(0),stroke:"var(--mat)","stroke-width":2.6},svg);
+    let d="";for(let i=0;i<=60;i++){const m=Rm*i/60;d+=(i?"L":"M")+X(m).toFixed(1)+" "+Y(sD*(1-(m/Rm)*(m/Rm))).toFixed(1)+" ";}
+    el("path",{d:d,fill:"none",stroke:"var(--mat)","stroke-width":2,"stroke-dasharray":"7 5"},svg);
+    el("line",{x1:X(Re-aMax),y1:Y(aMax),x2:X(Re),y2:Y(0),stroke:"var(--muted)","stroke-width":1.6,"stroke-dasharray":"2 4"},svg);
+    tx(svg,X(Rm*0.55)+4,Y(sD*0.45)+16,"Goodman",{fill:"var(--mat)","font-size":"12.5","font-weight":"700"});
+    tx(svg,X(Rm*0.62),Y(sD*(1-0.62*0.62))-8,"Gerber",{fill:"var(--mat)","font-size":"12.5"});
+    txs(svg,X(Re-aMax)+6,Y(aMax)+14,[["σ",""],["max","sub"],[" = R",""],["e","sub"]],{class:"lbl"});
+    txs(svg,X(0)+6,Y(sD)-6,[["σ",""],["D","sub"],[" = 270",""]],{fill:"var(--mat)","font-size":"12"});
+    txs(svg,X(Rm),Y(0)-6,[["R",""],["m","sub"]],{fill:"var(--muted)","font-size":"12","text-anchor":"middle"});
+    /* point */
+    const sm=+sm_.value,sa=+sa_.value;
+    const aG=sm>0?sD*(1-sm/Rm):sD,aGe=sm>0?sD*(1-(sm/Rm)*(sm/Rm)):sD;
+    el("line",{x1:X(sm),y1:Y(0),x2:X(sm),y2:Y(Math.max(0,aG)),stroke:"var(--tau)","stroke-width":1.4,"stroke-dasharray":"3 3"},svg);
+    el("circle",{cx:X(sm),cy:Y(sa),r:7,fill:"var(--sig)",stroke:"var(--card)","stroke-width":2.5},svg);
+    $("#m4bmo").textContent=sm+" MPa";$("#m4bao").textContent=sa+" MPa";
+    const smax=sm+sa,smin=sm-sa;
+    ro.innerHTML="<span class='sig'>σ<sub>max</sub> = "+smax+"</span><span class='sig'>σ<sub>min</sub> = "+smin+" MPa</span><span class='mat'>R = "+Rtxt(smax,smin)+"</span><span class='mat'>Goodman : σ<sub>a</sub> ≤ "+nf(Math.max(0,aG),0)+" MPa</span><span class='mat'>Gerber : σ<sub>a</sub> ≤ "+nf(Math.max(0,aGe),0)+" MPa</span>";
+    let m;
+    if(sm>=Rm)m="σ<sub>m</sub> ≥ R<sub>m</sub> : la pièce casse en statique, avant même de parler de fatigue.";
+    else if(sa<=aG)m="✅ Sous la droite de Goodman : endurance illimitée, même avec le critère le plus prudent.";
+    else if(sa<=aGe)m="⚖️ Entre Goodman et Gerber : sûr selon Gerber, pas selon Goodman. Zone de doute ; le concepteur prudent retient Goodman.";
+    else m="❌ Au-dessus des deux courbes : durée de vie finie, il faut un calcul en endurance limitée.";
+    if(sm<0)m+=" σ<sub>m</sub> de compression : on garde σ<sub>D</sub> sans la majorer (prudence).";
+    if(smax>Re)m+=" ⚠️ σ<sub>max</sub> = "+smax+" MPa dépasse R<sub>e</sub> : la pièce plastifie dès le premier cycle.";
+    msg.innerHTML=m;
+  }
+  [sm_,sa_].forEach(s=>s.addEventListener("input",draw));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M5 : la droite de Basquin
+   ========================================================= */
+(function(){
+  const svg=$("#m5svg");if(!svg)return;
+  const s1=$("#m5s1"),n1=$("#m5n1"),s2=$("#m5s2"),n2=$("#m5n2"),sp=$("#m5p"),ro=$("#m5r"),msg=$("#m5msg");
+  let extra="";
+  function vals(){const a1=+s1.value,a2=+s2.value,e1=+n1.value,e2=+n2.value;
+    const k=(a1>a2)?(e2-e1)/Math.log10(a1/a2):NaN;return {a1,a2,e1,e2,k};}
+  function draw(){
+    const W=svgW(svg),H=W<520?300:330;setVB(svg,W,H);clear(svg);
+    const v=vals(),sP=+sp.value;
+    const fr=frame(svg,{x0:48,x1:W-14,y0:28,y1:H-42,nMin:3,nMax:9,sMin:80,sMax:700,logY:true,yTicks:[100,200,300,500,700],minor:true,xEvery:W<520?2:1,yLabel:[["σ",""],["a","sub"],[" (MPa, échelle log)",""]],xLabel:[["N",""],["r","sub"],[" (cycles)",""]]});
+    $("#m5s1o").textContent=v.a1+" MPa";$("#m5s2o").textContent=v.a2+" MPa";$("#m5n1o").textContent=p10f(v.e1);$("#m5n2o").textContent=p10f(v.e2);$("#m5po").textContent=sP+" MPa";
+    if(!(v.k>0)){msg.innerHTML="Il faut σ<sub>a1</sub> &gt; σ<sub>a2</sub> et N<sub>1</sub> &lt; N<sub>2</sub> : plus la contrainte est forte, plus la vie est courte.";ro.innerHTML="";return;}
+    const Nof=s=>Math.pow(10,v.e1)*Math.pow(v.a1/s,v.k);
+    /* droite sur toute la largeur */
+    const sAt=e=>v.a1*Math.pow(10,-(e-v.e1)/v.k);
+    let d="";for(let i=0;i<=60;i++){const e=3+6*i/60,s=sAt(e);if(s<80||s>700)continue;d+=(d?"L":"M")+fr.X(Math.pow(10,e)).toFixed(1)+" "+fr.Y(s).toFixed(1)+" ";}
+    el("path",{d:d,fill:"none",stroke:"var(--mat)","stroke-width":3},svg);
+    [[v.a1,v.e1,"1"],[v.a2,v.e2,"2"]].forEach(p=>{const x=fr.X(Math.pow(10,p[1])),y=fr.Y(p[0]);el("circle",{cx:x,cy:y,r:7,fill:"var(--eps)",stroke:"var(--card)","stroke-width":2},svg);tx(svg,x-9,y+18,"essai "+p[2],{"font-size":"12","font-weight":"700","text-anchor":"end"});});
+    const NP=Nof(sP),xP=fr.X(Math.min(1e9,Math.max(1e3,NP))),yP=fr.Y(sP);
+    if(NP>=1e3&&NP<=1e9){arrow(svg,fr.X(1e3),yP,xP-2,yP,"var(--sig)",2,8);arrow(svg,xP,yP,xP,H-44,"var(--eps)",2,8);el("circle",{cx:xP,cy:yP,r:5,fill:"var(--ink)"},svg);}
+    /* triangle de pente */
+    const eA=v.e1,eB=v.e1+1,sA=sAt(eA),sB=sAt(eB);
+    el("path",{d:"M"+fr.X(Math.pow(10,eA))+" "+fr.Y(sA)+" L"+fr.X(Math.pow(10,eB))+" "+fr.Y(sA)+" L"+fr.X(Math.pow(10,eB))+" "+fr.Y(sB),fill:"none",stroke:"var(--mat)","stroke-width":1.2,"stroke-dasharray":"3 3"},svg);
+    tx(svg,(fr.X(Math.pow(10,eA))+fr.X(Math.pow(10,eB)))/2,fr.Y(sA)-6,"1 décade",{class:"lbl","text-anchor":"middle"});
+    const b=-1/v.k,C=v.k*Math.log10(v.a1)+v.e1,sf=v.a1/Math.pow(2*Math.pow(10,v.e1),b);
+    ro.innerHTML="<span class='mat'>k = "+nf(v.k,2)+"</span><span class='mat'>b = −1/k = "+nf(b,3)+"</span><span class='mat'>C = 10<sup>"+nf(C,1)+"</sup> MPa<sup>k</sup></span><span class='mat'>σ′<sub>f</sub> ≈ "+nf(sf,0)+" MPa</span><span class='eps'>à "+sP+" MPa : N ≈ "+bigN(NP)+" cycles</span>";
+    msg.innerHTML="k = log(N<sub>2</sub>/N<sub>1</sub>)/log(σ<sub>a1</sub>/σ<sub>a2</sub>) = "+nf(v.e2-v.e1,2)+"/"+nf(Math.log10(v.a1/v.a2),3)+" = <b>"+nf(v.k,2)+"</b>. Diviser la contrainte par 2 <b>multiplie</b> la durée de vie par 2<sup>k</sup> = "+bigN(Math.pow(2,v.k))+"."+extra;
+    extra="";
+  }
+  function p10f(e){return bigN(Math.pow(10,e))+" cycles";}
+  [s1,n1,s2,n2,sp].forEach(x=>x.addEventListener("input",draw));
+  $("#m5half").addEventListener("click",()=>{const v=vals();const a=+sp.value,h=Math.max(100,Math.round(a/2/5)*5);
+    const r=Math.pow(a/h,v.k);sp.value=h;extra=" Tu viens de passer de "+a+" à "+h+" MPa : durée de vie × "+bigN(r)+".";draw();});
+  $("#m5weld").addEventListener("click",()=>{s1.value=465;n1.value=4;s2.value=100;n2.value=6;sp.value=200;extra=" <b>Pente des soudures :</b> k ≈ 3. Diviser la contrainte par 2 ne multiplie la durée de vie « que » par 8.";draw();});
+  $("#m5ex").addEventListener("click",()=>{s1.value=400;n1.value=4;s2.value=250;n2.value=6;sp.value=300;draw();});
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M6 : le nuage d'essais
+   ========================================================= */
+(function(){
+  const svg=$("#m6svg");if(!svg)return;
+  const hs=$("#m6hist"),sp=$("#m6p"),ss=$("#m6s"),ro=$("#m6r"),msg=$("#m6msg");
+  const LV=[380,340,310,290],PS=[50,90,95,97.7,99,99.9],Z=[0,1.2816,1.6449,2.0,2.3263,3.0902];
+  let Zs=[],lev=2;
+  function draws(){Zs=LV.map(()=>Array.from({length:8},()=>gauss()));}
+  function mu0(s){return Math.log10(NofS(MAT.acier,s));}
+  function draw(){
+    const W=svgW(svg),H=W<520?280:310;setVB(svg,W,H);clear(svg);
+    const s=+ss.value,zi=+sp.value,z=Z[zi];
+    const fr=frame(svg,{x0:48,x1:W-14,y0:24,y1:H-42,nMin:3,nMax:7,sMin:270,sMax:400,yStep:20,minor:true,yLabel:[["σ",""],["a","sub"],[" (MPa)",""]],xLabel:[["N",""],["r","sub"],[" (cycles)",""]]});
+    const M=MAT.acier;
+    el("path",{d:curvePath(fr,n=>{const v=sOfN(M,n);return v>=M.Re||v<=M.sD+0.5?NaN:v;},4,7,200),fill:"none",stroke:"var(--mat)","stroke-width":2.6},svg);
+    const shift=n=>n*Math.pow(10,z*s);
+    let d="";for(let i=0;i<=200;i++){const e=3+4*i/200,N=Math.pow(10,e),N0=shift(N),v=sOfN(M,N0);if(N0<1e4||v<=M.sD+0.5||v>400)continue;d+=(d?"L":"M")+fr.X(N).toFixed(1)+" "+fr.Y(v).toFixed(1)+" ";}
+    if(zi>0)el("path",{d:d,fill:"none",stroke:"var(--mat)","stroke-width":2.6,"stroke-dasharray":"8 5"},svg);
+    LV.forEach((L,i)=>{const m=mu0(L);el("line",{x1:fr.X(1e3),y1:fr.Y(L),x2:fr.X(1e7),y2:fr.Y(L),stroke:i===lev?"var(--sig)":"var(--line)","stroke-width":i===lev?1.4:1,opacity:i===lev?.6:1},svg);
+      Zs[i].forEach(zz=>{const N=Math.pow(10,m+s*zz);if(N<1e3||N>1e7)return;el("circle",{cx:fr.X(N),cy:fr.Y(L),r:4.2,fill:"var(--eps)",opacity:.8,stroke:"var(--card)","stroke-width":1},svg);});});
+    tx(svg,fr.X(1e7)-4,fr.Y(390),"médiane (trait plein)",{fill:"var(--mat)","font-size":"12","text-anchor":"end"});
+    if(zi>0)tx(svg,fr.X(1e7)-4,fr.Y(390)+15,"calcul à "+nf(PS[zi],PS[zi]%1?1:0)+" % (tirets)",{fill:"var(--mat)","font-size":"12","text-anchor":"end"});
+    /* histogramme */
+    const W2=svgW(hs),H2=170;setVB(hs,W2,H2);clear(hs);
+    const L=LV[lev],m=mu0(L),xs=Zs[lev].map(zz=>m+s*zz);
+    const mu=xs.reduce((a,b)=>a+b,0)/xs.length,sd=Math.sqrt(xs.reduce((a,b)=>a+(b-mu)*(b-mu),0)/(xs.length-1));
+    const lo=m-1.3,hi=m+1.3,hx0=48,hx1=W2-14,hy0=22,hy1=H2-34;
+    const HX=v=>hx0+(hx1-hx0)*(v-lo)/(hi-lo);
+    const bw=0.1,nb=Math.round((hi-lo)/bw),cnt=new Array(nb).fill(0);
+    xs.forEach(v=>{const k=Math.floor((v-lo)/bw);if(k>=0&&k<nb)cnt[k]++;});
+    const cm=Math.max(3,...cnt),HY=c=>hy1-(hy1-hy0)*c/cm;
+    for(let c=0;c<=cm;c++){el("line",{x1:hx0,y1:HY(c),x2:hx1,y2:HY(c),class:"gridbg",opacity:.6},hs);if(c%(cm>4?2:1)===0)tx(hs,hx0-6,HY(c)+4,String(c),{class:"lbl","text-anchor":"end"});}
+    cnt.forEach((c,k)=>{if(c)el("rect",{x:HX(lo+k*bw)+1,y:HY(c),width:HX(lo+(k+1)*bw)-HX(lo+k*bw)-2,height:hy1-HY(c),fill:"var(--eps)",opacity:.75},hs);});
+    let g="";for(let i=0;i<=120;i++){const v=lo+(hi-lo)*i/120,dens=8*bw/(s*Math.sqrt(2*Math.PI))*Math.exp(-0.5*Math.pow((v-m)/s,2));g+=(i?"L":"M")+HX(v).toFixed(1)+" "+HY(Math.min(cm,dens)).toFixed(1)+" ";}
+    el("path",{d:g,fill:"none",stroke:"var(--mat)","stroke-width":2},hs);
+    el("line",{x1:hx0,y1:hy1,x2:hx1,y2:hy1,class:"axis"},hs);
+    for(let e=Math.ceil(lo*2)/2;e<=hi;e+=0.5){tx(hs,HX(e),hy1+15,nf(e,1),{class:"lbl","text-anchor":"middle"});}
+    tx(hs,hx1,hy1+29,"log N (le niveau "+L+" MPa)",{class:"lbl","text-anchor":"end"});
+    [[mu,"μ","var(--mat)"],[mu-z*sd,"μ − z·s","var(--sig)"]].forEach((q,i)=>{if(i===1&&zi===0)return;el("line",{x1:HX(q[0]),y1:hy0-4,x2:HX(q[0]),y2:hy1,stroke:q[2],"stroke-width":2,"stroke-dasharray":i?"5 4":null},hs);tx(hs,HX(q[0])+(i?-4:4),hy0+6,q[1],{fill:q[2],"font-size":"12","text-anchor":i?"end":"start","font-weight":"700"});});
+    tx(hs,hx0,14,"Répartition des 8 essais à "+L+" MPa",{class:"lbl"});
+    $("#m6po").textContent=nf(PS[zi],PS[zi]%1?1:0)+" %";$("#m6so").textContent=nf(s,2);
+    const N50=Math.pow(10,mu),Nps=Math.pow(10,mu-z*sd);
+    const mn=Math.min(...xs),mx=Math.max(...xs);
+    ro.innerHTML="<span class='sig'>niveau "+L+" MPa</span><span class='mat'>μ = "+nf(mu,2)+"</span><span class='mat'>s mesuré = "+nf(sd,2)+"</span><span class='eps'>N<sub>50</sub> = "+bigN(N50)+"</span><span class='eps'>N à "+nf(PS[zi],PS[zi]%1?1:0)+" % = "+bigN(Nps)+"</span>";
+    msg.innerHTML="Au même niveau, le plus long essai a duré <b>"+nf(Math.pow(10,mx-mn),1)+" fois</b> plus que le plus court. "+(zi===0?"Avec 50 % de survie, une pièce sur deux casserait avant la durée prévue : inacceptable.":"La courbe de calcul (tirets) est décalée vers la gauche de z·s = "+nf(z*s,2)+" décade, soit une durée de vie divisée par "+nf(Math.pow(10,z*s),1)+".")+" Le s mesuré sur 8 essais diffère un peu du s réglé : c'est l'incertitude d'un petit échantillon.";
+  }
+  [sp,ss].forEach(x=>x.addEventListener("input",draw));
+  $$("#m6lv [data-l]").forEach(b=>b.addEventListener("click",()=>{lev=+b.dataset.l;$$("#m6lv [data-l]").forEach(x=>x.classList.toggle("on",x===b));draw();}));
+  $("#m6new").addEventListener("click",()=>{draws();draw();});
+  draws();redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M7 : vérifier un détail soudé (EN 1993-1-9, amplitude constante)
+   ========================================================= */
+(function(){
+  const svg=$("#m7svg");if(!svg)return;
+  const sc=$("#m7c"),sd=$("#m7d"),sn=$("#m7n"),ro=$("#m7r"),msg=$("#m7msg");
+  const CL=[36,40,45,50,56,63,71,80,90,100,112,125,140,160];
+  let gM=1.15;
+  function R(C,N){const D=0.737*C;return N<=5e6?C*Math.cbrt(2e6/N):D;}
+  function Rvar(C,N){const D=0.737*C,L=0.405*C;if(N<=5e6)return C*Math.cbrt(2e6/N);if(N<=1e8)return D*Math.pow(5e6/N,0.2);return L;}
+  function draw(){
+    const W=svgW(svg),H=W<520?310:340;setVB(svg,W,H);clear(svg);
+    const C=CL[+sc.value],ds=+sd.value,eN=+sn.value,N=Math.pow(10,eN);
+    const fr=frame(svg,{x0:48,x1:W-14,y0:28,y1:H-42,nMin:4,nMax:9,sMin:10,sMax:1000,logY:true,yTicks:[10,20,50,100,200,500,1000],minor:true,xEvery:1,yLabel:[["Δσ (MPa, échelle log)",""]],xLabel:[["N (cycles)",""]]});
+    /* acier lisse en Δσ = 2σa */
+    el("path",{d:curvePath(fr,n=>2*sOfN(MAT.acier,n),4,9),fill:"none",stroke:"var(--muted)","stroke-width":2,opacity:.8},svg);
+    txs(svg,fr.X(1e4)+6,fr.Y(2*sOfN(MAT.acier,1e4))+16,[["acier lisse poli (Δσ = 2σ",""],["a","sub"],[")",""]],{fill:"var(--muted)","font-size":"12"});
+    /* branche variable */
+    el("path",{d:curvePath(fr,n=>Rvar(C,n),Math.log10(5e6),9,80),fill:"none",stroke:"var(--mat)","stroke-width":1.4,"stroke-dasharray":"2 4",opacity:.8},svg);
+    /* courbe caractéristique (amplitude constante) */
+    el("path",{d:curvePath(fr,n=>R(C,n),4,9,200),fill:"none",stroke:"var(--mat)","stroke-width":3},svg);
+    el("path",{d:curvePath(fr,n=>R(C,n)/gM,4,9,200),fill:"none",stroke:"var(--mat)","stroke-width":2.2,"stroke-dasharray":"8 5"},svg);
+    [[2e6,C,"FAT "+C],[5e6,0.737*C,"Δσ"]].forEach((q,i)=>{const x=fr.X(q[0]),y=fr.Y(q[1]);el("circle",{cx:x,cy:y,r:4,fill:"var(--mat)"},svg);
+      if(i===0)tx(svg,x+8,y-12,q[2],{fill:"var(--mat)","font-weight":"700","font-size":"12.5"});else txs(svg,x+6,y+18,[["Δσ",""],["D","sub"]],{fill:"var(--mat)","font-size":"12"});});
+    if(W>=480)tx(svg,fr.X(3e8),fr.Y(Rvar(C,3e8))+16,"spectre variable",{fill:"var(--mat)","font-size":"11.5","text-anchor":"middle"});
+    /* point */
+    const dem=1.0*ds,res=R(C,N),resd=res/gM,ok=dem<=resd+1e-9,u=dem/resd;
+    el("line",{x1:fr.X(N),y1:fr.Y(10),x2:fr.X(N),y2:fr.Y(dem),stroke:"var(--eps)","stroke-width":1.2,"stroke-dasharray":"3 3"},svg);
+    el("circle",{cx:fr.X(N),cy:fr.Y(dem),r:7,fill:ok?"var(--eps)":"var(--bad)",stroke:"var(--card)","stroke-width":2.5},svg);
+    $("#m7co").textContent="FAT "+C;$("#m7do").textContent=ds+" MPa";$("#m7no").textContent=bigN(N);
+    /* durée de vie de calcul sous ds */
+    const x=ds*gM,D=0.737*C;const Nadm=x>D?2e6*Math.pow(C/x,3):Infinity;
+    ro.innerHTML="<span class='mat'>Δσ<sub>C</sub> = "+C+"</span><span class='mat'>Δσ<sub>D</sub> = "+nf(D,1)+"</span><span class='mat'>Δσ<sub>L</sub> = "+nf(0.405*C,1)+" MPa</span><span class='mat'>Δσ<sub>R</sub>(N) = "+nf(res,1)+"</span><span class='mat'>Δσ<sub>R</sub>/γ<sub>Mf</sub> = "+nf(resd,1)+" MPa</span><span class='"+(ok?"eps":"sig")+"'>taux d'utilisation = "+nf(u*100,0)+" %</span><span class='eps'>N de calcul sous "+ds+" MPa : "+(isFinite(Nadm)?bigN(Nadm):"illimité")+"</span>";
+    let m=(ok?"✅ <b>Le détail passe</b> : ":"❌ <b>Le détail ne passe pas</b> : ")+"γ<sub>Ff</sub>·Δσ = "+nf(dem,1)+" MPa "+(ok?"≤":"&gt;")+" Δσ<sub>R</sub>/γ<sub>Mf</sub> = "+nf(res,1)+"/"+nf(gM,2)+" = "+nf(resd,1)+" MPa.";
+    if(N>5e6)m+=" Au-delà de 5 × 10⁶ cycles en amplitude constante, la résistance est plafonnée à Δσ<sub>D</sub> : si γ<sub>Mf</sub>·Δσ ≤ Δσ<sub>D</sub>, la durée de vie est illimitée.";
+    m+=" Comparaison : à 2 × 10⁶ cycles, l'acier lisse supporte Δσ = 540 MPa, soit "+nf(540/C,1)+" fois la classe FAT.";
+    msg.innerHTML=m;
+  }
+  [sc,sd,sn].forEach(x=>x.addEventListener("input",draw));
+  $$("#m7g .btn").forEach(b=>b.addEventListener("click",()=>{gM=+b.dataset.g;$$("#m7g .btn").forEach(x=>x.classList.toggle("on",x===b));draw();}));
+  redraws.push(draw);draw();
+})();
+/* =========================================================
+   Quiz, check-list, sommaire, thème
+   ========================================================= */
+(function(){
+  const box=$("#quiz");if(!box)return;
+  const Q=[
+    {q:"Sur une courbe de Wöhler, l'axe vertical porte :",o:["le nombre de cycles","la contrainte (souvent σ<sub>a</sub>), c'est-à-dire la cause","la déformation plastique","le temps d'essai"],c:1,e:"La <b>cause</b> (la contrainte) est en ordonnée, l'<b>effet</b> (N<sub>r</sub>) en abscisse : l'inverse de l'habitude."},
+    {q:"Une flèche → au bout d'un point d'essai signifie :",o:["une rupture brutale","un essai arrêté sans rupture : la durée de vie réelle est plus longue","une erreur de mesure","une rupture oligocyclique"],c:1,e:"C'est une éprouvette <b>non rompue</b> : on a arrêté l'essai (par exemple à 10⁷ cycles)."},
+    {q:"Sur une échelle logarithmique, la distance entre 10³ et 10⁴ est :",o:["dix fois plus petite que celle entre 10⁴ et 10⁵","la même que celle entre 10⁶ et 10⁷","nulle","dix fois plus grande que celle entre 10⁴ et 10⁵"],c:1,e:"Toutes les <b>décades</b> ont la même longueur : c'est tout l'intérêt de l'échelle logarithmique."},
+    {q:"log(5 × 10⁶) vaut environ :",o:["5,6","6,7","30","0,7"],c:1,e:"log 5 + log 10⁶ = 0,699 + 6 = <b>6,7</b>."},
+    {q:"Le domaine oligocyclique correspond à :",o:["σ<sub>a</sub> &lt; σ<sub>D</sub>","σ<sub>a</sub> &gt; R<sub>e</sub>, rupture en moins de 10⁴ cycles environ","plus de 10⁸ cycles","une rupture sans aucune déformation plastique"],c:1,e:"Au-dessus de R<sub>e</sub>, toute la section plastifie à chaque cycle : la rupture arrive en <b>peu de cycles</b>."},
+    {q:"Un alliage d'aluminium (cubique à faces centrées) :",o:["a une vraie limite d'endurance, comme l'acier","n'a pas de vraie limite : on définit une limite conventionnelle à N cycles","ne se fatigue pas","a une courbe qui remonte après 10⁷ cycles"],c:1,e:"Sa courbe descend sans fin : on choisit un N (10⁶ à 10⁹) et on annonce σ<sub>D</sub>(N)."},
+    {q:"Goodman, avec σ<sub>D</sub> = 300 MPa, R<sub>m</sub> = 600 MPa et σ<sub>m</sub> = 200 MPa : amplitude admissible ?",o:["300 MPa","200 MPa","100 MPa","400 MPa"],c:1,e:"300 × (1 − 200/600) = 300 × 2/3 = <b>200 MPa</b>."},
+    {q:"Loi σ<sub>a</sub><sup>k</sup>·N = C avec k = 10 : si σ<sub>a</sub> est divisée par 2, la durée de vie est :",o:["multipliée par 2","multipliée par 20","multipliée par environ 1 000","divisée par 1 000"],c:2,e:"2¹⁰ = 1 024 : <b>environ mille fois</b> plus de cycles."},
+    {q:"Pour une soudure (exposant 3), réduire Δσ de 20 % multiplie la durée de vie par environ :",o:["1,2","1,95","3","8"],c:1,e:"(1/0,8)³ = 1,25³ ≈ <b>1,95</b>."},
+    {q:"Avec une loi log-normale (moyenne μ et écart-type s des log N), la durée de vie à 97,7 % de survie vaut :",o:["10<sup>μ</sup>","10<sup>μ − 2s</sup>","10<sup>μ + 2s</sup>","la moyenne arithmétique des N"],c:1,e:"Deux écarts-types à gauche de la moyenne des logarithmes : <b>10<sup>μ − 2s</sup></b>."},
+    {q:"K<sub>t</sub> = 3 et q = 0,5 donnent K<sub>f</sub> =",o:["1,5","2","3","4"],c:1,e:"K<sub>f</sub> = 1 + q(K<sub>t</sub> − 1) = 1 + 0,5 × 2 = <b>2</b>."},
+    {q:"Détail FAT 90 à 2 × 10⁶ cycles, avec γ<sub>Mf</sub> = 1,35 : étendue de calcul admissible ?",o:["90 MPa","121 MPa","67 MPa","45 MPa"],c:2,e:"À 2 × 10⁶ cycles, Δσ<sub>R</sub> = Δσ<sub>C</sub> = 90 MPa ; 90/1,35 ≈ <b>67 MPa</b>."}
+  ];
+  let score=0,done=0;const sc=$("#qzScore");
+  function upd(){let t="Score : "+score+" / "+Q.length;if(done===Q.length)t+=score>=10?"  ·  🎉 prêt pour le cours 3":score>=7?"  ·  relis les explications":"  ·  refais un tour des chapitres";sc.textContent=t;}
+  function render(){box.innerHTML="";score=0;done=0;
+    Q.forEach((it,n)=>{const d=document.createElement("div");d.className="qz";
+      d.innerHTML='<p class="qz-q"><b>'+(n+1)+".</b> "+it.q+'</p><div class="qz-o"></div><div class="qz-e" hidden></div>';
+      const o=d.querySelector(".qz-o"),ex=d.querySelector(".qz-e");let answered=false;
+      it.o.forEach((txt,i)=>{const b=document.createElement("button");b.type="button";b.className="qz-b";b.innerHTML=String.fromCharCode(65+i)+". "+txt;
+        b.addEventListener("click",()=>{if(answered)return;answered=true;done++;const ok=i===it.c;if(ok)score++;b.classList.add(ok?"ok":"ko");o.children[it.c].classList.add("ok");ex.hidden=false;ex.innerHTML=(ok?"✅ <b>Bien joué.</b> ":"❌ <b>Pas tout à fait.</b> ")+it.e;upd();});
+        o.appendChild(b);});
+      box.appendChild(d);});
+    upd();}
+  $("#qzReset").addEventListener("click",render);render();
+})();
+(function(){
+  const boxes=$$("#checklist input[type=checkbox]"),msg=$("#checkMsg"),KEY="fatigue-cours2-check";
+  if(!boxes.length)return;
+  let saved=[];try{saved=JSON.parse(localStorage.getItem(KEY)||"[]")||[];}catch(e){saved=[];}
+  boxes.forEach(b=>{b.checked=saved.indexOf(b.dataset.c)>=0;});
+  function upd(){const on=boxes.filter(b=>b.checked).map(b=>b.dataset.c);try{localStorage.setItem(KEY,JSON.stringify(on));}catch(e){}
+    msg.innerHTML=on.length===boxes.length?"🎉 <b>Tout est coché : tu es prêt pour le cours 3 !</b>":on.length+" / "+boxes.length+" : reviens sur les points non cochés (les manipulations sont faites pour ça).";}
+  boxes.forEach(b=>b.addEventListener("change",upd));upd();
+})();
+(function(){
+  const links=$$(".toc a"),tin=$(".toc-in");
+  if(!links.length||!("IntersectionObserver" in window))return;
+  const map={};links.forEach(a=>{map[a.getAttribute("href").slice(1)]=a;});
+  const obs=new IntersectionObserver(ents=>{ents.forEach(en=>{if(!en.isIntersecting)return;const a=map[en.target.id];if(!a)return;
+    links.forEach(l=>l.classList.toggle("on",l===a));
+    if(tin){const tgt=a.offsetLeft-tin.clientWidth/2+a.offsetWidth/2;try{tin.scrollTo({left:tgt,behavior:RM?"auto":"smooth"});}catch(e){tin.scrollLeft=tgt;}}});},{rootMargin:"-45% 0px -50% 0px"});
+  Object.keys(map).forEach(id=>{const s=document.getElementById(id);if(s)obs.observe(s);});
+})();
+(function(){
+  const b=$("#themeBtn");if(!b)return;const KEY="fatigue-theme",root=document.documentElement;
+  const lab={auto:"◐ Thème : automatique",light:"☀️ Thème : clair",dark:"🌙 Thème : sombre"};
+  let t="auto";try{t=localStorage.getItem(KEY)||"auto";}catch(e){}
+  function apply(){if(t==="auto")root.removeAttribute("data-theme");else root.setAttribute("data-theme",t);b.textContent=lab[t];}
+  b.addEventListener("click",()=>{t=t==="auto"?"light":t==="light"?"dark":"auto";try{localStorage.setItem(KEY,t);}catch(e){}apply();});
+  apply();
+})();
+})();
+</script>
+</body>
+</html>

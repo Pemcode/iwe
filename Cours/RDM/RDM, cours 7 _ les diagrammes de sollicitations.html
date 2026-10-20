@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RDM, cours 7 : les diagrammes de sollicitations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@500;600;700&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F3F6F9; --paper-2:#E6ECF2; --card:#FFFFFF; --ink:#17212B; --muted:#56626F; --line:#C5CFD9;
+  --grid:rgba(40,90,160,.075);
+  --sig:#CF2438; --tau:#8A34B6; --eps:#1B5ED3; --gam:#06849A; --frc:#D46A00; --mat:#26844A;
+  --ok:#26844A; --warn:#B86E00; --bad:#C62828;
+  --lv2:#E4EBF2; --hl:#FFF3B0;
+  --font-body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-head:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --font-math:"STIX Two Text","Cambria Math","Cambria","Times New Roman",serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+    --grid:rgba(120,160,220,.07);
+    --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A;
+    --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+  --grid:rgba(120,160,220,.07);
+  --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A;
+  --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+  color-scheme: dark;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0;color:var(--ink);font-family:var(--font-body);font-size:17.5px;line-height:1.62;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;
+}
+img,svg{max-width:100%}
+.wrap{max-width:800px;margin:0 auto;padding:0 20px}
+.wide{max-width:980px}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.1;margin:0}
+h3{font-size:1.65rem;font-weight:600;margin:2rem 0 .6rem}
+h4{font-size:1.3rem;font-weight:600;margin:1.4rem 0 .4rem}
+p{margin:.7em 0}
+a{color:var(--eps)}
+b,strong{font-weight:700}
+small{font-size:.8em}
+sub{font-size:.72em}
+.m{font-family:var(--font-math);font-size:1.08em;white-space:nowrap}
+.sig{color:var(--sig)} .tau{color:var(--tau)} .eps{color:var(--eps)} .gam{color:var(--gam)} .frc{color:var(--frc)} .mat{color:var(--mat)} .mut{color:var(--muted)}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .12em;line-height:1.1}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 .2em .08em}
+.frac>span:last-child{padding:.08em .2em 0}
+.vec{position:relative;display:inline-block}
+.vec::after{content:"→";position:absolute;left:0;right:0;top:-.72em;font-size:.62em;text-align:center;font-family:var(--font-body)}
+
+/* ---------- hero ---------- */
+.hero{padding:34px 0 10px}
+.title-block{border:2.5px solid var(--ink);background:var(--card);display:grid;grid-template-columns:1fr 290px}
+.tb-main{padding:22px 24px;border-right:2.5px solid var(--ink)}
+.tb-series{margin:0 0 .5rem;color:var(--muted);font-size:.95rem}
+.hero h1{font-size:clamp(2.4rem,6vw,4.1rem);font-weight:700;letter-spacing:-.01em}
+.tb-cells{display:grid;grid-template-rows:repeat(4,1fr)}
+.tb-cells>div{padding:9px 16px;border-bottom:1.5px solid var(--ink);display:flex;flex-direction:column;justify-content:center}
+.tb-cells>div:last-child{border-bottom:0}
+.tb-cells small{color:var(--muted);font-size:.78rem}
+.tb-cells b{font-family:var(--font-head);font-size:1.3rem;font-weight:600;line-height:1.15}
+.lede{font-size:1.13rem;max-width:760px;margin:1.2rem 0}
+@media (max-width:760px){.title-block{grid-template-columns:1fr}.tb-main{border-right:0;border-bottom:2.5px solid var(--ink)}.tb-cells{grid-template-rows:none;grid-template-columns:1fr 1fr}.tb-cells>div:nth-child(odd){border-right:1.5px solid var(--ink)}.tb-cells>div:nth-child(3){border-bottom:0}}
+
+/* code couleur */
+.cc{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:stretch;margin:1rem 0 .4rem}
+.cc-box{background:var(--card);border:2px solid var(--line);padding:12px 14px;border-radius:4px}
+.cc-cause{border-color:var(--sig)} .cc-link{border-color:var(--mat)} .cc-eff{border-color:var(--eps)}
+.cc-box small{display:block;color:var(--muted);font-size:.82rem;line-height:1.3}
+.cc-syms{font-family:var(--font-math);font-size:2.3rem;line-height:1.2;display:flex;gap:.5em;margin:.2rem 0}
+.cc-box p{margin:0;font-size:.9rem;line-height:1.35}
+.cc-arrow{align-self:center;font-size:1.8rem;color:var(--muted)}
+@media (max-width:700px){.cc{grid-template-columns:1fr}.cc-arrow{transform:rotate(90deg);justify-self:center;line-height:1}}
+.cc-note{font-size:.95rem;color:var(--muted)}
+
+/* ---------- nav ---------- */
+.toc{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-bottom:1.5px solid var(--line);padding-top:env(safe-area-inset-top,0px);margin-top:18px}
+.toc-in{display:flex;gap:6px;overflow-x:auto;padding:9px 20px;max-width:980px;margin:0 auto;scrollbar-width:thin}
+.toc a{flex:none;text-decoration:none;color:var(--ink);font-size:.88rem;padding:4px 11px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);white-space:nowrap}
+.toc a.on{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.toc a:focus-visible,.btn:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--eps);outline-offset:2px}
+
+/* ---------- sections ---------- */
+section.chap{padding:46px 0 10px}
+.cartouche{display:grid;grid-template-columns:86px 1fr 240px;border:2.5px solid var(--ink);background:var(--card);margin-bottom:1.4rem}
+.c-num{font-family:var(--font-head);font-size:3.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;border-right:2.5px solid var(--ink)}
+.c-title{padding:14px 18px;border-right:2.5px solid var(--ink)}
+.c-title h2{font-size:2.1rem;font-weight:700}
+.c-title p{margin:.25rem 0 0;color:var(--muted)}
+.c-img{padding:12px 14px;display:flex;gap:12px;align-items:center;background:var(--paper-2)}
+.c-img .ico{font-size:2.3rem;line-height:1}
+.c-img small{display:block;color:var(--muted);font-size:.78rem}
+.c-img span{font-size:.95rem;line-height:1.3}
+@media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
+
+/* niveaux */
+.lv{margin:1.2rem 0;padding:6px 22px 14px;border-radius:4px}
+.lv1{background:var(--card);border:2px solid var(--ink)}
+.lv2{background:var(--lv2);border-left:6px solid var(--ink)}
+.lv-h{display:flex;align-items:center;gap:10px;font-family:var(--font-head);font-size:1.35rem;font-weight:600;margin:10px 0 4px}
+.lv-h .tag{font-size:.95rem;font-family:var(--font-body);font-weight:400;color:var(--muted)}
+
+/* formule */
+.fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:560px;text-align:center;border-radius:3px}
+.fx .big{font-family:var(--font-math);font-size:2.2rem;line-height:1.35}
+.fx .cap{font-size:.85rem;color:var(--muted);margin:.2rem 0 0}
+.syms{margin:.6rem 0;display:grid;grid-template-columns:auto 1fr;gap:.35rem 1rem;align-items:baseline}
+.syms dt{font-family:var(--font-math);font-size:1.3rem;text-align:right;white-space:nowrap}
+.syms dd{margin:0}
+.def{margin:.9rem 0;padding:.5rem .9rem;border-left:3px dotted var(--muted);font-size:.96rem;background:color-mix(in srgb,var(--card) 60%,transparent)}
+.def b:first-child{font-family:var(--font-head);font-size:1.08rem;font-weight:600}
+.tip{margin:1rem 0;padding:.7rem 1rem;border:1.5px dashed var(--mat);border-radius:4px;font-size:.97rem}
+.warn{margin:1rem 0;padding:.7rem 1rem;border:2px solid var(--bad);border-radius:4px;font-size:.97rem;background:color-mix(in srgb,var(--bad) 7%,transparent)}
+.meta{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--frc);border-radius:4px;background:color-mix(in srgb,var(--frc) 6%,transparent)}
+.mnemo{margin:1rem 0;padding:.7rem 1rem;background:var(--hl);border-radius:4px;font-size:.98rem}
+.fun{margin:1.2rem 0;padding:.8rem 1rem;border:2px dashed var(--muted);border-radius:10px;background:var(--card);font-size:.98rem}
+.fun-h{display:block;margin-bottom:.35rem;font-family:var(--font-head);font-size:1.15rem;font-weight:600;letter-spacing:.02em}
+
+/* labos (animations) */
+.lab{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:14px 16px 12px;margin:1.4rem 0}
+.lab-h{font-family:var(--font-head);font-size:1.3rem;font-weight:600;margin:0 0 .2rem}
+.lab-sub{margin:0 0 .6rem;color:var(--muted);font-size:.92rem}
+.lab svg{display:block;width:100%;height:auto;color:var(--ink);font-family:var(--font-body)}
+.ctrl{display:grid;grid-template-columns:minmax(120px,auto) 1fr minmax(90px,auto);gap:6px 12px;align-items:center;margin:.6rem 0}
+.ctrl label{font-size:.95rem}
+.ctrl output{font-family:var(--font-math);font-size:1.1rem;text-align:right}
+input[type=range]{width:100%;accent-color:var(--ink);height:28px}
+input.r-frc{accent-color:var(--frc)} input.r-eps{accent-color:var(--eps)} input.r-mat{accent-color:var(--mat)} input.r-geo{accent-color:var(--muted)} input.r-th{accent-color:var(--tau)}
+.btns{display:flex;flex-wrap:wrap;gap:6px;margin:.5rem 0}
+.btn{font-family:var(--font-body);font-size:.9rem;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 13px;cursor:pointer}
+.btn:hover{background:var(--paper-2)}
+.btn.on{background:var(--ink);color:var(--paper)}
+.readout{font-family:var(--font-math);font-size:1.12rem;background:var(--paper-2);border-radius:4px;padding:.5rem .8rem;margin:.5rem 0;overflow-x:auto}
+.status{font-size:.97rem;margin:.4rem 0}
+.gauge{position:relative;height:16px;background:var(--paper-2);border-radius:8px;margin:1.4rem 0 1.6rem;overflow:visible}
+.gauge .fill{position:absolute;left:0;top:0;bottom:0;border-radius:8px;transition:width .15s}
+.gauge .mk{position:absolute;top:-6px;bottom:-6px;width:2px;background:var(--ink)}
+.gauge .mk span{position:absolute;top:22px;left:50%;transform:translateX(-50%);font-size:.78rem;white-space:nowrap}
+.radios{display:flex;flex-wrap:wrap;gap:6px 14px;margin:.4rem 0;font-size:.95rem}
+.radios label{display:flex;gap:6px;align-items:center;cursor:pointer}
+
+/* svg classes */
+svg text{fill:currentColor;font-size:13px}
+svg .lbl{font-size:12.5px;fill:var(--muted)}
+svg .big{font-size:18px;font-family:var(--font-math);font-weight:600}
+svg .mth{font-family:var(--font-math);font-size:17px}
+.arr line{stroke:currentColor}
+.arr polygon{fill:currentColor}
+.arr.ink{color:var(--ink)}
+.arr.dim{opacity:.16}
+.arr.hl line{stroke-width:5}
+.arr[data-k]{cursor:pointer}
+svg .bar{fill:var(--paper-2);stroke:var(--ink);stroke-width:1.6}
+svg .ghost{opacity:.3}
+svg .cut{stroke:var(--ink);stroke-width:1.5;stroke-dasharray:6 4}
+svg .cutline{stroke:var(--ink);stroke-width:2.5}
+svg .thin-dash{fill:none;stroke:var(--muted);stroke-width:1.2;stroke-dasharray:4 4}
+svg .ref{stroke:var(--muted);stroke-width:1.3;stroke-dasharray:4 3}
+svg .ref-rect{fill:none;stroke:var(--muted);stroke-width:1.4;stroke-dasharray:6 4}
+svg .gridl{stroke:var(--eps);stroke-width:1.2;opacity:.75}
+svg .wall{fill:var(--muted);opacity:.55}
+svg .axis{stroke:var(--ink);stroke-width:1.4}
+svg .tick{stroke:var(--muted);stroke-width:1}
+svg .gridbg{stroke:var(--line);stroke-width:1}
+svg .curve-ghost{fill:none;stroke:var(--muted);stroke-width:2;opacity:.45}
+svg .curve{fill:none;stroke:var(--ink);stroke-width:3.2;stroke-linejoin:round}
+svg .unload{stroke:var(--mat);stroke-width:2.4;stroke-dasharray:7 4}
+svg .z-el{fill:var(--eps);opacity:.08} svg .z-pl{fill:var(--frc);opacity:.08} svg .z-str{fill:var(--sig);opacity:.09}
+svg .spec{fill:var(--paper-2);stroke:var(--ink);stroke-width:1.8}
+svg .grip{fill:var(--muted);opacity:.7}
+svg .card-a{fill:color-mix(in srgb,var(--gam) 22%,var(--card));stroke:var(--ink);stroke-width:1}
+svg .card-b{fill:color-mix(in srgb,var(--gam) 10%,var(--card));stroke:var(--ink);stroke-width:1}
+svg .plate{fill:var(--ink);opacity:.8}
+svg .arc{fill:none;stroke-width:2}
+svg .face{stroke:var(--ink);stroke-width:1.6}
+svg .face-front{fill:color-mix(in srgb,var(--eps) 7%,var(--card))}
+svg .face-right{fill:color-mix(in srgb,var(--eps) 14%,var(--card))}
+svg .face-top{fill:color-mix(in srgb,var(--eps) 20%,var(--card))}
+svg .hidden-e{stroke:var(--muted);stroke-width:1.2;stroke-dasharray:4 4}
+svg .trace{fill:none;stroke:var(--tau);stroke-width:2.6;stroke-linejoin:round;stroke-linecap:round}
+svg .mohr{fill:none;stroke:var(--ink);stroke-width:1.4;stroke-dasharray:6 5}
+svg .pt{stroke:var(--card);stroke-width:2}
+#spinner{transform-box:fill-box;transform-origin:center}
+#spinner.spinning{animation:spin 3.2s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){#spinner.spinning{animation:none;transform:rotate(22deg)}}
+
+/* matrice */
+.matrow{display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:center}
+.cubebox{flex:1 1 300px;max-width:400px}
+.matbox{flex:1 1 280px}
+.mtx{border-collapse:collapse;font-family:var(--font-math);font-size:1.25rem;margin:0 auto}
+.mtx th{font-family:var(--font-body);font-weight:400;font-size:.75rem;color:var(--muted);padding:2px 6px}
+.mtx td.c{padding:6px 12px;text-align:center;cursor:pointer;border-radius:4px;min-width:62px}
+.mtx td.c:hover{background:var(--paper-2)}
+.mtx td.c.act{background:var(--hl);outline:2px solid var(--ink)}
+.mtx td.c.zero{color:var(--muted)}
+.mtx td.bl{border-left:2.5px solid var(--ink);border-top:2.5px solid var(--ink);border-bottom:2.5px solid var(--ink);width:8px;padding:0}
+.mtx td.br{border-right:2.5px solid var(--ink);border-top:2.5px solid var(--ink);border-bottom:2.5px solid var(--ink);width:8px;padding:0}
+.mtx td.c.blk{box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--eps) 50%,transparent)}
+.mtx-txt{font-size:.95rem;min-height:4.6em;background:var(--paper-2);border-radius:4px;padding:.6rem .8rem;margin-top:.6rem}
+.emtx{font-family:var(--font-math);font-size:1.1rem;overflow-x:auto;background:var(--lv2);padding:.6rem .8rem;border-radius:4px;margin-top:.7rem}
+.inlinemat{display:inline-grid;grid-template-columns:repeat(3,auto);gap:2px 16px;padding:4px 10px;border-left:2px solid currentColor;border-right:2px solid currentColor;border-radius:6px;vertical-align:middle;text-align:center}
+
+/* tableaux */
+.tbl-wrap{overflow-x:auto;margin:1rem 0}
+table.data{border-collapse:collapse;width:100%;font-size:.95rem;background:var(--card)}
+table.data th,table.data td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:middle}
+table.data th{font-family:var(--font-head);font-weight:600;font-size:1.05rem;background:var(--paper-2)}
+.ebar{height:10px;background:var(--mat);border-radius:5px;min-width:2px}
+
+/* parcours */
+.route{list-style:none;padding:0;margin:1rem 0;position:relative}
+.route::before{content:"";position:absolute;left:17px;top:10px;bottom:10px;width:4px;background:var(--line);border-radius:2px}
+.route li{position:relative;padding:0 0 14px 52px}
+.route li .dot{position:absolute;left:4px;top:0;width:30px;height:30px;border-radius:50%;border:3px solid var(--ink);background:var(--card);font-family:var(--font-head);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+.route li.here .dot{background:var(--ink);color:var(--paper)}
+.route li b{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.route li p{margin:.1rem 0 0;font-size:.95rem}
+.route li .dur{color:var(--muted);font-size:.85rem}
+.plan48{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:.8rem 0}
+.plan48>div{background:var(--card);border:1.5px solid var(--line);padding:8px 10px;border-radius:4px;font-size:.9rem}
+.plan48 b{display:block;font-family:var(--font-head);font-size:1.05rem}
+@media (max-width:640px){.plan48{grid-template-columns:1fr 1fr}}
+
+/* mise au point */
+.fix{border:2.5px solid var(--ink);background:var(--card);padding:6px 22px 16px;margin:1.2rem 0}
+.fix-diag{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;margin:1rem 0;font-family:var(--font-math)}
+.fix-diag .bx{border:2.5px solid;padding:8px 14px;text-align:center;border-radius:4px;min-width:150px}
+.fix-diag .bx small{display:block;font-family:var(--font-body);font-size:.78rem;color:var(--muted)}
+.fix-diag .bx .s{font-size:1.9rem;line-height:1.2}
+.fix-diag .ar{font-size:1.4rem;color:var(--mat);text-align:center;font-family:var(--font-body)}
+.fix-diag .ar small{display:block;font-size:.78rem}
+
+/* exercices / quiz */
+.exo{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--ink);padding:6px 20px 12px;margin:1.2rem 0;border-radius:4px}
+.exo h4{margin-top:.8rem}
+.exo .lvtag{font-family:var(--font-body);font-size:.85rem;font-weight:400;color:var(--muted);margin-left:.4rem}
+details{margin:.6rem 0}
+summary{cursor:pointer;font-weight:700;padding:4px 0}
+details .sol{padding:.4rem .9rem;border-left:3px solid var(--mat);margin:.4rem 0}
+.qz{background:var(--card);border:1.5px solid var(--line);border-radius:6px;padding:10px 16px;margin:.8rem 0}
+.qz-q{margin:.3rem 0 .6rem}
+.qz-o{display:flex;flex-direction:column;gap:6px}
+.qz-b{text-align:left;font-family:var(--font-body);font-size:.97rem;padding:8px 12px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:5px;cursor:pointer}
+.qz-b:hover{border-color:var(--ink)}
+.qz-b.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--card))}
+.qz-b.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--card))}
+.qz-e{font-size:.94rem;margin:.6rem 0 .2rem}
+.score{position:sticky;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);display:inline-block;background:var(--ink);color:var(--paper);padding:6px 14px;border-radius:999px;font-size:.95rem;margin:.6rem 0}
+
+/* fiche mémoire */
+.fiche{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:2.5px solid var(--ink);background:var(--card);margin:1rem 0}
+.fiche>div{padding:12px 14px;border-right:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}
+.fiche>div:nth-child(3n){border-right:0}
+.fiche>div:nth-last-child(-n+3){border-bottom:0}
+.fiche .ic{font-size:1.9rem;line-height:1}
+.fiche h4{margin:.3rem 0 .2rem;font-size:1.15rem}
+.fiche .f{font-family:var(--font-math);font-size:1.15rem;margin:.2rem 0}
+.fiche p{margin:.2rem 0 0;font-size:.88rem;color:var(--muted)}
+@media (max-width:720px){.fiche{grid-template-columns:1fr 1fr}.fiche>div{border-right:1.5px solid var(--ink)!important;border-bottom:1.5px solid var(--ink)!important}.fiche>div:nth-child(2n){border-right:0!important}}
+.gloss{display:grid;grid-template-columns:minmax(150px,220px) 1fr;gap:0;border-top:1.5px solid var(--line);margin:1rem 0}
+.gloss dt,.gloss dd{border-bottom:1.5px solid var(--line);padding:7px 8px;margin:0}
+.gloss dt{font-weight:700}
+.gloss dd{font-size:.95rem}
+@media (max-width:600px){.gloss{grid-template-columns:1fr}.gloss dt{border-bottom:0;padding-bottom:0}}
+.check label{display:flex;gap:10px;align-items:flex-start;padding:5px 0;cursor:pointer}
+.check input{margin-top:.35em;width:18px;height:18px;accent-color:var(--mat)}
+footer{padding:40px 0 60px;color:var(--muted);font-size:.9rem}
+hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
+
+/* ---------- ajouts cours 2 ---------- */
+:root{--weld:#9A5B12}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--weld:#E7A95A}}
+:root[data-theme="dark"]{--weld:#E7A95A}
+.weld{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--weld);border-radius:4px;background:color-mix(in srgb,var(--weld) 7%,transparent)}
+.weld>b:first-child{font-family:var(--font-head);font-size:1.15rem;font-weight:600;color:var(--weld)}
+.recall{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:1rem 0}
+.recall>div{background:var(--card);border:1.5px solid var(--line);border-radius:4px;padding:8px 12px;font-size:.92rem}
+.recall .f{font-family:var(--font-math);font-size:1.15rem}
+@media (max-width:640px){.recall{grid-template-columns:1fr}}
+/* machine à multiplier */
+.mm-grid{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:center;margin:.6rem 0}
+.mm-in{display:grid;grid-template-columns:repeat(3,70px);gap:4px;padding:6px 8px;border-left:2.5px solid var(--ink);border-right:2.5px solid var(--ink);border-radius:8px}
+.mm-in input,.mm-v input,.wl-in input{width:100%;font-family:var(--font-math);font-size:1.05rem;text-align:center;border:1.5px solid var(--line);border-radius:4px;background:var(--paper);color:var(--ink);padding:3px 2px}
+.mm-in input[readonly]{background:var(--paper-2);color:var(--muted);border-style:dashed}
+.mm-in input.act,.mm-v input.act{background:var(--hl);border-color:var(--ink)}
+.mm-v{display:grid;grid-template-columns:88px;gap:4px;padding:6px 8px;border-left:2.5px solid var(--ink);border-right:2.5px solid var(--ink);border-radius:8px}
+.mm-T{display:grid;grid-template-columns:86px;gap:4px;padding:6px 8px;border-left:2.5px solid var(--ink);border-right:2.5px solid var(--ink);border-radius:8px}
+.mm-T div{font-family:var(--font-math);font-size:1.05rem;text-align:center;padding:3px 2px;min-height:1.9em;border-radius:4px;background:var(--paper-2)}
+.mm-T div.act{background:var(--hl);outline:2px solid var(--ink)}
+.mm-op{font-family:var(--font-math);font-size:1.6rem}
+.mm-lab{font-size:.78rem;color:var(--muted);text-align:center}
+.mm-col{display:flex;flex-direction:column;align-items:center;gap:3px}
+.mm-steps{font-family:var(--font-math);font-size:1.05rem;background:var(--paper-2);border-radius:4px;padding:.6rem .9rem;margin:.6rem 0;min-height:3em;overflow-x:auto}
+.mm-steps div{margin:.15rem 0}
+.mm-steps .now{background:var(--hl);border-radius:3px;padding:0 .3rem}
+/* cordon */
+.wl-in{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px 14px;margin:.6rem 0}
+.wl-in label{font-size:.88rem;color:var(--muted);display:flex;flex-direction:column;gap:2px}
+.wl-in select{font-family:var(--font-body);font-size:.95rem;border:1.5px solid var(--line);border-radius:4px;background:var(--paper);color:var(--ink);padding:4px}
+svg .plate2{fill:var(--paper-2);stroke:var(--ink);stroke-width:1.6}
+svg .weldf{fill:color-mix(in srgb,var(--weld) 30%,var(--card));stroke:var(--ink);stroke-width:1.6}
+svg .throat{stroke:var(--weld);stroke-width:3;stroke-dasharray:7 4}
+.arr.weldc{color:var(--weld)}
+input.r-gam{accent-color:var(--gam)}
+.hp{display:inline-block;font-size:.75rem;font-weight:700;padding:1px 7px;border-radius:9px;background:var(--weld);color:var(--card);vertical-align:middle;margin-left:6px}
+@media (max-width:700px){.m{white-space:normal}.fx{padding:12px 10px}.fx .big{font-size:1.45rem!important}}
+.fx{overflow-x:auto}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="wrap wide">
+  <div class="title-block">
+    <div class="tb-main">
+      <p class="tb-series">Résistance des matériaux, série 2 : la théorie des poutres</p>
+      <h1>Faire glisser la coupe : les diagrammes</h1>
+    </div>
+    <div class="tb-cells">
+      <div><small>Cours</small><b>7 : les diagrammes de sollicitations</b></div>
+      <div><small>Durée conseillée</small><b>≈ 3 h avec les exercices</b></div>
+      <div><small>Prérequis</small><b>le cours 6 (torseur de cohésion)</b></div>
+      <div><small>À la fin tu sais</small><b>tracer N(x), T(x), Mf(x) et trouver la section la plus sollicitée</b></div>
+    </div>
+  </div>
+  <p class="lede">Au cours 6, tu as calculé les efforts intérieurs dans <b>une</b> section. Mais où la poutre est-elle la plus sollicitée ? Pour le savoir, on fait glisser la coupe tout le long de la poutre et on trace les efforts intérieurs en fonction de la position : ce sont les <b>diagrammes de sollicitations</b>. Ils se lisent comme une carte : en un coup d'œil, on voit où couper, où renforcer, où placer une soudure, et où surtout ne pas la placer.</p>
+  <div class="cc" role="img" aria-label="Code couleur de la série 2">
+    <div class="cc-box" style="border-color:var(--frc)"><small>Les charges</small><div class="cc-syms"><span class="frc">F</span><span class="frc">p</span><span class="frc">C</span></div><p>ponctuelles, réparties, couples, en orange</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-cause"><small>Les diagrammes</small><div class="cc-syms"><span class="sig">N</span><span class="tau">T</span><span class="sig">Mf</span></div><p>N et Mf en rouge (σ), T en violet (τ)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-link"><small>Les appuis</small><div class="cc-syms"><span class="mat">▲</span><span class="mat">▥</span></div><p>en vert</p></div>
+  </div>
+  <p class="cc-note">Même code couleur qu'au cours 6. Sur tous les diagrammes, les valeurs positives sont tracées vers le haut. Convention de la série : le torseur de cohésion est l'action de la partie droite sur la partie gauche.</p>
+</div>
+</header>
+
+<nav class="toc" aria-label="Sommaire">
+  <div class="toc-in">
+    <a href="#avant">Avant de commencer</a>
+    <a href="#c1">1 Le principe</a>
+    <a href="#c2">2 Charges ponctuelles</a>
+    <a href="#c3">3 Charges réparties</a>
+    <a href="#c4">4 Pente et aire</a>
+    <a href="#c5">5 Le diagrammeur</a>
+    <a href="#exos">Exercices</a>
+    <a href="#quiz-s">Quiz</a>
+    <a href="#fiche">Fiche mémoire</a>
+    <a href="#gloss">Glossaire</a>
+  </div>
+</nav>
+
+<main>
+<section class="chap" id="avant">
+<div class="wrap">
+  <h3 style="margin-top:0">Avant de commencer</h3>
+  <h4>Le cours 6 en trois cases</h4>
+  <div class="recall">
+    <div><div class="f">{τ}<sub>coh</sub> = {S<sub>2</sub> → S<sub>1</sub>}</div>Couper, isoler, équilibrer : le torseur de cohésion est l'action de la droite sur la gauche, = −{ext → gauche} = +{ext → droite}.</div>
+    <div><div class="f"><span class="tau">T<sub>y</sub></span> = −ΣF<sub>y</sub>(gauche)</div><span class="sig">Mf<sub>z</sub></span> = −ΣM<sub>G,z</sub>(gauche) ; <span class="sig">N</span> = −ΣF<sub>x</sub>(gauche). Mf<sub>z</sub> &gt; 0 : fibres du bas tendues.</div>
+    <div><div class="f"><span class="sig">N, Mf → σ</span> · <span class="tau">T, Mt → τ</span></div>Les efforts intérieurs, rouges ou violets selon la contrainte qu'ils créent.</div>
+  </div>
+
+  <div class="def"><b>📘 Dans le prolongement du cours 6</b> (torseur de cohésion, sollicitations internes) : un diagramme n'est rien d'autre que la représentation graphique de ces sollicitations le long de la poutre. On garde la convention de la série ({S<sub>2</sub> → S<sub>1</sub>}) et ses notations (N, T, Mf, repère x le long de la poutre, y vers le haut).</div>
+
+  <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage (formation IWE)</b>
+    <p>(IWE : <i>International Welding Engineer</i>, ingénieur international en soudage.) Le diagramme de moment de flexion dit où une poutre travaille le plus. Une règle de bon sens des constructeurs en découle : on évite de placer un joint soudé (un raboutage de poutre, une attache) dans la zone où le moment est maximal, et en tout cas on le vérifie là en priorité. Et pour une console soudée à un poteau, c'est à l'encastrement, donc dans les cordons eux-mêmes, que le moment est le plus grand.</p>
+  </div>
+
+  <h4>Le plan du cours</h4>
+  <ol class="route">
+    <li><span class="dot">1</span><b>Le principe</b><p>La coupe qui glisse laisse une trace : c'est le diagramme.</p></li>
+    <li><span class="dot">2</span><b>Les charges ponctuelles</b><p>Des marches pour T, des segments pour Mf.</p></li>
+    <li><span class="dot">3</span><b>Les charges réparties</b><p>Des droites pour T, des paraboles pour Mf.</p></li>
+    <li><span class="dot">4</span><b>Pente et aire</b><p>Les relations entre charge, T et Mf, pour tracer vite et vérifier.</p></li>
+    <li><span class="dot">5</span><b>Le diagrammeur et les cas types</b><p>Tous les cas, et le formulaire à connaître.</p></li>
+  </ol>
+</div>
+</section>
+
+<section class="chap" id="c1">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">1</div>
+    <div class="c-title"><h2>Le principe : la coupe qui laisse une trace</h2><p>Un diagramme, c'est le film de toutes les coupes</p></div>
+    <div class="c-img"><span class="ico">🎞️</span><span><small>Image à retenir</small>La pellicule : chaque image est une coupe, le diagramme est le film complet</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">de la coupe au diagramme</span></div>
+    <p>Au cours 6, la coupe à la position x donnait trois nombres : N, T et Mf. Fais glisser la coupe de l'appui gauche à l'appui droit, et note à chaque position la valeur trouvée : tu obtiens trois courbes, <b>N(x)</b>, <b>T(x)</b> et <b>Mf(x)</b>. Ce sont les diagrammes. La manipulation te montre la trace qui se dessine pendant que la coupe avance.</p>
+    <p><b>La méthode par tronçons.</b> Les formules ne changent qu'aux endroits où « il se passe quelque chose » : un appui, une charge ponctuelle, le début ou la fin d'une charge répartie, un couple. Entre deux de ces points, sur un <b>tronçon</b>, une seule expression suffit. On découpe donc la poutre en tronçons, on écrit N, T, Mf sur chacun, et on trace.</p>
+  </div>
+
+  <div class="lab" id="d1">
+    <p class="lab-h">Manipulation 1 : la coupe qui trace le diagramme</p>
+    <p class="lab-sub">Une poutre de 4 m sur deux appuis, une charge F. Lance le film : la coupe avance, et les valeurs de T et de Mf qu'elle trouve se dessinent au fur et à mesure.</p>
+    <svg id="d1svg" viewBox="0 0 680 420" role="img" aria-label="Poutre, coupe mobile et diagrammes qui se tracent"></svg>
+    <div class="ctrl"><label for="d1x">Position de la coupe x</label><input id="d1x" class="r-geo" type="range" min="0" max="4" step="0.02" value="0"><output id="d1xv"></output></div>
+    <div class="ctrl"><label for="d1a">Position a de la charge</label><input id="d1a" class="r-geo" type="range" min="0.2" max="3.8" step="0.1" value="1.5"><output id="d1av"></output></div>
+    <div class="btns">
+      <button class="btn" id="d1play" type="button">▶ Lancer le film</button>
+      <label class="btn" style="display:inline-flex;gap:6px;align-items:center"><input type="checkbox" id="d1ghost"> Montrer le diagramme complet</label>
+    </div>
+    <div class="readout" id="d1out"></div>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">la méthode rédigée</span></div>
+    <p>Poutre sur deux appuis A (x = 0) et B (x = L), charge F vers le bas en x = a. Réactions (cours 6) : Y<sub>A</sub> = F(L − a)/L, Y<sub>B</sub> = F·a/L.</p>
+    <p><b>Tronçon 1 : 0 &lt; x &lt; a.</b> À gauche de la coupe, seulement Y<sub>A</sub>. <span class="m"><span class="tau">T<sub>y</sub></span> = −Y<sub>A</sub></span> (constant) et <span class="m"><span class="sig">Mf<sub>z</sub></span> = Y<sub>A</sub>·x</span> (droite qui monte).<br><b>Tronçon 2 : a &lt; x &lt; L.</b> Y<sub>A</sub> et F. <span class="m"><span class="tau">T<sub>y</sub></span> = F − Y<sub>A</sub> = Y<sub>B</sub></span> (constant) et <span class="m"><span class="sig">Mf<sub>z</sub></span> = Y<sub>A</sub>·x − F(x − a) = Y<sub>B</sub>(L − x)</span> (droite qui redescend à 0).</p>
+    <p><b>Lecture :</b> T saute de −Y<sub>A</sub> à +Y<sub>B</sub> sous la charge, soit un saut de F. Mf forme un triangle dont le sommet, sous la charge, vaut <span class="m">Mf<sub>max</sub> = F·a(L − a)/L</span> ; au milieu, FL/4.</p>
+    <div class="warn">⚠️ <b>Selon la convention, le diagramme de T peut être inversé.</b> Avec la convention de la série, T est négatif à gauche de la charge. Des ouvrages qui prennent l'action de la gauche sur la droite trouvent l'inverse. Les valeurs absolues, la position des sauts et la section la plus sollicitée ne changent jamais. Et certains métiers (le génie civil notamment) tracent le moment du côté des fibres tendues, donc vers le bas : regarde toujours la légende.</div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c2">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">2</div>
+    <div class="c-title"><h2>Les charges ponctuelles : marches et segments</h2><p>Ce que fait une force concentrée sur les diagrammes</p></div>
+    <div class="c-img"><span class="ico">🪜</span><span><small>Image à retenir</small>L'escalier : T fait des marches, Mf fait des rampes</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">trois règles</span></div>
+    <p>Quand la poutre ne porte que des forces ponctuelles :</p>
+    <p><b>1. Entre deux charges, T est constant</b> (une marche horizontale) : en déplaçant la coupe, on n'ajoute aucune force à gauche.<br><b>2. Sous chaque charge, T fait un saut</b> égal à la charge : la force entre d'un coup dans la partie gauche.<br><b>3. Entre deux charges, Mf est une droite</b>, qui change de pente sous chaque charge : on dit que le diagramme a un <b>point anguleux</b>.</p>
+    <p>Et aux extrémités sur appuis simples ou articulations (sans couple appliqué), Mf vaut toujours 0 : il n'y a rien pour faire tourner.</p>
+  </div>
+
+  <div class="lab" id="d2">
+    <p class="lab-h">Manipulation 2 : deux charges ponctuelles</p>
+    <p class="lab-sub">Poutre de 5 m sur deux appuis, deux charges réglables. Les sauts de T sont annotés ; le point le plus haut de Mf est repéré.</p>
+    <svg id="d2svg" viewBox="0 0 680 420" role="img" aria-label="Diagrammes de T et de Mf pour deux charges ponctuelles"></svg>
+    <div class="ctrl"><label for="d2F1"><span class="frc">F<sub>1</sub></span></label><input id="d2F1" class="r-frc" type="range" min="0" max="30" step="1" value="10"><output id="d2F1v"></output></div>
+    <div class="ctrl"><label for="d2a1">Position de F<sub>1</sub></label><input id="d2a1" class="r-geo" type="range" min="0.2" max="4.8" step="0.1" value="1"><output id="d2a1v"></output></div>
+    <div class="ctrl"><label for="d2F2"><span class="frc">F<sub>2</sub></span></label><input id="d2F2" class="r-frc" type="range" min="0" max="30" step="1" value="20"><output id="d2F2v"></output></div>
+    <div class="ctrl"><label for="d2a2">Position de F<sub>2</sub></label><input id="d2a2" class="r-geo" type="range" min="0.2" max="4.8" step="0.1" value="3"><output id="d2a2v"></output></div>
+    <div class="readout" id="d2out"></div>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">les sauts, en toute rigueur</span></div>
+    <p>Pour une force ponctuelle de composantes (F<sub>x</sub> ; F<sub>y</sub>) en x<sub>0</sub>, quand la coupe passe de x<sub>0</sub>⁻ (juste avant) à x<sub>0</sub>⁺ (juste après), la force rejoint la partie gauche, d'où, avec la convention de la série :</p>
+    <div class="fx"><div class="big" style="font-size:1.4rem">Δ<span class="sig">N</span> = −F<sub>x</sub> &nbsp;&nbsp; Δ<span class="tau">T<sub>y</sub></span> = −F<sub>y</sub> &nbsp;&nbsp; Δ<span class="sig">Mf<sub>z</sub></span> = 0</div><p class="cap">une charge de F vers le bas (F<sub>y</sub> = −F) fait monter T de F ; le moment ne saute pas, il change seulement de pente</p></div>
+    <p>Les <b>réactions d'appui</b> sont des forces ponctuelles comme les autres : T saute aussi au droit de chaque appui. Vérification très efficace : aux deux extrémités d'une poutre sur deux appuis, T part de 0 et revient à 0 après le dernier saut.</p>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c3">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">3</div>
+    <div class="c-title"><h2>Les charges réparties : droites et paraboles</h2><p>Quand la charge est étalée sur une longueur</p></div>
+    <div class="c-img"><span class="ico">❄️</span><span><small>Image à retenir</small>La neige sur le toit : répartie partout, elle arrondit tout</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la charge qui s'accumule</span></div>
+    <p>Une <b>charge répartie</b> est étalée sur une longueur : le poids propre d'une poutre, la neige sur un toit, un plancher. On la décrit par son intensité <b>p</b>, en kN/m (kilonewtons par mètre de poutre). Sur une longueur ℓ, elle pèse p·ℓ.</p>
+    <p>Quand la coupe avance sous une charge répartie, la partie gauche en contient un peu plus à chaque pas. Résultat :</p>
+    <p><b>1. T varie en ligne droite</b> (en pente) : il gagne p à chaque mètre.<br><b>2. Mf varie en parabole</b> : une courbe arrondie.<br><b>3. Le sommet de la parabole est là où T s'annule.</b> C'est là que Mf est maximal.</p>
+    <div class="mnemo">❄️ <b>Le piège classique :</b> pour calculer les <b>réactions</b>, on remplace toute la charge répartie par sa résultante p·ℓ, placée au milieu de la zone chargée. Mais pour le torseur de cohésion, on ne remplace que <b>la partie de la charge qui est sur le morceau isolé</b> : p·x, placée à x/2 de l'appui si la coupe est en x.</div>
+  </div>
+
+  <div class="lab" id="d3">
+    <p class="lab-h">Manipulation 3 : une charge répartie</p>
+    <p class="lab-sub">Poutre de 6 m sur deux appuis, charge répartie p sur une zone réglable. Observe la droite de T, la parabole de Mf et la position de son sommet.</p>
+    <div class="btns"><button class="btn" id="d3full" type="button">Charge sur toute la portée</button></div>
+    <svg id="d3svg" viewBox="0 0 680 420" role="img" aria-label="Diagrammes pour une charge répartie"></svg>
+    <div class="ctrl"><label for="d3p"><span class="frc">p</span></label><input id="d3p" class="r-frc" type="range" min="0" max="10" step="0.5" value="2"><output id="d3pv"></output></div>
+    <div class="ctrl"><label for="d3a">Début de la zone chargée</label><input id="d3a" class="r-geo" type="range" min="0" max="6" step="0.1" value="0"><output id="d3av"></output></div>
+    <div class="ctrl"><label for="d3b">Fin de la zone chargée</label><input id="d3b" class="r-geo" type="range" min="0" max="6" step="0.1" value="6"><output id="d3bv"></output></div>
+    <div class="readout" id="d3out"></div>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">le cas de référence</span></div>
+    <p>Poutre sur deux appuis, charge p sur toute la longueur L. Réactions : Y<sub>A</sub> = Y<sub>B</sub> = pL/2. Coupe en x, partie gauche : Y<sub>A</sub> et la charge p·x, appliquée à x/2 de A.</p>
+    <div class="fx" style="max-width:640px"><div class="big" style="font-size:1.35rem;line-height:1.9"><span class="tau">T<sub>y</sub>(x)</span> = −(pL/2 − p·x) = p·x − pL/2 &nbsp;&nbsp;&nbsp; <span class="sig">Mf<sub>z</sub>(x)</span> = <span class="frac"><span>pL</span><span>2</span></span>x − <span class="frac"><span>p x²</span><span>2</span></span></div><p class="cap">T s'annule au milieu (x = L/2), où Mf atteint son maximum</p></div>
+    <div class="fx"><div class="big" style="font-size:1.6rem"><span class="sig">Mf<sub>max</sub></span> = <span class="frac"><span>p L²</span><span>8</span></span> &nbsp; (au milieu) &nbsp;&nbsp; |<span class="tau">T</span>|<sub>max</sub> = <span class="frac"><span>pL</span><span>2</span></span> &nbsp; (aux appuis)</div></div>
+    <p><b>Comparaison utile :</b> la même charge totale pL, mais concentrée au milieu, donnerait FL/4 = pL²/4, soit <b>deux fois plus</b> de moment. Répartir une charge soulage la poutre.</p>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c4">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">4</div>
+    <div class="c-title"><h2>Pente et aire : les relations entre p, T et Mf</h2><p>Tracer vite, et vérifier à coup sûr</p></div>
+    <div class="c-img"><span class="ico">🏔️</span><span><small>Image à retenir</small>La randonnée : Mf est l'altitude, T donne la pente, et au sommet la pente est nulle</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">l'altitude et la pente</span></div>
+    <p>Imagine que le diagramme de Mf est le profil d'une randonnée. Alors T est lié à la <b>pente</b> du chemin : avec la convention de la série, la pente de Mf vaut −T. Quand T est négatif, Mf monte ; quand T est positif, Mf descend ; <b>quand T s'annule (ou change de signe), Mf passe par un sommet</b> : c'est là que se trouve la section la plus sollicitée en flexion. Exception à connaître : pour une console, T ne s'annule pas ; le maximum de |Mf| est en bout de diagramme, à l'encastrement.</p>
+    <p>Et de même, la charge répartie donne la pente de T : sous une charge répartie p vers le bas, T monte de p par mètre ; sans charge répartie, T est plat.</p>
+    <p><b>Le lien par les aires :</b> la variation de Mf entre deux points est égale à <b>moins l'aire</b> du diagramme de T entre ces deux points. Pour une poutre sur deux appuis, Mf(x) = −(aire de T entre 0 et x). La manipulation te montre la tangente et l'aire en direct.</p>
+  </div>
+
+  <div class="lab" id="d4">
+    <p class="lab-h">Manipulation 4 : la pente et l'aire</p>
+    <p class="lab-sub">Poutre de 6 m, charge répartie de 2 kN/m et charge ponctuelle F. Déplace le point x : sur T, l'aire hachurée de 0 à x ; sur Mf, la tangente en x. Compare les nombres.</p>
+    <svg id="d4svg" viewBox="0 0 680 420" role="img" aria-label="Pente de Mf et aire sous T"></svg>
+    <div class="ctrl"><label for="d4x">Point x</label><input id="d4x" class="r-geo" type="range" min="0" max="6" step="0.05" value="2"><output id="d4xv"></output></div>
+    <div class="ctrl"><label for="d4F"><span class="frc">F</span> (à 4 m)</label><input id="d4F" class="r-frc" type="range" min="0" max="20" step="1" value="6"><output id="d4Fv"></output></div>
+    <div class="readout" id="d4out"></div>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">la démonstration sur une tranche</span></div>
+    <p>Isole une tranche de poutre entre x et x + dx, qui porte la charge répartie p<sub>y</sub>·dx (p<sub>y</sub> : composante selon y de la charge par mètre ; p<sub>y</sub> = −p pour une charge p vers le bas). Elle reçoit, à droite, l'action de la matière de droite, {τ}<sub>coh</sub>(x + dx), et, à gauche, l'action de la matière de gauche, −{τ}<sub>coh</sub>(x). Son équilibre donne :</p>
+    <div class="fx" style="max-width:640px"><div class="big" style="font-size:1.4rem;line-height:1.9"><span class="frac"><span>d<span class="tau">T<sub>y</sub></span></span><span>dx</span></span> = −p<sub>y</sub> &nbsp;&nbsp;&nbsp; <span class="frac"><span>d<span class="sig">Mf<sub>z</sub></span></span><span>dx</span></span> = −<span class="tau">T<sub>y</sub></span> &nbsp;&nbsp;&nbsp; <span class="frac"><span>d<span class="sig">N</span></span><span>dx</span></span> = −p<sub>x</sub></div><p class="cap">d/dx : la dérivée, c'est-à-dire la pente de la courbe ; convention de la série</p></div>
+    <p><b>Conséquences pratiques :</b> <b>1.</b> Pas de charge répartie : T constant, Mf linéaire. <b>2.</b> Charge répartie uniforme : T linéaire, Mf parabolique. <b>3.</b> Mf est extrémal là où T s'annule ou change de signe. <b>4.</b> En intégrant : <span class="m">Mf(x<sub>2</sub>) − Mf(x<sub>1</sub>) = −∫ T dx</span>, moins l'aire de T entre x<sub>1</sub> et x<sub>2</sub> (∫ : le symbole d'intégrale, qui calcule une aire).</p>
+    <p><b>Les couples concentrés.</b> Un couple C (sens trigonométrique) appliqué en x<sub>0</sub> ne change pas T, mais fait sauter le moment : <span class="m">ΔMf<sub>z</sub> = −C</span>. C'est le seul cas où Mf a une marche (voir le défi).</p>
+    <div class="tip">💡 <b>Et avec d'autres conventions ?</b> Si l'on prend l'action de la gauche sur la droite, N, T et Mf changent <b>tous</b> de signe : la relation dMf/dx = −T garde alors la même forme. En revanche, certaines combinaisons de conventions (en génie civil, par exemple, on compte positif le moment qui tend les fibres du bas et l'effort tranchant qui fait tourner la tranche dans le sens horaire) conduisent à dM/dx = +V, où V désigne l'effort tranchant. Ce qui ne change jamais : les extremums de Mf sont là où T s'annule ou change de signe, ou aux extrémités de la poutre.</div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c5">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">5</div>
+    <div class="c-title"><h2>Le diagrammeur et les cas types</h2><p>Tous les chargements, et le formulaire à connaître</p></div>
+    <div class="c-img"><span class="ico">🧰</span><span><small>Image à retenir</small>La boîte à outils : quatre cas types et le principe de superposition suffisent presque toujours</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">quatre cas à connaître par cœur</span></div>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Cas</th><th>|T|<sub>max</sub></th><th>|Mf|<sub>max</sub></th><th>Où</th></tr>
+      <tr><td>Deux appuis, charge F au milieu</td><td>F/2</td><td><b>FL/4</b></td><td>sous la charge</td></tr>
+      <tr><td>Deux appuis, charge p sur toute la portée</td><td>pL/2</td><td><b>pL²/8</b></td><td>au milieu</td></tr>
+      <tr><td>Console, charge F en bout</td><td>F</td><td><b>FL</b></td><td>à l'encastrement</td></tr>
+      <tr><td>Console, charge p sur toute la longueur</td><td>pL</td><td><b>pL²/2</b></td><td>à l'encastrement</td></tr>
+    </table></div>
+    <p><b>Le principe de superposition :</b> en élasticité linéaire, les diagrammes de plusieurs charges <b>s'additionnent</b>. Une poutre avec une charge répartie et une charge ponctuelle a pour diagrammes la somme des deux cas types. Attention : on additionne les diagrammes point par point ; les maxima ne s'additionnent que s'ils sont au même endroit.</p>
+  </div>
+
+  <div class="lab" id="d5">
+    <p class="lab-h">Manipulation 5 : le diagrammeur</p>
+    <p class="lab-sub">Choisis les appuis et combine les charges (mets 0 pour en retirer une). Les trois diagrammes, les réactions et la section la plus sollicitée se calculent en direct. Les boutons chargent les cas types et les exercices.</p>
+    <div class="btns" id="d5pre">
+      <button class="btn on" type="button" data-c="aa,6,3,12,0,0,0,0,0,0,0,0">2 appuis, F au milieu</button>
+      <button class="btn" type="button" data-c="aa,6,0,0,0,0,0,6,2,0,0,0">2 appuis, p partout</button>
+      <button class="btn" type="button" data-c="con,3,3,4,0,0,0,0,0,0,0,0">Console, F en bout</button>
+      <button class="btn" type="button" data-c="con,2,0,0,0,0,0,2,3,0,0,0">Console, p partout</button>
+      <button class="btn" type="button" data-c="aa,5,1,10,3,20,0,0,0,0,0,0">Exercice 3</button>
+      <button class="btn" type="button" data-c="aa,4,0,0,0,0,0,0,0,2,8,0">Couple (défi)</button>
+      <button class="btn" type="button" data-c="aa,6,4,8,0,0,0,6,1,0,0,15">Composé (N + T + Mf)</button>
+    </div>
+    <div class="wl-in">
+      <label><span>Appuis</span><select id="d5sup"><option value="aa">Deux appuis</option><option value="con">Console (encastrée à gauche)</option></select></label>
+      <label><span>Longueur L (m)</span><input id="d5L" type="number" min="1" max="20" step="0.5"></label>
+      <label><span>F<sub>1</sub> : position (m)</span><input id="d5x1" type="number" step="0.1"></label>
+      <label><span>F<sub>1</sub> (kN, vers le bas)</span><input id="d5F1" type="number" step="0.5"></label>
+      <label><span>F<sub>2</sub> : position (m)</span><input id="d5x2" type="number" step="0.1"></label>
+      <label><span>F<sub>2</sub> (kN, vers le bas)</span><input id="d5F2" type="number" step="0.5"></label>
+      <label><span>p : début (m)</span><input id="d5qa" type="number" step="0.1"></label>
+      <label><span>p : fin (m)</span><input id="d5qb" type="number" step="0.1"></label>
+      <label><span>p (kN/m, vers le bas)</span><input id="d5p" type="number" step="0.5"></label>
+      <label><span>Couple : position (m)</span><input id="d5xc" type="number" step="0.1"></label>
+      <label><span>Couple C (kN·m, sens trigo)</span><input id="d5C" type="number" step="0.5"></label>
+      <label><span>Traction en bout H (kN)</span><input id="d5H" type="number" step="0.5"></label>
+    </div>
+    <svg id="d5svg" viewBox="0 0 680 500" role="img" aria-label="Diagrammes N, T et Mf d'une poutre quelconque"></svg>
+    <div class="mm-steps" id="d5out"></div>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">la méthode d'examen et les vérifications</span></div>
+    <p><b>La méthode en cinq étapes :</b> <b>1.</b> Réactions d'appui (cours 6). <b>2.</b> Découpage en tronçons (appuis, charges, débuts et fins de charges réparties, couples). <b>3.</b> Sur chaque tronçon, N(x), T(x), Mf(x), en gardant le côté le plus simple. <b>4.</b> Valeurs aux bornes des tronçons, et extremum de Mf là où T s'annule. <b>5.</b> Tracé, avec les valeurs remarquables écrites sur le dessin.</p>
+    <p><b>Les cinq vérifications qui attrapent presque toutes les erreurs :</b> T revient à 0 après le dernier appui ; chaque saut de T est égal à la charge ponctuelle correspondante ; Mf est nul aux extrémités libres et aux appuis d'extrémité (sauf couple appliqué) ; les extremums de Mf sont là où T change de signe, ou à un encastrement ; la pente de T sous une charge répartie vaut p.</p>
+    <div class="weld"><b>🔥 Où placer (ou ne pas placer) une soudure</b>
+      <p>Sur une poutre sur deux appuis chargée uniformément, le moment est maximal au milieu et nul aux appuis, tandis que l'effort tranchant fait l'inverse. Un raboutage soudé au milieu doit donc passer toute la flexion ; une attache soudée près d'un appui travaille surtout au cisaillement. Pour une console, tout se concentre à l'encastrement : la soudure d'attache y reçoit à la fois le moment maximal et l'effort tranchant maximal.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="exos">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✎</div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Du cas type au diagramme à reconstruire</p></div>
+    <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de muscu : on ne progresse qu'en soulevant soi-même</span></div>
+  </div>
+  <div class="lv lv1"><div class="lv-h">👁 Mode d'emploi <span class="tag">de tête, puis la fiche, puis le cours</span></div>
+    <p>Pour chaque exercice : réactions, tronçons, expressions, valeurs remarquables, tracé. Convention de la série : T<sub>y</sub> = −ΣF<sub>y</sub>(gauche), Mf<sub>z</sub> = −ΣM<sub>G</sub>(gauche). Le diagrammeur (manipulation 5) te permet de vérifier chaque tracé.</p>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 1 : la charge au milieu <span class="lvtag">N1 · chapitres 1 et 2</span></h4>
+    <p>Poutre de 6 m sur deux appuis, charge de 12 kN vers le bas au milieu.</p>
+    <p><b>a)</b> Calcule les réactions.<br><b>b)</b> Donne T<sub>y</sub> et Mf<sub>z</sub> sur chaque tronçon.<br><b>c)</b> Trace les diagrammes et donne le moment maximal.</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> Symétrie : <b>Y<sub>A</sub> = Y<sub>B</sub> = 6 kN</b>.</p>
+      <p><b>b)</b> Pour 0 &lt; x &lt; 3 : <span class="m">T<sub>y</sub> = −6 kN</span>, <span class="m">Mf<sub>z</sub> = 6x</span>. Pour 3 &lt; x &lt; 6 : <span class="m">T<sub>y</sub> = −6 + 12 = +6 kN</span>, <span class="m">Mf<sub>z</sub> = 6x − 12(x − 3) = 36 − 6x</span>.</p>
+      <p><b>c)</b> T : une marche à −6, un saut de +12 sous la charge, une marche à +6. Mf : un triangle, de 0 à <span class="m">Mf<sub>max</sub> = 6 × 3 = <b>18 kN·m</b></span> au milieu, puis retour à 0. On retrouve FL/4 = 12 × 6/4 = 18 kN·m ✅.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 2 : la console <span class="lvtag">N1 · chapitres 1 et 5</span></h4>
+    <p>Console de 3 m encastrée à gauche, charge de 4 kN vers le bas à son extrémité.</p>
+    <p><b>a)</b> Calcule les réactions.<br><b>b)</b> Écris T<sub>y</sub>(x) et Mf<sub>z</sub>(x) en gardant la partie droite.<br><b>c)</b> Où est la section la plus sollicitée ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <b>Y<sub>A</sub> = 4 kN</b>, <b>M<sub>A</sub> = 4 × 3 = 12 kN·m</b>.</p>
+      <p><b>b)</b> Partie droite : seulement la charge, à la distance 3 − x. <span class="m">T<sub>y</sub> = +ΣF<sub>y</sub>(droite) = <b>−4 kN</b></span> (constant) ; <span class="m">Mf<sub>z</sub> = +ΣM<sub>G</sub>(droite) = (3 − x) × (−4) = <b>−4(3 − x)</b></span>.</p>
+      <p><b>c)</b> À l'encastrement : <span class="m">|Mf|<sub>max</sub> = <b>12 kN·m</b></span> = FL. Mf est négatif : ce sont les fibres du <b>haut</b> qui sont tendues, comme toujours pour une console chargée vers le bas.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 3 : deux charges ponctuelles <span class="lvtag">N2 · chapitre 2</span></h4>
+    <p>Poutre de 5 m sur deux appuis ; F<sub>1</sub> = 10 kN à 1 m de A et F<sub>2</sub> = 20 kN à 3 m de A, vers le bas.</p>
+    <p><b>a)</b> Calcule les réactions.<br><b>b)</b> Donne T<sub>y</sub> sur les trois tronçons.<br><b>c)</b> Calcule Mf<sub>z</sub> sous chaque charge et trouve le maximum.</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> Moments en A : <span class="m">5Y<sub>B</sub> = 10 × 1 + 20 × 3 = 70</span>, donc <b>Y<sub>B</sub> = 14 kN</b> et <b>Y<sub>A</sub> = 30 − 14 = 16 kN</b>.</p>
+      <p><b>b)</b> 0 &lt; x &lt; 1 : <b>−16 kN</b> ; 1 &lt; x &lt; 3 : −16 + 10 = <b>−6 kN</b> ; 3 &lt; x &lt; 5 : −6 + 20 = <b>+14 kN</b> (= Y<sub>B</sub> ✅).</p>
+      <p><b>c)</b> <span class="m">Mf(1) = 16 × 1 = <b>16 kN·m</b></span> ; <span class="m">Mf(3) = 16 × 3 − 10 × 2 = <b>28 kN·m</b></span> (par la droite : 14 × 2 = 28 ✅). Le maximum est en x = 3 m, là où T change de signe (de −6 à +14) : <b>Mf<sub>max</sub> = 28 kN·m</b>.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 4 : charge répartie, puis superposition <span class="lvtag">N2 · chapitres 3 et 5</span></h4>
+    <p>Poutre de 6 m sur deux appuis, charge répartie p = 2 kN/m sur toute la longueur.</p>
+    <p><b>a)</b> Écris T<sub>y</sub>(x) et Mf<sub>z</sub>(x) ; donne le moment maximal.<br><b>b)</b> On ajoute une charge de 6 kN au milieu : nouveau moment maximal et nouvel effort tranchant aux appuis, par superposition.</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> Y<sub>A</sub> = Y<sub>B</sub> = 6 kN. <span class="m">T<sub>y</sub>(x) = 2x − 6</span> ; <span class="m">Mf<sub>z</sub>(x) = 6x − x²</span>. T s'annule en x = 3 m : <span class="m">Mf<sub>max</sub> = 18 − 9 = <b>9 kN·m</b></span> = pL²/8 ✅.</p>
+      <p><b>b)</b> La charge ponctuelle seule donne FL/4 = 6 × 6/4 = 9 kN·m au milieu, et ±3 kN d'effort tranchant. Les deux maxima sont au même endroit : <span class="m">Mf<sub>max</sub> = 9 + 9 = <b>18 kN·m</b></span>. Aux appuis : |T| = 6 + 3 = <b>9 kN</b>.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 5 : la console sous charge répartie <span class="lvtag">N1 · chapitres 3 et 5</span></h4>
+    <p>Console de 2 m encastrée à gauche, charge répartie p = 3 kN/m sur toute sa longueur.</p>
+    <p><b>a)</b> Calcule les réactions.<br><b>b)</b> Écris T<sub>y</sub>(x) et Mf<sub>z</sub>(x) par la droite.<br><b>c)</b> Donne les valeurs à l'encastrement et au milieu.</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> Charge totale 6 kN à 1 m : <b>Y<sub>A</sub> = 6 kN</b>, <b>M<sub>A</sub> = 6 × 1 = 6 kN·m</b>.</p>
+      <p><b>b)</b> Partie droite : charge 3(2 − x) vers le bas, appliquée à (2 − x)/2 de la coupe. <span class="m">T<sub>y</sub> = <b>−3(2 − x)</b></span> ; <span class="m">Mf<sub>z</sub> = <b>−3(2 − x)²/2</b></span>.</p>
+      <p><b>c)</b> Encastrement (x = 0) : T = −6 kN, Mf = <b>−6 kN·m</b> = pL²/2 ✅. Milieu (x = 1) : T = −3 kN, Mf = −1,5 kN·m : quatre fois moins qu'à l'encastrement, car Mf varie comme le carré de la distance au bout.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 6 : retrouver le chargement <span class="lvtag">N2 · chapitre 4</span></h4>
+    <p>Poutre de 6 m sur deux appuis. Son diagramme de T<sub>y</sub> vaut −8 kN de 0 à 2 m, puis +4 kN de 2 à 6 m.</p>
+    <p><b>a)</b> Quel est le chargement ? Quelles sont les réactions ?<br><b>b)</b> Calcule Mf<sub>z</sub> en x = 2 m par l'aire de T, puis vérifie par la droite.</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> T est constant par morceaux : pas de charge répartie. Il saute de −8 à +4 en x = 2 m : une charge ponctuelle de <b>12 kN vers le bas</b> à 2 m. T = −Y<sub>A</sub> au départ, donc <b>Y<sub>A</sub> = 8 kN</b> ; T = +Y<sub>B</sub> à la fin, donc <b>Y<sub>B</sub> = 4 kN</b> (et 8 + 4 = 12 ✅).</p>
+      <p><b>b)</b> <span class="m">Mf(2) = −(aire de T entre 0 et 2) = −(−8 × 2) = <b>16 kN·m</b></span>. Par la droite : Y<sub>B</sub> à 4 m de la coupe, <span class="m">Mf = 4 × 4 = 16 kN·m</span> ✅.</p>
+    </div></details>
+  </div>
+
+  <div class="exo" style="border-left-color:var(--mat)">
+    <h4>Défi : le couple concentré <span class="lvtag">N2 · chapitre 4</span></h4>
+    <p>Poutre de 4 m sur deux appuis, sans aucune force : seulement un couple C = 8 kN·m (sens trigonométrique) appliqué au milieu. Trace T et Mf.</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p>Moments en A : <span class="m">4Y<sub>B</sub> + 8 = 0</span>, donc <b>Y<sub>B</sub> = −2 kN</b> (vers le bas) et <b>Y<sub>A</sub> = +2 kN</b>. T<sub>y</sub> = −Y<sub>A</sub> = <b>−2 kN partout</b> : aucune force entre les appuis. Mf : pour x &lt; 2, <span class="m">Mf = 2x</span>, qui monte à <b>+4 kN·m</b> ; au passage du couple, saut de −C = −8 : <b>−4 kN·m</b> ; puis <span class="m">Mf = 2x − 8</span>, qui revient à 0 en B. Un diagramme en « dents de scie » : un couple fait sauter Mf, jamais T.</p>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="quiz-s">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">?</div>
+    <div class="c-title"><h2>Quiz : 12 questions éclair</h2><p>Chaque réponse est expliquée, même quand tu as juste</p></div>
+    <div class="c-img"><span class="ico">🎯</span><span><small>Image à retenir</small>La cible : vise 10/12 avant le cours 8</span></div>
+  </div>
+  <div id="quiz"></div>
+  <div class="score" id="qzScore" aria-live="polite">Score : 0 / 12</div>
+  <div class="btns"><button class="btn" id="qzReset" type="button">↺ Recommencer le quiz</button></div>
+</div>
+</section>
+
+<section class="chap" id="fiche">
+<div class="wrap wide">
+  <div class="cartouche">
+    <div class="c-num">★</div>
+    <div class="c-title"><h2>Fiche mémoire du cours 7</h2><p>Neuf cases, neuf images : à photographier, puis à redessiner de tête</p></div>
+    <div class="c-img"><span class="ico">🌉</span><span><small>Image à retenir</small>Le pont du Forth, un diagramme de moment en acier</span></div>
+  </div>
+  <div class="fiche">
+    <div><div class="ic">🎞️</div><h4>Le principe</h4><div class="f">coupe qui glisse → N(x), T(x), Mf(x)</div><p>Un tronçon entre deux « événements » : appui, charge, début ou fin de charge répartie, couple.</p></div>
+    <div><div class="ic">🪜</div><h4>Charges ponctuelles</h4><div class="f">Δ<span class="tau">T</span> = F &nbsp; <span class="sig">Mf</span> linéaire</div><p>T en marches, Mf en segments avec un point anguleux sous chaque charge.</p></div>
+    <div><div class="ic">❄️</div><h4>Charge répartie</h4><div class="f"><span class="tau">T</span> droite, <span class="sig">Mf</span> parabole</div><p>Pour les réactions : p·ℓ au milieu de la zone. Pour la coupe : seulement la charge du morceau isolé.</p></div>
+    <div><div class="ic">🏔️</div><h4>La pente</h4><div class="f">d<span class="sig">Mf</span>/dx = −<span class="tau">T</span></div><p>Mf extrémal là où T s'annule ou change de signe (ou à l'encastrement d'une console). Et dT/dx = p sous une charge p vers le bas.</p></div>
+    <div><div class="ic">🧮</div><h4>L'aire</h4><div class="f">ΔMf = −aire(T)</div><p>La variation de Mf entre deux points est moins l'aire de T entre ces points.</p></div>
+    <div><div class="ic">🌉</div><h4>Deux appuis</h4><div class="f">FL/4 &nbsp;·&nbsp; pL²/8</div><p>Au milieu. Effort tranchant maximal aux appuis : F/2 ou pL/2.</p></div>
+    <div><div class="ic">🪝</div><h4>Console</h4><div class="f">FL &nbsp;·&nbsp; pL²/2</div><p>À l'encastrement, fibres du haut tendues (Mf &lt; 0). |T|<sub>max</sub> = F ou pL.</p></div>
+    <div><div class="ic">🔄</div><h4>Le couple</h4><div class="f">Δ<span class="sig">Mf</span> = −C</div><p>Un couple concentré fait sauter Mf, pas T. Aux appuis d'extrémité sans couple, Mf = 0.</p></div>
+    <div><div class="ic">➕</div><h4>Superposition</h4><div class="f">diagrammes qui s'additionnent</div><p>Point par point. Les maxima ne s'additionnent que s'ils sont au même endroit.</p></div>
+  </div>
+  <div class="fun"><span class="fun-h">🌉 Fun fact : Le pont du Forth, un diagramme de moment en acier</span>Le pont ferroviaire du Forth, en Écosse, ouvert en 1890, repose sur trois grandes consoles doubles en acier. Elles sont très hautes au-dessus de leurs piles et s'affinent vers leurs extrémités : leur hauteur suit l'allure du diagramme de moment fléchissant d'une console, maximal à l'encastrement et nul au bout libre (<a href="#c5">chapitre 5</a>). Pour faire comprendre ce principe, ses ingénieurs, John Fowler et Benjamin Baker, en présentent en 1887 un modèle vivant : deux hommes assis sur des chaises, bras tendus tenant des bâtons, forment deux consoles. Leurs bras travaillent en traction, les bâtons en compression, des piles de briques servent de contrepoids, et au milieu, assis sur une planche suspendue, l'ingénieur japonais Kaichi Watanabe joue le rôle de la charge. La photo est si célèbre qu'elle figure depuis 2007 sur un billet de 20 livres de la Bank of Scotland.</div>
+</div>
+</section>
+
+<section class="chap" id="gloss">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">A–Z</div>
+    <div class="c-title"><h2>Glossaire</h2><p>Les mots et symboles de ce cours</p></div>
+    <div class="c-img"><span class="ico">📖</span><span><small>Image à retenir</small>Le dictionnaire : un mot flou, un clic</span></div>
+  </div>
+  <p class="mut">Les termes du cours 6 (torseur, liaisons, sollicitations) sont dans son glossaire.</p>
+  <dl class="gloss">
+    <dt>Aire (sous un diagramme)</dt><dd>Surface comprise entre la courbe et l'axe, comptée négativement sous l'axe ; l'aire de T donne la variation de Mf (au signe près).</dd>
+    <dt>Charge ponctuelle F</dt><dd>Force appliquée en un point, en kN.</dd>
+    <dt>Charge répartie p</dt><dd>Charge étalée sur une longueur, en kN/m ; sur une longueur ℓ, sa résultante vaut p·ℓ, appliquée au milieu de la zone.</dd>
+    <dt>Couple concentré C</dt><dd>Moment appliqué en un point, en kN·m ; il fait sauter Mf de −C (convention de la série).</dd>
+    <dt>d/dx (dérivée)</dt><dd>Pente d'une courbe : de combien elle monte par mètre parcouru.</dd>
+    <dt>Diagramme de sollicitations</dt><dd>Graphe de N(x), T(x) ou Mf(x) le long de la poutre.</dd>
+    <dt>∫ (intégrale)</dt><dd>Symbole qui calcule l'aire sous une courbe entre deux bornes.</dd>
+    <dt>kN, kN/m, kN·m</dt><dd>Kilonewton (1 000 N), kilonewton par mètre (charge répartie), kilonewton-mètre (moment).</dd>
+    <dt>p<sub>x</sub>, p<sub>y</sub></dt><dd>Composantes de la charge répartie selon x et y ; p<sub>y</sub> = −p pour une charge p vers le bas.</dd>
+    <dt>Point anguleux</dt><dd>Point où une courbe change brusquement de pente ; Mf en a un sous chaque charge ponctuelle.</dd>
+    <dt>Saut (discontinuité)</dt><dd>Changement brusque de valeur d'un diagramme : T saute sous une force ponctuelle, Mf sous un couple.</dd>
+    <dt>Section la plus sollicitée (section dangereuse)</dt><dd>Section où la sollicitation (souvent |Mf|) est maximale ; c'est là qu'on vérifie la poutre.</dd>
+    <dt>Superposition</dt><dd>Principe de l'élasticité linéaire : les effets (et les diagrammes) de plusieurs charges s'additionnent.</dd>
+    <dt>Tronçon</dt><dd>Portion de poutre entre deux « événements » (appui, charge, début ou fin de charge répartie, couple), sur laquelle une seule expression décrit N, T et Mf.</dd>
+  </dl>
+
+  <hr class="sep">
+  <h3>Check-list : suis-je prêt pour le cours 8 ?</h3>
+  <p>Coche seulement ce que tu sais faire <b>de tête</b>. Tes coches restent enregistrées dans ce navigateur.</p>
+  <div class="check" id="checklist">
+    <label><input type="checkbox" data-c="1"> Je sais découper une poutre en tronçons.</label>
+    <label><input type="checkbox" data-c="2"> Je sais écrire T(x) et Mf(x) sur chaque tronçon, par la gauche ou par la droite.</label>
+    <label><input type="checkbox" data-c="3"> Je sais qu'une charge ponctuelle fait sauter T et casser la pente de Mf.</label>
+    <label><input type="checkbox" data-c="4"> Je sais traiter une charge répartie sans me tromper de résultante.</label>
+    <label><input type="checkbox" data-c="5"> Je connais dMf/dx = −T et je sais que Mf est maximal là où T s'annule (ou à l'encastrement d'une console).</label>
+    <label><input type="checkbox" data-c="6"> Je sais utiliser l'aire de T pour calculer une valeur de Mf.</label>
+    <label><input type="checkbox" data-c="7"> Je connais par cœur FL/4, pL²/8, FL et pL²/2.</label>
+    <label><input type="checkbox" data-c="8"> Je sais utiliser le principe de superposition.</label>
+    <label><input type="checkbox" data-c="9"> Je sais ce que fait un couple concentré sur les diagrammes.</label>
+    <label><input type="checkbox" data-c="10"> Je sais vérifier un diagramme avec les cinq contrôles du chapitre 5.</label>
+  </div>
+  <p class="status" id="checkMsg"></p>
+
+  <div class="meta">🔭 <b>Au prochain épisode, cours 8 : les caractéristiques des sections.</b> Les diagrammes donnent Mf ; pour en déduire la contrainte, il faut connaître la forme de la section. Moment statique, centre de gravité, moment quadratique I<sub>Gz</sub> (et la différence avec le moment polaire I<sub>G</sub>), théorème de Huygens, sections composées, axes principaux : pourquoi une planche posée sur chant est tellement plus rigide qu'à plat.</div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="wrap">
+  <p>Cours 7 de la série « Résistance des matériaux » (série 2 : la théorie des poutres). Pour les notations et les conventions, l'enseignement de ta formation fait foi.</p>
+</div>
+</footer>
+<script>
+(function(){
+"use strict";
+const NS="http://www.w3.org/2000/svg";
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const RM=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function el(tag,attrs,parent){
+  const e=document.createElementNS(NS,tag);
+  if(attrs){for(const k in attrs){const v=attrs[k];if(v===undefined||v===null)continue;
+    if(typeof v==="string"&&v.indexOf("var(")>=0&&k!=="style")e.style.setProperty(k,v);else e.setAttribute(k,v);}}
+  if(parent)parent.appendChild(e);
+  return e;
+}
+function tx(p,x,y,str,cls,extra){
+  const t=el("text",Object.assign({x:x,y:y},cls?{class:cls}:{},extra||{}),p);
+  t.textContent=str;return t;
+}
+function txSub(p,x,y,main,sub,cls,extra){
+  const t=el("text",Object.assign({x:x,y:y},cls?{class:cls}:{},extra||{}),p);
+  t.appendChild(document.createTextNode(main));
+  const s=el("tspan",{dy:"4",style:"font-size:.7em"},t);s.textContent=sub;
+  return t;
+}
+function clear(svg){while(svg.firstChild)svg.removeChild(svg.firstChild);}
+function arrow(p,x1,y1,x2,y2,cls,w,h){
+  w=w||3;h=h||11;
+  const g=el("g",{class:"arr "+(cls||"ink")},p);
+  const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy);
+  if(L<1)return g;
+  const ux=dx/L,uy=dy/L,hh=Math.min(h,L*0.65),bx=x2-ux*hh,by=y2-uy*hh,hw=hh*0.48+w*0.35;
+  el("line",{x1:x1,y1:y1,x2:bx,y2:by,"stroke-width":w,"stroke-linecap":"round"},g);
+  el("polygon",{points:x2+","+y2+" "+(bx-uy*hw)+","+(by+ux*hw)+" "+(bx+uy*hw)+","+(by-ux*hw)},g);
+  return g;
+}
+function nf(v,d){
+  if(d===undefined)d=1;
+  if(Math.abs(v)<0.5*Math.pow(10,-d))v=0;
+  return v.toLocaleString("fr-FR",{minimumFractionDigits:d,maximumFractionDigits:d}).replace("-","−");
+}
+const SUP={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function sci(v,d){
+  if(v===0)return "0";
+  const e=Math.floor(Math.log10(Math.abs(v)));
+  let m=v/Math.pow(10,e);
+  if(Math.abs(m)>=9.995){m/=10;return sci(v,d);}
+  return nf(m,d===undefined?2:d)+" × 10"+String(e).split("").map(c=>SUP[c]).join("");
+}
+function smart(v,d){return Math.abs(v)>0&&Math.abs(v)<1e-3?sci(v,2):nf(v,d);}
+const S=(c,t)=>'<span class="'+c+'">'+t+'</span>';
+const rad=d=>d*Math.PI/180;
+function arcArrow(p,cx,cy,r,ccw,cls,w){
+  const a0=ccw?rad(-110):rad(110),a1=ccw?rad(110):rad(-110),P=t=>[cx+r*Math.cos(t),cy-r*Math.sin(t)];
+  const s=P(a0),e=P(a1),g=el("g",{class:"arr "+cls},p);
+  el("path",{d:"M"+s[0].toFixed(1)+","+s[1].toFixed(1)+" A"+r+","+r+" 0 1 "+(ccw?0:1)+" "+e[0].toFixed(1)+","+e[1].toFixed(1),fill:"none","stroke-width":w||2.6,style:"stroke:currentColor"},g);
+  const b=P(a1+(ccw?-0.35:0.35));arrow(p,b[0],b[1],e[0],e[1],cls,w||2.6,9);
+  return g;
+}
+function support(svg,type,x,y){ // y : niveau de la poutre
+  if(type==="art"||type==="app"){
+    el("polygon",{points:x+","+y+" "+(x-13)+","+(y+22)+" "+(x+13)+","+(y+22),style:"fill:var(--card);stroke:var(--mat);stroke-width:2"},svg);
+    el("circle",{cx:x,cy:y,r:3.5,style:"fill:var(--card);stroke:var(--mat);stroke-width:2"},svg);
+    if(type==="app"){[-8,0,8].forEach(d=>el("circle",{cx:x+d,cy:y+26,r:3.2,style:"fill:none;stroke:var(--mat);stroke-width:1.6"},svg));el("line",{x1:x-18,y1:y+31,x2:x+18,y2:y+31,style:"stroke:var(--mat);stroke-width:2"},svg);}
+    else el("line",{x1:x-18,y1:y+23,x2:x+18,y2:y+23,style:"stroke:var(--mat);stroke-width:2"},svg);
+  }else if(type==="enc"){
+    el("line",{x1:x,y1:y-30,x2:x,y2:y+30,style:"stroke:var(--mat);stroke-width:3"},svg);
+    for(let k=-30;k<30;k+=8)el("line",{x1:x,y1:y+k,x2:x-9,y2:y+k+8,style:"stroke:var(--mat);stroke-width:1.4"},svg);
+  }
+}
+
+
+/* ---------- moteur de calcul (convention de la série : droite sur gauche) ---------- */
+function beamSolve(cfg){
+  const P=cfg.P||[],q=(cfg.q||[]).filter(o=>o.b>o.a+1e-9&&Math.abs(o.p)>1e-12),C=cfg.C||[],H=cfg.H||0,L=cfg.L;
+  let S=0,Mx=0;P.forEach(o=>{S+=o.F;Mx+=o.F*o.x;});q.forEach(o=>{const l=o.b-o.a;S+=o.p*l;Mx+=o.p*l*(o.a+o.b)/2;});
+  const Cs=C.reduce((s,o)=>s+o.C,0);
+  const R=cfg.sup==="aa"?(()=>{const YB=(Mx-Cs)/L;return {YA:S-YB,YB:YB,MA:0,XA:-H};})():{YA:S,YB:0,MA:Mx-Cs,XA:-H};
+  const pf=[[0,R.XA,R.YA]];P.forEach(o=>pf.push([o.x,0,-o.F]));pf.push([L,H,cfg.sup==="aa"?R.YB:0]);
+  const cp=C.map(o=>[o.x,o.C]);if(cfg.sup!=="aa")cp.push([0,R.MA]);
+  const at=(x,side)=>{const inc=xi=>side<0?xi<x-1e-9:xi<=x+1e-9;let N=0,T=0,M=0;
+    pf.forEach(f=>{if(inc(f[0])){N-=f[1];T-=f[2];M-=(f[0]-x)*f[2];}});
+    cp.forEach(c=>{if(inc(c[0]))M-=c[1];});
+    q.forEach(o=>{const e=Math.min(x,o.b);if(e>o.a){const Fy=-o.p*(e-o.a),xc=(o.a+e)/2;T-=Fy;M-=(xc-x)*Fy;}});
+    return {N:N,T:T,M:M};};
+  const bp=[0,L];P.forEach(o=>bp.push(o.x));q.forEach(o=>{bp.push(o.a,o.b);});C.forEach(o=>bp.push(o.x));
+  const B=[...new Set(bp.filter(x=>x>=-1e-9&&x<=L+1e-9).map(x=>Math.round(x*1e6)/1e6))].sort((a,b)=>a-b);
+  const S_=[Object.assign({x:0},at(0,-1))];
+  for(let i=0;i<B.length-1;i++){const b0=B[i],b1=B[i+1];if(b1-b0<1e-9)continue;const n=100;
+    for(let k=0;k<=n;k++){const x=b0+(b1-b0)*k/n;S_.push(Object.assign({x:x},at(x,k===n?-1:1)));}}
+  S_.push(Object.assign({x:L},at(L,1)));
+  return {R:R,at:at,S:S_,B:B,q:q,P:P,C:C,H:H,L:L,sup:cfg.sup};
+}
+
+/* ---------- dessin : poutre + diagrammes ---------- */
+const DCOL={N:"var(--sig)",T:"var(--tau)",M:"var(--sig)"},DLAB={N:"N (kN)",T:"T (kN)",M:"Mf (kN·m)"};
+function drawBeamDiagrams(svg,sol,o){
+  o=o||{};const X0=70,X1=640,L=sol.L,X=x=>X0+(X1-X0)*x/L,show=o.show||["T","M"];
+  clear(svg);
+  // --- poutre
+  const yb=62;
+  el("line",{x1:X(0),y1:yb,x2:X(L),y2:yb,style:"stroke:var(--ink);stroke-width:6;stroke-linecap:round"},svg);
+  if(sol.sup==="aa"){support(svg,"art",X(0),yb+4);support(svg,"app",X(L),yb+4);}else support(svg,"enc",X(0),yb);
+  sol.q.forEach(c=>{const a=X(c.a),b=X(c.b),h=10+Math.min(Math.abs(c.p),10)*2.2;el("line",{x1:a,y1:yb-6-h,x2:b,y2:yb-6-h,style:"stroke:var(--frc);stroke-width:2"},svg);
+    const n=Math.max(2,Math.round((b-a)/26));for(let i=0;i<=n;i++){const x=a+(b-a)*i/n;arrow(svg,x,yb-6-h,x,yb-5,"frc",1.6,6);}
+    tx(svg,(a+b)/2,yb-12-h,"p = "+nf(c.p,1)+" kN/m","lbl",{"text-anchor":"middle",style:"fill:var(--frc);font-weight:700"});});
+  sol.P.forEach((f,i)=>{if(Math.abs(f.F)<1e-9)return;const x=X(f.x),l=16+Math.min(Math.abs(f.F),30)*1.2;
+    if(f.F>0)arrow(svg,x,yb-6-l,x,yb-5,"frc",3,10);else arrow(svg,x,yb-5,x,yb-6-l,"frc",3,10);
+    tx(svg,x+6,yb-l+2,(sol.P.length>1?"F"+"₁₂"[i]+" = ":"F = ")+nf(Math.abs(f.F),1),"lbl",{style:"fill:var(--frc);font-weight:700"});});
+  sol.C.forEach(c=>{if(Math.abs(c.C)<1e-9)return;arcArrow(svg,X(c.x),yb,18,c.C>0,"frc",2.4);tx(svg,X(c.x)+22,yb-22,"C = "+nf(c.C,1),"lbl",{style:"fill:var(--frc);font-weight:700"});});
+  if(Math.abs(sol.H)>1e-9){if(sol.H>0)arrow(svg,X(L)+6,yb,X(L)+30,yb,"frc",2.8,9);else arrow(svg,X(L)+30,yb,X(L)+6,yb,"frc",2.8,9);}
+  // réactions
+  const reac=(x,v,lab)=>{if(Math.abs(v)<1e-6)return;const l=10+Math.min(Math.abs(v),30)*1.1,y0=yb+40;
+    if(v>0)arrow(svg,x,y0+l,x,y0,"frc",2.4,8);else arrow(svg,x,y0,x,y0+l,"frc",2.4,8);
+    tx(svg,x+(x<X0+5?8:-8),y0+l-2,lab+" = "+nf(v,2),"lbl",{"text-anchor":x<X0+5?"start":"end",style:"fill:var(--frc)"});};
+  reac(X(0)-(sol.sup==="aa"?0:0),sol.R.YA,"YA");if(sol.sup==="aa")reac(X(L),sol.R.YB,"YB");
+  if(sol.sup!=="aa"&&Math.abs(sol.R.MA)>1e-6)tx(svg,X(0)+10,yb-24,"MA = "+nf(sol.R.MA,2)+" kN·m","lbl",{style:"fill:var(--frc);font-weight:700"});
+  // --- diagrammes
+  let y=yb+64;const H={N:70,T:110,M:120},info={};
+  const cutX=o.cut!=null?X(o.cut):null;
+  show.forEach(key=>{
+    const h=H[key],yc=y+h/2,vals=sol.S.map(s=>s[key]);let m=0;vals.forEach(v=>{m=Math.max(m,Math.abs(v));});
+    const k=m>1e-9?(h/2-14)/m:1,Yv=v=>yc-v*k,col=DCOL[key];
+    el("line",{x1:X(0),y1:yc,x2:X(L),y2:yc,class:"axis"},svg);
+    tx(svg,6,y+12,DLAB[key],"lbl",{style:"fill:"+col+";font-weight:700"});
+    const lim=o.traceTo!=null?o.traceTo:L+1;
+    const vis=sol.S.filter(s=>s.x<=lim+1e-9);
+    if(o.traceTo!=null&&o.ghost)el("polyline",{points:sol.S.map(s=>X(s.x).toFixed(1)+","+Yv(s[key]).toFixed(1)).join(" "),fill:"none",style:"stroke:"+col+";stroke-width:2;opacity:.25"},svg);
+    if(vis.length>1){
+      const poly=[X(vis[0].x)+","+yc].concat(vis.map(s=>X(s.x).toFixed(1)+","+Yv(s[key]).toFixed(1))).concat([X(vis[vis.length-1].x)+","+yc]);
+      el("polygon",{points:poly.join(" "),style:"fill:color-mix(in srgb,"+col+" 16%,transparent);stroke:none"},svg);
+      el("polyline",{points:vis.map(s=>X(s.x).toFixed(1)+","+Yv(s[key]).toFixed(1)).join(" "),fill:"none",style:"stroke:"+col+";stroke-width:2.6"},svg);
+    }
+    if(m<1e-9)tx(svg,X(L)-4,yc-6,"nul partout","lbl",{"text-anchor":"end"});
+    // extremums
+    if(o.extremes!==false&&o.traceTo==null&&m>1e-9){
+      let imax=0,imin=0;sol.S.forEach((s,i)=>{if(s[key]>sol.S[imax][key]+1e-9)imax=i;if(s[key]<sol.S[imin][key]-1e-9)imin=i;});
+      [[imax,1],[imin,-1]].forEach(q=>{const s=sol.S[q[0]],v=s[key];if(q[1]*v<1e-6)return;const px=Math.max(X0+26,Math.min(X1-26,X(s.x)));
+        el("circle",{cx:X(s.x),cy:Yv(v),r:3.5,style:"fill:"+col},svg);tx(svg,px,Yv(v)+(v>0?-7:15),nf(v,2),"lbl",{"text-anchor":"middle",style:"fill:"+col+";font-weight:700"});});
+      info[key]={max:sol.S[imax],min:sol.S[imin]};
+    }
+    // sauts
+    if(o.jumps&&key==="T"){for(let i=1;i<sol.S.length;i++){const a=sol.S[i-1],b=sol.S[i];const d=b.T-a.T;
+      if(Math.abs(b.x-a.x)<1e-9&&Math.abs(d)>1e-6&&b.x>1e-6&&b.x<L-1e-6){const yy=(Yv(a.T)+Yv(b.T))/2;tx(svg,X(b.x)+6,yy+4,"saut +"+nf(d,1),"lbl",{style:"fill:var(--frc);font-weight:700"});}}}
+    // aire
+    if(o.area&&key==="T"&&o.cut!=null){const part=sol.S.filter(s=>s.x<=o.cut+1e-9).concat([Object.assign({x:o.cut},sol.at(o.cut,1))]);
+      const poly=[X(0)+","+yc].concat(part.map(s=>X(s.x).toFixed(1)+","+Yv(s.T).toFixed(1))).concat([X(o.cut)+","+yc]);
+      el("polygon",{points:poly.join(" "),style:"fill:color-mix(in srgb,var(--tau) 38%,transparent);stroke:var(--tau);stroke-width:1;stroke-dasharray:3 3"},svg);}
+    // tangente
+    if(o.tangent&&key==="M"&&o.cut!=null){const v=sol.at(o.cut,1),kx=(X1-X0)/L,sl=k*v.T/kx,dx=85;
+      el("line",{x1:X(o.cut)-dx,y1:Yv(v.M)+sl*(-dx),x2:X(o.cut)+dx,y2:Yv(v.M)+sl*dx,style:"stroke:var(--ink);stroke-width:2"},svg);}
+    // coupe
+    if(cutX!=null){const v=sol.at(o.cut,1)[key];el("circle",{cx:cutX,cy:Yv(v),r:5.5,class:"pt",style:"fill:"+col},svg);}
+    info[key]=Object.assign(info[key]||{},{k:k,yc:yc});
+    y+=h+12;
+  });
+  if(cutX!=null)el("line",{x1:cutX,y1:yb-40,x2:cutX,y2:y-8,style:"stroke:var(--ink);stroke-width:1.2;stroke-dasharray:5 4;opacity:.7"},svg);
+  svg.setAttribute("viewBox","0 0 680 "+Math.round(y+4));
+  return info;
+}
+const fx=v=>nf(Math.abs(v)<5e-4?0:v,2);
+
+/* =========================================================
+   d1 : la coupe qui trace le diagramme
+   ========================================================= */
+(function(){
+  const svg=$("#d1svg");if(!svg)return;
+  const ix=$("#d1x"),ia=$("#d1a"),bp=$("#d1play"),cg=$("#d1ghost");let anim=null;
+  function draw(){
+    const x=+ix.value,a=+ia.value;$("#d1xv").textContent=nf(x,2)+" m";$("#d1av").textContent=nf(a,1)+" m";
+    const sol=beamSolve({L:4,sup:"aa",P:[{x:a,F:10}]});
+    drawBeamDiagrams(svg,sol,{show:["T","M"],cut:x,traceTo:x,ghost:cg.checked,extremes:false});
+    const v=sol.at(x,1);
+    $("#d1out").innerHTML="coupe à x = "+nf(x,2)+" m ("+(x<a?"tronçon 1, avant la charge":"tronçon 2, après la charge")+") : "+S("tau","T<sub>y</sub> = "+fx(v.T)+" kN")+" · "+S("sig","Mf<sub>z</sub> = "+fx(v.M)+" kN·m")+"<br>formules : "+(x<a?"T<sub>y</sub> = −Y<sub>A</sub> = "+fx(-sol.R.YA)+" ; Mf<sub>z</sub> = Y<sub>A</sub>·x = "+fx(sol.R.YA)+" × "+nf(x,2):"T<sub>y</sub> = F − Y<sub>A</sub> = "+fx(10-sol.R.YA)+" ; Mf<sub>z</sub> = Y<sub>A</sub>·x − F(x − a)");
+  }
+  function stop(){if(anim){cancelAnimationFrame(anim);anim=null;}bp.textContent="▶ Lancer le film";}
+  [ix,ia].forEach(i=>i.addEventListener("input",()=>{stop();draw();}));cg.addEventListener("change",draw);
+  bp.addEventListener("click",()=>{if(anim){stop();return;}if(+ix.value>=3.99)ix.value=0;bp.textContent="⏸ Pause";
+    const step=()=>{const v=Math.min(4,+ix.value+(RM?0.5:0.02));ix.value=v;draw();if(v<4)anim=requestAnimationFrame(step);else stop();};anim=requestAnimationFrame(step);});
+  draw();
+})();
+
+/* =========================================================
+   d2 : deux charges ponctuelles
+   ========================================================= */
+(function(){
+  const svg=$("#d2svg");if(!svg)return;
+  const I=["F1","a1","F2","a2"].map(k=>$("#d2"+k));
+  function draw(){
+    const [F1,a1,F2,a2]=I.map(i=>+i.value);
+    $("#d2F1v").textContent=F1+" kN";$("#d2a1v").textContent=nf(a1,1)+" m";$("#d2F2v").textContent=F2+" kN";$("#d2a2v").textContent=nf(a2,1)+" m";
+    const sol=beamSolve({L:5,sup:"aa",P:[{x:a1,F:F1},{x:a2,F:F2}]});
+    const info=drawBeamDiagrams(svg,sol,{show:["T","M"],jumps:true});
+    const mx=info.M&&info.M.max;
+    $("#d2out").innerHTML="réactions : Y<sub>A</sub> = "+fx(sol.R.YA)+" kN, Y<sub>B</sub> = "+fx(sol.R.YB)+" kN · chaque saut de T est égal à la charge qui le provoque"+(mx?"<br>"+S("sig","Mf<sub>max</sub> = "+fx(mx.M)+" kN·m en x = "+nf(mx.x,2)+" m")+" : c'est bien là où T change de signe":"");
+  }
+  I.forEach(i=>i.addEventListener("input",draw));draw();
+})();
+
+/* =========================================================
+   d3 : une charge répartie
+   ========================================================= */
+(function(){
+  const svg=$("#d3svg");if(!svg)return;
+  const ip=$("#d3p"),ia=$("#d3a"),ib=$("#d3b");
+  function draw(){
+    let p=+ip.value,a=+ia.value,b=+ib.value;if(a>b){const t=a;a=b;b=t;}
+    $("#d3pv").textContent=nf(p,1)+" kN/m";$("#d3av").textContent=nf(+ia.value,1)+" m";$("#d3bv").textContent=nf(+ib.value,1)+" m";
+    const sol=beamSolve({L:6,sup:"aa",q:[{a:a,b:b,p:p}]});
+    const info=drawBeamDiagrams(svg,sol,{show:["T","M"]});
+    const Rt=p*(b-a),mx=info.M&&info.M.max;
+    let s="résultante de la charge : p × ℓ = "+nf(p,1)+" × "+nf(b-a,1)+" = <b>"+nf(Rt,2)+" kN</b>, au milieu de la zone (x = "+nf((a+b)/2,2)+" m) · Y<sub>A</sub> = "+fx(sol.R.YA)+" kN, Y<sub>B</sub> = "+fx(sol.R.YB)+" kN";
+    if(mx)s+="<br>"+S("sig","Mf<sub>max</sub> = "+fx(mx.M)+" kN·m en x = "+nf(mx.x,2)+" m")+", là où T s'annule"+(Math.abs(a)<1e-9&&Math.abs(b-6)<1e-9?" · formule pL²/8 = "+nf(p*36/8,2)+" kN·m ✅":"");
+    $("#d3out").innerHTML=s;
+  }
+  [ip,ia,ib].forEach(i=>i.addEventListener("input",draw));
+  $("#d3full").addEventListener("click",()=>{ia.value=0;ib.value=6;draw();});
+  draw();
+})();
+
+/* =========================================================
+   d4 : la pente et l'aire
+   ========================================================= */
+(function(){
+  const svg=$("#d4svg");if(!svg)return;
+  const ix=$("#d4x"),iF=$("#d4F");
+  function draw(){
+    const x=+ix.value,F=+iF.value;$("#d4xv").textContent=nf(x,2)+" m";$("#d4Fv").textContent=F+" kN";
+    const sol=beamSolve({L:6,sup:"aa",q:[{a:0,b:6,p:2}],P:[{x:4,F:F}]});
+    drawBeamDiagrams(svg,sol,{show:["T","M"],cut:x,area:true,tangent:true});
+    let A=0;const n=600;for(let i=0;i<n;i++){const t=(i+0.5)*x/n;A+=sol.at(t,1).T*x/n;}
+    const v=sol.at(x,1);
+    $("#d4out").innerHTML="au point x = "+nf(x,2)+" m : "+S("tau","T<sub>y</sub> = "+fx(v.T)+" kN")+" → pente de Mf = −T = <b>"+fx(-v.T)+" kN·m par m</b> (la tangente noire)"+
+      "<br>aire de T entre 0 et x = <b>"+fx(A)+" kN·m</b> → −aire = "+fx(-A)+" = "+S("sig","Mf<sub>z</sub>(x) = "+fx(v.M)+" kN·m")+" ✅"+
+      (Math.abs(v.T)<0.15?"<br>🏔️ <b>Sommet</b> : T ≈ 0, la tangente est horizontale, Mf est maximal ici.":"");
+  }
+  [ix,iF].forEach(i=>i.addEventListener("input",draw));draw();
+})();
+
+/* =========================================================
+   d5 : le diagrammeur
+   ========================================================= */
+(function(){
+  const svg=$("#d5svg");if(!svg)return;
+  const K=["sup","L","x1","F1","x2","F2","qa","qb","p","xc","C","H"],E={};K.forEach(k=>{E[k]=$("#d5"+k);});
+  const g=k=>{const v=parseFloat(String(E[k].value).replace(",","."));return isFinite(v)?v:0;};
+  function draw(){
+    const L=Math.max(0.5,g("L")),cl=v=>Math.max(0,Math.min(L,v));
+    let qa=cl(g("qa")),qb=cl(g("qb"));if(qa>qb){const t=qa;qa=qb;qb=t;}
+    const cfg={L:L,sup:E.sup.value,P:[{x:cl(g("x1")),F:g("F1")},{x:cl(g("x2")),F:g("F2")}].filter(o=>Math.abs(o.F)>1e-9),q:[{a:qa,b:qb,p:g("p")}],C:Math.abs(g("C"))>1e-9?[{x:cl(g("xc")),C:g("C")}]:[],H:g("H")};
+    const sol=beamSolve(cfg);
+    const show=Math.abs(cfg.H)>1e-9?["N","T","M"]:["T","M"];
+    const info=drawBeamDiagrams(svg,sol,{show:show});
+    const ext=key=>{let b=sol.S[0];sol.S.forEach(s=>{if(Math.abs(s[key])>Math.abs(b[key])+1e-9)b=s;});return b;};
+    const Mx=ext("M"),Tx=ext("T"),Nx=ext("N");
+    const L_=["<b>Réactions</b> : Y<sub>A</sub> = "+fx(sol.R.YA)+" kN"+(cfg.sup==="aa"?", Y<sub>B</sub> = "+fx(sol.R.YB)+" kN":", M<sub>A</sub> = "+fx(sol.R.MA)+" kN·m")+(Math.abs(sol.R.XA)>1e-9?", X<sub>A</sub> = "+fx(sol.R.XA)+" kN":""),
+      "<b>Section la plus sollicitée en flexion</b> : "+S("sig","|Mf|<sub>max</sub> = "+fx(Math.abs(Mx.M))+" kN·m")+" en x = "+nf(Mx.x,2)+" m ("+(Mx.M>=0?"fibres du bas tendues":"fibres du haut tendues")+")",
+      "<b>Effort tranchant maximal</b> : "+S("tau","|T|<sub>max</sub> = "+fx(Math.abs(Tx.T))+" kN")+" en x = "+nf(Tx.x,2)+" m"+(show.includes("N")?" · "+S("sig","|N|<sub>max</sub> = "+fx(Math.abs(Nx.N))+" kN"):""),
+      "<b>Contrôles</b> : T en bout de poutre = "+fx(sol.S[sol.S.length-1].T)+" kN · Mf en bout = "+fx(sol.S[sol.S.length-1].M)+" kN·m"+(cfg.sup==="aa"?" · Mf en A = "+fx(sol.at(1e-9,1).M)+" kN·m":"")];
+    $("#d5out").innerHTML=L_.map((l,i)=>'<div'+(i===1?' class="now"':'')+'>'+l+'</div>').join("");
+  }
+  K.forEach(k=>E[k].addEventListener(k==="sup"?"change":"input",()=>{$$("#d5pre .btn").forEach(b=>b.classList.remove("on"));draw();}));
+  $$("#d5pre .btn").forEach(b=>b.addEventListener("click",()=>{const v=b.dataset.c.split(",");K.forEach((k,i)=>{E[k].value=v[i];});$$("#d5pre .btn").forEach(o=>o.classList.toggle("on",o===b));draw();}));
+  $$("#d5pre .btn")[0].click();
+})();
+
+/* =========================================================
+   Quiz, check-list, sommaire
+   ========================================================= */
+(function(){
+  const box=$("#quiz");if(!box)return;
+  const Q=[
+    {q:"Entre deux charges ponctuelles (sans charge répartie), l'effort tranchant est :",o:["constant","linéaire","parabolique","nul"],c:0,e:"Aucune force n'entre dans la partie gauche quand la coupe avance : <b>T est constant</b> (une marche)."},
+    {q:"Entre deux charges ponctuelles, le moment de flexion est :",o:["constant","linéaire (une droite)","parabolique","nul"],c:1,e:"dMf/dx = −T, et T est constant : <b>Mf est une droite</b>, qui change de pente sous chaque charge."},
+    {q:"Sous une charge ponctuelle F, le diagramme de T :",o:["fait un saut égal à F","a un point anguleux","s'annule toujours","ne change pas"],c:0,e:"La force entre d'un coup dans la partie gauche : <b>saut de F</b>. C'est Mf qui a un point anguleux."},
+    {q:"Sous une charge uniformément répartie, Mf est :",o:["constant","une droite","une parabole","en marches"],c:2,e:"T est linéaire, donc Mf, dont la pente vaut −T, est une <b>parabole</b>."},
+    {q:"Pour une poutre sur deux appuis, le moment de flexion est maximal :",o:["aux appuis","là où T s'annule ou change de signe","là où la charge est la plus grande","au milieu, toujours"],c:1,e:"La pente de Mf est −T : Mf a un sommet <b>là où T s'annule ou change de signe</b>. Pour une console, en revanche, T ne s'annule pas : le maximum est à l'encastrement, en bout de diagramme."},
+    {q:"Poutre sur deux appuis, charge F au milieu : Mf<sub>max</sub> =",o:["FL","FL/2","FL/4","FL/8"],c:2,e:"Réactions F/2, bras de levier L/2 : <b>FL/4</b>."},
+    {q:"Poutre sur deux appuis, charge p sur toute la portée : Mf<sub>max</sub> =",o:["pL²/2","pL²/4","pL²/8","pL/2"],c:2,e:"<b>pL²/8</b>, au milieu. Deux fois moins qu'avec la même charge concentrée au milieu."},
+    {q:"Console de longueur L, charge F en bout : où est |Mf| maximal, et combien vaut-il ?",o:["en bout, FL","à l'encastrement, FL","au milieu, FL/2","à l'encastrement, FL/4"],c:1,e:"<b>À l'encastrement, FL</b>. Et Mf &lt; 0 : fibres du haut tendues."},
+    {q:"Console de longueur L, charge p sur toute la longueur : |Mf|<sub>max</sub> =",o:["pL²/2","pL²/8","pL","pL²"],c:0,e:"Charge totale pL, bras de levier L/2 : <b>pL²/2</b>, à l'encastrement."},
+    {q:"À une extrémité sur appui simple, sans couple appliqué, Mf vaut :",o:["0","la réaction","FL","il dépend de la charge"],c:0,e:"Rien ne peut faire tourner la poutre à cet endroit : <b>Mf = 0</b>. Excellent contrôle."},
+    {q:"Un couple concentré C appliqué sur la poutre :",o:["fait sauter T","fait sauter Mf","ne change rien","annule Mf"],c:1,e:"Il ajoute un moment sans ajouter de force : <b>Mf saute (de −C)</b>, T ne change pas."},
+    {q:"Pour une poutre sur deux appuis, Mf(x) peut se calculer comme :",o:["l'aire de T entre 0 et x","moins l'aire de T entre 0 et x","la pente de T","T × x"],c:1,e:"dMf/dx = −T et Mf(0) = 0 : <b>Mf(x) = −aire de T entre 0 et x</b>."}
+  ];
+  let score=0,done=0;const sc=$("#qzScore");
+  function upd(){let t="Score : "+score+" / "+Q.length;if(done===Q.length)t+=score>=10?"  ·  🎉 prêt pour le cours 8":score>=7?"  ·  relis les explications":"  ·  refais un tour des chapitres";sc.textContent=t;}
+  function render(){box.innerHTML="";score=0;done=0;
+    Q.forEach((it,n)=>{const d=document.createElement("div");d.className="qz";
+      d.innerHTML='<p class="qz-q"><b>'+(n+1)+".</b> "+it.q+'</p><div class="qz-o"></div><div class="qz-e" hidden></div>';
+      const o=d.querySelector(".qz-o"),ex=d.querySelector(".qz-e");let answered=false;
+      it.o.forEach((txt,i)=>{const b=document.createElement("button");b.type="button";b.className="qz-b";b.innerHTML=String.fromCharCode(65+i)+". "+txt;
+        b.addEventListener("click",()=>{if(answered)return;answered=true;done++;const ok=i===it.c;if(ok)score++;b.classList.add(ok?"ok":"ko");o.children[it.c].classList.add("ok");ex.hidden=false;ex.innerHTML=(ok?"✅ <b>Bien joué.</b> ":"❌ <b>Pas tout à fait.</b> ")+it.e;upd();});
+        o.appendChild(b);});
+      box.appendChild(d);});
+    upd();}
+  $("#qzReset").addEventListener("click",render);render();
+})();
+(function(){
+  const boxes=$$("#checklist input[type=checkbox]"),msg=$("#checkMsg"),KEY="rdm-cours7-check";
+  if(!boxes.length)return;
+  let saved=[];try{saved=JSON.parse(localStorage.getItem(KEY)||"[]")||[];}catch(e){saved=[];}
+  boxes.forEach(b=>{b.checked=saved.indexOf(b.dataset.c)>=0;});
+  function upd(){const on=boxes.filter(b=>b.checked).map(b=>b.dataset.c);try{localStorage.setItem(KEY,JSON.stringify(on));}catch(e){}
+    msg.innerHTML=on.length===boxes.length?"🎉 <b>Tout est coché : tu es prêt pour le cours 8 !</b>":on.length+" / "+boxes.length+" : reviens sur les points non cochés (les manipulations sont faites pour ça).";}
+  boxes.forEach(b=>b.addEventListener("change",upd));upd();
+})();
+(function(){
+  const links=$$(".toc a"),tin=$(".toc-in");
+  if(!links.length||!("IntersectionObserver" in window))return;
+  const map={};links.forEach(a=>{map[a.getAttribute("href").slice(1)]=a;});
+  const obs=new IntersectionObserver(ents=>{ents.forEach(en=>{if(!en.isIntersecting)return;const a=map[en.target.id];if(!a)return;
+    links.forEach(l=>l.classList.toggle("on",l===a));
+    if(tin){const tgt=a.offsetLeft-tin.clientWidth/2+a.offsetWidth/2;try{tin.scrollTo({left:tgt,behavior:RM?"auto":"smooth"});}catch(e){tin.scrollLeft=tgt;}}});},{rootMargin:"-45% 0px -50% 0px"});
+  Object.keys(map).forEach(id=>{const s=document.getElementById(id);if(s)obs.observe(s);});
+})();
+})();
+</script>
+</body>
+</html>

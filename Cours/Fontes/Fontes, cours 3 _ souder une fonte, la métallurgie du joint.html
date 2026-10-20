@@ -1,0 +1,1643 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fontes, cours 3 : souder une fonte, la métallurgie du joint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@500;600;700&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F3F6F9; --paper-2:#E6ECF2; --card:#FFFFFF; --ink:#17212B; --muted:#56626F; --line:#C5CFD9;
+  --grid:rgba(40,90,160,.075);
+  --sig:#CF2438; --tau:#8A34B6; --eps:#1B5ED3; --gam:#06849A; --frc:#D46A00; --mat:#26844A; --weld:#9A5B12;
+  --ok:#26844A; --warn:#B86E00; --bad:#C62828;
+  --lv2:#E4EBF2; --hl:#FFF3B0;
+  --font-body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-head:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --font-math:"STIX Two Text","Cambria Math","Cambria","Times New Roman",serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+    --grid:rgba(120,160,220,.07);
+    --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+    --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+  --grid:rgba(120,160,220,.07);
+  --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+  --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+  color-scheme: dark;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0;color:var(--ink);font-family:var(--font-body);font-size:17.5px;line-height:1.62;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;overflow-x:hidden;
+}
+img,svg{max-width:100%}
+.wrap{max-width:800px;margin:0 auto;padding:0 20px}
+.wide{max-width:980px}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.1;margin:0}
+h3{font-size:1.65rem;font-weight:600;margin:2rem 0 .6rem}
+h4{font-size:1.3rem;font-weight:600;margin:1.4rem 0 .4rem}
+p{margin:.7em 0}
+a{color:var(--eps)}
+b,strong{font-weight:700}
+small{font-size:.8em}
+sub{font-size:.72em}
+.m{font-family:var(--font-math);font-size:1.08em;white-space:nowrap}
+.sig{color:var(--sig)} .tau{color:var(--tau)} .eps{color:var(--eps)} .gam{color:var(--gam)} .frc{color:var(--frc)} .mat{color:var(--mat)} .mut{color:var(--muted)} .wcol{color:var(--weld)}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .12em;line-height:1.1}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 .2em .08em}
+.frac>span:last-child{padding:.08em .2em 0}
+ul,ol{padding-left:1.4em}
+li{margin:.25em 0}
+
+/* ---------- en-tête ---------- */
+.hero{padding:34px 0 10px}
+.title-block{border:2.5px solid var(--ink);background:var(--card);display:grid;grid-template-columns:1fr 300px}
+.tb-main{padding:22px 24px;border-right:2.5px solid var(--ink);display:flex;flex-direction:column;justify-content:space-between;gap:14px}
+.tb-series{margin:0 0 .5rem;color:var(--muted);font-size:.95rem}
+.hero h1{font-size:clamp(2.3rem,6vw,4rem);font-weight:700;letter-spacing:-.01em}
+.tb-cells{display:grid;grid-template-rows:repeat(4,auto)}
+.tb-cells>div{padding:9px 16px;border-bottom:1.5px solid var(--ink);display:flex;flex-direction:column;justify-content:center}
+.tb-cells>div:last-child{border-bottom:0}
+.tb-cells small{color:var(--muted);font-size:.78rem}
+.tb-cells b{font-family:var(--font-head);font-size:1.25rem;font-weight:600;line-height:1.15}
+.lede{font-size:1.13rem;max-width:760px;margin:1.2rem 0}
+.theme-btn{align-self:flex-start;font-family:var(--font-body);font-size:.85rem;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
+@media (max-width:760px){.title-block{grid-template-columns:1fr}.tb-main{border-right:0;border-bottom:2.5px solid var(--ink)}.tb-cells{grid-template-rows:none;grid-template-columns:1fr 1fr}.tb-cells>div:nth-child(odd){border-right:1.5px solid var(--ink)}.tb-cells>div:nth-child(3){border-bottom:0}}
+@media (max-width:420px){.tb-cells{grid-template-columns:1fr}.tb-cells>div:nth-child(odd){border-right:0}.tb-cells>div:nth-child(3){border-bottom:1.5px solid var(--ink)}}
+
+/* code couleur */
+.cc{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:stretch;margin:1rem 0 .4rem}
+.cc-box{background:var(--card);border:2px solid var(--line);padding:12px 14px;border-radius:4px}
+.cc-cause{border-color:var(--sig)} .cc-link{border-color:var(--mat)} .cc-eff{border-color:var(--eps)}
+.cc-box small{display:block;color:var(--muted);font-size:.82rem;line-height:1.3}
+.cc-syms{font-family:var(--font-math);font-size:1.7rem;line-height:1.25;display:flex;flex-wrap:wrap;gap:.1em .45em;margin:.2rem 0}
+.cc-box p{margin:0;font-size:.9rem;line-height:1.35}
+.cc-arrow{align-self:center;font-size:1.8rem;color:var(--muted)}
+@media (max-width:700px){.cc{grid-template-columns:1fr}.cc-arrow{transform:rotate(90deg);justify-self:center;line-height:1}}
+.cc-more{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:.5rem 0}
+.cc-more>div{border:2px solid var(--line);background:var(--card);border-radius:4px;padding:6px 10px;font-size:.9rem}
+@media (max-width:640px){.cc-more{grid-template-columns:1fr}}
+
+/* ---------- sommaire ---------- */
+.toc{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-bottom:1.5px solid var(--line);padding-top:env(safe-area-inset-top,0px);margin-top:18px}
+.toc-in{display:flex;gap:6px;overflow-x:auto;padding:9px 20px;max-width:980px;margin:0 auto;scrollbar-width:thin}
+.toc a{flex:none;text-decoration:none;color:var(--ink);font-size:.88rem;padding:4px 11px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);white-space:nowrap}
+.toc a.on{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.toc a:focus-visible,.btn:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--eps);outline-offset:2px}
+
+/* ---------- sections ---------- */
+section.chap{padding:46px 0 10px}
+.cartouche{display:grid;grid-template-columns:86px 1fr 250px;border:2.5px solid var(--ink);background:var(--card);margin-bottom:1.4rem}
+.c-num{font-family:var(--font-head);font-size:3.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;border-right:2.5px solid var(--ink)}
+.c-title{padding:14px 18px;border-right:2.5px solid var(--ink)}
+.c-title h2{font-size:2.1rem;font-weight:700}
+.c-title p{margin:.25rem 0 0;color:var(--muted)}
+.c-img{padding:12px 14px;display:flex;gap:12px;align-items:center;background:var(--paper-2)}
+.c-img .ico{font-size:2.3rem;line-height:1}
+.c-img small{display:block;color:var(--muted);font-size:.78rem}
+.c-img span{font-size:.95rem;line-height:1.3}
+@media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
+
+/* niveaux */
+.lv{margin:1.2rem 0;padding:6px 22px 14px;border-radius:4px}
+.lv1{background:var(--card);border:2px solid var(--ink)}
+.lv2{background:var(--lv2);border-left:6px solid var(--ink)}
+.lv-h{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;font-family:var(--font-head);font-size:1.35rem;font-weight:600;margin:10px 0 4px}
+.lv-h .tag{font-size:.95rem;font-family:var(--font-body);font-weight:400;color:var(--muted)}
+@media (max-width:520px){.lv{padding:6px 14px 12px}}
+
+/* formules et encadrés */
+.fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:600px;text-align:center;border-radius:3px;overflow-x:auto}
+.fx .big{font-family:var(--font-math);font-size:1.9rem;line-height:1.4}
+.fx .cap{font-size:.85rem;color:var(--muted);margin:.3rem 0 0}
+.fx .row{display:flex;flex-wrap:wrap;justify-content:center;gap:.2em 1.4em}
+.syms{margin:.6rem 0;display:grid;grid-template-columns:auto 1fr;gap:.35rem 1rem;align-items:baseline}
+.syms dt{font-family:var(--font-math);font-size:1.25rem;text-align:right;white-space:nowrap}
+.syms dd{margin:0}
+.def{margin:.9rem 0;padding:.5rem .9rem;border-left:3px dotted var(--muted);font-size:.96rem;background:color-mix(in srgb,var(--card) 60%,transparent)}
+.def>b:first-child{font-family:var(--font-head);font-size:1.08rem;font-weight:600}
+.tip{margin:1rem 0;padding:.7rem 1rem;border:1.5px dashed var(--mat);border-radius:4px;font-size:.97rem}
+.warn{margin:1rem 0;padding:.7rem 1rem;border:2px solid var(--bad);border-radius:4px;font-size:.97rem;background:color-mix(in srgb,var(--bad) 7%,transparent)}
+.mnemo{margin:1rem 0;padding:.7rem 1rem;background:var(--hl);border-radius:4px;font-size:.98rem}
+.fun{margin:1.2rem 0;padding:.8rem 1rem;border:2px dashed var(--muted);border-radius:10px;background:var(--card);font-size:.98rem}
+.fun-h{display:block;margin-bottom:.35rem;font-family:var(--font-head);font-size:1.15rem;font-weight:600;letter-spacing:.02em}
+.meta{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--frc);border-radius:4px;background:color-mix(in srgb,var(--frc) 6%,transparent)}
+.weld{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--weld);border-radius:4px;background:color-mix(in srgb,var(--weld) 7%,transparent)}
+.weld>b:first-child{font-family:var(--font-head);font-size:1.15rem;font-weight:600;color:var(--weld)}
+.hp{display:inline-block;font-size:.72rem;font-weight:700;padding:1px 7px;border-radius:9px;background:var(--weld);color:var(--card);vertical-align:middle;margin-left:4px;white-space:nowrap}
+.recall{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:1rem 0}
+.recall>div{background:var(--card);border:1.5px solid var(--line);border-radius:4px;padding:8px 12px;font-size:.92rem}
+.recall .f{font-family:var(--font-math);font-size:1.2rem;margin-bottom:.2rem}
+@media (max-width:640px){.recall{grid-template-columns:1fr}}
+.hist{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:1rem 0}
+.hist>div{background:var(--card);border:1.5px solid var(--weld);border-radius:4px;padding:8px 12px;font-size:.93rem}
+.hist .yr{font-family:var(--font-head);font-size:1.6rem;font-weight:700;color:var(--weld);line-height:1}
+@media (max-width:720px){.hist{grid-template-columns:1fr}}
+
+/* manipulations */
+.lab{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:14px 16px 12px;margin:1.4rem 0}
+.lab-h{font-family:var(--font-head);font-size:1.3rem;font-weight:600;margin:0 0 .2rem}
+.lab-sub{margin:0 0 .6rem;color:var(--muted);font-size:.92rem}
+.lab svg{display:block;width:100%;height:auto;color:var(--ink);font-family:var(--font-body);touch-action:pan-y}
+.ctrl{display:grid;grid-template-columns:minmax(110px,auto) 1fr minmax(92px,auto);gap:4px 12px;align-items:center;margin:.5rem 0}
+.ctrl label{font-size:.95rem}
+.ctrl output{font-family:var(--font-math);font-size:1.08rem;text-align:right;white-space:nowrap}
+@media (max-width:520px){.ctrl{grid-template-columns:1fr auto}.ctrl input[type=range]{grid-column:1/-1;grid-row:2}}
+input[type=range]{width:100%;accent-color:var(--ink);height:28px;margin:0}
+input.r-sig{accent-color:var(--sig)} input.r-tau{accent-color:var(--tau)} input.r-frc{accent-color:var(--frc)} input.r-mat{accent-color:var(--mat)} input.r-eps{accent-color:var(--eps)}
+.btns{display:flex;flex-wrap:wrap;gap:6px;margin:.5rem 0}
+.btn{font-family:var(--font-body);font-size:.9rem;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 13px;cursor:pointer;line-height:1.3}
+.btn:hover{background:var(--paper-2)}
+.btn.on{background:var(--ink);color:var(--paper)}
+.btn.play{border-color:var(--eps);color:var(--eps);font-weight:700}
+.btn:disabled{opacity:.45;cursor:default}
+.readout{font-family:var(--font-math);font-size:1.08rem;background:var(--paper-2);border-radius:4px;padding:.5rem .8rem;margin:.5rem 0;overflow-x:auto;display:flex;flex-wrap:wrap;gap:.2em 1.3em}
+.readout>span{white-space:nowrap}
+.status{font-size:.97rem;margin:.5rem 0;padding:.5rem .8rem;border-left:4px solid var(--eps);background:color-mix(in srgb,var(--eps) 6%,transparent);border-radius:0 4px 4px 0;min-height:2.6em}
+.radios{display:flex;flex-wrap:wrap;gap:6px 14px;margin:.4rem 0;font-size:.95rem}
+.radios label{display:inline-block;cursor:pointer}
+.radios input{margin:0 6px 0 0;vertical-align:middle}
+
+/* svg */
+svg text{fill:currentColor;font-size:13px}
+svg .lbl{font-size:12.5px;fill:var(--muted)}
+svg .mth{font-family:var(--font-math);font-size:16px}
+svg .ttl{font-family:var(--font-head);font-size:15px;font-weight:600}
+svg .axis{stroke:var(--ink);stroke-width:1.4;fill:none}
+svg .tick{stroke:var(--muted);stroke-width:1}
+svg .gridbg{stroke:var(--line);stroke-width:1}
+svg .ref{stroke:var(--muted);stroke-width:1.3;stroke-dasharray:4 3;fill:none}
+.arr line{stroke:currentColor}
+.arr polygon{fill:currentColor}
+
+/* tableaux */
+.tbl-wrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch}
+table.data{border-collapse:collapse;width:100%;font-size:.94rem;background:var(--card)}
+table.data th,table.data td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:middle}
+table.data th{font-family:var(--font-head);font-weight:600;font-size:1.05rem;background:var(--paper-2)}
+table.data td.n{font-family:var(--font-math);white-space:nowrap}
+table.data tr.now td{background:var(--hl)}
+
+/* parcours */
+.route{list-style:none;padding:0;margin:1rem 0;position:relative}
+.route::before{content:"";position:absolute;left:17px;top:10px;bottom:10px;width:4px;background:var(--line);border-radius:2px}
+.route li{position:relative;padding:0 0 14px 52px;margin:0}
+.route li .dot{position:absolute;left:4px;top:0;width:30px;height:30px;border-radius:50%;border:3px solid var(--ink);background:var(--card);font-family:var(--font-head);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+.route li b{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.route li p{margin:.1rem 0 0;font-size:.95rem}
+.series{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:.8rem 0}
+.series>div{background:var(--card);border:1.5px solid var(--line);padding:8px 10px;border-radius:4px;font-size:.88rem}
+.series>div.here{border:2.5px solid var(--ink)}
+.series b{display:block;font-family:var(--font-head);font-size:1.05rem}
+@media (max-width:700px){.series{grid-template-columns:1fr 1fr}}
+
+/* exercices et quiz */
+.exo{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--ink);padding:6px 20px 12px;margin:1.2rem 0;border-radius:4px}
+.exo.defi{border-left-color:var(--weld)}
+.exo h4{margin-top:.8rem}
+.exo .lvtag{font-family:var(--font-body);font-size:.85rem;font-weight:400;color:var(--muted);margin-left:.4rem}
+.exo .q{margin:.25rem 0}
+details{margin:.6rem 0}
+summary{cursor:pointer;font-weight:700;padding:4px 0}
+details .sol{padding:.4rem .9rem;border-left:3px solid var(--mat);margin:.4rem 0}
+details .sol p{margin:.45em 0}
+.qz{background:var(--card);border:1.5px solid var(--line);border-radius:6px;padding:10px 16px;margin:.8rem 0}
+.qz-q{margin:.3rem 0 .6rem}
+.qz-o{display:flex;flex-direction:column;gap:6px}
+.qz-b{text-align:left;font-family:var(--font-body);font-size:.97rem;padding:8px 12px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:5px;cursor:pointer}
+.qz-b:hover{border-color:var(--ink)}
+.qz-b.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--card))}
+.qz-b.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--card))}
+.qz-e{font-size:.94rem;margin:.6rem 0 .2rem}
+.score{position:sticky;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);display:inline-block;background:var(--ink);color:var(--paper);padding:6px 14px;border-radius:999px;font-size:.95rem;margin:.6rem 0}
+
+/* fiche mémoire */
+.fiche{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:2.5px solid var(--ink);background:var(--card);margin:1rem 0}
+.fiche>div{padding:12px 14px;border-right:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}
+.fiche>div:nth-child(3n){border-right:0}
+.fiche>div:nth-last-child(-n+3){border-bottom:0}
+.fiche .ic{font-size:1.9rem;line-height:1}
+.fiche h4{margin:.3rem 0 .2rem;font-size:1.15rem}
+.fiche .f{font-family:var(--font-math);font-size:1.1rem;margin:.2rem 0}
+.fiche p{margin:.2rem 0 0;font-size:.88rem;color:var(--muted)}
+@media (max-width:720px){.fiche{grid-template-columns:1fr 1fr}.fiche>div{border-right:1.5px solid var(--ink)!important;border-bottom:1.5px solid var(--ink)!important}.fiche>div:nth-child(2n){border-right:0!important}.fiche>div:last-child{border-bottom:0!important}}
+@media (max-width:440px){.fiche{grid-template-columns:1fr}.fiche>div{border-right:0!important}}
+.gloss{display:grid;grid-template-columns:minmax(150px,230px) 1fr;gap:0;border-top:1.5px solid var(--line);margin:1rem 0}
+.gloss dt,.gloss dd{border-bottom:1.5px solid var(--line);padding:7px 8px;margin:0}
+.gloss dt{font-weight:700}
+.gloss dd{font-size:.95rem}
+@media (max-width:600px){.gloss{grid-template-columns:1fr}.gloss dt{border-bottom:0;padding-bottom:0}}
+.check label{display:flex;gap:10px;align-items:flex-start;padding:5px 0;cursor:pointer}
+.check input{margin-top:.35em;width:18px;height:18px;accent-color:var(--mat);flex:none}
+footer{padding:40px 0 60px;color:var(--muted);font-size:.9rem}
+hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
+@media (max-width:700px){.m{white-space:normal}.fx{padding:12px 10px}.fx .big{font-size:1.4rem}}
+@media (max-width:400px){body{font-size:16.5px}.wrap{padding:0 14px}.lab{padding:12px 10px}}
+
+/* compléments de la série Rupture */
+.btn.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,var(--card))}
+.btn.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--card))}
+.ctrl[hidden]{display:none}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="wrap wide">
+  <div class="title-block">
+    <div class="tb-main">
+      <div>
+        <p class="tb-series">Fontes et soudage des fontes, série 2.17 : comprendre la fonte pour mieux la souder</p>
+        <h1>Souder une fonte : la métallurgie du joint</h1>
+      </div>
+      <button class="theme-btn" id="themeBtn" type="button" aria-label="Changer de thème">◐ Thème : automatique</button>
+    </div>
+    <div class="tb-cells">
+      <div><small>Cours</small><b>3 sur 4 : ce qui se passe dans une soudure sur fonte, et comment le maîtriser</b></div>
+      <div><small>Durée conseillée</small><b>≈ 2 h 30 à 3 h avec les exercices</b></div>
+      <div><small>Prérequis</small><b>cours 1 et 2 de la série ; zones d'une soudure, dilution, énergie de soudage (Électrode enrobée, cours 4 et 5) ; martensite et revenu (Métallurgie, cours 3) ; essais de dureté (Essais, cours 2)</b></div>
+      <div><small>À la fin tu sais</small><b>dire quelles fontes se soudent et dans quel groupe de matériaux elles tombent ; décrire les zones d'une soudure sur fonte et leurs structures ; choisir un métal d'apport et maîtriser la dilution ; choisir entre régime chaud et régime froid ; estimer un préchauffage ; organiser le refroidissement, le martelage et le traitement après soudage</b></div>
+    </div>
+  </div>
+  <p class="lede">Souder une fonte, c'est réparer un matériau qui n'aime ni chauffer vite, ni refroidir vite, ni être tiré. Sous l'arc, le graphite voisin se dissout ; au refroidissement, son carbone ressort en cémentite ou se fige dans de la martensite, et le retrait du cordon tire sur une matière presque sans ductilité. Ce cours suit la soudure de l'intérieur : quelles fontes s'y prêtent, ce que devient chaque zone, comment le métal d'apport et la dilution décident de la zone fondue, puis les deux grandes stratégies, souder à chaud ou souder à froid, avec le préchauffage, le refroidissement, le martelage et les traitements qui les accompagnent.</p>
+
+  <h4>Le code couleur de la série</h4>
+  <div class="cc" role="img" aria-label="Code couleur : les causes en rouge et violet, les paramètres en vert, les effets en bleu et bleu-vert">
+    <div class="cc-box cc-cause"><small>Les causes</small><div class="cc-syms"><span class="sig">T</span><span class="sig">Ṫ</span><span class="sig">σ</span><span class="tau">Fe₃C</span><span class="tau">α′</span></div><p><span class="sig">rouge</span> : ce qui chauffe, refroidit ou tire (température maximale, vitesse de refroidissement, retrait, contraintes) ; <span class="tau">violet</span> : les ennemis (cémentite et lédéburite, martensite α′, fissures, porosités)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-link"><small>Les paramètres</small><div class="cc-syms"><span class="mat">T<sub>0</sub></span><span class="mat">Q</span><span class="mat">D</span><span class="mat">Ni</span><span class="mat">CE<sub>s</sub></span></div><p>en <span class="mat">vert</span> : les choix du soudeur (préchauffage T<sub>0</sub>, énergie de soudage Q, dilution D, métal d'apport, carbone équivalent de soudage CE<sub>s</sub>)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-eff"><small>Les effets</small><div class="cc-syms"><span class="eps">HV</span><span class="eps">ε</span><span class="eps">t<sub>8/5</sub></span><span class="gam">ZF</span><span class="gam">ZAT</span></div><p><span class="eps">bleu</span> : ce qu'on mesure (dureté, déformation, durée de refroidissement, largeurs de zones) ; <span class="gam">bleu-vert</span> : la structure obtenue (zone fondue, zone affectée, graphite, ferrite, austénite)</p></div>
+  </div>
+  <div class="cc-more">
+    <div><b class="frc">Orange</b> : les actions et les forces (arc, flamme, martelage, bridage).</div>
+    <div><b>Noir</b> : la géométrie dessinée (pièces, cordons, cotes).</div>
+    <div><b class="wcol">Bronze</b> : les encadrés « métier » 🔥, tournés vers l'atelier de soudage.</div>
+  </div>
+</div>
+</header>
+
+<nav class="toc" aria-label="Sommaire">
+  <div class="toc-in">
+    <a href="#avant">Avant de commencer</a>
+    <a href="#c1">1 Quelles fontes se soudent</a>
+    <a href="#c2">2 Les zones</a>
+    <a href="#c3">3 Dilution et apport</a>
+    <a href="#c4">4 Chaud ou froid</a>
+    <a href="#c5">5 Préchauffer</a>
+    <a href="#c6">6 Refroidir et traiter</a>
+    <a href="#exos">Exercices</a>
+    <a href="#quiz-s">Quiz</a>
+    <a href="#fiche">Fiche mémoire</a>
+    <a href="#gloss">Glossaire</a>
+    <a href="#check">Check-list</a>
+  </div>
+</nav>
+
+<main>
+<section class="chap" id="avant">
+<div class="wrap">
+  <h3 style="margin-top:0">Avant de commencer</h3>
+  <h4>Le cours 2 en trois cases</h4>
+  <div class="recall">
+    <div><div class="f">EN-GJ + L/S/V/M/N</div>La désignation dit la forme du graphite, la matrice, les propriétés garanties, et parfois W : nuance destinée au soudage.</div>
+    <div><div class="f">GS ferritique &gt; GS perlitique &gt; GL</div>La ductilité de la nuance dit combien elle peut encaisser de retrait ; une ADI ne se répare pas par soudage, une fonte blanche non plus.</div>
+    <div><div class="f">500-600 · 700-740 · 900</div>Détensionnement, ferritisation, graphitisation ou recuit complet : les mêmes traitements servent après soudage.</div>
+  </div>
+
+  <div class="def"><b>📘 Correspondance avec le planning et le référentiel</b>. Ce cours poursuit le sujet <b>2.17 « Fontes »</b> du planning de la formation :
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Chapitre du cours</th><th>Ce qu'il apporte à l'IWE</th></tr>
+      <tr><td>1 Quelles fontes se soudent</td><td>soudabilité par famille, groupes de l'ISO/TR 15608, normes de soudage des fontes, facteurs liés à la pièce</td></tr>
+      <tr><td>2 Les zones de la soudure</td><td>zone fondue, zone partiellement fondue, zone affectée : structures et largeurs</td></tr>
+      <tr><td>3 Dilution et métal d'apport</td><td>apports homogènes et hétérogènes, nickel et nickel-fer, limite de dilution</td></tr>
+      <tr><td>4 Régime chaud, régime froid</td><td>deux stratégies de soudage, refroidissement et dureté de la zone affectée</td></tr>
+      <tr><td>5 Préchauffer</td><td>effets, carbone équivalent de soudage, repères de température, préchauffage local et mesure</td></tr>
+      <tr><td>6 Refroidir, marteler, traiter</td><td>refroidissement contrôlé, martelage, traitements thermiques après soudage</td></tr>
+    </table></div>
+    Dans le référentiel de l'IIW (<i>International Institute of Welding</i>), le module 2.17 demande à l'IWE (<i>International Welding Engineer</i>) de classer la soudabilité des fontes, de décrire leurs problèmes de soudage, et d'appliquer les procédés, les produits d'apport et les mesures propres à surmonter ces problèmes, traitements thermiques compris. Les procédés, les produits d'apport normalisés et les gestes de réparation sont au cours 4.
+  </div>
+
+  <div class="def"><b>📖 Les normes, sources et sigles de ce cours</b>.
+    <ul>
+      <li><b>ISO/TR 15608</b> : groupes de matériaux pour le soudage (groupe 7 : fontes) ; <b>EN 1011-8</b> (édition 2018) : recommandations pour le soudage des fontes ; <b>ISO 15614-3</b> : qualification des modes opératoires de soudage des fontes non alliées et faiblement alliées ; <b>ISO 1071</b> : produits d'apport pour le soudage des fontes ; <b>ISO 13916</b> : mesure de la température de préchauffage.</li>
+      <li><b>ZF</b> : zone fondue ; <b>ZPF</b> : zone partiellement fondue ; <b>ZAT</b> : zone affectée thermiquement ; <b>MB</b>, <b>MA</b> : métal de base, métal d'apport ; <b>D</b> : dilution ; <b>T<sub>0</sub></b> : température de préchauffage ; <b>Q</b> : énergie de soudage, Q = k·U·I/v (k : rendement thermique du procédé, U : tension, I : intensité, v : vitesse de soudage, selon l'EN 1011-1) ; <b>E</b> : module d'élasticité ; <b>t<sub>8/5</sub></b> : durée de refroidissement de 800 à 500 °C ; <b>CE<sub>s</sub></b> : carbone équivalent de soudage ; <b>α′</b> : martensite ; <b>HV</b> : dureté Vickers ; <b>TTAS</b> : traitement thermique après soudage.</li>
+    </ul>
+    Les températures de transformation sont celles d'une fonte non alliée à environ 2 % de silicium. Les modèles des manipulations sont pédagogiques ; un mode opératoire réel se qualifie.
+  </div>
+
+  <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage</b>
+    <p>Les fontes sont rarement assemblées par soudage en construction neuve, mais elles sont réparées tous les jours : défauts de fonderie rechargés avant livraison, carters et bâtis fissurés, pièces d'usure, éléments de patrimoine. Une réparation ratée fissure souvent quelques heures après le soudage, ou casse en service le long de la zone affectée. Savoir ce qui se passe dans chaque zone et pourquoi, c'est pouvoir écrire un mode opératoire qui tient, et le défendre en qualification.</p>
+  </div>
+
+  <h4>La série en quatre cours</h4>
+  <div class="series">
+    <div><b>1 Graphite ou cémentite</b>Ce qu'est une fonte, diagrammes stable et métastable, grise ou blanche, formes du graphite, matrice, propriétés.</div>
+    <div><b>2 La famille des fontes</b>Désignations EN 1560, nuances GL, GV, GS, ADI, malléables, blanches et alliées, traitements thermiques, corrosion.</div>
+    <div class="here"><b>3 Souder une fonte : le joint</b>Soudabilité, zones de la soudure, dilution, régimes chaud et froid, préchauffage, refroidissement.</div>
+    <div><b>4 Souder une fonte : la pratique</b>Procédés et produits d'apport, beurrage, préparation et réparation, qualification, aciers moulés.</div>
+  </div>
+
+  <h4>Le plan du cours</h4>
+  <ol class="route">
+    <li><span class="dot">1</span><b>Quelles fontes se soudent ?</b><p>Une matière fragile qui doit encaisser un retrait : qui le peut, qui ne le peut pas.</p></li>
+    <li><span class="dot">2</span><b>Les zones d'une soudure de fonte</b><p>Zone fondue, zone partiellement fondue, zone affectée : la trace de la température maximale.</p></li>
+    <li><span class="dot">3</span><b>Dilution et métal d'apport</b><p>Fonte, acier ou nickel : ce que devient le carbone de la fonte dans le bain.</p></li>
+    <li><span class="dot">4</span><b>Régime chaud, régime froid</b><p>Tout chauffer comme à la coulée, ou presque rien et à petites touches.</p></li>
+    <li><span class="dot">5</span><b>Préchauffer</b><p>Pourquoi, combien, comment, et où mesurer.</p></li>
+    <li><span class="dot">6</span><b>Refroidir, marteler, traiter</b><p>Finir la soudure sans la fissurer : refroidissement lent, martelage, traitement après soudage.</p></li>
+  </ol>
+</div>
+</section>
+
+<section class="chap" id="c1">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">1</div>
+    <div class="c-title"><h2>Quelles fontes se soudent ?</h2><p>Une matière fragile qui doit encaisser un retrait : qui le peut, qui ne le peut pas</p></div>
+    <div class="c-img"><span class="ico">🧊</span><span><small>Image à retenir</small>Le glaçon dans l'eau tiède : un matériau fragile éclate quand une partie se dilate et l'autre non</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le glaçon dans l'eau tiède</span></div>
+    <p>Plonge un glaçon dans l'eau tiède : il craque. Sa surface se dilate, son cœur froid la retient, et la glace, fragile, ne peut pas se déformer pour s'accommoder. Une soudure fait la même chose à une pièce : elle chauffe une petite zone, qui se dilate puis se rétracte en refroidissant, pendant que le reste de la pièce, froid, la retient. Le cordon et son voisinage se retrouvent étirés. Un acier s'étire de 20 % avant de rompre et encaisse ce retrait sans broncher ; une fonte GL ne s'étire que de quelques dixièmes de pour cent. Elle fissure.</p>
+    <p>Par rapport à un acier, la fonte cumule des atouts et des pièges :</p>
+    <ul>
+      <li>elle <b>fond plus bas</b> : il faut moins de chaleur pour la souder ;</li>
+      <li>son liquide est <b>très fluide</b> : on soude surtout à plat ;</li>
+      <li>son <b>module d'élasticité</b> est plus faible (pour les GL) : à déformation égale, elle se met moins en contrainte ;</li>
+      <li>mais elle est <b>peu ductile</b>, voire pas du tout ;</li>
+      <li>et elle est <b>très sensible au refroidissement rapide</b> : son carbone forme de la cémentite ou de la martensite, dures et fragiles (cours 1).</li>
+    </ul>
+    <p>Le problème général du soudage des fontes tient donc en une phrase : <b>garder le carbone à l'état de graphite, et ne pas tirer sur une matière qui ne s'étire pas</b>. D'où trois règles : limiter la dilution, ralentir le refroidissement, éviter les contraintes de traction.</p>
+    <p>Qui se soude ? Les fontes les plus ductiles. Les <b>GS ferritiques</b> se soudent le mieux ; les <b>GS perlitiques, GV et GL</b> se soudent avec précautions ; parmi les malléables, les nuances à cœur blanc minces et décarburées se soudent bien, les autres mal ; les <b>fontes blanches</b>, les fontes alliées au chrome ou au silicium et les <b>ADI</b> ne se soudent pas pour l'assemblage. Les fontes austénitiques au nickel se soudent avec des apports au nickel.</p>
+  </div>
+
+  <div class="lab" id="m1">
+    <p class="lab-h">Manipulation 1 : le barreau bridé</p>
+    <p class="lab-sub">Un barreau tenu entre deux murs est chauffé localement par la soudure, puis refroidit. En dessous d'environ 650 °C, le métal ne se relâche plus : son retrait jusqu'à la température de préchauffage T<sub>0</sub> impose une déformation ε = α·(650 − T<sub>0</sub>)·b, où b mesure le bridage (1 : murs parfaitement rigides). Le barreau fissure si ε dépasse ce que la matière peut encaisser, R<sub>m</sub>/E + A (E : module d'élasticité ; A : allongement). ▶ Refroidir rejoue le retrait. Modèle pédagogique.</p>
+    <div class="btns" id="m1m">
+      <button class="btn" data-k="S235" type="button">Acier S235</button>
+      <button class="btn" data-k="GS" type="button">EN-GJS-400-15</button>
+      <button class="btn on" data-k="GL" type="button">EN-GJL-250</button>
+      <button class="btn" data-k="blanche" type="button">Fonte blanche</button>
+    </div>
+    <div class="ctrl"><label for="m1t">Préchauffage <span class="mat">T<sub>0</sub></span></label><input type="range" id="m1t" class="r-mat" min="20" max="600" step="10" value="20"><output id="m1to"></output></div>
+    <div class="ctrl"><label for="m1b">Bridage <span class="mat">b</span></label><input type="range" id="m1b" class="r-mat" min="0.1" max="1" step="0.05" value="1"><output id="m1bo"></output></div>
+    <div class="btns"><button class="btn play" id="m1play" type="button">▶ Refroidir</button></div>
+    <svg id="m1svg" role="img" aria-label="Barreau bridé entre deux murs, déformation imposée par le retrait et capacité de déformation du matériau"></svg>
+    <div class="readout" id="m1r"></div>
+    <p class="status" id="m1msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">déformation de retrait, groupes de matériaux, normes</span></div>
+    <p><b>Le bilan de déformation.</b> Une zone chauffée puis refroidie, retenue par une pièce froide, subit une déformation de traction proportionnelle à l'écart de température au-dessous duquel le métal ne se relâche plus :</p>
+    <div class="fx"><div class="row"><div class="big"><span class="eps">ε</span> ≈ <span class="mat">α</span>·(<span class="sig">T<sub>r</sub></span> − <span class="mat">T<sub>0</sub></span>)·<span class="mat">b</span></div><div class="big">fissure si <span class="eps">ε</span> &gt; <span class="frac"><span>R<sub>m</sub></span><span>E</span></span> + A</div></div><p class="cap">α ≈ 12 × 10⁻⁶ K⁻¹ : coefficient de dilatation ; T<sub>r</sub> ≈ 650 °C : température au-dessus de laquelle les contraintes se relâchent (valeur du modèle) ; T<sub>0</sub> : préchauffage ; b : bridage, de 0 (pièce libre) à 1 (parfaitement bridée) ; E : module d'élasticité ; R<sub>m</sub>/E : déformation élastique avant rupture ; A : allongement.</p></div>
+    <p>Sans préchauffage et pleinement bridée : ε ≈ 12 × 10⁻⁶ × 630 ≈ 0,76 %. Une EN-GJL-250 n'encaisse qu'environ 250/110 000 + 0,3 % ≈ 0,53 % : elle fissure. Préchauffée à 300 °C : ε ≈ 0,42 %, elle tient. Une GS ferritique, avec 15 % d'allongement, encaisse sans difficulté ; une fonte blanche, sans allongement, fissure même préchauffée à 300 °C.</p>
+    <p><b>Les groupes de matériaux.</b> L'ISO/TR 15608 range les fontes dans le groupe 7, utilisé pour les qualifications de modes opératoires et de soudeurs :</p>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Groupe</th><th>Fontes</th></tr>
+      <tr><td class="n">71</td><td>fontes à graphite lamellaire, à résistance ou dureté Brinell spécifiées</td></tr>
+      <tr><td class="n">72</td><td>fontes à graphite sphéroïdal à propriétés mécaniques spécifiées : 72.1 ferritiques avec résilience spécifiée ; 72.2 ferritiques (résistance, limite d'élasticité et allongement, ou dureté) ; 72.3 EN-GJS-500-7 et EN-GJS-450-10 si la perlite atteint 20 % ; 72.4 perlitiques</td></tr>
+      <tr><td class="n">73</td><td>fontes malléables</td></tr>
+      <tr><td class="n">74</td><td>fontes ausferritiques (ADI)</td></tr>
+      <tr><td class="n">75</td><td>fontes austénitiques</td></tr>
+      <tr><td class="n">76</td><td>autres fontes (les fontes GV, par exemple)</td></tr>
+    </table></div>
+    <p><b>Les normes du soudage des fontes.</b> L'<b>EN 1011-8</b> donne les recommandations pour le soudage par fusion des pièces en fonte non alliée et faiblement alliée (EN 1561, EN 1562, EN 1563) : préchauffage et température entre passes, énergie, produits d'apport, traitement après soudage ; elle ne traite pas l'assemblage d'une fonte avec un autre métal. L'<b>ISO 15614-3</b> qualifie les modes opératoires de soudage de production et de réparation de ces fontes (EN 1561 à EN 1564), et ses principes s'appliquent au soudage fonte-acier. L'<b>ISO 1071</b> classe les produits d'apport (cours 4).</p>
+    <p><b>Les facteurs liés à la pièce.</b> Une pièce ancienne ou ayant servi a pu absorber de l'huile dans ses porosités, contenir des inclusions de sable ou des retassures, porter une peau de fonderie oxydée, ou s'être graphitisée par corrosion (cours 2). Ces défauts donnent des soufflures et des manques de liaison.</p>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Cause de porosités</th><th>Remède</th></tr>
+      <tr><td>Air et humidité ambiants</td><td>préparation soignée, protection du bain</td></tr>
+      <tr><td>Humidité des enrobages ou des flux</td><td>étuvage des produits d'apport</td></tr>
+      <tr><td>Huile, graisse absorbées par la fonte</td><td>dégraissage, chauffage pour brûler les hydrocarbures</td></tr>
+      <tr><td>Rouille, oxydes, laitier, sable</td><td>meulage ou gougeage jusqu'au métal sain ; laisser le bain dégazer</td></tr>
+    </table></div>
+    <div class="def"><b>📖 Soudabilité</b> : aptitude d'un matériau à être soudé, avec un mode opératoire donné, en donnant un assemblage qui remplit sa fonction. Pour une fonte, elle dépend surtout de sa ductilité, de la forme de son graphite, de sa matrice et de son état (propre ou imprégné).</div>
+    <div class="warn"><b>⚠️ Piège : « la fonte ne se soude pas ».</b> C'est faux pour la plupart des fontes grises et GS : elles se soudent avec un mode opératoire adapté et qualifié. C'est vrai pour les fontes blanches, les fontes au chrome ou au silicium et, en pratique, pour les ADI, dont la soudure détruit l'ausferrite.</div>
+    <div class="tip">💡 <b>GV : groupe 76.</b> Les fontes à graphite vermiculaire n'ont pas de groupe propre dans l'ISO/TR 15608 : elles tombent dans le groupe des « autres fontes ». Leur soudabilité est proche de celle des GL et des GS perlitiques.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « graphite gardé, traction évitée »</b> : les deux objectifs de tout mode opératoire de soudage de fonte.</div>
+    <div class="weld"><b>🔥 Le premier geste : regarder et sentir</b>
+      <p>Avant de souder une pièce en fonte usagée, chauffe une petite zone au chalumeau : si elle « transpire » de l'huile ou fume, la pièce est imprégnée, il faut la dégraisser et la chauffer plus longtemps. Meule une facette : une cassure grise et un graphite visible rassurent ; une zone blanche, brillante et très dure annonce une fonte blanche ou trempée, à ne pas souder.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c2">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">2</div>
+    <div class="c-title"><h2>Les zones d'une soudure de fonte</h2><p>Zone fondue, zone partiellement fondue, zone affectée : la trace de la température maximale</p></div>
+    <div class="c-img"><span class="ico">🏕️</span><span><small>Image à retenir</small>Le feu de camp : braises au centre, zone pâteuse au bord, sol cuit autour ; la fonte garde la trace de la chaleur reçue</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le feu de camp</span></div>
+    <p>Autour d'un feu de camp, le sol garde la trace de la chaleur : braises au centre, cendre pâteuse au bord, terre cuite plus loin. Autour d'un cordon, chaque point de la fonte a atteint une <b>température maximale</b> qui dépend de sa distance au bain, et cette température décide de ce qu'il devient :</p>
+    <ul>
+      <li>la <b>zone fondue</b> (ZF) : métal d'apport mélangé à de la fonte fondue. Sa structure dépend du métal d'apport et de la dilution (chapitre 3) ;</li>
+      <li>la <b>zone partiellement fondue</b> (ZPF) : chauffée entre le palier eutectique (vers 1 150 °C) et le liquidus de la fonte (vers 1 200 °C). Le liquide eutectique y apparaît autour du graphite, sans que la zone fonde entièrement. Le métal d'apport n'y arrive pas, et ce liquide refroidit très vite contre la pièce froide : il se solidifie en <span class="tau">fonte blanche</span> (lédéburite). C'est la zone la plus dure et la plus fragile ;</li>
+      <li>la <b>zone affectée thermiquement</b> (ZAT) : chauffée dans le domaine de l'austénite sans fondre. Le graphite voisin se dissout en partie, l'austénite s'enrichit en carbone, et un refroidissement rapide la transforme en <span class="tau">martensite</span> dure. Plus loin, une bande intercritique ne s'austénitise qu'en partie ;</li>
+      <li>le <b>métal de base</b>, chauffé sous la transformation, garde sa structure.</li>
+    </ul>
+    <p>Un acier n'a pratiquement pas de zone partiellement fondue : son intervalle de solidification est étroit. La fonte, avec son eutectique et ses écarts entre solidus et liquidus, en a toujours une.</p>
+  </div>
+
+  <div class="lab" id="m2">
+    <p class="lab-h">Manipulation 2 : la température maximale et les zones</p>
+    <p class="lab-sub">Règle l'énergie de soudage Q, l'épaisseur t et le préchauffage T<sub>0</sub>. La courbe donne la température maximale atteinte à la distance y de la ligne de fusion (formule d'Adams, tôle soudée en pleine épaisseur) ; les seuils de la fonte découpent les zones, reportées en coupe sous le graphique. ▶ Souder fait monter l'énergie. Fonte non alliée à environ 2 % de silicium. Modèle pédagogique.</p>
+    <div class="ctrl"><label for="m2Q">Énergie <span class="mat">Q</span></label><input type="range" id="m2Q" class="r-mat" min="0.3" max="3" step="0.1" value="1"><output id="m2Qo"></output></div>
+    <div class="ctrl"><label for="m2t">Épaisseur <span class="mat">t</span></label><input type="range" id="m2t" class="r-mat" min="5" max="40" step="1" value="10"><output id="m2to"></output></div>
+    <div class="ctrl"><label for="m2T">Préchauffage <span class="mat">T<sub>0</sub></span></label><input type="range" id="m2T" class="r-mat" min="20" max="600" step="10" value="20"><output id="m2To"></output></div>
+    <div class="btns"><button class="btn play" id="m2play" type="button">▶ Souder</button></div>
+    <svg id="m2svg" role="img" aria-label="Température maximale en fonction de la distance à la ligne de fusion, et zones de la soudure"></svg>
+    <div class="readout" id="m2r"></div>
+    <p class="status" id="m2msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">formule d'Adams, structures des zones, diffusion du carbone</span></div>
+    <p><b>La température maximale.</b> Pour une tôle soudée en pleine épaisseur, la formule d'Adams relie la température maximale T<sub>p</sub> atteinte à une distance y de la ligne de fusion à l'énergie de soudage et à l'épaisseur :</p>
+    <div class="fx"><div class="big"><span class="frac"><span>1</span><span><span class="sig">T<sub>p</sub></span> − <span class="mat">T<sub>0</sub></span></span></span> = <span class="frac"><span>4,13·ρc·<span class="mat">t</span>·<span class="eps">y</span></span><span><span class="mat">Q</span></span></span> + <span class="frac"><span>1</span><span><span class="sig">T<sub>L</sub></span> − <span class="mat">T<sub>0</sub></span></span></span></div><p class="cap">T<sub>p</sub> : température maximale (°C) ; T<sub>0</sub> : préchauffage ; ρc ≈ 0,0044 J/(mm³·K) : capacité thermique volumique ; t : épaisseur (mm) ; y : distance à la ligne de fusion (mm) ; Q : énergie de soudage (J/mm), qui tient déjà compte du rendement thermique ; T<sub>L</sub> : température de la ligne de fusion, prise au liquidus de la fonte (≈ 1 200 °C) ; 4,13 = √(2πe).</p></div>
+    <p>En résolvant pour chaque seuil, on obtient la largeur de chaque zone. Avec Q = 1 kJ/mm, t = 10 mm et sans préchauffage : ZPF ≈ 0,21 mm, ZAT austénitisée jusqu'à ≈ 2,3 mm, bande intercritique jusqu'à ≈ 2,6 mm. Préchauffée à 300 °C, la pièce donne une ZPF de 0,36 mm et une ZAT de 4,7 mm : <b>le préchauffage élargit les zones mais ralentit leur refroidissement</b>, ce qui évite les constituants durs (chapitre 4).</p>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Zone</th><th>Température maximale</th><th>Ce qui s'y passe</th><th>Structure après refroidissement rapide</th></tr>
+      <tr><td>ZF</td><td>&gt; liquidus</td><td>mélange de métal d'apport et de fonte fondue</td><td>selon l'apport : fonte blanche, martensite, ou austénite au nickel avec graphite</td></tr>
+      <tr><td>ZPF</td><td>≈ 1 150 à 1 200 °C</td><td>liquide eutectique autour du graphite</td><td>lédéburite (fonte blanche) et martensite : dure, fragile</td></tr>
+      <tr><td>ZAT austénitisée</td><td>≈ 810 à 1 150 °C</td><td>austénite, dissolution partielle du graphite</td><td>martensite riche en carbone, autour des particules de graphite</td></tr>
+      <tr><td>ZAT intercritique</td><td>≈ 780 à 810 °C</td><td>austénitisation partielle</td><td>îlots de martensite dans la ferrite ou la perlite</td></tr>
+      <tr><td>MB</td><td>&lt; 780 °C</td><td>pas de transformation</td><td>inchangée (revenu léger)</td></tr>
+    </table></div>
+    <p><b>Le carbone voyage peu, mais assez.</b> Le carbone du graphite diffuse dans l'austénite sur une distance de l'ordre de √(D·t) : avec D ≈ 2 × 10⁻¹¹ m²/s vers 1 000 °C, environ 6 µm en 2 s, 14 µm en 10 s. Dans une GS, la martensite forme donc des <b>auréoles</b> autour des sphéroïdes ; dans une GL, des liserés le long des lamelles. Une GS perlitique, dont la matrice contient déjà du carbone, durcit davantage qu'une GS ferritique.</p>
+    <div class="def"><b>📖 Zone partiellement fondue</b> : bande du métal de base portée entre son solidus (ici le palier eutectique) et son liquidus, où coexistent liquide et solide. <b>Ligne de fusion</b> : limite entre la zone fondue et le métal de base resté solide.</div>
+    <div class="warn"><b>⚠️ Piège : le métal d'apport ne soigne pas la ZPF.</b> Un apport au nickel rend la zone fondue ductile, mais la ZPF reste de la fonte refondue : sans préchauffage, elle sort blanche. On la réduit (faible énergie, faible dilution) ou on la ralentit (préchauffage), et on la traite après soudage si besoin.</div>
+    <div class="tip">💡 <b>Où casse une soudure sur fonte ?</b> Rarement dans le cordon, presque toujours le long de la ligne de fusion, dans la ZPF ou la ZAT trempée, là où se rencontrent la dureté, la fragilité et les contraintes de retrait.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « Fondu, Pâteux, Trempé, Tranquille »</b> : ZF, ZPF, ZAT, métal de base.</div>
+    <div class="weld"><b>🔥 Lire une macrographie de réparation</b>
+      <p>Sur une coupe attaquée d'une réparation sur fonte, la ZPF apparaît comme un liseré blanc brillant le long de la ligne de fusion, et la ZAT comme une bande sombre et fine. Une filiation de dureté (cours 2 de la série Essais) y trouve couramment 500 à 700 HV sans préchauffage : c'est la mesure qui juge le mode opératoire.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c3">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">3</div>
+    <div class="c-title"><h2>Dilution et métal d'apport</h2><p>Fonte, acier ou nickel : ce que devient le carbone de la fonte dans le bain</p></div>
+    <div class="c-img"><span class="ico">🥤</span><span><small>Image à retenir</small>Le sirop dans l'eau : plus on dilue, plus le goût change ; la fonte fondue « parfume » le bain en carbone</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le sirop dans l'eau</span></div>
+    <p>Le bain de soudure est un mélange : du métal d'apport et une part de fonte fondue, la <b>dilution</b>. Or la fonte fondue apporte 3 à 4 % de carbone. Ce que devient ce carbone décide de la zone fondue :</p>
+    <ul>
+      <li><b>avec un apport en fonte</b> (soudage homogène) : la zone fondue est de la fonte. Elle sort grise si l'on refroidit lentement et si l'apport est riche en silicium, blanche sinon. C'est le choix du régime chaud ;</li>
+      <li><b>avec un apport en acier</b> : l'acier absorbe le carbone de la fonte et devient un acier très chargé, qui trempe en martensite dure et se rétracte fortement : fissures assurées, sauf pour de petites réparations sans exigence ;</li>
+      <li><b>avec un apport au nickel</b> : le nickel ne forme pas de carbures et dissout peu de carbone ; l'excès ressort en graphite. La zone fondue est une austénite au nickel, ductile, tendre et usinable, qui accepte le retrait. Le nickel-fer, à environ 55 % de nickel, est plus résistant et se dilate moins, plus près de la fonte.</li>
+    </ul>
+    <p>Mais le nickel se dilue lui aussi : trop de fonte fondue, et la teneur en nickel du bain baisse jusqu'à ce que l'austénite devienne instable. D'où la règle d'or du soudage hétérogène : <b>petite électrode, faible intensité, faible dilution</b>.</p>
+  </div>
+
+  <div class="lab" id="m3">
+    <p class="lab-h">Manipulation 3 : la dilution qui décide de la zone fondue</p>
+    <p class="lab-sub">Choisis le métal d'apport, puis règle la dilution D, part de fonte fondue dans la zone fondue (fonte de base : 3,4 % de carbone). À gauche, la coupe du cordon : en gris le métal d'apport déposé, en bleu-vert la fonte fondue. À droite, la dureté estimée de la zone fondue en fonction de la dilution. Pour l'apport en fonte, le régime choisi compte. ▶ Diluer fait monter la dilution de 5 à 60 %. Modèle pédagogique.</p>
+    <div class="btns" id="m3a">
+      <button class="btn" data-k="acier" type="button">Acier doux</button>
+      <button class="btn" data-k="ni" type="button">Nickel (≈ 95 % Ni)</button>
+      <button class="btn on" data-k="nife" type="button">Nickel-fer (≈ 55 % Ni)</button>
+      <button class="btn" data-k="fonte" type="button">Fonte</button>
+    </div>
+    <div class="btns" id="m3r">
+      <button class="btn on" data-k="froid" type="button">Régime froid</button>
+      <button class="btn" data-k="chaud" type="button">Régime chaud</button>
+    </div>
+    <div class="ctrl"><label for="m3d">Dilution <span class="mat">D</span></label><input type="range" id="m3d" class="r-mat" min="0.05" max="0.6" step="0.01" value="0.3"><output id="m3do"></output></div>
+    <div class="btns"><button class="btn play" id="m3play" type="button">▶ Diluer</button></div>
+    <svg id="m3svg" role="img" aria-label="Coupe d'un cordon montrant la dilution, et dureté de la zone fondue selon le métal d'apport"></svg>
+    <div class="readout" id="m3out"></div>
+    <p class="status" id="m3msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">règle des mélanges, stabilité de l'austénite, soufre et phosphore</span></div>
+    <p><b>La règle des mélanges.</b> La dilution se mesure sur une macrographie ; la composition de la zone fondue s'en déduit :</p>
+    <div class="fx"><div class="row"><div class="big"><span class="mat">D</span> = <span class="frac"><span>A<sub>MB</sub></span><span>A<sub>MB</sub> + A<sub>MA</sub></span></span></div><div class="big"><span class="eps">X<sub>ZF</sub></span> = <span class="mat">D</span>·X<sub>MB</sub> + (1 − <span class="mat">D</span>)·X<sub>MA</sub></div></div><p class="cap">A<sub>MB</sub>, A<sub>MA</sub> : aires de la fonte fondue et du métal d'apport déposé sur la coupe ; X : teneur d'un élément (C, Ni…) dans la zone fondue (ZF), la fonte (MB) et l'apport (MA).</p></div>
+    <p>Exemples : avec un apport en acier à 0,08 % de carbone et 30 % de dilution, la zone fondue contient 0,08 + 0,30 × (3,4 − 0,08) ≈ 1,1 % de carbone : un acier à outils trempé, au-delà de 700 HV. Avec un nickel-fer à 55 % de nickel, la zone fondue garde 0,70 × 55 ≈ 38,5 % de nickel à 30 % de dilution, mais 27,5 % seulement à 50 %. Le modèle de la manipulation considère l'austénite au nickel stable au-dessus d'environ 32 % de nickel : la dilution d'un nickel-fer doit rester sous 1 − 32/55 ≈ 42 %. Un apport à 95 % de nickel tolère beaucoup plus.</p>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Famille d'apport</th><th>Zone fondue</th><th>Points forts</th><th>Limites</th></tr>
+      <tr><td>Fonte (baguette ou électrode riche en silicium)</td><td>fonte grise, si refroidissement lent</td><td>même couleur, même usinabilité, mêmes propriétés</td><td>régime chaud obligatoire ; sinon fonte blanche</td></tr>
+      <tr><td>Nickel (≈ 85 à 98 % Ni)</td><td>austénite au nickel + graphite</td><td>la plus tendre et la plus usinable ; tolère la dilution</td><td>résistance modérée ; sensible au soufre et au phosphore</td></tr>
+      <tr><td>Nickel-fer (≈ 45 à 60 % Ni)</td><td>austénite Ni-Fe + graphite</td><td>plus résistante, dilatation plus proche de la fonte, meilleure tolérance au phosphore ; adaptée aux GS</td><td>dilution à limiter</td></tr>
+      <tr><td>Nickel-cuivre</td><td>austénite Ni-Cu</td><td>couleur proche, bonne usinabilité</td><td>sensible à la fissuration à chaud si la dilution monte</td></tr>
+      <tr><td>Acier doux</td><td>acier très chargé en carbone</td><td>bon marché</td><td>martensite, retrait fort, fissures : réservé aux réparations sans exigence</td></tr>
+    </table></div>
+    <p><b>Soufre et phosphore.</b> Avec le nickel, le soufre forme un eutectique nickel-sulfure qui fond vers 640 °C, et le phosphore un eutectique nickel-phosphore vers 870 °C : ces films liquides aux joints de grains provoquent la <b>fissuration à chaud</b> de la zone fondue. Les fontes riches en phosphore (fontes anciennes, fontes d'art) et les fortes dilutions y exposent ; le nickel-fer y résiste mieux que le nickel pur. Côté fonte, le phosphore forme aussi un eutectique phosphoreux fragile, qui refond facilement.</p>
+    <div class="def"><b>📖 Soudage homogène, hétérogène</b> : avec un métal d'apport de même nature que le métal de base (fonte sur fonte), ou de nature différente (nickel, nickel-fer, acier sur fonte). <b>Dilution</b> : part du métal de base fondu dans la zone fondue.</div>
+    <div class="warn"><b>⚠️ Piège : « une électrode acier, c'est plus solide ».</b> Sur fonte, c'est l'inverse : l'acier se charge en carbone, trempe et se rétracte plus que la fonte ; la soudure se décolle ou fissure la pièce le long de la ligne de fusion.</div>
+    <div class="tip">💡 <b>Diluer moins, c'est possible.</b> Petit diamètre, faible intensité, arc court, électrode dirigée vers le cordon déjà déposé plutôt que vers la fonte, et premières couches déposées sur les bords du chanfrein : c'est le beurrage, au cours 4.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « le nickel boit le carbone et le rend en graphite »</b> ; l'acier, lui, le garde et trempe.</div>
+    <div class="weld"><b>🔥 Choisir l'apport sur le terrain</b>
+      <p>Pour une réparation à froid sur une GL mince à usiner : nickel. Pour une GS, une pièce épaisse ou une liaison fonte-acier : nickel-fer. Pour un bâti qui doit garder couleur et propriétés et peut être chauffé entier : fonte, en régime chaud. Pour une pièce ancienne riche en phosphore : nickel-fer et dilution minimale, voire soudobrasage (cours 4).</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c4">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">4</div>
+    <div class="c-title"><h2>Régime chaud, régime froid</h2><p>Tout chauffer comme à la coulée, ou presque rien et à petites touches</p></div>
+    <div class="c-img"><span class="ico">🏺</span><span><small>Image à retenir</small>Le four du potier ou les points de couture : chauffer toute la pièce lentement, ou ne chauffer presque rien, point par point</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le four du potier, les points de couture</span></div>
+    <p>Un potier ne passe jamais une poterie de la flamme au froid : il la cuit entière dans son four et la laisse refroidir des heures. Une couturière, elle, ne tire jamais tout le tissu : elle avance à petits points. Ce sont les deux grandes façons de souder une fonte.</p>
+    <ul>
+      <li><b>Le régime chaud</b> imite la fonderie. On chauffe <b>toute la pièce</b> vers 500 à 650 °C, on la soude avec un <b>apport en fonte</b> en gardant cette température, puis on la laisse refroidir très lentement, au four ou sous isolant. Rien ne refroidit vite : ni martensite dans la zone affectée, ni fonte blanche dans la zone partiellement fondue, et une zone fondue en fonte grise. Le joint a la couleur, l'usinabilité et les propriétés de la pièce. Le prix : un four ou un chauffage lourd, des déformations possibles, des heures de travail, et un soudeur exposé à une chaleur pénible.</li>
+      <li><b>Le régime froid</b> fait l'inverse : la pièce reste presque froide. On soude avec un <b>apport au nickel ou au nickel-fer</b>, de petit diamètre, à faible intensité, en <b>cordons courts</b> de quelques centimètres, espacés, <b>martelés</b> aussitôt, en attendant que la zone refroidisse avant le cordon suivant. La zone affectée trempe, mais elle reste très étroite ; la zone fondue, ductile, accepte le retrait. C'est la méthode de la réparation sur place, sans démonter ni déformer.</li>
+      <li>Entre les deux, le <b>régime demi-chaud</b> préchauffe la zone ou la pièce vers 200 à 400 °C : la zone affectée s'adoucit, les contraintes baissent, sans les contraintes d'un vrai four.</li>
+    </ul>
+    <p>Le régime chaud <b>évite</b> les zones dures ; le régime froid les <b>accepte mais les confine</b>.</p>
+  </div>
+
+  <div class="lab" id="m4">
+    <p class="lab-h">Manipulation 4 : chaud ou froid, la dureté de la zone affectée</p>
+    <p class="lab-sub">Choisis la fonte, puis règle l'énergie de soudage Q et le préchauffage T<sub>0</sub>. À gauche, le cycle thermique d'un point de la zone affectée (temps en échelle logarithmique) : la durée t<sub>8/5</sub> de passage entre 800 et 500 °C décide de la martensite. À droite, la dureté de la zone affectée en fonction du préchauffage, avec un repère de 350 HV. Les boutons de régime chargent un réglage type. ▶ Préchauffer fait monter T<sub>0</sub>. Modèle pédagogique.</p>
+    <div class="btns" id="m4b">
+      <button class="btn" data-k="GSf" type="button">GS ferritique</button>
+      <button class="btn on" data-k="GSp" type="button">GS perlitique</button>
+      <button class="btn" data-k="GL" type="button">GL</button>
+    </div>
+    <div class="btns" id="m4p">
+      <button class="btn" data-k="froid" type="button">Régime froid</button>
+      <button class="btn" data-k="demi" type="button">Demi-chaud</button>
+      <button class="btn" data-k="chaud" type="button">Régime chaud</button>
+    </div>
+    <div class="ctrl"><label for="m4Q">Énergie <span class="mat">Q</span></label><input type="range" id="m4Q" class="r-mat" min="0.3" max="2.5" step="0.1" value="1"><output id="m4Qo"></output></div>
+    <div class="ctrl"><label for="m4T">Préchauffage <span class="mat">T<sub>0</sub></span></label><input type="range" id="m4T" class="r-mat" min="20" max="650" step="10" value="20"><output id="m4To"></output></div>
+    <div class="btns"><button class="btn play" id="m4play" type="button">▶ Préchauffer</button></div>
+    <svg id="m4svg" role="img" aria-label="Cycle thermique de la zone affectée et dureté de la zone affectée selon le préchauffage"></svg>
+    <div class="readout" id="m4r"></div>
+    <p class="status" id="m4msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">t<sub>8/5</sub>, trempe de la zone affectée, choix du régime</span></div>
+    <p><b>La durée de refroidissement.</b> Pour une pièce épaisse, où la chaleur s'évacue dans les trois directions, la solution de Rosenthal donne :</p>
+    <div class="fx"><div class="big"><span class="eps">t<sub>8/5</sub></span> = <span class="frac"><span><span class="mat">Q</span></span><span>2π·λ</span></span>·<span style="white-space:nowrap">[ <span class="frac"><span>1</span><span>500 − <span class="mat">T<sub>0</sub></span></span></span> − <span class="frac"><span>1</span><span>800 − <span class="mat">T<sub>0</sub></span></span></span> ]</span></div><p class="cap">t<sub>8/5</sub> : durée de refroidissement de 800 à 500 °C (s) ; Q : énergie de soudage (J/mm) ; λ : conductivité thermique, ≈ 0,040 W/(mm·K) dans le modèle, soit 40 W/(m·K) ; T<sub>0</sub> : préchauffage (°C). C'est la forme de la formule « 3D » de l'EN 1011-2 pour les aciers, avec la conductivité de la fonte.</p></div>
+    <p>Avec Q = 1 kJ/mm : <span class="m">Q/(2πλ) = 1 000/(2π × 0,040) ≈ 3 980 K·s</span>, d'où t<sub>8/5</sub> ≈ 3,2 s sans préchauffage, 11,9 s à 300 °C, 29,8 s à 400 °C. Le préchauffage agit beaucoup plus que l'énergie : près de 500 °C, la zone ne redescend presque plus sous 500 °C pendant le soudage, c'est le régime chaud.</p>
+    <p><b>Pourquoi la zone affectée trempe.</b> Dans l'austénite de la zone affectée, le carbone vient du graphite voisin et de la perlite de la matrice. Riche en carbone et refroidie vite, elle se transforme en martensite, souvent avec de l'austénite résiduelle. Le modèle de la manipulation écrit la part de martensite f<sub>M</sub> = 1/[1 + (t<sub>8/5</sub>/t<sub>c</sub>)²], avec une durée caractéristique t<sub>c</sub> de 6 s pour une GS ferritique (peu de carbone disponible), 10 s pour une GL et 12 s pour une GS perlitique (matrice déjà chargée en carbone), puis la dureté <span class="m">HV = HV<sub>MB</sub> + f<sub>M</sub>·(HV<sub>α′</sub> − HV<sub>MB</sub>)</span>, avec une martensite vers 600 à 700 HV. Ce ne sont pas des valeurs de norme : elles traduisent les tendances observées.</p>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Régime</th><th>Préchauffage</th><th>Apport</th><th>Exécution</th><th>Résultat</th></tr>
+      <tr><td>Chaud</td><td>pièce entière, ≈ 500 à 650 °C, tenue pendant le soudage</td><td>fonte (baguette ou électrode riches en silicium)</td><td>chalumeau ou arc ; refroidissement au four ou sous isolant</td><td>joint homogène, gris, usinable ; pas de martensite</td></tr>
+      <tr><td>Demi-chaud</td><td>≈ 200 à 400 °C, zone ou pièce</td><td>nickel-fer, nickel, parfois fonte</td><td>arc ; température entre passes au moins égale au préchauffage</td><td>zone affectée adoucie, contraintes réduites</td></tr>
+      <tr><td>Froid</td><td>aucun, ou léger chauffage pour sécher</td><td>nickel, nickel-fer, petit diamètre</td><td>cordons courts espacés, martelage, zone à peine tiède avant le cordon suivant</td><td>pièce non déformée ; zones dures mais étroites</td></tr>
+    </table></div>
+    <div class="def"><b>📖 Régime chaud, régime froid</b> : stratégies de soudage des fontes. Le régime chaud supprime les constituants durs par un préchauffage élevé de toute la pièce et un refroidissement lent ; le régime froid limite l'apport de chaleur pour réduire la largeur des zones dures et compte sur un métal fondu ductile pour accepter le retrait.</div>
+    <div class="warn"><b>⚠️ Piège : préchauffer, puis laisser retomber.</b> En régime chaud ou demi-chaud, la température entre passes doit rester au moins égale au préchauffage : une pièce qui refroidit pendant une pause revient au cas sans préchauffage. En régime froid, c'est l'inverse : on attend que la zone refroidisse avant de reprendre.</div>
+    <div class="tip">💡 <b>Le même t<sub>8/5</sub>, deux chemins.</b> Pour une même dureté, on peut augmenter Q ou T<sub>0</sub>. Mais une forte énergie élargit les zones et augmente la dilution (chapitre 3) : sur fonte, on préfère en général préchauffer plutôt que « souder chaud » avec beaucoup d'énergie.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « chaud comme le fondeur, froid comme la couturière »</b> : tout chauffer et tout laisser refroidir, ou avancer à petits points sans tirer sur le tissu.</div>
+    <div class="weld"><b>🔥 Choisir son régime</b>
+      <p>Pièce neuve en fonderie, défaut à reboucher avant usinage, exigence d'étanchéité ou de couleur : régime chaud, si la pièce entre dans un four. Carter fissuré sur une machine, bâti qu'on ne peut ni démonter ni déformer : régime froid au nickel-fer. Pièce épaisse en GS perlitique, très bridée : demi-chaud au nickel-fer. Dans tous les cas, le mode opératoire se qualifie (ISO 15614-3) et la dureté se contrôle.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c5">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">5</div>
+    <div class="c-title"><h2>Préchauffer</h2><p>Pourquoi, combien, comment, et où mesurer</p></div>
+    <div class="c-img"><span class="ico">🍳</span><span><small>Image à retenir</small>La poêle en fonte : posée froide sur une flamme vive, elle peut se fendre ; on la chauffe doucement et partout</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la poêle en fonte</span></div>
+    <p>Une poêle en fonte, froide, posée sur une flamme vive, peut se fendre : son centre se dilate, son bord froid le retient. On la chauffe doucement, sur toute sa surface. Le préchauffage d'une pièce en fonte suit la même règle : <b>lentement, partout, et sans relâcher</b>. Il a quatre effets :</p>
+    <ul>
+      <li>il <b>ralentit le refroidissement</b> : moins de martensite dans la zone affectée, moins de fonte blanche dans la zone partiellement fondue (chapitres 2 et 4) ;</li>
+      <li>il <b>réduit les écarts de température</b> entre la soudure et la pièce, donc le retrait imposé et les contraintes (chapitre 1) ;</li>
+      <li>il <b>dilate toute la pièce</b> avec la soudure, qui se rétractent ensuite ensemble ;</li>
+      <li>il <b>sèche</b> la pièce et <b>brûle</b> les huiles absorbées, sources de porosités.</li>
+    </ul>
+    <p>Combien ? Cela dépend de la fonte, de sa composition, de son épaisseur, de son bridage, du procédé et du régime choisi. La composition s'évalue par un <b>carbone équivalent de soudage</b> CE<sub>s</sub> : plus il est élevé, plus la fonte trempe facilement.</p>
+  </div>
+
+  <div class="lab" id="m5">
+    <p class="lab-h">Manipulation 5 : le carbone équivalent de soudage</p>
+    <p class="lab-sub">Choisis une fonte type, puis modifie sa teneur en carbone, silicium, phosphore et chrome + molybdène (les autres éléments restent ceux de la fonte type). À gauche, la contribution de chaque élément au CE<sub>s</sub> ; à droite, la tendance du préchauffage du modèle, T<sub>p</sub> ≈ 230·(CE<sub>s</sub> − 3), bornée de 20 à 450 °C. ▶ Enrichir en carbone fait monter le carbone. Tendance pédagogique, pas une valeur de norme.</p>
+    <div class="btns" id="m5p">
+      <button class="btn on" data-k="gl" type="button">EN-GJL-250</button>
+      <button class="btn" data-k="glp" type="button">GL riche en P</button>
+      <button class="btn" data-k="gs4" type="button">EN-GJS-400-15</button>
+      <button class="btn" data-k="gs7" type="button">EN-GJS-700-2</button>
+      <button class="btn" data-k="glcr" type="button">GL au Cr-Mo</button>
+      <button class="btn" data-k="adi" type="button">GS au Ni-Mo</button>
+    </div>
+    <div class="ctrl"><label for="m5C"><span class="mat">C</span> (%)</label><input type="range" id="m5C" class="r-mat" min="2.5" max="4" step="0.05" value="3.3"><output id="m5Co"></output></div>
+    <div class="ctrl"><label for="m5Si"><span class="mat">Si</span> (%)</label><input type="range" id="m5Si" class="r-mat" min="1" max="3" step="0.05" value="2"><output id="m5Sio"></output></div>
+    <div class="ctrl"><label for="m5P"><span class="mat">P</span> (%)</label><input type="range" id="m5P" class="r-mat" min="0.02" max="1" step="0.01" value="0.06"><output id="m5Po"></output></div>
+    <div class="ctrl"><label for="m5Cr"><span class="mat">Cr + Mo</span> (%)</label><input type="range" id="m5Cr" class="r-mat" min="0" max="1" step="0.05" value="0.1"><output id="m5Cro"></output></div>
+    <div class="btns"><button class="btn play" id="m5play" type="button">▶ Enrichir en carbone</button></div>
+    <svg id="m5svg" role="img" aria-label="Contributions des éléments au carbone équivalent de soudage et tendance du préchauffage"></svg>
+    <div class="readout" id="m5r"></div>
+    <p class="status" id="m5msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">CE<sub>s</sub>, contraintes thermiques, mesure ISO 13916</span></div>
+    <p><b>Le carbone équivalent de soudage.</b> Des guides de soudage des fontes proposent un indice de composition qui pèse l'effet de chaque élément sur la trempe de la zone soudée (teneurs en % massique) :</p>
+    <div class="fx"><div class="big"><span class="mat">CE<sub>s</sub></span> = C + 0,31·Si + 0,33·P + 0,45·S − 0,028·Mn + Mo + Cr − 0,02·Ni − 0,01·Cu</div><p class="cap">Le carbone domine, puis le silicium ; le chrome et le molybdène, formeurs de carbures, comptent pour un point de carbone par point de teneur ; le nickel et le cuivre, graphitisants, le réduisent un peu. Exemple d'une EN-GJL-250 (C 3,3 ; Si 2,0 ; Mn 0,6 ; P 0,06 ; S 0,09 ; Cr 0,1 ; Cu 0,3) : CE<sub>s</sub> ≈ 4,06.</p></div>
+    <p>Cet indice ne voit que la composition. Il ignore la forme du graphite, la matrice et la ductilité : une GS ferritique a un CE<sub>s</sub> élevé à cause de son carbone et de son silicium, mais elle tolère bien mieux le retrait qu'une GL (chapitre 1) et sa zone affectée trempe moins (chapitre 4). Le préchauffage se choisit donc avec le CE<sub>s</sub>, la famille, l'épaisseur, le bridage et le régime, puis il se qualifie.</p>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Situation</th><th>Repère courant de préchauffage</th></tr>
+      <tr><td>Régime froid, apport nickel ou nickel-fer, pièce peu bridée</td><td>aucun, ou léger chauffage pour sécher la pièce</td></tr>
+      <tr><td>GS ferritique, apport nickel-fer</td><td>de l'ambiante à ≈ 200 °C selon l'épaisseur et le bridage</td></tr>
+      <tr><td>GL ou GS perlitique, pièce épaisse ou bridée, apport nickel-fer</td><td>≈ 200 à 400 °C (demi-chaud)</td></tr>
+      <tr><td>Apport en fonte, joint homogène</td><td>≈ 500 à 650 °C, pièce entière (régime chaud)</td></tr>
+    </table></div>
+    <p class="mut" style="font-size:.9rem">Ces fourchettes varient d'un guide à l'autre ; les recommandations de l'EN 1011-8 et le mode opératoire qualifié font foi.</p>
+    <p><b>Préchauffer sans fissurer.</b> Un écart de température ΔT entre deux zones d'une pièce bridée crée une contrainte qui peut atteindre <span class="m">σ ≈ E·α·ΔT</span>. Pour une GL (E ≈ 110 GPa, α ≈ 12 × 10⁻⁶ K⁻¹) et ΔT = 200 K : σ ≈ 110 000 × 12 × 10⁻⁶ × 200 ≈ 264 MPa, de l'ordre de sa résistance. Un chauffage trop rapide ou trop local peut donc casser la pièce avant même le premier cordon.</p>
+    <svg id="f5svg" role="img" aria-label="Roue à rayons fissurée : chauffer seulement le rayon le met en traction au refroidissement ; chauffer aussi la jante le laisse libre" style="display:block;width:100%;height:auto"></svg>
+    <p class="mut" style="font-size:.9rem;text-align:center">Le rayon fissuré d'une roue : chauffé seul, il se dilate contre la jante froide, puis se rétracte et se retrouve en traction ; en chauffant aussi la jante de part et d'autre, toute la roue se dilate et se rétracte avec lui.</p>
+    <p><b>Mesurer selon l'ISO 13916.</b> Pour une épaisseur t jusqu'à 50 mm, la température se mesure à une distance de 4·t du bord du chanfrein, sans dépasser 50 mm ; au-delà de 50 mm d'épaisseur, à 75 mm au moins. On mesure de préférence sur la face opposée au chauffage, et, après avoir retiré la source de chaleur, on laisse la température s'égaliser environ 2 min par 25 mm d'épaisseur. Instruments : crayons thermosensibles (qui fondent à une température donnée), thermomètres de contact, thermocouples, pyromètres infrarouges (attention à l'émissivité de la surface).</p>
+    <div class="def"><b>📖 Préchauffage, température entre passes</b> : température de la zone à souder juste avant le soudage ; température de la zone soudée juste avant le dépôt de la passe suivante. Un mode opératoire peut fixer une valeur minimale (régimes chaud et demi-chaud) ou maximale (régime froid).</div>
+    <div class="warn"><b>⚠️ Piège : le chalumeau braqué sur la fissure.</b> Un préchauffage local et rapide d'une pièce bridée (rayon de roue, nervure de bâti, bride de carter) peut agrandir la fissure qu'on veut réparer. On chauffe large, lentement, et l'on pense aux parties qui retiennent la zone.</div>
+    <div class="tip">💡 <b>Deux crayons valent mieux qu'un.</b> Un crayon au préchauffage minimal doit fondre ; un crayon à la température maximale ne doit pas fondre : la zone est dans la fourchette.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « lentement, partout, longtemps »</b> : monter doucement, chauffer large, tenir la température jusqu'à la fin du soudage.</div>
+    <div class="weld"><b>🔥 Les moyens de chauffage</b>
+      <p>Chalumeaux et rampes à gaz, nattes chauffantes électriques à résistances, induction, fours, voire four de fortune en briques réfractaires autour de la pièce. Pour les grandes pièces, on chauffe plusieurs zones à la fois et on protège la pièce par des couvertures isolantes pour éviter qu'elle ne se refroidisse pendant le soudage.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c6">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">6</div>
+    <div class="c-title"><h2>Refroidir, marteler, traiter</h2><p>Finir la soudure sans la fissurer : refroidissement lent, martelage, traitement après soudage</p></div>
+    <div class="c-img"><span class="ico">🔨</span><span><small>Image à retenir</small>Le marteau et la couverture : étirer le cordon tant qu'il est chaud, puis border la pièce et la laisser refroidir</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le marteau et la couverture</span></div>
+    <p>La soudure est faite, mais la fonte n'est pas encore sauvée : beaucoup de réparations fissurent pendant le refroidissement, parfois des heures après. Trois gestes finissent le travail.</p>
+    <ul>
+      <li><b>Refroidir lentement.</b> On borde la pièce de couvertures isolantes, on l'enterre dans du sable sec ou de la vermiculite, ou on la laisse refroidir dans le four éteint. Moins d'écart de température, moins de contraintes, moins de constituants durs.</li>
+      <li><b>Marteler.</b> Juste après chaque cordon court, tant qu'il est chaud, on le frappe à petits coups rapides avec un marteau à panne ronde ou un outil pneumatique. Le métal déposé s'étire et compense son retrait : au lieu de tirer sur la fonte, il se retrouve plutôt comprimé. On ne martèle que des dépôts ductiles (nickel, nickel-fer), jamais un dépôt en fonte, ni la fonte elle-même.</li>
+      <li><b>Traiter après soudage</b> si nécessaire : un <b>détensionnement</b> relâche les contraintes et revient la martensite ; une <b>ferritisation</b> adoucit la zone affectée et la matrice ; un <b>recuit de graphitisation</b>, plus chaud, décompose les carbures de la zone partiellement fondue.</li>
+    </ul>
+    <p>Enfin, l'ordre de soudage compte : cordons courts, alternés d'une extrémité à l'autre ou en pas de pèlerin (chaque cordon déposé en reculant vers le précédent), pour ne jamais accumuler la chaleur ni le retrait au même endroit.</p>
+  </div>
+
+  <div class="lab" id="m6">
+    <p class="lab-h">Manipulation 6 : le traitement après soudage</p>
+    <p class="lab-sub">Règle la température de maintien et sa durée. À gauche, le cycle du traitement (montée à 100 °C/h, refroidissement au four à 55 °C/h jusqu'à 315 °C puis à l'air, vitesses de repère) et les domaines de température ; à droite, ce que le traitement change pour une soudure sur GS perlitique : contraintes relâchées, dureté de la zone affectée, ferritisation de la matrice, carbures de la zone partiellement fondue décomposés. ▶ Monter en température balaie le maintien de 450 à 950 °C. Modèle pédagogique.</p>
+    <div class="btns" id="m6p">
+      <button class="btn on" data-k="det" type="button">Détensionner</button>
+      <button class="btn" data-k="fer" type="button">Ferritiser</button>
+      <button class="btn" data-k="gra" type="button">Graphitiser</button>
+    </div>
+    <div class="ctrl"><label for="m6T">Maintien <span class="mat">T</span></label><input type="range" id="m6T" class="r-mat" min="450" max="950" step="10" value="600"><output id="m6To"></output></div>
+    <div class="ctrl"><label for="m6t">Durée <span class="mat">t</span></label><input type="range" id="m6t" class="r-mat" min="0.5" max="8" step="0.5" value="2"><output id="m6to"></output></div>
+    <div class="btns"><button class="btn play" id="m6play" type="button">▶ Monter en température</button></div>
+    <svg id="m6svg" role="img" aria-label="Cycle du traitement après soudage et effets sur les contraintes, la dureté, la matrice et les carbures"></svg>
+    <div class="readout" id="m6r"></div>
+    <p class="status" id="m6msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">paramètre de revenu, domaines de traitement</span></div>
+    <p><b>Température et durée s'échangent.</b> Le revenu de la martensite dépend de la température et de la durée de maintien à travers le paramètre de Hollomon et Jaffe :</p>
+    <div class="fx"><div class="big"><span class="eps">P</span> = <span class="mat">T</span>·(20 + log <span class="mat">t</span>)·10⁻³</div><p class="cap">T : température de maintien en kelvins ; t : durée en heures ; log : logarithme décimal ; 20 : constante courante pour les aciers, reprise ici. Deux traitements de même P donnent à peu près le même revenu.</p></div>
+    <p>À 600 °C pendant 1 h : P = 873 × 20 × 10⁻³ ≈ 17,5. Le même revenu demande environ 5 min à 650 °C, mais plus de 16 h à 550 °C : la température compte bien plus que la durée.</p>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Traitement</th><th>Domaine repère</th><th>Effet</th><th>Quand</th></tr>
+      <tr><td>Détensionnement</td><td>≈ 600 à 650 °C</td><td>relâche les contraintes, revient la martensite ; matrice conservée</td><td>pièces bridées, épaisses, réparations importantes</td></tr>
+      <tr><td>Ferritisation (recuit sous-critique)</td><td>≈ 700 à 760 °C</td><td>décompose la perlite en ferrite et graphite ; adoucit la zone affectée, rend la ductilité</td><td>GS ferritiques ; usinage ; mais une GS perlitique perd sa résistance</td></tr>
+      <tr><td>Recuit de graphitisation</td><td>≈ 900 à 950 °C, puis refroidissement lent</td><td>décompose les carbures de la zone partiellement fondue et de la zone fondue en fonte</td><td>après soudage homogène, ou ZPF trop dure à usiner</td></tr>
+      <tr><td>Normalisation</td><td>≈ 870 à 950 °C, puis refroidissement à l'air</td><td>redonne une matrice perlitique uniforme</td><td>GS ou GL perlitiques dont il faut garder la résistance</td></tr>
+    </table></div>
+    <p>Repères courants : un maintien de l'ordre de 1 h par 25 mm d'épaisseur, puis un refroidissement au four vers 55 °C/h jusqu'à environ 315 °C, et à l'air ensuite. Le détensionnement après soudage est un peu plus chaud que celui de fonderie (500 à 600 °C, cours 2) : il doit aussi revenir la martensite de la zone affectée. Montée et descente se font lentement, pour ne pas recréer les contraintes qu'on veut éliminer (σ ≈ E·α·ΔT, chapitre 5). Au-dessus du domaine intercritique, vers 780 à 810 °C pour une fonte à 2 % de silicium, la matrice redevient austénite : c'est le refroidissement qui décide alors de la structure, et un refroidissement trop rapide recrée de la martensite.</p>
+    <div class="def"><b>📖 Martelage</b> : déformation plastique à froid ou à chaud de la surface d'un cordon par des chocs répétés, qui allonge le métal déposé et réduit ses contraintes résiduelles de traction. <b>TTAS</b> : traitement thermique après soudage.</div>
+    <div class="warn"><b>⚠️ Piège : ferritiser une nuance perlitique.</b> Un recuit vers 720 °C adoucit la zone affectée, mais il transforme aussi la perlite de toute la pièce : une EN-GJS-700-2 n'atteint plus sa résistance. Pour elle, on détensionne, ou l'on normalise si la pièce entière peut être traitée.</div>
+    <div class="tip">💡 <b>Le premier et le dernier cordon.</b> On évite de marteler la première passe sur la fonte, qui risquerait de fissurer la zone partiellement fondue, et on ne martèle jamais un dépôt fragile. Le martelage se fait tant que le dépôt est chaud, juste après chaque cordon court.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « 600 détend, 720 ferritise, 900 graphitise »</b>.</div>
+    <div class="weld"><b>🔥 Contrôler le résultat</b>
+      <p>Après la réparation : examen visuel, ressuage ou magnétoscopie (pour les fontes ferritiques et perlitiques) pour chercher les fissures le long de la ligne de fusion, filiation de dureté sur l'éprouvette de qualification, et parfois épreuve d'étanchéité. Une fissure qui apparaît plusieurs heures après la fin du soudage signe un refroidissement trop rapide ou trop de bridage : on revoit le préchauffage, la séquence et le refroidissement.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="exos">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✎</div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Six exercices et un défi, du retrait bridé au traitement après soudage</p></div>
+    <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de musculation : on ne progresse qu'en soulevant soi-même</span></div>
+  </div>
+  <div class="lv lv1"><div class="lv-h">👁 Mode d'emploi <span class="tag">formule littérale, puis valeurs, puis unités</span></div>
+    <p>Cherche chaque question sur papier avant d'ouvrir la correction. Les valeurs viennent des formules du cours et des modèles des manipulations ; le défi se rejoue dans la manipulation 4.</p>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 1 : le barreau bridé <span class="lvtag">N1 · chapitre 1</span></h4>
+    <p>Modèle de la manipulation 1 : α = 12 × 10⁻⁶ K⁻¹, T<sub>r</sub> = 650 °C, bridage b = 1.</p>
+    <p class="q"><b>a)</b> Quelle déformation le retrait impose-t-il sans préchauffage (T<sub>0</sub> = 20 °C) ?</p>
+    <p class="q"><b>b)</b> Quelle déformation une EN-GJL-250 peut-elle encaisser (R<sub>m</sub> = 250 MPa, E = 110 GPa, A = 0,3 %) ? Conclus.</p>
+    <p class="q"><b>c)</b> Même question pour une EN-GJS-400-15 (R<sub>m</sub> = 400 MPa, E = 169 GPa, A = 15 %).</p>
+    <p class="q"><b>d)</b> À partir de quel préchauffage la GL tient-elle tout juste ? Et avec 300 °C ?</p>
+    <p class="q"><b>e)</b> Une fonte blanche (R<sub>m</sub> = 350 MPa, E = 170 GPa, A = 0) préchauffée à 300 °C tient-elle ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">ε = α·(T<sub>r</sub> − T<sub>0</sub>)·b = 12 × 10⁻⁶ × 630 × 1 ≈ 7,6 × 10⁻³</span>, soit <b>0,76 %</b>.</p>
+      <p><b>b)</b> <span class="m">R<sub>m</sub>/E + A = 250/110 000 + 0,003 ≈ 0,0023 + 0,003 = 0,53 %</span>. La déformation imposée est 1,43 fois plus grande : <b>la GL fissure</b>.</p>
+      <p><b>c)</b> <span class="m">400/169 000 + 0,15 ≈ 15,2 %</span> : vingt fois plus que nécessaire, la GS ferritique encaisse sans difficulté.</p>
+      <p><b>d)</b> Limite : <span class="m">650 − T<sub>0</sub> = 0,00527/(12 × 10⁻⁶) ≈ 439 K</span>, soit <b>T<sub>0</sub> ≈ 211 °C</b>. À 300 °C : ε = 12 × 10⁻⁶ × 350 = 0,42 %, soit 80 % de la capacité : elle tient, avec une marge.</p>
+      <p><b>e)</b> Capacité : 350/170 000 ≈ 0,21 % ; imposée : 0,42 %, deux fois trop : <b>elle fissure</b>. Il faudrait près de 480 °C dans ce modèle, et sa zone fondue resterait fragile : on ne soude pas une fonte blanche pour l'assembler.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 2 : la largeur des zones <span class="lvtag">N2 · chapitre 2</span></h4>
+    <p>Formule d'Adams, tôle de t = 10 mm, ρc = 0,0044 J/(mm³·K), T<sub>L</sub> = 1 200 °C ; seuils : 1 150 °C (ZPF), 810 °C (ZAT austénitisée), 780 °C (bande intercritique).</p>
+    <p class="q"><b>a)</b> Avec Q = 1 kJ/mm et T<sub>0</sub> = 20 °C, calcule la largeur de la ZPF et l'étendue de la ZAT austénitisée et de la bande intercritique.</p>
+    <p class="q"><b>b)</b> Même calcul avec T<sub>0</sub> = 300 °C.</p>
+    <p class="q"><b>c)</b> Que deviennent les largeurs du a) avec Q = 0,5 kJ/mm ?</p>
+    <p class="q"><b>d)</b> Le préchauffage élargit les zones. Pourquoi est-il quand même bénéfique ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p>On isole y : <span class="m">y = Q/(4,13·ρc·t) × [1/(T − T<sub>0</sub>) − 1/(T<sub>L</sub> − T<sub>0</sub>)]</span>, avec <span class="m">1 000/(4,13 × 0,0044 × 10) ≈ 5 503 mm·K</span>.</p>
+      <p><b>a)</b> ZPF : 5 503 × (1/1 130 − 1/1 180) ≈ <b>0,21 mm</b> ; ZAT : 5 503 × (1/790 − 1/1 180) ≈ <b>2,3 mm</b> ; bande intercritique jusqu'à 5 503 × (1/760 − 1/1 180) ≈ <b>2,6 mm</b>.</p>
+      <p><b>b)</b> ZPF : 5 503 × (1/850 − 1/900) ≈ <b>0,36 mm</b> ; ZAT : 5 503 × (1/510 − 1/900) ≈ <b>4,7 mm</b> ; intercritique jusqu'à 5 503 × (1/480 − 1/900) ≈ <b>5,4 mm</b>.</p>
+      <p><b>c)</b> y est proportionnel à Q : tout est divisé par deux, ZPF ≈ 0,10 mm, ZAT ≈ 1,2 mm, intercritique ≈ 1,3 mm. C'est l'idée du régime froid.</p>
+      <p><b>d)</b> Ce qui fragilise, ce n'est pas la largeur mais la structure : préchauffée, la zone refroidit beaucoup plus lentement, forme moins de martensite et de fonte blanche, et le retrait imposé est plus faible (exercice 1).</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 3 : la dilution <span class="lvtag">N2 · chapitre 3</span></h4>
+    <p>Fonte de base à 3,4 % de carbone.</p>
+    <p class="q"><b>a)</b> Sur une macrographie, la fonte fondue occupe 12 mm² et le métal d'apport déposé 28 mm². Quelle est la dilution ?</p>
+    <p class="q"><b>b)</b> Avec un apport en acier à 0,08 % de carbone et cette dilution, quelle est la teneur en carbone de la zone fondue ? Conséquence ?</p>
+    <p class="q"><b>c)</b> Avec un nickel-fer à 55 % de nickel, quelle teneur en nickel à cette dilution ? À 50 % ?</p>
+    <p class="q"><b>d)</b> Quelle dilution maximale garde au moins 32 % de nickel (seuil du modèle) ?</p>
+    <p class="q"><b>e)</b> Et avec un apport à 95 % de nickel, à 50 % de dilution ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">D = A<sub>MB</sub>/(A<sub>MB</sub> + A<sub>MA</sub>) = 12/(12 + 28) = 0,30</span>, soit <b>30 %</b>.</p>
+      <p><b>b)</b> <span class="m">C<sub>ZF</sub> = 0,30 × 3,4 + 0,70 × 0,08 ≈ 1,08 %</span> : un acier hypereutectoïde qui trempe en martensite très dure (plus de 700 HV) et se rétracte fortement. Fissures quasi certaines.</p>
+      <p><b>c)</b> <span class="m">Ni<sub>ZF</sub> = 0,70 × 55 = 38,5 %</span> ; à 50 % de dilution : 0,50 × 55 = <b>27,5 %</b>, sous le seuil : l'austénite n'est plus stable, la zone fondue durcit.</p>
+      <p><b>d)</b> <span class="m">(1 − D) × 55 ≥ 32</span> donne <b>D ≤ 1 − 32/55 ≈ 42 %</b>.</p>
+      <p><b>e)</b> 0,50 × 95 = <b>47,5 %</b> de nickel : bien au-dessus du seuil. Le nickel tolère plus de dilution que le nickel-fer.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 4 : la durée de refroidissement <span class="lvtag">N2 · chapitre 4</span></h4>
+    <p>Pièce épaisse, λ = 0,040 W/(mm·K).</p>
+    <p class="q"><b>a)</b> Calcule t<sub>8/5</sub> pour Q = 1 kJ/mm sans préchauffage (T<sub>0</sub> = 20 °C).</p>
+    <p class="q"><b>b)</b> Même calcul à T<sub>0</sub> = 300 °C, puis à 400 °C.</p>
+    <p class="q"><b>c)</b> Quel préchauffage donne t<sub>8/5</sub> = 36 s avec Q = 1 kJ/mm ?</p>
+    <p class="q"><b>d)</b> Sans préchauffage, que donne une énergie doublée ? Compare.</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">Q/(2πλ) = 1 000/(2π × 0,040) ≈ 3 979 K·s</span> ; <span class="m">t<sub>8/5</sub> = 3 979 × (1/480 − 1/780) ≈ 3 979 × 8,01 × 10⁻⁴ ≈ 3,2 s</span>.</p>
+      <p><b>b)</b> À 300 °C : 3 979 × (1/200 − 1/500) = 3 979 × 0,003 ≈ <b>11,9 s</b> ; à 400 °C : 3 979 × (1/100 − 1/400) ≈ <b>29,8 s</b>.</p>
+      <p><b>c)</b> <span class="m">1/(500 − T<sub>0</sub>) − 1/(800 − T<sub>0</sub>) = 300/[(500 − T<sub>0</sub>)(800 − T<sub>0</sub>)]</span>, donc <span class="m">(500 − T<sub>0</sub>)(800 − T<sub>0</sub>) = 300 × 3 979/36 ≈ 33 160</span>. Avec x = 500 − T<sub>0</sub> : x² + 300·x − 33 160 = 0, x ≈ 86, d'où <b>T<sub>0</sub> ≈ 414 °C</b>.</p>
+      <p><b>d)</b> t<sub>8/5</sub> est proportionnel à Q : <b>6,4 s</b>. Doubler l'énergie fait moins que 300 °C de préchauffage, et elle élargit les zones et la dilution.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 5 : préparer le préchauffage <span class="lvtag">N1 et N2 · chapitre 5</span></h4>
+    <p>EN-GJL-250 : C 3,3 ; Si 2,0 ; Mn 0,6 ; P 0,06 ; S 0,09 ; Cr 0,1 ; Cu 0,3 (en %).</p>
+    <p class="q"><b>a)</b> Calcule son CE<sub>s</sub> et la tendance de préchauffage du modèle de la manipulation 5.</p>
+    <p class="q"><b>b)</b> Une fonte ancienne contient 0,8 % de phosphore. Combien le phosphore ajoute-t-il au CE<sub>s</sub> ?</p>
+    <p class="q"><b>c)</b> On chauffe vite une zone de cette GL, bridée par le reste de la pièce, à 200 K au-dessus de ses voisines. Ordre de grandeur de la contrainte ? (E = 110 GPa, α = 12 × 10⁻⁶ K⁻¹)</p>
+    <p class="q"><b>d)</b> Pièce de 30 mm d'épaisseur : où mesurer le préchauffage, et combien attendre après avoir retiré le chalumeau ? Et pour 10 mm ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">CE<sub>s</sub> = 3,3 + 0,31 × 2,0 + 0,33 × 0,06 + 0,45 × 0,09 − 0,028 × 0,6 + 0,1 − 0,01 × 0,3</span> = 3,3 + 0,62 + 0,020 + 0,041 − 0,017 + 0,1 − 0,003 ≈ <b>4,06</b>. Tendance du modèle : 230 × (4,06 − 3) ≈ <b>244 °C</b>, à moduler selon le régime et le bridage.</p>
+      <p><b>b)</b> <span class="m">0,33 × 0,8 ≈ 0,26</span> : un quart de point de carbone équivalent. Ce phosphore forme aussi un eutectique fragile et favorise la fissuration à chaud d'un apport au nickel (chapitre 3).</p>
+      <p><b>c)</b> <span class="m">σ ≈ E·α·ΔT = 110 000 × 12 × 10⁻⁶ × 200 ≈ 264 MPa</span> : de l'ordre de sa résistance. Le chauffage lui-même peut casser la pièce : on chauffe lentement et large.</p>
+      <p><b>d)</b> 4 × 30 = 120 mm, limité à <b>50 mm</b> du bord du chanfrein ; attente <span class="m">2 min × 30/25 = 2,4 min</span>, soit environ 2 min 24 s. Pour 10 mm : à <b>40 mm</b> du bord, attente d'environ 48 s.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 6 : choisir le traitement après soudage <span class="lvtag">N2 · chapitre 6</span></h4>
+    <p class="q"><b>a)</b> Calcule le paramètre de Hollomon et Jaffe d'un maintien de 1 h à 600 °C.</p>
+    <p class="q"><b>b)</b> Quelle durée à 650 °C donne le même revenu ? Et à 550 °C ?</p>
+    <p class="q"><b>c)</b> Un corps de pompe en EN-GJS-700-2 a été réparé au nickel-fer. Faut-il le ferritiser vers 720 °C pour adoucir la zone affectée ?</p>
+    <p class="q"><b>d)</b> Une réparation en fonte (régime chaud) présente une ZPF trop dure pour l'usinage. Quel traitement ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">P = T·(20 + log t)·10⁻³ = 873 × (20 + 0) × 10⁻³ ≈ 17,46</span>.</p>
+      <p><b>b)</b> À 650 °C : <span class="m">20 + log t = 17 460/923 ≈ 18,92</span>, log t ≈ −1,08, t ≈ 0,083 h ≈ <b>5 min</b>. À 550 °C : 17 460/823 ≈ 21,22, log t ≈ 1,22, t ≈ <b>16 h</b>.</p>
+      <p><b>c)</b> Non : la ferritisation transformerait la perlite de toute la pièce, qui perdrait sa résistance. On fait un <b>détensionnement</b> vers 600 à 650 °C, qui revient la martensite et relâche les contraintes ; une normalisation n'est envisageable que si la pièce entière peut être traitée.</p>
+      <p><b>d)</b> Un <b>recuit de graphitisation</b> vers 900 à 950 °C, suivi d'un refroidissement lent : la cémentite de la ZPF se décompose en graphite, la zone s'adoucit.</p>
+    </div></details>
+  </div>
+
+  <div class="exo defi">
+    <h4>🏆 Défi : le préchauffage minimal <span class="lvtag">N2 · chapitres 4 et 5 · manipulation 4</span></h4>
+    <p>GS perlitique. On vise une zone affectée d'au plus 350 HV, repère du modèle. Règle le préchauffage par pas de 10 °C.</p>
+    <p class="q"><b>a)</b> Avec Q = 0,5 kJ/mm, quel est le préchauffage minimal ? Relève t<sub>8/5</sub>.</p>
+    <p class="q"><b>b)</b> Même question avec Q = 1,5 kJ/mm.</p>
+    <p class="q"><b>c)</b> Qu'ont en commun les deux réglages ?</p>
+    <p class="q"><b>d)</b> Et pour une GL avec Q = 1 kJ/mm ?</p>
+    <p class="q"><b>e)</b> Le régime froid, à 20 °C, laisse plus de 600 HV. Pourquoi fonctionne-t-il quand même en réparation ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <b>T<sub>0</sub> = 440 °C</b> : 330 HV, t<sub>8/5</sub> ≈ 27,6 s (à 430 °C : 354 HV).</p>
+      <p><b>b)</b> <b>T<sub>0</sub> = 340 °C</b> : 346 HV, t<sub>8/5</sub> ≈ 24,3 s (à 330 °C : 358 HV).</p>
+      <p><b>c)</b> Le même t<sub>8/5</sub>, environ 25 s : c'est la durée de refroidissement qui décide de la dureté, et on l'obtient par l'énergie ou par le préchauffage. Le préchauffage le fait sans élargir le bain ni la dilution.</p>
+      <p><b>d)</b> <b>T<sub>0</sub> = 340 °C</b> : 338 HV (à 330 °C : 353 HV). Dans le modèle, la GL trempe un peu moins que la GS perlitique : avec une énergie plus faible, le même préchauffage suffit.</p>
+      <p><b>e)</b> Parce qu'il confine la dureté : avec une faible énergie, la ZAT ne fait qu'environ 1 mm, la zone fondue au nickel est ductile et accepte le retrait, et les cordons courts martelés limitent les contraintes. Le prix : une ligne de fusion dure à usiner et une réparation qui doit être qualifiée pour son service.</p>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="quiz-s">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">?</div>
+    <div class="c-title"><h2>Quiz : 12 questions éclair</h2><p>Chaque réponse est expliquée, même quand tu as juste</p></div>
+    <div class="c-img"><span class="ico">🎯</span><span><small>Image à retenir</small>La cible : vise 10 sur 12 avant le cours 4</span></div>
+  </div>
+  <div id="quiz"></div>
+  <div class="score" id="qzScore" aria-live="polite">Score : 0 / 12</div>
+  <div class="btns"><button class="btn" id="qzReset" type="button">↺ Recommencer le quiz</button></div>
+</div>
+</section>
+
+<section class="chap" id="fiche">
+<div class="wrap wide">
+  <div class="cartouche">
+    <div class="c-num">★</div>
+    <div class="c-title"><h2>Fiche mémoire du cours 3</h2><p>Neuf cases, neuf images : à photographier, puis à redessiner de tête</p></div>
+    <div class="c-img"><span class="ico">🌉</span><span><small>Image à retenir</small>Le pont de la Dee : la fonte porte en compression, elle casse en traction</span></div>
+  </div>
+  <div class="fiche">
+    <div><div class="ic">🧊</div><h4>Le glaçon</h4><div class="f"><span class="eps">ε</span> = α·(T<sub>r</sub> − <span class="mat">T<sub>0</sub></span>)·b &gt; R<sub>m</sub>/E + A</div><p>Le retrait bridé dépasse la ductilité d'une GL, pas celle d'une GS ferritique ; une fonte blanche ne se soude pas.</p></div>
+    <div><div class="ic">🗂️</div><h4>Les groupes</h4><div class="f">71 GL · 72 GS · 73 M · 74 ADI · 75 A · 76</div><p>Groupe 7 de l'ISO/TR 15608 ; EN 1011-8 pour souder, ISO 15614-3 pour qualifier, ISO 1071 pour les apports.</p></div>
+    <div><div class="ic">🏕️</div><h4>Le feu de camp</h4><div class="f">ZF · ZPF 1 150-1 200 °C · ZAT</div><p>La ZPF refond en fonte blanche, la ZAT trempe en martensite autour du graphite : c'est là que ça casse.</p></div>
+    <div><div class="ic">📏</div><h4>Adams</h4><div class="f">y ∝ <span class="mat">Q</span>/(ρc·t)</div><p>Q = 1 kJ/mm, 10 mm, à froid : ZPF 0,2 mm, ZAT 2,3 mm ; le préchauffage élargit mais adoucit.</p></div>
+    <div><div class="ic">🥤</div><h4>Le sirop</h4><div class="f"><span class="eps">X<sub>ZF</sub></span> = <span class="mat">D</span>·X<sub>MB</sub> + (1 − <span class="mat">D</span>)·X<sub>MA</sub></div><p>Acier : 1 % de C, martensite ; nickel-fer à 55 % : D ≤ ≈ 40 % ; le nickel rend le carbone en graphite.</p></div>
+    <div><div class="ic">🏺</div><h4>Chaud ou froid</h4><div class="f">500-650 °C + fonte · ou Ni à froid</div><p>Le chaud évite les zones dures ; le froid les confine : cordons courts, martelage, zone tiède entre cordons.</p></div>
+    <div><div class="ic">⏱️</div><h4>Le t<sub>8/5</sub></h4><div class="f"><span class="eps">t<sub>8/5</sub></span> = <span class="mat">Q</span>/(2πλ)·[1/(500 − <span class="mat">T<sub>0</sub></span>) − 1/(800 − <span class="mat">T<sub>0</sub></span>)]</div><p>3 s à froid, 30 s à 400 °C pour 1 kJ/mm : le préchauffage agit plus que l'énergie.</p></div>
+    <div><div class="ic">🍳</div><h4>La poêle</h4><div class="f"><span class="mat">CE<sub>s</sub></span> = C + 0,31 Si + … · σ ≈ E·α·ΔT</div><p>Lentement, partout, longtemps ; mesure à 4·t du chanfrein, 50 mm au plus (ISO 13916).</p></div>
+    <div><div class="ic">🔨</div><h4>Le marteau</h4><div class="f">P = T·(20 + log t)·10⁻³</div><p>600 détend, 720 ferritise, 900 graphitise ; on martèle le nickel chaud, jamais la fonte.</p></div>
+  </div>
+  <div class="fun"><span class="fun-h">🌉 Fun fact : le pont de la Dee</span>Le 24 mai 1847, à Chester, en Angleterre, un train de voyageurs en route pour Ruabon s'engage sur le pont de la Dee, ouvert quelques mois plus tôt sous la direction de l'ingénieur Robert Stephenson. Ses poutres sont en fonte : chacune est faite de trois pièces moulées assemblées bout à bout et renforcées par des barres de fer forgé. Quelques jours plus tôt, on a recouvert le tablier de ballast pour protéger du feu son platelage en bois : une charge de plus. Une poutre se rompt au passage du train, et une partie du convoi tombe dans la rivière. Cinq personnes meurent : trois voyageurs, le chef de train et le chauffeur de la locomotive. Le mécanisme exact de la rupture est encore discuté, mais la leçon tient en une ligne : la fonte, solide en compression, casse en traction et en flexion presque sans prévenir. Une commission royale sur l'emploi du fer dans les ouvrages de chemin de fer rend son rapport en 1849, et les poutres en fonte renforcée cèdent la place au fer forgé dans les ponts ferroviaires. Pourquoi une fonte grise n'aime pas être tirée : <a href="#c1">chapitre 1</a>.</div>
+</div>
+</section>
+
+<section class="chap" id="gloss">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">A–Z</div>
+    <div class="c-title"><h2>Glossaire</h2><p>Les mots, symboles et sigles de ce cours</p></div>
+    <div class="c-img"><span class="ico">📖</span><span><small>Image à retenir</small>Le dictionnaire : un mot flou, un clic</span></div>
+  </div>
+  <dl class="gloss">
+    <dt>A, R<sub>m</sub>, E</dt><dd>Allongement après rupture (%) ; résistance à la traction (MPa) ; module d'élasticité (GPa ou MPa).</dd>
+    <dt>A<sub>MB</sub>, A<sub>MA</sub></dt><dd>Aires, sur une coupe, du métal de base fondu et du métal d'apport déposé ; elles donnent la dilution.</dd>
+    <dt>ADI</dt><dd>Fonte GS ausferritique (<i>austempered ductile iron</i>) ; sa structure est détruite par la soudure.</dd>
+    <dt>α (dilatation), α′ (martensite)</dt><dd>Coefficient de dilatation thermique (K⁻¹) ; martensite, structure de trempe dure et fragile.</dd>
+    <dt>Austénite, ferrite, perlite</dt><dd>Constituants de la matrice : solution solide cubique à faces centrées, stable à chaud (ou grâce au nickel) ; fer cubique centré, tendre ; lamelles de ferrite et de cémentite.</dd>
+    <dt>Austénite résiduelle</dt><dd>Austénite qui ne s'est pas transformée au refroidissement, fréquente dans les zones très riches en carbone.</dd>
+    <dt>b (bridage)</dt><dd>Part du retrait empêchée par la pièce, de 0 (pièce libre) à 1 (parfaitement bridée), dans le modèle de la manipulation 1.</dd>
+    <dt>Beurrage</dt><dd>Dépôt préalable d'une couche d'apport sur les bords du chanfrein, avant de remplir le joint (cours 4).</dd>
+    <dt>CE<sub>s</sub></dt><dd>Carbone équivalent de soudage : indice de composition qui pèse l'effet de chaque élément sur la trempe de la zone soudée.</dd>
+    <dt>Cémentite Fe₃C, lédéburite</dt><dd>Carbure de fer dur et fragile ; eutectique austénite-cémentite, constituant de la fonte blanche.</dd>
+    <dt>Crayon thermosensible</dt><dd>Crayon qui fond à une température donnée ; on s'en sert pour vérifier le préchauffage.</dd>
+    <dt>D, dilution</dt><dd>Part du métal de base fondu dans la zone fondue.</dd>
+    <dt>Demi-chaud</dt><dd>Régime de soudage avec un préchauffage intermédiaire, vers 200 à 400 °C.</dd>
+    <dt>Détensionnement</dt><dd>Maintien vers 600 à 650 °C après soudage (500 à 600 °C pour un détensionnement de fonderie), qui relâche les contraintes résiduelles et revient la martensite.</dd>
+    <dt>DMOS</dt><dd>Descriptif de mode opératoire de soudage : la fiche qui fixe procédé, apport, préchauffage et paramètres.</dd>
+    <dt>EN 1011-8, EN 1011-1, EN 1011-2</dt><dd>Recommandations pour le soudage des fontes ; recommandations générales pour le soudage à l'arc ; soudage à l'arc des aciers ferritiques.</dd>
+    <dt>Eutectique</dt><dd>Mélange qui se solidifie à température constante, plus bas que ses constituants ; dans une fonte, vers 1 150 °C.</dd>
+    <dt>Ferritisation</dt><dd>Recuit sous-critique, vers 700 à 760 °C, qui transforme la perlite en ferrite et graphite.</dd>
+    <dt>Fissuration à chaud</dt><dd>Fissuration pendant la solidification, causée par des films liquides aux joints de grains (soufre, phosphore avec le nickel).</dd>
+    <dt>f<sub>M</sub>, t<sub>c</sub></dt><dd>Part de martensite dans la zone affectée ; durée caractéristique de refroidissement de la fonte dans le modèle de la manipulation 4.</dd>
+    <dt>GL, GS, GV</dt><dd>Fontes à graphite lamellaire, sphéroïdal, vermiculaire.</dd>
+    <dt>Graphitisation (recuit de)</dt><dd>Recuit, vers 900 à 950 °C, qui décompose la cémentite en graphite.</dd>
+    <dt>Groupe de matériaux</dt><dd>Classe de l'ISO/TR 15608 qui regroupe les matériaux de comportement voisin au soudage ; les fontes forment le groupe 7.</dd>
+    <dt>HV, HV<sub>MB</sub>, HV<sub>α′</sub></dt><dd>Dureté Vickers ; dureté du métal de base ; dureté de la martensite.</dd>
+    <dt>Hollomon et Jaffe (paramètre de)</dt><dd>P = T·(20 + log t)·10⁻³, qui combine température (K) et durée (h) d'un revenu.</dd>
+    <dt>IIW, IWE</dt><dd><i>International Institute of Welding</i> ; <i>International Welding Engineer</i>, ingénieur international en soudage.</dd>
+    <dt>Intercritique (domaine)</dt><dd>Intervalle de températures où ferrite, austénite et graphite coexistent ; vers 780 à 810 °C pour une fonte à 2 % de silicium.</dd>
+    <dt>ISO/TR 15608, ISO 15614-3, ISO 1071, ISO 13916</dt><dd>Groupes de matériaux pour le soudage ; qualification des modes opératoires de soudage des fontes ; produits d'apport pour les fontes ; mesure des températures de préchauffage et entre passes.</dd>
+    <dt>k, U, I, v</dt><dd>Rendement thermique du procédé ; tension (V) ; intensité (A) ; vitesse de soudage (mm/s).</dd>
+    <dt>λ, ρc</dt><dd>Conductivité thermique (W/(mm·K)) ; capacité thermique volumique (J/(mm³·K)).</dd>
+    <dt>Ligne de fusion</dt><dd>Limite entre la zone fondue et le métal de base resté solide.</dd>
+    <dt>Liquidus, solidus</dt><dd>Température au-dessus de laquelle tout est liquide ; au-dessous de laquelle tout est solide.</dd>
+    <dt>log</dt><dd>Logarithme décimal.</dd>
+    <dt>Martelage</dt><dd>Frappe répétée d'un cordon encore chaud pour l'allonger et réduire ses contraintes de traction.</dd>
+    <dt>MB, MA</dt><dd>Métal de base ; métal d'apport.</dd>
+    <dt>Nickel-fer</dt><dd>Métal d'apport à environ 45 à 60 % de nickel, plus résistant que le nickel et de dilatation plus proche de la fonte.</dd>
+    <dt>Normalisation</dt><dd>Austénitisation puis refroidissement à l'air, qui donne une matrice perlitique fine.</dd>
+    <dt>Pas de pèlerin</dt><dd>Séquence où chaque cordon court est déposé en revenant vers le précédent, pour répartir chaleur et retrait.</dd>
+    <dt>Préchauffage T<sub>0</sub>, température entre passes</dt><dd>Température de la zone avant le soudage ; température de la zone soudée avant la passe suivante.</dd>
+    <dt>Q</dt><dd>Énergie de soudage : Q = k·U·I/v (J/mm ou kJ/mm), selon l'EN 1011-1.</dd>
+    <dt>Régime chaud, régime froid</dt><dd>Soudage avec la pièce entière préchauffée vers 500 à 650 °C et un apport en fonte ; soudage presque sans préchauffage, avec un apport au nickel, en cordons courts.</dd>
+    <dt>Retrait</dt><dd>Contraction du métal qui refroidit.</dd>
+    <dt>Revenu</dt><dd>Maintien sous la transformation qui adoucit la martensite.</dd>
+    <dt>Soudabilité</dt><dd>Aptitude d'un matériau à être soudé, avec un mode opératoire donné, en un assemblage qui remplit sa fonction.</dd>
+    <dt>Soudage homogène, hétérogène</dt><dd>Avec un apport de même nature que la pièce (fonte sur fonte) ; avec un apport différent (nickel, nickel-fer, acier).</dd>
+    <dt>t, y</dt><dd>Épaisseur de la pièce (mm) ; distance à la ligne de fusion (mm).</dd>
+    <dt>t<sub>8/5</sub></dt><dd>Durée de refroidissement de 800 à 500 °C.</dd>
+    <dt>T<sub>p</sub>, T<sub>L</sub>, T<sub>r</sub></dt><dd>Température maximale atteinte ; température de la ligne de fusion (liquidus de la fonte) ; température au-dessous de laquelle les contraintes ne se relâchent plus (modèle).</dd>
+    <dt>TTAS</dt><dd>Traitement thermique après soudage.</dd>
+    <dt>X<sub>ZF</sub>, X<sub>MB</sub>, X<sub>MA</sub></dt><dd>Teneur d'un élément dans la zone fondue, le métal de base, le métal d'apport.</dd>
+    <dt>ZF, ZPF, ZAT</dt><dd>Zone fondue ; zone partiellement fondue ; zone affectée thermiquement.</dd>
+  </dl>
+</div>
+</section>
+
+<section class="chap" id="check">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✓</div>
+    <div class="c-title"><h2>Suis-je prêt pour la suite ?</h2><p>Dix points à cocher de tête</p></div>
+    <div class="c-img"><span class="ico">🧭</span><span><small>Image à retenir</small>La boussole : quand tout est coché, cap sur le cours 4, le dernier de la série</span></div>
+  </div>
+  <p>Coche seulement ce que tu sais faire <b>sans regarder</b>. Tes coches restent enregistrées dans ce navigateur.</p>
+  <div class="check" id="checklist">
+    <label><input type="checkbox" data-c="1"> <span>Je sais expliquer pourquoi une fonte fissure au retrait et classer les fontes par soudabilité.</span></label>
+    <label><input type="checkbox" data-c="2"> <span>Je sais situer une fonte dans les groupes 71 à 76 de l'ISO/TR 15608 et citer les normes du soudage des fontes.</span></label>
+    <label><input type="checkbox" data-c="3"> <span>Je sais décrire la zone fondue, la zone partiellement fondue et la zone affectée, et leurs structures.</span></label>
+    <label><input type="checkbox" data-c="4"> <span>Je sais estimer la largeur des zones avec la formule d'Adams.</span></label>
+    <label><input type="checkbox" data-c="5"> <span>Je sais calculer une dilution et la composition d'une zone fondue, et choisir entre nickel, nickel-fer, fonte et acier.</span></label>
+    <label><input type="checkbox" data-c="6"> <span>Je sais comparer les régimes chaud, demi-chaud et froid et choisir le bon.</span></label>
+    <label><input type="checkbox" data-c="7"> <span>Je sais calculer un t<sub>8/5</sub> et expliquer l'effet du préchauffage sur la dureté de la zone affectée.</span></label>
+    <label><input type="checkbox" data-c="8"> <span>Je sais calculer un CE<sub>s</sub>, dire ses limites, et préchauffer sans fissurer.</span></label>
+    <label><input type="checkbox" data-c="9"> <span>Je sais où et quand mesurer un préchauffage selon l'ISO 13916.</span></label>
+    <label><input type="checkbox" data-c="10"> <span>Je sais organiser le refroidissement, le martelage et choisir un traitement après soudage.</span></label>
+  </div>
+  <p class="status" id="checkMsg"></p>
+
+  <div class="meta">▶ <b>Prochain cours, le dernier de la série : souder une fonte, la pratique.</b> Tu sais maintenant ce qui se passe dans une soudure sur fonte et comment le maîtriser. Le cours 4 passe à l'atelier : les procédés (chalumeau, électrode enrobée, fil fourré, soudobrasage), les produits d'apport de l'ISO 1071, le beurrage, la préparation et la réparation d'une fissure, le goujonnage, la qualification des modes opératoires, et pour finir les aciers moulés.</div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="wrap">
+  <p>Cours 3 sur 4 de la série « Fontes et soudage des fontes » (sujet 2.17 du planning). Groupes de matériaux selon l'ISO/TR 15608 ; recommandations de soudage selon l'EN 1011-8 ; qualification selon l'ISO 15614-3 ; mesure du préchauffage selon l'ISO 13916. Les modèles des manipulations sont pédagogiques ; pour les notations et les conventions, l'enseignement de ta formation fait foi.</p>
+</div>
+</footer>
+
+
+<script>
+(function(){
+"use strict";
+const NS="http://www.w3.org/2000/svg";
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const RM=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function el(tag,attrs,parent){
+  const e=document.createElementNS(NS,tag);
+  if(attrs){for(const k in attrs){const v=attrs[k];if(v===undefined||v===null)continue;
+    if(typeof v==="string"&&v.indexOf("var(")>=0&&k!=="style")e.style.setProperty(k,v);else e.setAttribute(k,v);}}
+  if(parent)parent.appendChild(e);
+  return e;
+}
+function tx(p,x,y,str,attrs){const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);t.textContent=str;return t;}
+function txs(p,x,y,parts,attrs){/* parts: [["σ",""],["max","sub"],[" = 3",""]] */
+  const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);
+  parts.forEach(pt=>{const s=el("tspan",pt[1]==="sub"?{"font-size":"0.72em",dy:"3"}:(pt[2]?{dy:pt[2]}:{}),t);s.textContent=pt[0];
+    if(pt[1]==="sub"){const r=el("tspan",{dy:"-3"},t);r.textContent="\u200b";}});
+  return t;
+}
+function clear(svg){while(svg.firstChild)svg.removeChild(svg.firstChild);}
+function fitText(t,x0,x1,gap){/* garde un texte SVG entre x0 et x1 : il passe de l'autre côté de son repère (écart gap), sinon il glisse */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const a=t.getAttribute("text-anchor")||"start",x=+t.getAttribute("x");
+  if(gap&&a!=="middle"&&(b.x<x0||b.x+b.width>x1)){t.setAttribute("text-anchor",a==="end"?"start":"end");t.setAttribute("x",a==="end"?x+2*gap:x-2*gap);b=t.getBBox();}
+  const nx=+t.getAttribute("x");
+  if(b.x+b.width>x1)t.setAttribute("x",nx-(b.x+b.width-x1));else if(b.x<x0)t.setAttribute("x",nx+(x0-b.x));
+  return t;}
+function arrow(p,x1,y1,x2,y2,color,w,h){
+  w=w||2.4;h=h||10;
+  const g=el("g",{class:"arr"},p);g.style.color=color||"var(--ink)";
+  const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy);
+  if(L<1)return g;
+  const ux=dx/L,uy=dy/L,hh=Math.min(h,L*0.6),bx=x2-ux*hh,by=y2-uy*hh,hw=hh*0.45+w*0.3;
+  el("line",{x1:x1,y1:y1,x2:bx,y2:by,"stroke-width":w,"stroke-linecap":"round"},g);
+  el("polygon",{points:x2+","+y2+" "+(bx-uy*hw)+","+(by+ux*hw)+" "+(bx+uy*hw)+","+(by-ux*hw)},g);
+  return g;
+}
+function darrow(p,x,y1,y2,color,w){/* double flèche verticale */
+  const g=el("g",{},p);const m=(y1+y2)/2;
+  if(Math.abs(y2-y1)<4){el("line",{x1:x-5,y1:y1,x2:x+5,y2:y1,stroke:color,"stroke-width":2},g);return g;}
+  arrow(g,x,m,x,y1,color,w||2,8);arrow(g,x,m,x,y2,color,w||2,8);return g;
+}
+function nf(v,d){
+  if(d===undefined)d=1;
+  if(Math.abs(v)<0.5*Math.pow(10,-d))v=0;
+  return v.toLocaleString("fr-FR",{minimumFractionDigits:d,maximumFractionDigits:d}).replace("-","−").replace(/[\u202f\u2009]/g,"\u00a0");
+}
+const SUP={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function sci(v,d){
+  if(v===0)return "0";
+  if(!isFinite(v))return "∞";
+  let e=Math.floor(Math.log10(Math.abs(v)));
+  let m=v/Math.pow(10,e);
+  const dd=d===undefined?1:d;
+  if(Math.abs(Number(m.toFixed(dd)))>=10){m/=10;e+=1;}
+  return nf(m,dd)+" × 10"+String(e).split("").map(c=>SUP[c]).join("");
+}
+function bigN(v){/* nombre de cycles lisible */
+  if(!isFinite(v))return "∞";
+  if(v===0)return "0";
+  if(v<10)return nf(v,v<1?2:0);
+  if(v<1e5)return nf(Math.round(v),0);
+  return sci(v,1);
+}
+function dur(s){
+  if(!isFinite(s))return "∞";
+  if(s<60)return nf(s,s<10?1:0)+" s";
+  if(s<3600)return nf(s/60,0)+" min";
+  if(s<86400)return nf(s/3600,1)+" h";
+  if(s<86400*365)return nf(s/86400,1)+" jours";
+  return nf(s/(86400*365),1)+" ans";
+}
+function svgW(svg){const r=svg.getBoundingClientRect();return Math.max(290,Math.round(r.width||(svg.parentNode&&svg.parentNode.clientWidth)||600));}
+function setVB(svg,W,H){svg.setAttribute("viewBox","0 0 "+W+" "+H);}
+const redraws=[];
+let rzT=null,lastWW=window.innerWidth;
+window.addEventListener("resize",()=>{if(window.innerWidth===lastWW)return;lastWW=window.innerWidth;clearTimeout(rzT);rzT=setTimeout(()=>redraws.forEach(f=>{try{f();}catch(e){console.error(e);}}),120);});
+
+function niceStep(range,n){const raw=range/(n||5),p=Math.pow(10,Math.floor(Math.log10(raw))),m=raw/p;return (m<1.5?1:m<3?2:m<7?5:10)*p;}
+function setOn(sel,btn){$$(sel+" .btn").forEach(b=>b.classList.toggle("on",b===btn));}
+function fmtmm(mm){return mm<0.1?nf(mm*1000,0)+" µm":mm<10?nf(mm,mm<1?2:1)+" mm":nf(mm,0)+" mm";}
+function axes(svg,x0,x1,y0,y1,xmin,xmax,ymin,ymax,xlab,ylab,xstep,ystep,xfmt,yfmt){
+  const X=v=>x0+(x1-x0)*(v-xmin)/(xmax-xmin),Y=v=>y1-(y1-y0)*(v-ymin)/(ymax-ymin);
+  for(let v=Math.ceil(ymin/ystep-1e-9)*ystep;v<=ymax+1e-9;v+=ystep){el("line",{x1:x0,y1:Y(v),x2:x1,y2:Y(v),class:"gridbg"},svg);tx(svg,x0-5,Y(v)+4,yfmt?yfmt(v):nf(v,ystep<1?1:0),{class:"lbl","text-anchor":"end"});}
+  for(let v=Math.ceil(xmin/xstep-1e-9)*xstep;v<=xmax+1e-9;v+=xstep){el("line",{x1:X(v),y1:y1,x2:X(v),y2:y1+4,class:"tick"},svg);tx(svg,X(v),y1+17,xfmt?xfmt(v):nf(v,xstep<1?1:0),{class:"lbl","text-anchor":"middle"});}
+  el("line",{x1:x0,y1:y1,x2:x1,y2:y1,class:"axis"},svg);el("line",{x1:x0,y1:y0-4,x2:x0,y2:y1,class:"axis"},svg);
+  tx(svg,x0+4,y0-10,ylab,{class:"lbl"});tx(svg,x1,y1+32,xlab,{class:"lbl","text-anchor":"end"});
+  return {X:X,Y:Y};
+}
+function animate(btn,label,dur,onStep,onEnd){
+  let raf=null,run=false;
+  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;btn.textContent=label;}
+  function start(){if(run){stop();return;}if(RM){onStep(1);stop();if(onEnd)onEnd();return;}
+    run=true;btn.textContent="⏸ Pause";const t0=performance.now();
+    const step=now=>{const p=Math.min(1,(now-t0)/dur);onStep(p);if(p>=1){stop();if(onEnd)onEnd();return;}raf=requestAnimationFrame(step);};raf=requestAnimationFrame(step);}
+  btn.addEventListener("click",start);return {stop:stop,running:()=>run};
+}
+
+
+function sig2(v){/* arrondi à deux chiffres significatifs */
+  if(v<=0)return 0;const p=Math.pow(10,Math.floor(Math.log10(v))-1);return Math.round(v/p)*p;}
+function halo(t,svg){/* liseré de fond, puis passage au premier plan */
+  t.setAttribute("paint-order","stroke");t.style.setProperty("stroke","var(--card)");t.setAttribute("stroke-width","4");t.setAttribute("stroke-linejoin","round");if(svg)svg.appendChild(t);return t;}
+function plate(t,svg){/* fond plein derrière une étiquette */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const r=el("rect",{x:b.x-3,y:b.y-1,width:b.width+6,height:b.height+2,fill:"var(--card)",opacity:.92,rx:2});svg.appendChild(r);svg.appendChild(t);return t;}
+function le(n,f){return /^[aeiouyhéèâî]/i.test(n)?"l'"+n:(f?"la ":"le ")+n;}
+function du(n,f){return /^[aeiouyhéèâî]/i.test(n)?"de l'"+n:(f?"de la ":"du ")+n;}
+function fmtG(v){return nf(v,v<0.1?3:2)+" N/m";}
+function fmtPa(p){return p<1000?nf(p,0)+" Pa":p<1e5?nf(p/1000,1)+" kPa":nf(p/1e5,2)+" bar";}
+function fmtLen(m){/* m en mètres */
+  const mm=m*1000;if(mm<1)return nf(mm*1000,0)+" µm";if(mm<10)return nf(mm,1)+" mm";if(mm<1000)return nf(mm,0)+" mm";return nf(m,1)+" m";}
+function fmtT(s){if(!isFinite(s))return "∞";if(s<0.01)return nf(s*1000,1)+" ms";if(s<1)return nf(s,3)+" s";if(s<60)return nf(s,s<10?1:0)+" s";return nf(s/60,s<600?1:0)+" min";}
+
+function spread(items,gap,ymin,ymax){/* écarte verticalement des étiquettes {y} triées */
+  items.sort((a,b)=>a.y-b.y);
+  for(let i=1;i<items.length;i++)if(items[i].y-items[i-1].y<gap)items[i].y=items[i-1].y+gap;
+  if(items.length&&items[items.length-1].y>ymax){items[items.length-1].y=ymax;for(let i=items.length-2;i>=0;i--)if(items[i+1].y-items[i].y<gap)items[i].y=items[i+1].y-gap;}
+  if(items.length&&items[0].y<ymin){items[0].y=ymin;for(let i=1;i<items.length;i++)if(items[i].y-items[i-1].y<gap)items[i].y=items[i-1].y+gap;}
+  return items;}
+function declutter(ts,ymin,ymax){/* décale verticalement les textes qui se chevauchent */
+  const box=t=>{try{return t.getBBox();}catch(e){return null;}};
+  for(let i=1;i<ts.length;i++){const ti=ts[i];if(!ti)continue;
+    for(let pass=0;pass<6;pass++){const bi=box(ti);if(!bi)break;let moved=false;
+      for(let j=0;j<i;j++){const bj=ts[j]&&box(ts[j]);if(!bj)continue;
+        const ix=Math.min(bi.x+bi.width,bj.x+bj.width)-Math.max(bi.x,bj.x),iy=Math.min(bi.y+bi.height,bj.y+bj.height)-Math.max(bi.y,bj.y);
+        if(ix>1&&iy>1){let dy=(bi.y+bi.height/2>=bj.y+bj.height/2)?(bj.y+bj.height-bi.y+1):-(bi.y+bi.height-bj.y+1);
+          if(bi.y+dy<ymin||bi.y+bi.height+dy>ymax)dy=dy>0?-(bi.y+bi.height-bj.y+1):(bj.y+bj.height-bi.y+1);
+          ti.setAttribute("y",+ti.getAttribute("y")+dy);moved=true;break;}}
+      if(!moved)break;}}
+  return ts;}
+const SUPD={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function p10(e){return "10"+String(e).split("").map(c=>SUPD[c]||c).join("");}
+function fmtP(p){/* pression en Pa, lisible */
+  if(p>=1e5)return nf(p/1e5,1)+" bar";if(p>=1000)return nf(p/1000,p<1e4?1:0)+" kPa";if(p>=1)return nf(p,p<10?1:0)+" Pa";return sci(p,1)+" Pa";}
+
+
+
+function rng(seed){/* générateur pseudo-aléatoire reproductible */
+  let a=seed>>>0;return ()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296;};}
+
+
+
+/* =========================================================
+   Utilitaires communs du cours : unités, formats, dessins
+   ========================================================= */
+const nbsp=s=>s.replace(/(\d) (°C\/h|°C|kJ\/mm|J\/mm|K·s|MPa|GPa|mm²|mm|µm|%|HB|HV|min|h|s|K)(?=[\s.,;:)<·/]|$)/g,"$1 $2");
+function fitSize(t,maxW,min){let b;try{b=t.getBBox();}catch(e){return t;}let fs=parseFloat(getComputedStyle(t).fontSize)||13;
+  while(b.width>maxW&&fs>(min||9)){fs-=0.5;t.style.fontSize=fs+"px";b=t.getBBox();}return t;}
+const pts=P=>P.map(p=>p[0].toFixed(2)+","+p[1].toFixed(2)).join(" ");
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function sstep(a,b,x){const u=clamp((x-a)/(b-a),0,1);return u*u*(3-2*u);}
+function fsz(t,px){t.style.fontSize=px+"px";return t;}
+function hatch(svg,id,color,gap,w){let d=svg.querySelector("defs");if(!d)d=el("defs",{},svg);
+  const p=el("pattern",{id:id,width:gap,height:gap,patternUnits:"userSpaceOnUse",patternTransform:"rotate(45)"},d);
+  el("line",{x1:0,y1:0,x2:0,y2:gap,stroke:color,"stroke-width":w||1.4},p);return "url(#"+id+")";}
+function fmtW(v){return v<1?nf(v,2):v<10?nf(v,1):nf(v,0);}
+function flake(p,x,y,a,L,col,w){return el("line",{x1:x-Math.cos(a)*L/2,y1:y-Math.sin(a)*L/2,x2:x+Math.cos(a)*L/2,y2:y+Math.sin(a)*L/2,stroke:col||"var(--ink)","stroke-width":w||1.3,"stroke-linecap":"round"},p);}
+
+/* =========================================================
+   M1 : le barreau bridé
+   ========================================================= */
+(function(){
+  const svg=$("#m1svg");if(!svg)return;
+  const sT=$("#m1t"),sb=$("#m1b"),ro=$("#m1r"),msg=$("#m1msg");
+  const MAT={S235:["acier S235",360,210000,26,"acier"],GS:["EN-GJS-400-15",400,169000,15,"GS"],GL:["EN-GJL-250",250,110000,0.3,"GL"],blanche:["fonte blanche",350,170000,0,"blanche"]};
+  const AL=12e-6,TR=650,TW=1150;
+  const GR=(function(){const R=rng(1847),A=[];for(let i=0;i<60;i++)A.push([R(),R(),R()*Math.PI,0.6+0.8*R()]);return A;})();
+  let k="GL",prog=null;
+  function draw(){
+    const W=svgW(svg),n=W<560,H=n?232:236;setVB(svg,W,H);clear(svg);
+    const T0=+sT.value,b=+sb.value,m=MAT[k];
+    $("#m1to").textContent=nf(T0,0)+" °C";$("#m1bo").textContent=nf(b,2);
+    const T=prog===null?T0:TW-(TW-T0)*prog;
+    const cap=m[1]/m[2]+m[3]/100,eps=AL*Math.max(0,TR-T)*b,epsF=AL*Math.max(0,TR-T0)*b,r=eps/cap,rF=epsF/cap,crack=eps>=cap&&eps>0;
+    tx(svg,8,15,"Le barreau bridé : "+m[0],{class:"ttl"});
+    /* murs et barreau */
+    const ww=n?16:22,xa=8,xb=W-8-ww,by=50,bh=n?32:36,hp=hatch(svg,"m1h","var(--ink)",6,1.1);
+    [xa,xb].forEach(x=>el("rect",{x:x,y:by-16,width:ww,height:bh+32,fill:hp,stroke:"var(--ink)","stroke-width":1.5},svg));
+    const x0=xa+ww,x1=xb,cx=(x0+x1)/2,zw=n?34:46;
+    el("rect",{x:x0,y:by,width:x1-x0,height:bh,fill:"color-mix(in srgb,var(--gam) 14%,var(--card))",stroke:"var(--ink)","stroke-width":1.4},svg);
+    const g=el("g",{},svg);
+    GR.forEach(q=>{const x=x0+6+q[0]*(x1-x0-12),y=by+4+q[1]*(bh-8);if(Math.abs(x-cx)<zw/2+2)return;
+      if(m[4]==="GL")flake(g,x,y,q[2],7*q[3]);else if(m[4]==="GS"&&q[3]>0.9)el("circle",{cx:x,cy:y,r:1.9,fill:"var(--ink)"},g);
+      else if(m[4]==="blanche"&&q[3]>0.8)el("rect",{x:x-3,y:y-1,width:6,height:2,fill:"var(--tau)",opacity:.6},g);});
+    const h=clamp((T-T0)/(TW-T0+1e-9),0,1);
+    el("rect",{x:cx-zw/2,y:by,width:zw,height:bh,fill:"color-mix(in srgb,var(--sig) "+Math.round(12+70*h)+"%,var(--card))",stroke:"var(--ink)","stroke-width":1.2},svg);
+    el("path",{d:"M"+(cx-zw/2)+","+by+" Q"+cx+","+(by-9)+" "+(cx+zw/2)+","+by,fill:"color-mix(in srgb,var(--sig) "+Math.round(12+70*h)+"%,var(--card))",stroke:"var(--ink)","stroke-width":1.2},svg);
+    const tl=fsz(tx(svg,cx,by-13,"T = "+nf(T,0)+" °C",{class:"lbl","text-anchor":"middle",fill:"var(--sig)","font-weight":"700"}),12);halo(tl,svg);
+    /* flèches de traction */
+    if(eps>0){const L=Math.min(1.6,r)*(n?32:52)+8,ya=by+bh+14;
+      arrow(svg,x0+L+6,ya,x0+6,ya,"var(--sig)",2.4,9);arrow(svg,x1-L-6,ya,x1-6,ya,"var(--sig)",2.4,9);
+      const ts=fsz(tx(svg,x0+L+12,ya+4,"σ",{class:"lbl",fill:"var(--sig)","font-weight":"700"}),13);halo(ts,svg);}
+    if(crack){const xc=cx+zw/2+3,P=[];for(let i=0;i<=6;i++)P.push([xc+(i%2?4:-3),by-2+i*(bh+4)/6]);
+      el("polyline",{points:pts(P),fill:"none",stroke:"var(--tau)","stroke-width":2.8,"stroke-linejoin":"round"},svg);
+      const tc=fsz(tx(svg,xc+10,by+bh/2+4,"fissure",{class:"lbl",fill:"var(--tau)","font-weight":"700"}),12);halo(tc,svg);}
+    /* jauges en échelle logarithmique */
+    const gy=by+bh+50,lx0=n?78:150,lx1=W-(n?14:24),LMIN=0.05,LMAX=40;
+    const X=v=>lx0+(lx1-lx0)*(Math.log10(clamp(v,LMIN,LMAX))-Math.log10(LMIN))/(Math.log10(LMAX)-Math.log10(LMIN));
+    const rows=[[n?"imposée ε":"déformation imposée ε",eps*100,"var(--eps)"],[n?"capacité":"capacité Rm/E + A",cap*100,"var(--gam)"]];
+    rows.forEach((rw,i)=>{const y=gy+i*30;
+      const tl2=fsz(tx(svg,lx0-8,y+5,rw[0],{class:"lbl","text-anchor":"end"}),n?11:12);fitSize(tl2,lx0-14,8);
+      el("rect",{x:lx0,y:y-8,width:lx1-lx0,height:16,fill:"var(--card)",stroke:"var(--muted)","stroke-width":.8},svg);
+      if(rw[1]>0){const xe=X(rw[1]);el("rect",{x:lx0,y:y-8,width:Math.max(1,xe-lx0),height:16,fill:rw[2],opacity:.75},svg);
+        const tv=fsz(tx(svg,xe+5,y+5,(rw[1]<1?nf(rw[1],2):nf(rw[1],1))+" %",{class:"lbl","font-weight":"700",fill:rw[2]}),12);
+        fitText(tv,lx0,W-4,5);halo(tv,svg);}});
+    const xc=X(cap*100);el("line",{x1:xc,y1:gy-14,x2:xc,y2:gy+38,stroke:"var(--gam)","stroke-width":2,"stroke-dasharray":"4 3"},svg);
+    const ay=gy+56;el("line",{x1:lx0,y1:ay,x2:lx1,y2:ay,class:"axis"},svg);
+    [0.1,0.3,1,3,10,30].forEach(v=>{const xx=X(v);el("line",{x1:xx,y1:ay,x2:xx,y2:ay+4,class:"tick"},svg);fsz(tx(svg,xx,ay+16,nf(v,v<1?1:0),{class:"lbl","text-anchor":"middle"}),11);});
+    const ta=fsz(tx(svg,lx1,ay+30,"déformation (%, échelle log)",{class:"lbl","text-anchor":"end"}),11);fitSize(ta,lx1-8,8);
+    /* lectures et commentaire */
+    ro.innerHTML=nbsp("<span>T<sub>0</sub> = <b class='mat'>"+nf(T0,0)+" °C</b> · b = <b class='mat'>"+nf(b,2)+"</b></span><span>ε imposée = <b class='eps'>"+nf(epsF*100,2)+" %</b></span><span>capacité = <b class='gam'>"+(cap*100<1?nf(cap*100,2):nf(cap*100,1))+" %</b></span><span>rapport = <b>"+nf(rF,2)+"</b></span><span>→ "+(rF>=1?"<b class='tau'>fissure</b>":"tient")+"</span>");
+    let s;
+    if(prog!==null)s=T>TR?"Refroidissement : T = "+nf(T,0)+" °C. Au-dessus d'environ 650 °C, le métal chaud se relâche : pas encore de contrainte.":"T = "+nf(T,0)+" °C : chaque degré perdu tire sur le barreau ; ε = "+nf(eps*100,2)+" % pour une capacité de "+(cap*100<1?nf(cap*100,2):nf(cap*100,1))+" %"+(crack?" : il a fissuré.":".");
+    else if(b<=0.001)s="Pièce libre : le retrait ne rencontre aucun obstacle, rien ne tire.";
+    else if(rF>=1){const Tl=TR-cap/(AL*b);
+      s=(k==="blanche"?"Fonte blanche : sans aucun allongement, elle ne peut encaisser que "+nf(cap*100,2)+" %. ":"")+"Le retrait impose "+nf(epsF*100,2)+" %, soit "+nf(rF,2)+" fois ce que la "+m[0]+" peut encaisser : elle fissure, le long de la zone affectée. "+(Tl<600?"Il faudrait préchauffer à au moins ≈ "+nf(Tl,0)+" °C, ou réduire le bridage.":"Même préchauffée, elle reste au bord de la rupture.");}
+    else if(k==="GL"||k==="blanche")s="La "+m[0]+" tient : le retrait n'utilise que "+nf(rF*100,0)+" % de sa capacité. Le préchauffage et la réduction du bridage ont fait la différence.";
+    else s="La ductilité de l'"+(k==="GS"?"EN-GJS-400-15":"acier")+" absorbe le retrait : il n'utilise que "+nf(rF*100,0)+" % de sa capacité. Le danger est ailleurs : dans les zones dures de la soudure (chapitres 2 à 4).";
+    msg.innerHTML=nbsp(s);
+  }
+  const A=animate($("#m1play"),"▶ Refroidir",6000,p=>{prog=p;draw();},()=>{prog=null;draw();});
+  $$("#m1m .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;k=b.dataset.k;setOn("#m1m",b);draw();}));
+  [sT,sb].forEach(r=>r.addEventListener("input",()=>{A.stop();prog=null;draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M2 : la température maximale et les zones
+   ========================================================= */
+(function(){
+  const svg=$("#m2svg");if(!svg)return;
+  const sQ=$("#m2Q"),st=$("#m2t"),sT=$("#m2T"),ro=$("#m2r"),msg=$("#m2msg");
+  const RC=0.0044,TL=1200,XN=-1.5,XM=12;
+  const FL=(function(){const R=rng(215),A=[];for(let i=0;i<90;i++)A.push([R(),R(),R()*Math.PI,0.6+0.8*R()]);return A;})();
+  let prog=null;
+  function draw(){
+    const W=svgW(svg),n=W<560,H=n?360:310;setVB(svg,W,H);clear(svg);
+    const Q=prog===null?+sQ.value:0.3+2.7*prog,t=+st.value,T0=+sT.value;
+    $("#m2Qo").textContent=nf(Q,1)+" kJ/mm";$("#m2to").textContent=nf(t,0)+" mm";$("#m2To").textContent=nf(T0,0)+" °C";
+    const f=Q*1000/(4.13*RC*t),yAt=X=>X<=T0?Infinity:f*(1/(X-T0)-1/(TL-T0)),Tp=y=>T0+1/(y/f+1/(TL-T0));
+    const yP=yAt(1150),yA=yAt(810),yI=yAt(780);
+    tx(svg,8,15,"Température maximale atteinte, puis zones",{class:"ttl"});
+    const x0=50,x1=W-(n?12:16),y0=44,y1=H-108;
+    const A=axes(svg,x0,x1,y0,y1,XN,XM,0,1400,"distance à la ligne de fusion y (mm)","Tp (°C)",n?3:1,200,v=>nf(v,0),v=>nf(v,0));
+    const cX=v=>A.X(clamp(v,XN,XM));
+    /* bandes des zones */
+    el("rect",{x:A.X(XN),y:y0,width:A.X(0)-A.X(XN),height:y1-y0,fill:"var(--gam)",opacity:.16},svg);
+    [[0,yP,.42],[yP,yA,.22],[yA,yI,.1]].forEach(z=>{if(z[0]>=XM)return;el("rect",{x:cX(z[0]),y:y0,width:Math.max(0.6,cX(z[1])-cX(z[0])),height:y1-y0,fill:"var(--tau)",opacity:z[2]},svg);});
+    /* seuils */
+    [[1150,"1 150 °C : liquide eutectique",-5],[810,"810 °C : austénite",-5],[780,"780 °C : début d'austénitisation",13]].forEach(s=>{
+      el("line",{x1:A.X(XN),y1:A.Y(s[0]),x2:x1,y2:A.Y(s[0]),stroke:"var(--sig)","stroke-width":1.1,"stroke-dasharray":"5 4",opacity:.8},svg);
+      const ts=fsz(tx(svg,x1-4,A.Y(s[0])+s[2],n?s[1].split(" : ")[0]:s[1],{class:"lbl","text-anchor":"end",fill:"var(--sig)"}),n?10.5:11);halo(ts,svg);});
+    /* courbe */
+    const P=[[A.X(XN),A.Y(TL)],[A.X(0),A.Y(TL)]];for(let i=0;i<=120;i++){const y=XM*i/120;P.push([A.X(y),A.Y(Tp(y))]);}
+    el("polyline",{points:pts(P),fill:"none",stroke:"var(--sig)","stroke-width":2.8},svg);
+    [[yP,1150],[yA,810],[yI,780]].forEach(q=>{if(q[0]<XM)el("circle",{cx:A.X(q[0]),cy:A.Y(q[1]),r:4.5,fill:"var(--eps)"},svg);});
+    const tz=fsz(tx(svg,A.X(XN/2),y0+14,"ZF",{class:"lbl","text-anchor":"middle",fill:"var(--gam)","font-weight":"700"}),11.5);halo(tz,svg);
+    /* coupe */
+    const ys=y1+40,hs=n?30:32,xa=A.X(XN),xb=A.X(XM);
+    const cp=el("clipPath",{id:"m2c"},svg);el("rect",{x:xa,y:ys,width:xb-xa,height:hs},cp);const g=el("g",{"clip-path":"url(#m2c)"},svg);
+    el("rect",{x:xa,y:ys,width:xb-xa,height:hs,fill:"color-mix(in srgb,var(--gam) 10%,var(--card))"},g);
+    FL.forEach(q=>{const xm=XN+q[0]*(XM-XN),x=A.X(xm),y=ys+3+q[1]*(hs-6);if(xm<0)return;
+      if(xm<yP)return;if(xm<yA)flake(g,x,y,q[2],9*q[3],"var(--tau)",4.5).setAttribute("opacity",.45);
+      else if(xm<yI&&q[3]>1)el("circle",{cx:x+4,cy:y,r:2.6,fill:"var(--tau)",opacity:.4},g);
+      flake(g,x,y,q[2],8*q[3]);});
+    el("rect",{x:xa,y:ys,width:A.X(0)-xa,height:hs,fill:"var(--gam)",opacity:.55},g);
+    [[0,yP,.8],[yP,yA,.32],[yA,yI,.14]].forEach(z=>{if(z[0]>=XM)return;el("rect",{x:cX(z[0]),y:ys,width:Math.max(1.2,cX(z[1])-cX(z[0])),height:hs,fill:"var(--tau)",opacity:z[2]},g);});
+    el("rect",{x:xa,y:ys,width:xb-xa,height:hs,fill:"none",stroke:"var(--ink)","stroke-width":1.2},svg);
+    const r1=ys+hs+14,r2=r1+14,L=[];
+    L.push(fsz(tx(svg,(xa+A.X(0))/2,r1,"ZF",{class:"lbl","text-anchor":"middle","font-weight":"700",fill:"var(--gam)"}),11));
+    if(yA<XM)L.push(fsz(tx(svg,(cX(yP)+cX(yA))/2,r1,"ZAT",{class:"lbl","text-anchor":"middle","font-weight":"700",fill:"var(--tau)"}),11));
+    if(yI<XM-1)L.push(fsz(tx(svg,(cX(yI)+xb)/2,r1,"métal de base",{class:"lbl","text-anchor":"middle"}),11));
+    const xp=cX(yP/2);el("line",{x1:xp,y1:ys+hs,x2:xp,y2:r2-10,stroke:"var(--tau)","stroke-width":1},svg);
+    L.push(fsz(tx(svg,xp+3,r2,"ZPF",{class:"lbl","font-weight":"700",fill:"var(--tau)"}),11));
+    L.forEach(t=>halo(t,svg));
+    if(yI>XM){const ta=fsz(tx(svg,xb-4,r2,"zones au-delà du cadre →",{class:"lbl","text-anchor":"end",fill:"var(--tau)","font-weight":"700"}),11);halo(ta,svg);}
+    /* lectures */
+    const fy=v=>isFinite(v)?fmtW(v)+" mm":"∞";
+    ro.innerHTML=nbsp("<span>Q = <b class='mat'>"+nf(Q,1)+" kJ/mm</b></span><span>t = <b class='mat'>"+nf(t,0)+" mm</b></span><span>T<sub>0</sub> = <b class='mat'>"+nf(T0,0)+" °C</b></span><span>ZPF ≈ <b class='eps'>"+fy(yP)+"</b></span><span>ZAT jusqu'à ≈ <b class='eps'>"+fy(yA)+"</b></span><span>intercritique jusqu'à ≈ <b class='eps'>"+fy(yI)+"</b></span>");
+    let s="Sur "+fy(yP)+", la fonte a partiellement refondu autour du graphite : refroidie vite, elle sort blanche. Jusqu'à "+fy(yA)+", elle s'est austénitisée et le graphite a commencé à se dissoudre : la martensite guette. ";
+    if(T0>=250)s+="Préchauffée à "+nf(T0,0)+" °C, la pièce a des zones plus larges, mais elles refroidissent lentement : moins de fonte blanche et de martensite (chapitre 4).";
+    else if(Q<=0.6)s+="Faible énergie : des zones étroites, c'est l'idée du régime froid.";
+    else s+="Plus d'énergie élargit les zones ; une pièce plus épaisse les resserre.";
+    msg.innerHTML=nbsp(s);
+  }
+  const A=animate($("#m2play"),"▶ Souder",6000,p=>{prog=p;draw();},()=>{prog=null;sQ.value=3;draw();});
+  [sQ,st,sT].forEach(r=>r.addEventListener("input",()=>{A.stop();prog=null;draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M3 : la dilution qui décide de la zone fondue
+   ========================================================= */
+(function(){
+  const svg=$("#m3svg");if(!svg)return;
+  const sd=$("#m3d"),ro=$("#m3out"),msg=$("#m3msg");
+  const NM={acier:"acier doux",ni:"nickel",nife:"nickel-fer",fonte:"fonte"};
+  function zf(fil,D,chaud){
+    if(fil==="acier"){const C=0.08+D*(3.4-0.08);return {C:C,HV:200+600*sstep(0.15,0.6,C)};}
+    if(fil==="ni"){const Ni=95*(1-D);return {Ni:Ni,HV:150+1.2*(95-Ni)+300*(1-sstep(20,30,Ni))};}
+    if(fil==="nife"){const Ni=55*(1-D);return {Ni:Ni,HV:190+(55-Ni)+300*(1-sstep(22,32,Ni))};}
+    return {C:3.4,HV:chaud?210:480};}
+  const FL=(function(){const R=rng(31),A=[];for(let i=0;i<70;i++)A.push([R(),R(),R()*Math.PI,0.6+0.8*R()]);return A;})();
+  let fil="nife",reg="froid",prog=null;
+  function draw(){
+    const W=svgW(svg),n=W<560,H=n?500:290;setVB(svg,W,H);clear(svg);
+    const D=prog===null?+sd.value:0.05+0.55*prog,ch=reg==="chaud",z=zf(fil,D,ch);
+    $("#m3do").textContent=nf(D*100,0)+" %";
+    /* coupe du cordon */
+    const pw=n?W-16:Math.round(W*0.4),px=8,cx=px+pw/2;
+    tx(svg,8,15,"Coupe du cordon",{class:"ttl"});
+    const ys=n?122:134,a=Math.min(pw*0.3,n?76:84),ht=a*1.15,hr=(1-D)*ht,hp=D*ht,thk=n?82:96;
+    el("rect",{x:px,y:ys,width:pw,height:thk,fill:"color-mix(in srgb,var(--gam) 8%,var(--card))",stroke:"var(--ink)","stroke-width":1.3},svg);
+    const g=el("g",{},svg);FL.forEach(q=>{const x=px+5+q[0]*(pw-10),y=ys+5+q[1]*(thk-10);if(Math.pow((x-cx)/(a+6),2)+Math.pow((y-ys)/(hp+6),2)<1)return;flake(g,x,y,q[2],8*q[3]);});
+    el("path",{d:"M"+(cx-a)+","+ys+" A"+a+","+Math.max(hp,0.5)+" 0 0 0 "+(cx+a)+","+ys+"Z",fill:"var(--gam)","fill-opacity":.42,stroke:"var(--ink)","stroke-width":1.3},svg);
+    el("path",{d:"M"+(cx-a)+","+ys+" A"+a+","+Math.max(hr,0.5)+" 0 0 1 "+(cx+a)+","+ys+"Z",fill:"var(--muted)","fill-opacity":.4,stroke:"var(--ink)","stroke-width":1.3},svg);
+    el("line",{x1:cx-a,y1:ys,x2:cx+a,y2:ys,stroke:"var(--ink)","stroke-width":1,"stroke-dasharray":"4 3"},svg);
+    const t1=fsz(tx(svg,cx,ys-hr-8,"apport déposé : "+nf((1-D)*100,0)+" %",{class:"lbl","text-anchor":"middle","font-weight":"700"}),11.5);halo(t1,svg);fitText(t1,px,px+pw,0);
+    const t2=fsz(tx(svg,cx,hp>30?ys+hp/2+4:ys+hp+16,"fonte fondue : "+nf(D*100,0)+" %",{class:"lbl","text-anchor":"middle","font-weight":"700",fill:"var(--gam)"}),11.5);halo(t2,svg);fitText(t2,px,px+pw,0);
+    const tm=fsz(tx(svg,px+4,ys+thk-8,"fonte de base, 3,4 % C",{class:"lbl"}),11);halo(tm,svg);
+    /* barre de mélange */
+    const by=ys+thk+22,bw=pw-8;
+    el("rect",{x:px+4,y:by,width:bw*D,height:12,fill:"var(--gam)",opacity:.75},svg);
+    el("rect",{x:px+4+bw*D,y:by,width:bw*(1-D),height:12,fill:"var(--muted)",opacity:.5},svg);
+    el("rect",{x:px+4,y:by,width:bw,height:12,fill:"none",stroke:"var(--ink)","stroke-width":1},svg);
+    const tb=fsz(tx(svg,px+4,by+27,"zone fondue : "+(z.Ni!==undefined?"Ni ≈ "+nf(z.Ni,1)+" %":"C ≈ "+nf(z.C,2)+" %"),{class:"lbl","font-weight":"700",fill:"var(--eps)"}),12);fitSize(tb,pw-8,8);
+    /* dureté selon la dilution */
+    const cx0=n?50:Math.round(W*0.4)+58,cx1=W-(n?14:96),cy0=n?by+82:44,cy1=n?H-40:H-44;
+    tx(svg,n?8:Math.round(W*0.4)+16,n?by+52:15,"Dureté de la zone fondue",{class:"ttl"});
+    const A=axes(svg,cx0,cx1,cy0,cy1,0,60,100,850,"dilution D (%)","HV",10,150,v=>nf(v,0),v=>nf(v,0));
+    el("line",{x1:cx0,y1:A.Y(350),x2:cx1,y2:A.Y(350),stroke:"var(--muted)","stroke-width":1.2,"stroke-dasharray":"6 4"},svg);
+    const t35=fsz(tx(svg,cx0+4,A.Y(350)-5,"repère 350 HV",{class:"lbl"}),10.5);halo(t35,svg);
+    if(fil==="nife"){const xd=A.X(100*(1-32/55));el("line",{x1:xd,y1:cy0,x2:xd,y2:cy1,stroke:"var(--tau)","stroke-width":1.4,"stroke-dasharray":"4 3"},svg);
+      const tn=fsz(tx(svg,xd-4,cy0+12,"Ni < 32 %",{class:"lbl","text-anchor":"end",fill:"var(--tau)","font-weight":"700"}),10.5);halo(tn,svg);}
+    const labs=[];
+    ["acier","ni","nife","fonte"].forEach(f=>{const on=f===fil,P=[];for(let i=0;i<=60;i++){P.push([A.X(i),A.Y(Math.min(850,zf(f,i/100,ch).HV))]);}
+      el("polyline",{points:pts(P),fill:"none",stroke:on?"var(--eps)":"var(--muted)","stroke-width":on?3:1.4,"stroke-dasharray":on?"":"4 3",opacity:on?1:.8},svg);
+      if(!n){const t=fsz(tx(svg,cx1+6,A.Y(Math.min(850,zf(f,0.6,ch).HV))+4,NM[f],{class:"lbl",fill:on?"var(--eps)":"var(--muted)","font-weight":on?"700":"400"}),11);labs.push(t);}});
+    if(labs.length)declutter(labs,cy0-6,cy1+10);
+    el("circle",{cx:A.X(D*100),cy:A.Y(Math.min(850,z.HV)),r:6,fill:"var(--sig)"},svg);
+    if(n){const tl=fsz(tx(svg,cx1,cy0-8,"courbe pleine : "+NM[fil],{class:"lbl","text-anchor":"end",fill:"var(--eps)","font-weight":"700"}),10.5);halo(tl,svg);}
+    /* lectures et commentaire */
+    const ok=fil==="fonte"?ch:fil==="nife"?z.Ni>=32:fil==="ni"?z.Ni>=30:z.HV<350;
+    ro.innerHTML=nbsp("<span>apport : <b class='mat'>"+NM[fil]+"</b>"+(fil==="fonte"?" · "+(ch?"régime chaud":"régime froid"):"")+"</span><span>D = <b class='mat'>"+nf(D*100,0)+" %</b></span><span>"+(z.Ni!==undefined?"Ni ≈ <b class='eps'>"+nf(z.Ni,1)+" %</b>":"C ≈ <b class='eps'>"+nf(z.C,2)+" %</b>")+"</span><span>≈ <b class='eps'>"+nf(z.HV,0)+" HV</b></span><span>→ "+(ok?"zone fondue ductile":"<b class='tau'>zone fondue dure</b>")+"</span>");
+    let s;
+    if(fil==="acier")s=z.C<0.3?"Très faible dilution : l'acier reste peu chargé ("+nf(z.C,2)+" % C). Mais dès que la dilution monte, il absorbe le carbone de la fonte.":"L'acier a absorbé le carbone de la fonte : "+nf(z.C,2)+" % C, il trempe en martensite (≈ "+nf(z.HV,0)+" HV) et se rétracte fortement. Fissures quasi certaines.";
+    else if(fil==="ni")s="Nickel : il reste "+nf(z.Ni,1)+" % de nickel, l'austénite est stable et le carbone ressort en graphite. Zone fondue tendre (≈ "+nf(z.HV,0)+" HV), usinable ; elle tolère une forte dilution.";
+    else if(fil==="nife")s=z.Ni>=32?"Nickel-fer : "+nf(z.Ni,1)+" % de nickel, austénite stable, ≈ "+nf(z.HV,0)+" HV. Marge : la dilution peut monter jusqu'à ≈ 42 %.":"Trop de dilution : le nickel tombe à "+nf(z.Ni,1)+" %, sous ≈ 32 %, l'austénite n'est plus stable et la zone fondue durcit (≈ "+nf(z.HV,0)+" HV). Petite électrode, faible intensité !";
+    else s=ch?"Apport en fonte, régime chaud : la zone fondue refroidit lentement et sort grise (≈ "+nf(z.HV,0)+" HV), comme la pièce. La dilution ne change presque rien : fonte sur fonte.":"Apport en fonte, régime froid : la zone fondue refroidit vite et sort blanche (≈ "+nf(z.HV,0)+" HV), dure et fragile. L'apport en fonte exige le régime chaud.";
+    if(fil!=="fonte"&&reg==="chaud")s+=" (Le régime ne change pas la composition de la zone fondue avec cet apport.)";
+    msg.innerHTML=nbsp(s);
+  }
+  const A=animate($("#m3play"),"▶ Diluer",6000,p=>{prog=p;draw();},()=>{prog=null;sd.value=0.6;draw();});
+  $$("#m3a .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;fil=b.dataset.k;setOn("#m3a",b);draw();}));
+  $$("#m3r .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;reg=b.dataset.k;setOn("#m3r",b);draw();}));
+  sd.addEventListener("input",()=>{A.stop();prog=null;draw();});
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M4 : chaud ou froid, la dureté de la zone affectée
+   ========================================================= */
+(function(){
+  const svg=$("#m4svg");if(!svg)return;
+  const sQ=$("#m4Q"),sT=$("#m4T"),ro=$("#m4r"),msg=$("#m4msg");
+  const LAM=0.040,B={GSf:["GS ferritique",160,600,6],GSp:["GS perlitique",260,700,12],GL:["GL",220,650,10]};
+  const PRE={froid:[0.5,20],demi:[1,300],chaud:[1.5,600]};
+  const C0=Q=>1000*Q/(2*Math.PI*LAM);
+  const t85=(Q,T0)=>T0>=500?Infinity:C0(Q)*(1/(500-T0)-1/(800-T0));
+  function hv(kk,Q,T0){const b=B[kk],t=t85(Q,T0),fM=isFinite(t)?1/(1+Math.pow(t/b[3],2)):0;return {t:t,fM:fM,HV:b[1]+fM*(b[2]-b[1])};}
+  const fT=t=>isFinite(t)?(t<100?nf(t,1):nf(t,0))+" s":"∞";
+  let k="GSp";
+  function draw(){
+    const W=svgW(svg),n=W<560,H=n?520:290;setVB(svg,W,H);clear(svg);
+    const Q=+sQ.value,T0=+sT.value,h=hv(k,Q,T0),b=B[k],C=C0(Q);
+    $("#m4Qo").textContent=nf(Q,1)+" kJ/mm";$("#m4To").textContent=nf(T0,0)+" °C";
+    /* cycle thermique */
+    const L0=Math.log10(0.3),L1=3,ax0=50,ax1=n?W-14:Math.round(W*0.5)-16,ay0=44,ay1=n?250:H-44;
+    tx(svg,8,15,"Cycle thermique de la ZAT",{class:"ttl"});
+    const A=axes(svg,ax0,ax1,ay0,ay1,L0,L1,0,1200,"temps (s, échelle log)","T (°C)",10,200,v=>"",v=>nf(v,0));
+    [0.3,1,10,100,1000].forEach(v=>{const xx=A.X(Math.log10(v));el("line",{x1:xx,y1:ay1,x2:xx,y2:ay1+4,class:"tick"},svg);fsz(tx(svg,xx,ay1+16,nf(v,v<1?1:0),{class:"lbl","text-anchor":"middle"}),11);});
+    el("rect",{x:ax0,y:A.Y(800),width:ax1-ax0,height:A.Y(500)-A.Y(800),fill:"var(--eps)",opacity:.1},svg);
+    [800,500].forEach(v=>el("line",{x1:ax0,y1:A.Y(v),x2:ax1,y2:A.Y(v),stroke:"var(--eps)","stroke-width":1,"stroke-dasharray":"4 3",opacity:.7},svg));
+    const TP=1100,tp=C/(TP-T0),th=tp/4,P=[];
+    for(let i=0;i<=160;i++){const l=L0+(L1-L0)*i/160,t=Math.pow(10,l);let T;
+      if(t<tp)T=t<th?T0:T0+(TP-T0)*sstep(Math.log10(th),Math.log10(tp),l);else T=T0+C/t;P.push([A.X(l),A.Y(Math.min(1200,T))]);}
+    el("polyline",{points:pts(P),fill:"none",stroke:"var(--sig)","stroke-width":2.8},svg);
+    if(T0<500){const t8=C/(800-T0),t5=C/(500-T0),x8=A.X(clamp(Math.log10(t8),L0,L1)),x5=A.X(clamp(Math.log10(t5),L0,L1));
+      el("circle",{cx:x8,cy:A.Y(800),r:4.5,fill:"var(--eps)"},svg);el("circle",{cx:x5,cy:A.Y(500),r:4.5,fill:"var(--eps)"},svg);
+      const ya=A.Y(500)+16;el("line",{x1:x8,y1:ya-5,x2:x5,y2:ya-5,stroke:"var(--eps)","stroke-width":1.6},svg);
+      [x8,x5].forEach(x=>el("line",{x1:x,y1:ya-10,x2:x,y2:ya,stroke:"var(--eps)","stroke-width":1.6},svg));
+      const tl=fsz(tx(svg,(x8+x5)/2,ya+12,"t8/5 = "+fT(h.t),{class:"lbl","text-anchor":"middle",fill:"var(--eps)","font-weight":"700"}),12);halo(tl,svg);fitText(tl,ax0+2,ax1,0);}
+    else{const tl=fsz(tx(svg,ax1-4,A.Y(500)+18,"reste au-dessus de 500 °C : refroidissement au four",{class:"lbl","text-anchor":"end",fill:"var(--eps)","font-weight":"700"}),11);fitSize(tl,ax1-ax0-8,8);halo(tl,svg);}
+    const l8=fsz(tx(svg,ax0+4,A.Y(800)-4,"800 °C",{class:"lbl",fill:"var(--eps)"}),10.5),l5=fsz(tx(svg,ax0+4,A.Y(500)-4,"500 °C",{class:"lbl",fill:"var(--eps)"}),10.5);halo(l8,svg);halo(l5,svg);
+    /* dureté selon le préchauffage */
+    const bx0=n?50:Math.round(W*0.5)+44,bx1=W-(n?14:16),by0=n?ay1+82:44,by1=H-44;
+    tx(svg,n?8:Math.round(W*0.5)+8,n?ay1+52:15,"Dureté de la ZAT selon le préchauffage",{class:"ttl"});
+    const Bx=axes(svg,bx0,bx1,by0,by1,20,650,100,750,"préchauffage T0 (°C)","HV",n?200:100,100,v=>nf(v,0),v=>nf(v,0));
+    el("rect",{x:Bx.X(500),y:by0,width:Bx.X(650)-Bx.X(500),height:by1-by0,fill:"var(--mat)",opacity:.1},svg);
+    const tc=fsz(tx(svg,(Bx.X(500)+Bx.X(650))/2,by0+12,"chaud",{class:"lbl","text-anchor":"middle",fill:"var(--mat)","font-weight":"700"}),10.5);halo(tc,svg);
+    el("line",{x1:bx0,y1:Bx.Y(350),x2:bx1,y2:Bx.Y(350),stroke:"var(--muted)","stroke-width":1.2,"stroke-dasharray":"6 4"},svg);
+    const t35=fsz(tx(svg,Bx.X(380),Bx.Y(350)-6,"repère 350 HV",{class:"lbl"}),10.5);halo(t35,svg);
+    Object.keys(B).forEach(kk=>{const on=kk===k,Pp=[];for(let v=20;v<=650;v+=5)Pp.push([Bx.X(v),Bx.Y(hv(kk,Q,v).HV)]);
+      el("polyline",{points:pts(Pp),fill:"none",stroke:on?"var(--eps)":"var(--muted)","stroke-width":on?3:1.4,"stroke-dasharray":on?"":"4 3",opacity:on?1:.75},svg);});
+    const tn=fsz(tx(svg,bx1,by0-8,"plein : "+b[0]+" · pointillés : autres fontes",{class:"lbl","text-anchor":"end"}),10.5);fitSize(tn,bx1-bx0-30,8);halo(tn,svg);
+    el("circle",{cx:Bx.X(T0),cy:Bx.Y(h.HV),r:6.5,fill:"var(--sig)"},svg);
+    /* lectures et commentaire */
+    const reg=T0>=500?"régime chaud":T0>=150?"demi-chaud":"régime froid";
+    ro.innerHTML=nbsp("<span>"+b[0]+"</span><span>Q = <b class='mat'>"+nf(Q,1)+" kJ/mm</b></span><span>T<sub>0</sub> = <b class='mat'>"+nf(T0,0)+" °C</b></span><span>t<sub>8/5</sub> ≈ <b class='eps'>"+fT(h.t)+"</b></span><span>martensite ≈ <b class='tau'>"+nf(h.fM*100,0)+" %</b></span><span>ZAT ≈ <b class='eps'>"+nf(h.HV,0)+" HV</b></span><span>→ "+reg+"</span>");
+    let s;
+    if(T0>=500)s="Régime chaud : à "+nf(T0,0)+" °C, la zone affectée ne redescend pas sous 500 °C pendant le soudage, et le refroidissement final, lent, ne forme pas de martensite : ≈ "+nf(h.HV,0)+" HV, comme le métal de base. Le joint peut être en fonte.";
+    else if(h.HV<=350)s="t8/5 ≈ "+fT(h.t)+" : la zone affectée refroidit assez lentement, martensite ≈ "+nf(h.fM*100,0)+" %, ≈ "+nf(h.HV,0)+" HV, sous le repère de 350 HV.";
+    else{s="t8/5 ≈ "+fT(h.t)+", trop court : ≈ "+nf(h.fM*100,0)+" % de martensite, ZAT ≈ "+nf(h.HV,0)+" HV. ";
+      s+=(Q<=0.7&&T0<150)?"C'est le régime froid : la zone affectée est dure mais étroite, et la zone fondue au nickel encaisse le retrait.":"Monte le préchauffage, ou l'énergie, pour allonger t8/5.";}
+    msg.innerHTML=nbsp(s.replace(/t8\/5/g,"t<sub>8/5</sub>"));
+    $$("#m4p .btn").forEach(bt=>{const p=PRE[bt.dataset.k];bt.classList.toggle("on",Math.abs(p[0]-Q)<1e-6&&p[1]===T0);});
+  }
+  const A=animate($("#m4play"),"▶ Préchauffer",7000,p=>{sT.value=20+Math.round(63*p)*10;draw();},null);
+  $$("#m4b .btn").forEach(bt=>bt.addEventListener("click",()=>{A.stop();k=bt.dataset.k;setOn("#m4b",bt);draw();}));
+  $$("#m4p .btn").forEach(bt=>bt.addEventListener("click",()=>{A.stop();const p=PRE[bt.dataset.k];sQ.value=p[0];sT.value=p[1];draw();}));
+  [sQ,sT].forEach(r=>r.addEventListener("input",()=>{A.stop();draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   Figure du chapitre 5 : la roue à rayons
+   ========================================================= */
+(function(){
+  const svg=$("#f5svg");if(!svg)return;
+  function wheel(cx,cy,R,mode){
+    const a0=-Math.PI/2,sx=cx,sy0=cy-R*0.16,sy1=cy-R;
+    if(mode===2){const da=0.62;el("path",{d:"M"+(cx+R*Math.cos(a0-da))+","+(cy+R*Math.sin(a0-da))+" A"+R+","+R+" 0 0 1 "+(cx+R*Math.cos(a0+da))+","+(cy+R*Math.sin(a0+da)),fill:"none",stroke:"var(--frc)","stroke-width":13,opacity:.45,"stroke-linecap":"round"},svg);}
+    if(mode>=1)el("line",{x1:sx,y1:sy0,x2:sx,y2:sy1,stroke:"var(--frc)","stroke-width":12,opacity:.45,"stroke-linecap":"round"},svg);
+    el("circle",{cx:cx,cy:cy,r:R,fill:"none",stroke:"var(--ink)","stroke-width":5},svg);
+    for(let i=0;i<6;i++){const a=a0+i*Math.PI/3;el("line",{x1:cx+R*0.16*Math.cos(a),y1:cy+R*0.16*Math.sin(a),x2:cx+R*Math.cos(a),y2:cy+R*Math.sin(a),stroke:"var(--ink)","stroke-width":3.2},svg);}
+    el("circle",{cx:cx,cy:cy,r:R*0.16,fill:"var(--card)",stroke:"var(--ink)","stroke-width":3},svg);
+    const yc=cy-R*0.56;
+    if(mode<2){const P=[];for(let i=0;i<=4;i++)P.push([cx-9+i*4.5,yc+(i%2?4:-4)]);el("polyline",{points:pts(P),fill:"none",stroke:"var(--tau)","stroke-width":2.6},svg);}
+    if(mode===1){arrow(svg,cx+11,yc-6,cx+11,yc-R*0.3,"var(--sig)",2.2,8);arrow(svg,cx+11,yc+6,cx+11,yc+R*0.3,"var(--sig)",2.2,8);
+      const ts=fsz(tx(svg,cx+16,yc+4,"σ",{class:"lbl",fill:"var(--sig)","font-weight":"700"}),13);halo(ts,svg);}
+    if(mode===2){[-0.5,0,0.5].forEach(d=>{const a=a0+d;arrow(svg,cx+(R+6)*Math.cos(a),cy+(R+6)*Math.sin(a),cx+(R+19)*Math.cos(a),cy+(R+19)*Math.sin(a),"var(--frc)",2,7);});}
+  }
+  function draw(){
+    const W=svgW(svg),n=W<560,cw=(W-16)/3,R=Math.min(cw*0.34,64),top=n?40:30,H=Math.round(top+2*R+(n?92:80));setVB(svg,W,H);clear(svg);
+    const T=[[["Rayon fissuré"],["où souder ?"]],[["Rayon","chauffé seul"],["traction au","refroidissement"]],[["Rayon et jante","chauffés"],["tout se rétracte","ensemble"]]];
+    const lines=(x,y,arr,attrs,lh,px,maxW)=>arr.forEach((s,j)=>{const t=tx(svg,x,y+j*lh,s,attrs);if(px)fsz(t,px);fitSize(t,maxW,8);});
+    T.forEach((tt,i)=>{const cx=8+cw*i+cw/2,cy=top+R+12;
+      lines(cx,n&&tt[0].length>1?14:18,n?tt[0]:[tt[0].join(" ")],{class:"ttl","text-anchor":"middle"},15,null,cw-6);
+      wheel(cx,cy,R,i);
+      lines(cx,cy+R+24,n?tt[1]:[tt[1].join(" ")],{class:"lbl","text-anchor":"middle","font-weight":"700",fill:i===1?"var(--sig)":i===2?"var(--gam)":"var(--tau)"},14,11.5,cw-6);});
+    const tl=fsz(tx(svg,8,H-6,"orange : zones chauffées · violet : fissure · rouge : traction",{class:"lbl"}),11);fitSize(tl,W-16,8);
+  }
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M5 : le carbone équivalent de soudage
+   ========================================================= */
+(function(){
+  const svg=$("#m5svg");if(!svg)return;
+  const sC=$("#m5C"),sSi=$("#m5Si"),sP=$("#m5P"),sCr=$("#m5Cr"),ro=$("#m5r"),msg=$("#m5msg");
+  /* nom, C, Si, Mn, P, S, Cr, Ni, Mo, Cu */
+  const PR={gl:["EN-GJL-250",3.3,2.0,0.6,0.06,0.09,0.1,0,0,0.3],glp:["GL riche en P",3.3,2.2,0.6,0.8,0.10,0,0,0,0],gs4:["EN-GJS-400-15",3.6,2.5,0.2,0.03,0.01,0,0,0,0],
+    gs7:["EN-GJS-700-2",3.5,2.3,0.5,0.03,0.01,0.05,0,0,0.8],glcr:["GL au Cr-Mo",3.2,1.9,0.7,0.05,0.08,0.4,0,0.3,0],adi:["GS au Ni-Mo",3.6,2.5,0.3,0.03,0.01,0,1.5,0.2,0.6]};
+  const full=p=>({C:p[1],Si:p[2],Mn:p[3],P:p[4],S:p[5],CrMo:p[6]+p[8],Ni:p[7],Cu:p[9]});
+  const CE=c=>c.C+0.31*c.Si+0.33*c.P+0.45*c.S-0.028*c.Mn+c.CrMo-0.02*c.Ni-0.01*c.Cu;
+  const TN=ce=>clamp(230*(ce-3),20,450);
+  let k="gl";
+  function setP(kk){const c=full(PR[kk]);sC.value=c.C;sSi.value=c.Si;sP.value=c.P;sCr.value=c.CrMo;}
+  function comp(){const c=full(PR[k]);c.C=+sC.value;c.Si=+sSi.value;c.P=+sP.value;c.CrMo=+sCr.value;return c;}
+  function draw(){
+    const W=svgW(svg),n=W<560,H=n?480:280;setVB(svg,W,H);clear(svg);
+    const c=comp(),ce=CE(c),T=TN(ce),c0=full(PR[k]);
+    const mod=Math.abs(c.C-c0.C)>1e-6||Math.abs(c.Si-c0.Si)>1e-6||Math.abs(c.P-c0.P)>1e-6||Math.abs(c.CrMo-c0.CrMo)>1e-6;
+    $("#m5Co").textContent=nf(c.C,2);$("#m5Sio").textContent=nf(c.Si,2);$("#m5Po").textContent=nf(c.P,2);$("#m5Cro").textContent=nf(c.CrMo,2);
+    /* contributions */
+    const pw=n?W-16:Math.round(W*0.52);
+    tx(svg,8,15,"Contribution de chaque élément (%)",{class:"ttl"});
+    const R=[["C",c.C,1],["Si",c.Si,0.31],["P",c.P,0.33],["S",c.S,0.45],["Mn",c.Mn,-0.028],["Cr + Mo",c.CrMo,1],["Ni",c.Ni,-0.02],["Cu",c.Cu,-0.01]];
+    const dy=n?20:23,y0=42,bx0=n?132:150,bx1=8+pw-44,bz=bx0+(bx1-bx0)*0.1,sc=(bx1-bz)/1.0;
+    el("line",{x1:bz,y1:y0-12,x2:bz,y2:y0+dy*R.length-8,stroke:"var(--ink)","stroke-width":1},svg);
+    R.forEach((r,i)=>{const y=y0+i*dy,v=r[1]*r[2],col=r[2]<0?"var(--gam)":r[0]==="C"||r[0]==="Cr + Mo"?"var(--tau)":"var(--sig)";
+      const tl=fsz(tx(svg,8,y+4,r[0]+" "+nf(r[1],2)+" × "+(r[2]<0?"(−"+nf(-r[2],r[2]===-0.028?3:2)+")":nf(r[2],r[2]===1?0:2)),{class:"lbl"}),n?11:12);fitSize(tl,bx0-14,8);
+      const w=Math.min(Math.abs(v)*sc,v>0?bx1-bz:bz-bx0+30);
+      el("rect",{x:v>=0?bz:bz-w,y:y-7,width:Math.max(w,0.8),height:13,fill:col,opacity:.72},svg);
+      if(v>1.02){[0,6].forEach(o=>el("line",{x1:bx1-18+o,y1:y-10,x2:bx1-24+o,y2:y+9,stroke:"var(--card)","stroke-width":3},svg));}
+      const xv=v>=0?bz+Math.min(w,bx1-bz)+5:bz+5;
+      const tv=fsz(tx(svg,xv,y+4,(v<0?"−":"")+nf(Math.abs(v),2),{class:"lbl","font-weight":"700",fill:col}),11.5);halo(tv,svg);});
+    const yt=y0+R.length*dy+10;
+    const tt=fsz(tx(svg,8,yt,"CE",{class:"lbl","font-weight":"700",fill:"var(--mat)"}),14);
+    const ts=el("tspan",{"font-size":"0.72em",dy:"3"},tt);ts.textContent="s";const tr=el("tspan",{dy:"-3"},tt);tr.textContent=" = "+nf(ce,2);
+    /* tendance du préchauffage */
+    const cx0=n?50:Math.round(W*0.52)+60,cx1=W-(n?14:16),cy0=n?yt+62:44,cy1=H-44;
+    tx(svg,n?8:Math.round(W*0.52)+18,n?yt+32:15,"Tendance du préchauffage (modèle)",{class:"ttl"});
+    const A=axes(svg,cx0,cx1,cy0,cy1,3.6,4.8,0,500,"CE de soudage","T (°C)",0.2,100,v=>nf(v,1),v=>nf(v,0));
+    const P=[];for(let x=3.6;x<=4.8001;x+=0.01)P.push([A.X(x),A.Y(TN(x))]);
+    el("polyline",{points:pts(P),fill:"none",stroke:"var(--mat)","stroke-width":2.6},svg);
+    Object.keys(PR).forEach(kk=>{const e=CE(full(PR[kk]));if(kk===k&&!mod)return;el("circle",{cx:A.X(clamp(e,3.6,4.8)),cy:A.Y(TN(e)),r:3.6,fill:"var(--muted)",opacity:.8},svg);});
+    const xp=A.X(clamp(ce,3.6,4.8)),yp=A.Y(T);
+    el("line",{x1:xp,y1:yp,x2:xp,y2:cy1,stroke:"var(--sig)","stroke-width":1.2,"stroke-dasharray":"4 3"},svg);
+    el("line",{x1:cx0,y1:yp,x2:xp,y2:yp,stroke:"var(--sig)","stroke-width":1.2,"stroke-dasharray":"4 3"},svg);
+    el("circle",{cx:xp,cy:yp,r:6.5,fill:"var(--sig)"},svg);
+    const tp=fsz(tx(svg,xp-9,yp-9,"≈ "+nf(T,0)+" °C",{class:"lbl","text-anchor":"end","font-weight":"700",fill:"var(--sig)"}),12);halo(tp,svg);fitText(tp,cx0+2,cx1,9);
+    const tg=fsz(tx(svg,cx1-4,cy1-8,"gris : les autres fontes types",{class:"lbl","text-anchor":"end"}),10.5);fitSize(tg,cx1-cx0-10,8);halo(tg,svg);
+    /* lectures et commentaire */
+    ro.innerHTML=nbsp("<span>"+PR[k][0]+(mod?" modifiée":"")+"</span><span>CE<sub>s</sub> = <b class='mat'>"+nf(ce,2)+"</b></span><span>carbone : "+nf(c.C,2)+" · silicium : "+nf(0.31*c.Si,2)+"</span><span>tendance du modèle ≈ <b class='eps'>"+nf(T,0)+" °C</b></span>");
+    let s="CE<sub>s</sub> = "+nf(ce,2)+" : le carbone en fournit "+nf(c.C,2)+" et le silicium "+nf(0.31*c.Si,2)+". Tendance du modèle : ≈ "+nf(T,0)+" °C, à moduler selon la ductilité, l'épaisseur, le bridage et le régime.";
+    if(c.P>=0.3)s+=" Le phosphore ("+nf(c.P,2)+" %) ajoute "+nf(0.33*c.P,2)+" et forme un eutectique fragile ; avec le nickel, il favorise la fissuration à chaud : nickel-fer et faible dilution.";
+    if(c.CrMo>=0.3)s+=" Le chrome et le molybdène comptent chacun pour un point de carbone : la fonte trempe plus facilement.";
+    if(k==="gs4"&&!mod)s+=" Une GS ferritique a un CE<sub>s</sub> élevé, mais elle est ductile : en pratique elle se soude mieux qu'une GL. Le CE<sub>s</sub> ne voit pas la forme du graphite.";
+    if((c.Ni>0||c.Cu>=0.5)&&c.P<0.3&&c.CrMo<0.3)s+=" Le nickel et le cuivre, graphitisants, réduisent un peu le CE<sub>s</sub>.";
+    msg.innerHTML=nbsp(s);
+  }
+  const A=animate($("#m5play"),"▶ Enrichir en carbone",6000,p=>{sC.value=(2.8+1.2*p).toFixed(2);draw();},null);
+  $$("#m5p .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();k=b.dataset.k;setOn("#m5p",b);setP(k);draw();}));
+  [sC,sSi,sP,sCr].forEach(r=>r.addEventListener("input",()=>{A.stop();draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M6 : le traitement après soudage
+   ========================================================= */
+(function(){
+  const svg=$("#m6svg");if(!svg)return;
+  const sT=$("#m6T"),st=$("#m6t"),ro=$("#m6r"),msg=$("#m6msg");
+  const PRE={det:[600,2],fer:[720,4],gra:[920,3]};
+  const tauR=T=>2*Math.exp(30070*(1/(T+273)-1/873));
+  const relax=(T,t)=>1-Math.exp(-Math.pow(t/tauR(T),0.6));
+  const PH=(T,t)=>(T+273)*(20+Math.log10(t))/1000;
+  const hvZ=(T,t)=>T>=790?260:clamp(700-60*(PH(T,t)-12),260,700);
+  const ferr=(T,t)=>T<650?0:T>=790?null:1-Math.exp(-t/(3*Math.exp(24055*(1/(T+273)-1/993))));
+  const graph=(T,t)=>T<850?0:1-Math.exp(-t/(1.5*Math.exp(30000*(1/(T+273)-1/1193))));
+  function draw(){
+    const W=svgW(svg),n=W<560,H=n?494:280;setVB(svg,W,H);clear(svg);
+    const T=+sT.value,t=+st.value,r=relax(T,t),Pj=PH(T,t),hz=hvZ(T,t),fe=ferr(T,t),gr=graph(T,t);
+    $("#m6To").textContent=nf(T,0)+" °C";$("#m6to").textContent=nf(t,t%1?1:0)+" h";
+    /* cycle */
+    const th=(T-20)/100,tc=(T-315)/55,tot=th+t+tc+1.5,tmax=Math.max(10,Math.ceil(tot/5)*5);
+    const ax0=50,ax1=n?W-14:Math.round(W*0.56)-14,ay0=44,ay1=n?250:H-44;
+    tx(svg,8,15,"Cycle du traitement",{class:"ttl"});
+    const A=axes(svg,ax0,ax1,ay0,ay1,0,tmax,0,1000,"temps (h)","T (°C)",tmax>20?10:5,200,v=>nf(v,0),v=>nf(v,0));
+    const D=[[600,650,"détensionnement","détente",.16],[700,760,"ferritisation","ferrit.",.16],[780,810,"intercritique","interc.",0],[900,950,"graphitisation","graphit.",.16]];
+    const hp=hatch(svg,"m6h","var(--tau)",6,1);
+    D.forEach(d=>{el("rect",{x:ax0,y:A.Y(d[1]),width:ax1-ax0,height:A.Y(d[0])-A.Y(d[1]),fill:d[4]?"var(--mat)":hp,opacity:d[4]?d[4]:.35},svg);
+      const tl=fsz(tx(svg,ax1-4,(A.Y(d[0])+A.Y(d[1]))/2+4,n?d[3]:d[2],{class:"lbl","text-anchor":"end",fill:d[4]?"var(--mat)":"var(--tau)"}),10);halo(tl,svg);});
+    const P=[[0,20],[th,T],[th+t,T],[th+t+tc,315],[tot,20]].map(p=>[A.X(p[0]),A.Y(p[1])]);
+    el("polyline",{points:pts(P),fill:"none",stroke:"var(--sig)","stroke-width":2.8,"stroke-linejoin":"round"},svg);
+    const tl=fsz(tx(svg,A.X(th+t/2),A.Y(T)-8,nf(T,0)+" °C · "+nf(t,t%1?1:0)+" h",{class:"lbl","text-anchor":"middle","font-weight":"700",fill:"var(--sig)"}),11.5);halo(tl,svg);fitText(tl,ax0+2,ax1,0);
+    /* effets */
+    const gx0=n?8:Math.round(W*0.56)+14,gx1=W-(n?60:64),gy0=n?ay1+70:56,gdy=n?40:52;
+    tx(svg,gx0,n?ay1+46:15,"Ce que le traitement change",{class:"ttl"});
+    const G=[["contraintes relâchées",r,nf(r*100,0)+" %","var(--eps)"],["dureté de la ZAT",(hz-0)/750,nf(hz,0)+" HV","var(--eps)"],["ferritisation de la matrice",fe===null?null:fe,fe===null?"variable":nf(fe*100,0)+" %","var(--gam)"],["carbures de la ZPF décomposés",gr,nf(gr*100,0)+" %","var(--gam)"]];
+    G.forEach((g,i)=>{const y=gy0+i*gdy;
+      const tg=fsz(tx(svg,gx0,y,g[0],{class:"lbl","font-weight":"700"}),11.5);fitSize(tg,gx1-gx0,8);
+      el("rect",{x:gx0,y:y+6,width:gx1-gx0,height:14,fill:"var(--card)",stroke:"var(--muted)","stroke-width":.8},svg);
+      if(g[1]===null)el("rect",{x:gx0,y:y+6,width:gx1-gx0,height:14,fill:hp,opacity:.5},svg);
+      else el("rect",{x:gx0,y:y+6,width:Math.max(0.8,(gx1-gx0)*clamp(g[1],0,1)),height:14,fill:g[3],opacity:.72},svg);
+      if(i===1){const x7=gx0+(gx1-gx0)*700/750,x3=gx0+(gx1-gx0)*350/750;
+        el("line",{x1:x7,y1:y+3,x2:x7,y2:y+23,stroke:"var(--tau)","stroke-width":2},svg);el("line",{x1:x3,y1:y+3,x2:x3,y2:y+23,stroke:"var(--muted)","stroke-width":1.4,"stroke-dasharray":"3 2"},svg);}
+      const tv=fsz(tx(svg,gx1+6,y+18,g[2],{class:"lbl","font-weight":"700",fill:g[3]}),11);fitSize(tv,W-gx1-8,7.5);});
+    const tn=fsz(tx(svg,gx0,gy0+4*gdy-4,"violet : brut de soudage, 700 HV · pointillé : 350 HV",{class:"lbl"}),10);fitSize(tn,W-gx0-8,7.5);
+    /* lectures et commentaire */
+    ro.innerHTML=nbsp("<span>T = <b class='mat'>"+nf(T,0)+" °C</b> · t = <b class='mat'>"+nf(t,t%1?1:0)+" h</b></span><span>P ≈ <b>"+nf(Pj,1)+"</b></span><span>relâchées ≈ <b class='eps'>"+nf(r*100,0)+" %</b></span><span>ZAT ≈ <b class='eps'>"+nf(hz,0)+" HV</b></span><span>ferritisation : <b class='gam'>"+(fe===null?"selon le refroidissement":nf(fe*100,0)+" %")+"</b></span><span>carbures décomposés ≈ <b class='gam'>"+nf(gr*100,0)+" %</b></span>");
+    let s;
+    if(T<550)s="À "+nf(T,0)+" °C, le maintien relâche peu les contraintes ("+nf(r*100,0)+" %) et revient à peine la martensite (≈ "+nf(hz,0)+" HV) : trop froid pour détensionner une fonte.";
+    else if(T<650)s="Détensionnement : "+nf(r*100,0)+" % des contraintes relâchées, martensite revenue (ZAT ≈ "+nf(hz,0)+" HV), matrice intacte : la résistance d'une GS perlitique est conservée.";
+    else if(T<790)s=(fe<0.2?"Début de ferritisation : ":"Ferritisation : ")+"la perlite se décompose en ferrite et graphite ("+nf(fe*100,0)+" % ici). La ZAT s'adoucit (≈ "+nf(hz,0)+" HV) et la pièce devient plus ductile et usinable, mais une GS perlitique perd sa résistance.";
+    else if(T<850)s="Au-dessus d'environ 790 °C dans le modèle, la matrice redevient austénite : c'est le refroidissement qui décide. Lent au four : ferrite et perlite ; à l'air : normalisation, matrice perlitique. Les carbures de la ZPF résistent encore.";
+    else s="Graphitisation : "+nf(gr*100,0)+" % des carbures de la ZPF décomposés en graphite. Le refroidissement doit rester lent, sinon la martensite revient. Réservé aux pièces qui entrent dans un four, souvent après un soudage homogène.";
+    msg.innerHTML=nbsp(s);
+    $$("#m6p .btn").forEach(b=>{const p=PRE[b.dataset.k];b.classList.toggle("on",p[0]===T&&Math.abs(p[1]-t)<1e-6);});
+  }
+  const A=animate($("#m6play"),"▶ Monter en température",7000,p=>{sT.value=450+Math.round(50*p)*10;draw();},null);
+  $$("#m6p .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();const p=PRE[b.dataset.k];sT.value=p[0];st.value=p[1];draw();}));
+  [sT,st].forEach(r=>r.addEventListener("input",()=>{A.stop();draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   Quiz, check-list, sommaire, thème
+   ========================================================= */
+(function(){
+  const box=$("#quiz");if(!box)return;
+  const Q=[
+    {q:"Parmi ces fontes, laquelle se soude le mieux ?",o:["EN-GJL-250","EN-GJS-400-15, ferritique","EN-GJS-1050-6, ausferritique (ADI)","une fonte blanche au chrome"],c:1,e:"La <b>GS ferritique</b> est la plus ductile : elle encaisse le retrait. L'ADI perd son ausferrite sous l'arc, la fonte blanche fissure."},
+    {q:"Dans l'ISO/TR 15608, une fonte à graphite sphéroïdal relève du groupe :",o:["71","72","74","76"],c:1,e:"<b>72</b>, avec les sous-groupes 72.1 à 72.4 ; 71 : GL ; 74 : ADI ; 76 : autres fontes, dont les GV."},
+    {q:"La zone partiellement fondue d'une soudure sur fonte, refroidie vite, contient surtout :",o:["de la ferrite","du graphite sphéroïdal","de la lédéburite (fonte blanche) et de la martensite","de l'austénite au nickel"],c:2,e:"Chauffée entre l'eutectique et le liquidus, elle refond autour du graphite ; ce liquide se fige en <b>fonte blanche</b>. Le métal d'apport n'y arrive pas."},
+    {q:"Un apport en acier doux sur une fonte à 3,4 % de carbone, avec 30 % de dilution, donne une zone fondue à environ :",o:["0,08 % de carbone","0,3 % de carbone","1,1 % de carbone","3,4 % de carbone"],c:2,e:"0,30 × 3,4 + 0,70 × 0,08 ≈ <b>1,1 %</b> : un acier très chargé qui trempe en martensite dure."},
+    {q:"Pourquoi les apports au nickel conviennent-ils à la fonte ?",o:["le nickel forme des carbures durs","le nickel ne forme pas de carbures et le carbone ressort en graphite, dans une austénite ductile","le nickel fond plus haut que la fonte","le nickel supprime la zone affectée"],c:1,e:"La zone fondue au nickel est une <b>austénite ductile avec du graphite</b> : tendre, usinable, elle accepte le retrait. La zone affectée, elle, reste à maîtriser."},
+    {q:"Avec un nickel-fer à 55 % de nickel, pour garder au moins 32 % de nickel, la dilution doit rester sous :",o:["≈ 20 %","≈ 42 %","≈ 58 %","≈ 80 %"],c:1,e:"(1 − D) × 55 ≥ 32 donne <b>D ≤ 42 %</b>. D'où petite électrode et faible intensité."},
+    {q:"Le régime chaud consiste à :",o:["souder sans préchauffage avec du nickel","préchauffer toute la pièce vers 500 à 650 °C, souder avec un apport en fonte et refroidir lentement","préchauffer localement à 100 °C","souder en cordons courts martelés"],c:1,e:"La fonderie rejouée : <b>pièce entière chaude, apport en fonte, refroidissement lent</b>. Pas de martensite, joint homogène."},
+    {q:"En régime froid, entre deux cordons, on :",o:["maintient la pièce à 300 °C au moins","martèle le cordon encore chaud, puis attend que la zone refroidisse","trempe la pièce à l'eau","dépose un cordon le plus long possible"],c:1,e:"<b>Cordons courts, martelés, puis attente</b> : la chaleur ne s'accumule pas, la zone affectée reste étroite."},
+    {q:"Dans une pièce épaisse, sans préchauffage, si l'on double l'énergie de soudage Q, t<sub>8/5</sub> :",o:["ne change pas","double","est divisé par deux","est multiplié par quatre"],c:1,e:"En régime 3D, <b>t<sub>8/5</sub> est proportionnel à Q</b>. Le préchauffage agit bien plus fortement : de 3 s à 30 s entre 20 et 400 °C pour 1 kJ/mm."},
+    {q:"Selon l'ISO 13916, pour une pièce de 10 mm d'épaisseur, le préchauffage se mesure à :",o:["10 mm du bord du chanfrein","40 mm du bord du chanfrein","75 mm du bord du chanfrein","dans le chanfrein"],c:1,e:"<b>4·t = 40 mm</b>, sans dépasser 50 mm ; au-delà de 50 mm d'épaisseur, à 75 mm au moins."},
+    {q:"Le carbone équivalent de soudage CE<sub>s</sub> ne tient pas compte :",o:["du silicium","du phosphore","de la forme du graphite et de la matrice","du chrome"],c:2,e:"C'est un indice de <b>composition</b> : il ignore la forme du graphite, la matrice et la ductilité. Une GS ferritique a un CE<sub>s</sub> élevé, mais elle se soude bien."},
+    {q:"Une EN-GJS-700-2 réparée au nickel-fer doit être traitée après soudage. On choisit :",o:["une ferritisation vers 720 °C","un détensionnement vers 600 à 650 °C","une trempe à l'eau","aucun traitement n'est possible sur une fonte"],c:1,e:"La <b>ferritisation</b> ferait perdre sa perlite, donc sa résistance, à toute la pièce ; le <b>détensionnement</b> revient la martensite et relâche les contraintes."}
+  ];
+  let score=0,done=0;const sc=$("#qzScore");
+  function upd(){let t="Score : "+score+" / "+Q.length;if(done===Q.length)t+=score>=10?"  ·  🎉 prêt pour le cours 4":score>=7?"  ·  relis les explications":"  ·  refais un tour des chapitres";sc.textContent=t;}
+  function render(){box.innerHTML="";score=0;done=0;
+    Q.forEach((it,n)=>{const d=document.createElement("div");d.className="qz";
+      d.innerHTML='<p class="qz-q"><b>'+(n+1)+".</b> "+it.q+'</p><div class="qz-o"></div><div class="qz-e" hidden></div>';
+      const o=d.querySelector(".qz-o"),ex=d.querySelector(".qz-e");let answered=false;
+      it.o.forEach((txt,i)=>{const b=document.createElement("button");b.type="button";b.className="qz-b";b.innerHTML=String.fromCharCode(65+i)+". "+txt;
+        b.addEventListener("click",()=>{if(answered)return;answered=true;done++;const ok=i===it.c;if(ok)score++;b.classList.add(ok?"ok":"ko");o.children[it.c].classList.add("ok");ex.hidden=false;ex.innerHTML=(ok?"✅ <b>Bien joué.</b> ":"❌ <b>Pas tout à fait.</b> ")+it.e;upd();});
+        o.appendChild(b);});
+      box.appendChild(d);});
+    upd();}
+  $("#qzReset").addEventListener("click",render);render();
+})();
+(function(){
+  const boxes=$$("#checklist input[type=checkbox]"),msg=$("#checkMsg"),KEY="fontes-cours3-check";
+  if(!boxes.length)return;
+  let saved=[];try{saved=JSON.parse(localStorage.getItem(KEY)||"[]")||[];}catch(e){saved=[];}
+  boxes.forEach(b=>{b.checked=saved.indexOf(b.dataset.c)>=0;});
+  function upd(){const on=boxes.filter(b=>b.checked).map(b=>b.dataset.c);try{localStorage.setItem(KEY,JSON.stringify(on));}catch(e){}
+    msg.innerHTML=on.length===boxes.length?"🎉 <b>Tout est coché : cap sur le cours 4, la pratique du soudage des fontes, dernier cours de la série !</b>":on.length+" / "+boxes.length+" : reviens sur les points non cochés (les manipulations sont faites pour ça).";}
+  boxes.forEach(b=>b.addEventListener("change",upd));upd();
+})();
+
+
+(function(){
+  const links=$$(".toc a"),tin=$(".toc-in");
+  if(!links.length||!("IntersectionObserver" in window))return;
+  const map={};links.forEach(a=>{map[a.getAttribute("href").slice(1)]=a;});
+  const obs=new IntersectionObserver(ents=>{ents.forEach(en=>{if(!en.isIntersecting)return;const a=map[en.target.id];if(!a)return;
+    links.forEach(l=>l.classList.toggle("on",l===a));
+    if(tin){const tgt=a.offsetLeft-tin.clientWidth/2+a.offsetWidth/2;try{tin.scrollTo({left:tgt,behavior:RM?"auto":"smooth"});}catch(e){tin.scrollLeft=tgt;}}});},{rootMargin:"-45% 0px -50% 0px"});
+  Object.keys(map).forEach(id=>{const s=document.getElementById(id);if(s)obs.observe(s);});
+})();
+(function(){
+  const b=$("#themeBtn");if(!b)return;const KEY="fontes-theme",root=document.documentElement;
+  const lab={auto:"◐ Thème : automatique",light:"☀️ Thème : clair",dark:"🌙 Thème : sombre"};
+  let t="auto";try{t=localStorage.getItem(KEY)||"auto";}catch(e){}
+  function apply(){if(t==="auto")root.removeAttribute("data-theme");else root.setAttribute("data-theme",t);b.textContent=lab[t];}
+  b.addEventListener("click",()=>{t=t==="auto"?"light":t==="light"?"dark":"auto";try{localStorage.setItem(KEY,t);}catch(e){}apply();});
+  apply();
+})();
+})();
+</script>
+</body>
+</html>

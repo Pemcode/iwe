@@ -1,0 +1,1784 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Aciers Cr-Mo, cours 1 : chaleur, pression et fluage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@500;600;700&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F3F6F9; --paper-2:#E6ECF2; --card:#FFFFFF; --ink:#17212B; --muted:#56626F; --line:#C5CFD9;
+  --grid:rgba(40,90,160,.075);
+  --sig:#CF2438; --tau:#8A34B6; --eps:#1B5ED3; --gam:#06849A; --frc:#D46A00; --mat:#26844A; --weld:#9A5B12;
+  --ok:#26844A; --warn:#B86E00; --bad:#C62828;
+  --lv2:#E4EBF2; --hl:#FFF3B0;
+  --font-body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-head:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --font-math:"STIX Two Text","Cambria Math","Cambria","Times New Roman",serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+    --grid:rgba(120,160,220,.07);
+    --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+    --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+  --grid:rgba(120,160,220,.07);
+  --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+  --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+  color-scheme: dark;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0;color:var(--ink);font-family:var(--font-body);font-size:17.5px;line-height:1.62;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;overflow-x:hidden;
+}
+img,svg{max-width:100%}
+.wrap{max-width:800px;margin:0 auto;padding:0 20px}
+.wide{max-width:980px}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.1;margin:0}
+h3{font-size:1.65rem;font-weight:600;margin:2rem 0 .6rem}
+h4{font-size:1.3rem;font-weight:600;margin:1.4rem 0 .4rem}
+p{margin:.7em 0}
+a{color:var(--eps)}
+b,strong{font-weight:700}
+small{font-size:.8em}
+sub{font-size:.72em}
+.m{font-family:var(--font-math);font-size:1.08em;white-space:nowrap}
+.sig{color:var(--sig)} .tau{color:var(--tau)} .eps{color:var(--eps)} .gam{color:var(--gam)} .frc{color:var(--frc)} .mat{color:var(--mat)} .mut{color:var(--muted)} .wcol{color:var(--weld)}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .12em;line-height:1.1}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 .2em .08em}
+.frac>span:last-child{padding:.08em .2em 0}
+ul,ol{padding-left:1.4em}
+li{margin:.25em 0}
+
+/* ---------- en-tête ---------- */
+.hero{padding:34px 0 10px}
+.title-block{border:2.5px solid var(--ink);background:var(--card);display:grid;grid-template-columns:1fr 300px}
+.tb-main{padding:22px 24px;border-right:2.5px solid var(--ink);display:flex;flex-direction:column;justify-content:space-between;gap:14px}
+.tb-series{margin:0 0 .5rem;color:var(--muted);font-size:.95rem}
+.hero h1{font-size:clamp(2.3rem,6vw,4rem);font-weight:700;letter-spacing:-.01em}
+.tb-cells{display:grid;grid-template-rows:repeat(4,auto)}
+.tb-cells>div{padding:9px 16px;border-bottom:1.5px solid var(--ink);display:flex;flex-direction:column;justify-content:center}
+.tb-cells>div:last-child{border-bottom:0}
+.tb-cells small{color:var(--muted);font-size:.78rem}
+.tb-cells b{font-family:var(--font-head);font-size:1.25rem;font-weight:600;line-height:1.15}
+.lede{font-size:1.13rem;max-width:760px;margin:1.2rem 0}
+.theme-btn{align-self:flex-start;font-family:var(--font-body);font-size:.85rem;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
+@media (max-width:760px){.title-block{grid-template-columns:1fr}.tb-main{border-right:0;border-bottom:2.5px solid var(--ink)}.tb-cells{grid-template-rows:none;grid-template-columns:1fr 1fr}.tb-cells>div:nth-child(odd){border-right:1.5px solid var(--ink)}.tb-cells>div:nth-child(3){border-bottom:0}}
+@media (max-width:420px){.tb-cells{grid-template-columns:1fr}.tb-cells>div:nth-child(odd){border-right:0}.tb-cells>div:nth-child(3){border-bottom:1.5px solid var(--ink)}}
+
+/* code couleur */
+.cc{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:stretch;margin:1rem 0 .4rem}
+.cc-box{background:var(--card);border:2px solid var(--line);padding:12px 14px;border-radius:4px}
+.cc-cause{border-color:var(--sig)} .cc-link{border-color:var(--mat)} .cc-eff{border-color:var(--eps)}
+.cc-box small{display:block;color:var(--muted);font-size:.82rem;line-height:1.3}
+.cc-syms{font-family:var(--font-math);font-size:1.7rem;line-height:1.25;display:flex;flex-wrap:wrap;gap:.1em .45em;margin:.2rem 0}
+.cc-box p{margin:0;font-size:.9rem;line-height:1.35}
+.cc-arrow{align-self:center;font-size:1.8rem;color:var(--muted)}
+@media (max-width:700px){.cc{grid-template-columns:1fr}.cc-arrow{transform:rotate(90deg);justify-self:center;line-height:1}}
+.cc-more{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:.5rem 0}
+.cc-more>div{border:2px solid var(--line);background:var(--card);border-radius:4px;padding:6px 10px;font-size:.9rem}
+@media (max-width:640px){.cc-more{grid-template-columns:1fr}}
+
+/* ---------- sommaire ---------- */
+.toc{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-bottom:1.5px solid var(--line);padding-top:env(safe-area-inset-top,0px);margin-top:18px}
+.toc-in{display:flex;gap:6px;overflow-x:auto;padding:9px 20px;max-width:980px;margin:0 auto;scrollbar-width:thin}
+.toc a{flex:none;text-decoration:none;color:var(--ink);font-size:.88rem;padding:4px 11px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);white-space:nowrap}
+.toc a.on{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.toc a:focus-visible,.btn:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--eps);outline-offset:2px}
+
+/* ---------- sections ---------- */
+section.chap{padding:46px 0 10px}
+.cartouche{display:grid;grid-template-columns:86px 1fr 250px;border:2.5px solid var(--ink);background:var(--card);margin-bottom:1.4rem}
+.c-num{font-family:var(--font-head);font-size:3.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;border-right:2.5px solid var(--ink)}
+.c-title{padding:14px 18px;border-right:2.5px solid var(--ink)}
+.c-title h2{font-size:2.1rem;font-weight:700}
+.c-title p{margin:.25rem 0 0;color:var(--muted)}
+.c-img{padding:12px 14px;display:flex;gap:12px;align-items:center;background:var(--paper-2)}
+.c-img .ico{font-size:2.3rem;line-height:1}
+.c-img small{display:block;color:var(--muted);font-size:.78rem}
+.c-img span{font-size:.95rem;line-height:1.3}
+@media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
+
+/* niveaux */
+.lv{margin:1.2rem 0;padding:6px 22px 14px;border-radius:4px}
+.lv1{background:var(--card);border:2px solid var(--ink)}
+.lv2{background:var(--lv2);border-left:6px solid var(--ink)}
+.lv-h{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;font-family:var(--font-head);font-size:1.35rem;font-weight:600;margin:10px 0 4px}
+.lv-h .tag{font-size:.95rem;font-family:var(--font-body);font-weight:400;color:var(--muted)}
+@media (max-width:520px){.lv{padding:6px 14px 12px}}
+
+/* formules et encadrés */
+.fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:600px;text-align:center;border-radius:3px;overflow-x:auto}
+.fx .big{font-family:var(--font-math);font-size:1.9rem;line-height:1.4}
+.fx .cap{font-size:.85rem;color:var(--muted);margin:.3rem 0 0}
+.fx .row{display:flex;flex-wrap:wrap;justify-content:center;gap:.2em 1.4em}
+.syms{margin:.6rem 0;display:grid;grid-template-columns:auto 1fr;gap:.35rem 1rem;align-items:baseline}
+.syms dt{font-family:var(--font-math);font-size:1.25rem;text-align:right;white-space:nowrap}
+.syms dd{margin:0}
+.def{margin:.9rem 0;padding:.5rem .9rem;border-left:3px dotted var(--muted);font-size:.96rem;background:color-mix(in srgb,var(--card) 60%,transparent)}
+.def>b:first-child{font-family:var(--font-head);font-size:1.08rem;font-weight:600}
+.tip{margin:1rem 0;padding:.7rem 1rem;border:1.5px dashed var(--mat);border-radius:4px;font-size:.97rem}
+.warn{margin:1rem 0;padding:.7rem 1rem;border:2px solid var(--bad);border-radius:4px;font-size:.97rem;background:color-mix(in srgb,var(--bad) 7%,transparent)}
+.mnemo{margin:1rem 0;padding:.7rem 1rem;background:var(--hl);border-radius:4px;font-size:.98rem}
+.fun{margin:1.2rem 0;padding:.8rem 1rem;border:2px dashed var(--muted);border-radius:10px;background:var(--card);font-size:.98rem}
+.fun-h{display:block;margin-bottom:.35rem;font-family:var(--font-head);font-size:1.15rem;font-weight:600;letter-spacing:.02em}
+.meta{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--frc);border-radius:4px;background:color-mix(in srgb,var(--frc) 6%,transparent)}
+.weld{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--weld);border-radius:4px;background:color-mix(in srgb,var(--weld) 7%,transparent)}
+.weld>b:first-child{font-family:var(--font-head);font-size:1.15rem;font-weight:600;color:var(--weld)}
+.hp{display:inline-block;font-size:.72rem;font-weight:700;padding:1px 7px;border-radius:9px;background:var(--weld);color:var(--card);vertical-align:middle;margin-left:4px;white-space:nowrap}
+.recall{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:1rem 0}
+.recall>div{background:var(--card);border:1.5px solid var(--line);border-radius:4px;padding:8px 12px;font-size:.92rem}
+.recall .f{font-family:var(--font-math);font-size:1.2rem;margin-bottom:.2rem}
+@media (max-width:640px){.recall{grid-template-columns:1fr}}
+.hist{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:1rem 0}
+.hist>div{background:var(--card);border:1.5px solid var(--weld);border-radius:4px;padding:8px 12px;font-size:.93rem}
+.hist .yr{font-family:var(--font-head);font-size:1.6rem;font-weight:700;color:var(--weld);line-height:1}
+@media (max-width:720px){.hist{grid-template-columns:1fr}}
+
+/* manipulations */
+.lab{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:14px 16px 12px;margin:1.4rem 0}
+.lab-h{font-family:var(--font-head);font-size:1.3rem;font-weight:600;margin:0 0 .2rem}
+.lab-sub{margin:0 0 .6rem;color:var(--muted);font-size:.92rem}
+.lab svg{display:block;width:100%;height:auto;color:var(--ink);font-family:var(--font-body);touch-action:pan-y}
+.ctrl{display:grid;grid-template-columns:minmax(110px,auto) 1fr minmax(92px,auto);gap:4px 12px;align-items:center;margin:.5rem 0}
+.ctrl label{font-size:.95rem}
+.ctrl output{font-family:var(--font-math);font-size:1.08rem;text-align:right;white-space:nowrap}
+@media (max-width:520px){.ctrl{grid-template-columns:1fr auto}.ctrl input[type=range]{grid-column:1/-1;grid-row:2}}
+input[type=range]{width:100%;accent-color:var(--ink);height:28px;margin:0}
+input.r-sig{accent-color:var(--sig)} input.r-tau{accent-color:var(--tau)} input.r-frc{accent-color:var(--frc)} input.r-mat{accent-color:var(--mat)} input.r-eps{accent-color:var(--eps)}
+.btns{display:flex;flex-wrap:wrap;gap:6px;margin:.5rem 0}
+.btn{font-family:var(--font-body);font-size:.9rem;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 13px;cursor:pointer;line-height:1.3}
+.btn:hover{background:var(--paper-2)}
+.btn.on{background:var(--ink);color:var(--paper)}
+.btn.play{border-color:var(--eps);color:var(--eps);font-weight:700}
+.btn:disabled{opacity:.45;cursor:default}
+.readout{font-family:var(--font-math);font-size:1.08rem;background:var(--paper-2);border-radius:4px;padding:.5rem .8rem;margin:.5rem 0;overflow-x:auto;display:flex;flex-wrap:wrap;gap:.2em 1.3em}
+.readout>span{white-space:nowrap}
+.status{font-size:.97rem;margin:.5rem 0;padding:.5rem .8rem;border-left:4px solid var(--eps);background:color-mix(in srgb,var(--eps) 6%,transparent);border-radius:0 4px 4px 0;min-height:2.6em}
+.radios{display:flex;flex-wrap:wrap;gap:6px 14px;margin:.4rem 0;font-size:.95rem}
+.radios label{display:inline-block;cursor:pointer}
+.radios input{margin:0 6px 0 0;vertical-align:middle}
+
+/* svg */
+svg text{fill:currentColor;font-size:13px}
+svg .lbl{font-size:12.5px;fill:var(--muted)}
+svg .mth{font-family:var(--font-math);font-size:16px}
+svg .ttl{font-family:var(--font-head);font-size:15px;font-weight:600}
+svg .axis{stroke:var(--ink);stroke-width:1.4;fill:none}
+svg .tick{stroke:var(--muted);stroke-width:1}
+svg .gridbg{stroke:var(--line);stroke-width:1}
+svg .ref{stroke:var(--muted);stroke-width:1.3;stroke-dasharray:4 3;fill:none}
+.arr line{stroke:currentColor}
+.arr polygon{fill:currentColor}
+
+/* tableaux */
+.tbl-wrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch}
+table.data{border-collapse:collapse;width:100%;font-size:.94rem;background:var(--card)}
+table.data th,table.data td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:middle}
+table.data th{font-family:var(--font-head);font-weight:600;font-size:1.05rem;background:var(--paper-2)}
+table.data td.n{font-family:var(--font-math);white-space:nowrap}
+table.data tr.now td{background:var(--hl)}
+
+/* parcours */
+.route{list-style:none;padding:0;margin:1rem 0;position:relative}
+.route::before{content:"";position:absolute;left:17px;top:10px;bottom:10px;width:4px;background:var(--line);border-radius:2px}
+.route li{position:relative;padding:0 0 14px 52px;margin:0}
+.route li .dot{position:absolute;left:4px;top:0;width:30px;height:30px;border-radius:50%;border:3px solid var(--ink);background:var(--card);font-family:var(--font-head);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+.route li b{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.route li p{margin:.1rem 0 0;font-size:.95rem}
+.series{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:.8rem 0}
+.series>div{background:var(--card);border:1.5px solid var(--line);padding:8px 10px;border-radius:4px;font-size:.88rem}
+.series>div.here{border:2.5px solid var(--ink)}
+.series b{display:block;font-family:var(--font-head);font-size:1.05rem}
+@media (max-width:700px){.series{grid-template-columns:1fr 1fr}}
+
+/* exercices et quiz */
+.exo{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--ink);padding:6px 20px 12px;margin:1.2rem 0;border-radius:4px}
+.exo.defi{border-left-color:var(--weld)}
+.exo h4{margin-top:.8rem}
+.exo .lvtag{font-family:var(--font-body);font-size:.85rem;font-weight:400;color:var(--muted);margin-left:.4rem}
+.exo .q{margin:.25rem 0}
+details{margin:.6rem 0}
+summary{cursor:pointer;font-weight:700;padding:4px 0}
+details .sol{padding:.4rem .9rem;border-left:3px solid var(--mat);margin:.4rem 0}
+details .sol p{margin:.45em 0}
+.qz{background:var(--card);border:1.5px solid var(--line);border-radius:6px;padding:10px 16px;margin:.8rem 0}
+.qz-q{margin:.3rem 0 .6rem}
+.qz-o{display:flex;flex-direction:column;gap:6px}
+.qz-b{text-align:left;font-family:var(--font-body);font-size:.97rem;padding:8px 12px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:5px;cursor:pointer}
+.qz-b:hover{border-color:var(--ink)}
+.qz-b.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--card))}
+.qz-b.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--card))}
+.qz-e{font-size:.94rem;margin:.6rem 0 .2rem}
+.score{position:sticky;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);display:inline-block;background:var(--ink);color:var(--paper);padding:6px 14px;border-radius:999px;font-size:.95rem;margin:.6rem 0}
+
+/* fiche mémoire */
+.fiche{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:2.5px solid var(--ink);background:var(--card);margin:1rem 0}
+.fiche>div{padding:12px 14px;border-right:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}
+.fiche>div:nth-child(3n){border-right:0}
+.fiche>div:nth-last-child(-n+3){border-bottom:0}
+.fiche .ic{font-size:1.9rem;line-height:1}
+.fiche h4{margin:.3rem 0 .2rem;font-size:1.15rem}
+.fiche .f{font-family:var(--font-math);font-size:1.1rem;margin:.2rem 0}
+.fiche p{margin:.2rem 0 0;font-size:.88rem;color:var(--muted)}
+@media (max-width:720px){.fiche{grid-template-columns:1fr 1fr}.fiche>div{border-right:1.5px solid var(--ink)!important;border-bottom:1.5px solid var(--ink)!important}.fiche>div:nth-child(2n){border-right:0!important}.fiche>div:last-child{border-bottom:0!important}}
+@media (max-width:440px){.fiche{grid-template-columns:1fr}.fiche>div{border-right:0!important}}
+.gloss{display:grid;grid-template-columns:minmax(150px,230px) 1fr;gap:0;border-top:1.5px solid var(--line);margin:1rem 0}
+.gloss dt,.gloss dd{border-bottom:1.5px solid var(--line);padding:7px 8px;margin:0}
+.gloss dt{font-weight:700}
+.gloss dd{font-size:.95rem}
+@media (max-width:600px){.gloss{grid-template-columns:1fr}.gloss dt{border-bottom:0;padding-bottom:0}}
+.check label{display:flex;gap:10px;align-items:flex-start;padding:5px 0;cursor:pointer}
+.check input{margin-top:.35em;width:18px;height:18px;accent-color:var(--mat);flex:none}
+footer{padding:40px 0 60px;color:var(--muted);font-size:.9rem}
+hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
+@media (max-width:700px){.m{white-space:normal}.fx{padding:12px 10px}.fx .big{font-size:1.4rem}}
+@media (max-width:400px){body{font-size:16.5px}.wrap{padding:0 14px}.lab{padding:12px 10px}}
+
+/* compléments de la série Rupture */
+.btn.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,var(--card))}
+.btn.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--card))}
+.ctrl[hidden]{display:none}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="wrap wide">
+  <div class="title-block">
+    <div class="tb-main">
+      <div>
+        <p class="tb-series">Aciers Cr-Mo résistant au fluage, série 2.12 : de la centrale à la soudure</p>
+        <h1>Chaleur, pression et fluage : le cahier des charges</h1>
+      </div>
+      <button class="theme-btn" id="themeBtn" type="button" aria-label="Changer de thème">◐ Thème : automatique</button>
+    </div>
+    <div class="tb-cells">
+      <div><small>Cours</small><b>1 sur 5 : pourquoi ces aciers, et comment on juge leur tenue à chaud</b></div>
+      <div><small>Durée conseillée</small><b>≈ 3 h avec les exercices</b></div>
+      <div><small>Prérequis</small><b>la courbe de fluage et ses mécanismes (Fluage, cours 1) ; contrainte, déformation et essai de traction (RDM, cours 1 ; Essais, cours 1) ; logarithmes décimaux et exponentielles</b></div>
+      <div><small>À la fin tu sais</small><b>expliquer pourquoi l'énergie réclame des aciers chauds et sous pression ; utiliser la loi de Norton ; décrire l'essai de fluage ISO 204 ; extrapoler une durée de vie avec Larson-Miller ; choisir une nuance et dimensionner une paroi au fluage ; organiser la surveillance d'un composant et estimer sa vie restante</b></div>
+    </div>
+  </div>
+  <p class="lede">Dans une centrale thermique moderne, la vapeur quitte la chaudière vers 600 °C, sous près de 300 bar, et les tubes qui la portent doivent tenir trente ans sans casser ni gonfler. À cette température, l'acier flue : il s'allonge lentement, même sous une contrainte bien inférieure à sa limite d'élasticité. Ce premier cours pose le cahier des charges des aciers au chrome-molybdène : pourquoi on chauffe toujours plus, comment on mesure et on prévoit le fluage, comment on choisit une nuance et une épaisseur, et comment on surveille un composant vieillissant. Les quatre cours suivants entreront dans le métal, puis dans la soudure.</p>
+
+  <h4>Le code couleur de la série</h4>
+  <div class="cc" role="img" aria-label="Code couleur : les causes en rouge et violet, les paramètres en vert, les effets en bleu et bleu-vert">
+    <div class="cc-box cc-cause"><small>Les causes</small><div class="cc-syms"><span class="sig">T</span><span class="sig">σ</span><span class="tau">cavités</span><span class="tau">D</span></div><p><span class="sig">rouge</span> : ce qui chauffe ou tire (température T, contrainte σ) ; <span class="tau">violet</span> : l'endommagement (cavités, fissures, fraction de vie consommée D)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-link"><small>Les paramètres</small><div class="cc-syms"><span class="mat">n</span><span class="mat">Q</span><span class="mat">C</span><span class="mat">μ</span><span class="mat">S</span></div><p>en <span class="mat">vert</span> : les constantes du matériau et les choix de l'ingénieur (exposant n, énergie d'activation Q, constante de Larson-Miller C, module de cisaillement μ, coefficient de sécurité S, nuance)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-eff"><small>Les effets</small><div class="cc-syms"><span class="eps">ε</span><span class="eps">ε̇</span><span class="eps">t<sub>r</sub></span><span class="eps">η</span><span class="gam">classe</span></div><p><span class="eps">bleu</span> : ce qu'on mesure ou calcule (déformation ε, vitesse ε̇, temps à rupture t<sub>r</sub>, rendement η, épaisseur e) ; <span class="gam">bleu-vert</span> : l'état observé du métal (classe de réplique)</p></div>
+  </div>
+  <div class="cc-more">
+    <div><b class="frc">Orange</b> : les actions et les forces (pression p, charge F, flamme, vapeur).</div>
+    <div><b>Noir</b> : la géométrie dessinée (tubes, diamètres, éprouvettes).</div>
+    <div><b class="wcol">Bronze</b> : les encadrés « métier » 🔥, tournés vers la fabrication et le soudage.</div>
+  </div>
+</div>
+</header>
+
+<nav class="toc" aria-label="Sommaire">
+  <div class="toc-in">
+    <a href="#avant">Avant de commencer</a>
+    <a href="#c1">1 Chaud et sous pression</a>
+    <a href="#c2">2 Le fluage en bref</a>
+    <a href="#c3">3 L'essai de fluage</a>
+    <a href="#c4">4 Larson-Miller</a>
+    <a href="#c5">5 Choisir, dimensionner</a>
+    <a href="#c6">6 Surveiller</a>
+    <a href="#exos">Exercices</a>
+    <a href="#quiz-s">Quiz</a>
+    <a href="#fiche">Fiche mémoire</a>
+    <a href="#gloss">Glossaire</a>
+    <a href="#check">Check-list</a>
+  </div>
+</nav>
+
+<main>
+<section class="chap" id="avant">
+<div class="wrap">
+  <h3 style="margin-top:0">Avant de commencer</h3>
+  <h4>Le fluage en trois cases</h4>
+  <div class="recall">
+    <div><div class="f">I · II · III</div>Sous charge constante et à chaud, la déformation ε grandit avec le temps : stade primaire qui ralentit, secondaire à vitesse presque constante, tertiaire qui accélère jusqu'à la rupture.</div>
+    <div><div class="f"><span class="eps">ε̇</span> ∝ <span class="sig">σ</span><sup>n</sup>·e<sup>−Q/RT</sup></div>La vitesse du stade secondaire suit une loi puissance de la contrainte (Norton) et une loi d'activation thermique (Arrhenius) : quelques degrés de plus la multiplient.</div>
+    <div><div class="f">T &gt; 0,4 T<sub>f</sub></div>Le fluage devient sensible au-delà d'environ 0,4 fois la température de fusion, en kelvins : vers 450 °C pour un acier. Les dislocations montent, les atomes diffusent.</div>
+  </div>
+
+  <div class="def"><b>📘 Correspondance avec le planning et le référentiel</b>. Ce cours ouvre le sujet <b>2.12 « Acier résistant au fluage »</b> du planning de la formation :
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Chapitre du cours</th><th>Ce qu'il apporte à l'IWE</th></tr>
+      <tr><td>1 Chaud et sous pression</td><td>applications à haute température, rendement des installations, place des aciers au chrome-molybdène</td></tr>
+      <tr><td>2 Le fluage en bref</td><td>phénomène et stades du fluage, loi de Norton, variables influentes, mécanismes, cartes d'Ashby</td></tr>
+      <tr><td>3 L'essai de fluage</td><td>essai uniaxial en traction (ISO 204), grandeurs mesurées, données de résistance au fluage</td></tr>
+      <tr><td>4 Larson-Miller</td><td>prévision de la durée de vie, équivalence temps-température, méthode isobare, limites de l'extrapolation</td></tr>
+      <tr><td>5 Choisir, dimensionner</td><td>classement des aciers résistant au fluage, contrainte admissible et épaisseur d'une paroi</td></tr>
+      <tr><td>6 Surveiller</td><td>suivi en service, répliques, prélèvements, durée de vie résiduelle</td></tr>
+    </table></div>
+    Dans le référentiel de l'IIW (<i>International Institute of Welding</i>), le module 2.12 s'intitule « <i>Creep and creep resistant steels</i> » (fluage et aciers résistant au fluage). Il demande notamment à l'IWE (<i>International Welding Engineer</i>) de prévoir la durée de vie en fluage à l'aide d'essais pour décider de l'emploi d'un acier dans une application donnée et juger l'influence de la soudure sur cette durée de vie, et d'expliquer les phénomènes et les stades du fluage en reliant la résistance au fluage aux éléments d'alliage et à la structure de l'acier. Ce cours pose la partie « fluage et durée de vie » ; la métallurgie des nuances, la fragilisation au revenu et le soudage occupent les cours 2 à 5.
+  </div>
+
+  <div class="def"><b>📖 Les normes, sources et sigles de ce cours</b>.
+    <ul>
+      <li><b>ISO 204</b> : essai de fluage uniaxial en traction des matériaux métalliques (elle a remplacé l'EN 10291) ; <b>EN 10216-2</b> : tubes sans soudure pour service sous pression en aciers non alliés et alliés avec caractéristiques spécifiées à température élevée (son annexe donne les résistances au fluage) ; <b>EN 10028-2</b> : tôles en aciers pour appareils à pression, avec caractéristiques à température élevée ; <b>EN 12952-3</b> : chaudières à tubes d'eau, calcul ; <b>EN 13480-3</b> : tuyauteries industrielles métalliques, calcul ; <b>EN 13445-3</b> : récipients sous pression non soumis à la flamme, calcul ; <b>ISO 3057</b> : examen non destructif par répliques métallographiques ; <b>ASTM A213</b> et <b>A335</b> : tubes (T) et tuyaux (P) en aciers ferritiques alliés, d'où les noms T22, P22, T91, P91…</li>
+      <li><b>ECCC</b> (<i>European Creep Collaborative Committee</i>) : comité européen qui rassemble et évalue les résultats d'essais de fluage ; les valeurs de l'EN 10216-2 en sont issues. <b>Frost et Ashby</b>, <i>Deformation-Mechanism Maps</i> (1982) : l'ouvrage de référence des cartes de mécanismes de déformation.</li>
+      <li><b>T</b> : température ; <b>T<sub>f</sub></b> : température de fusion ; <b>σ</b> (sigma) : contrainte ; <b>ε</b> (epsilon) : déformation ; <b>ε̇</b> (epsilon point) : vitesse de déformation, dérivée de ε par rapport au temps ; <b>t<sub>r</sub></b> : temps à rupture (noté t<sub>u</sub> dans l'ISO 204) ; <b>η</b> (êta) : rendement ; <b>p</b> : pression ; <b>log</b> : logarithme décimal (log 1 000 = 3) ; <b>ln</b> : logarithme népérien ; <b>exp</b> : fonction exponentielle ; <b>∝</b> : « proportionnel à ».</li>
+      <li><b>ZAT</b> : zone affectée thermiquement ; <b>TTAS</b> : traitement thermique après soudage ; <b>CND</b> : contrôle non destructif ; <b>MT</b>, <b>PT</b>, <b>UT</b> : magnétoscopie, ressuage, ultrasons ; <b>USC</b> : ultra-supercritique ; <b>REP</b> : réacteur à eau sous pression.</li>
+    </ul>
+    Les modèles des manipulations sont pédagogiques : ils reproduisent les tendances et les ordres de grandeur, et leurs courbes de résistance sont calées sur les valeurs moyennes publiées dans l'EN 10216-2. Pour un calcul réel, on prend les valeurs de la norme de produit et du code de construction applicables.
+  </div>
+
+  <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage</b>
+    <p>Un collecteur de surchauffeur en 10CrMo9-10, une tuyauterie de vapeur en P91, un réacteur d'hydrocraquage en 2,25Cr-1Mo-V : avant d'y déposer le premier cordon, le coordinateur en soudage doit savoir pourquoi ce métal a été choisi et quelle propriété la soudure doit préserver. Ici, ce n'est ni la limite d'élasticité ni la résilience seules, c'est la <b>résistance au fluage sur 100 000 à 200 000 heures</b>. Une soudure trop dure, mal revenue ou à zone affectée adoucie peut diviser cette durée de vie, et c'est souvent elle que les inspecteurs examinent en premier. Ce cours donne le vocabulaire et les outils de calcul ; les cours 3 à 5 les appliqueront au joint soudé.</p>
+  </div>
+
+  <h4>La série en cinq cours</h4>
+  <div class="series" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">
+    <div class="here"><b>1 Chaleur, pression et fluage</b>Applications, fluage, essai, Larson-Miller, choix et dimensionnement, surveillance en service.</div>
+    <div><b>2 La métallurgie des Cr-Mo</b>Rôle du chrome, du molybdène et des micro-additions, carbures, désignations, nuances, traitements thermiques.</div>
+    <div><b>3 Souder un Cr-Mo : les pièges</b>Trempe et hydrogène, fragilisation au revenu, fissuration au réchauffage, zone affectée et fluage du joint.</div>
+    <div><b>4 Souder un Cr-Mo : la pratique</b>Produits d'apport, préchauffage, températures entre passes, cordons, hydrogène, TTAS.</div>
+    <div><b>5 Les assemblages hétérogènes</b>Deux Cr-Mo différents, Cr-Mo et inoxydable austénitique, apports base nickel.</div>
+  </div>
+
+  <h4>Le plan du cours</h4>
+  <ol class="route">
+    <li><span class="dot">1</span><b>Chaud et sous pression</b><p>Pourquoi l'énergie pousse la vapeur toujours plus haut, et ce que cela demande à l'acier.</p></li>
+    <li><span class="dot">2</span><b>Le fluage en bref</b><p>Trois stades, une loi puissance, une activation thermique, quatre mécanismes.</p></li>
+    <li><span class="dot">3</span><b>L'essai de fluage</b><p>Le banc, ses règles et ce qu'il mesure.</p></li>
+    <li><span class="dot">4</span><b>Larson-Miller</b><p>Prévoir trente ans de service avec des essais d'un an, et savoir où s'arrêter.</p></li>
+    <li><span class="dot">5</span><b>Choisir l'acier, dimensionner la paroi</b><p>Du classement des nuances à l'épaisseur d'un collecteur.</p></li>
+    <li><span class="dot">6</span><b>Surveiller le fluage en service</b><p>Répliques, barquettes, mesures, vie restante et décision.</p></li>
+  </ol>
+</div>
+</section>
+
+<section class="chap" id="c1">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">1</div>
+    <div class="c-title"><h2>Chaud et sous pression</h2><p>Pourquoi l'énergie réclame des aciers qui tiennent trente ans à 600 °C</p></div>
+    <div class="c-img"><span class="ico">🌊</span><span><small>Image à retenir</small>La cascade : plus l'eau tombe de haut, plus le moulin tourne ; plus la vapeur est chaude, plus la centrale produit</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la cascade et le moulin</span></div>
+    <p>Les aciers résistant au fluage travaillent là où l'on transforme de la chaleur en travail ou en produits : <b>chaudières</b> et <b>centrales thermiques</b>, <b>fours</b> et <b>échangeurs</b> de raffinerie et de pétrochimie, <b>réacteurs</b> chimiques, unités d'<b>hydrocraquage</b> (où l'on casse des hydrocarbures lourds sous hydrogène), et plus généralement les <b>appareils à pression à parois épaisses</b>. Partout, la même tendance : on cherche à <b>augmenter la pression et la température</b>.</p>
+    <p>Pourquoi ? Pense à un moulin à eau. L'eau qui tombe fait tourner la roue, et plus elle tombe de haut, plus la roue fournit de travail. Dans une centrale, c'est la chaleur qui « tombe » de la vapeur chaude vers l'eau froide du condenseur, et la turbine récupère au passage une partie de cette chute. La hauteur de la cascade, c'est l'<b>écart de température</b> entre la vapeur et le condenseur. Le condenseur est fixé par la rivière ou l'air ambiant, vers 20 à 40 °C ; pour gagner du rendement, il ne reste qu'à <b>chauffer la vapeur plus fort</b>.</p>
+    <p>Et la pression ? Pour fabriquer de la vapeur très chaude sans gaspiller, il faut que l'eau absorbe sa chaleur à haute température, donc qu'elle bouille tard : à 1 bar l'eau bout à 100 °C, à 100 bar vers 311 °C. Au-delà de <b>221 bar</b> (le point critique de l'eau, à 374 °C), elle ne bout même plus : elle passe continûment du liquide à la vapeur. On parle alors de chaudière <b>supercritique</b>.</p>
+    <p>En un siècle, la vapeur des centrales est passée d'environ <b>13 bar et 275 °C</b> à <b>280 bar et 600 °C</b>. Chaque marche a exigé un nouvel acier : acier au carbone, puis au molybdène, puis au chrome-molybdène, puis à 9 et 12 % de chrome. Le chrome et le molybdène, alliés à quelques centièmes ou dixièmes de pour cent de vanadium, de niobium et d'azote, donnent à l'acier sa tenue mécanique à chaud et sa résistance à l'oxydation, au soufre et à l'hydrogène (cours 2). Vers 1960, les premières centrales supercritiques ont visé 600 à 650 °C avec des tuyauteries en acier inoxydable austénitique ; les difficultés rencontrées ont fait redescendre les conditions vers 540 °C pendant près de trente ans. Il a fallu attendre l'acier à 9 % de chrome modifié, le <b>P91</b>, pour repartir : sa première grande application ultra-supercritique, au Japon en 1988, fonctionnait à 31 MPa (310 bar) et 566 °C.</p>
+  </div>
+
+  <div class="lab" id="m1">
+    <p class="lab-h">Manipulation 1 : un siècle de vapeur</p>
+    <p class="lab-sub">Choisis une époque, ou règle la température de la vapeur T<sub>ch</sub> et celle du condenseur T<sub>fr</sub>. Le graphique trace le rendement maximal de Carnot et l'estimation de Curzon et Ahlborn, plus proche des centrales réelles ; la bande colorée sous l'axe indique la famille d'acier qu'il faut pour les tubes les plus chauds. À droite, la chaleur à fournir et le CO₂ émis pour produire 1 kWh électrique avec du charbon. Repères historiques approximatifs, modèle pédagogique.</p>
+    <div class="btns" id="m1e">
+      <button class="btn" data-k="0" type="button">1910</button>
+      <button class="btn" data-k="1" type="button">1925</button>
+      <button class="btn" data-k="2" type="button">1935</button>
+      <button class="btn" data-k="3" type="button">1950</button>
+      <button class="btn" data-k="4" type="button">1960</button>
+      <button class="btn" data-k="5" type="button">1975</button>
+      <button class="btn" data-k="6" type="button">1985</button>
+      <button class="btn" data-k="7" type="button">1995</button>
+      <button class="btn on" data-k="8" type="button">2005</button>
+      <button class="btn" data-k="9" type="button">700 °C</button>
+    </div>
+    <div class="ctrl"><label for="m1T">Vapeur <span class="sig">T<sub>ch</sub></span></label><input type="range" id="m1T" class="r-sig" min="200" max="750" step="5" value="600"><output id="m1To"></output></div>
+    <div class="ctrl"><label for="m1F">Condenseur <span class="mat">T<sub>fr</sub></span></label><input type="range" id="m1F" class="r-mat" min="10" max="60" step="1" value="30"><output id="m1Fo"></output></div>
+    <div class="btns"><button class="btn play" id="m1play" type="button">▶ Un siècle de vapeur</button></div>
+    <svg id="m1svg" role="img" aria-label="Rendement en fonction de la température de la vapeur, familles d'aciers, chaleur et CO2 par kilowattheure"></svg>
+    <div class="readout" id="m1r"></div>
+    <p class="status" id="m1msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">rendement, pression, contrainte</span></div>
+    <div class="def"><b>📖 Rendement de Carnot</b> : rendement maximal d'un moteur thermique qui reçoit de la chaleur d'une source chaude à la température T<sub>ch</sub> et en rejette vers une source froide à T<sub>fr</sub>. Aucun moteur réel ne peut le dépasser. Les températures sont <b>absolues</b>, en kelvins (K) : T (K) = θ (°C) + 273,15.</div>
+    <div class="fx"><div class="big"><span class="eps">η</span><sub>C</sub> = 1 − <span class="frac"><span><span class="mat">T<sub>fr</sub></span></span><span><span class="sig">T<sub>ch</sub></span></span></span></div><p class="cap">η : rendement (travail produit / chaleur reçue) ; T<sub>ch</sub>, T<sub>fr</sub> en K. Vapeur à 600 °C (873 K), condenseur à 30 °C (303 K) : η<sub>C</sub> = 1 − 303/873 ≈ 65 %.</p></div>
+    <p>Un moteur qui atteindrait le rendement de Carnot tournerait infiniment lentement et ne fournirait aucune puissance. Pour un moteur qui produit le maximum de puissance, Curzon et Ahlborn (1975), après Chambadal et Novikov (1957), ont proposé une estimation plus réaliste :</p>
+    <div class="fx"><div class="big"><span class="eps">η</span><sub>CA</sub> ≈ 1 − √(<span class="mat">T<sub>fr</sub></span>/<span class="sig">T<sub>ch</sub></span>)</div><p class="cap">600 °C : η<sub>CA</sub> ≈ 1 − √(303/873) ≈ 41 % ; 275 °C : ≈ 26 %. Les meilleures centrales au charbon actuelles annoncent environ 45 %.</p></div>
+    <p><b>Ce que coûte un point de rendement.</b> Pour produire 1 kWh électrique, il faut brûler 1/η kWh de combustible. Le charbon bitumineux émet environ 94,6 tonnes de CO₂ par térajoule de chaleur (valeur par défaut des lignes directrices du GIEC, le Groupe d'experts intergouvernemental sur l'évolution du climat), soit 341 g de CO₂ par kWh thermique. D'où :</p>
+    <div class="fx"><div class="big"><span class="eps">m<sub>CO₂</sub></span> ≈ <span class="frac"><span>341</span><span><span class="eps">η</span></span></span> g/kWh<sub>é</sub></div><p class="cap">kWh<sub>é</sub> : kilowattheure électrique. η<sub>CA</sub> = 25,6 % (1910) : ≈ 1 330 g/kWh ; 41,1 % (2005) : ≈ 830 g/kWh, soit 38 % de charbon et de CO₂ en moins.</p></div>
+    <p><b>Pourquoi la pression suit.</b> L'eau de la chaudière reçoit sa chaleur en trois temps : réchauffage du liquide, ébullition, surchauffe de la vapeur. L'ébullition se fait à la température de saturation, qui monte avec la pression : 192 °C à 13 bar, 311 °C à 100 bar, 374 °C au point critique (220,6 bar). Plus on bout chaud, plus la température <i>moyenne</i> d'apport de chaleur est haute, et plus le rendement réel s'approche de celui de Carnot. Les centrales supercritiques (au-delà de 221 bar) suppriment le palier d'ébullition.</p>
+    <p><b>Ce que cela demande à l'acier.</b> Dans la paroi d'un tube mince de diamètre D et d'épaisseur e, sous une pression intérieure p, la contrainte circonférentielle moyenne vaut :</p>
+    <div class="fx"><div class="big"><span class="sig">σ</span> ≈ <span class="frac"><span><span class="frc">p</span>·D</span><span>2·<span class="eps">e</span></span></span></div><p class="cap">p en MPa (1 bar = 0,1 MPa), D et e en mm, σ en MPa. Un tube Ø 51 × 8 mm à 280 bar : σ ≈ 28 × 51/16 ≈ 89 MPa, à 600 °C, pendant des dizaines d'années.</p></div>
+    <p>Doubler la pression double la contrainte ; monter de 50 °C peut diviser par deux ou trois ce que l'acier supporte. Les deux évolutions se cumulent : c'est tout le défi des aciers résistant au fluage, qui fait l'objet des chapitres suivants.</p>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Installation</th><th>Conditions typiques</th><th>Aciers typiques</th><th>Ce qui dimensionne</th></tr>
+      <tr><td>Chaudière et tuyauteries de vapeur d'une centrale récente</td><td class="n">250 à 300 bar, 540 à 620 °C</td><td>10CrMo9-10 (T22), X10CrMoVNb9-1 (P91), X10CrWMoVNb9-2 (P92), austénitiques pour les surchauffeurs les plus chauds</td><td>fluage, oxydation par la vapeur</td></tr>
+      <tr><td>Réacteur d'hydrocraquage</td><td class="n">hydrogène sous 100 à 200 bar, ≈ 400 à 450 °C</td><td>2,25Cr-1Mo, 2,25Cr-1Mo-V, en parois souvent de plus de 200 mm</td><td>attaque par l'hydrogène à chaud, fragilisation au revenu, épaisseur</td></tr>
+      <tr><td>Circuit primaire d'un REP</td><td class="n">155 bar, ≈ 290 à 330 °C</td><td>16MND5, 18MND5 (aciers faiblement alliés au manganèse, nickel, molybdène)</td><td>ténacité, fatigue, irradiation ; pas de fluage notable</td></tr>
+    </table></div>
+    <div class="warn"><b>⚠️ Piège : les degrés Celsius dans Carnot.</b> Avec 600 et 30 « degrés », on trouverait 1 − 30/600 = 95 % : absurde. Les températures sont toujours en kelvins dans η<sub>C</sub>, et le rendement de Carnot est une borne, jamais atteinte.</div>
+    <div class="tip">💡 <b>Les noms des centrales.</b> Sous-critique : moins de 221 bar ; supercritique : au-delà, vers 540 à 565 °C ; ultra-supercritique (USC) : 580 à 620 °C environ ; les projets « 700 °C » (A-USC, <i>advanced</i> USC) visent environ 350 bar et 700 °C, avec des alliages à base de nickel.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « 13-275, 280-600 ».</b> En un siècle, la pression a été multipliée par plus de 20 et la température a gagné plus de 300 °C ; le rendement estimé est passé d'un quart à plus de 40 %.</div>
+    <div class="weld"><b>🔥 Le nucléaire et l'ancienne désignation</b>
+      <p>Les cuves et les générateurs de vapeur des REP français utilisent des aciers notés 16MND5 et 18MND5 dans l'ancienne désignation française : le nombre initial donne cent fois la teneur en carbone (0,16 %), les lettres les éléments d'alliage par teneurs décroissantes (M manganèse, N nickel, D molybdène), et le dernier nombre quatre fois la teneur du premier d'entre eux (5/4 ≈ 1,25 % de manganèse). Ce ne sont pas des aciers de fluage, puisque le circuit primaire reste vers 300 °C, mais ce sont des aciers épais, trempés et revenus, dont le soudage obéit aux mêmes précautions : préchauffage, hydrogène, traitement thermique (cours 3 et 4).</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c2">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">2</div>
+    <div class="c-title"><h2>Le fluage en bref</h2><p>Trois stades, une loi puissance, une activation thermique : l'essentiel pour l'ingénieur</p></div>
+    <div class="c-img"><span class="ico">🏔️</span><span><small>Image à retenir</small>Le glacier : solide, il coule pourtant, d'autant plus vite qu'il fait chaud et qu'il est lourd</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le glacier</span></div>
+    <p>Un glacier est de la glace, un solide. Pourtant il descend la vallée de quelques dizaines de mètres par an, sous son propre poids, sans casser. Il « coule » parce qu'il est proche de sa température de fusion. Un acier à 550 °C est dans la même situation, à son échelle : il est à 45 % de sa température de fusion absolue, et ses atomes bougent assez pour qu'il se déforme lentement sous une charge constante.</p>
+    <div class="def"><b>📖 Fluage</b> : déformation plastique lente et continue d'un matériau soumis à une contrainte constante, inférieure à sa limite d'élasticité R<sub>e</sub>, à une température suffisante pour activer la diffusion des atomes. Le comportement est <b>viscoplastique</b> : la déformation dépend du temps. Il devient sensible au-delà d'environ <b>0,4 T<sub>f</sub></b> et domine au-delà de <b>0,5 T<sub>f</sub></b> (T<sub>f</sub> : température de fusion, en kelvins). Pour le fer (T<sub>f</sub> = 1 538 °C), 0,4 T<sub>f</sub> ≈ 450 °C et 0,5 T<sub>f</sub> ≈ 630 °C.</div>
+    <p>Classiquement, la courbe de fluage montre <b>trois stades</b> :</p>
+    <ul>
+      <li><b>I, primaire</b> : la vitesse de déformation diminue ; le métal se durcit en se déformant (ses dislocations s'enchevêtrent) ;</li>
+      <li><b>II, secondaire</b> : la vitesse est presque constante et minimale ; le durcissement et l'adoucissement par diffusion (restauration) s'équilibrent ;</li>
+      <li><b>III, tertiaire</b> : la vitesse accélère ; des cavités s'ouvrent aux joints de grains, la section se réduit, jusqu'à la rupture.</li>
+    </ul>
+    <p>La déformation dépend fortement du <b>temps</b>, de la <b>température</b> et de la <b>contrainte</b>, et aussi de la <b>taille des grains</b>. Quand la contrainte ou la température augmente, toute la courbe se redresse : la déformation est plus rapide, le stade secondaire plus court, la rupture plus précoce. C'est le faisceau de la manipulation 2.</p>
+  </div>
+
+  <div class="lab" id="m2">
+    <p class="lab-h">Manipulation 2 : le faisceau de courbes</p>
+    <p class="lab-sub">Acier 10CrMo9-10 (2,25Cr-1Mo). Choisis le mode : quatre contraintes à température fixée, ou quatre températures à contrainte fixée, puis règle les valeurs de base. Chaque courbe ε(t) va jusqu'à la rupture, marquée d'une croix ; les traits courts séparent les stades I, II et III. Durées calées sur les résistances moyennes de l'EN 10216-2 (chapitre 4) ; forme des courbes : modèle pédagogique.</p>
+    <div class="btns" id="m2m">
+      <button class="btn on" data-k="s" type="button">σ croissante</button>
+      <button class="btn" data-k="T" type="button">T croissante</button>
+    </div>
+    <div class="ctrl"><label for="m2s">Contrainte <span class="sig">σ</span></label><input type="range" id="m2s" class="r-sig" min="40" max="200" step="5" value="70"><output id="m2so"></output></div>
+    <div class="ctrl"><label for="m2T">Température <span class="sig">T</span></label><input type="range" id="m2T" class="r-sig" min="480" max="620" step="5" value="550"><output id="m2To"></output></div>
+    <div class="btns"><button class="btn play" id="m2play" type="button">▶ Lancer les quatre essais</button></div>
+    <svg id="m2svg" role="img" aria-label="Quatre courbes de fluage déformation-temps jusqu'à rupture, avec leurs trois stades"></svg>
+    <div class="readout" id="m2r"></div>
+    <p class="status" id="m2msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">loi de Norton, mécanismes, cartes</span></div>
+    <p><b>La loi du stade secondaire.</b> La vitesse de déformation plastique du stade secondaire s'écrit, sous sa forme normalisée :</p>
+    <div class="fx"><div class="big"><span class="eps">ε̇<sub>p</sub></span> = <span class="mat">ε̇<sub>0</sub></span>·<span class="m">(<span class="sig">σ</span>/<span class="mat">μ</span>)<sup><span class="mat">n</span></sup></span>·exp(−<span class="mat">Q</span>/R<span class="sig">T</span>)</div><p class="cap">ε̇<sub>p</sub> : vitesse de déformation plastique (s⁻¹) ; ε̇<sub>0</sub> : constante du matériau (s⁻¹) ; σ : contrainte (MPa) ; μ : module de cisaillement (MPa), noté aussi G ; n : exposant de Norton (sans unité) ; Q : énergie d'activation (J/mol) ; R = 8,314 J/(mol·K) : constante des gaz parfaits ; T en K.</p></div>
+    <p>Diviser σ par μ, c'est mesurer la contrainte avec la « raideur » du métal, qui baisse quand il chauffe : pour un acier ferritique, μ = E/[2(1 + ν)] ≈ E/2,6 (E : module d'Young, ν ≈ 0,3 : coefficient de Poisson), soit environ 80 GPa à 20 °C et 66 GPa à 550 °C. Le facteur exponentiel est la <b>loi d'Arrhenius</b> : la fraction des sauts atomiques qui réussissent. Dans le cours Fluage 1, la même loi s'écrivait ε̇ = B·σ<sup>n</sup>·exp(−Q/RT) : c'est la même, avec B = ε̇<sub>0</sub>/μ<sup>n</sup>, si l'on néglige la variation de μ.</p>
+    <p><b>Ordres de grandeur.</b> Pour le 10CrMo9-10 vers 550 °C et 70 MPa, les résistances moyennes de l'EN 10216-2 donnent un exposant apparent n ≈ 5 et une énergie d'activation apparente Q ≈ 390 kJ/mol (chapitre 4). Conséquences pratiques :</p>
+    <ul>
+      <li>+10 % de contrainte : vitesse × 1,1⁵ ≈ × 1,6 ;</li>
+      <li>+10 °C : vitesse × 2 environ (exp(Q/R·ΔT/T²) ≈ 2,0 à 550 °C), donc durée de vie divisée par deux ;</li>
+      <li>la vitesse minimale et la durée de vie varient en sens inverse : leur produit ε̇<sub>min</sub>·t<sub>r</sub> reste à peu près constant (relation de Monkman-Grant, ≈ 0,035 dans la manipulation).</li>
+    </ul>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Mécanisme</th><th>Ce qui bouge</th><th>Exposant n</th><th>Effet de la taille de grain d</th><th>Domaine</th></tr>
+      <tr><td><b>Fluage-dislocations</b> (loi puissance)</td><td>les dislocations glissent et montent par diffusion de lacunes au-dessus des obstacles</td><td class="n">3 à 8</td><td>faible</td><td>contraintes moyennes : le cas des chaudières</td></tr>
+      <tr><td><b>Fluage-diffusion de Nabarro-Herring</b></td><td>les atomes diffusent à travers les grains, des faces comprimées vers les faces tendues</td><td class="n">1</td><td>vitesse ∝ 1/d²</td><td>faibles contraintes, très hautes températures</td></tr>
+      <tr><td><b>Fluage-diffusion de Coble</b></td><td>la même chose le long des joints de grains</td><td class="n">1</td><td>vitesse ∝ 1/d³</td><td>faibles contraintes, grains fins</td></tr>
+      <tr><td><b>Glissement aux joints de grains</b></td><td>les grains coulissent les uns sur les autres ; il accompagne la diffusion</td><td class="n">≈ 2</td><td>favorisé par les grains fins</td><td>hautes températures</td></tr>
+      <tr><td><b>Recristallisation dynamique</b></td><td>de nouveaux grains naissent pendant la déformation</td><td class="n">—</td><td>—</td><td>fortes contraintes, très hautes températures (mise en forme à chaud)</td></tr>
+    </table></div>
+    <p><b>Les cartes d'Ashby.</b> Frost et Ashby ont rassemblé ces mécanismes sur des <b>cartes des mécanismes de déformation</b> : en abscisse la température homologue T/T<sub>f</sub>, en ordonnée la contrainte de cisaillement normalisée σ<sub>s</sub>/μ (en échelle logarithmique), et dans chaque domaine le mécanisme le plus rapide, avec des lignes d'égale vitesse de déformation. Une autre présentation porte la vitesse en fonction de la contrainte, avec des lignes d'égale température. Pour un tube à 550 °C sous 70 MPa : T/T<sub>f</sub> ≈ 823/1 811 ≈ 0,45 et σ<sub>s</sub> ≈ σ/√3 ≈ 40 MPa, soit σ<sub>s</sub>/μ ≈ 6 × 10⁻⁴ : on est dans le domaine du <b>fluage-dislocations</b>, en loi puissance. La carte dit aussi comment résister : monter la température de fusion, freiner les dislocations par des atomes en solution et des précipités fins et stables (le rôle du molybdène, du vanadium et du niobium, cours 2), et, contre la diffusion, éviter les grains trop fins.</p>
+    <div class="warn"><b>⚠️ Piège : l'exposant « vrai » et l'exposant apparent.</b> Les modèles simples de montée donnent n ≈ 3 à 5 pour un métal pur. Dans un acier renforcé par des précipités, la contrainte efficace est diminuée d'une contrainte seuil, et l'exposant apparent mesuré peut dépasser 10 aux faibles vitesses. Un exposant est toujours valable dans un domaine donné de contraintes et de températures.</div>
+    <div class="tip">💡 <b>La règle des 10 à 15 °C.</b> Pour les aciers de chaudière, un dépassement de 10 à 15 °C de la température de calcul divise à peu près par deux la durée de vie. C'est pourquoi on surveille les températures de métal des tubes avec des thermocouples.</div>
+    <div class="weld"><b>🔥 Les grains fins de la soudure</b>
+      <p>Le fluage-diffusion est d'autant plus rapide que les grains sont fins : la vitesse de Coble varie comme 1/d³. Or la zone affectée d'une soudure contient, à côté de la zone à gros grains, une bande à grains très fins chauffée juste au-dessus de la température de transformation. Dans les aciers à 9 % de chrome, c'est souvent là que le joint casse en fluage, parfois à la moitié de la durée de vie du métal de base : c'est la fissuration de type IV, au programme du cours 3.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c3">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">3</div>
+    <div class="c-title"><h2>L'essai de fluage</h2><p>Un poids, un four, un extensomètre… et des années de patience (ISO 204)</p></div>
+    <div class="c-img"><span class="ico">⚖️</span><span><small>Image à retenir</small>La balance romaine : un poids au bout d'un levier tire l'éprouvette dans son four, jour et nuit, pendant des années</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la balance romaine</span></div>
+    <p>Une machine de fluage ressemble à une balance romaine. Une <b>éprouvette</b>, en général cylindrique, est vissée entre deux tiges dans un <b>four</b> à trois zones de chauffe, régulé par des thermocouples posés sur l'éprouvette. En haut, un <b>levier</b> porte un plateau de <b>poids</b> : un rapport de bras de 10 transforme 96 kg en près de 9,4 kN, de quoi tirer à 120 MPa une éprouvette de 10 mm de diamètre. La <b>charge reste constante</b>, l'éprouvette s'allonge, et un <b>extensomètre</b> sort les mouvements de l'éprouvette hors du four vers des capteurs de déplacement.</p>
+    <p>Le déroulement est codifié par l'<b>ISO 204</b>, qui a remplacé l'EN 10291 :</p>
+    <ul>
+      <li>on chauffe l'éprouvette à la température d'essai et on l'y maintient <b>au moins une heure avant de la charger</b>, pour que la température soit homogène ;</li>
+      <li>on applique la charge sans choc, selon l'axe de l'éprouvette ;</li>
+      <li>on maintient la température constante (à ±3 °C jusqu'à 600 °C) et la charge, ou plus rarement la contrainte, constante ;</li>
+      <li>on mesure l'allongement : en continu avec l'extensomètre (<b>essai ininterrompu</b>), ou à chaque interruption, après déchargement et refroidissement, sur des repères de l'éprouvette (<b>essai interrompu</b>) ; dans l'<b>essai de rupture par fluage</b>, on ne note que le temps à rupture et l'allongement final.</li>
+    </ul>
+    <p>Un essai de 10 000 h dure 14 mois, un essai de 100 000 h plus de 11 ans. Les laboratoires font donc tourner des dizaines, voire des centaines de machines en parallèle, certaines à plusieurs éprouvettes en série.</p>
+  </div>
+
+  <div class="lab" id="m3">
+    <p class="lab-h">Manipulation 3 : le banc de fluage</p>
+    <p class="lab-sub">Une éprouvette en 10CrMo9-10 de diamètre d<sub>0</sub> = 10 mm est tirée par un poids au bout d'un levier de rapport 10. Choisis le type d'essai et le mode de chargement, règle la contrainte initiale R<sub>o</sub> et la température T, puis lance l'essai : le temps défile en accéléré. Modèle pédagogique : loi de Norton couplée à un endommagement, durées calées sur l'EN 10216-2.</p>
+    <div class="btns" id="m3t">
+      <button class="btn on" data-k="ext" type="button">Ininterrompu</button>
+      <button class="btn" data-k="int" type="button">Interrompu</button>
+      <button class="btn" data-k="rup" type="button">Rupture seule</button>
+    </div>
+    <div class="btns" id="m3c">
+      <button class="btn on" data-k="F" type="button">Charge constante</button>
+      <button class="btn" data-k="S" type="button">Contrainte constante</button>
+    </div>
+    <div class="ctrl"><label for="m3s">Contrainte <span class="sig">R<sub>o</sub></span></label><input type="range" id="m3s" class="r-sig" min="40" max="250" step="5" value="100"><output id="m3so"></output></div>
+    <div class="ctrl"><label for="m3T">Température <span class="sig">T</span></label><input type="range" id="m3T" class="r-sig" min="500" max="650" step="5" value="600"><output id="m3To"></output></div>
+    <div class="btns"><button class="btn play" id="m3play" type="button">▶ Lancer l'essai</button></div>
+    <svg id="m3svg" role="img" aria-label="Machine de fluage à levier avec four et extensomètre, et courbe d'allongement en fonction du temps"></svg>
+    <div class="readout" id="m3r"></div>
+    <p class="status" id="m3msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">grandeurs, symboles, données de calcul</span></div>
+    <p><b>Les grandeurs de l'ISO 204.</b> La norme définit ses grandeurs à partir de la longueur de référence de l'éprouvette, L<sub>r</sub>, le plus souvent égale à la longueur initiale entre repères L<sub>o</sub>, et de la section initiale S<sub>o</sub> :</p>
+    <dl class="syms">
+      <dt>R<sub>o</sub></dt><dd>contrainte initiale (MPa) : force F divisée par S<sub>o</sub>, R<sub>o</sub> = F/S<sub>o</sub>.</dd>
+      <dt>t<sub>u</sub></dt><dd>temps de rupture par fluage (h), noté t<sub>r</sub> dans ce cours ; on le complète par la température et la contrainte : t<sub>u</sub> à 600 °C sous 100 MPa.</dd>
+      <dt>A<sub>u</sub></dt><dd>allongement après rupture par fluage (%) : A<sub>u</sub> = (L<sub>u</sub> − L<sub>o</sub>)/L<sub>o</sub> × 100, L<sub>u</sub> étant la longueur entre repères après rupture.</dd>
+      <dt>Z<sub>u</sub></dt><dd>coefficient de striction après rupture (%) : Z<sub>u</sub> = (S<sub>o</sub> − S<sub>u</sub>)/S<sub>o</sub> × 100, S<sub>u</sub> étant la plus petite section après rupture.</dd>
+      <dt>t<sub>p1</sub></dt><dd>temps pour atteindre 1 % d'allongement plastique (h) ; plus généralement t<sub>px</sub> pour x %.</dd>
+      <dt>ε̇<sub>min</sub></dt><dd>vitesse minimale de fluage, pente du stade secondaire (h⁻¹ ou s⁻¹).</dd>
+    </dl>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Température spécifiée T</th><th>Écart permis entre la température mesurée corrigée et T</th><th>Variation maximale le long de l'éprouvette</th></tr>
+      <tr><td class="n">T ≤ 600 °C</td><td class="n">±3 °C</td><td class="n">3 °C</td></tr>
+      <tr><td class="n">600 &lt; T ≤ 800 °C</td><td class="n">±4 °C</td><td class="n">4 °C</td></tr>
+      <tr><td class="n">800 &lt; T ≤ 1 000 °C</td><td class="n">±5 °C</td><td class="n">5 °C</td></tr>
+      <tr><td class="n">1 000 &lt; T ≤ 1 100 °C</td><td class="n">±6 °C</td><td class="n">6 °C</td></tr>
+    </table></div>
+    <p>Pourquoi tant de rigueur ? Avec la règle des 10 à 15 °C, une erreur de 3 °C change déjà le temps à rupture d'environ 20 %.</p>
+    <p><b>Charge constante ou contrainte constante.</b> À charge constante, la section diminue quand l'éprouvette s'allonge ; à volume constant, la contrainte vraie vaut σ = R<sub>o</sub>·(1 + ε) : +10 % à 10 % d'allongement. Le stade tertiaire en est accéléré. Une machine à contrainte constante (bras de levier à came, ou asservissement) corrige la charge pour garder σ constante. L'ISO 204 admet les deux, mais leurs résultats diffèrent ; les données industrielles viennent presque toutes d'essais à charge constante.</p>
+    <p><b>Des essais aux données de calcul.</b> En rassemblant de nombreux essais, on établit pour chaque nuance :</p>
+    <ul>
+      <li>la <b>résistance à la rupture par fluage</b>, notée couramment R<sub>u/t/T</sub> : la contrainte qui provoque la rupture en un temps t à la température T, par exemple R<sub>u/10⁵/550</sub> ;</li>
+      <li>la <b>limite de fluage à 1 %</b>, notée R<sub>p1/t/T</sub> : la contrainte qui produit 1 % d'allongement plastique en un temps t ;</li>
+      <li>autres notations courantes : σ<sub>R</sub>, ou R<sub>m/t/T</sub> dans certaines normes de produits.</li>
+    </ul>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Nuance (EN 10216-2)</th><th>T</th><th>R<sub>u</sub> à 10⁴ h</th><th>R<sub>u</sub> à 10⁵ h</th><th>R<sub>u</sub> à 2 × 10⁵ h</th></tr>
+      <tr><td>10CrMo9-10 (2,25Cr-1Mo)</td><td class="n">550 °C</td><td class="n">111 MPa</td><td class="n">70 MPa</td><td class="n">57 MPa</td></tr>
+      <tr><td>10CrMo9-10</td><td class="n">600 °C</td><td class="n">60 MPa</td><td class="n">35 MPa</td><td class="n">28 MPa</td></tr>
+      <tr><td>X10CrMoVNb9-1 (P91)</td><td class="n">600 °C</td><td class="n">123 MPa</td><td class="n">94 MPa</td><td class="n">86 MPa</td></tr>
+    </table></div>
+    <p>Ces valeurs sont des <b>moyennes</b> évaluées par l'ECCC ; la dispersion autour de la moyenne est classiquement de ±20 % en contrainte, et une coulée particulière peut se trouver nettement en dessous. Le passage de 10⁵ à 2 × 10⁵ h ne retire « que » 8 à 20 % de résistance : la résistance au fluage décroît lentement avec le temps, mais elle décroît toujours.</p>
+    <div class="warn"><b>⚠️ Piège : A et A<sub>u</sub>.</b> L'allongement après rupture A d'un essai de traction (Essais, cours 1) et l'allongement après rupture par fluage A<sub>u</sub> ne se comparent pas : le second dépend de la contrainte et de la durée, et il chute souvent pour les essais très longs, quand la rupture devient intergranulaire.</div>
+    <div class="tip">💡 <b>Ininterrompu, interrompu, rupture.</b> L'essai ininterrompu donne toute la courbe mais immobilise un extensomètre ; l'essai interrompu se contente de repères, mais chaque arrêt fait subir à l'éprouvette un refroidissement et un réchauffage ; l'essai de rupture seule permet de multiplier les éprouvettes, par exemple plusieurs en série dans un même four.</div>
+    <div class="weld"><b>🔥 L'essai travers-joint</b>
+      <p>Pour une soudure, on prélève des éprouvettes <b>travers-joint</b> : leur partie calibrée contient le métal de base, les deux zones affectées et la zone fondue. Tout l'intérêt est de voir <b>où</b> elles cassent. Si la rupture se place dans le métal de base, le joint est au moins aussi résistant ; si elle se place dans la zone affectée, la résistance du joint est inférieure, et les codes appliquent un coefficient de réduction (chapitre 5, cours 3).</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c4">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">4</div>
+    <div class="c-title"><h2>Larson-Miller : prévoir trente ans avec des essais d'un an</h2><p>Échanger du temps contre de la température, et savoir jusqu'où on peut extrapoler</p></div>
+    <div class="c-img"><span class="ico">⏩</span><span><small>Image à retenir</small>L'avance rapide : chauffer un peu plus fait défiler le film du fluage beaucoup plus vite</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">l'avance rapide</span></div>
+    <p>Une chaudière est calculée pour 100 000 à 200 000 heures, soit 11 à 23 ans de marche continue. Personne ne peut attendre 23 ans avant de choisir un acier. L'astuce consiste à faire défiler le film plus vite : comme le fluage est piloté par la diffusion, et que la diffusion s'accélère très vite avec la température, un essai <b>un peu plus chaud</b> reproduit en quelques mois ce que le service fera en dizaines d'années.</p>
+    <p>En 1952, Larson et Miller ont proposé de résumer cette équivalence par un seul nombre, le <b>paramètre de Larson-Miller</b> :</p>
+    <div class="fx"><div class="big"><span class="eps">P</span> = <span class="sig">T</span>·(<span class="mat">C</span> + log <span class="eps">t<sub>r</sub></span>)</div><p class="cap">T en kelvins, t<sub>r</sub> en heures, log : logarithme décimal ; C : constante du matériau, voisine de 20 pour les aciers faiblement alliés.</p></div>
+    <p>Pour une contrainte donnée, P est le même quelle que soit la température. Autrement dit, chaque contrainte correspond à une valeur de P, et l'on peut tracer une seule <b>courbe maîtresse</b> σ(P), propre au matériau : elle décroît, d'abord lentement, puis de plus en plus vite. Les essais accélérés, chauds et courts, et le service, plus froid et long, se placent sur la même courbe.</p>
+    <p>Exemple pour le 10CrMo9-10 avec C = 20 : un service de 100 000 h à 550 °C (823 K) correspond à P = 823 × (20 + 5) ≈ 20 580. À 625 °C (898 K), la même valeur de P est atteinte en log t<sub>r</sub> = 20 580/898,15 − 20 ≈ 2,91, soit environ <b>820 heures</b>. Cinq semaines d'essai « valent » onze ans de service, à condition que rien ne change dans le métal entre les deux températures.</p>
+    <p>C'est là la limite. Pour que l'équivalence tienne, il faut que le mécanisme de fluage et l'état du métal soient les mêmes à la température d'essai et en service. Or, pendant des dizaines d'années, les carbures grossissent, de nouvelles phases apparaissent, et la courbe peut plonger plus vite que prévu. Les données européennes de l'acier P92, à 9 % de chrome et 1,5 à 2 % de tungstène, l'ont montré : en 1999, l'ECCC estimait sa résistance moyenne à 600 °C pour 100 000 h à 123 MPa ; en 2005, avec deux fois plus d'heures d'essai, l'estimation est tombée à 113 MPa. Celle du P91, réévaluée ensuite sur une base d'essais bien plus longs, a perdu jusqu'à une dizaine de pour cent selon la méthode d'ajustement.</p>
+  </div>
+
+  <div class="lab" id="m4">
+    <p class="lab-h">Manipulation 4 : la courbe maîtresse</p>
+    <p class="lab-sub">Douze essais accélérés simulés : trois contraintes à quatre températures, sur la nuance choisie. Règle la constante C : avec la bonne valeur, les quatre isothermes se rangent sur une seule courbe maîtresse, ajustée en direct. Fixe ensuite la condition de service σ et T : la courbe donne le temps à rupture prévu et le facteur d'extrapolation par rapport à l'essai le plus long. La vue « isothermes » retrace les courbes contrainte-temps. Essais simulés à partir des moyennes de l'EN 10216-2, avec une dispersion d'environ ±20 % en temps.</p>
+    <div class="btns" id="m4a">
+      <button class="btn on" data-k="p22" type="button">10CrMo9-10</button>
+      <button class="btn" data-k="p91" type="button">P91</button>
+    </div>
+    <div class="btns" id="m4v">
+      <button class="btn on" data-k="P" type="button">Courbe maîtresse σ(P)</button>
+      <button class="btn" data-k="t" type="button">Isothermes σ(t)</button>
+    </div>
+    <div class="ctrl"><label for="m4C">Constante <span class="mat">C</span></label><input type="range" id="m4C" class="r-mat" min="10" max="40" step="0.5" value="20"><output id="m4Co"></output></div>
+    <div class="ctrl"><label for="m4s">Service <span class="sig">σ</span></label><input type="range" id="m4s" class="r-sig" min="30" max="200" step="1" value="80"><output id="m4so"></output></div>
+    <div class="ctrl"><label for="m4T">Service <span class="sig">T</span></label><input type="range" id="m4T" class="r-sig" min="480" max="650" step="5" value="540"><output id="m4To"></output></div>
+    <div class="btns"><button class="btn play" id="m4play" type="button">▶ Chercher le meilleur C</button></div>
+    <svg id="m4svg" role="img" aria-label="Contrainte en fonction du paramètre de Larson-Miller pour douze essais à quatre températures, et prévision du temps à rupture en service"></svg>
+    <div class="readout" id="m4r"></div>
+    <p class="status" id="m4msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">d'où vient P, comment l'utiliser, où s'arrêter</span></div>
+    <p><b>D'Arrhenius à Larson-Miller.</b> Supposons qu'à contrainte fixée, le temps à rupture suive une loi d'activation : t<sub>r</sub> = t<sub>0</sub>·exp(Q/RT), où t<sub>0</sub> est une constante de temps (h). En passant au logarithme décimal (ln x = 2,303·log x) :</p>
+    <div class="fx"><div class="big">log <span class="eps">t<sub>r</sub></span> = log t<sub>0</sub> + <span class="frac"><span><span class="mat">Q</span></span><span>2,303·R·<span class="sig">T</span></span></span> &nbsp;⇒&nbsp; <span class="sig">T</span>·(<span class="mat">C</span> + log <span class="eps">t<sub>r</sub></span>) = <span class="frac"><span><span class="mat">Q</span>(<span class="sig">σ</span>)</span><span>2,303·R</span></span></div><p class="cap">avec C = −log t<sub>0</sub>. Le paramètre P n'est autre que l'énergie d'activation apparente divisée par 2,303·R, et cette énergie dépend de la contrainte.</p></div>
+    <p>Pour le 10CrMo9-10 à 70 MPa, P ≈ 20 600 K, d'où Q ≈ 2,303 × 8,314 × 20 600 ≈ 394 kJ/mol : c'est la valeur apparente annoncée au chapitre 2, nettement supérieure à l'énergie d'autodiffusion du fer α (≈ 250 kJ/mol), comme toujours pour un alliage renforcé.</p>
+    <div class="def"><b>📖 Équivalence temps-température</b> : à contrainte égale, deux couples (T<sub>1</sub>, t<sub>1</sub>) et (T<sub>2</sub>, t<sub>2</sub>) sont équivalents s'ils donnent le même P :
+      <div class="fx"><div class="big">log <span class="eps">t<sub>2</sub></span> = <span class="frac"><span><span class="sig">T<sub>1</sub></span>·(<span class="mat">C</span> + log t<sub>1</sub>)</span><span><span class="sig">T<sub>2</sub></span></span></span> − <span class="mat">C</span></div><p class="cap">Essai rompu en 3 000 h à 625 °C (898 K) : P = 898 × (20 + 3,48) ≈ 21 090 ; à 550 °C, log t<sub>2</sub> = 21 090/823 − 20 ≈ 5,62, soit t<sub>2</sub> ≈ 410 000 h (47 ans).</p></div>
+    </div>
+    <p><b>La constante C.</b> On la choisit pour que les isothermes se superposent le mieux possible (manipulation 4). Larson et Miller proposaient C ≈ 20 pour de nombreux aciers ; certains aciers martensitiques à 9 % de chrome, comme le P91, s'ajustent mieux avec une constante plus élevée, vers 30. Une erreur sur C se paie cher : pour l'essai ci-dessus, prendre C = 30 au lieu de 20 annonce 3,4 millions d'heures au lieu de 410 000.</p>
+    <p><b>La méthode isobare.</b> À contrainte fixée, l'équivalence se lit sur un autre graphique : log t<sub>r</sub> en fonction de la température. D'après Larson-Miller, log t<sub>r</sub> = P/T − C est une droite en fonction de 1/T. On réalise quelques essais accélérés à la contrainte de service, à des températures supérieures, et l'on prolonge la droite jusqu'à la gamme de température de service. C'est la méthode reine pour un métal déjà vieilli (chapitre 6).</p>
+    <p><b>Autres paramètres.</b> D'autres combinaisons temps-température existent : Orr-Sherby-Dorn (1954), log t<sub>r</sub> − Q/(2,303·R·T), à énergie d'activation constante ; Manson-Haferd (1953), (T − T<sub>a</sub>)/(log t<sub>r</sub> − log t<sub>a</sub>), où les isothermes convergent vers un point (T<sub>a</sub>, t<sub>a</sub>). Les évaluations modernes de l'ECCC comparent plusieurs modèles et ne retiennent une extrapolation que si elle est physiquement réaliste.</p>
+    <p><b>Jusqu'où extrapoler ?</b> La règle prudente, reprise dans les notes de l'EN 10216-2, est de ne pas extrapoler au-delà d'un <b>facteur 3 en temps</b> par rapport aux essais les plus longs : pour annoncer une valeur à 100 000 h, il faut des essais d'au moins 30 000 h. Dans la norme, les valeurs obtenues avec une extrapolation plus longue sont marquées d'un astérisque.</p>
+    <div class="warn"><b>⚠️ Pièges : kelvins, logarithme décimal, heures.</b> Larson-Miller s'écrit avec T en kelvins, t en heures et le logarithme décimal. En degrés Celsius, avec des secondes ou avec ln, les valeurs de P et de C changent complètement. Beaucoup de documents divisent P par 1 000 (P = 20,58 au lieu de 20 580) : vérifie l'échelle avant de lire une courbe.</div>
+    <div class="tip">💡 <b>Un cousin connu.</b> Le paramètre de Hollomon-Jaffe du revenu, T·(20 + log t)/1 000, a exactement la même forme : il range sur une même courbe les duretés obtenues par des revenus de durées et de températures différentes (Métallurgie, cours 3). Le cours 2 s'en sert pour suivre l'évolution des carbures et régler un revenu, le cours 4 pour choisir le traitement thermique après soudage.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « 20, kelvins, heures, log ».</b> Les quatre réglages de Larson-Miller pour un acier faiblement allié ; et « ×3 » pour la limite d'extrapolation.</div>
+    <div class="weld"><b>🔥 Qualifier vite, mais pas trop</b>
+      <p>Pour un nouveau produit d'apport ou un mode opératoire de soudage destiné au fluage, on réalise souvent des essais de rupture travers-joint accélérés, à des températures supérieures à celle du service, et on les place sur la courbe maîtresse du métal de base. Un essai trop chaud peut cependant changer de mécanisme et masquer la faiblesse de la zone affectée qui apparaîtrait aux longues durées : c'est l'histoire de la fissuration de type IV (cours 3).</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c5">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">5</div>
+    <div class="c-title"><h2>Choisir l'acier, dimensionner la paroi</h2><p>Du classement des nuances à l'épaisseur d'un collecteur</p></div>
+    <div class="c-img"><span class="ico">🧥</span><span><small>Image à retenir</small>Le manteau : plus l'acier tient à chaud, plus le manteau est mince ; un manteau mince chauffe vite sans se fendre</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le manteau</span></div>
+    <p>Trace pour chaque nuance sa résistance moyenne à la rupture en 100 000 h en fonction de la température : tu obtiens un faisceau de courbes qui descendent, et chaque famille d'acier gagne environ 50 °C sur la précédente.</p>
+    <ul>
+      <li><b>Aciers au carbone-manganèse</b> (P235GH, P265GH) : jusque vers 400 à 425 °C ; au-delà, leur cémentite peut se décomposer en graphite.</li>
+      <li><b>Aciers au molybdène</b> (16Mo3, 0,3 % Mo) : jusque vers 460 °C.</li>
+      <li><b>Aciers au chrome-molybdène faiblement alliés</b> (13CrMo4-5 à 1 % Cr, 10CrMo9-10 à 2,25 % Cr) : jusque vers 545 à 550 °C ; les nuances modernes T23 et T24, micro-alliées, montent un peu plus.</li>
+      <li><b>Aciers martensitiques à 9-12 % de chrome</b> (X20CrMoV11-1, P91, E911, P92) : jusque vers 585 à 625 °C.</li>
+      <li><b>Aciers inoxydables austénitiques</b> (X6CrNi18-10 et ses variantes au niobium, au molybdène, à l'azote) : de 600 à 680 °C environ.</li>
+      <li><b>Alliages à base de nickel</b> (alliage 617…) : au-delà de 650 à 700 °C.</li>
+    </ul>
+    <p>Choisir une nuance plus résistante, c'est s'offrir un <b>manteau plus mince</b> pour la même pression. Une paroi plus mince pèse moins, coûte moins de soudure (moins de passes, moins de temps de traitement thermique), et surtout <b>chauffe vite sans se fendre</b> : lors d'un démarrage, l'écart de température entre la face chauffée et le cœur crée des contraintes thermiques d'autant plus fortes que la paroi est épaisse. C'est ainsi que le P91 a remplacé le 10CrMo9-10 dans les gros collecteurs et les tuyauteries de vapeur des centrales qui démarrent et s'arrêtent souvent.</p>
+    <p>La température maximale d'emploi n'est pas fixée que par le fluage : au-delà, l'acier s'oxyde trop vite dans la vapeur ou les fumées. Le <b>chrome</b> est le premier rempart contre cette oxydation, d'où son augmentation d'une famille à l'autre.</p>
+  </div>
+
+  <div class="lab" id="m5">
+    <p class="lab-h">Manipulation 5 : la bonne nuance pour la bonne paroi</p>
+    <p class="lab-sub">Choisis un composant (diamètre extérieur D<sub>o</sub>) et la base de calcul, règle la pression p et la température T. Pour chaque nuance, f = R<sub>u</sub>/S (résistances moyennes de l'EN 10216-2) donne e = p·D<sub>o</sub>/(2f + p) ; les coupes montrent la plus mince et la plus épaisse des nuances utilisables. Coefficient de soudure égal à 1, vérification hors fluage omise, P92 estimé : exercice d'école, pas un calcul de code.</p>
+    <div class="btns" id="m5c">
+      <button class="btn" data-k="38" type="button">Tube d'écran Ø 38</button>
+      <button class="btn" data-k="51" type="button">Surchauffeur Ø 51</button>
+      <button class="btn on" data-k="324" type="button">Collecteur Ø 324</button>
+      <button class="btn" data-k="457" type="button">Tuyauterie Ø 457</button>
+    </div>
+    <div class="btns" id="m5d">
+      <button class="btn on" data-k="0" type="button">10⁵ h, S = 1,5</button>
+      <button class="btn" data-k="1" type="button">2 × 10⁵ h, S = 1,5</button>
+      <button class="btn" data-k="2" type="button">2 × 10⁵ h, S = 1,25</button>
+    </div>
+    <div class="ctrl"><label for="m5p">Pression <span class="frc">p</span></label><input type="range" id="m5p" class="r-frc" min="20" max="320" step="5" value="180"><output id="m5po"></output></div>
+    <div class="ctrl"><label for="m5T">Température <span class="sig">T</span></label><input type="range" id="m5T" class="r-sig" min="450" max="650" step="5" value="560"><output id="m5To"></output></div>
+    <div class="btns"><button class="btn play" id="m5play" type="button">▶ Monter en température</button></div>
+    <svg id="m5svg" role="img" aria-label="Épaisseur de paroi nécessaire pour chaque nuance d'acier et coupe des tubes extrêmes"></svg>
+    <div class="readout" id="m5r"></div>
+    <p class="status" id="m5msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">contrainte nominale, épaisseur, coefficients</span></div>
+    <p><b>La contrainte nominale de calcul en fluage.</b> Les codes européens d'appareils à pression (EN 12952-3 pour les chaudières, EN 13480-3 pour les tuyauteries, EN 13445-3 pour les récipients) fixent une contrainte nominale f à ne pas dépasser. Dans le domaine du fluage, elle découle de la résistance moyenne à la rupture pour la durée de calcul, divisée par un coefficient de sécurité :</p>
+    <div class="fx"><div class="big"><span class="mat">f</span> = <span class="frac"><span>R<sub>u/t/T</sub></span><span><span class="mat">S</span></span></span></div><p class="cap">S ≈ 1,5 en général ; l'EN 13445-3 admet 1,25 si la durée de vie est surveillée en service. La durée de calcul t vaut souvent 100 000 ou 200 000 h. Hors fluage, f découle de la limite d'élasticité à chaud et de la résistance à la traction, et c'est la plus petite valeur qui s'applique.</p></div>
+    <p><b>L'épaisseur d'un tube droit.</b> La contrainte circonférentielle moyenne d'un tube de diamètre extérieur D<sub>o</sub> et d'épaisseur e vaut p·(D<sub>o</sub> − e)/(2e). En l'égalant à f·z, on obtient la formule des codes pour un tube droit sous pression intérieure :</p>
+    <div class="fx"><div class="big"><span class="eps">e</span> = <span class="frac"><span><span class="frc">p</span>·D<sub>o</sub></span><span>2·<span class="mat">f</span>·<span class="mat">z</span> + <span class="frc">p</span></span></span></div><p class="cap">p et f en MPa, D<sub>o</sub> et e en mm ; z : coefficient de soudure (de joint), égal à 1 pour un tube sans soudure longitudinale. On ajoute ensuite les surépaisseurs de corrosion et les tolérances de fabrication.</p></div>
+    <p><b>Exemple.</b> Collecteur Ø 324 mm, 180 bar (18 MPa), 560 °C, 100 000 h, S = 1,5. Pour le 10CrMo9-10, R<sub>u/10⁵/560</sub> = 61 MPa, f ≈ 40,7 MPa et e = 18 × 324/(2 × 40,7 + 18) ≈ 58,7 mm. Pour le P91, R<sub>u/10⁵/560</sub> = 150 MPa, f = 100 MPa et e ≈ 26,8 mm : deux fois moins épais, deux fois plus léger.</p>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Nuance (EN 10216-2)</th><th>Famille</th><th>R<sub>u/10⁵</sub> à 500 °C</th><th>à 550 °C</th><th>à 600 °C</th><th>Emploi usuel jusqu'à</th></tr>
+      <tr><td>P265GH</td><td>C-Mn</td><td class="n">32 MPa</td><td class="n">—</td><td class="n">—</td><td class="n">≈ 425 °C</td></tr>
+      <tr><td>16Mo3</td><td>0,3 % Mo</td><td class="n">102 MPa</td><td class="n">32 MPa</td><td class="n">—</td><td class="n">≈ 460 °C</td></tr>
+      <tr><td>13CrMo4-5</td><td>1Cr-0,5Mo</td><td class="n">145 MPa</td><td class="n">53 MPa</td><td class="n">20 MPa</td><td class="n">≈ 545 °C</td></tr>
+      <tr><td>10CrMo9-10</td><td>2,25Cr-1Mo</td><td class="n">141 MPa</td><td class="n">70 MPa</td><td class="n">35 MPa</td><td class="n">≈ 545 °C</td></tr>
+      <tr><td>X20CrMoV11-1</td><td>12Cr-1Mo-V</td><td class="n">236 MPa</td><td class="n">128 MPa</td><td class="n">59 MPa</td><td class="n">≈ 585 °C</td></tr>
+      <tr><td>X10CrMoVNb9-1 (P91)</td><td>9Cr-1Mo-V-Nb</td><td class="n">258 MPa*</td><td class="n">166 MPa</td><td class="n">94 MPa</td><td class="n">≈ 625 °C</td></tr>
+      <tr><td>X10CrWMoVNb9-2 (P92)</td><td>9Cr-2W-V-Nb</td><td class="n">—</td><td class="n">—</td><td class="n">113 MPa (ECCC 2005)</td><td class="n">≈ 625 °C</td></tr>
+    </table></div>
+    <p class="mut" style="font-size:.9rem">* extrapolation au-delà d'un facteur 3 en temps. Les températures d'emploi sont des ordres de grandeur : elles dépendent du milieu (vapeur, fumées), de la durée et du code.</p>
+    <p><b>Le coefficient de joint en fluage.</b> Une soudure longitudinale ou circulaire peut fluer plus vite que le tube. L'EN 13445-3 applique par défaut un coefficient de réduction de 0,8 à la contrainte nominale en fluage des joints soudés, sauf si des essais de fluage sur joints montrent que leur résistance reste dans la bande du métal de base ; on vise alors un <b>coefficient de joint de 100 %</b>, ce qui pèse sur le choix du produit d'apport (cours 4).</p>
+    <div class="warn"><b>⚠️ Piège : les unités de la pression.</b> 1 bar = 0,1 MPa : 180 bar font 18 MPa, pas 180. Avec p = 180 dans la formule, l'épaisseur dépasserait le rayon du tube.</div>
+    <div class="tip">💡 <b>Les contraintes thermiques.</b> À vitesse de chauffe donnée, l'écart de température dans la paroi, donc la contrainte thermique, croît comme le carré de l'épaisseur. Pour une même contrainte admise, la vitesse de montée en température autorisée varie donc comme 1/e² : diviser l'épaisseur par 2,2 permet de démarrer environ 4,8 fois plus vite.</div>
+    <div class="weld"><b>🔥 L'épaisseur, c'est aussi de la soudure</b>
+      <p>Un collecteur de 59 mm demande, selon le chanfrein, deux à cinq fois plus de métal déposé qu'un collecteur de 27 mm, un préchauffage plus long et un traitement thermique après soudage plus long, car on compte souvent environ une heure par 25 mm d'épaisseur. Le P91 divise l'épaisseur, mais il impose une discipline thermique stricte : préchauffage, températures entre passes, revenu dans une fenêtre étroite (cours 3 et 4).</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c6">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">6</div>
+    <div class="c-title"><h2>Surveiller le fluage en service</h2><p>Répliques, barquettes, mesures : estimer la vie restante et décider</p></div>
+    <div class="c-img"><span class="ico">🦷</span><span><small>Image à retenir</small>L'empreinte du dentiste : un film plastique copie la surface polie et révèle les cavités bien avant la fissure</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">l'empreinte du dentiste</span></div>
+    <p>Une centrale calculée pour 200 000 h fonctionne souvent 30 à 50 ans. Ses températures réelles ne sont jamais exactement celles du calcul, et le métal réel n'est pas le métal moyen des normes. Les exploitants surveillent donc les composants qui fluent, en commençant par les plus chauds et les plus sollicités : collecteurs, coudes, tés, et surtout leurs <b>soudures</b>.</p>
+    <p><b>Au stade précoce</b>, l'endommagement est microscopique :</p>
+    <ul>
+      <li>les <b>répliques métallographiques</b> (ISO 3057) : sur la pièce en place, on meule, on polit et on attaque chimiquement une petite zone, puis on y applique un film plastique ramolli au solvant. En séchant, le film prend l'<b>empreinte</b> de la surface, comme la pâte du dentiste ; on l'observe au microscope au laboratoire. On y voit la microstructure et les <b>cavités</b> débouchantes aux joints de grains ;</li>
+      <li>les <b>prélèvements en barquette</b> : on découpe un petit copeau en forme de barque dans la paroi, ce qui oblige à réparer ensuite par soudage. Une coupe polie montre l'endommagement interne, et des éprouvettes miniatures permettent des essais de fluage isobares sur le métal vieilli.</li>
+    </ul>
+    <p><b>Au stade avancé</b>, les dommages deviennent mesurables à grande échelle : <b>contrôle dimensionnel</b> des pièces suspectes (un tube qui flue gonfle), recherche de fissures <b>débouchantes</b> par contrôle de surface (magnétoscopie, ressuage) et <b>non débouchantes</b> par contrôle volumique (ultrasons).</p>
+    <p>Sur une réplique, la cavitation suit une progression typique, décrite par Neubauer au début des années 1980 : <b>cavités isolées</b>, puis <b>cavités orientées</b> perpendiculairement à la contrainte principale, alignées en chapelets, puis <b>microfissures</b> quand les cavités d'une même facette se rejoignent, enfin <b>macrofissures</b>. Chaque stade appelle une décision.</p>
+  </div>
+
+  <div class="lab" id="m6">
+    <p class="lab-h">Manipulation 6 : le carnet de santé d'un collecteur</p>
+    <p class="lab-sub">Collecteur en 10CrMo9-10 sous σ = 70 MPa. Règle la température de service, la durée de service (8 000 h par an) et une éventuelle surchauffe accidentelle, comptée dans cette durée. La règle de Robinson donne la fraction de vie consommée D ; la réplique montre un état de cavitation compatible ; le bouton « barquette » simule trois essais isobares accélérés sur un prélèvement et prolonge leur droite jusqu'à la température de service. Correspondance entre D et classe de réplique indicative ; modèle pédagogique.</p>
+    <div class="ctrl"><label for="m6T">Service <span class="sig">T</span></label><input type="range" id="m6T" class="r-sig" min="520" max="570" step="1" value="540"><output id="m6To"></output></div>
+    <div class="ctrl"><label for="m6y">Durée de service</label><input type="range" id="m6y" class="r-mat" min="0" max="40" step="1" value="15"><output id="m6yo"></output></div>
+    <div class="ctrl"><label for="m6d">Surchauffe <span class="sig">ΔT</span></label><input type="range" id="m6d" class="r-sig" min="0" max="40" step="1" value="0"><output id="m6do"></output></div>
+    <div class="ctrl"><label for="m6h">pendant</label><input type="range" id="m6h" class="r-sig" min="0" max="10000" step="250" value="0"><output id="m6ho"></output></div>
+    <div class="btns"><button class="btn" id="m6b" type="button">🔬 Prélever une barquette</button><button class="btn play" id="m6play" type="button">▶ Vieillir</button></div>
+    <svg id="m6svg" role="img" aria-label="Temps à rupture en fonction de la température à contrainte constante, essais isobares sur barquette, et réplique montrant les cavités"></svg>
+    <div class="readout" id="m6r"></div>
+    <p class="status" id="m6msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">fraction de vie, classes, méthode isobare</span></div>
+    <p><b>La règle de Robinson</b> (1952), ou règle de la fraction de vie : chaque période t<sub>i</sub> passée sous la contrainte σ<sub>i</sub> et à la température T<sub>i</sub> consomme une fraction t<sub>i</sub>/t<sub>r,i</sub> de la vie, où t<sub>r,i</sub> est le temps à rupture dans ces conditions. On additionne :</p>
+    <div class="fx"><div class="big"><span class="tau">D</span> = Σ <span class="frac"><span>t<sub>i</sub></span><span><span class="eps">t<sub>r</sub></span>(<span class="sig">σ<sub>i</sub></span>, <span class="sig">T<sub>i</sub></span>)</span></span> &nbsp;;&nbsp; rupture quand <span class="tau">D</span> = 1</div><p class="cap">Σ (sigma majuscule) : somme. Vie restante dans des conditions futures (σ, T) : t<sub>reste</sub> = (1 − D)·t<sub>r</sub>(σ, T).</p></div>
+    <p><b>Exemple.</b> Collecteur en 10CrMo9-10 à 70 MPa : t<sub>r</sub> ≈ 220 600 h à 540 °C et 38 700 h à 565 °C. Quinze ans de service (120 000 h), dont 2 000 h de surchauffe à 565 °C : D ≈ 118 000/220 600 + 2 000/38 700 ≈ 0,535 + 0,052 ≈ 0,59. Les 2 000 h de surchauffe, moins de 2 % du temps, ont coûté presque 10 % de ce qui a été consommé.</p>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Classe (Neubauer)</th><th>Ce que montre la réplique</th><th>Décision couramment associée</th></tr>
+      <tr><td><b>A</b></td><td>cavités isolées</td><td>poursuivre l'exploitation ; contrôle à l'intervalle normal</td></tr>
+      <tr><td><b>B</b></td><td>cavités orientées, en chapelets</td><td>poursuivre sous surveillance ; nouveau contrôle rapproché, de l'ordre de 1,5 à 3 ans</td></tr>
+      <tr><td><b>C</b></td><td>microfissures (cavités coalescées sur des facettes)</td><td>exploitation limitée ; réparation ou remplacement à planifier, en général dans l'année</td></tr>
+      <tr><td><b>D</b></td><td>macrofissures</td><td>réparation ou remplacement immédiat</td></tr>
+    </table></div>
+    <p class="mut" style="font-size:.9rem">Délais indicatifs, couramment cités ; chaque exploitant et chaque code fixe les siens. Autre échelle courante, plus fine (lignes directrices allemandes VGB et nordiques Nordtest) : 0 (état neuf), 1 (vieilli sans cavité), 2a, 2b (cavités isolées, peu ou beaucoup), 3a, 3b (cavités orientées, puis en chapelets), 4 (microfissures), 5 (macrofissures).</p>
+    <p><b>La méthode isobare sur barquette.</b> Le métal prélevé a déjà consommé sa fraction D. Si l'on admet la règle de Robinson, sa vie restante à n'importe quelle température vaut (1 − D)·t<sub>r</sub>(σ, T). On réalise donc trois ou quatre essais <b>à la contrainte de service</b> et à des températures supérieures de 60 à 100 °C, pour qu'ils durent quelques centaines à quelques milliers d'heures. On trace log t en fonction de 1/T, on ajuste une droite, et on la prolonge jusqu'à la température de service : on lit directement la vie restante, sans connaître ni l'historique ni les propriétés initiales du métal. Revers de la médaille : l'extrapolation porte sur un facteur 20 à 100 en temps, et la dispersion de trois essais suffit à changer le résultat de plusieurs dizaines de pour cent.</p>
+    <div class="warn"><b>⚠️ Piège : Robinson n'est qu'une règle.</b> Elle suppose que l'ordre des épisodes n'importe pas et ignore les cycles de démarrage. Quand les arrêts et démarrages sont nombreux, la fatigue s'ajoute au fluage et les codes combinent les deux endommagements, avec des règles plus sévères. Et l'oxydation de la paroi réduit l'épaisseur, donc augmente la contrainte au fil des ans.</div>
+    <div class="tip">💡 <b>Où poser les répliques ?</b> Là où la contrainte et la température sont les plus fortes et la microstructure la plus faible : zones affectées des soudures circulaires de collecteurs et de tuyauteries, raccords de piquages, extrados des coudes. Une réplique se pose en surface : elle ne voit pas un endommagement qui commence au cœur de la paroi, d'où l'intérêt des barquettes et des ultrasons.</div>
+    <div class="weld"><b>🔥 La barquette se paie en soudure</b>
+      <p>Prélever une barquette, c'est creuser la paroi d'un composant en service : il faut ensuite la réparer par soudage, avec un mode opératoire qualifié pour la nuance vieillie, son préchauffage et son traitement thermique. Le coordinateur en soudage est donc partie prenante de toute campagne d'expertise de durée de vie.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="exos">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✎</div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Six exercices et un défi, de la chaudière au collecteur vieilli</p></div>
+    <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de musculation : on ne progresse qu'en soulevant soi-même</span></div>
+  </div>
+  <div class="lv lv1"><div class="lv-h">👁 Mode d'emploi <span class="tag">formule littérale, puis valeurs, puis unités</span></div>
+    <p>Cherche chaque question sur papier avant d'ouvrir la correction. Les valeurs viennent des modèles du cours et des manipulations 1 à 6 ; le défi se rejoue dans la manipulation 6. Rappel : T (K) = θ (°C) + 273,15 ; 1 bar = 0,1 MPa ; 8 760 h par année calendaire, 8 000 h par année de service dans les exemples.</p>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 1 : un siècle de rendement <span class="lvtag">N1 · chapitre 1</span></h4>
+    <p>Une centrale de 1910 produit sa vapeur à 275 °C, une centrale de 2005 à 600 °C ; leur condenseur est à 30 °C.</p>
+    <p class="q"><b>a)</b> Calcule pour chacune le rendement de Carnot η<sub>C</sub> et l'estimation de Curzon-Ahlborn η<sub>CA</sub>.</p>
+    <p class="q"><b>b)</b> Selon η<sub>CA</sub>, de combien diminue la quantité de charbon brûlée par kWh électrique entre 1910 et 2005 ?</p>
+    <p class="q"><b>c)</b> Calcule le CO₂ émis par kWh électrique dans les deux cas, avec 341 g de CO₂ par kWh thermique.</p>
+    <p class="q"><b>d)</b> Pourquoi la pression des chaudières a-t-elle augmenté en même temps que la température ? Que se passe-t-il au-delà de 221 bar ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> 1910 : T<sub>ch</sub> = 548,15 K, T<sub>fr</sub> = 303,15 K. <span class="m">η<sub>C</sub> = 1 − 303,15/548,15 = 1 − 0,553 ≈ 44,7 %</span> ; <span class="m">η<sub>CA</sub> = 1 − √0,553 = 1 − 0,744 ≈ 25,6 %</span>. 2005 : T<sub>ch</sub> = 873,15 K ; <span class="m">η<sub>C</sub> = 1 − 0,347 ≈ 65,3 %</span> ; <span class="m">η<sub>CA</sub> = 1 − √0,347 = 1 − 0,589 ≈ 41,1 %</span>.</p>
+      <p><b>b)</b> Chaleur par kWh<sub>é</sub> : <span class="m">1/0,256 ≈ 3,91 kWh</span> en 1910, <span class="m">1/0,411 ≈ 2,43 kWh</span> en 2005. Rapport <span class="m">2,43/3,91 ≈ 0,62</span> : environ <b>38 % de charbon en moins</b>.</p>
+      <p><b>c)</b> <span class="m">m<sub>CO₂</sub> = 341/η</span> : ≈ 1 330 g/kWh<sub>é</sub> en 1910, ≈ 830 g/kWh<sub>é</sub> en 2005 (la manipulation 1 affiche les mêmes valeurs).</p>
+      <p><b>d)</b> L'eau reçoit une grande partie de sa chaleur pendant l'ébullition, à la température de saturation, qui monte avec la pression (192 °C à 13 bar, 311 °C à 100 bar). Bouillir à haute pression relève la température moyenne d'apport de chaleur, donc le rendement réel. Au-delà du point critique (220,6 bar, 374 °C), il n'y a plus d'ébullition : l'eau passe continûment à l'état de vapeur ; la chaudière est dite supercritique.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 2 : la loi de Norton au travail <span class="lvtag">N1 et N2 · chapitre 2</span></h4>
+    <p>Un tube en 10CrMo9-10 flue au stade secondaire avec n = 5 et Q = 390 kJ/mol. Son module de cisaillement vaut μ = (210 000 − 70·θ)/2,6 MPa, θ en °C. T<sub>f</sub> = 1 538 °C.</p>
+    <p class="q"><b>a)</b> À 550 °C et 70 MPa, calcule la température homologue T/T<sub>f</sub> et le rapport σ/μ.</p>
+    <p class="q"><b>b)</b> Une surpression augmente la contrainte de 10 %. Par combien la vitesse de fluage est-elle multipliée ?</p>
+    <p class="q"><b>c)</b> La température passe de 540 à 550 °C à contrainte constante. Calcule le facteur d'Arrhenius, l'effet de la baisse de μ, puis le facteur total.</p>
+    <p class="q"><b>d)</b> Qu'en déduis-tu pour la durée de vie ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">T/T<sub>f</sub> = 823,15/1 811,15 ≈ 0,454</span> : au-delà de 0,4 T<sub>f</sub>, le fluage est sensible. <span class="m">μ = (210 000 − 38 500)/2,6 ≈ 65 960 MPa</span>, d'où <span class="m">σ/μ = 70/65 960 ≈ 1,06 × 10⁻³</span>.</p>
+      <p><b>b)</b> <span class="m">ε̇<sub>2</sub>/ε̇<sub>1</sub> = (σ<sub>2</sub>/σ<sub>1</sub>)<sup>n</sup> = 1,1⁵ ≈ 1,61</span> : +61 % de vitesse pour +10 % de contrainte.</p>
+      <p><b>c)</b> Arrhenius : <span class="m">exp[(Q/R)·(1/T<sub>1</sub> − 1/T<sub>2</sub>)]</span> = <span class="m">exp[(390 000/8,314) × (1/813,15 − 1/823,15)]</span> = <span class="m">exp(46 908 × 1,494 × 10⁻⁵)</span> = <span class="m">exp(0,701) ≈ 2,02</span>. Module : μ(540) ≈ 66 231 MPa, μ(550) ≈ 65 962 MPa ; σ/μ augmente de 0,41 %, d'où <span class="m">1,0041⁵ ≈ 1,02</span>. Total : <span class="m">2,02 × 1,02 ≈ 2,06</span>.</p>
+      <p><b>d)</b> Le produit ε̇<sub>min</sub>·t<sub>r</sub> étant à peu près constant (Monkman-Grant), la durée de vie est divisée par environ 2 pour 10 °C de plus : c'est la règle des 10 à 15 °C. La manipulation 2 en mode « T croissante » à 70 MPa et 550 °C donne bien un facteur 2,0.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 3 : préparer un essai de fluage <span class="lvtag">N1 · chapitre 3</span></h4>
+    <p>Éprouvette en 10CrMo9-10 de diamètre d<sub>0</sub> = 10 mm, longueur entre repères L<sub>o</sub> = 50 mm ; essai à 600 °C sous R<sub>o</sub> = 120 MPa, sur une machine à levier de rapport 10 (g = 9,81 m/s²).</p>
+    <p class="q"><b>a)</b> Calcule la force à appliquer et la masse à poser sur le plateau.</p>
+    <p class="q"><b>b)</b> Quel écart de température l'ISO 204 permet-elle à 600 °C ? Et à 650 °C ?</p>
+    <p class="q"><b>c)</b> Après rupture, L<sub>u</sub> = 61,5 mm et le plus petit diamètre vaut d<sub>u</sub> = 6,3 mm. Calcule A<sub>u</sub> et Z<sub>u</sub>.</p>
+    <p class="q"><b>d)</b> L'essai est à charge constante. Quelle est la contrainte vraie quand l'allongement atteint 10 % ? Avec n = 5, de combien ce seul effet accélère-t-il le fluage ?</p>
+    <p class="q"><b>e)</b> La manipulation 3 annonce 280 h pour cet essai. Combien de temps durerait-il sous 100 MPa ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">S<sub>o</sub> = π·d<sub>0</sub>²/4 = π × 100/4 ≈ 78,5 mm²</span> ; <span class="m">F = R<sub>o</sub>·S<sub>o</sub> = 120 × 78,5 ≈ 9 425 N</span>. Masse : <span class="m">m = F/(10·g) = 9 425/98,1 ≈ 96 kg</span>.</p>
+      <p><b>b)</b> ±3 °C jusqu'à 600 °C inclus ; ±4 °C entre 600 et 800 °C, donc à 650 °C.</p>
+      <p><b>c)</b> <span class="m">A<sub>u</sub> = (61,5 − 50)/50 × 100 = 23 %</span> ; <span class="m">Z<sub>u</sub> = [1 − (d<sub>u</sub>/d<sub>0</sub>)²] × 100 = (1 − 0,397) × 100 ≈ 60 %</span>.</p>
+      <p><b>d)</b> À volume constant, <span class="m">σ = R<sub>o</sub>·(1 + ε) = 120 × 1,10 = 132 MPa</span>, et la vitesse est multipliée par <span class="m">1,1⁵ ≈ 1,61</span> : c'est une des causes de l'accélération du stade tertiaire à charge constante.</p>
+      <p><b>e)</b> Dans la manipulation 3, à 100 MPa et 600 °C : t<sub>u</sub> ≈ 718 h, un mois de machine ; sous 80 MPa, il faudrait environ 2 140 h, trois mois.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 4 : Larson-Miller dans les deux sens <span class="lvtag">N2 · chapitre 4</span></h4>
+    <p>Une éprouvette de 10CrMo9-10 rompt en 3 000 h à 625 °C. On prend C = 20.</p>
+    <p class="q"><b>a)</b> Calcule le paramètre P.</p>
+    <p class="q"><b>b)</b> Quelle durée de vie prévoir à 550 °C sous la même contrainte ?</p>
+    <p class="q"><b>c)</b> Combien d'heures d'essai à 625 °C « valent » 100 000 h à 550 °C ?</p>
+    <p class="q"><b>d)</b> Refais b) avec C = 30. Conclusion ?</p>
+    <p class="q"><b>e)</b> Calcule l'énergie d'activation apparente correspondant à la valeur de P de a).</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">P = T·(C + log t<sub>r</sub>) = 898,15 × (20 + log 3 000) = 898,15 × 23,477 ≈ 21 086 K</span>.</p>
+      <p><b>b)</b> <span class="m">log t = P/T − C = 21 086/823,15 − 20 = 5,616</span>, d'où <span class="m">t ≈ 4,1 × 10⁵ h</span>, environ 47 ans de marche continue.</p>
+      <p><b>c)</b> <span class="m">P = 823,15 × (20 + 5) ≈ 20 579 K</span> ; à 625 °C, <span class="m">log t = 20 579/898,15 − 20 = 2,912</span>, soit <span class="m">t ≈ 817 h</span>, cinq semaines.</p>
+      <p><b>d)</b> <span class="m">P = 898,15 × 33,477 ≈ 30 068 K</span> ; <span class="m">log t = 30 068/823,15 − 30 = 6,528</span>, soit <span class="m">t ≈ 3,4 × 10⁶ h</span>, huit fois plus. La constante C doit être déterminée sur les essais du matériau (manipulation 4) : une mauvaise valeur rend la prévision fantaisiste.</p>
+      <p><b>e)</b> <span class="m">Q = 2,303·R·P = 2,303 × 8,314 × 21 086 ≈ 4,04 × 10⁵ J/mol ≈ 404 kJ/mol</span>.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 5 : dimensionner un collecteur <span class="lvtag">N2 · chapitre 5</span></h4>
+    <p>Collecteur de surchauffeur sans soudure longitudinale (z = 1), diamètre extérieur D<sub>o</sub> = 324 mm, pression de calcul 180 bar, 560 °C, 100 000 h, S = 1,5. Résistances moyennes de l'EN 10216-2 à 560 °C pour 10⁵ h : 10CrMo9-10 : 61 MPa ; X20CrMoV11-1 : 111 MPa ; P91 : 150 MPa. Masse volumique : 7 850 kg/m³.</p>
+    <p class="q"><b>a)</b> Calcule la contrainte nominale f et l'épaisseur e pour les trois nuances.</p>
+    <p class="q"><b>b)</b> Calcule la masse par mètre du collecteur en 10CrMo9-10 et en P91.</p>
+    <p class="q"><b>c)</b> Dans quel rapport la vitesse de montée en température admissible change-t-elle entre ces deux collecteurs ?</p>
+    <p class="q"><b>d)</b> Le 10CrMo9-10 est-il un bon choix ici ? Vérifie avec la manipulation 5.</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> p = 18 MPa ; <span class="m">e = p·D<sub>o</sub>/(2f + p) = 5 832/(2f + 18)</span>. 10CrMo9-10 : <span class="m">f = 61/1,5 ≈ 40,7 MPa</span>, <span class="m">e = 5 832/99,3 ≈ 58,7 mm</span>. X20CrMoV11-1 : <span class="m">f = 74 MPa</span>, <span class="m">e = 5 832/166 ≈ 35,1 mm</span>. P91 : <span class="m">f = 100 MPa</span>, <span class="m">e = 5 832/218 ≈ 26,8 mm</span>.</p>
+      <p><b>b)</b> <span class="m">m = ρ·π·(D<sub>o</sub> − e)·e</span>. 10CrMo9-10 : <span class="m">7 850 × π × 0,2653 × 0,0587 ≈ 384 kg/m</span> ; P91 : <span class="m">7 850 × π × 0,2972 × 0,0268 ≈ 196 kg/m</span>.</p>
+      <p><b>c)</b> Vitesse admissible ∝ 1/e² : <span class="m">(58,7/26,8)² ≈ 4,8</span>. Le collecteur en P91 peut monter en température près de cinq fois plus vite.</p>
+      <p><b>d)</b> Non : outre son épaisseur, le 10CrMo9-10 travaillerait au-delà de son emploi usuel (≈ 545 °C), où l'oxydation et le vieillissement deviennent pénalisants ; la manipulation 5 le marque d'un ⚠ et propose le P91 ou le P92.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 6 : le carnet de santé <span class="lvtag">N1 et N2 · chapitre 6</span></h4>
+    <p>Collecteur en 10CrMo9-10 sous 70 MPa : le modèle donne t<sub>r</sub> ≈ 220 600 h à 540 °C et 38 700 h à 565 °C. Il a fonctionné 15 ans à 8 000 h par an, dont 2 000 h à 565 °C à la suite d'un déréglage.</p>
+    <p class="q"><b>a)</b> Calcule la fraction de vie consommée D (règle de Robinson).</p>
+    <p class="q"><b>b)</b> Quelle vie restante prévoir à 540 °C, en heures et en années de service ?</p>
+    <p class="q"><b>c)</b> Quelle classe de réplique attendre, avec la correspondance de la manipulation 6, et quelle décision ?</p>
+    <p class="q"><b>d)</b> Même questions si la surchauffe avait duré 10 000 h.</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> 15 × 8 000 = 120 000 h, dont 118 000 h à 540 °C : <span class="m">D = 118 000/220 600 + 2 000/38 700 ≈ 0,535 + 0,052 ≈ 0,587</span>.</p>
+      <p><b>b)</b> <span class="m">t<sub>reste</sub> = (1 − D)·t<sub>r</sub>(540 °C) ≈ 0,413 × 220 600 ≈ 91 100 h</span>, soit environ 11,4 ans à 8 000 h par an.</p>
+      <p><b>c)</b> 0,5 ≤ D &lt; 0,7 : classe B, cavités orientées. Poursuivre l'exploitation sous surveillance, nouvelles répliques dans 1,5 à 3 ans environ.</p>
+      <p><b>d)</b> <span class="m">D = 110 000/220 600 + 10 000/38 700 ≈ 0,499 + 0,258 ≈ 0,757</span> : classe C, microfissures probables ; vie restante <span class="m">≈ 0,243 × 220 600 ≈ 53 500 h</span> (6,7 ans), mais la décision est déjà de planifier une réparation ou un remplacement. Huit pour cent du temps passés en surchauffe représentent un tiers de la fraction de vie consommée.</p>
+    </div></details>
+  </div>
+
+  <div class="exo defi">
+    <h4>Défi : la barquette contre Robinson <span class="lvtag">N2 · chapitres 4 et 6 · manipulation 6</span></h4>
+    <p>Le même collecteur a fonctionné 20 ans à 540 °C, dont 3 000 h à 570 °C après une avarie de brûleurs (t<sub>r</sub> à 570 °C ≈ 27 650 h). Règle la manipulation 6 sur 540 °C, 20 ans, +30 °C pendant 3 000 h.</p>
+    <p class="q"><b>a)</b> Calcule D, la vie restante selon Robinson et la classe de réplique attendue.</p>
+    <p class="q"><b>b)</b> On prélève une barquette. Trois essais à 70 MPa donnent 848 h à 600 °C, 183 h à 620 °C et 71 h à 640 °C. Trace log t en fonction de 1/T, prolonge la droite jusqu'à 540 °C : quelle vie restante obtiens-tu ? Compare à Robinson.</p>
+    <p class="q"><b>c)</b> Quelle décision recommander à l'exploitant ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> 160 000 h dont 157 000 h à 540 °C : <span class="m">D = 157 000/220 600 + 3 000/27 650 ≈ 0,712 + 0,108 ≈ 0,820</span>. Vie restante <span class="m">≈ 0,180 × 220 600 ≈ 39 600 h</span>, environ 5 ans. Classe C : microfissures.</p>
+      <p><b>b)</b> Points (1/T en K⁻¹ ; log t) : (1,1453 × 10⁻³ ; 2,928), (1,1196 × 10⁻³ ; 2,263), (1,0951 × 10⁻³ ; 1,851). La droite des moindres carrés a une pente d'environ 21 500 K. À 540 °C, 1/T = 1,2298 × 10⁻³ : <span class="m">log t ≈ 2,347 + 21 500 × (1,2298 − 1,1200) × 10⁻³</span> <span class="m">≈ 4,71</span>, soit <span class="m">t ≈ 51 000 h</span>, 6,4 ans, environ 28 % de plus que Robinson. Avec les deux points extrêmes seulement, on trouverait environ 55 000 h : trois essais dispersés de ±20 % changent la prévision de plusieurs dizaines de pour cent. La manipulation 6, bouton « barquette », affiche la même droite et 51 000 h environ.</p>
+      <p><b>c)</b> Les deux méthodes s'accordent sur quelques années seulement, et la réplique montrerait des microfissures : exploitation limitée, réparation ou remplacement du collecteur à planifier dans l'année, contrôles rapprochés (répliques, ultrasons) d'ici là, et surtout correction de la cause de la surchauffe. On retient la valeur la plus prudente, celle de Robinson.</p>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="quiz-s">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">?</div>
+    <div class="c-title"><h2>Quiz : 12 questions éclair</h2><p>Chaque réponse est expliquée, même quand tu as juste</p></div>
+    <div class="c-img"><span class="ico">🎯</span><span><small>Image à retenir</small>La cible : vise 10 sur 12 avant le cours 2</span></div>
+  </div>
+  <div id="quiz"></div>
+  <div class="score" id="qzScore" aria-live="polite">Score : 0 / 12</div>
+  <div class="btns"><button class="btn" id="qzReset" type="button">↺ Recommencer le quiz</button></div>
+</div>
+</section>
+
+<section class="chap" id="fiche">
+<div class="wrap wide">
+  <div class="cartouche">
+    <div class="c-num">★</div>
+    <div class="c-title"><h2>Fiche mémoire du cours 1</h2><p>Neuf cases, neuf images : à photographier, puis à redessiner de tête</p></div>
+    <div class="c-img"><span class="ico">📜</span><span><small>Image à retenir</small>Six cents exemplaires : le petit livre de Carnot, oublié puis fondateur</span></div>
+  </div>
+  <div class="fiche">
+    <div><div class="ic">🌊</div><h4>La cascade</h4><div class="f"><span class="eps">η</span><sub>C</sub> = 1 − <span class="mat">T<sub>fr</sub></span>/<span class="sig">T<sub>ch</sub></span></div><p>En kelvins. Chauffer plus fort la vapeur, c'est du rendement : de 13 bar et 275 °C à 280 bar et 600 °C en un siècle.</p></div>
+    <div><div class="ic">🏔️</div><h4>Le glacier</h4><div class="f"><span class="sig">T</span> &gt; 0,4 T<sub>f</sub></div><p>Déformation lente sous σ &lt; R<sub>e</sub> ; stades I (ralentit), II (constant), III (accélère jusqu'à rupture).</p></div>
+    <div><div class="ic">⚙️</div><h4>Norton</h4><div class="f"><span class="eps">ε̇</span> = ε̇<sub>0</sub>(<span class="sig">σ</span>/<span class="mat">μ</span>)<sup><span class="mat">n</span></sup>e<sup>−Q/RT</sup></div><p>n ≈ 5, Q ≈ 390 kJ/mol pour le 10CrMo9-10 : +10 % de σ, ×1,6 ; +10 °C, ×2.</p></div>
+    <div><div class="ic">🗺️</div><h4>La carte d'Ashby</h4><div class="f">σ<sub>s</sub>/μ ↔ T/T<sub>f</sub></div><p>Dislocations (n de 3 à 8) aux contraintes moyennes ; diffusion (n = 1, grains fins) aux faibles contraintes.</p></div>
+    <div><div class="ic">⚖️</div><h4>La balance romaine</h4><div class="f">ISO 204 · ±3 °C</div><p>Charge constante, au moins 1 h à température avant charge ; t<sub>u</sub>, A<sub>u</sub>, Z<sub>u</sub>, t<sub>p1</sub>, ε̇<sub>min</sub>.</p></div>
+    <div><div class="ic">⏩</div><h4>L'avance rapide</h4><div class="f"><span class="eps">P</span> = <span class="sig">T</span>(<span class="mat">C</span> + log <span class="eps">t<sub>r</sub></span>)</div><p>K, heures, log ; C ≈ 20 (≈ 30 pour 9 % Cr) ; extrapoler au plus d'un facteur 3 en temps.</p></div>
+    <div><div class="ic">🧥</div><h4>Le manteau</h4><div class="f"><span class="eps">e</span> = <span class="frc">p</span>D<sub>o</sub>/(2<span class="mat">f</span> + <span class="frc">p</span>)</div><p>f = R<sub>u</sub>/S, S ≈ 1,5 ; le P91 divise l'épaisseur par deux face au 10CrMo9-10, et la chauffe va 5 fois plus vite.</p></div>
+    <div><div class="ic">🦷</div><h4>L'empreinte</h4><div class="f">A · B · C · D</div><p>Répliques (ISO 3057) : cavités isolées, orientées, microfissures, macrofissures ; barquettes et CND complètent.</p></div>
+    <div><div class="ic">🧮</div><h4>Robinson</h4><div class="f"><span class="tau">D</span> = Σ t<sub>i</sub>/<span class="eps">t<sub>r,i</sub></span></div><p>Vie restante (1 − D)·t<sub>r</sub> ; la méthode isobare sur barquette la mesure directement.</p></div>
+  </div>
+  <div class="fun"><span class="fun-h">📜 Fun fact : six cents exemplaires</span>En 1824, un jeune officier du génie de 28 ans, ancien élève de l'École polytechnique, publie à compte d'auteur un petit livre de 118 pages tiré à 600 exemplaires : <i>Réflexions sur la puissance motrice du feu</i>. Sadi Carnot y compare la machine à vapeur à une roue hydraulique : la roue tire son travail de la hauteur de chute de l'eau, la machine thermique de la différence de températures entre la chaudière et le condenseur. Le livre passe presque inaperçu. Carnot meurt du choléra le 24 août 1832, à 36 ans ; ses effets personnels, archives comprises, sont brûlés pour éviter la contagion. En 1834, l'ingénieur Émile Clapeyron reprend son raisonnement et le dessine sous forme de cycle dans un diagramme pression-volume ; c'est notamment par ce mémoire que Rudolf Clausius et William Thomson, futur lord Kelvin, découvrent Carnot et fondent la thermodynamique vers 1850. Deux siècles plus tard, chaque degré gagné par les aciers de chaudière applique encore sa règle : <a href="#c1">chapitre 1</a>.</div>
+</div>
+</section>
+
+<section class="chap" id="gloss">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">A–Z</div>
+    <div class="c-title"><h2>Glossaire</h2><p>Les mots, symboles et sigles de ce cours</p></div>
+    <div class="c-img"><span class="ico">📖</span><span><small>Image à retenir</small>Le dictionnaire : un mot flou, un clic</span></div>
+  </div>
+  <dl class="gloss">
+    <dt>16MND5, 18MND5</dt><dd>Aciers faiblement alliés au manganèse, au nickel et au molybdène des cuves et générateurs de vapeur des REP, en ancienne désignation française (M : Mn, N : Ni, D : Mo).</dd>
+    <dt>A<sub>u</sub>, Z<sub>u</sub></dt><dd>Allongement après rupture par fluage et coefficient de striction après rupture, en % (ISO 204).</dd>
+    <dt>A-USC</dt><dd>Ultra-supercritique avancé : centrales visant environ 350 bar et 700 °C, avec des alliages à base de nickel.</dd>
+    <dt>Arrhenius (loi d')</dt><dd>Variation exponentielle d'une vitesse avec la température absolue, en exp(−Q/RT) : la fraction des sauts atomiques qui franchissent la barrière d'énergie Q.</dd>
+    <dt>ASTM A213, A335</dt><dd>Spécifications américaines des tubes (T) et tuyaux (P) en aciers ferritiques alliés : T22, P22, T91, P91, P92…</dd>
+    <dt>Austénitique (acier)</dt><dd>Acier, en général inoxydable au chrome-nickel, de structure cubique à faces centrées : plus résistant au fluage au-delà de 600 °C, mais plus dilatable et moins conducteur que les aciers ferritiques.</dd>
+    <dt>Barquette</dt><dd>Prélèvement en forme de barque découpé dans la paroi d'un composant en service, pour examen métallographique et essais ; il faut ensuite réparer par soudage.</dd>
+    <dt>C (Larson-Miller)</dt><dd>Constante du paramètre de Larson-Miller, voisine de 20 pour les aciers faiblement alliés, de 30 pour les aciers à 9 % de chrome ; elle vaut −log t<sub>0</sub>.</dd>
+    <dt>Carte d'Ashby</dt><dd>Carte des mécanismes de déformation (Frost et Ashby) : contrainte normalisée σ<sub>s</sub>/μ en fonction de T/T<sub>f</sub>, avec le mécanisme dominant et des lignes d'égale vitesse.</dd>
+    <dt>Cavité</dt><dd>Petit vide qui s'ouvre aux joints de grains pendant le fluage, surtout sur les joints perpendiculaires à la contrainte principale.</dd>
+    <dt>Charge constante, contrainte constante</dt><dd>Deux modes d'essai : force fixe (la contrainte vraie croît avec l'allongement) ou force corrigée pour garder la contrainte vraie fixe.</dd>
+    <dt>CND (MT, PT, UT)</dt><dd>Contrôles non destructifs : magnétoscopie, ressuage (fissures débouchantes), ultrasons (défauts internes).</dd>
+    <dt>Coble, Nabarro-Herring</dt><dd>Mécanismes de fluage-diffusion : les atomes migrent le long des joints de grains (Coble, vitesse en 1/d³) ou à travers les grains (Nabarro-Herring, en 1/d²) ; n = 1.</dd>
+    <dt>Coefficient de joint z</dt><dd>Coefficient appliqué à la contrainte nominale d'une paroi soudée ; en fluage, l'EN 13445-3 prend 0,8 par défaut, sauf essais de fluage sur joints.</dd>
+    <dt>Coefficient de sécurité S</dt><dd>Diviseur appliqué à la résistance moyenne au fluage pour obtenir la contrainte nominale f : ≈ 1,5, ou 1,25 avec surveillance de la durée de vie.</dd>
+    <dt>Curzon-Ahlborn (rendement de)</dt><dd>Estimation η ≈ 1 − √(T<sub>fr</sub>/T<sub>ch</sub>) du rendement d'un moteur thermique à puissance maximale (aussi attribuée à Chambadal et Novikov).</dd>
+    <dt>D (fraction de vie)</dt><dd>Fraction de la durée de vie en fluage consommée, Σ t<sub>i</sub>/t<sub>r,i</sub> selon Robinson ; rupture prévue quand D = 1.</dd>
+    <dt>ECCC</dt><dd><i>European Creep Collaborative Committee</i> : comité européen qui collecte et évalue les essais de fluage ; ses moyennes alimentent les normes de produits.</dd>
+    <dt>ε, ε̇, ε̇<sub>min</sub></dt><dd>Déformation (sans unité ou %), vitesse de déformation (s⁻¹ ou h⁻¹), vitesse minimale de fluage (pente du stade secondaire).</dd>
+    <dt>Essai interrompu, ininterrompu, de rupture</dt><dd>Mesure de l'allongement à chaque arrêt sur repères, en continu à l'extensomètre, ou mesure du seul temps à rupture.</dd>
+    <dt>Extensomètre</dt><dd>Appareil qui mesure l'allongement de l'éprouvette en continu, par des tiges sortant du four ou sans contact.</dd>
+    <dt>f (contrainte nominale)</dt><dd>Contrainte de calcul d'une paroi sous pression, en MPa ; en fluage, R<sub>u/t/T</sub>/S.</dd>
+    <dt>Fluage</dt><dd>Déformation plastique lente et continue sous contrainte constante inférieure à R<sub>e</sub>, à une température suffisante pour activer la diffusion (au-delà d'environ 0,4 T<sub>f</sub>).</dd>
+    <dt>Graphitisation</dt><dd>Décomposition lente de la cémentite des aciers au carbone et au carbone-molybdène en graphite, au-delà de 425 à 470 °C environ : elle fragilise l'acier.</dd>
+    <dt>Hollomon-Jaffe (paramètre de)</dt><dd>T·(20 + log t)/1 000, de même forme que Larson-Miller : il caractérise l'effet d'un revenu de durée t à la température T.</dd>
+    <dt>Hydrocraquage</dt><dd>Procédé de raffinage qui casse les hydrocarbures lourds sous hydrogène, à haute pression et vers 400 à 450 °C, dans des réacteurs en 2,25Cr-1Mo(-V).</dd>
+    <dt>Isobare (méthode)</dt><dd>Extrapolation à contrainte constante : on trace log t<sub>r</sub> en fonction de 1/T pour des essais accélérés, et on prolonge jusqu'à la température de service.</dd>
+    <dt>Larson-Miller (paramètre P)</dt><dd>P = T·(C + log t<sub>r</sub>), T en K, t<sub>r</sub> en h ; une même contrainte correspond à un même P : courbe maîtresse σ(P).</dd>
+    <dt>log, ln, exp</dt><dd>Logarithme décimal (log 100 = 2), logarithme népérien (ln x = 2,303·log x), fonction exponentielle.</dd>
+    <dt>Manson-Haferd, Orr-Sherby-Dorn</dt><dd>Autres paramètres temps-température pour extrapoler le fluage.</dd>
+    <dt>Martensitique à 9-12 % Cr (acier)</dt><dd>Acier au chrome trempé et revenu (X20CrMoV11-1, P91, P92) : martensite revenue renforcée par des précipités fins ; l'acier ferritique le plus résistant au fluage.</dd>
+    <dt>Microfissure, macrofissure</dt><dd>Fissure à l'échelle d'une ou quelques facettes de grains (cavités coalescées), puis fissure visible à l'échelle de la pièce.</dd>
+    <dt>Monkman-Grant (relation de)</dt><dd>ε̇<sub>min</sub>·t<sub>r</sub> ≈ constante : la vitesse minimale et le temps à rupture varient en sens inverse.</dd>
+    <dt>μ (mu), G</dt><dd>Module de cisaillement (MPa), ≈ E/2,6 pour un acier ; il diminue quand la température augmente.</dd>
+    <dt>n (exposant de Norton)</dt><dd>Exposant de la contrainte dans la loi de Norton : 3 à 8 pour le fluage-dislocations, 1 pour le fluage-diffusion ; apparent, il peut dépasser 10 dans les alliages renforcés.</dd>
+    <dt>Neubauer (classes de)</dt><dd>Classement des répliques : A cavités isolées, B cavités orientées, C microfissures, D macrofissures. Autre échelle courante : 0 à 5 (VGB, Nordtest).</dd>
+    <dt>Norton (loi de)</dt><dd>Loi puissance de la vitesse de fluage secondaire : ε̇ = ε̇<sub>0</sub>·(σ/μ)<sup>n</sup>·exp(−Q/RT).</dd>
+    <dt>Point critique</dt><dd>Au-delà de 220,6 bar et 374 °C, l'eau ne présente plus de transition liquide-vapeur : pas d'ébullition.</dd>
+    <dt>Q, R</dt><dd>Énergie d'activation (J/mol), constante des gaz parfaits R = 8,314 J/(mol·K).</dd>
+    <dt>R<sub>o</sub></dt><dd>Contrainte initiale d'un essai de fluage : force divisée par la section initiale (ISO 204).</dd>
+    <dt>R<sub>u/t/T</sub>, R<sub>p1/t/T</sub></dt><dd>Résistance à la rupture par fluage (contrainte qui fait rompre en un temps t à T) et limite de fluage à 1 % (contrainte qui donne 1 % d'allongement plastique en t). Autres notations : σ<sub>R</sub>, R<sub>m/t/T</sub>.</dd>
+    <dt>Rendement de Carnot</dt><dd>η<sub>C</sub> = 1 − T<sub>fr</sub>/T<sub>ch</sub> (K) : rendement maximal d'un moteur thermique entre deux sources.</dd>
+    <dt>REP</dt><dd>Réacteur à eau sous pression : circuit primaire vers 155 bar et 290 à 330 °C.</dd>
+    <dt>Réplique métallographique</dt><dd>Film plastique appliqué sur une zone polie et attaquée d'une pièce en place, qui en garde l'empreinte pour l'observation au microscope (ISO 3057).</dd>
+    <dt>Robinson (règle de)</dt><dd>Règle de la fraction de vie : D = Σ t<sub>i</sub>/t<sub>r,i</sub>, rupture quand D = 1.</dd>
+    <dt>Stades I, II, III</dt><dd>Fluage primaire (vitesse décroissante), secondaire (vitesse minimale presque constante), tertiaire (vitesse croissante jusqu'à rupture).</dd>
+    <dt>Supercritique, USC</dt><dd>Chaudière fonctionnant au-delà du point critique de l'eau ; ultra-supercritique (USC) : vers 580 à 620 °C.</dd>
+    <dt>t<sub>r</sub>, t<sub>u</sub>, t<sub>p1</sub></dt><dd>Temps à rupture (t<sub>u</sub> dans l'ISO 204) ; temps pour 1 % d'allongement plastique.</dd>
+    <dt>T<sub>f</sub>, T/T<sub>f</sub></dt><dd>Température de fusion ; température homologue, rapport des températures absolues.</dd>
+    <dt>T<sub>ch</sub>, T<sub>fr</sub></dt><dd>Températures absolues de la source chaude (vapeur) et de la source froide (condenseur).</dd>
+    <dt>Type IV (fissuration de)</dt><dd>Rupture en fluage dans la zone affectée à grains fins des soudures, surtout dans les aciers à 9-12 % Cr (cours 3).</dd>
+    <dt>Viscoplastique</dt><dd>Se dit d'un comportement où la déformation plastique dépend du temps et de la vitesse.</dd>
+    <dt>ZAT</dt><dd>Zone affectée thermiquement : métal de base chauffé par le soudage sans fondre.</dd>
+  </dl>
+</div>
+</section>
+
+<section class="chap" id="check">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✓</div>
+    <div class="c-title"><h2>Suis-je prêt pour la suite ?</h2><p>Dix points à cocher de tête</p></div>
+    <div class="c-img"><span class="ico">🧭</span><span><small>Image à retenir</small>La boussole : quand tout est coché, cap sur le cours 2</span></div>
+  </div>
+  <p>Coche seulement ce que tu sais faire <b>sans regarder</b>. Tes coches restent enregistrées dans ce navigateur.</p>
+  <div class="check" id="checklist">
+    <label><input type="checkbox" data-c="1"> <span>Je sais expliquer pourquoi l'énergie pousse la pression et la température de la vapeur, et calculer η<sub>C</sub> et η<sub>CA</sub>.</span></label>
+    <label><input type="checkbox" data-c="2"> <span>Je sais citer les familles d'aciers résistant au fluage, du C-Mn aux alliages de nickel, avec leurs domaines de température.</span></label>
+    <label><input type="checkbox" data-c="3"> <span>Je sais définir le fluage, décrire ses trois stades et situer le seuil de 0,4 T<sub>f</sub>.</span></label>
+    <label><input type="checkbox" data-c="4"> <span>Je sais utiliser la loi de Norton normalisée pour estimer l'effet d'une variation de contrainte ou de température.</span></label>
+    <label><input type="checkbox" data-c="5"> <span>Je sais citer les mécanismes de fluage et lire une carte d'Ashby.</span></label>
+    <label><input type="checkbox" data-c="6"> <span>Je sais décrire un essai de fluage selon l'ISO 204 et calculer la charge, A<sub>u</sub> et Z<sub>u</sub>.</span></label>
+    <label><input type="checkbox" data-c="7"> <span>Je sais calculer un paramètre de Larson-Miller et une durée équivalente à une autre température.</span></label>
+    <label><input type="checkbox" data-c="8"> <span>Je sais dire jusqu'où on peut extrapoler, et pourquoi les valeurs à long terme peuvent être revues à la baisse.</span></label>
+    <label><input type="checkbox" data-c="9"> <span>Je sais calculer la contrainte nominale et l'épaisseur d'un tube au fluage, et comparer des nuances.</span></label>
+    <label><input type="checkbox" data-c="10"> <span>Je sais appliquer la règle de Robinson, interpréter une classe de réplique et utiliser la méthode isobare.</span></label>
+  </div>
+  <p class="status" id="checkMsg"></p>
+
+  <div class="meta">▶ <b>Prochain cours : la métallurgie des aciers Cr-Mo.</b> Tu sais maintenant pourquoi ces aciers existent et comment on juge leur tenue à chaud. Le cours 2 entre dans le métal : rôle du chrome, du molybdène, du carbone et des micro-additions de vanadium, de niobium, d'azote, de tungstène et de bore ; carbures qui se forment et évoluent pendant le service ; désignations ASTM et européennes ; panorama des nuances, du 16Mo3 au P92 ; résistance à l'oxydation, au soufre et à l'hydrogène ; traitements thermiques de recuit, de normalisation, de trempe et de revenu.</div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="wrap">
+  <p>Cours 1 sur 5 de la série « Aciers Cr-Mo résistant au fluage » (sujet 2.12 du planning). Résistances au fluage d'après les valeurs moyennes de l'EN 10216-2 (évaluations de l'ECCC) et les réévaluations publiées par l'ECCC pour les aciers P91 et P92 ; essai de fluage selon l'ISO 204 ; pour les notations et les conventions, l'enseignement de ta formation fait foi.</p>
+</div>
+</footer>
+
+
+<script>
+(function(){
+"use strict";
+const NS="http://www.w3.org/2000/svg";
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const RM=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function el(tag,attrs,parent){
+  const e=document.createElementNS(NS,tag);
+  if(attrs){for(const k in attrs){const v=attrs[k];if(v===undefined||v===null)continue;
+    if(typeof v==="string"&&v.indexOf("var(")>=0&&k!=="style")e.style.setProperty(k,v);else e.setAttribute(k,v);}}
+  if(parent)parent.appendChild(e);
+  return e;
+}
+function tx(p,x,y,str,attrs){const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);t.textContent=str;return t;}
+function txs(p,x,y,parts,attrs){/* parts: [["σ",""],["max","sub"],[" = 3",""]] */
+  const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);
+  parts.forEach(pt=>{const s=el("tspan",pt[1]==="sub"?{"font-size":"0.72em",dy:"3"}:(pt[2]?{dy:pt[2]}:{}),t);s.textContent=pt[0];
+    if(pt[1]==="sub"){const r=el("tspan",{dy:"-3"},t);r.textContent="\u200b";}});
+  return t;
+}
+function clear(svg){while(svg.firstChild)svg.removeChild(svg.firstChild);}
+function fitText(t,x0,x1,gap){/* garde un texte SVG entre x0 et x1 : il passe de l'autre côté de son repère (écart gap), sinon il glisse */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const a=t.getAttribute("text-anchor")||"start",x=+t.getAttribute("x");
+  if(gap&&a!=="middle"&&(b.x<x0||b.x+b.width>x1)){t.setAttribute("text-anchor",a==="end"?"start":"end");t.setAttribute("x",a==="end"?x+2*gap:x-2*gap);b=t.getBBox();}
+  const nx=+t.getAttribute("x");
+  if(b.x+b.width>x1)t.setAttribute("x",nx-(b.x+b.width-x1));else if(b.x<x0)t.setAttribute("x",nx+(x0-b.x));
+  return t;}
+function arrow(p,x1,y1,x2,y2,color,w,h){
+  w=w||2.4;h=h||10;
+  const g=el("g",{class:"arr"},p);g.style.color=color||"var(--ink)";
+  const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy);
+  if(L<1)return g;
+  const ux=dx/L,uy=dy/L,hh=Math.min(h,L*0.6),bx=x2-ux*hh,by=y2-uy*hh,hw=hh*0.45+w*0.3;
+  el("line",{x1:x1,y1:y1,x2:bx,y2:by,"stroke-width":w,"stroke-linecap":"round"},g);
+  el("polygon",{points:x2+","+y2+" "+(bx-uy*hw)+","+(by+ux*hw)+" "+(bx+uy*hw)+","+(by-ux*hw)},g);
+  return g;
+}
+function darrow(p,x,y1,y2,color,w){/* double flèche verticale */
+  const g=el("g",{},p);const m=(y1+y2)/2;
+  if(Math.abs(y2-y1)<4){el("line",{x1:x-5,y1:y1,x2:x+5,y2:y1,stroke:color,"stroke-width":2},g);return g;}
+  arrow(g,x,m,x,y1,color,w||2,8);arrow(g,x,m,x,y2,color,w||2,8);return g;
+}
+function nf(v,d){
+  if(d===undefined)d=1;
+  if(Math.abs(v)<0.5*Math.pow(10,-d))v=0;
+  return v.toLocaleString("fr-FR",{minimumFractionDigits:d,maximumFractionDigits:d}).replace("-","−").replace(/[\u202f\u2009]/g,"\u00a0");
+}
+const SUP={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function sci(v,d){
+  if(v===0)return "0";
+  if(!isFinite(v))return "∞";
+  let e=Math.floor(Math.log10(Math.abs(v)));
+  let m=v/Math.pow(10,e);
+  const dd=d===undefined?1:d;
+  if(Math.abs(Number(m.toFixed(dd)))>=10){m/=10;e+=1;}
+  return nf(m,dd)+" × 10"+String(e).split("").map(c=>SUP[c]).join("");
+}
+function bigN(v){/* nombre de cycles lisible */
+  if(!isFinite(v))return "∞";
+  if(v===0)return "0";
+  if(v<10)return nf(v,v<1?2:0);
+  if(v<1e5)return nf(Math.round(v),0);
+  return sci(v,1);
+}
+function dur(s){
+  if(!isFinite(s))return "∞";
+  if(s<60)return nf(s,s<10?1:0)+" s";
+  if(s<3600)return nf(s/60,0)+" min";
+  if(s<86400)return nf(s/3600,1)+" h";
+  if(s<86400*365)return nf(s/86400,1)+" jours";
+  return nf(s/(86400*365),1)+" ans";
+}
+function svgW(svg){const r=svg.getBoundingClientRect();return Math.max(290,Math.round(r.width||(svg.parentNode&&svg.parentNode.clientWidth)||600));}
+function setVB(svg,W,H){svg.setAttribute("viewBox","0 0 "+W+" "+H);}
+const redraws=[];
+let rzT=null,lastWW=window.innerWidth;
+window.addEventListener("resize",()=>{if(window.innerWidth===lastWW)return;lastWW=window.innerWidth;clearTimeout(rzT);rzT=setTimeout(()=>redraws.forEach(f=>{try{f();}catch(e){console.error(e);}}),120);});
+
+function niceStep(range,n){const raw=range/(n||5),p=Math.pow(10,Math.floor(Math.log10(raw))),m=raw/p;return (m<1.5?1:m<3?2:m<7?5:10)*p;}
+function setOn(sel,btn){$$(sel+" .btn").forEach(b=>b.classList.toggle("on",b===btn));}
+function fmtmm(mm){return mm<0.1?nf(mm*1000,0)+" µm":mm<10?nf(mm,mm<1?2:1)+" mm":nf(mm,0)+" mm";}
+function axes(svg,x0,x1,y0,y1,xmin,xmax,ymin,ymax,xlab,ylab,xstep,ystep,xfmt,yfmt){
+  const X=v=>x0+(x1-x0)*(v-xmin)/(xmax-xmin),Y=v=>y1-(y1-y0)*(v-ymin)/(ymax-ymin);
+  for(let v=Math.ceil(ymin/ystep-1e-9)*ystep;v<=ymax+1e-9;v+=ystep){el("line",{x1:x0,y1:Y(v),x2:x1,y2:Y(v),class:"gridbg"},svg);tx(svg,x0-5,Y(v)+4,yfmt?yfmt(v):nf(v,ystep<1?1:0),{class:"lbl","text-anchor":"end"});}
+  for(let v=Math.ceil(xmin/xstep-1e-9)*xstep;v<=xmax+1e-9;v+=xstep){el("line",{x1:X(v),y1:y1,x2:X(v),y2:y1+4,class:"tick"},svg);tx(svg,X(v),y1+17,xfmt?xfmt(v):nf(v,xstep<1?1:0),{class:"lbl","text-anchor":"middle"});}
+  el("line",{x1:x0,y1:y1,x2:x1,y2:y1,class:"axis"},svg);el("line",{x1:x0,y1:y0-4,x2:x0,y2:y1,class:"axis"},svg);
+  tx(svg,x0+4,y0-10,ylab,{class:"lbl"});tx(svg,x1,y1+32,xlab,{class:"lbl","text-anchor":"end"});
+  return {X:X,Y:Y};
+}
+function animate(btn,label,dur,onStep,onEnd){
+  let raf=null,run=false;
+  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;btn.textContent=label;}
+  function start(){if(run){stop();return;}if(RM){onStep(1);stop();if(onEnd)onEnd();return;}
+    run=true;btn.textContent="⏸ Pause";const t0=performance.now();
+    const step=now=>{const p=Math.min(1,(now-t0)/dur);onStep(p);if(p>=1){stop();if(onEnd)onEnd();return;}raf=requestAnimationFrame(step);};raf=requestAnimationFrame(step);}
+  btn.addEventListener("click",start);return {stop:stop,running:()=>run};
+}
+
+
+function sig2(v){/* arrondi à deux chiffres significatifs */
+  if(v<=0)return 0;const p=Math.pow(10,Math.floor(Math.log10(v))-1);return Math.round(v/p)*p;}
+function halo(t,svg){/* liseré de fond, puis passage au premier plan */
+  t.setAttribute("paint-order","stroke");t.style.setProperty("stroke","var(--card)");t.setAttribute("stroke-width","4");t.setAttribute("stroke-linejoin","round");if(svg)svg.appendChild(t);return t;}
+function plate(t,svg){/* fond plein derrière une étiquette */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const r=el("rect",{x:b.x-3,y:b.y-1,width:b.width+6,height:b.height+2,fill:"var(--card)",opacity:.92,rx:2});svg.appendChild(r);svg.appendChild(t);return t;}
+function le(n,f){return /^[aeiouyhéèâî]/i.test(n)?"l'"+n:(f?"la ":"le ")+n;}
+function du(n,f){return /^[aeiouyhéèâî]/i.test(n)?"de l'"+n:(f?"de la ":"du ")+n;}
+function fmtG(v){return nf(v,v<0.1?3:2)+" N/m";}
+function fmtPa(p){return p<1000?nf(p,0)+" Pa":p<1e5?nf(p/1000,1)+" kPa":nf(p/1e5,2)+" bar";}
+function fmtLen(m){/* m en mètres */
+  const mm=m*1000;if(mm<1)return nf(mm*1000,0)+" µm";if(mm<10)return nf(mm,1)+" mm";if(mm<1000)return nf(mm,0)+" mm";return nf(m,1)+" m";}
+function fmtT(s){if(!isFinite(s))return "∞";if(s<0.01)return nf(s*1000,1)+" ms";if(s<1)return nf(s,3)+" s";if(s<60)return nf(s,s<10?1:0)+" s";return nf(s/60,s<600?1:0)+" min";}
+
+function spread(items,gap,ymin,ymax){/* écarte verticalement des étiquettes {y} triées */
+  items.sort((a,b)=>a.y-b.y);
+  for(let i=1;i<items.length;i++)if(items[i].y-items[i-1].y<gap)items[i].y=items[i-1].y+gap;
+  if(items.length&&items[items.length-1].y>ymax){items[items.length-1].y=ymax;for(let i=items.length-2;i>=0;i--)if(items[i+1].y-items[i].y<gap)items[i].y=items[i+1].y-gap;}
+  if(items.length&&items[0].y<ymin){items[0].y=ymin;for(let i=1;i<items.length;i++)if(items[i].y-items[i-1].y<gap)items[i].y=items[i-1].y+gap;}
+  return items;}
+function declutter(ts,ymin,ymax){/* décale verticalement les textes qui se chevauchent */
+  const box=t=>{try{return t.getBBox();}catch(e){return null;}};
+  for(let i=1;i<ts.length;i++){const ti=ts[i];if(!ti)continue;
+    for(let pass=0;pass<6;pass++){const bi=box(ti);if(!bi)break;let moved=false;
+      for(let j=0;j<i;j++){const bj=ts[j]&&box(ts[j]);if(!bj)continue;
+        const ix=Math.min(bi.x+bi.width,bj.x+bj.width)-Math.max(bi.x,bj.x),iy=Math.min(bi.y+bi.height,bj.y+bj.height)-Math.max(bi.y,bj.y);
+        if(ix>1&&iy>1){let dy=(bi.y+bi.height/2>=bj.y+bj.height/2)?(bj.y+bj.height-bi.y+1):-(bi.y+bi.height-bj.y+1);
+          if(bi.y+dy<ymin||bi.y+bi.height+dy>ymax)dy=dy>0?-(bi.y+bi.height-bj.y+1):(bj.y+bj.height-bi.y+1);
+          ti.setAttribute("y",+ti.getAttribute("y")+dy);moved=true;break;}}
+      if(!moved)break;}}
+  return ts;}
+const SUPD={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function p10(e){return "10"+String(e).split("").map(c=>SUPD[c]||c).join("");}
+function fmtP(p){/* pression en Pa, lisible */
+  if(p>=1e5)return nf(p/1e5,1)+" bar";if(p>=1000)return nf(p/1000,p<1e4?1:0)+" kPa";if(p>=1)return nf(p,p<10?1:0)+" Pa";return sci(p,1)+" Pa";}
+
+
+
+function rng(seed){/* générateur pseudo-aléatoire reproductible */
+  let a=seed>>>0;return ()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296;};}
+
+
+
+/* =========================================================
+   Utilitaires communs du cours : unités, formats, dessins
+   ========================================================= */
+const nbsp=s=>s.replace(/(\d) (°C\/h|°C|kJ\/mol|g\/kWh|kWh|kg\/m|kN|MPa|GPa|bar|kg|mm|µm|%|ans|an|h|s|K)(?=[\s.,;:)<·/]|$)/g,"$1 $2");
+function fitSize(t,maxW,min){let b;try{b=t.getBBox();}catch(e){return t;}let fs=parseFloat(getComputedStyle(t).fontSize)||13;
+  while(b.width>maxW&&fs>(min||9)){fs-=0.5;t.style.fontSize=fs+"px";b=t.getBBox();}return t;}
+const pts=P=>P.map(p=>p[0].toFixed(2)+","+p[1].toFixed(2)).join(" ");
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function sstep(a,b,x){const u=clamp((x-a)/(b-a),0,1);return u*u*(3-2*u);}
+function fsz(t,px){t.style.fontSize=px+"px";return t;}
+function mix(col,pc){return "color-mix(in srgb,"+col+" "+Math.round(clamp(pc,0,100))+"%,var(--card))";}
+function kfmt(v){/* graduation de temps compacte : 20 k, 1,5 M */
+  return v>=1e6?nf(v/1e6,v%1e6?1:0)+" M":v>=1e3?nf(v/1e3,0)+" k":nf(v,0);}
+function fmtH(h){/* durée en heures, lisible */
+  if(!isFinite(h))return "∞";if(h<10)return nf(h,1)+" h";if(h<1e6)return nf(h,0)+" h";return sci(h,2)+" h";}
+function fmtY(h,per){/* équivalent en années (per heures par an) */
+  const y=h/(per||8760);return y<1?nf(y*12,1)+" mois":nf(y,y<10?1:0)+" ans";}
+function logAxisY(svg,x0,x1,y0,y1,lmin,lmax,lab,fmt){/* axe vertical logarithmique : lmin, lmax en décades */
+  const Y=v=>y1-(y1-y0)*(Math.log10(v)-lmin)/(lmax-lmin);
+  for(let e=Math.ceil(lmin);e<=Math.floor(lmax);e++){for(let k=1;k<10;k++){const v=k*Math.pow(10,e),l=Math.log10(v);if(l<lmin-1e-9||l>lmax+1e-9)continue;
+      el("line",{x1:x0,y1:Y(v),x2:k===1?x1:x0+5,y2:Y(v),class:k===1?"gridbg":"tick"},svg);
+      if(k===1||((lmax-lmin)<=1.6&&(k===2||k===5)))tx(svg,x0-5,Y(v)+4,fmt?fmt(v):nf(v,0),{class:"lbl","text-anchor":"end"});}}
+  el("line",{x1:x0,y1:y0-4,x2:x0,y2:y1,class:"axis"},svg);
+  tx(svg,x0+4,y0-10,lab,{class:"lbl"});
+  return Y;}
+
+/* =========================================================
+   Modèle commun : courbes maîtresses de Larson-Miller
+   log σ = a + b·P + c·P², P = T·(C + log t)/1000, T en K, t en h,
+   ajustées sur les résistances moyennes de l'EN 10216-2 (ECCC)
+   ========================================================= */
+const K0=273.15,GRAV=9.81,HAN=8000;
+const LM={
+  p265:{n:"P265GH",a:-7.999569,b:1.368067,c:-0.045445,C:20,dP:0},
+  mo:{n:"16Mo3",a:-10.238081,b:1.609289,c:-0.050481,C:20,dP:0},
+  cm1:{n:"13CrMo4-5",a:-2.46116,b:0.762328,c:-0.027092,C:20,dP:0},
+  p22:{n:"10CrMo9-10",a:0.348313,b:0.393169,c:-0.015554,C:20,dP:0},
+  x20:{n:"X20CrMoV11-1",a:-1.529379,b:0.58605,c:-0.019915,C:20,dP:0},
+  p91:{n:"P91",a:-1.385611,b:0.372124,c:-0.008579,C:30,dP:0},
+  p92:{n:"P92",a:-1.385611,b:0.372124,c:-0.008579,C:30,dP:0.53361}/* courbe du P91 recalée sur 113 MPa à 600 °C et 10⁵ h (ECCC 2005) */
+};
+function lmP(m,T,t){return (T+K0)*(m.C+Math.log10(t))/1000;}
+function lmSig(m,T,t){const P=lmP(m,T,t)-m.dP;return Math.pow(10,m.a+m.b*P+m.c*P*P);}
+function lmPofS(m,s){const y=Math.log10(s),A=m.c,B=m.b,Cc=m.a-y,d=B*B-4*A*Cc;if(d<0)return NaN;
+  const r=[(-B+Math.sqrt(d))/(2*A),(-B-Math.sqrt(d))/(2*A)].filter(x=>m.b+2*m.c*x<0);return r.length?r[0]+m.dP:NaN;}
+function lmTr(m,s,T){const P=lmPofS(m,s);return isNaN(P)?0:Math.pow(10,1000*P/(T+K0)-m.C);}
+function lmN(m,s,T){/* exposant de Norton apparent : n = −d log t / d log σ */
+  const P=lmPofS(m,s)-m.dP;return 1/(-(m.b+2*m.c*P)*(T+K0)/1000);}
+const Emod=T=>210000-70*T,MU=T=>Emod(T)/2.6,TF=1538+K0;
+
+/* Courbe de fluage réduite (loi de Norton n = 5, endommagement de Kachanov χ = 5, primaire amorti),
+   à charge constante (σ = R_o·(1 + ε)/(1 − ω)) ou à contrainte constante (σ = R_o/(1 − ω)) */
+const CRV=(function(){
+  function run(load){const n=5,chi=5,es=0.035,beta=3,tp=0.02;let t=0,e=0,w=0,it=0;const T=[0],E=[0];
+    const f=(t,e,w)=>{const s=(load?1+e:1)/(1-w);return [es*Math.pow(s,n)*(1+beta*Math.exp(-t/tp)),Math.pow(s,chi)/(chi+1)];};
+    while(w<0.99&&e<0.8&&it<20000){it++;const a=f(t,e,w);const dt=Math.min(2e-3,0.0015/a[0],0.01*(1-w)/a[1],t<5*tp?tp/5:1);
+      const b=f(t+dt/2,e+dt/2*a[0],w+dt/2*a[1]);t+=dt;e+=dt*b[0];w+=dt*b[1];T.push(t);E.push(e);}
+    return {X:T.map(v=>v/t),E:E,tr:t,er:e};}
+  const L=run(true),S=run(false);
+  function at(c,x){if(x<=0)return 0;if(x>=1)return c.er;let lo=0,hi=c.X.length-1;while(hi-lo>1){const m=(lo+hi)>>1;if(c.X[m]<x)lo=m;else hi=m;}
+    const u=(x-c.X[lo])/(c.X[hi]-c.X[lo]);return c.E[lo]+u*(c.E[hi]-c.E[lo]);}
+  function xOf(c,eps){let lo=0,hi=1;for(let i=0;i<50;i++){const m=(lo+hi)/2;if(at(c,m)<eps)lo=m;else hi=m;}return lo;}
+  /* vitesse minimale et bornes des stades, en temps réduit */
+  let mn=1e9,im=0;const R=[];for(let i=1;i<L.X.length;i++){const r=(L.E[i]-L.E[i-1])/(L.X[i]-L.X[i-1]);R.push([L.X[i],r]);if(r<mn&&L.X[i]<0.9){mn=r;im=i-1;}}
+  let x1=0,x3=1;for(let i=0;i<R.length;i++){if(R[i][1]<=1.15*mn){x1=R[i][0];break;}}
+  for(let i=im;i<R.length;i++){if(R[i][1]>=1.5*mn){x3=R[i][0];break;}}
+  return {L:L,S:S,ratio:S.tr/L.tr,at:at,xOf:xOf,mg:mn,x1:x1,x3:x3};
+})();
+
+/* =========================================================
+   M1 : un siècle de vapeur
+   ========================================================= */
+(function(){
+  const svg=$("#m1svg");if(!svg)return;
+  const sT=$("#m1T"),sF=$("#m1F"),ro=$("#m1r"),msg=$("#m1msg");
+  const ERA=[
+    {y:"1910",p:13,T:275,s:"Vers 1910 : 13 bar et 275 °C. Acier au carbone ; la vapeur est à peine surchauffée, l'eau bouillant à 192 °C sous 13 bar."},
+    {y:"1925",p:16,T:350,s:"Vers 1925 : 16 bar et 350 °C. Les aciers au carbone suffisent encore."},
+    {y:"1935",p:36,T:450,s:"Vers 1935 : 36 bar et 450 °C. Les aciers au carbone atteignent leur limite ; l'acier au molybdène prend le relais."},
+    {y:"1950",p:100,T:500,s:"Vers 1950 : 100 bar et 500 °C. Les aciers au chrome-molybdène faiblement alliés s'imposent."},
+    {y:"1960",p:310,pt:"150 à 350",T:625,s:"Vers 1960 : premières chaudières supercritiques, 150 à 350 bar et 600 à 650 °C, avec des tuyauteries en acier austénitique. Les difficultés font ensuite redescendre les conditions."},
+    {y:"1975",p:200,T:525,s:"Vers 1975 : 200 bar et 525 °C, retour à des conditions éprouvées avec les aciers Cr-Mo."},
+    {y:"1985",p:260,T:540,s:"Vers 1985 : 260 bar et 540 °C ; le supercritique se généralise, vers 540 °C."},
+    {y:"1995",p:275,T:580,s:"Vers 1995 : 275 bar et 580 °C ; l'acier P91 (9 % Cr, V, Nb, N) ouvre l'ultra-supercritique."},
+    {y:"2005",p:280,T:600,s:"Vers 2005 : 280 bar et 600 °C ; P92 dans les tuyauteries, austénitiques avancés dans les surchauffeurs."},
+    {y:"projet",p:350,T:700,s:"Projets « 700 °C » : environ 350 bar ; alliages à base de nickel pour les parties les plus chaudes."}];
+  const FAM=[[200,400,"C-Mn","acier au carbone-manganèse (P235GH, P265GH)"],[400,460,"Mo","acier au molybdène (16Mo3)"],[460,545,"Cr-Mo","acier Cr-Mo faiblement allié (13CrMo4-5, 10CrMo9-10)"],
+    [545,585,"12 Cr","acier martensitique à 12 % Cr (X20CrMoV11-1) ou Cr-Mo micro-allié (T23, T24)"],[585,625,"9 Cr","acier martensitique à 9 % Cr (P91, P92)"],[625,700,"austénitique","acier inoxydable austénitique"],[700,750,"Ni","alliage à base de nickel"]];
+  let era=8;
+  const famOf=T=>FAM.find(f=>T>=f[0]&&T<f[1])||FAM[FAM.length-1];
+  function draw(){
+    const W=svgW(svg),n=W<560,H=n?500:300;setVB(svg,W,H);clear(svg);
+    const T=+sT.value,F=+sF.value,Tc=T+K0,Tf=F+K0,eC=1-Tf/Tc,eA=1-Math.sqrt(Tf/Tc);
+    $("#m1To").textContent=nf(T,0)+" °C";$("#m1Fo").textContent=nf(F,0)+" °C";
+    const E=era>=0?ERA[era]:null,fam=famOf(T);
+    /* graphique */
+    const x0=46,x1=n?W-12:Math.round(W*0.62),y0=46,y1=n?262:H-40;
+    tx(svg,8,15,"Rendement et température de la vapeur",{class:"ttl"});fitSize(svg.lastChild,x1-8,9);
+    const A=axes(svg,x0,x1,y0,y1,200,750,0,75,"température de la vapeur (°C)","η (%)",n?100:50,15,v=>nf(v,0),v=>nf(v,0));
+    /* bandes des familles d'aciers */
+    const bh=16,by=y1-bh;
+    FAM.forEach((f,i)=>{const xa=A.X(f[0]),xb=A.X(f[1]),on=f===fam;
+      el("rect",{x:xa,y:by,width:xb-xa,height:bh,fill:mix("var(--mat)",on?55:(i%2?14:24)),stroke:on?"var(--mat)":"none","stroke-width":1.5},svg);
+      if(xb-xa>(n?30:24)){const t=fsz(tx(svg,(xa+xb)/2,by+11.5,f[2],{"text-anchor":"middle",fill:"var(--ink)","font-weight":on?"700":"400"}),n?9.5:10);fitSize(t,xb-xa-4,7.5);}});
+    /* courbes de Carnot et de Curzon-Ahlborn */
+    const pc=[],pa=[];for(let v=200;v<=750;v+=5){const k=v+K0;pc.push([A.X(v),A.Y(100*(1-Tf/k))]);pa.push([A.X(v),A.Y(100*(1-Math.sqrt(Tf/k)))]);}
+    el("polyline",{points:pts(pc),fill:"none",stroke:"var(--eps)","stroke-width":1.6,"stroke-dasharray":"6 4"},svg);
+    el("polyline",{points:pts(pa),fill:"none",stroke:"var(--eps)","stroke-width":2.6},svg);
+    /* légende */
+    el("line",{x1:x0+10,y1:y0+8,x2:x0+34,y2:y0+8,stroke:"var(--eps)","stroke-width":1.6,"stroke-dasharray":"6 4"},svg);
+    el("line",{x1:x0+10,y1:y0+26,x2:x0+34,y2:y0+26,stroke:"var(--eps)","stroke-width":2.6},svg);
+    const tC=fsz(tx(svg,x0+40,y0+12,"Carnot (borne)",{fill:"var(--eps)"}),11);halo(tC,svg);
+    const tA=fsz(tx(svg,x0+40,y0+30,"Curzon-Ahlborn (réaliste)",{fill:"var(--eps)","font-weight":"700"}),11);fitSize(tA,x1-x0-48,8);halo(tA,svg);
+    const L1=[];
+    /* repères historiques */
+    ERA.forEach((e,i)=>{const X=A.X(e.T),Y=A.Y(100*(1-Math.sqrt(Tf/(e.T+K0))));
+      el("circle",{cx:X,cy:Y,r:i===era?6:3.5,fill:i===era?"var(--sig)":"var(--card)",stroke:"var(--sig)","stroke-width":1.6},svg);});
+    if(E){const X=A.X(E.T),Y=A.Y(100*(1-Math.sqrt(Tf/(E.T+K0))));const t=fsz(tx(svg,X,Y-11,E.y==="projet"?"projet":E.y,{"text-anchor":"middle",fill:"var(--sig)","font-weight":"700"}),11.5);fitText(t,x0+2,x1-2,0);L1.unshift(t);}
+    declutter(L1,y0,by-2);L1.forEach(t=>halo(t,svg));
+    /* point courant */
+    const Xc=A.X(T);el("line",{x1:Xc,y1:y0,x2:Xc,y2:by,stroke:"var(--sig)","stroke-width":1.2,"stroke-dasharray":"3 3"},svg);
+    el("circle",{cx:Xc,cy:A.Y(100*eA),r:4.5,fill:"var(--eps)"},svg);el("circle",{cx:Xc,cy:A.Y(100*eC),r:3.5,fill:"var(--card)",stroke:"var(--eps)","stroke-width":1.5},svg);
+    /* panneau : 1 kWh électrique */
+    const px0=n?14:x1+26,px1=W-12,py0=n?y1+74:52;
+    tx(svg,n?8:x1+16,n?y1+54:15,"Pour 1 kWh électrique (charbon)",{class:"ttl"});fitSize(svg.lastChild,W-(n?16:x1+24),9);
+    const e0=1-Math.sqrt(Tf/(ERA[0].T+K0)),heat=1/eA,co2=341/eA,co20=341/e0;
+    const rows=[["chaleur à fournir",heat,4,nf(heat,2)+" kWh","var(--frc)",1/e0],["CO₂ émis",co2,1400,nf(co2,0)+" g","var(--tau)",co20]];
+    const bw=px1-px0,lab=n?88:0;
+    rows.forEach((r,i)=>{const y=py0+i*(n?44:64);
+      fsz(tx(svg,px0,y,r[0],{class:"lbl"}),11.5);
+      const yb=y+8,w=Math.max(2,(bw-lab)*clamp(r[1]/r[2],0,1));
+      el("rect",{x:px0,y:yb,width:bw,height:14,fill:"var(--card)",stroke:"var(--muted)","stroke-width":.7},svg);
+      el("rect",{x:px0,y:yb,width:w,height:14,fill:r[4],opacity:.75},svg);
+      const xr=px0+bw*clamp(r[5]/r[2],0,1);el("line",{x1:xr,y1:yb-3,x2:xr,y2:yb+17,stroke:"var(--ink)","stroke-width":1.6},svg);
+      const t1=fsz(tx(svg,xr,yb+30,"1910",{"text-anchor":"middle",class:"lbl"}),10);fitText(t1,px0,px1,0);
+      const tv=fsz(tx(svg,px0+3,yb+11,r[3],{"font-weight":"700",fill:"var(--ink)"}),11);halo(tv,svg);});
+    const ys=py0+(n?100:140);
+    const pres=E?(E.pt||nf(E.p,0))+" bar":"—";
+    fsz(tx(svg,px0,ys,"pression : "+pres,{"font-weight":"700"}),12);fitSize(svg.lastChild,bw,9);
+    const sup=E&&E.p>=221;
+    const t3=fsz(tx(svg,px0,ys+18,sup?"supercritique : plus d'ébullition":E?"sous-critique : l'eau bout":"choisis une époque",{class:"lbl",fill:sup?"var(--sig)":"var(--muted)"}),11);fitSize(t3,bw,8);
+    const t4=fsz(tx(svg,px0,ys+36,"acier : "+fam[2],{fill:"var(--mat)","font-weight":"700"}),11.5);fitSize(t4,bw,8);
+    /* lectures */
+    ro.innerHTML=nbsp("<span>T<sub>ch</sub> = <b class='sig'>"+nf(Tc,0)+" K</b></span><span>η<sub>C</sub> = <b class='eps'>"+nf(100*eC,1)+" %</b></span><span>η<sub>CA</sub> = <b class='eps'>"+nf(100*eA,1)+" %</b></span><span>chaleur = "+nf(heat,2)+" kWh/kWh<sub>é</sub></span><span>CO₂ ≈ <b class='tau'>"+nf(co2,0)+" g/kWh</b></span>");
+    let s=E?E.s+" ":"";
+    s+="À "+nf(T,0)+" °C, il faut un "+fam[3]+". ";
+    const gain=1-e0/eA;s+=gain>0.005?"Par rapport à la vapeur de 1910, il faut "+nf(100*gain,0)+" % de charbon en moins pour le même kWh.":gain<-0.005?"C'est moins bien que la vapeur de 1910.":"C'est la vapeur de 1910.";
+    if(F>=45)s+=" Un condenseur chaud (eau de refroidissement tiède, aéroréfrigérant) coûte aussi du rendement.";
+    msg.innerHTML=nbsp(s);
+  }
+  const Anim=animate($("#m1play"),"▶ Un siècle de vapeur",9000,p=>{const i=Math.min(ERA.length-1,Math.floor(p*ERA.length));if(i!==era||+sT.value!==ERA[i].T){era=i;sT.value=ERA[i].T;$$("#m1e .btn").forEach(b=>b.classList.toggle("on",+b.dataset.k===i));}draw();},null);
+  $$("#m1e .btn").forEach(b=>b.addEventListener("click",()=>{Anim.stop();era=+b.dataset.k;sT.value=ERA[era].T;setOn("#m1e",b);draw();}));
+  sT.addEventListener("input",()=>{Anim.stop();era=ERA.findIndex(e=>e.T===+sT.value);$$("#m1e .btn").forEach(b=>b.classList.toggle("on",+b.dataset.k===era));draw();});
+  sF.addEventListener("input",()=>{Anim.stop();draw();});
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M2 : le faisceau de courbes
+   ========================================================= */
+(function(){
+  const svg=$("#m2svg");if(!svg)return;
+  const ss=$("#m2s"),sT=$("#m2T"),ro=$("#m2r"),msg=$("#m2msg"),M=LM.p22,EMAX=12;
+  let mode="s",prog=1;
+  const KS=[1,1.15,1.3,1.5],KT=[0,10,20,30];
+  function set(){const s=+ss.value,T=+sT.value;return mode==="s"?KS.map(k=>({s:s*k,T:T})):KT.map(d=>({s:s,T:T+d}));}
+  function draw(){
+    const W=svgW(svg),n=W<560,H=n?400:300;setVB(svg,W,H);clear(svg);
+    const s0=+ss.value,T0=+sT.value;$("#m2so").textContent=nf(s0,0)+" MPa";$("#m2To").textContent=nf(T0,0)+" °C";
+    const C=set().map(c=>Object.assign(c,{tr:lmTr(M,c.s,c.T)}));
+    const tmax=Math.max(...C.map(c=>c.tr))*1.06,tc=prog*tmax;
+    const x0=50,x1=W-26,y0=46,y1=H-42;
+    tx(svg,8,15,mode==="s"?"Quatre contraintes à "+nf(T0,0)+" °C":"Quatre températures sous "+nf(s0,0)+" MPa",{class:"ttl"});fitSize(svg.lastChild,W-16,9);
+    const st=niceStep(tmax,n?3:6),fx=kfmt;
+    const A=axes(svg,x0,x1,y0,y1,0,tmax,0,EMAX,"temps t (h)","ε plastique (%)",st,2,fx,v=>nf(v,0));
+    const cp=el("clipPath",{id:"m2clip"},el("defs",{},svg));el("rect",{x:x0,y:y0-2,width:x1-x0,height:y1-y0+2},cp);
+    const g=el("g",{"clip-path":"url(#m2clip)"},svg);
+    const labs=[];
+    C.forEach((c,i)=>{const col=mix("var(--sig)",40+20*i);const P=[];
+      for(let k=0;k<CRV.L.X.length;k+=2){const t=CRV.L.X[k]*c.tr;if(t>tc)break;P.push([A.X(t),A.Y(Math.min(EMAX+1,100*CRV.L.E[k]))]);}
+      if(tc>=c.tr)P.push([A.X(c.tr),A.Y(Math.min(EMAX+1,100*CRV.L.er))]);
+      if(P.length>1)el("polyline",{points:pts(P),fill:"none",stroke:col,"stroke-width":i===0?2.8:2.2},g);
+      /* bornes des stades */
+      [CRV.x1,CRV.x3].forEach(x=>{const t=x*c.tr;if(t>tc)return;const Y=A.Y(100*CRV.at(CRV.L,x));el("line",{x1:A.X(t),y1:Y-6,x2:A.X(t),y2:Y+6,stroke:"var(--ink)","stroke-width":1.4},svg);});
+      if(tc>=c.tr){const X=A.X(c.tr),Y=y0+6+i*0;
+        el("path",{d:"M"+(X-5)+","+(Y-5)+" l10,10 M"+(X+5)+","+(Y-5)+" l-10,10",stroke:col,"stroke-width":2.4},svg);
+        const t=fsz(tx(svg,X-8,Y+18,mode==="s"?nf(c.s,0)+" MPa":nf(c.T,0)+" °C",{"text-anchor":"end",fill:"var(--ink)","font-weight":i===0?"700":"400"}),11);labs.push(t);}
+    });
+    labs.forEach(t=>fitText(t,x0+2,x1-2,0));declutter(labs,y0,y1-4);declutter(labs,y0,y1-4);labs.forEach(t=>halo(t,svg));
+    /* chiffres romains sur la courbe de base */
+    const b=C[0];if(tc>=b.tr*0.6){[[CRV.x1/2,"I"],[(CRV.x1+CRV.x3)/2,"II"],[(CRV.x3+1)/2*0.98,"III"]].forEach(q=>{const t=q[0]*b.tr,Y=A.Y(Math.min(EMAX,100*CRV.at(CRV.L,q[0])));
+      const tt=fsz(tx(svg,A.X(t),Y-10,q[1],{"text-anchor":"middle",fill:"var(--ink)","font-weight":"700",class:"mth"}),14);fitText(tt,x0+4,x1-4,0);halo(tt,svg);});}
+    if(prog<1){const X=A.X(tc);el("line",{x1:X,y1:y0,x2:X,y2:y1,stroke:"var(--eps)","stroke-width":1.2,"stroke-dasharray":"3 3"},svg);
+      const tt=fsz(tx(svg,X,y1-6,fmtH(tc),{"text-anchor":"middle",fill:"var(--eps)","font-weight":"700"}),11);fitText(tt,x0+2,x1-2,0);halo(tt,svg);}
+    /* lectures */
+    const tr0=b.tr,emin=CRV.mg/tr0,tp1=CRV.xOf(CRV.L,0.01)*tr0,nA=lmN(M,b.s,b.T),Pb=lmPofS(M,b.s),Q=8.314*Math.LN10*Pb*1000/1000;
+    const rat=tr0/C[3].tr;
+    ro.innerHTML=nbsp("<span>t<sub>r</sub> = <b class='eps'>"+fmtH(tr0)+"</b> ("+fmtY(tr0)+")</span><span>ε̇<sub>min</sub> = <b class='eps'>"+sci(emin,2)+" h⁻¹</b></span><span>t<sub>p1</sub> = "+fmtH(tp1)+"</span><span>n ≈ <b class='mat'>"+nf(nA,1)+"</b></span><span>Q ≈ <b class='mat'>"+nf(Q,0)+" kJ/mol</b></span><span>T/T<sub>f</sub> = "+nf((b.T+K0)/TF,2)+"</span><span>σ/μ = "+sci(b.s/MU(b.T),1)+"</span>");
+    let s=mode==="s"?"Contrainte multipliée par 1,15, 1,3 puis 1,5 à "+nf(T0,0)+" °C : la durée de vie est divisée par "+nf(tr0/C[1].tr,1)+", "+nf(tr0/C[2].tr,1)+" puis "+nf(rat,1)+". Avec n ≈ "+nf(nA,1)+", 1,5ⁿ ≈ "+nf(Math.pow(1.5,nA),1)+".":
+      "Chaque palier de 10 °C divise la durée de vie par "+nf(tr0/C[1].tr,1)+" à "+nf(C[2].tr/C[3].tr,1)+" : +30 °C la divisent par "+nf(rat,1)+".";
+    s+=" Les trois stades se retrouvent sur chaque courbe ; le produit ε̇<sub>min</sub>·t<sub>r</sub> reste égal à "+nf(CRV.mg,3)+" (Monkman-Grant).";
+    if((b.T+K0)/TF<0.42)s+=" À T/T<sub>f</sub> = "+nf((b.T+K0)/TF,2)+", on est au seuil du fluage : les durées deviennent énormes.";
+    if(tr0>2e5)s+=" Au-delà de 2 × 10⁵ h, la courbe maîtresse est extrapolée bien au-delà des essais : prudence.";
+    msg.innerHTML=nbsp(s);
+  }
+  const Anim=animate($("#m2play"),"▶ Lancer les quatre essais",7000,p=>{prog=Math.max(0.002,p);draw();},()=>{prog=1;draw();});
+  $$("#m2m .btn").forEach(b=>b.addEventListener("click",()=>{Anim.stop();prog=1;mode=b.dataset.k;setOn("#m2m",b);draw();}));
+  [ss,sT].forEach(r=>r.addEventListener("input",()=>{Anim.stop();prog=1;draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M3 : le banc de fluage
+   ========================================================= */
+(function(){
+  const svg=$("#m3svg");if(!svg)return;
+  const ss=$("#m3s"),sT=$("#m3T"),ro=$("#m3r"),msg=$("#m3msg"),M=LM.p22,D0=10,S0=Math.PI*D0*D0/4,KL=10;
+  let typ="ext",mode="F",prog=1;
+  function draw(){
+    const W=svgW(svg),n=W<560,H=n?520:310;setVB(svg,W,H);clear(svg);
+    const s=+ss.value,T=+sT.value;$("#m3so").textContent=nf(s,0)+" MPa";$("#m3To").textContent=nf(T,0)+" °C";
+    const trF=lmTr(M,s,T),trS=trF*CRV.ratio,cur=mode==="F"?CRV.L:CRV.S,oth=mode==="F"?CRV.S:CRV.L,tr=mode==="F"?trF:trS,tro=mode==="F"?trS:trF;
+    const t=prog*tr,x=prog,eps=CRV.at(cur,x),broken=prog>=1;
+    const F=s*S0,mass=F/(GRAV*KL),tol=T<=600?3:4;
+    /* --- machine --- */
+    const mw=n?W:Math.round(W*0.4),mh=n?250:H-6;
+    tx(svg,8,15,"La machine",{class:"ttl"});
+    const xs=Math.round(mw*0.36),top=36,bot=mh-10;
+    el("rect",{x:10,y:top,width:mw-20,height:8,fill:mix("var(--muted)",40),stroke:"var(--ink)","stroke-width":1.2},svg);
+    el("rect",{x:14,y:top,width:8,height:bot-top,fill:mix("var(--muted)",30),stroke:"var(--ink)","stroke-width":1},svg);
+    el("rect",{x:10,y:bot,width:mw-20,height:6,fill:mix("var(--muted)",40),stroke:"var(--ink)","stroke-width":1.2},svg);
+    /* levier */
+    const yl=top+30,piv=xs+16,lend=mw-22;
+    el("polygon",{points:pts([[piv,yl],[piv-7,top+8],[piv+7,top+8]]),fill:"var(--ink)"},svg);
+    el("line",{x1:xs-8,y1:yl,x2:lend,y2:yl,stroke:"var(--ink)","stroke-width":4,"stroke-linecap":"round"},svg);
+    const tk=fsz(tx(svg,(piv+lend)/2,yl-6,"levier × "+KL,{"text-anchor":"middle",class:"lbl"}),10.5);halo(tk,svg);
+    /* poids */
+    const wy=yl+8,wh=clamp(mass/3,10,60);el("line",{x1:lend-6,y1:yl,x2:lend-6,y2:wy+12,stroke:"var(--ink)","stroke-width":1.4},svg);
+    el("rect",{x:lend-26,y:wy+12,width:40,height:wh,fill:mix("var(--frc)",60),stroke:"var(--frc)","stroke-width":1.4},svg);
+    const tm=fsz(tx(svg,lend-6,wy+12+wh+14,nf(mass,0)+" kg",{"text-anchor":"middle",fill:"var(--frc)","font-weight":"700"}),11);fitText(tm,4,mw-4,0);
+    arrow(svg,lend-6,wy+12+wh+20,lend-6,wy+12+wh+40,"var(--frc)",2.2,8);
+    /* four et éprouvette */
+    const fy0=yl+28,fy1=bot-46,fx=xs-30,fw=60;
+    el("line",{x1:xs,y1:yl,x2:xs,y2:fy0+10,stroke:"var(--ink)","stroke-width":3},svg);
+    el("rect",{x:fx,y:fy0,width:fw,height:fy1-fy0,rx:4,fill:mix("var(--sig)",12),stroke:"var(--sig)","stroke-width":1.4},svg);
+    for(let k=1;k<3;k++){const yy=fy0+(fy1-fy0)*k/3;el("line",{x1:fx,y1:yy,x2:fx+fw,y2:yy,stroke:"var(--sig)","stroke-width":.8,"stroke-dasharray":"3 3"},svg);}
+    const L0=(fy1-fy0)*0.42,ym=(fy0+fy1)/2,vis=Math.min(eps*2.2,0.55),L=L0*(1+vis),ga=ym-L/2,gb=ym+L/2,neck=sstep(0.9,1,x);
+    el("rect",{x:xs-9,y:fy0+10,width:18,height:ga-fy0-10,fill:mix("var(--muted)",45),stroke:"var(--ink)","stroke-width":1},svg);
+    el("rect",{x:xs-9,y:gb,width:18,height:fy1-gb+12,fill:mix("var(--muted)",45),stroke:"var(--ink)","stroke-width":1},svg);
+    const hw=4.5*(1-0.12*vis),nw=hw*(1-0.6*neck);
+    if(!broken){el("path",{d:"M"+(xs-hw)+","+ga+" L"+(xs-nw)+","+ym+" L"+(xs-hw)+","+gb+" L"+(xs+hw)+","+gb+" L"+(xs+nw)+","+ym+" L"+(xs+hw)+","+ga+"Z",fill:mix("var(--ink)",55),stroke:"var(--ink)","stroke-width":1},svg);}
+    else{el("path",{d:"M"+(xs-hw)+","+ga+" L"+(xs-nw)+","+(ym-4)+" L"+(xs+nw)+","+(ym-4)+" L"+(xs+hw)+","+ga+"Z",fill:mix("var(--ink)",55),stroke:"var(--ink)","stroke-width":1},svg);
+      el("path",{d:"M"+(xs-hw)+","+gb+" L"+(xs-nw)+","+(ym+6)+" L"+(xs+nw)+","+(ym+6)+" L"+(xs+hw)+","+gb+"Z",fill:mix("var(--ink)",55),stroke:"var(--ink)","stroke-width":1},svg);
+      const tb=fsz(tx(svg,xs+fw/2+4,ym+4,"rupture",{fill:"var(--tau)","font-weight":"700"}),11);fitText(tb,4,mw-4,0);halo(tb,svg);}
+    el("line",{x1:xs,y1:fy1+12,x2:xs,y2:bot,stroke:"var(--ink)","stroke-width":3},svg);
+    [0.25,0.5,0.75].forEach(f=>{const yy=fy0+(fy1-fy0)*f;el("circle",{cx:fx+fw-6,cy:yy,r:2.6,fill:"var(--sig)"},svg);el("line",{x1:fx+fw-6,y1:yy,x2:fx+fw+12,y2:yy,stroke:"var(--sig)","stroke-width":1},svg);});
+    const tf=fsz(tx(svg,fx+fw+6,fy1-4,nf(T,0)+" ± "+tol+" °C",{fill:"var(--sig)","font-weight":"700"}),10.5);fitText(tf,4,mw-4,0);halo(tf,svg);
+    if(typ==="ext"){/* extensomètre */
+      el("line",{x1:xs-7,y1:ga+2,x2:xs-14,y2:ga+2,stroke:"var(--eps)","stroke-width":1.6},svg);el("line",{x1:xs-14,y1:ga+2,x2:xs-14,y2:bot-14,stroke:"var(--eps)","stroke-width":1.6},svg);
+      el("line",{x1:xs+7,y1:gb-2,x2:xs+14,y2:gb-2,stroke:"var(--eps)","stroke-width":1.6},svg);el("line",{x1:xs+14,y1:gb-2,x2:xs+14,y2:bot-14,stroke:"var(--eps)","stroke-width":1.6},svg);
+      el("rect",{x:xs-20,y:bot-16,width:40,height:10,fill:mix("var(--eps)",35),stroke:"var(--eps)","stroke-width":1},svg);
+      const te=fsz(tx(svg,xs-24,bot-8,"capteur",{"text-anchor":"end",fill:"var(--eps)"}),10);fitText(te,4,mw-4,0);}
+    else if(typ==="int"){[ga+3,gb-3].forEach(yy=>el("line",{x1:xs-10,y1:yy,x2:xs+10,y2:yy,stroke:"var(--eps)","stroke-width":1.6},svg));
+      const te=fsz(tx(svg,xs-14,gb-2,"repères",{"text-anchor":"end",fill:"var(--eps)"}),10);fitText(te,4,mw-4,0);halo(te,svg);}
+    /* --- courbe --- */
+    const gx0=n?52:mw+46,gx1=W-26,gy0=n?mh+52:46,gy1=H-42;
+    tx(svg,n?8:mw+20,n?mh+20:15,typ==="rup"?"Essai de rupture : seul le temps compte":"Allongement plastique ε(t)",{class:"ttl"});fitSize(svg.lastChild,W-(n?16:mw+28),9);
+    const tmax=Math.max(tr,tro)*1.05,ym2=24;
+    const A=axes(svg,gx0,gx1,gy0,gy1,0,tmax,0,ym2,"temps (h)","ε (%)",niceStep(tmax,n?3:5),4,kfmt,v=>nf(v,0));
+    const line=(c,trc,upTo,col,wid,dash)=>{const P=[];for(let k=0;k<c.X.length;k+=2){const tt=c.X[k]*trc;if(tt>upTo)break;P.push([A.X(tt),A.Y(100*c.E[k])]);}
+      if(upTo>=trc)P.push([A.X(trc),A.Y(100*c.er)]);if(P.length>1)el("polyline",{points:pts(P),fill:"none",stroke:col,"stroke-width":wid,"stroke-dasharray":dash||"none"},svg);};
+    line(oth,tro,1e12,mix("var(--muted)",70),1.4,"5 4");
+    el("line",{x1:gx0+10,y1:gy0+10,x2:gx0+30,y2:gy0+10,stroke:mix("var(--muted)",70),"stroke-width":1.4,"stroke-dasharray":"5 4"},svg);
+    const to=fsz(tx(svg,gx0+34,gy0+14,mode==="F"?"contrainte constante":"charge constante",{class:"lbl"}),10.5);fitSize(to,gx1-gx0-44,8);halo(to,svg);
+    if(typ==="ext")line(cur,tr,t,"var(--eps)",2.6);
+    else if(typ==="int"){for(let k=1;k<=8;k++){const tt=tr*k/8.4;if(tt>t)break;const e=CRV.at(cur,tt/tr);
+        el("line",{x1:A.X(tt),y1:gy0,x2:A.X(tt),y2:gy1,stroke:mix("var(--eps)",30),"stroke-width":1,"stroke-dasharray":"2 3"},svg);
+        el("circle",{cx:A.X(tt),cy:A.Y(100*e),r:4,fill:"var(--eps)"},svg);}
+      if(broken)el("circle",{cx:A.X(tr),cy:A.Y(100*cur.er),r:4,fill:"var(--eps)"},svg);}
+    if(broken){const X=A.X(tr),Y=A.Y(100*cur.er);el("path",{d:"M"+(X-6)+","+(Y-6)+" l12,12 M"+(X+6)+","+(Y-6)+" l-12,12",stroke:"var(--tau)","stroke-width":2.6},svg);
+      const tu=fsz(txs(svg,X-10,Y+4,[["t",""],["u","sub"],[" = "+fmtH(tr),""]],{"text-anchor":"end",fill:"var(--tau)","font-weight":"700"}),11);fitText(tu,gx0+2,gx1-2,0);halo(tu,svg);}
+    else{const X=A.X(t);el("line",{x1:X,y1:gy0,x2:X,y2:gy1,stroke:"var(--eps)","stroke-width":1.2,"stroke-dasharray":"3 3"},svg);}
+    /* lectures */
+    const tp1=CRV.xOf(cur,0.01)*tr;
+    ro.innerHTML=nbsp("<span>F = <b class='frc'>"+nf(F/1000,2)+" kN</b></span><span>masse = "+nf(mass,0)+" kg</span><span>t = "+fmtH(t)+"</span><span>ε = <b class='eps'>"+(typ==="rup"&&!broken?"non mesurée":nf(100*eps,2)+" %")+"</b></span>"+
+      (broken?"<span>t<sub>u</sub> = <b class='eps'>"+fmtH(tr)+"</b></span><span>A<sub>u</sub> ≈ <b class='eps'>"+nf(100*cur.er,0)+" %</b></span>":"")+(typ!=="rup"?"<span>t<sub>p1</sub> = "+fmtH(tp1)+"</span>":""));
+    let m="R<sub>o</sub> = "+nf(s,0)+" MPa sur S<sub>o</sub> = "+nf(S0,1)+" mm² : F = "+nf(F,0)+" N, soit "+nf(mass,1)+" kg au bout du levier de rapport "+KL+". ";
+    m+=typ==="ext"?"Essai ininterrompu : l'extensomètre suit toute la courbe. ":typ==="int"?"Essai interrompu : à chaque arrêt, on décharge, on refroidit, on mesure les repères, on réchauffe et on recharge. ":"Essai de rupture seule : on note t<sub>u</sub> et l'allongement final, sans courbe. ";
+    m+=mode==="F"?"À charge constante, la contrainte vraie croît avec l'allongement : la rupture arrive "+nf(100*(1-1/CRV.ratio),0)+" % plus tôt qu'à contrainte constante. ":"À contrainte constante, la charge est réduite au fil de l'allongement : la durée est "+nf(100*(CRV.ratio-1),0)+" % plus longue qu'à charge constante. ";
+    m+="Durée : "+fmtH(tr)+", soit "+fmtY(tr)+" de machine occupée.";
+    if(tr>1e5)m+=" Un tel essai dure plus de 11 ans : on préfère des essais plus chauds ou plus chargés, puis Larson-Miller (chapitre 4).";
+    if(tr<50)m+=" Moins de 50 h : contrainte trop élevée pour représenter le service.";
+    msg.innerHTML=nbsp(m);
+  }
+  const Anim=animate($("#m3play"),"▶ Lancer l'essai",8000,p=>{prog=Math.max(0.001,p);draw();},()=>{prog=1;draw();});
+  $$("#m3t .btn").forEach(b=>b.addEventListener("click",()=>{Anim.stop();prog=1;typ=b.dataset.k;setOn("#m3t",b);draw();}));
+  $$("#m3c .btn").forEach(b=>b.addEventListener("click",()=>{Anim.stop();prog=1;mode=b.dataset.k;setOn("#m3c",b);draw();}));
+  [ss,sT].forEach(r=>r.addEventListener("input",()=>{Anim.stop();prog=1;draw();}));
+  redraws.push(draw);draw();
+})();
+
+function solve3(A,b){/* résout un système 3 × 3 par élimination de Gauss */
+  const M=A.map((r,i)=>r.concat([b[i]]));
+  for(let i=0;i<3;i++){let p=i;for(let k=i+1;k<3;k++)if(Math.abs(M[k][i])>Math.abs(M[p][i]))p=k;const tmp=M[i];M[i]=M[p];M[p]=tmp;
+    for(let k=i+1;k<3;k++){const f=M[k][i]/M[i][i];for(let j=i;j<4;j++)M[k][j]-=f*M[i][j];}}
+  const x=[0,0,0];for(let i=2;i>=0;i--){let s=M[i][3];for(let j=i+1;j<3;j++)s-=M[i][j]*x[j];x[i]=s/M[i][i];}return x;}
+function logAxisX(svg,x0,x1,y0,y1,lmin,lmax,lab){/* axe horizontal logarithmique en décades */
+  const X=l=>x0+(x1-x0)*(l-lmin)/(lmax-lmin);
+  for(let e=Math.ceil(lmin);e<=Math.floor(lmax);e++){el("line",{x1:X(e),y1:y0,x2:X(e),y2:y1,class:"gridbg"},svg);
+    tx(svg,X(e),y1+17,e<=3?nf(Math.pow(10,e),0):p10(e),{class:"lbl","text-anchor":"middle"});}
+  el("line",{x1:x0,y1:y1,x2:x1,y2:y1,class:"axis"},svg);
+  tx(svg,x1,y1+32,lab,{class:"lbl","text-anchor":"end"});return X;}
+
+/* =========================================================
+   M4 : la courbe maîtresse de Larson-Miller
+   ========================================================= */
+(function(){
+  const svg=$("#m4svg");if(!svg)return;
+  const sC=$("#m4C"),ss=$("#m4s"),sT=$("#m4T"),ro=$("#m4r"),msg=$("#m4msg");
+  const Z=[0.05,-0.07,0.02,-0.03,0.08,-0.04,0.06,-0.06,0.01,0.07,-0.08,0.03];
+  const SET={p22:{m:LM.p22,T:[600,625,650,675],lo:1,hi:2.4,def:[80,540]},p91:{m:LM.p91,T:[625,650,675,700],lo:1.3,hi:2.5,def:[90,600]}};
+  let mat="p22",view="P",best=20;
+  function data(){const S=SET[mat],D=[];let k=0;S.T.forEach(T=>[300,3000,20000].forEach(t0=>{const s=Math.round(lmSig(S.m,T,t0)*2)/2;D.push({T:T,s:s,t:lmTr(S.m,s,T)*Math.pow(10,Z[k++])});}));return D;}
+  function fit(D,C){const X=D.map(d=>(d.T+K0)*(C+Math.log10(d.t))/1000),Y=D.map(d=>Math.log10(d.s));
+    const S=[[0,0,0],[0,0,0],[0,0,0]],R=[0,0,0];
+    X.forEach((x,i)=>{const v=[1,x,x*x];for(let a=0;a<3;a++){R[a]+=v[a]*Y[i];for(let b=0;b<3;b++)S[a][b]+=v[a]*v[b];}});
+    const c=solve3(S,R);let q=0;X.forEach((x,i)=>{const r=c[0]+c[1]*x+c[2]*x*x-Y[i];q+=r*r;});
+    return {a:c[0],b:c[1],c:c[2],rms:Math.sqrt(q/X.length),X:X,Pmin:Math.min(...X),Pmax:Math.max(...X)};}
+  const fsig=(f,P)=>Math.pow(10,f.a+f.b*P+f.c*P*P);
+  function fP(f,s){/* P tel que la courbe ajustée donne σ, sur la branche décroissante */
+    const y=Math.log10(s),A=f.c,B=f.b,Cc=f.a-y;
+    if(Math.abs(A)<1e-9)return -Cc/B;const d=B*B-4*A*Cc;if(d<0)return NaN;
+    const r=[(-B+Math.sqrt(d))/(2*A),(-B-Math.sqrt(d))/(2*A)].filter(x=>f.b+2*f.c*x<0);
+    if(!r.length)return NaN;return r.reduce((u,v)=>Math.abs(v-f.Pmax)<Math.abs(u-f.Pmax)?v:u);}
+  function bestC(D){let bc=10,br=1e9;for(let C=10;C<=40.001;C+=0.5){const r=fit(D,C).rms;if(r<br){br=r;bc=C;}}return bc;}
+  function draw(){
+    const W=svgW(svg),n=W<560,H=n?420:310;setVB(svg,W,H);clear(svg);
+    const S=SET[mat],C=+sC.value,ssv=+ss.value,Ts=+sT.value;
+    $("#m4Co").textContent=nf(C,1);$("#m4so").textContent=nf(ssv,0)+" MPa";$("#m4To").textContent=nf(Ts,0)+" °C";
+    const D=data(),f=fit(D,C);best=bestC(D);
+    const Ps=fP(f,ssv),tp=isNaN(Ps)?NaN:Math.pow(10,1000*Ps/(Ts+K0)-C),tref=lmTr(S.m,ssv,Ts),tmaxT=Math.max(...D.map(d=>d.t)),fac=tp/tmaxT;
+    const disp=100*(Math.pow(10,f.rms)-1);
+    const cols=S.T.map((T,i)=>mix("var(--sig)",40+20*i));
+    const x0=52,x1=W-28,y0=46,y1=H-44;
+    tx(svg,8,15,view==="P"?"Courbe maîtresse σ(P), C = "+nf(C,1):"Isothermes σ(t) déduites de la courbe maîtresse",{class:"ttl"});fitSize(svg.lastChild,W-16,9);
+    const Y=logAxisY(svg,x0,x1,y0,y1,S.lo,S.hi,"σ (MPa)",v=>nf(v,0));
+    const labs=[];
+    if(view==="P"){
+      const pa=Math.min(f.Pmin,isNaN(Ps)?f.Pmin:Ps)-0.3,pb=Math.max(f.Pmax,isNaN(Ps)?f.Pmax:Ps)+0.3;
+      const A=axes(svg,x0,x1,y0,y1,pa,pb,0,1,"P = T·(C + log t) (K)","",niceStep(pb-pa,n?3:6),2,v=>nf(v*1000,0),()=>"");
+      /* courbe ajustée : trait plein sur les essais, tirets au-delà */
+      const seg=(p1,p2,dash)=>{const P=[];for(let k=0;k<=60;k++){const p=p1+(p2-p1)*k/60,s=fsig(f,p);if(s>0)P.push([A.X(p),clamp(Y(s),y0-4,y1)]);}el("polyline",{points:pts(P),fill:"none",stroke:"var(--ink)","stroke-width":2,"stroke-dasharray":dash||"none"},svg);};
+      seg(pa,f.Pmin);seg(f.Pmin,f.Pmax);seg(f.Pmax,pb,"6 4");
+      D.forEach((d,i)=>{const P=f.X[i];el("circle",{cx:A.X(P),cy:Y(d.s),r:5,fill:cols[S.T.indexOf(d.T)],stroke:"var(--ink)","stroke-width":.8},svg);});
+      S.T.forEach((T,i)=>{const d=D.filter(q=>q.T===T),P=f.X[D.indexOf(d[0])];const t=fsz(tx(svg,A.X(P),Y(d[0].s)-9,nf(T,0)+" °C",{"text-anchor":"middle",fill:"var(--ink)"}),10.5);labs.push(t);});
+      if(!isNaN(Ps)){const X=A.X(Ps),Ys=Y(ssv);
+        el("line",{x1:x0,y1:Ys,x2:X,y2:Ys,stroke:"var(--eps)","stroke-width":1.4,"stroke-dasharray":"4 3"},svg);el("line",{x1:X,y1:Ys,x2:X,y2:y1,stroke:"var(--eps)","stroke-width":1.4,"stroke-dasharray":"4 3"},svg);
+        el("polygon",{points:pts([0,1,2,3,4,5,6,7,8,9].map(k=>{const r=k%2?3.5:8,a=-Math.PI/2+k*Math.PI/5;return [X+r*Math.cos(a),Ys+r*Math.sin(a)];})),fill:"var(--eps)"},svg);
+        const t=fsz(tx(svg,X+5,y1-8,"service : "+nf(Ts,0)+" °C",{fill:"var(--eps)","font-weight":"700"}),11);fitText(t,x0+2,x1-2,0);halo(t,svg);}
+      if(Ps>f.Pmax){const t=fsz(tx(svg,A.X((f.Pmax+Math.min(pb,Ps))/2),y1-8,"extrapolation",{"text-anchor":"middle",fill:"var(--tau)"}),10.5);labs.push(t);}
+    }else{
+      const lmin=1,lmax=6.5,X=logAxisX(svg,x0,x1,y0,y1,lmin,lmax,"temps à rupture t (h)");
+      const iso=(T,col,w,dash)=>{const P=[];for(let l=lmin;l<=lmax+1e-9;l+=0.05){const p=(T+K0)*(C+l)/1000,s=fsig(f,p);if(s>Math.pow(10,S.lo-0.05)&&s<Math.pow(10,S.hi+0.1))P.push([X(l),clamp(Y(s),y0-4,y1)]);}
+        if(P.length>1)el("polyline",{points:pts(P),fill:"none",stroke:col,"stroke-width":w,"stroke-dasharray":dash||"none"},svg);};
+      S.T.forEach((T,i)=>iso(T,cols[i],1.8));iso(Ts,"var(--eps)",2.4,"6 4");
+      const l3=Math.log10(3*tmaxT),l5=5;
+      [[l5,"10⁵ h"],[l3,"× 3"]].forEach(q=>{if(q[0]<lmin||q[0]>lmax)return;el("line",{x1:X(q[0]),y1:y0,x2:X(q[0]),y2:y1,stroke:q[1]==="× 3"?"var(--tau)":"var(--muted)","stroke-width":1.3,"stroke-dasharray":"3 3"},svg);
+        const t=fsz(tx(svg,X(q[0])+3,y0+10,q[1],{fill:q[1]==="× 3"?"var(--tau)":"var(--muted)"}),10.5);labs.push(t);});
+      D.forEach(d=>{const l=Math.log10(d.t);el("circle",{cx:X(l),cy:Y(d.s),r:5,fill:cols[S.T.indexOf(d.T)],stroke:"var(--ink)","stroke-width":.8},svg);});
+      S.T.forEach((T,i)=>{const d=D.filter(q=>q.T===T)[2];const t=fsz(tx(svg,X(Math.log10(d.t))+8,Y(d.s)+4,nf(T,0)+" °C",{fill:"var(--ink)"}),10.5);labs.push(t);});
+      if(!isNaN(tp)){const l=clamp(Math.log10(tp),lmin,lmax),Xs=X(l),Ys=Y(ssv);
+        el("polygon",{points:pts([0,1,2,3,4,5,6,7,8,9].map(k=>{const r=k%2?3.5:8,a=-Math.PI/2+k*Math.PI/5;return [Xs+r*Math.cos(a),Ys+r*Math.sin(a)];})),fill:"var(--eps)"},svg);
+        const t=fsz(tx(svg,Xs-10,Ys+18,"service "+nf(Ts,0)+" °C",{"text-anchor":"end",fill:"var(--eps)","font-weight":"700"}),11);labs.push(t);}
+    }
+    labs.forEach(t=>fitText(t,x0+2,x1-2,0));declutter(labs,y0,y1-2);declutter(labs,y0,y1-2);labs.forEach(t=>halo(t,svg));
+    /* lectures */
+    ro.innerHTML=nbsp("<span>C = <b class='mat'>"+nf(C,1)+"</b></span><span>dispersion ≈ ±"+nf(disp,0)+" % en σ</span><span>meilleur C ≈ "+nf(best,1)+"</span>"+
+      (isNaN(Ps)?"<span>σ hors courbe</span>":"<span>P<sub>service</sub> = "+nf(Ps*1000,0)+" K</span><span>t<sub>r</sub> prévu = <b class='eps'>"+fmtH(tp)+"</b> ("+fmtY(tp)+")</span><span>référence = "+fmtH(tref)+"</span><span>extrapolation × <b class='"+(fac>3?"tau":"eps")+"'>"+nf(fac,fac<10?1:0)+"</b></span>"));
+    let m="";
+    if(Math.abs(C-best)>2.5)m+="Avec C = "+nf(C,1)+", les quatre isothermes ne se superposent pas (dispersion ±"+nf(disp,0)+" %) : le meilleur rangement est obtenu vers C ≈ "+nf(best,1)+". ";
+    else m+="Les douze essais se rangent sur une seule courbe (dispersion ±"+nf(disp,0)+" %, proche de celle des essais eux-mêmes). ";
+    if(!isNaN(tp)){m+="En service à "+nf(Ts,0)+" °C sous "+nf(ssv,0)+" MPa : t<sub>r</sub> ≈ "+fmtH(tp)+", à comparer à la référence "+fmtH(tref)+" (écart "+(tp>=tref?"+":"−")+nf(Math.abs(100*(tp/tref-1)),0)+" %). ";
+      m+=fac>3?"L'essai le plus long dure "+fmtH(tmaxT)+" : extrapoler d'un facteur "+nf(fac,0)+" dépasse la règle du facteur 3, la prévision reste indicative.":"Extrapolation modeste (facteur "+nf(fac,1)+") : prévision fiable si le mécanisme ne change pas.";}
+    else m+="La contrainte demandée dépasse ce que la courbe peut donner aux températures d'essai.";
+    if(mat==="p91")m+=" Pour les aciers à 9 % Cr, le meilleur C est voisin de 30.";
+    msg.innerHTML=nbsp(m);
+  }
+  const Anim=animate($("#m4play"),"▶ Chercher le meilleur C",6000,p=>{sC.value=p<0.8?10+30*p/0.8:best;draw();},()=>{sC.value=best;draw();});
+  $$("#m4a .btn").forEach(b=>b.addEventListener("click",()=>{Anim.stop();mat=b.dataset.k;setOn("#m4a",b);ss.value=SET[mat].def[0];sT.value=SET[mat].def[1];sC.value=mat==="p91"?30:20;draw();}));
+  $$("#m4v .btn").forEach(b=>b.addEventListener("click",()=>{Anim.stop();view=b.dataset.k;setOn("#m4v",b);draw();}));
+  [sC,ss,sT].forEach(r=>r.addEventListener("input",()=>{Anim.stop();draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M5 : la bonne nuance pour la bonne paroi
+   ========================================================= */
+(function(){
+  const svg=$("#m5svg");if(!svg)return;
+  const sp=$("#m5p"),sT=$("#m5T"),ro=$("#m5r"),msg=$("#m5msg"),RHO=7850;
+  /* résistances moyennes à la rupture par fluage de l'EN 10216-2 (MPa), de 10 en 10 °C à partir de T0 */
+  const ST=[
+    {k:"p265",n:"P265GH",T0:400,v5:[141,128,114,100,88,77,66,56,47,39,32],v2:null,tm:425},
+    {k:"mo",n:"16Mo3",T0:450,v5:[236,205,176,149,124,102,83,65,51,40,32],v2:[218,188,158,129,105,84,67,53,42,34,25],tm:460},
+    {k:"cm1",n:"13CrMo4-5",T0:450,v5:[290,258,227,198,170,145,121,100,80,65,53,44,38,31,26,20],v2:[264,233,203,175,148,123,102,82,66,51,41,35,30,25,null,null],tm:545},
+    {k:"p22",n:"10CrMo9-10",T0:450,v5:[229,212,194,177,160,141,124,105,95,81,70,61,53,46,40,35],v2:[204,188,172,156,140,124,108,94,80,68,57,49,43,38,33,28],tm:545},
+    {k:"x20",n:"X20CrMoV11-1",T0:480,v5:[289,263,236,212,188,167,147,128,111,95,81,69,59,51,43,36,31,26],v2:[270,242,218,194,170,149,129,112,96,81,68,58,49,42,36,30,null,null],tm:585},
+    {k:"p91",n:"P91",T0:500,v5:[258,239,220,201,183,166,150,134,120,106,94,83,73,65,56,49,42,36],v2:[246,227,208,189,171,154,139,124,110,97,86,75,65,57,49,42,35,null],tm:625},
+    {k:"p92",n:"P92",model:true,T0:550,T1:650,tm:625}];
+  const BASE=[{t:1e5,S:1.5,l:"10⁵ h, S = 1,5"},{t:2e5,S:1.5,l:"2 × 10⁵ h, S = 1,5"},{t:2e5,S:1.25,l:"2 × 10⁵ h, S = 1,25"}];
+  let Do=324,base=0;
+  function tab(arr,T0,T){if(!arr)return null;const i=(T-T0)/10;if(i<-1e-9||i>arr.length-1+1e-9)return null;const a=Math.floor(i+1e-9),b=Math.min(arr.length-1,a+1),u=i-a;
+    if(arr[a]==null||arr[b]==null)return null;return Math.pow(10,Math.log10(arr[a])+(b>a?u*(Math.log10(arr[b])-Math.log10(arr[a])):0));}
+  function Ru(s,T,t){
+    if(s.model){if(T<s.T0||T>s.T1)return null;return lmSig(LM.p92,T,t);}
+    const r5=tab(s.v5,s.T0,T);if(r5==null)return null;if(t<=1e5)return r5;
+    const r2=tab(s.v2,s.T0,T);if(r2!=null)return r2;
+    const m=LM[s.k];return r5*lmSig(m,T,2e5)/lmSig(m,T,1e5);}
+  function draw(){
+    const W=svgW(svg),n=W<560,H=n?560:284;setVB(svg,W,H);clear(svg);
+    const p=+sp.value/10,T=+sT.value,B=BASE[base];$("#m5po").textContent=nf(+sp.value,0)+" bar";$("#m5To").textContent=nf(T,0)+" °C";
+    const R=ST.map(s=>{const ru=Ru(s,T,B.t);if(ru==null)return {s:s,st:"nd"};const f=ru/B.S;if(p>=2*f)return {s:s,st:"imp",ru:ru,f:f};
+      const e=p*Do/(2*f+p);return {s:s,st:T>s.tm?"warn":"ok",ru:ru,f:f,e:e,m:RHO*Math.PI*(Do-e)*e/1e6};});
+    const ok=R.filter(r=>r.e!=null),okUs=ok.filter(r=>r.st==="ok"),pool=okUs.length?okUs:ok;
+    const bestR=pool.length?pool.reduce((a,b)=>b.e<a.e?b:a):null,worstR=pool.length?pool.reduce((a,b)=>b.e>a.e?b:a):null;
+    /* barres */
+    const bx0=n?96:104,bx1=n?W-60:Math.round(W*0.62)-56,by0=44,dy=n?30:30;
+    tx(svg,8,15,"Épaisseur nécessaire e (mm), Ø "+Do+" mm, "+nf(+sp.value,0)+" bar, "+nf(T,0)+" °C",{class:"ttl"});fitSize(svg.lastChild,(n?W:Math.round(W*0.62))-16,9);
+    const emax=Math.max(10,...ok.map(r=>r.e))*1.08;
+    R.forEach((r,i)=>{const y=by0+i*dy;
+      const tl=fsz(tx(svg,bx0-8,y+5,r.s.n,{"text-anchor":"end",fill:"var(--ink)","font-weight":r===bestR?"700":"400"}),n?11:12);fitSize(tl,bx0-12,8);
+      el("rect",{x:bx0,y:y-8,width:bx1-bx0,height:16,fill:"var(--card)",stroke:"var(--muted)","stroke-width":.7},svg);
+      if(r.e!=null){const w=Math.max(2,(bx1-bx0)*r.e/emax);
+        el("rect",{x:bx0,y:y-8,width:w,height:16,fill:r.st==="warn"?mix("var(--eps)",30):r===bestR?"var(--eps)":mix("var(--eps)",60)},svg);
+        const tv=fsz(tx(svg,Math.min(bx0+w+5,bx1+4),y+5,nf(r.e,1)+(r.st==="warn"?" ⚠":""),{fill:"var(--ink)","font-weight":"700"}),11);fitText(tv,bx0,(n?W:Math.round(W*0.62))-4,0);}
+      else{const t=fsz(tx(svg,bx0+6,y+5,r.st==="imp"?"impossible : p ≥ 2f":"pas de donnée de fluage à "+nf(T,0)+" °C",{fill:r.st==="imp"?"var(--tau)":"var(--muted)"}),10.5);fitSize(t,bx1-bx0-10,8);}});
+    const yl=by0+R.length*dy-6;
+    const tw=fsz(tx(svg,bx0,yl+6,"⚠ au-delà de l'emploi usuel de la nuance",{class:"lbl"}),10.5);fitSize(tw,(n?W:Math.round(W*0.62))-bx0-8,8);
+    /* coupes */
+    const cx0=n?0:Math.round(W*0.62),cw=W-cx0,cy0=n?yl+30:40,ch=H-cy0-8;
+    tx(svg,cx0+8,n?cy0+4:15,"Coupes à l'échelle",{class:"ttl"});
+    const two=[bestR,worstR].filter((r,i,a)=>r&&a.indexOf(r)===i);
+    const Rp=Math.min(cw/(2*Math.max(1,two.length))-14,(ch-46)/2);
+    two.forEach((r,i)=>{const cx=cx0+cw*(2*i+1)/(2*two.length),cy=cy0+18+Rp,ri=Rp*(Do-2*r.e)/Do;
+      el("circle",{cx:cx,cy:cy,r:(Rp+ri)/2,fill:"none",stroke:mix("var(--muted)",70),"stroke-width":Math.max(1,Rp-ri)},svg);
+      el("circle",{cx:cx,cy:cy,r:Rp,fill:"none",stroke:"var(--ink)","stroke-width":1.2},svg);el("circle",{cx:cx,cy:cy,r:Math.max(1,ri),fill:"none",stroke:"var(--ink)","stroke-width":1.2},svg);
+      arrow(svg,cx,cy,cx+ri*0.7,cy-ri*0.7,"var(--frc)",1.8,7);
+      const t1=fsz(tx(svg,cx,cy+Rp+15,r.s.n,{"text-anchor":"middle","font-weight":"700",fill:"var(--ink)"}),11);fitSize(t1,cw/two.length-6,8);
+      const t2=fsz(tx(svg,cx,cy+Rp+29,"e = "+nf(r.e,1)+" mm",{"text-anchor":"middle",fill:"var(--eps)","font-weight":"700"}),11);fitSize(t2,cw/two.length-6,8);});
+    if(!two.length){const t=fsz(tx(svg,cx0+cw/2,cy0+ch/2,"aucune nuance ne convient",{"text-anchor":"middle",fill:"var(--tau)","font-weight":"700"}),12);fitSize(t,cw-12,8);}
+    /* lectures */
+    if(bestR)ro.innerHTML=nbsp("<span>meilleure : <b class='mat'>"+bestR.s.n+"</b></span><span>R<sub>u</sub> = "+nf(bestR.ru,0)+" MPa</span><span>f = <b class='mat'>"+nf(bestR.f,1)+" MPa</b></span><span>e = <b class='eps'>"+nf(bestR.e,1)+" mm</b></span><span>masse = "+nf(bestR.m,0)+" kg/m</span>"+
+      (worstR&&worstR!==bestR?"<span>"+worstR.s.n+" : e = "+nf(worstR.e,1)+" mm</span><span>chauffe × "+nf(Math.pow(worstR.e/bestR.e,2),1)+"</span>":""));
+    else ro.innerHTML="<span>aucune nuance utilisable</span>";
+    let m="p = "+nf(p,1)+" MPa, D<sub>o</sub> = "+Do+" mm, base "+B.l+". ";
+    if(bestR){m+="La nuance la plus favorable est le "+bestR.s.n+" : f = "+nf(bestR.ru,0)+"/"+nf(B.S,2)+" = "+nf(bestR.f,1)+" MPa et e = "+nf(p,1)+" × "+Do+"/(2 × "+nf(bestR.f,1)+" + "+nf(p,1)+") ≈ "+nf(bestR.e,1)+" mm. ";
+      if(worstR&&worstR!==bestR)m+="Avec le "+worstR.s.n+", il faudrait "+nf(worstR.e,1)+" mm ; la vitesse de montée en température admissible serait environ "+nf(Math.pow(worstR.e/bestR.e,2),1)+" fois plus faible (1/e²). ";}
+    const warn=R.filter(r=>r.st==="warn").map(r=>r.s.n),nd=R.filter(r=>r.st==="nd").map(r=>r.s.n);
+    if(warn.length)m+="Au-delà de leur emploi usuel (oxydation, stabilité) : "+warn.join(", ")+". ";
+    if(nd.length===R.length)m+="Aucune donnée de fluage à cette température : en dessous d'environ 450 °C, la paroi se calcule sur la limite d'élasticité à chaud. ";
+    else if(nd.length)m+="Sans donnée à "+nf(T,0)+" °C : "+nd.join(", ")+". ";
+    if(base===2)m+="S = 1,25 suppose une surveillance de la durée de vie en service (chapitre 6).";
+    msg.innerHTML=nbsp(m);
+  }
+  const Anim=animate($("#m5play"),"▶ Monter en température",8000,p=>{sT.value=450+Math.round(40*p)*5;draw();},null);
+  $$("#m5c .btn").forEach(b=>b.addEventListener("click",()=>{Anim.stop();Do=+b.dataset.k;setOn("#m5c",b);draw();}));
+  $$("#m5d .btn").forEach(b=>b.addEventListener("click",()=>{Anim.stop();base=+b.dataset.k;setOn("#m5d",b);draw();}));
+  [sp,sT].forEach(r=>r.addEventListener("input",()=>{Anim.stop();draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M6 : le carnet de santé d'un collecteur
+   ========================================================= */
+(function(){
+  const svg=$("#m6svg");if(!svg)return;
+  const sT=$("#m6T"),sy=$("#m6y"),sd=$("#m6d"),sh=$("#m6h"),ro=$("#m6r"),msg=$("#m6msg"),bB=$("#m6b"),M=LM.p22,SIG=70;
+  const MULT=[1.18,0.86,1.07],DT=[60,80,100];
+  let barq=false;
+  const CL=[{c:"0",n:"pas de cavité",a:"Pas d'endommagement visible : poursuivre, contrôle à l'intervalle normal."},
+    {c:"A",n:"cavités isolées",a:"Classe A : poursuivre l'exploitation ; contrôle à l'intervalle normal."},
+    {c:"B",n:"cavités orientées",a:"Classe B : poursuivre sous surveillance ; nouvelles répliques dans 1,5 à 3 ans environ."},
+    {c:"C",n:"microfissures",a:"Classe C : exploitation limitée ; réparation ou remplacement à planifier, en général dans l'année."},
+    {c:"D",n:"macrofissures",a:"Classe D : réparation ou remplacement immédiat."},
+    {c:"✕",n:"rupture",a:"La fraction de vie dépasse 1 : le collecteur est censé avoir rompu ou fuir. Il fallait agir bien avant."}];
+  const clOf=D=>D<0.3?0:D<0.5?1:D<0.7?2:D<0.85?3:D<1?4:5;
+  function state(){const T=+sT.value,yrs=+sy.value,dT=+sd.value,h=+sh.value,tot=yrs*HAN,hh=dT>0?Math.min(h,tot):0;
+    const tr=lmTr(M,SIG,T),tr2=lmTr(M,SIG,T+dT);return {T:T,yrs:yrs,dT:dT,h:h,tot:tot,hh:hh,tr:tr,tr2:tr2,D:(tot-hh)/tr+(hh>0?hh/tr2:0),Dh:hh>0?hh/tr2:0};}
+  function tests(S){if(S.D>=1)return [];return DT.map((d,i)=>{const T=S.T+d;return {T:T,t:(1-S.D)*lmTr(M,SIG,T)*MULT[i]};});}
+  function regress(P,T){/* droite log t = a + b/T (T en K) prolongée jusqu'à T */
+    const X=P.map(q=>1/(q.T+K0)),Y=P.map(q=>Math.log10(q.t)),n=X.length,mx=X.reduce((a,b)=>a+b)/n,my=Y.reduce((a,b)=>a+b)/n;
+    let sxy=0,sxx=0;X.forEach((x,i)=>{sxy+=(x-mx)*(Y[i]-my);sxx+=(x-mx)*(x-mx);});const b=sxy/sxx,a=my-b*mx;return {a:a,b:b,at:TT=>Math.pow(10,a+b/(TT+K0))};}
+  /* grains de la réplique : hexagones déformés, arêtes partagées */
+  function grainEdges(x0,y0,w,h,r){const H=(x,y)=>{const k=Math.round(x*3)*7919+Math.round(y*3)*104729,v=Math.sin(k)*43758.5453;return v-Math.floor(v)-0.5;};
+    const dx=r*Math.sqrt(3),dy=1.5*r,E=new Map();
+    for(let row=-1;row*dy<h+2*r;row++)for(let col=-1;col*dx<w+2*dx;col++){const cx=x0+col*dx+(row%2?dx/2:0),cy=y0+row*dy,V=[];
+      for(let k=0;k<6;k++){const a=Math.PI/180*(60*k-30);let vx=cx+r*Math.cos(a),vy=cy+r*Math.sin(a);const jx=H(vx,vy),jy=H(vy+0.37,vx+0.11);V.push([vx+jx*0.5*r,vy+jy*0.5*r]);}
+      for(let k=0;k<6;k++){const A=V[k],B=V[(k+1)%6],key=[A,B].map(q=>Math.round(q[0]*2)+":"+Math.round(q[1]*2)).sort().join("|");if(!E.has(key))E.set(key,[A,B]);}}
+    return Array.from(E.values());}
+  function draw(){
+    const W=svgW(svg),n=W<560,H=n?580:320;setVB(svg,W,H);clear(svg);
+    const S=state();$("#m6To").textContent=nf(S.T,0)+" °C";$("#m6yo").textContent=nf(S.yrs,0)+" ans";$("#m6do").textContent="+"+nf(S.dT,0)+" °C";$("#m6ho").textContent=nf(S.h,0)+" h";
+    const cl=clOf(S.D),K=CL[cl],rest=Math.max(0,1-S.D)*S.tr,TS=barq?tests(S):[],reg=TS.length>=2?regress(TS,S.T):null,test=reg?reg.at(S.T):NaN;
+    /* graphique isobare */
+    const x0=56,x1=n?W-14:Math.round(W*0.6),y0=40,y1=n?286:H-44;
+    tx(svg,8,15,"Isobare à 70 MPa : temps à rupture",{class:"ttl"});fitSize(svg.lastChild,x1-8,9);
+    const Ta=S.T-30,Tb=S.T+115;
+    const A=axes(svg,x0,x1,y0,y1,Ta,Tb,0,1,"température (°C)","",n?40:20,1,v=>nf(v,0),()=>"");
+    const Y=logAxisY(svg,x0,x1,y0,y1,1,7,"t (h)",v=>v<=1000?nf(v,0):p10(Math.round(Math.log10(v))));
+    el("rect",{x:A.X(S.T-5),y:y0,width:A.X(S.T+5)-A.X(S.T-5),height:y1-y0,fill:mix("var(--sig)",14)},svg);
+    const tg=fsz(tx(svg,A.X(S.T)+2,y1-6,"service",{fill:"var(--sig)"}),10.5);halo(tg,svg);
+    el("rect",{x:A.X(S.T+55),y:y0,width:A.X(S.T+105)-A.X(S.T+55),height:y1-y0,fill:mix("var(--eps)",8)},svg);
+    const te=fsz(tx(svg,A.X(S.T+80),y0+12,"essais accélérés",{"text-anchor":"middle",fill:"var(--eps)"}),10.5);halo(te,svg);
+    if(S.dT>0){const Xo=A.X(S.T+S.dT);el("line",{x1:Xo,y1:y0+18,x2:Xo,y2:y1,stroke:"var(--sig)","stroke-width":1.4,"stroke-dasharray":"2 3"},svg);
+      const to=fsz(tx(svg,Xo+3,y1-20,"surchauffe",{fill:"var(--sig)"}),10);fitText(to,x0+2,x1-2,0);halo(to,svg);}
+    const curve=(k,col,w,dash)=>{const P=[];for(let T=Ta;T<=Tb+1e-9;T+=2.5){const t=k*lmTr(M,SIG,T);if(t>=10&&t<=1e7)P.push([A.X(T),Y(t)]);}if(P.length>1)el("polyline",{points:pts(P),fill:"none",stroke:col,"stroke-width":w,"stroke-dasharray":dash||"none"},svg);};
+    curve(1,"var(--ink)",1.6,"6 4");
+    const labs=[];const tn=fsz(tx(svg,A.X(S.T+30),Y(lmTr(M,SIG,S.T+30))-8,"neuf",{fill:"var(--ink)"}),11);labs.push(tn);
+    if(S.D<1){curve(1-S.D,"var(--eps)",2.4);if(S.D>0.05){const tt=fsz(tx(svg,A.X(S.T+40),Y((1-S.D)*lmTr(M,SIG,S.T+40))+16,"aujourd'hui",{fill:"var(--eps)","font-weight":"700"}),11);labs.push(tt);}
+      if(rest>=10)el("circle",{cx:A.X(S.T),cy:Y(clamp(rest,10,1e7)),r:5,fill:"var(--eps)"},svg);}
+    if(reg){const P=[];for(let T=S.T;T<=S.T+105;T+=2.5)P.push([A.X(T),Y(clamp(reg.at(T),10,1e7))]);el("polyline",{points:pts(P),fill:"none",stroke:"var(--gam)","stroke-width":1.8,"stroke-dasharray":"5 3"},svg);
+      TS.forEach(q=>el("rect",{x:A.X(q.T)-5,y:Y(clamp(q.t,10,1e7))-5,width:10,height:10,fill:"var(--gam)",stroke:"var(--ink)","stroke-width":.8},svg));
+      if(test>=10){const X=A.X(S.T),Ys=Y(clamp(test,10,1e7));el("polygon",{points:pts([0,1,2,3,4,5,6,7,8,9].map(k=>{const r=k%2?3.5:8,a=-Math.PI/2+k*Math.PI/5;return [X+r*Math.cos(a),Ys+r*Math.sin(a)];})),fill:"var(--gam)"},svg);}
+      const tb=fsz(tx(svg,A.X(S.T+100),Y(clamp(TS[2].t,10,1e7))-10,"barquette",{"text-anchor":"end",fill:"var(--gam)","font-weight":"700"}),11);labs.push(tb);}
+    labs.forEach(t=>fitText(t,x0+2,x1-2,0));declutter(labs,y0,y1-2);labs.forEach(t=>halo(t,svg));
+    /* réplique */
+    const rx0=n?14:x1+28,rx1=W-12,ry0=n?y1+62:44,ry1=H-30,rw=rx1-rx0,rh=ry1-ry0;
+    tx(svg,n?8:x1+20,n?y1+44:15,"Réplique : classe "+K.c,{class:"ttl"});fitSize(svg.lastChild,W-(n?16:x1+28),9);
+    const cp=el("clipPath",{id:"m6clip"},el("defs",{},svg));el("rect",{x:rx0,y:ry0,width:rw,height:rh},cp);
+    const g=el("g",{"clip-path":"url(#m6clip)"},svg);
+    el("rect",{x:rx0,y:ry0,width:rw,height:rh,fill:mix("var(--muted)",12)},g);
+    const r=Math.max(12,Math.min(20,rw/9)),E=grainEdges(rx0,ry0,rw,rh,r),R=rng(907);
+    E.forEach(e=>el("line",{x1:e[0][0],y1:e[0][1],x2:e[1][0],y2:e[1][1],stroke:mix("var(--ink)",45),"stroke-width":1},g));
+    const vert=E.filter(e=>Math.abs(e[1][0]-e[0][0])<0.6*Math.abs(e[1][1]-e[0][1]));
+    const qa=[0,0.14,0.45,0.6,0.7,0.7][cl],nc=[0,1,3,3,4,4][cl],qc=[0,0,0,0.28,0.38,0.38][cl];
+    vert.forEach(e=>{const u=R(),v=R();if(cl>=3&&v<qc){el("line",{x1:e[0][0],y1:e[0][1],x2:e[1][0],y2:e[1][1],stroke:"var(--tau)","stroke-width":2.6,"stroke-linecap":"round"},g);return;}
+      if(u<qa){for(let k=0;k<nc;k++){const f=nc===1?0.3+0.4*R():(k+0.6)/(nc+0.2);el("ellipse",{cx:e[0][0]+(e[1][0]-e[0][0])*f,cy:e[0][1]+(e[1][1]-e[0][1])*f,rx:1.6,ry:2.4,fill:"var(--tau)"},g);}}});
+    if(cl>=4){/* macrofissure : chaîne d'arêtes verticales du haut vers le bas */
+      let x=rx0+rw*0.55;const P=[];for(let y=ry0;y<=ry1+r;y+=r*0.75){x+=(R()-0.5)*r*0.9;P.push([x,y]);}
+      el("polyline",{points:pts(P),fill:"none",stroke:"var(--tau)","stroke-width":4,"stroke-linejoin":"round"},g);}
+    el("rect",{x:rx0,y:ry0,width:rw,height:rh,fill:"none",stroke:"var(--ink)","stroke-width":1.2},svg);
+    arrow(svg,rx0+30,ry1+14,rx0+4,ry1+14,"var(--frc)",2,7);arrow(svg,rx1-30,ry1+14,rx1-4,ry1+14,"var(--frc)",2,7);
+    const ts=fsz(tx(svg,(rx0+rx1)/2,ry1+18,"σ circonférentielle (traction)",{"text-anchor":"middle",fill:"var(--frc)"}),10.5);fitSize(ts,rw-64,8);
+    const tc=fsz(tx(svg,rx0+6,ry0+14,K.n,{fill:"var(--ink)","font-weight":"700"}),11);fitSize(tc,rw-12,8);plate(tc,svg);
+    /* lectures */
+    ro.innerHTML=nbsp("<span>t<sub>r</sub> neuf = "+fmtH(S.tr)+"</span><span>D = <b class='tau'>"+nf(S.D,3)+"</b></span>"+(S.dT>0&&S.hh>0?"<span>dont surchauffe : "+nf(S.Dh,3)+"</span>":"")+
+      "<span>surchauffe : +"+nf(S.dT,0)+" °C · "+nf(S.h,0)+" h</span><span>vie restante = <b class='eps'>"+fmtH(rest)+"</b> ("+fmtY(rest,HAN)+")</span><span>réplique : <b class='gam'>"+K.c+"</b></span>"+(reg?"<span>barquette : <b class='gam'>"+fmtH(test)+"</b></span>":""));
+    let m="À "+nf(S.T,0)+" °C sous 70 MPa, le 10CrMo9-10 neuf romprait en "+fmtH(S.tr)+". "+nf(S.yrs,0)+" ans à 8 000 h"+(S.hh>0?", dont "+nf(S.hh,0)+" h à "+nf(S.T+S.dT,0)+" °C,":"")+" consomment D = "+nf(S.D,2)+". ";
+    if(S.hh>0&&S.D>0)m+="La surchauffe représente "+nf(100*S.hh/Math.max(1,S.tot),1)+" % du temps mais "+nf(100*S.Dh/S.D,0)+" % de la vie consommée. ";
+    m+=K.a;
+    if(S.D<1)m+=" Vie restante selon Robinson : "+fmtH(rest)+" ("+fmtY(rest,HAN)+").";
+    if(barq){if(reg)m+=" Barquette : essais à "+TS.map(q=>nf(q.T,0)+" °C ("+fmtH(q.t)+")").join(", ")+" ; la droite isobare prolongée donne "+fmtH(test)+" à "+nf(S.T,0)+" °C, soit "+(test>=rest?"+":"−")+nf(Math.abs(100*(test/rest-1)),0)+" % par rapport à Robinson.";else m+=" Plus rien à prélever : le composant est hors d'usage.";}
+    msg.innerHTML=nbsp(m);
+  }
+  const Anim=animate($("#m6play"),"▶ Vieillir",8000,p=>{sy.value=Math.round(40*p);draw();},null);
+  bB.addEventListener("click",()=>{Anim.stop();barq=!barq;bB.classList.toggle("on",barq);draw();});
+  [sT,sy,sd,sh].forEach(r=>r.addEventListener("input",()=>{Anim.stop();draw();}));
+  redraws.push(draw);draw();
+})();
+/* =========================================================
+   Quiz, check-list, sommaire, thème
+   ========================================================= */
+(function(){
+  const box=$("#quiz");if(!box)return;
+  const Q=[
+    {q:"Pourquoi les centrales chauffent-elles leur vapeur toujours plus fort ?",o:["pour réduire la pression","parce que le rendement maximal croît avec l'écart de température entre la vapeur et le condenseur","pour éviter le fluage","pour économiser l'acier"],c:1,e:"Le rendement de Carnot, 1 − T<sub>fr</sub>/T<sub>ch</sub>, croît avec la température de la source chaude : c'est la <b>hauteur de la cascade</b>."},
+    {q:"Vapeur à 600 °C, condenseur à 30 °C : le rendement de Carnot vaut environ :",o:["95 %","41 %","5 %","65 %"],c:3,e:"En kelvins : 1 − 303/873 ≈ <b>65 %</b>. 95 % vient de l'erreur classique en degrés Celsius ; 41 % est l'estimation de Curzon-Ahlborn."},
+    {q:"Le fluage d'un acier devient sensible au-delà d'environ :",o:["100 °C","0,4 T<sub>f</sub>, soit vers 450 °C","0,9 T<sub>f</sub>","sa limite d'élasticité seulement"],c:1,e:"Vers <b>0,4 T<sub>f</sub></b> en kelvins (≈ 450 °C pour le fer), et il domine au-delà de 0,5 T<sub>f</sub>. Il se produit sous des contraintes inférieures à R<sub>e</sub>."},
+    {q:"Le stade secondaire d'une courbe de fluage correspond à :",o:["une vitesse minimale presque constante, équilibre entre durcissement et restauration","une vitesse qui décroît","une vitesse qui accélère jusqu'à rupture","la déformation élastique"],c:0,e:"Stade II : la <b>vitesse minimale</b>, presque constante ; c'est elle que décrit la loi de Norton."},
+    {q:"Avec n = 5, une contrainte 10 % plus forte multiplie la vitesse de fluage par :",o:["1,1","1,6","5","10"],c:1,e:"1,1⁵ ≈ <b>1,61</b>. Et, avec Q ≈ 390 kJ/mol, 10 °C de plus la doublent environ."},
+    {q:"Selon l'ISO 204, jusqu'à 600 °C, la température de l'éprouvette doit rester à :",o:["±10 °C","±1 °C","±3 °C","±25 °C"],c:2,e:"<b>±3 °C</b> (±4 °C de 600 à 800 °C) : 3 °C d'erreur changent déjà le temps à rupture d'environ 20 %."},
+    {q:"Dans un essai à charge constante :",o:["la contrainte vraie reste constante","la contrainte vraie augmente quand l'éprouvette s'allonge, et la rupture arrive plus tôt qu'à contrainte constante","la charge diminue","l'allongement est nul"],c:1,e:"La section diminue : σ = R<sub>o</sub>·(1 + ε). Le tertiaire s'accélère et la rupture arrive <b>plus tôt</b>."},
+    {q:"Le paramètre de Larson-Miller P = T·(C + log t<sub>r</sub>) s'utilise avec :",o:["T en °C, t en s, ln","T en °C, t en h, log","T en K, t en ans, ln","T en K, t en h, logarithme décimal"],c:3,e:"<b>Kelvins, heures, logarithme décimal</b>, et C ≈ 20 pour un acier faiblement allié."},
+    {q:"Pour annoncer une résistance moyenne à 100 000 h, on considère qu'il faut des essais d'au moins :",o:["1 000 h","10 000 h","30 000 h environ","100 000 h obligatoirement"],c:2,e:"La règle prudente limite l'extrapolation à un <b>facteur 3</b> en temps : 100 000/3 ≈ 33 000 h. Au-delà, l'EN 10216-2 marque les valeurs d'un astérisque."},
+    {q:"Collecteur Ø 324 mm, p = 18 MPa, f = 100 MPa : l'épaisseur e = p·D<sub>o</sub>/(2f + p) vaut :",o:["58,7 mm","5,8 mm","162 mm","26,8 mm"],c:3,e:"5 832/218 ≈ <b>26,8 mm</b> (P91 à 560 °C). Avec f ≈ 40,7 MPa (10CrMo9-10), il faudrait 58,7 mm."},
+    {q:"100 000 h où t<sub>r</sub> = 200 000 h, puis 5 000 h où t<sub>r</sub> = 20 000 h : selon Robinson, D vaut :",o:["0,25","0,5","0,75","1,05"],c:2,e:"D = 100 000/200 000 + 5 000/20 000 = 0,5 + 0,25 = <b>0,75</b> : un court épisode chaud coûte cher."},
+    {q:"Une réplique montre des cavités orientées, alignées en chapelets. Selon Neubauer, c'est :",o:["la classe B, surveillance rapprochée","la classe A, aucune action","la classe D, réparation immédiate","un défaut de polissage"],c:0,e:"<b>Classe B</b> : poursuivre sous surveillance, nouvelles répliques dans 1,5 à 3 ans environ. Les microfissures signeraient la classe C."}
+  ];
+  let score=0,done=0;const sc=$("#qzScore");
+  function upd(){let t="Score : "+score+" / "+Q.length;if(done===Q.length)t+=score>=10?"  ·  🎉 prêt pour le cours 2":score>=7?"  ·  relis les explications":"  ·  refais un tour des chapitres";sc.textContent=t;}
+  function render(){box.innerHTML="";score=0;done=0;
+    Q.forEach((it,n)=>{const d=document.createElement("div");d.className="qz";
+      d.innerHTML='<p class="qz-q"><b>'+(n+1)+".</b> "+it.q+'</p><div class="qz-o"></div><div class="qz-e" hidden></div>';
+      const o=d.querySelector(".qz-o"),ex=d.querySelector(".qz-e");let answered=false;
+      it.o.forEach((txt,i)=>{const b=document.createElement("button");b.type="button";b.className="qz-b";b.innerHTML=String.fromCharCode(65+i)+". "+txt;
+        b.addEventListener("click",()=>{if(answered)return;answered=true;done++;const ok=i===it.c;if(ok)score++;b.classList.add(ok?"ok":"ko");o.children[it.c].classList.add("ok");ex.hidden=false;ex.innerHTML=(ok?"✅ <b>Bien joué.</b> ":"❌ <b>Pas tout à fait.</b> ")+it.e;upd();});
+        o.appendChild(b);});
+      box.appendChild(d);});
+    upd();}
+  $("#qzReset").addEventListener("click",render);render();
+})();
+(function(){
+  const boxes=$$("#checklist input[type=checkbox]"),msg=$("#checkMsg"),KEY="crmo-cours1-check";
+  if(!boxes.length)return;
+  let saved=[];try{saved=JSON.parse(localStorage.getItem(KEY)||"[]")||[];}catch(e){saved=[];}
+  boxes.forEach(b=>{b.checked=saved.indexOf(b.dataset.c)>=0;});
+  function upd(){const on=boxes.filter(b=>b.checked).map(b=>b.dataset.c);try{localStorage.setItem(KEY,JSON.stringify(on));}catch(e){}
+    msg.innerHTML=on.length===boxes.length?"🎉 <b>Tout est coché : cap sur le cours 2, la métallurgie des aciers Cr-Mo !</b>":on.length+" / "+boxes.length+" : reviens sur les points non cochés (les manipulations sont faites pour ça).";}
+  boxes.forEach(b=>b.addEventListener("change",upd));upd();
+})();
+
+
+(function(){
+  const links=$$(".toc a"),tin=$(".toc-in");
+  if(!links.length||!("IntersectionObserver" in window))return;
+  const map={};links.forEach(a=>{map[a.getAttribute("href").slice(1)]=a;});
+  const obs=new IntersectionObserver(ents=>{ents.forEach(en=>{if(!en.isIntersecting)return;const a=map[en.target.id];if(!a)return;
+    links.forEach(l=>l.classList.toggle("on",l===a));
+    if(tin){const tgt=a.offsetLeft-tin.clientWidth/2+a.offsetWidth/2;try{tin.scrollTo({left:tgt,behavior:RM?"auto":"smooth"});}catch(e){tin.scrollLeft=tgt;}}});},{rootMargin:"-45% 0px -50% 0px"});
+  Object.keys(map).forEach(id=>{const s=document.getElementById(id);if(s)obs.observe(s);});
+})();
+(function(){
+  const b=$("#themeBtn");if(!b)return;const KEY="crmo-theme",root=document.documentElement;
+  const lab={auto:"◐ Thème : automatique",light:"☀️ Thème : clair",dark:"🌙 Thème : sombre"};
+  let t="auto";try{t=localStorage.getItem(KEY)||"auto";}catch(e){}
+  function apply(){if(t==="auto")root.removeAttribute("data-theme");else root.setAttribute("data-theme",t);b.textContent=lab[t];}
+  b.addEventListener("click",()=>{t=t==="auto"?"light":t==="light"?"dark":"auto";try{localStorage.setItem(KEY,t);}catch(e){}apply();});
+  apply();
+})();
+})();
+</script>
+</body>
+</html>

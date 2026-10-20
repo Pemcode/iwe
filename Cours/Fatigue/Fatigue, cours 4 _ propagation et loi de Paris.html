@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fatigue, cours 4 : propagation et loi de Paris</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@500;600;700&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F3F6F9; --paper-2:#E6ECF2; --card:#FFFFFF; --ink:#17212B; --muted:#56626F; --line:#C5CFD9;
+  --grid:rgba(40,90,160,.075);
+  --sig:#CF2438; --tau:#8A34B6; --eps:#1B5ED3; --gam:#06849A; --frc:#D46A00; --mat:#26844A; --weld:#9A5B12;
+  --ok:#26844A; --warn:#B86E00; --bad:#C62828;
+  --lv2:#E4EBF2; --hl:#FFF3B0;
+  --font-body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-head:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --font-math:"STIX Two Text","Cambria Math","Cambria","Times New Roman",serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+    --grid:rgba(120,160,220,.07);
+    --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+    --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+  --grid:rgba(120,160,220,.07);
+  --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+  --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+  color-scheme: dark;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0;color:var(--ink);font-family:var(--font-body);font-size:17.5px;line-height:1.62;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;overflow-x:hidden;
+}
+img,svg{max-width:100%}
+.wrap{max-width:800px;margin:0 auto;padding:0 20px}
+.wide{max-width:980px}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.1;margin:0}
+h3{font-size:1.65rem;font-weight:600;margin:2rem 0 .6rem}
+h4{font-size:1.3rem;font-weight:600;margin:1.4rem 0 .4rem}
+p{margin:.7em 0}
+a{color:var(--eps)}
+b,strong{font-weight:700}
+small{font-size:.8em}
+sub{font-size:.72em}
+.m{font-family:var(--font-math);font-size:1.08em;white-space:nowrap}
+.sig{color:var(--sig)} .tau{color:var(--tau)} .eps{color:var(--eps)} .gam{color:var(--gam)} .frc{color:var(--frc)} .mat{color:var(--mat)} .mut{color:var(--muted)} .wcol{color:var(--weld)}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .12em;line-height:1.1}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 .2em .08em}
+.frac>span:last-child{padding:.08em .2em 0}
+ul,ol{padding-left:1.4em}
+li{margin:.25em 0}
+
+/* ---------- en-tête ---------- */
+.hero{padding:34px 0 10px}
+.title-block{border:2.5px solid var(--ink);background:var(--card);display:grid;grid-template-columns:1fr 300px}
+.tb-main{padding:22px 24px;border-right:2.5px solid var(--ink);display:flex;flex-direction:column;justify-content:space-between;gap:14px}
+.tb-series{margin:0 0 .5rem;color:var(--muted);font-size:.95rem}
+.hero h1{font-size:clamp(2.3rem,6vw,4rem);font-weight:700;letter-spacing:-.01em}
+.tb-cells{display:grid;grid-template-rows:repeat(4,auto)}
+.tb-cells>div{padding:9px 16px;border-bottom:1.5px solid var(--ink);display:flex;flex-direction:column;justify-content:center}
+.tb-cells>div:last-child{border-bottom:0}
+.tb-cells small{color:var(--muted);font-size:.78rem}
+.tb-cells b{font-family:var(--font-head);font-size:1.25rem;font-weight:600;line-height:1.15}
+.lede{font-size:1.13rem;max-width:760px;margin:1.2rem 0}
+.theme-btn{align-self:flex-start;font-family:var(--font-body);font-size:.85rem;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
+@media (max-width:760px){.title-block{grid-template-columns:1fr}.tb-main{border-right:0;border-bottom:2.5px solid var(--ink)}.tb-cells{grid-template-rows:none;grid-template-columns:1fr 1fr}.tb-cells>div:nth-child(odd){border-right:1.5px solid var(--ink)}.tb-cells>div:nth-child(3){border-bottom:0}}
+@media (max-width:420px){.tb-cells{grid-template-columns:1fr}.tb-cells>div:nth-child(odd){border-right:0}.tb-cells>div:nth-child(3){border-bottom:1.5px solid var(--ink)}}
+
+/* code couleur */
+.cc{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:stretch;margin:1rem 0 .4rem}
+.cc-box{background:var(--card);border:2px solid var(--line);padding:12px 14px;border-radius:4px}
+.cc-cause{border-color:var(--sig)} .cc-link{border-color:var(--mat)} .cc-eff{border-color:var(--eps)}
+.cc-box small{display:block;color:var(--muted);font-size:.82rem;line-height:1.3}
+.cc-syms{font-family:var(--font-math);font-size:1.7rem;line-height:1.25;display:flex;flex-wrap:wrap;gap:.1em .45em;margin:.2rem 0}
+.cc-box p{margin:0;font-size:.9rem;line-height:1.35}
+.cc-arrow{align-self:center;font-size:1.8rem;color:var(--muted)}
+@media (max-width:700px){.cc{grid-template-columns:1fr}.cc-arrow{transform:rotate(90deg);justify-self:center;line-height:1}}
+.cc-more{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:.5rem 0}
+.cc-more>div{border:2px solid var(--line);background:var(--card);border-radius:4px;padding:6px 10px;font-size:.9rem}
+@media (max-width:640px){.cc-more{grid-template-columns:1fr}}
+
+/* ---------- sommaire ---------- */
+.toc{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-bottom:1.5px solid var(--line);padding-top:env(safe-area-inset-top,0px);margin-top:18px}
+.toc-in{display:flex;gap:6px;overflow-x:auto;padding:9px 20px;max-width:980px;margin:0 auto;scrollbar-width:thin}
+.toc a{flex:none;text-decoration:none;color:var(--ink);font-size:.88rem;padding:4px 11px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);white-space:nowrap}
+.toc a.on{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.toc a:focus-visible,.btn:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--eps);outline-offset:2px}
+
+/* ---------- sections ---------- */
+section.chap{padding:46px 0 10px}
+.cartouche{display:grid;grid-template-columns:86px 1fr 250px;border:2.5px solid var(--ink);background:var(--card);margin-bottom:1.4rem}
+.c-num{font-family:var(--font-head);font-size:3.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;border-right:2.5px solid var(--ink)}
+.c-title{padding:14px 18px;border-right:2.5px solid var(--ink)}
+.c-title h2{font-size:2.1rem;font-weight:700}
+.c-title p{margin:.25rem 0 0;color:var(--muted)}
+.c-img{padding:12px 14px;display:flex;gap:12px;align-items:center;background:var(--paper-2)}
+.c-img .ico{font-size:2.3rem;line-height:1}
+.c-img small{display:block;color:var(--muted);font-size:.78rem}
+.c-img span{font-size:.95rem;line-height:1.3}
+@media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
+
+/* niveaux */
+.lv{margin:1.2rem 0;padding:6px 22px 14px;border-radius:4px}
+.lv1{background:var(--card);border:2px solid var(--ink)}
+.lv2{background:var(--lv2);border-left:6px solid var(--ink)}
+.lv-h{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;font-family:var(--font-head);font-size:1.35rem;font-weight:600;margin:10px 0 4px}
+.lv-h .tag{font-size:.95rem;font-family:var(--font-body);font-weight:400;color:var(--muted)}
+@media (max-width:520px){.lv{padding:6px 14px 12px}}
+
+/* formules et encadrés */
+.fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:600px;text-align:center;border-radius:3px;overflow-x:auto}
+.fx .big{font-family:var(--font-math);font-size:1.9rem;line-height:1.4}
+.fx .cap{font-size:.85rem;color:var(--muted);margin:.3rem 0 0}
+.fx .row{display:flex;flex-wrap:wrap;justify-content:center;gap:.2em 1.4em}
+.syms{margin:.6rem 0;display:grid;grid-template-columns:auto 1fr;gap:.35rem 1rem;align-items:baseline}
+.syms dt{font-family:var(--font-math);font-size:1.25rem;text-align:right;white-space:nowrap}
+.syms dd{margin:0}
+.def{margin:.9rem 0;padding:.5rem .9rem;border-left:3px dotted var(--muted);font-size:.96rem;background:color-mix(in srgb,var(--card) 60%,transparent)}
+.def>b:first-child{font-family:var(--font-head);font-size:1.08rem;font-weight:600}
+.tip{margin:1rem 0;padding:.7rem 1rem;border:1.5px dashed var(--mat);border-radius:4px;font-size:.97rem}
+.warn{margin:1rem 0;padding:.7rem 1rem;border:2px solid var(--bad);border-radius:4px;font-size:.97rem;background:color-mix(in srgb,var(--bad) 7%,transparent)}
+.mnemo{margin:1rem 0;padding:.7rem 1rem;background:var(--hl);border-radius:4px;font-size:.98rem}
+.fun{margin:1.2rem 0;padding:.8rem 1rem;border:2px dashed var(--muted);border-radius:10px;background:var(--card);font-size:.98rem}
+.fun-h{display:block;margin-bottom:.35rem;font-family:var(--font-head);font-size:1.15rem;font-weight:600;letter-spacing:.02em}
+.meta{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--frc);border-radius:4px;background:color-mix(in srgb,var(--frc) 6%,transparent)}
+.weld{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--weld);border-radius:4px;background:color-mix(in srgb,var(--weld) 7%,transparent)}
+.weld>b:first-child{font-family:var(--font-head);font-size:1.15rem;font-weight:600;color:var(--weld)}
+.hp{display:inline-block;font-size:.72rem;font-weight:700;padding:1px 7px;border-radius:9px;background:var(--weld);color:var(--card);vertical-align:middle;margin-left:4px;white-space:nowrap}
+.recall{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:1rem 0}
+.recall>div{background:var(--card);border:1.5px solid var(--line);border-radius:4px;padding:8px 12px;font-size:.92rem}
+.recall .f{font-family:var(--font-math);font-size:1.2rem;margin-bottom:.2rem}
+@media (max-width:640px){.recall{grid-template-columns:1fr}}
+.hist{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:1rem 0}
+.hist>div{background:var(--card);border:1.5px solid var(--weld);border-radius:4px;padding:8px 12px;font-size:.93rem}
+.hist .yr{font-family:var(--font-head);font-size:1.6rem;font-weight:700;color:var(--weld);line-height:1}
+@media (max-width:720px){.hist{grid-template-columns:1fr}}
+
+/* manipulations */
+.lab{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:14px 16px 12px;margin:1.4rem 0}
+.lab-h{font-family:var(--font-head);font-size:1.3rem;font-weight:600;margin:0 0 .2rem}
+.lab-sub{margin:0 0 .6rem;color:var(--muted);font-size:.92rem}
+.lab svg{display:block;width:100%;height:auto;color:var(--ink);font-family:var(--font-body);touch-action:pan-y}
+.ctrl{display:grid;grid-template-columns:minmax(110px,auto) 1fr minmax(92px,auto);gap:4px 12px;align-items:center;margin:.5rem 0}
+.ctrl label{font-size:.95rem}
+.ctrl output{font-family:var(--font-math);font-size:1.08rem;text-align:right;white-space:nowrap}
+@media (max-width:520px){.ctrl{grid-template-columns:1fr auto}.ctrl input[type=range]{grid-column:1/-1;grid-row:2}}
+input[type=range]{width:100%;accent-color:var(--ink);height:28px;margin:0}
+input.r-sig{accent-color:var(--sig)} input.r-tau{accent-color:var(--tau)} input.r-frc{accent-color:var(--frc)} input.r-mat{accent-color:var(--mat)} input.r-eps{accent-color:var(--eps)}
+.btns{display:flex;flex-wrap:wrap;gap:6px;margin:.5rem 0}
+.btn{font-family:var(--font-body);font-size:.9rem;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 13px;cursor:pointer;line-height:1.3}
+.btn:hover{background:var(--paper-2)}
+.btn.on{background:var(--ink);color:var(--paper)}
+.btn.play{border-color:var(--eps);color:var(--eps);font-weight:700}
+.btn:disabled{opacity:.45;cursor:default}
+.readout{font-family:var(--font-math);font-size:1.08rem;background:var(--paper-2);border-radius:4px;padding:.5rem .8rem;margin:.5rem 0;overflow-x:auto;display:flex;flex-wrap:wrap;gap:.2em 1.3em}
+.readout>span{white-space:nowrap}
+.status{font-size:.97rem;margin:.5rem 0;padding:.5rem .8rem;border-left:4px solid var(--eps);background:color-mix(in srgb,var(--eps) 6%,transparent);border-radius:0 4px 4px 0;min-height:2.6em}
+.radios{display:flex;flex-wrap:wrap;gap:6px 14px;margin:.4rem 0;font-size:.95rem}
+.radios label{display:inline-block;cursor:pointer}
+.radios input{margin:0 6px 0 0;vertical-align:middle}
+
+/* svg */
+svg text{fill:currentColor;font-size:13px}
+svg .lbl{font-size:12.5px;fill:var(--muted)}
+svg .mth{font-family:var(--font-math);font-size:16px}
+svg .ttl{font-family:var(--font-head);font-size:15px;font-weight:600}
+svg .axis{stroke:var(--ink);stroke-width:1.4;fill:none}
+svg .tick{stroke:var(--muted);stroke-width:1}
+svg .gridbg{stroke:var(--line);stroke-width:1}
+svg .ref{stroke:var(--muted);stroke-width:1.3;stroke-dasharray:4 3;fill:none}
+.arr line{stroke:currentColor}
+.arr polygon{fill:currentColor}
+
+/* tableaux */
+.tbl-wrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch}
+table.data{border-collapse:collapse;width:100%;font-size:.94rem;background:var(--card)}
+table.data th,table.data td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:middle}
+table.data th{font-family:var(--font-head);font-weight:600;font-size:1.05rem;background:var(--paper-2)}
+table.data td.n{font-family:var(--font-math);white-space:nowrap}
+table.data tr.now td{background:var(--hl)}
+
+/* parcours */
+.route{list-style:none;padding:0;margin:1rem 0;position:relative}
+.route::before{content:"";position:absolute;left:17px;top:10px;bottom:10px;width:4px;background:var(--line);border-radius:2px}
+.route li{position:relative;padding:0 0 14px 52px;margin:0}
+.route li .dot{position:absolute;left:4px;top:0;width:30px;height:30px;border-radius:50%;border:3px solid var(--ink);background:var(--card);font-family:var(--font-head);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+.route li b{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.route li p{margin:.1rem 0 0;font-size:.95rem}
+.series{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:.8rem 0}
+.series>div{background:var(--card);border:1.5px solid var(--line);padding:8px 10px;border-radius:4px;font-size:.88rem}
+.series>div.here{border:2.5px solid var(--ink)}
+.series b{display:block;font-family:var(--font-head);font-size:1.05rem}
+@media (max-width:700px){.series{grid-template-columns:1fr 1fr}}
+
+/* exercices et quiz */
+.exo{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--ink);padding:6px 20px 12px;margin:1.2rem 0;border-radius:4px}
+.exo.defi{border-left-color:var(--weld)}
+.exo h4{margin-top:.8rem}
+.exo .lvtag{font-family:var(--font-body);font-size:.85rem;font-weight:400;color:var(--muted);margin-left:.4rem}
+.exo .q{margin:.25rem 0}
+details{margin:.6rem 0}
+summary{cursor:pointer;font-weight:700;padding:4px 0}
+details .sol{padding:.4rem .9rem;border-left:3px solid var(--mat);margin:.4rem 0}
+details .sol p{margin:.45em 0}
+.qz{background:var(--card);border:1.5px solid var(--line);border-radius:6px;padding:10px 16px;margin:.8rem 0}
+.qz-q{margin:.3rem 0 .6rem}
+.qz-o{display:flex;flex-direction:column;gap:6px}
+.qz-b{text-align:left;font-family:var(--font-body);font-size:.97rem;padding:8px 12px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:5px;cursor:pointer}
+.qz-b:hover{border-color:var(--ink)}
+.qz-b.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--card))}
+.qz-b.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--card))}
+.qz-e{font-size:.94rem;margin:.6rem 0 .2rem}
+.score{position:sticky;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);display:inline-block;background:var(--ink);color:var(--paper);padding:6px 14px;border-radius:999px;font-size:.95rem;margin:.6rem 0}
+
+/* fiche mémoire */
+.fiche{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:2.5px solid var(--ink);background:var(--card);margin:1rem 0}
+.fiche>div{padding:12px 14px;border-right:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}
+.fiche>div:nth-child(3n){border-right:0}
+.fiche>div:nth-last-child(-n+3){border-bottom:0}
+.fiche .ic{font-size:1.9rem;line-height:1}
+.fiche h4{margin:.3rem 0 .2rem;font-size:1.15rem}
+.fiche .f{font-family:var(--font-math);font-size:1.1rem;margin:.2rem 0}
+.fiche p{margin:.2rem 0 0;font-size:.88rem;color:var(--muted)}
+@media (max-width:720px){.fiche{grid-template-columns:1fr 1fr}.fiche>div{border-right:1.5px solid var(--ink)!important;border-bottom:1.5px solid var(--ink)!important}.fiche>div:nth-child(2n){border-right:0!important}.fiche>div:last-child{border-bottom:0!important}}
+@media (max-width:440px){.fiche{grid-template-columns:1fr}.fiche>div{border-right:0!important}}
+.gloss{display:grid;grid-template-columns:minmax(150px,230px) 1fr;gap:0;border-top:1.5px solid var(--line);margin:1rem 0}
+.gloss dt,.gloss dd{border-bottom:1.5px solid var(--line);padding:7px 8px;margin:0}
+.gloss dt{font-weight:700}
+.gloss dd{font-size:.95rem}
+@media (max-width:600px){.gloss{grid-template-columns:1fr}.gloss dt{border-bottom:0;padding-bottom:0}}
+.check label{display:flex;gap:10px;align-items:flex-start;padding:5px 0;cursor:pointer}
+.check input{margin-top:.35em;width:18px;height:18px;accent-color:var(--mat);flex:none}
+footer{padding:40px 0 60px;color:var(--muted);font-size:.9rem}
+hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
+@media (max-width:700px){.m{white-space:normal}.fx{padding:12px 10px}.fx .big{font-size:1.4rem}}
+@media (max-width:400px){body{font-size:16.5px}.wrap{padding:0 14px}.lab{padding:12px 10px}}
+</style>
+<style id="course-photo-style">
+/* Photographies documentées : compléments aux manipulations, lisibles hors ligne. */
+.photo-study{margin:1.8rem 0 2rem;padding-top:.4rem;border-top:3px solid var(--weld,var(--cL,#a46d40))}
+.photo-study>h3{margin:.6rem 0;font-size:1.65rem}
+.photo-intro{color:var(--muted,var(--ink2,#65717e));font-size:.96rem}
+.photo-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start}
+.course-photo{min-width:0;margin:1rem 0;background:var(--card,var(--paper,#fff));border:1.5px solid var(--line,var(--rule,#aeb9c2));border-radius:7px;overflow:hidden}
+.photo-media{position:relative;width:fit-content;max-width:100%;margin-inline:auto;line-height:0}
+.photo-media>img{display:block;max-width:100%;width:auto;height:auto;max-height:55vh;background:#fff}
+.course-photo figcaption{padding:12px 15px;font-size:.94rem}
+.photo-title{display:block;font-family:var(--font-head,inherit);font-size:1.3rem;line-height:1.2;color:var(--ink)}
+.photo-legend p{margin:.55rem 0}
+.photo-credit{font-size:.78rem;line-height:1.5;color:var(--muted,var(--ink2,#65717e));overflow-wrap:anywhere}
+.photo-open.btn{position:absolute;right:6px;bottom:calc(6px + var(--photo-footer,0%));display:grid;place-items:center;width:36px;height:36px;min-height:0;margin:0;padding:7px;border:1px solid rgba(255,255,255,.55);border-radius:6px;background:rgba(10,18,24,.48);color:#fff;opacity:.8;cursor:pointer;line-height:1;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.photo-open.btn:hover,.photo-open.btn:focus-visible{opacity:1;background:rgba(10,18,24,.8)}
+.photo-open.btn:focus-visible{outline:3px solid #f09828;outline-offset:2px}
+.photo-open svg{display:block;width:20px;height:20px;max-width:none;pointer-events:none}
+.photo-open.btn[hidden]{display:none}
+.photo-scale{font-size:.86rem;color:var(--muted,var(--ink2,#65717e))}
+.photo-question{padding:12px 16px;border-left:4px solid var(--mat,var(--good,#278158));background:var(--paper-2,var(--bg,#eef1f4));border-radius:0 5px 5px 0;font-size:.96rem}
+.photo-question details{margin-bottom:0}
+.photo-viewer{width:min(1120px,calc(100vw - 24px));max-width:calc(100vw - 24px);max-height:calc(100dvh - 24px);padding:16px;border:2px solid var(--line,var(--rule,#aeb9c2));border-radius:10px;background:var(--card,var(--paper,#fff));color:var(--ink);overflow:auto;overscroll-behavior:contain}
+.photo-viewer::backdrop{background:rgba(0,0,0,.78)}
+.photo-viewer-head{display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:-16px;background:var(--card,var(--paper,#fff));padding:8px 0;z-index:1}
+.photo-viewer-title{font-family:var(--font-head,inherit);font-size:1.45rem;font-weight:700;line-height:1.2;margin:0}
+.photo-viewer-head .btn{flex:none;min-height:42px}
+.photo-viewer-toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:4px 0 10px}
+.photo-viewer-toolbar p{font-size:.82rem;color:var(--muted,var(--ink2,#65717e));margin:0}
+.photo-viewer-stage{max-height:58vh;max-height:58dvh;overflow:auto;background:#e8e8e8;overscroll-behavior:contain;outline-offset:2px}
+.photo-viewer-stage:focus-visible{outline:3px solid var(--eps,var(--cL,#dc8c28))}
+.photo-viewer-stage img{display:block;max-height:58vh;max-height:58dvh;max-width:100%;width:auto;height:auto;margin:auto}
+.photo-viewer-stage.is-zoomed img{max-width:none;max-height:none;margin:0}
+.photo-viewer-caption{font-size:.94rem}
+body.photo-modal-open{overflow:hidden}
+@media(max-width:620px){.photo-pair{grid-template-columns:1fr}.photo-viewer{padding:12px}.photo-viewer-head{top:-12px}.photo-viewer-title{font-size:1.2rem}.photo-viewer-stage,.photo-viewer-stage img{max-height:48dvh}}
+@media print{.photo-open,.photo-viewer{display:none}.course-photo{break-inside:avoid}.photo-study{border-top-color:#555}}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="wrap wide">
+  <div class="title-block">
+    <div class="tb-main">
+      <div>
+        <p class="tb-series">Fatigue des métaux, série 1 : la vie d'une fissure</p>
+        <h1>Propagation et loi de Paris : de la fissure à la rupture</h1>
+      </div>
+      <button class="theme-btn" id="themeBtn" type="button" aria-label="Changer de thème">◐ Thème : automatique</button>
+    </div>
+    <div class="tb-cells">
+      <div><small>Cours</small><b>4 sur 4 : la propagation des fissures de fatigue</b></div>
+      <div><small>Durée conseillée</small><b>≈ 2 h 30 à 3 h avec les exercices</b></div>
+      <div><small>Prérequis</small><b>cours 1 à 3 ; logarithmes ; facteur d'intensité de contrainte K (simple rappel ici)</b></div>
+      <div><small>À la fin tu sais</small><b>lire une cassure, utiliser la loi de Paris, calculer une durée de propagation et un intervalle d'inspection</b></div>
+    </div>
+  </div>
+  <p class="lede">La fissure est née (cours 3). Elle va maintenant avancer, un tout petit peu à chaque cycle, en laissant sur la cassure des traces aussi régulières que les cernes d'un arbre. Sa vitesse dépend d'un seul nombre, l'étendue du facteur d'intensité de contrainte ΔK, et suit une loi d'une simplicité remarquable : la <b>loi de Paris</b>. En l'intégrant, on calcule combien de cycles il reste avant la rupture : le chiffre qui fixe l'intervalle entre deux inspections d'un pont, d'un avion ou d'une grue. Et on comprend enfin d'où vient la pente 3 des courbes FAT des soudures.</p>
+
+  <h4>Le code couleur de la série</h4>
+  <div class="cc" role="img" aria-label="Code couleur : contraintes et facteur d'intensité en rouge, paramètres du matériau en vert, fissure et vitesse en bleu">
+    <div class="cc-box cc-cause"><small>Les causes</small><div class="cc-syms"><span class="sig">Δσ</span><span class="sig">ΔK</span><span class="sig">K<sub>max</sub></span><span class="tau">défauts</span></div><p><span class="sig">rouge</span> : la contrainte et le facteur d'intensité qui pilotent la fissure ; <span class="tau">violet</span> : ce qui aggrave (défauts initiaux, contraintes résiduelles de traction)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-link"><small>Les liens et paramètres</small><div class="cc-syms"><span class="mat">C</span><span class="mat">m</span><span class="mat">Y</span><span class="mat">K<sub>IC</sub></span><span class="mat">ΔK<sub>S</sub></span></div><p>en <span class="mat">vert</span> : la loi de propagation et les propriétés du matériau et de la géométrie</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-eff"><small>Les effets</small><div class="cc-syms"><span class="eps">a</span><span class="eps">da/dN</span><span class="eps">N<sub>p</sub></span></div><p><span class="eps">bleu</span> : la longueur de fissure, sa vitesse, la durée de propagation ; <span class="gam">bleu-vert</span> : la zone plastique</p></div>
+  </div>
+  <div class="cc-more">
+    <div><b class="frc">Orange</b> : les actions extérieures, forces et moments.</div>
+    <div><b>Noir</b> : les vecteurs et la géométrie dessinée (contours, sections).</div>
+    <div><b class="wcol">Bronze</b> : les encadrés « métier » 🔥, tournés vers le soudage.</div>
+  </div>
+</div>
+</header>
+
+<nav class="toc" aria-label="Sommaire">
+  <div class="toc-in">
+    <a href="#avant">Avant de commencer</a>
+    <a href="#c1">1 Le mécanisme</a>
+    <a href="#c2">2 Lire une cassure</a>
+    <a href="#c3">3 da/dN–ΔK</a>
+    <a href="#c4">4 Loi de Paris</a>
+    <a href="#c5">5 Intégrer Paris</a>
+    <a href="#c6">6 Paris et FAT</a>
+    <a href="#exos">Exercices</a>
+    <a href="#quiz-s">Quiz</a>
+    <a href="#fiche">Fiche mémoire</a>
+    <a href="#gloss">Glossaire</a>
+    <a href="#check">Check-list</a>
+  </div>
+</nav>
+
+<main>
+<section class="chap" id="avant">
+<div class="wrap">
+  <h3 style="margin-top:0">Avant de commencer</h3>
+  <h4>Le cours 3 en trois cases</h4>
+  <div class="recall">
+    <div><div class="f">stade I → stade II</div>La microfissure naît d'une intrusion et suit d'abord les plans de glissement à 45° (stade I), puis tourne pour devenir perpendiculaire à l'effort (stade II, <b>mode I</b> : ouverture des lèvres).</div>
+    <div><div class="f">domaines 1 · 2 · 3 · 4</div>La courbe de Wöhler à l'amorçage est à gauche de la courbe à rupture ; sous σ<sub>D</sub>, des fissures peuvent naître puis s'endormir (domaine 4).</div>
+    <div><div class="f"><span class="eps">a<sub>0</sub></span> = (<span class="mat">ΔK<sub>S</sub></span>/(<span class="mat">Y</span><span class="mat">Δσ<sub>D</sub></span>))²</div>Kitagawa : une fissure courte est arrêtée par Δσ<sub>D</sub>, une fissure longue par le seuil ΔK<sub>S</sub>. Un défaut de soudure de 0,3 mm est déjà une fissure longue.</div>
+  </div>
+
+  <div class="def"><b>🔎 Cinq remarques de lecture</b>
+    <p><b>1. Modèle de Laird et « courbe-R ».</b> Le mécanisme d'émoussement puis d'affûtage de la pointe (chapitre 1) est le plus souvent appelé <b>modèle de Laird</b> (1967). On le voit parfois associé à un « effet de courbe-R » ; mais en mécanique de la rupture, l'expression « courbe-R » désigne d'ordinaire la résistance à la déchirure qui croît avec l'avancée de la fissure. Ce R n'a rien à voir avec le rapport de charge R = σ<sub>min</sub>/σ<sub>max</sub>.</p>
+    <p><b>2. La forme de K.</b> La série écrit K<sub>I</sub> = σY√a : son facteur Y contient le √π que beaucoup d'abaques écrivent à part (K = Yσ√(πa)). Une petite fissure de surface a Y ≈ 1,12√π ≈ 2 dans cette convention. Un Y pris dans une autre source doit être converti.</p>
+    <p><b>3. K<sub>IC</sub> ou K<sub>C</sub> ?</b> On rencontre les deux notations pour la ténacité qui met fin à la propagation. K<sub>IC</sub> est la ténacité en déformation plane (pièces épaisses) ; K<sub>C</sub> la ténacité pour une épaisseur donnée, plus élevée pour les tôles minces. Dans les deux cas, c'est K<sub>max</sub> (au sommet du cycle) qui l'atteint à la rupture, pas ΔK.</p>
+    <p><b>4. Le seuil : 10⁻⁹ ou 10⁻¹⁰ m par cycle ?</b> Selon les sources, le seuil de propagation est situé vers 10⁻⁹ ou 10⁻¹⁰ m par cycle. La norme d'essai ASTM E647 (ASTM : <i>American Society for Testing and Materials</i>) le définit conventionnellement à <b>10⁻¹⁰ m/cycle</b>, ce qui colle mieux à l'argument « moins d'une distance interatomique » (environ 2,5 × 10⁻¹⁰ m). On mesure d'ailleurs des vitesses moyennes inférieures à une distance atomique par cycle : le front n'avance pas partout à la fois.</p>
+    <p><b>5. K négatif ?</b> Quand le cycle passe en compression, certains schémas tracent K négatif. Physiquement, la fissure se referme et K négatif n'a pas de sens ; pour R &lt; 0, les conventions diffèrent (l'ASTM E647 prend ΔK = K<sub>max</sub>).</p>
+  </div>
+
+  <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage</b>
+    <p>(IWE : <i>International Welding Engineer</i>.) Un assemblage soudé passe presque toute sa vie en <b>propagation</b> (cours 1 et 3). La loi de Paris est donc le vrai moteur de sa tenue en fatigue. Elle sert directement dans deux métiers du soudage : l'<b>évaluation d'un défaut</b> trouvé en contrôle (« ce défaut de 2 mm est-il acceptable, et pour combien de temps ? »), selon les recommandations de l'IIW (<i>International Institute of Welding</i>) ou la norme britannique BS 7910, et la <b>planification des inspections</b> des structures soudées.</p>
+  </div>
+
+  <h4>La série en quatre cours</h4>
+  <div class="series">
+    <div><b>1 Le cycle</b>Le décor : décrire ce qui se répète.</div>
+    <div><b>2 Wöhler</b>L'espérance de vie, et les classes FAT.</div>
+    <div><b>3 L'amorçage</b>La naissance d'une fissure, grain par grain.</div>
+    <div class="here"><b>4 Paris</b>La croissance de la fissure jusqu'à la rupture.</div>
+  </div>
+
+  <h4>Le plan du cours</h4>
+  <ol class="route">
+    <li><span class="dot">1</span><b>Le mécanisme cycle par cycle</b><p>Rappel de K, puis émoussement et affûtage de la pointe : une strie par cycle.</p></li>
+    <li><span class="dot">2</span><b>Lire une cassure de fatigue</b><p>Origine, zone lisse, lignes d'arrêt, stries et zone de rupture brutale.</p></li>
+    <li><span class="dot">3</span><b>Le diagramme da/dN–ΔK</b><p>Seuil, régime de Paris, rupture ; et ΔK qui grimpe à Δσ constant.</p></li>
+    <li><span class="dot">4</span><b>La loi de Paris</b><p>da/dN = C(ΔK)<sup>m</sup>, ses unités et ses ordres de grandeur.</p></li>
+    <li><span class="dot">5</span><b>Intégrer la loi de Paris</b><p>La durée de propagation et l'intervalle d'inspection.</p></li>
+    <li><span class="dot">6</span><b>De Paris aux classes FAT</b><p>La boucle est bouclée : la pente 3 des soudures.</p></li>
+  </ol>
+</div>
+</section>
+<section class="chap" id="c1">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">1</div>
+    <div class="c-title"><h2>Le mécanisme cycle par cycle</h2><p>S'émousser, s'affûter, avancer d'une strie</p></div>
+    <div class="c-img"><span class="ico">🐛</span><span><small>Image à retenir</small>La chenille arpenteuse : elle s'étire (traction), se replie (compression) et avance d'un pas, une strie</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la chenille arpenteuse</span></div>
+    <div class="def"><b>📖 Rappel express : le facteur d'intensité de contrainte</b> (détaillé dans une autre série). À la pointe d'une fissure de longueur <span class="eps">a</span>, la contrainte est concentrée, d'autant plus que la contrainte nominale <span class="sig">σ</span> et la fissure sont grandes. Un seul nombre résume cette sévérité : <span class="m"><span class="sig">K<sub>I</sub></span> = <span class="sig">σ</span>·<span class="mat">Y</span>·√<span class="eps">a</span></span> (en MPa·√m, avec a en mètres ; Y, facteur géométrique sans unité ; l'indice I désigne le mode I, l'ouverture). Tant que K<sub>I</sub> reste sous la <b>ténacité</b> <span class="mat">K<sub>IC</sub></span> du matériau, pas de rupture brutale. Quand la fissure atteint la <b>longueur critique</b> a<sub>C</sub> où K<sub>I</sub> = K<sub>IC</sub>, la pièce casse d'un coup.</div>
+    <p>Entre les deux, la fissure avance un peu à chaque cycle, de façon essentiellement <b>transgranulaire</b> (à travers les grains). On décrit ce mouvement en quatre temps :</p>
+    <ul>
+      <li><b>début</b> : la pointe de la fissure est aiguë ;</li>
+      <li><b>traction</b> : la matière plastifie juste devant la pointe ; la pointe s'ouvre, s'arrondit (elle s'<b>émousse</b>) et avance un peu. Une fissure émoussée est moins dangereuse : elle s'arrête ;</li>
+      <li><b>compression</b> : la déformation se fait en sens inverse ; les lèvres se referment et la pointe s'<b>affûte</b> de nouveau, en laissant un petit repli. Elle redevient « vulnérable » ;</li>
+      <li><b>traction suivante</b> : la fissure repart, s'émousse, avance encore d'un pas.</li>
+    </ul>
+    <p>Comme une chenille arpenteuse : elle s'étire, se replie, et à chaque cycle elle a avancé d'un pas. Chaque pas laisse sur les faces de la cassure un petit repli : une <b>strie de fatigue</b>.</p>
+  </div>
+
+  <div class="lab" id="m1">
+    <p class="lab-h">Manipulation 1 : la pointe qui respire</p>
+    <p class="lab-sub">Une fissure vue de profil, l'effort vertical (il ouvre la fissure). Lance les cycles ou avance phase par phase. Le curseur ΔK règle la sévérité : plus ΔK est grand, plus chaque pas est long. La zone plastique est en bleu-vert, les stries en bleu.</p>
+    <div class="ctrl"><label for="m1k">Étendue <span class="sig">ΔK</span></label><input type="range" id="m1k" class="r-sig" min="8" max="40" step="1" value="18"><output id="m1ko"></output></div>
+    <div class="btns"><button class="btn play" id="m1play" type="button">▶ Cycler</button><button class="btn" id="m1step" type="button">⏭ Phase suivante</button><button class="btn" id="m1reset" type="button">↺ Recommencer</button></div>
+    <svg id="m1svg" role="img" aria-label="Pointe de fissure en traction et en compression, avec la zone plastique et les stries laissées à chaque cycle"></svg>
+    <div class="readout" id="m1r"></div>
+    <p class="status" id="m1msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">zone plastique et stries</span></div>
+    <div class="def"><b>📖 Strie de fatigue</b> : fine ondulation de la surface de rupture, parallèle au front de fissure, laissée par un cycle de chargement. Dans le régime de Paris, une strie correspond à un cycle : l'écart entre deux stries mesure la vitesse <b>da/dN</b>, l'avancée de la fissure par cycle (a : longueur de fissure ; N : nombre de cycles ; d : « petite variation de »).</div>
+    <h4>La taille de la zone plastique <span class="hp">complément</span></h4>
+    <p>Devant la pointe, la matière dépasse R<sub>e</sub> dans une petite zone. Son rayon s'estime (formule d'Irwin, contraintes planes) par :</p>
+    <div class="fx"><div class="big" style="font-size:1.6rem"><span class="gam">r<sub>p</sub></span> ≈ <span class="frac"><span>1</span><span>2π</span></span><span style="font-size:1.25em">(</span><span class="frac"><span><span class="sig">K<sub>max</sub></span></span><span>R<sub>e</sub></span></span><span style="font-size:1.25em">)</span>²</div>
+      <p class="cap">K<sub>max</sub> en MPa·√m et R<sub>e</sub> en MPa : r<sub>p</sub> sort en mètres. La valeur de K est la même quelle que soit la façon d'écrire Y.</p></div>
+    <p><b>Exemple.</b> K<sub>max</sub> = 20 MPa·√m dans un acier de R<sub>e</sub> = 400 MPa : <span class="m">r<sub>p</sub> ≈ (20/400)²/(2π) = 0,0025/6,28 ≈ 4 × 10⁻⁴ m = 0,4 mm</span>. La zone qui plastifie à chaque cycle, en traction puis en compression (zone plastique <b>cyclique</b>), est environ quatre fois plus petite : de l'ordre de 0,1 mm.</p>
+    <p>Le modèle de Laird explique l'avancée par l'ouverture de la pointe : plus K est grand, plus la pointe s'ouvre, plus le pas est long. Il suggère une vitesse proportionnelle à ΔK², alors que les essais donnent plutôt ΔK² à ΔK⁴ : le mécanisme est un peu plus riche, mais l'image est juste.</p>
+    <div class="warn"><b>⚠️ Piège : la compression ne fait pas avancer la fissure.</b> Elle la referme et l'affûte ; c'est la traction suivante qui la fait avancer. La compression prépare, la traction exécute.</div>
+    <div class="warn"><b>⚠️ Piège : K<sub>max</sub> ou ΔK ?</b> L'<b>étendue</b> ΔK pilote l'avancée cycle par cycle ; la <b>valeur maximale</b> K<sub>max</sub> décide de la rupture brutale (K<sub>max</sub> = K<sub>IC</sub>).</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique :</b> « <b>la traction émousse, la compression affûte</b> » : comme un crayon qu'on écrase puis qu'on retaille.</div>
+    <div class="weld"><b>🔥 Dans une soudure, la fissure reste ouverte</b>
+      <p>Au pied d'un cordon, les contraintes résiduelles de traction (proches de R<sub>e</sub>) maintiennent la fissure ouverte même pendant la partie « compression » du cycle nominal. Toute l'étendue Δσ sert donc à la faire avancer : c'est la version « mécanique de la rupture » de la règle du cours 1, qui calcule les soudures en Δσ sans tenir compte de σ<sub>m</sub>.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c2">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">2</div>
+    <div class="c-title"><h2>Lire une cassure de fatigue</h2><p>Origine, zone lisse, lignes d'arrêt, zone rugueuse</p></div>
+    <div class="c-img"><span class="ico">🐚</span><span><small>Image à retenir</small>Le coquillage : sur la cassure, les lignes d'arrêt dessinent des arcs autour de l'origine, comme les stries de croissance d'une coquille</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le coquillage</span></div>
+    <p>Une rupture par fatigue a un visage reconnaissable entre mille. Sur la surface cassée, on distingue :</p>
+    <ul>
+      <li>l'<b>origine</b>, le point d'amorçage, presque toujours en surface ;</li>
+      <li>une <b>zone lisse et plane</b>, celle de la propagation lente, où la fissure a avancé cycle après cycle. Elle porte souvent des <b>lignes d'arrêt</b> : des arcs concentriques autour de l'origine, comme les lignes de croissance d'un coquillage ;</li>
+      <li>une <b>zone rugueuse</b>, celle de la <b>rupture brutale</b> finale, quand la section restante n'a plus suffi.</li>
+    </ul>
+    <p>Les <b>lignes d'arrêt</b> se forment quand le chargement cyclique s'interrompt (la nuit, le week-end, à l'arrêt d'une machine) : le fond de fissure, exposé à l'air, s'oxyde un peu plus, d'où un contraste de couleur. Elles apparaissent aussi quand le chargement change (amplitude ou contrainte moyenne plus forte ou plus faible).</p>
+    <p>Au microscope électronique, la zone lisse révèle les <b>stries</b> de fatigue : des milliers de petites rides parallèles, une par cycle. Les lignes d'arrêt se voient à l'œil nu ; les stries, seulement au microscope.</p>
+  </div>
+
+  <!-- Photographies pédagogiques : fatigue-04-c2 -->
+<div class="photo-study" id="photos-fatigue-detail">
+<h3>Lire les traces sur une cassure réelle</h3>
+<figure class="course-photo" id="photo-fatigue-detail" aria-labelledby="photo-fatigue-detail-title">
+  <div class="photo-media"><img src="data:image/jpeg;base64,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" width="500" height="340" alt="Vue rapprochée d’une cassure de vilebrequin : arcs visibles sur une partie de la face et relief plus irrégulier ailleurs." loading="lazy" decoding="async"><button class="btn photo-open" type="button" aria-label="Agrandir : Les lignes d’arrêt à l’échelle de la pièce" hidden><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 9 3 3m0 5V3h5M15 9l6-6m-5 0h5v5M9 15l-6 6m5 0H3v-5M15 15l6 6m0-5v5h-5"/></svg></button></div>
+  <figcaption><strong class="photo-title" id="photo-fatigue-detail-title">Les lignes d’arrêt à l’échelle de la pièce</strong><div class="photo-legend"><p>Repère les <b>arcs successifs</b> sur la partie droite de cette cassure de fatigue, puis compare leur aspect avec les reliefs plus irréguliers du reste de la face. Le faciès réel est moins net et moins symétrique que le modèle interactif.</p><p>Ce sont des repères à l’échelle macroscopique : ne les confonds pas avec les <b>stries microscopiques</b>. Le cliché ne comporte pas de calibration permettant de mesurer une vitesse de propagation.</p></div><p class="photo-credit">Peterlewis (2008-02-27), <a href="https://commons.wikimedia.org/wiki/File:Crankshaft_fatigue.jpg">Crankshaft fatigue.jpg</a> · <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>. Fichier JPEG conservé, sans recadrage ni retouche. Photo maintenue sous cette licence.</p></figcaption>
+</figure>
+<div class="photo-question"><p><b>À toi d’observer.</b> Peut-on compter ces arcs pour obtenir le nombre de cycles ?</p><details><summary>Voir les repères</summary><p>Non. Les lignes d’arrêt macroscopiques ne correspondent pas à un cycle chacune. Elles servent d’abord à lire l’organisation de la propagation et doivent être confrontées à l’historique de chargement.</p></details></div>
+</div>
+<!-- Fin des photographies : fatigue-04-c2 -->
+<div class="lab" id="m2">
+    <p class="lab-h">Manipulation 2 : fabrique une cassure</p>
+    <p class="lab-sub">La section d'une pièce, vue de face. Fais grandir la fissure depuis son origine ; appuie sur « Arrêt » pour simuler une interruption du chargement et créer une ligne d'arrêt. La contrainte maximale fixe la taille critique : quand le front l'atteint, la pièce casse.</p>
+    <div class="ctrl"><label for="m2s">Contrainte <span class="sig">σ<sub>max</sub></span></label><input type="range" id="m2s" class="r-sig" min="100" max="400" step="10" value="200"><output id="m2so"></output></div>
+    <div class="btns"><button class="btn play" id="m2play" type="button">▶ Faire grandir</button><button class="btn" id="m2stop" type="button">⏸ Arrêt (ligne d'arrêt)</button><button class="btn" id="m2reset" type="button">↺ Nouvelle pièce</button><button class="btn" id="m2zoom" type="button">🔬 Vue au microscope</button></div>
+    <svg id="m2svg" role="img" aria-label="Surface de rupture par fatigue : origine, lignes d'arrêt, zone de fatigue et zone de rupture brutale"></svg>
+    <div class="readout" id="m2r"></div>
+    <p class="status" id="m2msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">l'expertise d'une rupture</span></div>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th></th><th>Stries de fatigue</th><th>Lignes d'arrêt</th></tr>
+      <tr><td><b>Échelle</b></td><td>espacement de 0,01 à quelques µm</td><td>espacement du dixième de mm au cm</td></tr>
+      <tr><td><b>Instrument</b></td><td>microscope électronique à balayage (MEB)</td><td>œil nu ou loupe</td></tr>
+      <tr><td><b>Origine</b></td><td>un cycle de chargement</td><td>une interruption ou un changement de chargement</td></tr>
+      <tr><td><b>Ce qu'on en tire</b></td><td>la vitesse da/dN, donc ΔK et la contrainte</td><td>l'histoire du chargement (arrêts, changements)</td></tr>
+    </table></div>
+    <p><b>Ce que l'expert lit sur la cassure</b> :</p>
+    <ul>
+      <li><b>la taille de la zone de rupture finale</b> : la fissure casse la pièce à a<sub>C</sub> = (K<sub>IC</sub>/(Y·σ<sub>max</sub>))². Une petite zone de fatigue et une grande zone brutale signalent une contrainte maximale élevée ; une grande zone de fatigue, une contrainte faible ou un matériau tenace ;</li>
+      <li><b>le nombre d'origines</b> : une seule origine trahit souvent un défaut local ; plusieurs origines, séparées par de petites marches (les « marches de rochet »), une contrainte élevée ou une concentration de contrainte étendue, comme un pied de cordon ;</li>
+      <li><b>l'orientation</b> : la cassure est perpendiculaire à la contrainte principale de traction (cours 3) ;</li>
+      <li><b>l'espacement des stries</b> : en le mesurant, on remonte à da/dN, puis à ΔK par la loi de Paris (chapitre 4), puis à la contrainte qui a réellement agi.</li>
+    </ul>
+    <div class="warn"><b>⚠️ Piège classique d'examen : strie ≠ ligne d'arrêt.</b> Une strie = un cycle (microscopique) ; une ligne d'arrêt = un événement (macroscopique), entre lesquels il peut y avoir des millions de cycles. Compter les lignes d'arrêt ne donne pas le nombre de cycles.</div>
+    <div class="tip"><b>💡 Une zone lisse… mais pas toujours brillante.</b> Le frottement des lèvres l'une contre l'autre, pendant les compressions, polit souvent la zone de fatigue, alors que la zone de rupture brutale reste grenue et mate (ou à facettes brillantes si elle est fragile).</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique :</b> « <b>la strie compte les cycles, la ligne d'arrêt compte les pauses</b> ».</div>
+    <div class="weld"><b>🔥 La cassure d'un pied de cordon</b>
+      <p>Une fissure de pied de cordon dessine en général une demi-ellipse aplatie (en « ongle » ou « pouce »), longue le long du pied et peu profonde. Souvent, plusieurs petites fissures nées le long du pied se rejoignent : les marches de rochet en gardent la trace. En expertise, la position de l'origine (pied ou racine), la forme du front et l'espacement des stries permettent de remonter au détail et au niveau de contrainte, puis de choisir la bonne réparation.</p>
+    </div>
+  </div>
+</div>
+</section>
+<section class="chap" id="c3">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">3</div>
+    <div class="c-title"><h2>Le diagramme da/dN–ΔK</h2><p>Un péage, une autoroute, une falaise</p></div>
+    <div class="c-img"><span class="ico">🛣️</span><span><small>Image à retenir</small>L'autoroute : un péage à l'entrée (le seuil), une longue ligne droite (Paris), une falaise au bout (K<sub>C</sub>)</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">trois domaines</span></div>
+    <p>On mesure, au laboratoire, la <b>vitesse</b> d'avancée de la fissure, da/dN (en mètres par cycle), et on la reporte en fonction de l'<b>étendue du facteur d'intensité de contrainte</b> pendant le cycle :</p>
+    <div class="fx"><div class="big" style="font-size:1.6rem"><span class="sig">ΔK</span> = <span class="sig">K<sub>max</sub></span> − <span class="sig">K<sub>min</sub></span> = <span class="sig">Δσ</span>·<span class="mat">Y</span>·√<span class="eps">a</span></div><p class="cap">ΔK en MPa·√m</p></div>
+    <p>En échelles logarithmiques sur les deux axes, la courbe a toujours la même allure, comme une autoroute :</p>
+    <ul>
+      <li><b>domaine 1, le péage</b> : en dessous d'une valeur seuil <span class="mat">ΔK<sub>S</sub></span>, la fissure ne se propage pas. Près du seuil, elle avance de moins d'une distance entre atomes par cycle : en réalité, elle n'avance plus ;</li>
+      <li><b>domaine 2, l'autoroute</b> : pour les sollicitations intermédiaires, une longue ligne droite. C'est la <b>loi de Paris</b> (chapitre 4) ;</li>
+      <li><b>domaine 3, la falaise</b> : quand K<sub>max</sub> s'approche de la ténacité <span class="mat">K<sub>C</sub></span>, la vitesse explose ; si K<sub>max</sub> atteint K<sub>C</sub>, la rupture se fait en un quart de cycle (le temps de monter jusqu'au maximum).</li>
+    </ul>
+    <p><b>Attention</b> : même si on impose une étendue de contrainte Δσ constante, ΔK <b>augmente</b> au fur et à mesure que la fissure grandit, puisqu'il contient √a. La fissure « monte » donc toute seule le long de la courbe : plus elle est longue, plus elle va vite, plus elle s'allonge vite… C'est un emballement.</p>
+  </div>
+
+  <div class="lab" id="m3">
+    <p class="lab-h">Manipulation 3 : la courbe da/dN–ΔK</p>
+    <p class="lab-sub">Acier de construction (modèle illustratif). Déplace ΔK pour parcourir les trois domaines. Le rapport de charge R décale le seuil et la falaise : plus R est grand, plus la fissure est ouverte longtemps.</p>
+    <div class="ctrl"><label for="m3k">Étendue <span class="sig">ΔK</span></label><input type="range" id="m3k" class="r-sig" min="0" max="100" step="0.5" value="50"><output id="m3ko"></output></div>
+    <div class="ctrl"><label for="m3r">Rapport <span class="mat">R</span></label><input type="range" id="m3r" class="r-mat" min="0" max="0.8" step="0.1" value="0.1"><output id="m3ro"></output></div>
+    <svg id="m3svg" role="img" aria-label="Diagramme de la vitesse de fissuration en fonction de l'étendue du facteur d'intensité de contrainte, trois domaines"></svg>
+    <div class="readout" id="m3r_"></div>
+    <p class="status" id="m3msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">ΔK, K<sub>max</sub>, R et les ordres de grandeur</span></div>
+    <div class="def"><b>📖 Seuil de fissuration ΔK<sub>S</sub></b> (souvent noté ΔK<sub>th</sub>, de l'anglais <i>threshold</i>) : étendue du facteur d'intensité de contrainte en dessous de laquelle une fissure longue ne se propage pas. Pour les aciers : environ 2 à 8 MPa·√m selon R.</div>
+    <div class="def"><b>📖 Ténacité K<sub>C</sub> (ou K<sub>IC</sub>)</b> : valeur de K<sub>max</sub> qui provoque la rupture brutale. Aciers de construction : de l'ordre de 50 à 200 MPa·√m à température ambiante, beaucoup moins à froid pour certains.</div>
+    <p>Avec R = K<sub>min</sub>/K<sub>max</sub> = σ<sub>min</sub>/σ<sub>max</sub> (R ≥ 0), on a :</p>
+    <div class="fx"><div class="row big" style="font-size:1.5rem"><span><span class="sig">K<sub>max</sub></span> = <span class="frac"><span><span class="sig">ΔK</span></span><span>1 − <span class="mat">R</span></span></span></span><span>falaise à <span class="sig">ΔK</span> = (1 − <span class="mat">R</span>)·<span class="mat">K<sub>C</sub></span></span></div></div>
+    <p><b>Effet de R</b>. À ΔK égal, une fissure soumise à un R plus élevé va plus vite et a un seuil plus bas. Explication principale (Elber, 1970) : à R faible, les lèvres de la fissure se touchent avant la fin de la décharge (<b>fermeture de fissure</b>), et une partie de ΔK ne sert à rien ; à R élevé, la fissure reste ouverte pendant tout le cycle.</p>
+    <p><b>Ordres de grandeur.</b> Domaine 1 vers 10⁻⁹ m/cycle et en dessous (la norme ASTM E647 fixe conventionnellement le seuil à 10⁻¹⁰ m/cycle) ; domaine 2 entre environ 10⁻⁸ et 10⁻⁶ m/cycle, soit 0,01 à 1 µm par cycle ; domaine 3 au-delà.</p>
+    <p><b>Exemple.</b> Δσ = 100 MPa, Y = 2, a = 2 mm : <span class="m">ΔK = 100 × 2 × √0,002 = 8,9 MPa·√m</span>, au-dessus d'un seuil de 6 MPa·√m : la fissure se propage. À a = 8 mm (quatre fois plus longue), ΔK double : 17,9 MPa·√m.</p>
+    <div class="tip"><b>💡 Comment mesure-t-on da/dN ?</b> Sur une éprouvette déjà fissurée (par exemple l'éprouvette compacte de traction, dite CT, un bloc entaillé tiré par deux goupilles), on impose une amplitude de charge constante et on suit la longueur de fissure en continu (par la variation de raideur de l'éprouvette, ou par la résistance électrique). ΔK augmente tout seul, comme on vient de le voir : on parcourt ainsi les domaines 2 et 3. Pour le seuil, on fait au contraire décroître la charge pas à pas.</div>
+    <div class="warn"><b>⚠️ Piège : ΔK, pas K.</b> La vitesse dépend de l'<b>étendue</b> ΔK ; la rupture finale, de K<sub>max</sub>. Deux cycles de même ΔK mais de R différents n'ont ni la même vitesse, ni la même longueur critique.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique :</b> « <b>péage, autoroute, falaise</b> » : ΔK<sub>S</sub>, Paris, K<sub>C</sub>.</div>
+    <div class="weld"><b>🔥 Des soudures à R élevé</b>
+      <p>À cause des contraintes résiduelles, une fissure de soudure travaille comme si R était élevé, quel que soit le R nominal. Les évaluations de défauts des soudures (IIW, BS 7910) utilisent donc des lois de propagation et des seuils correspondant à un R élevé, avec un seuil prudent de l'ordre de 2 MPa·√m pour l'acier (cours 3, défi).</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c4">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">4</div>
+    <div class="c-title"><h2>La loi de Paris</h2><p>da/dN = C(ΔK)<sup>m</sup></p></div>
+    <div class="c-img"><span class="ico">📏</span><span><small>Image à retenir</small>La règle posée sur le papier log-log : au milieu, la vitesse suit une droite de pente m</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">une droite et deux leviers</span></div>
+    <p>Dans le domaine 2, les logarithmes de la vitesse et de ΔK sont liés par une droite. En 1963, Paul Paris et Fazil Erdogan ont écrit cette observation sous la forme qui porte le nom du premier :</p>
+    <div class="fx"><div class="big"><span class="frac"><span>d<span class="eps">a</span></span><span>d<span class="eps">N</span></span></span> = <span class="mat">C</span>·(<span class="sig">ΔK</span>)<sup><span class="mat">m</span></sup></div><p class="cap">C et m : coefficients caractéristiques du matériau</p></div>
+    <p>Pour les aciers, m vaut environ 3. Cela donne deux leviers à retenir :</p>
+    <ul>
+      <li><b>doubler ΔK multiplie la vitesse par 2³ = 8</b> ;</li>
+      <li>comme ΔK contient √a, une fissure <b>deux fois plus longue</b> va (√2)³ ≈ <b>2,8 fois plus vite</b>, à contrainte égale.</li>
+    </ul>
+    <p>Et chaque cycle laissant une strie, l'espacement des stries mesuré au microscope <b>est</b> la vitesse da/dN : la cassure garde la mémoire de la loi de Paris.</p>
+  </div>
+
+  <div class="lab" id="m4">
+    <p class="lab-h">Manipulation 4 : la calculatrice de Paris</p>
+    <p class="lab-sub">Choisis une famille d'aciers et un ΔK : la vitesse, l'espacement des stries et le nombre de cycles pour avancer d'un millimètre se calculent en direct.</p>
+    <div class="btns" id="m4mat">
+      <button class="btn on" data-c="6.9e-12" data-m="3" type="button">ferrito-perlitique</button>
+      <button class="btn" data-c="1.35e-10" data-m="2.25" type="button">martensitique</button>
+      <button class="btn" data-c="5.6e-12" data-m="3.25" type="button">austénitique</button>
+      <button class="btn" data-c="1.65e-11" data-m="3" type="button">soudage, valeur prudente</button>
+    </div>
+    <div class="ctrl"><label for="m4k">Étendue <span class="sig">ΔK</span></label><input type="range" id="m4k" class="r-sig" min="5" max="60" step="0.5" value="10"><output id="m4ko"></output></div>
+    <div class="btns"><button class="btn" id="m4x2" type="button">× 2 sur ΔK</button></div>
+    <svg id="m4svg" role="img" aria-label="Droites de Paris pour plusieurs familles d'aciers, sur un diagramme log-log"></svg>
+    <div class="readout" id="m4r"></div>
+    <p class="status" id="m4msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">constantes, unités et limites</span></div>
+    <p><b>Constantes des aciers</b> (valeurs moyennes publiées par J. M. Barsom, avec da/dN en m/cycle et ΔK en MPa·√m) :</p>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Famille d'aciers</th><th>C</th><th>m</th></tr>
+      <tr><td>ferrito-perlitiques (aciers de construction)</td><td class="n">6,9 × 10⁻¹²</td><td class="n">3,0</td></tr>
+      <tr><td>martensitiques (trempés-revenus)</td><td class="n">1,35 × 10⁻¹⁰</td><td class="n">2,25</td></tr>
+      <tr><td>austénitiques (inoxydables)</td><td class="n">5,6 × 10⁻¹²</td><td class="n">3,25</td></tr>
+      <tr><td>valeur prudente pour l'acier à l'air (évaluation de défauts de soudure, IIW et BS 7910)</td><td class="n">≈ 1,65 × 10⁻¹¹</td><td class="n">3</td></tr>
+    </table></div>
+    <p><b>Exemple</b> (ferrito-perlitique) : à ΔK = 10 MPa·√m, <span class="m">da/dN = 6,9 × 10⁻¹² × 10³ = 6,9 × 10⁻⁹ m/cycle</span>, soit 6,9 nm par cycle (nm : nanomètre, un millionième de millimètre). Il faut alors <span class="m">10⁻³/6,9 × 10⁻⁹ ≈ 145 000 cycles</span> pour avancer d'un millimètre. À ΔK = 20 : 8 fois plus vite.</p>
+    <h4>Le piège des unités de C</h4>
+    <p>C a une unité « bizarre » : m/cycle/(MPa·√m)<sup>m</sup>. Sa valeur change complètement avec les unités. Beaucoup de documents de soudage travaillent en <b>mm/cycle</b> et en <b>N·mm<sup>−3/2</sup></b> (1 MPa·√m = 31,62 N·mm<sup>−3/2</sup>, car √1 000 = 31,62). La conversion :</p>
+    <div class="fx"><div class="big" style="font-size:1.5rem"><span class="mat">C</span><sub>(mm ; N·mm<sup>−3/2</sup>)</sub> = <span class="mat">C</span><sub>(m ; MPa·√m)</sub> × <span class="frac"><span>1 000</span><span>31,62<sup><span class="mat">m</span></sup></span></span></div></div>
+    <p>Exemple : 6,9 × 10⁻¹² × 1 000/31,62³ ≈ <b>2,2 × 10⁻¹³</b>. Et la valeur prudente 1,65 × 10⁻¹¹ devient 5,2 × 10⁻¹³, le nombre qu'on lit dans les recommandations de soudage.</p>
+    <div class="warn"><b>⚠️ Piège : C et m ne voyagent qu'ensemble.</b> On ne combine jamais le C d'une source avec le m d'une autre, ni un C en mm avec un ΔK en MPa·√m.</div>
+    <div class="warn"><b>⚠️ Piège : hors du domaine 2.</b> Prolongée vers le bas, la droite de Paris prévoit une propagation sous le seuil, qui n'existe pas (prudent mais pessimiste) ; prolongée vers le haut, elle sous-estime l'emballement final (sans grande conséquence : cette phase est très courte).</div>
+    <div class="tip"><b>💡 Au-delà de Paris.</b> Des lois enrichies ajoutent le seuil, la falaise et l'effet de R (lois de Forman, de Walker, ou la loi dite NASGRO utilisée en aéronautique). La manipulation 3 utilise une loi de ce type.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique :</b> « <b>Paris, c'est 3</b> » : pour les aciers, m ≈ 3 ; deux fois ΔK, huit fois plus vite.</div>
+    <div class="weld"><b>🔥 Le métal fondu et la zone affectée thermiquement</b>
+      <p>Dans le régime de Paris, les vitesses de propagation dans le métal fondu, la zone affectée thermiquement (ZAT, la zone du métal de base modifiée par la chaleur du soudage) et le métal de base sont proches, à R égal. Ce qui distingue une soudure, ce sont surtout ses <b>défauts initiaux</b>, sa <b>géométrie</b> (qui fixe Y) et ses <b>contraintes résiduelles</b> (qui fixent le R effectif).</p>
+    </div>
+  </div>
+</div>
+</section>
+<section class="chap" id="c5">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">5</div>
+    <div class="c-title"><h2>Intégrer la loi de Paris</h2><p>Combien de cycles avant la rupture ?</p></div>
+    <div class="c-img"><span class="ico">⏳</span><span><small>Image à retenir</small>Le sablier : le sable coule à peine au début, puis de plus en plus vite à la fin</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le sablier</span></div>
+    <p>La loi de Paris donne la vitesse de la fissure ; on veut le <b>temps</b> qu'elle met pour passer d'une longueur initiale a<sub>0</sub> (le défaut détecté ou supposé) à la longueur critique a<sub>C</sub> (la rupture). Il suffit d'additionner les petits temps nécessaires pour franchir chaque petit morceau de chemin : c'est une <b>intégrale</b>.</p>
+    <p>Le résultat surprend toujours : <b>presque toute la durée de propagation se passe quand la fissure est petite</b>. Comme un sablier qui coule à peine au début : la fissure met autant de cycles pour passer de 1 à 2 mm que pour passer de 2 mm à la rupture, ou presque. Une fois longue, elle s'emballe.</p>
+    <p>Deux conséquences pratiques :</p>
+    <ul>
+      <li>la durée de vie dépend énormément de la <b>taille du défaut initial</b>, beaucoup moins de la longueur critique ;</li>
+      <li>pour une structure inspectée, ce qui compte est le temps entre le moment où la fissure devient <b>détectable</b> (par un contrôle non destructif, CND) et le moment où elle devient <b>critique</b>. On inspecte plus souvent que cette durée, avec une marge : c'est le principe de la <b>tolérance aux dommages</b>.</li>
+    </ul>
+  </div>
+
+  <div class="lab" id="m5">
+    <p class="lab-h">Manipulation 5 : le simulateur de fissure</p>
+    <p class="lab-sub">Une fissure de surface dans une plaque large (Y = 2), acier ferrito-perlitique. Règle le chargement, le défaut initial et la ténacité : la courbe a(N) et l'évolution de K au cours du temps se calculent. Lance la lecture pour voir l'emballement.</p>
+    <div class="ctrl"><label for="m5d">Étendue <span class="sig">Δσ</span></label><input type="range" id="m5d" class="r-sig" min="40" max="250" step="5" value="100"><output id="m5do"></output></div>
+    <div class="ctrl"><label for="m5r">Rapport <span class="mat">R</span></label><input type="range" id="m5r" class="r-mat" min="0" max="0.7" step="0.1" value="0.1"><output id="m5ro"></output></div>
+    <div class="ctrl"><label for="m5a">Défaut initial <span class="tau">a<sub>0</sub></span></label><input type="range" id="m5a" class="r-tau" min="-1" max="0.7" step="0.01" value="0"><output id="m5ao"></output></div>
+    <div class="ctrl"><label for="m5k">Ténacité <span class="mat">K<sub>IC</sub></span></label><input type="range" id="m5k" class="r-mat" min="30" max="150" step="5" value="50"><output id="m5ko"></output></div>
+    <div class="btns"><button class="btn play" id="m5play" type="button">▶ Lecture</button></div>
+    <svg id="m5svg" role="img" aria-label="Longueur de fissure en fonction du nombre de cycles, et facteur d'intensité de contrainte au cours du temps"></svg>
+    <div class="readout" id="m5r_"></div>
+    <p class="status" id="m5msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">l'intégration</span></div>
+    <p>On sépare les variables dans la loi de Paris, avec ΔK = ΔσY√a et Y supposé constant :</p>
+    <div class="fx"><div class="big" style="font-size:1.5rem">d<span class="eps">N</span> = <span class="frac"><span>d<span class="eps">a</span></span><span><span class="mat">C</span>(<span class="sig">Δσ</span><span class="mat">Y</span>)<sup><span class="mat">m</span></sup> <span class="eps">a</span><sup><span class="mat">m</span>/2</sup></span></span> &nbsp;⟹&nbsp; <span class="eps">N<sub>p</sub></span> = <span class="frac"><span>1</span><span><span class="mat">C</span>(<span class="sig">Δσ</span><span class="mat">Y</span>)<sup><span class="mat">m</span></sup></span></span>∫<sub>a<sub>0</sub></sub><sup>a<sub>C</sub></sup> <span class="eps">a</span><sup>−<span class="mat">m</span>/2</sup> d<span class="eps">a</span></div>
+      <p class="cap">∫ : symbole de l'intégrale, la somme de tous les petits morceaux entre a<sub>0</sub> et a<sub>C</sub> ; ⟹ : « donc »</p></div>
+    <p>Une primitive de a<sup>−m/2</sup> est a<sup>1−m/2</sup>/(1 − m/2), d'où, pour m ≠ 2 :</p>
+    <div class="fx"><div class="big" style="font-size:1.5rem"><span class="eps">N<sub>p</sub></span> = <span class="frac"><span><span class="eps">a<sub>0</sub></span><sup>1−<span class="mat">m</span>/2</sup> − <span class="eps">a<sub>C</sub></span><sup>1−<span class="mat">m</span>/2</sup></span><span><span class="mat">C</span>(<span class="sig">Δσ</span><span class="mat">Y</span>)<sup><span class="mat">m</span></sup>(<span class="mat">m</span>/2 − 1)</span></span></div></div>
+    <p>Et pour <b>m = 3</b>, le cas des aciers, la formule devient très simple :</p>
+    <div class="fx"><div class="big" style="font-size:1.6rem"><span class="eps">N<sub>p</sub></span> = <span class="frac"><span>2 (1/√<span class="eps">a<sub>0</sub></span> − 1/√<span class="eps">a<sub>C</sub></span>)</span><span><span class="mat">C</span>(<span class="sig">Δσ</span><span class="mat">Y</span>)³</span></span> &nbsp;avec&nbsp; <span class="eps">a<sub>C</sub></span> = <span style="font-size:1.2em">(</span><span class="frac"><span><span class="mat">K<sub>IC</sub></span></span><span><span class="mat">Y</span>·<span class="sig">σ<sub>max</sub></span></span></span><span style="font-size:1.2em">)</span>²</div>
+      <p class="cap">a en mètres ; σ<sub>max</sub> = Δσ/(1 − R)</p></div>
+    <p><b>Exemple</b> (réglage initial de la manipulation). Δσ = 100 MPa, R = 0,1, Y = 2, K<sub>IC</sub> = 50 MPa·√m, a<sub>0</sub> = 1 mm, C = 6,9 × 10⁻¹², m = 3.</p>
+    <ul>
+      <li><span class="m">σ<sub>max</sub> = 100/0,9 = 111,1 MPa</span> ; <span class="m">a<sub>C</sub> = (50/(2 × 111,1))² = 0,0506 m ≈ 51 mm</span>.</li>
+      <li><span class="m">1/√a<sub>0</sub> = 31,62</span> ; <span class="m">1/√a<sub>C</sub> = 4,44</span> ; <span class="m">C(ΔσY)³ = 6,9 × 10⁻¹² × 200³ = 5,52 × 10⁻⁵</span>.</li>
+      <li><span class="m">N<sub>p</sub> = 2 × (31,62 − 4,44)/5,52 × 10⁻⁵ ≈ <b>9,8 × 10⁵ cycles</b></span>.</li>
+      <li>Depuis 2 mm : <span class="m">2 × (22,36 − 4,44)/5,52 × 10⁻⁵ ≈ 6,5 × 10⁵ cycles</span>. Le passage de 1 à 2 mm a donc pris à lui seul 34 % de la durée de propagation.</li>
+    </ul>
+    <h4>L'intervalle d'inspection</h4>
+    <p>Si un contrôle détecte à coup sûr les fissures de longueur a<sub>d</sub>, la fissure met N(a<sub>d</sub> → a<sub>C</sub>) cycles pour devenir critique après être devenue détectable. On inspecte au moins deux fois pendant cette durée (coefficient de sécurité 2, parfois 3) :</p>
+    <div class="fx"><div class="big" style="font-size:1.5rem">intervalle ≤ <span class="frac"><span><span class="eps">N</span>(<span class="eps">a<sub>d</sub></span> → <span class="eps">a<sub>C</sub></span>)</span><span>2</span></span></div></div>
+    <p>Dans l'exemple, avec a<sub>d</sub> = 2 mm : <span class="m">6,5 × 10⁵/2 ≈ 3,2 × 10⁵ cycles</span> entre deux inspections.</p>
+    <div class="warn"><b>⚠️ Piège : Y n'est pas constant.</b> Dans une vraie pièce, Y dépend de a (bords, épaisseur, forme du front) : on intègre alors numériquement, petit pas par petit pas. La formule fermée donne un ordre de grandeur et, surtout, les bons réflexes.</div>
+    <div class="warn"><b>⚠️ Piège : les unités.</b> a en <b>mètres</b> si C est en m/cycle et ΔK en MPa·√m. Un a<sub>0</sub> entré en millimètres fausse le résultat d'un facteur √1 000 ≈ 32.</div>
+    <div class="tip"><b>💡 Doubler Δσ divise N<sub>p</sub> par un peu plus de 8.</b> Le facteur 2³ vient de Paris ; le « un peu plus » vient de a<sub>C</sub>, qui diminue (divisé par 4). Mais comme a<sub>C</sub> pèse peu dans la formule, l'effet reste modeste.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique :</b> « <b>la vie est dans le petit</b> » : c'est la taille du défaut initial qui décide de la durée de propagation.</div>
+    <div class="weld"><b>🔥 Défauts acceptables et plan d'inspection</b>
+      <p>C'est exactement ce calcul (avec Y variable, un facteur d'amplification du pied de cordon et des lois prudentes) que mènent les évaluations de défauts selon l'IIW ou la BS 7910 : un défaut trouvé en contrôle est-il acceptable jusqu'à la prochaine inspection ? Et c'est lui qui fixe la périodicité des contrôles des structures soudées tolérantes aux dommages : ponts, grues, plateformes, avions.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c6">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">6</div>
+    <div class="c-title"><h2>De Paris aux classes FAT</h2><p>La boucle est bouclée</p></div>
+    <div class="c-img"><span class="ico">🔁</span><span><small>Image à retenir</small>La boucle : la pente 3 des courbes FAT, c'est l'exposant 3 de Paris</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la boucle bouclée</span></div>
+    <p>Reprends la formule du chapitre 5 pour un pied de cordon : un petit défaut initial a<sub>i</sub>, une fissure finale a<sub>f</sub> (la moitié de l'épaisseur, par exemple), m = 3. Tout ce qui ne dépend pas de la contrainte se regroupe en une constante :</p>
+    <div class="fx"><div class="big" style="font-size:1.6rem"><span class="sig">Δσ</span>³ · <span class="eps">N</span> = <span class="frac"><span>2 (1/√<span class="tau">a<sub>i</sub></span> − 1/√<span class="eps">a<sub>f</sub></span>)</span><span><span class="mat">C</span>·<span class="mat">Y</span>³</span></span> = constante</div></div>
+    <p>C'est exactement la forme des courbes de fatigue des soudures du cours 2 : <b>Δσ³·N = constante</b>. La pente 3 des classes FAT n'est pas un choix arbitraire : c'est l'exposant de Paris, parce qu'une soudure passe sa vie à propager.</p>
+    <p>Et la formule dit encore deux choses. La <b>nuance d'acier n'y apparaît pas</b> (C et m varient peu d'un acier de construction à l'autre) : c'est pourquoi un acier plus résistant n'améliore pas une soudure brute. En revanche, la <b>taille du défaut initial</b> y est en bonne place : c'est pourquoi meuler un pied de cordon, et effacer ses défauts, relève sa classe.</p>
+  </div>
+
+  <div class="lab" id="m6">
+    <p class="lab-h">Manipulation 6 : fabriquer une classe FAT</p>
+    <p class="lab-sub">Modèle simplifié d'un pied de cordon : Y = 2 constant, fissure finale a<sub>f</sub>, loi de Paris prudente (C = 1,65 × 10⁻¹¹, m = 3). La droite donne Δσ en fonction de N ; sa valeur à 2 × 10⁶ cycles est la « classe FAT » de ce détail. Les lignes grises sont les classes FAT normalisées 71, 80, 90 et 100.</p>
+    <div class="ctrl"><label for="m6a">Défaut initial <span class="tau">a<sub>i</sub></span></label><input type="range" id="m6a" class="r-tau" min="-1.4" max="0" step="0.01" value="-0.52"><output id="m6ao"></output></div>
+    <div class="ctrl"><label for="m6f">Fissure finale <span class="eps">a<sub>f</sub></span></label><input type="range" id="m6f" class="r-eps" min="5" max="20" step="1" value="10"><output id="m6fo"></output></div>
+    <div class="btns" id="m6ex"><button class="btn" data-a="-0.523" type="button">Caniveau 0,3 mm</button><button class="btn" data-a="-1" type="button">Micro-laitier 0,1 mm</button><button class="btn" data-a="-1.301" type="button">Pied meulé 0,05 mm</button></div>
+    <svg id="m6svg" role="img" aria-label="Courbe de fatigue d'un pied de cordon calculée par la loi de Paris, comparée aux classes FAT"></svg>
+    <div class="readout" id="m6r"></div>
+    <p class="status" id="m6msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">la classe FAT « équivalente »</span></div>
+    <p>En écrivant N = 2 × 10⁶ dans la relation précédente, on obtient l'étendue supportée à 2 millions de cycles :</p>
+    <div class="fx"><div class="big" style="font-size:1.5rem"><span class="mat">FAT<sub>éq</sub></span> = <span style="font-size:1.25em">[</span><span class="frac"><span>2 (1/√<span class="tau">a<sub>i</sub></span> − 1/√<span class="eps">a<sub>f</sub></span>)</span><span><span class="mat">C</span>·<span class="mat">Y</span>³ × 2 × 10⁶</span></span><span style="font-size:1.25em">]</span><sup>1/3</sup></div></div>
+    <p><b>Exemples</b> (a<sub>f</sub> = 10 mm, Y = 2, C = 1,65 × 10⁻¹¹) :</p>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Défaut initial a<sub>i</sub></th><th>1/√a<sub>i</sub> (m<sup>−1/2</sup>)</th><th>FAT<sub>éq</sub> (MPa)</th></tr>
+      <tr><td>0,3 mm (caniveau)</td><td class="n">57,7</td><td class="n">≈ 71</td></tr>
+      <tr><td>0,1 mm (micro-inclusions de laitier)</td><td class="n">100</td><td class="n">≈ 88</td></tr>
+      <tr><td>0,05 mm (pied meulé)</td><td class="n">141</td><td class="n">≈ 100</td></tr>
+    </table></div>
+    <p>Calcul détaillé pour 0,3 mm : <span class="m">2 × (57,7 − 10) = 95,5</span> ; <span class="m">C·Y³ × 2 × 10⁶ = 1,65 × 10⁻¹¹ × 8 × 2 × 10⁶ = 2,64 × 10⁻⁴</span> ; <span class="m">(95,5/2,64 × 10⁻⁴)<sup>1/3</sup></span> <span class="m">= (3,61 × 10⁵)<sup>1/3</sup> ≈ 71 MPa</span>.</p>
+    <p>On retrouve l'ordre de grandeur des classes FAT des détails courants (71 à 100). Ce modèle est volontairement simplifié : les calculs réels intègrent un Y qui dépend de a, un facteur d'amplification dû à la géométrie du pied de cordon, la forme demi-elliptique du front et l'épaisseur. Il montre les mécanismes, il ne remplace pas les tableaux de l'EN 1993-1-9.</p>
+    <div class="warn"><b>⚠️ Piège : ce calcul ne s'applique pas à une éprouvette lisse.</b> Une éprouvette polie passe l'essentiel de sa vie en amorçage (cours 3) : sa courbe a une pente bien plus faible (k ≈ 10, cours 2), et elle dépend fortement de la nuance d'acier.</div>
+    <div class="tip"><b>💡 L'effet d'épaisseur.</b> Dans une tôle plus épaisse, la fissure a plus de chemin à parcourir, mais la contrainte reste élevée plus profondément sous le pied de cordon. Le bilan est défavorable : les normes réduisent la résistance des assemblages épais (au-delà de 25 mm dans l'EN 1993-1-9).</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique :</b> « <b>trois pour Paris, trois pour FAT</b> » : même exposant, même histoire.</div>
+
+    <div class="weld"><b>🔥 Le bilan de la série : la vie d'une fissure</b>
+      <div class="tbl-wrap"><table class="data">
+        <tr><th>Étape</th><th>Ce qui la gouverne</th><th>Cours</th><th>Le levier du soudeur</th></tr>
+        <tr><td>Le chargement</td><td>Δσ, σ<sub>m</sub>, R, nombre de cycles (rainflow)</td><td>1</td><td>calculer en Δσ ; compter les cycles</td></tr>
+        <tr><td>L'espérance de vie</td><td>courbe de Wöhler, classe FAT, γ<sub>Mf</sub></td><td>2</td><td>choisir un meilleur détail</td></tr>
+        <tr><td>La naissance</td><td>glissements, intrusions, défauts, K<sub>t</sub></td><td>3</td><td>soigner le pied de cordon (meulage, TIG, martelage)</td></tr>
+        <tr><td>La croissance</td><td>ΔK, loi de Paris, a<sub>0</sub>, a<sub>C</sub></td><td>4</td><td>réduire les défauts, inspecter à temps</td></tr>
+      </table></div>
+    </div>
+  </div>
+</div>
+</section>
+<section class="chap" id="exos">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✎</div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Six exercices et un défi, de la strie au plan d'inspection</p></div>
+    <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de musculation : on ne progresse qu'en soulevant soi-même</span></div>
+  </div>
+  <div class="lv lv1"><div class="lv-h">👁 Mode d'emploi <span class="tag">longueurs en mètres !</span></div>
+    <p>Cherche chaque question avant d'ouvrir la correction. Écris la formule littérale, puis les valeurs avec leurs unités ; dans les formules de mécanique de la rupture, les longueurs de fissure sont en <b>mètres</b>. Les manipulations 4, 5 et 6 permettent de vérifier tes résultats.</p>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 1 : compter les stries <span class="lvtag">N1 · chapitres 1 et 2</span></h4>
+    <p class="q"><b>a)</b> Décris en quatre temps ce qui se passe à la pointe d'une fissure pendant un cycle de traction-compression.</p>
+    <p class="q"><b>b)</b> Au microscope, des stries sont espacées de 0,2 µm. Que vaut da/dN ?</p>
+    <p class="q"><b>c)</b> Combien de cycles faut-il pour que la fissure avance d'un millimètre à cette vitesse ?</p>
+    <p class="q"><b>d)</b> Sur la même cassure, on compte 6 lignes d'arrêt. Peut-on en déduire le nombre de cycles ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <b>Début</b> : pointe aiguë. <b>Traction</b> : la matière plastifie devant la pointe, qui s'ouvre, s'émousse et avance un peu. <b>Compression</b> : la déformation s'inverse, les lèvres se referment et la pointe s'affûte en laissant un repli. <b>Traction suivante</b> : nouvelle avancée. Chaque cycle laisse une strie.</p>
+      <p><b>b)</b> Une strie par cycle : <span class="m">da/dN ≈ 0,2 µm/cycle = <b>2 × 10⁻⁷ m/cycle</b></span>, dans le domaine 2 (entre 10⁻⁸ et 10⁻⁶).</p>
+      <p><b>c)</b> <span class="m">N = 1 mm/0,2 µm = 1 000 µm/0,2 µm = <b>5 000 cycles</b></span>.</p>
+      <p><b>d)</b> <b>Non.</b> Une ligne d'arrêt marque un événement (arrêt ou changement de chargement), pas un cycle. On sait seulement que le chargement s'est interrompu ou a changé au moins 6 fois pendant la propagation.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 2 : l'expertise d'un arbre cassé <span class="lvtag">N1 · chapitre 2</span></h4>
+    <p>La cassure d'un arbre montre une origine unique en surface, une zone lisse avec des lignes d'arrêt qui couvre 80 % de la section, et une petite zone rugueuse excentrée.</p>
+    <p class="q"><b>a)</b> Quel est le mode de rupture ? Justifie avec trois indices.</p>
+    <p class="q"><b>b)</b> La contrainte maximale était-elle plutôt forte ou plutôt faible ? Pourquoi ?</p>
+    <p class="q"><b>c)</b> Une autre pièce présente cinq origines le long d'un congé, avec de petites marches entre elles. Qu'en conclure ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <b>Rupture par fatigue</b> : une origine en surface, une zone lisse de propagation lente, des lignes d'arrêt en arcs autour de l'origine, puis une zone rugueuse de rupture brutale.</p>
+      <p><b>b)</b> Plutôt <b>faible</b> : la fissure a pu traverser 80 % de la section avant que K<sub>max</sub> n'atteigne K<sub>IC</sub>. Comme a<sub>C</sub> = (K<sub>IC</sub>/(Y·σ<sub>max</sub>))², une grande longueur critique signale un σ<sub>max</sub> faible (ou un matériau très tenace).</p>
+      <p><b>c)</b> Plusieurs origines séparées par des marches de rochet : une <b>contrainte élevée</b> et une <b>concentration de contrainte étendue</b> le long du congé (rayon trop petit, mauvais état de surface). La correction porte sur la géométrie, pas seulement sur le matériau.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 3 : ΔK, domaine et taille critique <span class="lvtag">N1 et N2 · chapitre 3</span></h4>
+    <p>Une plaque large présente une fissure de surface (Y = 2) de longueur a = 2 mm. Elle subit Δσ = 100 MPa avec R = 0,1. Acier : ΔK<sub>S</sub> = 6 MPa·√m, K<sub>IC</sub> = 60 MPa·√m.</p>
+    <p class="q"><b>a)</b> Calcule ΔK. La fissure se propage-t-elle ?</p>
+    <p class="q"><b>b)</b> Calcule σ<sub>max</sub> et K<sub>max</sub>.</p>
+    <p class="q"><b>c)</b> Calcule la longueur critique a<sub>C</sub>.</p>
+    <p class="q"><b>d)</b> Que vaut ΔK quand la fissure atteint 8 mm ? Commente ce résultat obtenu à Δσ constant.</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">ΔK = Δσ·Y·√a = 100 × 2 × √0,002 = 100 × 2 × 0,0447 = <b>8,9 MPa·√m</b></span> &gt; ΔK<sub>S</sub> = 6 : <b>elle se propage</b>.</p>
+      <p><b>b)</b> <span class="m">σ<sub>max</sub> = Δσ/(1 − R) = 100/0,9 = <b>111,1 MPa</b></span> ; <span class="m">K<sub>max</sub> = 111,1 × 2 × 0,0447 = <b>9,9 MPa·√m</b></span>, loin de K<sub>IC</sub>.</p>
+      <p><b>c)</b> <span class="m">a<sub>C</sub> = (K<sub>IC</sub>/(Y·σ<sub>max</sub>))² = (60/222,2)² = 0,0729 m ≈ <b>73 mm</b></span>.</p>
+      <p><b>d)</b> <span class="m">ΔK = 100 × 2 × √0,008 = <b>17,9 MPa·√m</b></span> : quatre fois plus de longueur, deux fois plus de ΔK. À Δσ constant, ΔK grandit avec la fissure, et la vitesse avec lui : 2³ = 8 fois plus vite avec m = 3.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 4 : manier la loi de Paris <span class="lvtag">N2 · chapitre 4</span></h4>
+    <p>Acier ferrito-perlitique : C = 6,9 × 10⁻¹² (m/cycle, MPa·√m), m = 3.</p>
+    <p class="q"><b>a)</b> Calcule da/dN pour ΔK = 10 et ΔK = 20 MPa·√m. Quel est le rapport ?</p>
+    <p class="q"><b>b)</b> Quel espacement de stries attend-on à ΔK = 20 MPa·√m ?</p>
+    <p class="q"><b>c)</b> Exprime C en mm/cycle et N·mm<sup>−3/2</sup>.</p>
+    <p class="q"><b>d)</b> Vérifie la conversion avec ΔK = 10 MPa·√m.</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">da/dN(10) = 6,9 × 10⁻¹² × 10³ = <b>6,9 × 10⁻⁹ m/cycle</b></span> ; <span class="m">da/dN(20) = 6,9 × 10⁻¹² × 8 000 = <b>5,5 × 10⁻⁸ m/cycle</b></span>. Rapport : <b>2³ = 8</b>.</p>
+      <p><b>b)</b> Une strie par cycle : <span class="m">5,5 × 10⁻⁸ m ≈ <b>55 nm</b></span> (0,055 µm), visible au MEB.</p>
+      <p><b>c)</b> <span class="m">C' = C × 1 000/31,62³ = 6,9 × 10⁻¹² × 1 000/31 623 ≈ <b>2,2 × 10⁻¹³</b></span> (mm/cycle, N·mm<sup>−3/2</sup>).</p>
+      <p><b>d)</b> ΔK = 10 MPa·√m = 316,2 N·mm<sup>−3/2</sup> ; <span class="m">2,2 × 10⁻¹³ × 316,2³ = 2,2 × 10⁻¹³ × 3,16 × 10⁷ ≈ 6,9 × 10⁻⁶ mm/cycle</span> = 6,9 × 10⁻⁹ m/cycle ✅.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 5 : la durée de propagation <span class="lvtag">N2 · chapitre 5</span></h4>
+    <p>Même plaque qu'à l'exercice 3, mais K<sub>IC</sub> = 50 MPa·√m ; Δσ = 100 MPa, R = 0,1, Y = 2 ; C = 6,9 × 10⁻¹², m = 3. Un défaut de 1 mm est présent.</p>
+    <p class="q"><b>a)</b> Calcule a<sub>C</sub>.</p>
+    <p class="q"><b>b)</b> Calcule la durée de propagation N<sub>p</sub> depuis 1 mm.</p>
+    <p class="q"><b>c)</b> Les contrôles détectent les fissures de 2 mm. Calcule N(2 mm → a<sub>C</sub>) et l'intervalle d'inspection avec un coefficient 2.</p>
+    <p class="q"><b>d)</b> Quelle part de N<sub>p</sub> la fissure passe-t-elle entre 1 et 2 mm ?</p>
+    <p class="q"><b>e)</b> Que devient N<sub>p</sub> (depuis 1 mm) si Δσ double ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">σ<sub>max</sub> = 111,1 MPa</span> ; <span class="m">a<sub>C</sub> = (50/(2 × 111,1))² = (0,225)² = <b>0,0506 m ≈ 51 mm</b></span>.</p>
+      <p><b>b)</b> <span class="m">C(ΔσY)³ = 6,9 × 10⁻¹² × 200³ = 5,52 × 10⁻⁵</span> ; <span class="m">1/√0,001 = 31,62</span> ; <span class="m">1/√0,0506 = 4,44</span>. <span class="m">N<sub>p</sub> = 2 × (31,62 − 4,44)/5,52 × 10⁻⁵ = 54,4/5,52 × 10⁻⁵ ≈ <b>9,8 × 10⁵ cycles</b></span>.</p>
+      <p><b>c)</b> <span class="m">1/√0,002 = 22,36</span> ; <span class="m">N = 2 × (22,36 − 4,44)/5,52 × 10⁻⁵ ≈ <b>6,5 × 10⁵ cycles</b></span>. Intervalle : <span class="m">6,5 × 10⁵/2 ≈ <b>3,2 × 10⁵ cycles</b></span>.</p>
+      <p><b>d)</b> <span class="m">9,85 × 10⁵ − 6,49 × 10⁵ = 3,36 × 10⁵ cycles</span>, soit <b>34 %</b> de N<sub>p</sub> pour faire passer la fissure de 1 à 2 mm, alors qu'elle doit encore aller jusqu'à 51 mm.</p>
+      <p><b>e)</b> σ<sub>max</sub> = 222,2 MPa, donc <span class="m">a<sub>C</sub> = (50/444,4)² ≈ 0,0127 m</span> (12,7 mm, divisé par 4) ; <span class="m">1/√a<sub>C</sub> = 8,89</span> ; <span class="m">C(ΔσY)³ = 6,9 × 10⁻¹² × 400³ = 4,42 × 10⁻⁴</span> ; <span class="m">N<sub>p</sub> = 2 × (31,62 − 8,89)/4,42 × 10⁻⁴ ≈ <b>1,0 × 10⁵ cycles</b></span>. Divisé par 9,6 : le facteur 8 de Paris, aggravé un peu par la baisse de a<sub>C</sub>.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 6 : de Paris à la classe FAT <span class="lvtag">N2 · chapitre 6</span></h4>
+    <p>Pied de cordon modélisé avec Y = 2, a<sub>f</sub> = 10 mm, C = 1,65 × 10⁻¹¹, m = 3.</p>
+    <p class="q"><b>a)</b> Avec un caniveau a<sub>i</sub> = 0,3 mm, calcule la durée de vie sous Δσ = 80 MPa.</p>
+    <p class="q"><b>b)</b> Calcule la classe FAT équivalente.</p>
+    <p class="q"><b>c)</b> Après meulage, a<sub>i</sub> = 0,05 mm. Par combien la durée de vie est-elle multipliée à Δσ égal ? Quelle classe FAT équivalente obtient-on ?</p>
+    <p class="q"><b>d)</b> Pourquoi R<sub>e</sub> n'apparaît-il nulle part ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">1/√0,0003 = 57,7</span> ; <span class="m">1/√0,01 = 10</span>. <span class="m">C(ΔσY)³ = 1,65 × 10⁻¹¹ × 160³ = 6,76 × 10⁻⁵</span>. <span class="m">N = 2 × (57,7 − 10)/6,76 × 10⁻⁵ = 95,5/6,76 × 10⁻⁵ ≈ <b>1,4 × 10⁶ cycles</b></span>.</p>
+      <p><b>b)</b> <span class="m">FAT<sub>éq</sub> = (95,5/(1,65 × 10⁻¹¹ × 8 × 2 × 10⁶))<sup>1/3</sup></span> <span class="m">= (95,5/2,64 × 10⁻⁴)<sup>1/3</sup></span> <span class="m">= (3,61 × 10⁵)<sup>1/3</sup> ≈ <b>71 MPa</b></span>.</p>
+      <p><b>c)</b> <span class="m">1/√0,00005 = 141,4</span> ; rapport <span class="m">(141,4 − 10)/(57,7 − 10) = 131,4/47,7 ≈ <b>2,75</b></span>. FAT<sub>éq</sub> = 71 × 2,75<sup>1/3</sup> = 71 × 1,40 ≈ <b>100 MPa</b>.</p>
+      <p><b>d)</b> La durée de vie d'une fissure qui se propage dépend de C, m, Y et des tailles de défauts, pas de la limite d'élasticité : c'est pourquoi la résistance en fatigue des soudures brutes ne dépend pratiquement pas de la nuance d'acier.</p>
+    </div></details>
+  </div>
+
+  <div class="exo defi">
+    <h4>🏆 Défi : le plan d'inspection de la poutre de roulement <span class="lvtag">N2 · chapitres 1 à 6</span></h4>
+    <p>On retrouve la poutre de roulement des cours 1 et 2 : au pied d'un raidisseur soudé, Δσ = 60 MPa, 160 000 cycles par an (40 passages par heure, 16 h par jour, 250 jours par an), durée de service prévue 25 ans. Le pied présente un caniveau a<sub>i</sub> = 0,3 mm ; on considère la ruine à a<sub>f</sub> = 10 mm (demi-épaisseur de la semelle). Modèle : Y = 2, C = 1,65 × 10⁻¹¹, m = 3. Les contrôles par magnétoscopie détectent les fissures de 2 mm.</p>
+    <p class="q"><b>a)</b> Calcule la durée de propagation totale, en cycles et en années. La poutre tient-elle 25 ans ?</p>
+    <p class="q"><b>b)</b> Calcule le temps entre la détection (2 mm) et la ruine (10 mm), en années.</p>
+    <p class="q"><b>c)</b> Propose un plan d'inspection : date de la première inspection et intervalle (coefficient 2).</p>
+    <p class="q"><b>d)</b> Quelle autre solution, vue dans la série, éviterait ces inspections ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">C(ΔσY)³ = 1,65 × 10⁻¹¹ × 120³ = 1,65 × 10⁻¹¹ × 1,728 × 10⁶ = 2,85 × 10⁻⁵</span> ; <span class="m">N = 2 × (57,7 − 10)/2,85 × 10⁻⁵ = 95,5/2,85 × 10⁻⁵ ≈ <b>3,35 × 10⁶ cycles</b></span>, soit <span class="m">3,35 × 10⁶/1,6 × 10⁵ ≈ <b>20,9 ans</b></span> &lt; 25 ans ❌. On retrouve la conclusion du cours 2 (19,5 ans avec la classe FAT 80 et γ<sub>Mf</sub>).</p>
+      <p><b>b)</b> <span class="m">1/√0,002 = 22,36</span> ; <span class="m">N = 2 × (22,36 − 10)/2,85 × 10⁻⁵ = 24,7/2,85 × 10⁻⁵ ≈ 8,7 × 10⁵ cycles</span>, soit <b>≈ 5,4 ans</b> entre la détection et la ruine.</p>
+      <p><b>c)</b> La fissure devient détectable au bout de <span class="m">(3,35 − 0,87) × 10⁶ = 2,48 × 10⁶ cycles ≈ 15,5 ans</span>. Intervalle : <span class="m">5,4/2 ≈ <b>2,7 ans</b></span>. Plan possible : première inspection vers <b>13 ans</b> (avec une marge), puis tous les <b>2,5 ans</b> ; toute fissure détectée est réparée.</p>
+      <p><b>d)</b> <b>Meuler le pied de cordon</b> (a<sub>i</sub> ≈ 0,05 mm) multiplie la durée de propagation par 2,75 (exercice 6), soit environ 57 ans ; ou passer à un détail de meilleure classe (FAT 90, cours 2), ou réduire Δσ en augmentant la section.</p>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="quiz-s">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">?</div>
+    <div class="c-title"><h2>Quiz : 12 questions éclair</h2><p>Chaque réponse est expliquée, même quand tu as juste</p></div>
+    <div class="c-img"><span class="ico">🎯</span><span><small>Image à retenir</small>La cible : vise 10 sur 12</span></div>
+  </div>
+  <div id="quiz"></div>
+  <div class="score" id="qzScore" aria-live="polite">Score : 0 / 12</div>
+  <div class="btns"><button class="btn" id="qzReset" type="button">↺ Recommencer le quiz</button></div>
+</div>
+</section>
+
+<section class="chap" id="fiche">
+<div class="wrap wide">
+  <div class="cartouche">
+    <div class="c-num">★</div>
+    <div class="c-title"><h2>Fiche mémoire du cours 4</h2><p>Neuf cases, neuf images : à photographier, puis à redessiner de tête</p></div>
+    <div class="c-img"><span class="ico">📮</span><span><small>Image à retenir</small>La loi refusée trois fois</span></div>
+  </div>
+  <div class="fiche">
+    <div><div class="ic">🔑</div><h4>La clé K</h4><div class="f"><span class="sig">K<sub>I</sub></span> = <span class="sig">σ</span>·<span class="mat">Y</span>·√<span class="eps">a</span></div><p>Rupture brutale quand K<sub>max</sub> = K<sub>IC</sub>, à a<sub>C</sub> = (K<sub>IC</sub>/(Yσ<sub>max</sub>))².</p></div>
+    <div><div class="ic">🐛</div><h4>La chenille</h4><div class="f">traction émousse, compression affûte</div><p>Un cycle, un pas, une strie (modèle de Laird). La compression prépare, la traction exécute.</p></div>
+    <div><div class="ic">🐚</div><h4>Le coquillage</h4><div class="f">origine · zone lisse · zone rugueuse</div><p>La strie compte les cycles (MEB), la ligne d'arrêt compte les pauses (œil nu).</p></div>
+    <div><div class="ic">🛣️</div><h4>L'autoroute</h4><div class="f"><span class="sig">ΔK</span> = <span class="sig">Δσ</span>·<span class="mat">Y</span>·√<span class="eps">a</span></div><p>Péage ΔK<sub>S</sub>, ligne droite de Paris, falaise K<sub>C</sub>. À Δσ constant, ΔK grimpe.</p></div>
+    <div><div class="ic">📏</div><h4>La droite de Paris</h4><div class="f">d<span class="eps">a</span>/d<span class="eps">N</span> = <span class="mat">C</span>(<span class="sig">ΔK</span>)<sup><span class="mat">m</span></sup></div><p>m ≈ 3 pour les aciers : deux fois ΔK, huit fois plus vite. C et m voyagent ensemble.</p></div>
+    <div><div class="ic">📐</div><h4>Le changement d'unités</h4><div class="f"><span class="mat">C</span>′ = <span class="mat">C</span> × 1 000/31,62<sup><span class="mat">m</span></sup></div><p>De m et MPa·√m vers mm et N·mm<sup>−3/2</sup> : 1,65 × 10⁻¹¹ devient 5,2 × 10⁻¹³.</p></div>
+    <div><div class="ic">⏳</div><h4>Le sablier</h4><div class="f"><span class="eps">N<sub>p</sub></span> = 2(1/√<span class="eps">a<sub>0</sub></span> − 1/√<span class="eps">a<sub>C</sub></span>)/(<span class="mat">C</span>(<span class="sig">Δσ</span><span class="mat">Y</span>)³)</div><p>La vie est dans le petit : le défaut initial décide, a<sub>C</sub> pèse peu.</p></div>
+    <div><div class="ic">🔦</div><h4>La lampe de l'inspecteur</h4><div class="f">intervalle ≤ <span class="eps">N</span>(<span class="eps">a<sub>d</sub></span> → <span class="eps">a<sub>C</sub></span>)/2</div><p>Tolérance aux dommages : trouver la fissure entre le moment où elle se voit et celui où elle casse.</p></div>
+    <div><div class="ic">🔁</div><h4>La boucle bouclée</h4><div class="f"><span class="sig">Δσ</span>³·<span class="eps">N</span> = constante</div><p>La pente 3 des classes FAT, c'est l'exposant 3 de Paris. Meuler le pied relève la classe.</p></div>
+  </div>
+  <div class="fun"><span class="fun-h">📮 Fun fact : La loi de Paris, refusée par trois revues</span>Au début des années 1960, le jeune chercheur américain Paul Paris propose une idée alors jugée peu orthodoxe : la vitesse d'avancée d'une fissure de fatigue, da/dN, dépend du facteur d'intensité de contrainte ΔK. Trois grandes revues scientifiques refusent son article. Il le publie finalement en janvier 1961 dans <i>The Trend in Engineering</i>, une modeste revue de l'université de Washington, à Seattle. Deux ans plus tard, avec Fazil Erdogan, il en donne la forme qui porte son nom (<a href="#c4">chapitre 4</a>). La loi refusée est devenue l'outil de base pour prévoir la vie restante des avions, des ponts et des structures soudées fissurées.</div>
+</div>
+</section>
+
+<section class="chap" id="gloss">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">A–Z</div>
+    <div class="c-title"><h2>Glossaire</h2><p>Les mots, symboles et sigles de ce cours</p></div>
+    <div class="c-img"><span class="ico">📖</span><span><small>Image à retenir</small>Le dictionnaire : un mot flou, un clic</span></div>
+  </div>
+  <dl class="gloss">
+    <dt>a, a<sub>0</sub>, a<sub>i</sub>, a<sub>d</sub>, a<sub>C</sub>, a<sub>f</sub></dt><dd>Longueur (profondeur) de fissure, en m ; initiale ; défaut initial de soudure ; détectable ; critique ; finale retenue pour le calcul.</dd>
+    <dt>ASTM E647</dt><dd>Norme américaine d'essai de propagation de fissures de fatigue (ASTM : <i>American Society for Testing and Materials</i>).</dd>
+    <dt>BS 7910</dt><dd>Norme britannique d'évaluation de l'acceptabilité des défauts dans les structures métalliques, notamment soudées.</dd>
+    <dt>C, m</dt><dd>Coefficient et exposant de la loi de Paris ; C en m/cycle/(MPa·√m)<sup>m</sup>, m sans unité (≈ 3 pour les aciers).</dd>
+    <dt>CND</dt><dd>Contrôles non destructifs : ressuage, magnétoscopie, ultrasons, radiographie, courants de Foucault.</dd>
+    <dt>da/dN</dt><dd>Vitesse de fissuration : avancée de la fissure par cycle, en m/cycle.</dd>
+    <dt>ΔK, ΔK<sub>S</sub></dt><dd>Étendue du facteur d'intensité de contrainte, K<sub>max</sub> − K<sub>min</sub> = ΔσY√a ; seuil de fissuration (ΔK<sub>th</sub> en anglais).</dd>
+    <dt>Domaines 1, 2, 3</dt><dd>Seuil (pas de propagation) ; régime de Paris (droite en log-log) ; accélération finale vers K<sub>C</sub>.</dd>
+    <dt>Émoussement, affûtage</dt><dd>Arrondi de la pointe de fissure en traction ; retour à une pointe aiguë en compression (modèle de Laird).</dd>
+    <dt>Éprouvette CT</dt><dd>Éprouvette compacte de traction : bloc entaillé et préfissuré, tiré par deux goupilles, utilisé pour mesurer da/dN.</dd>
+    <dt>FAT<sub>éq</sub></dt><dd>Classe FAT équivalente : étendue Δσ supportée à 2 × 10⁶ cycles, calculée ici par la loi de Paris.</dd>
+    <dt>Fermeture de fissure</dt><dd>Contact des lèvres avant la fin de la décharge : une partie de ΔK ne fait pas avancer la fissure (Elber, 1970).</dd>
+    <dt>∫, ⟹</dt><dd>Intégrale (somme continue de petits termes) ; « donc ».</dd>
+    <dt>K<sub>I</sub>, K<sub>max</sub>, K<sub>min</sub></dt><dd>Facteur d'intensité de contrainte en mode I (ouverture), K<sub>I</sub> = σY√a ; ses valeurs maximale et minimale au cours du cycle, en MPa·√m.</dd>
+    <dt>K<sub>IC</sub>, K<sub>C</sub></dt><dd>Ténacité en déformation plane ; ténacité pour une épaisseur donnée. Rupture brutale quand K<sub>max</sub> les atteint.</dd>
+    <dt>Ligne d'arrêt</dt><dd>Arc visible à l'œil nu sur une cassure de fatigue, marquant une interruption ou un changement du chargement.</dd>
+    <dt>Loi de Paris</dt><dd>da/dN = C(ΔK)<sup>m</sup>, dans le domaine 2 (Paris et Erdogan, 1963).</dd>
+    <dt>Marches de rochet</dt><dd>Petites marches entre plusieurs origines voisines de fissures de fatigue.</dd>
+    <dt>MEB</dt><dd>Microscope électronique à balayage.</dd>
+    <dt>MPa·√m, N·mm<sup>−3/2</sup></dt><dd>Unités de K ; 1 MPa·√m = 31,62 N·mm<sup>−3/2</sup>.</dd>
+    <dt>N<sub>p</sub></dt><dd>Durée de propagation : nombre de cycles pour passer de a<sub>0</sub> à a<sub>C</sub>.</dd>
+    <dt>nm, µm</dt><dd>Nanomètre (10⁻⁹ m) ; micromètre (10⁻⁶ m).</dd>
+    <dt>R</dt><dd>Rapport de charge σ<sub>min</sub>/σ<sub>max</sub> = K<sub>min</sub>/K<sub>max</sub>. Sans lien avec la « courbe-R ».</dd>
+    <dt>r<sub>p</sub></dt><dd>Rayon de la zone plastique en pointe de fissure, ≈ (K<sub>max</sub>/R<sub>e</sub>)²/(2π).</dd>
+    <dt>Strie de fatigue</dt><dd>Ride microscopique de la cassure laissée par un cycle ; son espacement vaut da/dN.</dd>
+    <dt>Tolérance aux dommages</dt><dd>Conception qui admet des fissures, à condition de les détecter par inspection avant qu'elles ne deviennent critiques.</dd>
+    <dt>Transgranulaire</dt><dd>Qui traverse les grains.</dd>
+    <dt>Y</dt><dd>Facteur géométrique, sans unité (≈ 2 pour une petite fissure de surface, convention de la série qui y inclut √π).</dd>
+    <dt>ZAT</dt><dd>Zone affectée thermiquement : partie du métal de base modifiée par la chaleur du soudage.</dd>
+  </dl>
+</div>
+</section>
+
+<section class="chap" id="check">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✓</div>
+    <div class="c-title"><h2>Ai-je bouclé la série ?</h2><p>Dix points à cocher de tête</p></div>
+    <div class="c-img"><span class="ico">🎓</span><span><small>Image à retenir</small>Le diplôme : la vie d'une fissure, de sa naissance à la rupture</span></div>
+  </div>
+  <p>Coche seulement ce que tu sais faire <b>sans regarder</b>. Tes coches restent enregistrées dans ce navigateur.</p>
+  <div class="check" id="checklist">
+    <label><input type="checkbox" data-c="1"> <span>Je sais décrire le mécanisme d'émoussement et d'affûtage, et l'origine des stries.</span></label>
+    <label><input type="checkbox" data-c="2"> <span>Je sais lire une cassure de fatigue : origine, zone lisse, lignes d'arrêt, zone rugueuse.</span></label>
+    <label><input type="checkbox" data-c="3"> <span>Je ne confonds plus strie et ligne d'arrêt.</span></label>
+    <label><input type="checkbox" data-c="4"> <span>Je sais calculer ΔK, K<sub>max</sub> et la longueur critique a<sub>C</sub>.</span></label>
+    <label><input type="checkbox" data-c="5"> <span>Je sais décrire les trois domaines du diagramme da/dN–ΔK et l'effet de R.</span></label>
+    <label><input type="checkbox" data-c="6"> <span>Je sais calculer une vitesse avec la loi de Paris et convertir C d'un système d'unités à l'autre.</span></label>
+    <label><input type="checkbox" data-c="7"> <span>Je sais intégrer la loi de Paris (m = 3, Y constant) pour obtenir N<sub>p</sub>.</span></label>
+    <label><input type="checkbox" data-c="8"> <span>Je sais calculer un intervalle d'inspection à partir de la taille détectable.</span></label>
+    <label><input type="checkbox" data-c="9"> <span>Je sais expliquer pourquoi les classes FAT ont une pente 3.</span></label>
+    <label><input type="checkbox" data-c="10"> <span>Je sais expliquer pourquoi la nuance d'acier compte peu pour une soudure brute, et ce qu'apporte le meulage.</span></label>
+  </div>
+  <p class="status" id="checkMsg"></p>
+
+  <div class="meta">🔭 <b>Fin de la série « la vie d'une fissure ».</b> Les quatre cours ont suivi la fissure de sa naissance jusqu'à la loi de Paris. D'autres questions pourront faire l'objet d'une nouvelle série : le <b>cumul des dommages</b> sous chargement variable (règle de Miner, qui exploite le comptage rainflow du cours 1), l'estimation des <b>limites d'endurance</b> et l'effet des paramètres de chargement, et la <b>fatigue plastique oligocyclique</b> (loi de Manson-Coffin).</div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="wrap">
+  <p>Cours 4 sur 4 de la série « Fatigue des métaux : la vie d'une fissure ». Pour les notations et les conventions, l'enseignement de ta formation fait foi.</p>
+</div>
+</footer>
+<script>
+(function(){
+"use strict";
+const NS="http://www.w3.org/2000/svg";
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const RM=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function el(tag,attrs,parent){
+  const e=document.createElementNS(NS,tag);
+  if(attrs){for(const k in attrs){const v=attrs[k];if(v===undefined||v===null)continue;
+    if(typeof v==="string"&&v.indexOf("var(")>=0&&k!=="style")e.style.setProperty(k,v);else e.setAttribute(k,v);}}
+  if(parent)parent.appendChild(e);
+  return e;
+}
+function tx(p,x,y,str,attrs){const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);t.textContent=str;return t;}
+function txs(p,x,y,parts,attrs){/* parts: [["σ",""],["max","sub"],[" = 3",""]] */
+  const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);
+  parts.forEach(pt=>{const s=el("tspan",pt[1]==="sub"?{"font-size":"0.72em",dy:"3"}:(pt[2]?{dy:pt[2]}:{}),t);s.textContent=pt[0];
+    if(pt[1]==="sub"){const r=el("tspan",{dy:"-3"},t);r.textContent="\u200b";}});
+  return t;
+}
+function clear(svg){while(svg.firstChild)svg.removeChild(svg.firstChild);}
+function arrow(p,x1,y1,x2,y2,color,w,h){
+  w=w||2.4;h=h||10;
+  const g=el("g",{class:"arr"},p);g.style.color=color||"var(--ink)";
+  const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy);
+  if(L<1)return g;
+  const ux=dx/L,uy=dy/L,hh=Math.min(h,L*0.6),bx=x2-ux*hh,by=y2-uy*hh,hw=hh*0.45+w*0.3;
+  el("line",{x1:x1,y1:y1,x2:bx,y2:by,"stroke-width":w,"stroke-linecap":"round"},g);
+  el("polygon",{points:x2+","+y2+" "+(bx-uy*hw)+","+(by+ux*hw)+" "+(bx+uy*hw)+","+(by-ux*hw)},g);
+  return g;
+}
+function darrow(p,x,y1,y2,color,w){/* double flèche verticale */
+  const g=el("g",{},p);const m=(y1+y2)/2;
+  if(Math.abs(y2-y1)<4){el("line",{x1:x-5,y1:y1,x2:x+5,y2:y1,stroke:color,"stroke-width":2},g);return g;}
+  arrow(g,x,m,x,y1,color,w||2,8);arrow(g,x,m,x,y2,color,w||2,8);return g;
+}
+function nf(v,d){
+  if(d===undefined)d=1;
+  if(Math.abs(v)<0.5*Math.pow(10,-d))v=0;
+  return v.toLocaleString("fr-FR",{minimumFractionDigits:d,maximumFractionDigits:d}).replace("-","−").replace(/[\u202f\u2009]/g,"\u00a0");
+}
+const SUP={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function sci(v,d){
+  if(v===0)return "0";
+  if(!isFinite(v))return "∞";
+  let e=Math.floor(Math.log10(Math.abs(v)));
+  let m=v/Math.pow(10,e);
+  const dd=d===undefined?1:d;
+  if(Math.abs(Number(m.toFixed(dd)))>=10){m/=10;e+=1;}
+  return nf(m,dd)+" × 10"+String(e).split("").map(c=>SUP[c]).join("");
+}
+function bigN(v){/* nombre de cycles lisible */
+  if(!isFinite(v))return "∞";
+  if(v===0)return "0";
+  if(v<10)return nf(v,v<1?2:0);
+  if(v<1e5)return nf(Math.round(v),0);
+  return sci(v,1);
+}
+function dur(s){
+  if(!isFinite(s))return "∞";
+  if(s<60)return nf(s,s<10?1:0)+" s";
+  if(s<3600)return nf(s/60,0)+" min";
+  if(s<86400)return nf(s/3600,1)+" h";
+  if(s<86400*365)return nf(s/86400,1)+" jours";
+  return nf(s/(86400*365),1)+" ans";
+}
+function svgW(svg){const r=svg.getBoundingClientRect();return Math.max(290,Math.round(r.width||(svg.parentNode&&svg.parentNode.clientWidth)||600));}
+function setVB(svg,W,H){svg.setAttribute("viewBox","0 0 "+W+" "+H);}
+const redraws=[];
+let rzT=null,lastWW=window.innerWidth;
+window.addEventListener("resize",()=>{if(window.innerWidth===lastWW)return;lastWW=window.innerWidth;clearTimeout(rzT);rzT=setTimeout(()=>redraws.forEach(f=>{try{f();}catch(e){console.error(e);}}),120);});
+function family(sm,sa){
+  const eps=1e-6*Math.max(1,Math.abs(sm),Math.abs(sa));
+  if(sa<=eps)return {k:"stat",n:"statique (R = 1)",d:"plus rien ne varie : ce n'est plus de la fatigue."};
+  if(Math.abs(sm)<=eps)return {k:"a",n:"(a) alternée symétrique",d:"autant de traction que de compression, comme une balançoire."};
+  if(sm>0){
+    if(Math.abs(sm-sa)<=eps)return {k:"c",n:"(c) répétée de traction",d:"on charge puis on revient à zéro, comme un crochet de grue."};
+    if(sm<sa)return {k:"b",n:"(b) alternée asymétrique",d:"la traction domine, avec un passage en compression, comme un plongeoir."};
+    return {k:"d",n:"(d) ondulée de traction",d:"toujours tendu, comme une corde de guitare qui vibre."};
+  }
+  if(Math.abs(-sm-sa)<=eps)return {k:"cr",n:"répétée de compression",d:"σ<sub>max</sub> = 0 : R n'est pas défini. On écrase puis on relâche, comme une butée."};
+  if(-sm<sa)return {k:"ca",n:"alternée à dominante de compression",d:"R &lt; −1 : un peu de traction, beaucoup de compression, comme une bielle de moteur."};
+  return {k:"co",n:"ondulée de compression",d:"R &gt; 1 : toujours comprimé, comme un appui de pont sous le trafic."};
+}
+function Rtxt(smax,smin){if(Math.abs(smax)<1e-9)return "non défini";return nf(smin/smax,2);}
+
+/* =========================================================
+   Outils du cours 4
+   ========================================================= */
+function supE(e){return String(e).split("").map(c=>SUP[c]||c).join("");}
+function p10(e){return e===0?"1":(e===1?"10":"10"+supE(e));}
+function sciS(v,d){return sci(v,d===undefined?2:d);}
+const PC=6.9e-12,PM=3;
+function dKth(R){return Math.max(2,7*(1-0.7*R));}
+function mmTxt(a){return a<1e-3?nf(a*1e6,0)+" µm":nf(a*1e3,a<1e-2?2:1)+" mm";}
+
+/* =========================================================
+   M1 : la pointe qui respire (modèle de Laird)
+   ========================================================= */
+(function(){
+  const svg=$("#m1svg");if(!svg)return;
+  const sk=$("#m1k"),ro=$("#m1r"),msg=$("#m1msg"),bP=$("#m1play");
+  let xt=null,ph=0,n=0,str=[],run=false,raf=null,last=0;
+  function reset(){xt=null;ph=0;n=0;str=[];}
+  function step(dph){
+    const W=svgW(svg),dK=+sk.value,D=Math.max(0.6,Math.min(14,1.1*Math.pow(dK/15,3)));
+    if(xt===null)xt=W*0.32;
+    const before=ph;ph+=dph;
+    if(ph>=1){ph-=1;n++;str.push(xt);xt+=D;if(xt>W-70){reset();xt=W*0.32;}}
+  }
+  function draw(){
+    const W=svgW(svg),H=260;setVB(svg,W,H);clear(svg);
+    if(xt===null)xt=W*0.32;
+    const dK=+sk.value,D=Math.max(0.6,Math.min(14,1.1*Math.pow(dK/15,3)));
+    const L=Math.sin(2*Math.PI*ph),yc=H/2,top=40,bot=H-40;
+    const adv=ph<0.25?D*Math.sin(Math.PI/2*ph/0.25):D;
+    const xtip=xt+(ph<0.5?adv:D);
+    el("rect",{x:0,y:top,width:W,height:bot-top,fill:"color-mix(in srgb, var(--muted) 12%, var(--card))",stroke:"var(--ink)","stroke-width":1.4},svg);
+    /* zone plastique */
+    const rp=(6+26*Math.pow(dK/40,2))*(L>0?(0.35+0.65*L):0.45);
+    el("ellipse",{cx:xtip+rp*0.45,cy:yc-rp*0.35,rx:rp*0.7,ry:rp*0.55,fill:"var(--gam)",opacity:.22},svg);
+    el("ellipse",{cx:xtip+rp*0.45,cy:yc+rp*0.35,rx:rp*0.7,ry:rp*0.55,fill:"var(--gam)",opacity:.22},svg);
+    /* fissure */
+    const om=L>0?6+24*L:1.4,r=L>0?1.5+6*L*(0.6+dK/40):0.6;
+    const up=x=>yc-(om/2)*(1-x/(xtip))-r*(x/xtip),dn=x=>yc+(om/2)*(1-x/(xtip))+r*(x/xtip);
+    let d="M0 "+up(0);
+    for(let x=0;x<=xtip-r;x+=4){d+=" L"+x.toFixed(1)+" "+up(x).toFixed(1);}
+    d+=" L"+(xtip-r).toFixed(1)+" "+(yc-r).toFixed(1)+" A"+r.toFixed(1)+" "+r.toFixed(1)+" 0 0 1 "+(xtip-r).toFixed(1)+" "+(yc+r).toFixed(1);
+    for(let x=xtip-r;x>=0;x-=4){d+=" L"+x.toFixed(1)+" "+dn(x).toFixed(1);}
+    d+=" L0 "+dn(0)+" Z";
+    el("path",{d:d,fill:"var(--card)",stroke:"var(--eps)","stroke-width":2.2,"stroke-linejoin":"round"},svg);
+    if(L<=0&&ph>0.5){/* replis à la pointe pendant la compression */
+      const e=3+3*Math.min(1,-L);el("path",{d:"M"+(xtip-6)+" "+(yc-1)+" l3 "+(-e)+" l3 "+e+" M"+(xtip-6)+" "+(yc+1)+" l3 "+e+" l3 "+(-e),fill:"none",stroke:"var(--eps)","stroke-width":1.8},svg);}
+    /* stries */
+    str.forEach(x=>{if(x>xtip-2)return;const yu=up(x),yd=dn(x);
+      el("path",{d:"M"+(x-2)+" "+yu+" l2 -3 l2 3",fill:"none",stroke:"var(--eps)","stroke-width":1.6},svg);
+      el("path",{d:"M"+(x-2)+" "+yd+" l2 3 l2 -3",fill:"none",stroke:"var(--eps)","stroke-width":1.6},svg);});
+    /* efforts */
+    const al=8+20*Math.abs(L),cx=W*0.18;
+    if(L>0.05){arrow(svg,cx,top-4,cx,top-4-al,"var(--frc)",2.4,9);arrow(svg,cx,bot+4,cx,bot+4+al,"var(--frc)",2.4,9);}
+    else if(L<-0.05){arrow(svg,cx,top-4-al,cx,top-4,"var(--frc)",2.4,9);arrow(svg,cx,bot+4+al,cx,bot+4,"var(--frc)",2.4,9);}
+    const phases=["début du cycle","traction : la pointe s'émousse et avance","décharge","compression : la pointe s'affûte"];
+    const pi=ph<0.02?0:ph<0.5?1:ph<0.55?2:3;
+    tx(svg,W-10,top-10,phases[pi],{class:"ttl","text-anchor":"end"});
+    if(str.length)tx(svg,(str[0]+xtip)/2,bot-10,"stries (une par cycle)",{fill:"var(--eps)","font-size":"12","text-anchor":"middle"});
+    tx(svg,xtip+rp+6,yc+4,"zone plastique",{fill:"var(--gam)","font-size":"12"});
+    $("#m1ko").textContent=dK+" MPa·√m";
+    const v=PC*Math.pow(dK,PM);
+    ro.innerHTML="<span class='eps'>cycles : "+n+"</span><span class='sig'>ΔK = "+dK+" MPa·√m</span><span class='eps'>da/dN réel ≈ "+nf(v*1e9,1)+" nm/cycle</span><span class='mut'>pas dessiné très grossi</span>";
+    const M=["<b>Début :</b> la pointe de la fissure est aiguë. Lance les cycles ou avance phase par phase.","<b>Traction :</b> la matière plastifie devant la pointe (bleu-vert). La pointe s'ouvre, s'arrondit (elle s'émousse) et avance un peu, puis s'arrête : une pointe ronde est moins dangereuse.","<b>Décharge :</b> l'effort retombe, la fissure commence à se refermer.","<b>Compression :</b> la déformation s'inverse ; les lèvres se referment et la pointe s'affûte en laissant un petit repli. Elle est prête pour le cycle suivant. Chaque cycle a laissé une strie."];
+    msg.innerHTML=M[pi]+(dK>=30?" Avec un ΔK élevé, chaque pas est long : les stries sont espacées.":"");
+  }
+  function loop(now){const dt=Math.min(50,now-last);last=now;step(dt*0.0007);draw();if(run)raf=requestAnimationFrame(loop);}
+  bP.addEventListener("click",()=>{run=!run;bP.textContent=run?"⏸ Pause":"▶ Cycler";if(run){last=performance.now();raf=requestAnimationFrame(loop);}else if(raf)cancelAnimationFrame(raf);});
+  $("#m1step").addEventListener("click",()=>{const targets=[0.25,0.5,0.75,1];const nxt=targets.find(t=>t>ph+1e-6)||1;step(nxt-ph);draw();});
+  $("#m1reset").addEventListener("click",()=>{reset();draw();});
+  sk.addEventListener("input",draw);
+  redraws.push(()=>{reset();draw();});draw();
+})();
+
+/* =========================================================
+   M2 : fabrique une cassure
+   ========================================================= */
+(function(){
+  const svg=$("#m2svg");if(!svg)return;
+  const ss=$("#m2s"),ro=$("#m2r"),msg=$("#m2msg"),bP=$("#m2play");
+  const D=40;
+  let a=0.8,marks=[],broken=false,run=false,raf=null,last=0,zoom=false;
+  function ac(){return Math.min(0.95*D,1000*Math.pow(50/(2*(+ss.value)),2));}
+  function draw(){
+    const W=svgW(svg),H=W<520?250:290;setVB(svg,W,H);clear(svg);
+    const x0=24,x1=W-24,y0=34,y1=H-30,sc=(y1-y0)/D,xm=(x0+x1)/2;
+    tx(svg,x0,22,"La section, vue de face (le plan de la cassure)",{class:"lbl"});
+    const cp="m2cp"+Math.floor(Math.random()*1e6),defs=el("defs",{},svg),c=el("clipPath",{id:cp},defs);el("rect",{x:x0,y:y0,width:x1-x0,height:y1-y0},c);
+    const g=el("g",{"clip-path":"url(#"+cp+")"},svg);
+    el("rect",{x:x0,y:y0,width:x1-x0,height:y1-y0,fill:broken?"color-mix(in srgb, var(--muted) 30%, var(--card))":"color-mix(in srgb, var(--muted) 8%, var(--card))"},g);
+    if(broken){let s=12345;const r=()=>{s=(s*16807)%2147483647;return s/2147483647;};for(let k=0;k<260;k++)el("circle",{cx:x0+r()*(x1-x0),cy:y0+r()*(y1-y0),r:1.1,fill:"var(--ink)",opacity:.35},g);}
+    const sem=(aa,cls)=>{const A=aa*sc,Cx=1.3*A;return "M"+(xm-Cx)+" "+y1+" A"+Cx+" "+A+" 0 0 1 "+(xm+Cx)+" "+y1;};
+    const aa=Math.min(a,broken?ac():a);
+    el("path",{d:sem(aa)+" Z",fill:"color-mix(in srgb, var(--eps) 18%, var(--card))"},g);
+    marks.forEach(m=>el("path",{d:sem(m),fill:"none",stroke:"var(--eps)","stroke-width":1.4,opacity:.85},g));
+    el("path",{d:sem(aa),fill:"none",stroke:"var(--eps)","stroke-width":broken?1.4:3},g);
+    el("rect",{x:x0,y:y0,width:x1-x0,height:y1-y0,fill:"none",stroke:"var(--ink)","stroke-width":1.8},svg);
+    el("polygon",{points:xm+","+(y1-2)+" "+(xm-6)+","+(y1+9)+" "+(xm+6)+","+(y1+9),fill:"var(--tau)"},svg);
+    tx(svg,xm+10,y1+12,"origine",{fill:"var(--tau)","font-size":"12"});
+    if(broken){tx(svg,W<520?x0+8:xm,y0+18,"zone rugueuse : rupture brutale",{"font-size":"12.5","text-anchor":W<520?"start":"middle","font-weight":"700"});
+      tx(svg,xm,y1-Math.max(10,aa*sc*0.4),"zone lisse de fatigue",{fill:"var(--eps)","font-size":"12","text-anchor":"middle","font-weight":"700"});}
+    if(marks.length&&!broken)tx(svg,xm+1.3*marks[marks.length-1]*sc*0.7+8,y1-marks[marks.length-1]*sc*0.75,"ligne d'arrêt",{fill:"var(--eps)","font-size":"12"});
+    if(zoom){const zr=W<520?36:48,zx=W<520?x1-46:x1-80,zy=W<520?y0+zr+30:y0+52;
+      el("circle",{cx:zx,cy:zy,r:zr,fill:"var(--card)",stroke:"var(--ink)","stroke-width":1.6},svg);
+      const cz="m2z"+Math.floor(Math.random()*1e6),cc=el("clipPath",{id:cz},defs);el("circle",{cx:zx,cy:zy,r:zr-1},cc);
+      const gz=el("g",{"clip-path":"url(#"+cz+")"},svg);
+      for(let k=-12;k<=12;k++)el("path",{d:"M"+(zx-zr)+" "+(zy+k*4)+" Q"+zx+" "+(zy+k*4-8)+" "+(zx+zr)+" "+(zy+k*4),fill:"none",stroke:"var(--eps)","stroke-width":1},gz);
+      tx(svg,W<520?x1-2:zx,zy+zr+14,"MEB : 1 strie = 1 cycle",{"font-size":"11.5","text-anchor":W<520?"end":"middle"});}
+    $("#m2so").textContent=ss.value+" MPa";
+    /* fraction de surface en fatigue */
+    let inF=0,tot=0;for(let i=0;i<40;i++)for(let j=0;j<40;j++){const px=x0+(i+0.5)*(x1-x0)/40,py=y0+(j+0.5)*(y1-y0)/40;tot++;const A=aa*sc,Cx=1.3*A;const u=(px-xm)/Cx,v=(y1-py)/A;if(A>0&&u*u+v*v<=1)inF++;}
+    const fr=inF/tot;
+    ro.innerHTML="<span class='eps'>profondeur a = "+nf(aa,1)+" mm</span><span class='eps'>a<sub>C</sub> = "+nf(ac(),1)+" mm</span><span class='sig'>σ<sub>max</sub> = "+ss.value+" MPa</span><span>zone de fatigue : "+nf(fr*100,0)+" % de la section</span><span>lignes d'arrêt : "+marks.length+"</span>";
+    if(broken)msg.innerHTML="💥 <b>Rupture.</b> La fissure a atteint a<sub>C</sub> = "+nf(ac(),1)+" mm : la zone de fatigue couvre "+nf(fr*100,0)+" % de la section. "+(fr<0.25?"Petite zone de fatigue, grande zone brutale : la contrainte maximale était <b>forte</b>.":"Grande zone de fatigue : la contrainte maximale était <b>faible</b> (ou le matériau très tenace).")+" Les "+marks.length+" lignes d'arrêt racontent "+marks.length+" interruptions du chargement, pas un nombre de cycles.";
+    else if(run)msg.innerHTML="La fissure avance depuis l'origine, en demi-ellipse. Appuie sur « Arrêt » pour simuler une nuit d'arrêt : une ligne d'arrêt se dessine.";
+    else msg.innerHTML="Choisis σ<sub>max</sub>, puis fais grandir la fissure. Avec K<sub>IC</sub> = 50 MPa·√m et Y = 2, a<sub>C</sub> = "+nf(ac(),1)+" mm.";
+  }
+  function loop(now){const dt=Math.min(50,now-last);last=now;a+=dt*0.00035*Math.pow(a,1.5)+dt*0.0004;if(a>=ac()){a=ac();broken=true;run=false;bP.textContent="▶ Faire grandir";draw();return;}draw();if(run)raf=requestAnimationFrame(loop);}
+  bP.addEventListener("click",()=>{if(broken)return;run=!run;bP.textContent=run?"⏸ Pause":"▶ Faire grandir";if(run){last=performance.now();raf=requestAnimationFrame(loop);}else if(raf)cancelAnimationFrame(raf);draw();});
+  $("#m2stop").addEventListener("click",()=>{if(broken)return;if(!marks.length||a-marks[marks.length-1]>0.3)marks.push(a);draw();});
+  $("#m2reset").addEventListener("click",()=>{run=false;if(raf)cancelAnimationFrame(raf);bP.textContent="▶ Faire grandir";a=0.8;marks=[];broken=false;draw();});
+  $("#m2zoom").addEventListener("click",()=>{zoom=!zoom;$("#m2zoom").classList.toggle("on",zoom);draw();});
+  ss.addEventListener("input",()=>{if(!broken)draw();});
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M3 : la courbe da/dN–ΔK
+   ========================================================= */
+(function(){
+  const svg=$("#m3svg");if(!svg)return;
+  const sk=$("#m3k"),sr=$("#m3r"),ro=$("#m3r_"),msg=$("#m3msg");
+  const Kc=80;
+  function v(dK,R){const th=dKth(R),kmax=(1-R)*Kc;if(dK<=th)return 0;if(dK>=kmax)return Infinity;return PC*Math.pow(dK,PM)*(1-Math.pow(th/dK,2))/(1-dK/kmax);}
+  function draw(){
+    const W=svgW(svg),H=W<520?300:330;setVB(svg,W,H);clear(svg);
+    const R=+sr.value,dK=Math.pow(10,2*(+sk.value)/100),x0=52,x1=W-14,y0=26,y1=H-42;
+    const X=k=>x0+(x1-x0)*Math.log10(k)/2,Y=s=>y1-(y1-y0)*(Math.log10(s)+11)/8;
+    for(let e=0;e<=2;e++){for(let k=1;k<=9;k++){const val=k*Math.pow(10,e);if(val>100)break;const x=X(val);el("line",{x1:x,y1:y0,x2:x,y2:y1,class:"gridbg",opacity:k===1?.8:.3},svg);if(k===1||(W>=480&&(k===2||k===5)))tx(svg,x,y1+16,String(val),{class:"lbl","text-anchor":"middle"});}}
+    for(let e=-11;e<=-3;e++){const y=Y(Math.pow(10,e));el("line",{x1:x0,y1:y,x2:x1,y2:y,class:"gridbg",opacity:.7},svg);if(Math.abs(e)%2===1||W>=480)tx(svg,x0-6,y+4,p10(e),{class:"lbl","text-anchor":"end"});}
+    el("line",{x1:x0,y1:y1,x2:x1,y2:y1,class:"axis"},svg);el("line",{x1:x0,y1:y0,x2:x0,y2:y1,class:"axis"},svg);
+    tx(svg,x0-6,y0-10,"da/dN (m/cycle)",{class:"lbl"});tx(svg,x1,y1+31,"ΔK (MPa·√m, échelle log)",{class:"lbl","text-anchor":"end"});
+    /* repères */
+    [[1e-9,"10⁻⁹ : seuil usuel"],[1e-10,"10⁻¹⁰ : seuil (ASTM E647)"]].forEach(q=>{el("line",{x1:x0,y1:Y(q[0]),x2:x1,y2:Y(q[0]),stroke:"var(--muted)","stroke-width":1,"stroke-dasharray":"2 4"},svg);if(W>=480)tx(svg,x1-4,Y(q[0])-4,q[1],{class:"lbl","text-anchor":"end"});});
+    [1e-8,1e-6].forEach(s=>el("line",{x1:x0,y1:Y(s),x2:x1,y2:Y(s),stroke:"var(--muted)","stroke-width":1.2,"stroke-dasharray":"6 4"},svg));
+    /* droite de Paris */
+    el("line",{x1:X(1),y1:Y(PC),x2:X(100),y2:Y(PC*1e6),stroke:"var(--mat)","stroke-width":1.4,"stroke-dasharray":"7 5",opacity:.7},svg);
+    const crv=(RR,w,op)=>{let d="",pen=false;for(let i=0;i<=400;i++){const k=Math.pow(10,2*i/400),s=v(k,RR);if(!(s>=1e-11&&s<=1e-3)){pen=false;continue;}d+=(pen?"L":"M")+X(k).toFixed(1)+" "+Y(s).toFixed(1)+" ";pen=true;}el("path",{d:d,fill:"none",stroke:"var(--mat)","stroke-width":w,opacity:op},svg);};
+    if(Math.abs(R-0.1)>1e-6)crv(0.1,1.6,.35);
+    crv(R,3,1);
+    const th=dKth(R),kk=(1-R)*Kc;
+    el("line",{x1:X(th),y1:y0,x2:X(th),y2:y1,stroke:"var(--mat)","stroke-width":1.2,"stroke-dasharray":"3 3"},svg);
+    el("line",{x1:X(kk),y1:y0,x2:X(kk),y2:y1,stroke:"var(--mat)","stroke-width":1.2,"stroke-dasharray":"3 3"},svg);
+    txs(svg,X(th)+4,y1-8,[["ΔK",""],["S","sub"]],{fill:"var(--mat)","font-weight":"700","font-size":"12.5"});
+    txs(svg,X(kk)-4,y0+40,[["K",""],["max","sub"],[" = K",""],["C","sub"]],{fill:"var(--mat)","font-weight":"700","font-size":"12.5","text-anchor":"end"});
+    const s=v(dK,R);let dom;
+    if(s===0)dom="1";else if(!isFinite(s))dom="3";else dom=s<1e-8?"1":(s>1e-6?"3":"2");
+    [["1",Math.sqrt(th*12)],["2",22],["3",Math.min(70,kk*0.93)]].forEach(t=>tx(svg,X(t[1]),y0+16,t[0],{"font-family":"var(--font-head)","font-size":"20","font-weight":"700","text-anchor":"middle",opacity:t[0]===dom?1:.4}));
+    if(s>0&&isFinite(s)&&s>=1e-11)el("circle",{cx:X(dK),cy:Y(Math.min(1e-3,s)),r:7,fill:"var(--sig)",stroke:"var(--card)","stroke-width":2.5},svg);
+    else el("circle",{cx:X(dK),cy:s===0?y1:y0,r:6,fill:"var(--sig)"},svg);
+    $("#m3ko").textContent=nf(dK,1)+" MPa·√m";$("#m3ro").textContent=nf(R,1);
+    ro.innerHTML="<span class='sig'>ΔK = "+nf(dK,1)+"</span><span class='sig'>K<sub>max</sub> = "+nf(dK/(1-R),1)+" MPa·√m</span><span class='mat'>ΔK<sub>S</sub> = "+nf(th,1)+"</span><span class='eps'>da/dN = "+(s===0?"0":isFinite(s)?sciS(s):"∞")+" m/cycle</span><span><b>domaine "+dom+"</b></span>";
+    let m;
+    if(s===0)m="<b>Domaine 1, sous le seuil :</b> ΔK &lt; ΔK<sub>S</sub> = "+nf(th,1)+" MPa·√m. La fissure ne se propage pas : elle dort.";
+    else if(!isFinite(s))m="<b>Rupture :</b> K<sub>max</sub> = ΔK/(1 − R) atteint K<sub>C</sub> = "+Kc+" MPa·√m. La pièce casse au sommet du cycle, en un quart de cycle.";
+    else if(dom==="1")m="<b>Domaine 1, près du seuil :</b> la fissure avance de "+nf(s*1e9,2)+" nm par cycle, à peine plus qu'une distance entre atomes. La courbe plonge vers ΔK<sub>S</sub>.";
+    else if(dom==="2")m="<b>Domaine 2, régime de Paris :</b> la courbe suit la droite en tirets. Il faut "+bigN(1e-3/s)+" cycles pour avancer d'un millimètre.";
+    else m="<b>Domaine 3, la falaise :</b> K<sub>max</sub> = "+nf(dK/(1-R),1)+" MPa·√m s'approche de K<sub>C</sub>. La vitesse s'emballe : "+nf(s*1e6,1)+" µm par cycle.";
+    if(R>0.1)m+=" Avec R = "+nf(R,1)+", le seuil baisse et la falaise arrive plus tôt (courbe pâle : R = 0,1).";
+    msg.innerHTML=m;
+  }
+  [sk,sr].forEach(x=>x.addEventListener("input",draw));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M4 : la calculatrice de Paris
+   ========================================================= */
+(function(){
+  const svg=$("#m4svg");if(!svg)return;
+  const sk=$("#m4k"),ro=$("#m4r"),msg=$("#m4msg");
+  const MATS=[{n:"ferrito-perlitique",C:6.9e-12,m:3},{n:"martensitique",C:1.35e-10,m:2.25},{n:"austénitique",C:5.6e-12,m:3.25},{n:"soudage prudent",C:1.65e-11,m:3}];
+  let cur=0,extra="";
+  function draw(){
+    const W=svgW(svg),H=W<520?290:320;setVB(svg,W,H);clear(svg);
+    const x0=52,x1=W-14,y0=26,y1=H-42,kmin=3,kmax=100;
+    const X=k=>x0+(x1-x0)*(Math.log10(k)-Math.log10(kmin))/(Math.log10(kmax)-Math.log10(kmin)),Y=s=>y1-(y1-y0)*(Math.log10(s)+10)/5;
+    [3,5,10,20,50,100].forEach(k=>{el("line",{x1:X(k),y1:y0,x2:X(k),y2:y1,class:"gridbg",opacity:.7},svg);tx(svg,X(k),y1+16,String(k),{class:"lbl","text-anchor":"middle"});});
+    for(let e=-10;e<=-5;e++){const y=Y(Math.pow(10,e));el("line",{x1:x0,y1:y,x2:x1,y2:y,class:"gridbg",opacity:.7},svg);tx(svg,x0-6,y+4,p10(e),{class:"lbl","text-anchor":"end"});}
+    el("line",{x1:x0,y1:y1,x2:x1,y2:y1,class:"axis"},svg);el("line",{x1:x0,y1:y0,x2:x0,y2:y1,class:"axis"},svg);
+    tx(svg,x0-6,y0-10,"da/dN (m/cycle)",{class:"lbl"});tx(svg,x1,y1+31,"ΔK (MPa·√m)",{class:"lbl","text-anchor":"end"});
+    const cp="m4cp"+Math.floor(Math.random()*1e6),defs=el("defs",{},svg),c=el("clipPath",{id:cp},defs);el("rect",{x:x0,y:y0,width:x1-x0,height:y1-y0},c);
+    const g=el("g",{"clip-path":"url(#"+cp+")"},svg);
+    MATS.forEach((M,i)=>{const on=i===cur;el("line",{x1:X(kmin),y1:Y(M.C*Math.pow(kmin,M.m)),x2:X(kmax),y2:Y(M.C*Math.pow(kmax,M.m)),stroke:"var(--mat)","stroke-width":on?3.2:1.4,opacity:on?1:.45,"stroke-dasharray":i===3?"8 5":null},g);});
+    const M=MATS[cur],dK=+sk.value,v=M.C*Math.pow(dK,M.m);
+    el("line",{x1:X(dK),y1:y1,x2:X(dK),y2:Y(v),stroke:"var(--sig)","stroke-width":1.4,"stroke-dasharray":"3 3"},svg);
+    el("line",{x1:x0,y1:Y(v),x2:X(dK),y2:Y(v),stroke:"var(--eps)","stroke-width":1.4,"stroke-dasharray":"3 3"},svg);
+    el("circle",{cx:X(dK),cy:Y(v),r:7,fill:"var(--sig)",stroke:"var(--card)","stroke-width":2.5},svg);
+    tx(svg,X(4),Y(M.C*Math.pow(4,M.m))-10,M.n,{fill:"var(--mat)","font-size":"12.5","font-weight":"700"});
+    const Cp=M.C*1000/Math.pow(31.6228,M.m);
+    $("#m4ko").textContent=nf(dK,1)+" MPa·√m";
+    ro.innerHTML="<span class='mat'>C = "+sciS(M.C)+", m = "+nf(M.m,2)+"</span><span class='eps'>da/dN = "+sciS(v)+" m/cycle</span><span class='eps'>stries ≈ "+(v<1e-6?nf(v*1e9,1)+" nm":nf(v*1e6,2)+" µm")+"</span><span class='eps'>"+bigN(1e-3/v)+" cycles pour 1 mm</span><span class='mat'>C en mm et N·mm<sup>−3/2</sup> : "+sciS(Cp)+"</span>";
+    msg.innerHTML="Pour un acier "+M.n+", à ΔK = "+nf(dK,1)+" MPa·√m, la fissure avance de "+(v<1e-6?nf(v*1e9,1)+" nm":nf(v*1e6,2)+" µm")+" par cycle : c'est aussi l'espacement des stries attendu au MEB."+extra;
+    extra="";
+  }
+  $$("#m4mat .btn").forEach((b,i)=>b.addEventListener("click",()=>{cur=i;$$("#m4mat .btn").forEach(x=>x.classList.toggle("on",x===b));draw();}));
+  $("#m4x2").addEventListener("click",()=>{const k=+sk.value,n=Math.min(60,2*k);const M=MATS[cur];sk.value=n;extra=" <b>ΔK × "+nf(n/k,2)+" :</b> la vitesse est multipliée par "+nf(Math.pow(n/k,M.m),1)+(n/k===2?" = 2<sup>m</sup>.":".");draw();});
+  sk.addEventListener("input",draw);
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M5 : le simulateur de fissure
+   ========================================================= */
+(function(){
+  const svg=$("#m5svg");if(!svg)return;
+  const sd=$("#m5d"),sr=$("#m5r"),sa=$("#m5a"),sk=$("#m5k"),ro=$("#m5r_"),msg=$("#m5msg"),bP=$("#m5play");
+  const Y=2,ad=0.002;let t=1,run=false,raf=null,t0=0;
+  function calc(){
+    const ds=+sd.value,R=+sr.value,a0=Math.pow(10,+sa.value)/1000,K=+sk.value;
+    const smax=ds/(1-R),smin=R*smax,ac=Math.pow(K/(Y*smax),2),B=PC*Math.pow(ds*Y,3);
+    const dK0=ds*Y*Math.sqrt(a0),th=dKth(R);
+    const Nab=(x,y)=>2*(Math.pow(x,-0.5)-Math.pow(y,-0.5))/B;
+    const Np=a0<ac?Nab(a0,ac):0;
+    return {ds,R,a0,K,smax,smin,ac,B,dK0,th,Np,Nab,aOf:N=>Math.pow(Math.pow(a0,-0.5)-N*B/2,-2)};
+  }
+  function draw(){
+    const W=svgW(svg),H=W<520?470:430;setVB(svg,W,H);clear(svg);
+    const c=calc();
+    $("#m5do").textContent=c.ds+" MPa";$("#m5ro").textContent=nf(c.R,1);$("#m5ao").textContent=mmTxt(c.a0);$("#m5ko").textContent=c.K+" MPa·√m";
+    const x0=56,x1=W-14;
+    /* panneau a(N) */
+    const ay0=28,ay1=W<520?220:200;
+    tx(svg,x0-50,ay0-12,"longueur de fissure a (mm)",{class:"lbl"});
+    if(c.a0>=c.ac){ro.innerHTML="<span class='sig'>a<sub>0</sub> ≥ a<sub>C</sub></span>";msg.innerHTML="💥 Le défaut initial dépasse déjà la longueur critique : rupture au premier chargement. Baisse Δσ ou augmente K<sub>IC</sub>.";return;}
+    const prop=true,below=c.dK0<=c.th;
+    const NX=c.Np,acmm=c.ac*1000;
+    const X=N=>x0+(x1-x0)*N/NX,Ya=a=>ay1-(ay1-ay0)*a*1000/acmm;
+    for(let i=0;i<=4;i++){const N=NX*i/4;el("line",{x1:X(N),y1:ay0,x2:X(N),y2:ay1,class:"gridbg",opacity:.6},svg);if(W>=480||i%2===0)tx(svg,X(N),ay1+15,i===0?"0":sciS(N,1),{class:"lbl","text-anchor":i===4?"end":"middle"});}
+    for(let i=0;i<=4;i++){const a=acmm*i/4;el("line",{x1:x0,y1:ay1-(ay1-ay0)*i/4,x2:x1,y2:ay1-(ay1-ay0)*i/4,class:"gridbg",opacity:.6},svg);tx(svg,x0-6,ay1-(ay1-ay0)*i/4+4,nf(a,a<10?1:0),{class:"lbl","text-anchor":"end"});}
+    el("line",{x1:x0,y1:ay1,x2:x1,y2:ay1,class:"axis"},svg);el("line",{x1:x0,y1:ay0,x2:x0,y2:ay1,class:"axis"},svg);
+    tx(svg,x1,ay1+29,"N (cycles)",{class:"lbl","text-anchor":"end"});
+    if(prop){
+      let d="";for(let i=0;i<=300;i++){const N=NX*i/300,a=Math.min(c.ac,c.aOf(N));d+=(i?"L":"M")+X(N).toFixed(1)+" "+Ya(a).toFixed(1)+" ";}
+      el("path",{d:d,fill:"none",stroke:"var(--eps)","stroke-width":3},svg);
+      if(ad<c.ac&&ad>c.a0){const Nd=c.Nab(c.a0,ad);el("line",{x1:x0,y1:Ya(ad),x2:x1,y2:Ya(ad),stroke:"var(--mat)","stroke-width":1.4,"stroke-dasharray":"6 4"},svg);tx(svg,x0+4,Ya(ad)-5,"détectable : 2 mm",{fill:"var(--mat)","font-size":"12"});
+        el("line",{x1:X(Nd),y1:ay0,x2:X(Nd),y2:ay1,stroke:"var(--mat)","stroke-width":1.2,"stroke-dasharray":"3 3"},svg);}
+      const Nt=NX*t,at=Math.min(c.ac,c.aOf(Nt));el("circle",{cx:X(Nt),cy:Ya(at),r:6,fill:"var(--ink)"},svg);
+    }
+    /* panneau K(t) */
+    const ky0=ay1+60,ky1=H-30,Kmx=c.K*1.12,Yk=k=>ky1-(ky1-ky0)*k/Kmx;
+    tx(svg,x0-50,ky0-12,W<520?"K(t) en MPa·√m":"K au cours du temps (MPa·√m)",{class:"lbl"});
+    for(let i=0;i<=4;i++){const k=Kmx*i/4;el("line",{x1:x0,y1:Yk(k),x2:x1,y2:Yk(k),class:"gridbg",opacity:.6},svg);tx(svg,x0-6,Yk(k)+4,nf(k,0),{class:"lbl","text-anchor":"end"});}
+    el("line",{x1:x0,y1:ky1,x2:x1,y2:ky1,class:"axis"},svg);el("line",{x1:x0,y1:ky0,x2:x0,y2:ky1,class:"axis"},svg);
+    el("line",{x1:x0,y1:Yk(c.K),x2:x1,y2:Yk(c.K),stroke:"var(--mat)","stroke-width":1.6,"stroke-dasharray":"6 4"},svg);
+    txs(svg,x1-4,Yk(c.K)-5,[["K",""],["IC","sub"]],{fill:"var(--mat)","font-weight":"700","text-anchor":"end"});
+    if(prop){
+      const cyc=14,sm=(c.smax+c.smin)/2,sa_=(c.smax-c.smin)/2;let d="",dU="",dL="";
+      for(let i=0;i<=700;i++){const u=i/700,a=Math.min(c.ac,c.aOf(NX*u)),ra=Y*Math.sqrt(a),s=sm+sa_*Math.sin(2*Math.PI*cyc*u),x=x0+(x1-x0)*u;
+        d+=(i?"L":"M")+x.toFixed(1)+" "+Yk(s*ra).toFixed(1)+" ";dU+=(i?"L":"M")+x.toFixed(1)+" "+Yk(c.smax*ra).toFixed(1)+" ";dL+=(i?"L":"M")+x.toFixed(1)+" "+Yk(c.smin*ra).toFixed(1)+" ";}
+      el("path",{d:dU,fill:"none",stroke:"var(--sig)","stroke-width":1.2,"stroke-dasharray":"4 4"},svg);
+      el("path",{d:dL,fill:"none",stroke:"var(--sig)","stroke-width":1.2,"stroke-dasharray":"4 4"},svg);
+      el("path",{d:d,fill:"none",stroke:"var(--sig)","stroke-width":1.8},svg);
+      const xt=x0+(x1-x0)*t;el("line",{x1:xt,y1:ky0,x2:xt,y2:ky1,stroke:"var(--ink)","stroke-width":1.2,"stroke-dasharray":"2 3"},svg);
+      tx(svg,x1,ky1+15,W<520?"temps (14 cycles dessinés)":"temps (14 cycles dessinés sur toute la vie)",{class:"lbl","text-anchor":"end"});
+    }
+    /* sorties */
+    const Nd2=(ad>c.a0&&ad<c.ac)?c.Nab(ad,c.ac):NaN;
+    ro.innerHTML="<span class='eps'>a<sub>C</sub> = "+mmTxt(c.ac)+"</span><span class='sig'>ΔK initial = "+nf(c.dK0,1)+" MPa·√m</span><span class='mat'>ΔK<sub>S</sub> = "+nf(c.th,1)+"</span>"+(prop?"<span class='eps'>N<sub>p</sub> = "+sciS(c.Np)+" cycles</span>"+(isFinite(Nd2)?"<span class='eps'>de 2 mm à a<sub>C</sub> : "+sciS(Nd2)+"</span><span class='mat'>intervalle (÷ 2) : "+sciS(Nd2/2)+"</span>":""):"<span><b>pas de propagation</b></span>");
+    {const half=c.Nab(c.a0,Math.min(c.ac,2*c.a0))/c.Np;
+      msg.innerHTML=(below?"⚠️ ΔK initial = "+nf(c.dK0,1)+" MPa·√m est sous le seuil ΔK<sub>S</sub> = "+nf(c.th,1)+" : en réalité, la fissure dormirait. La loi de Paris seule, prudente, prévoit quand même la courbe ci-dessus. ":"")+"La fissure met <b>"+nf(half*100,0)+" %</b> de sa durée de propagation à doubler de longueur (de "+mmTxt(c.a0)+" à "+mmTxt(Math.min(c.ac,2*c.a0))+"), puis s'emballe : c'est le sablier. En bas, à Δσ constant, l'enveloppe de K s'élargit comme √a, jusqu'à ce que K<sub>max</sub> touche K<sub>IC</sub>.";}
+  }
+  bP.addEventListener("click",()=>{if(run){run=false;cancelAnimationFrame(raf);bP.textContent="▶ Lecture";return;}
+    if(RM){t=1;draw();return;}
+    run=true;bP.textContent="⏸ Pause";if(t>=1)t=0;const tStart=t;t0=performance.now();
+    const st=now=>{t=Math.min(1,tStart+(now-t0)/6000);draw();if(t<1&&run)raf=requestAnimationFrame(st);else{run=false;bP.textContent="▶ Lecture";}};raf=requestAnimationFrame(st);});
+  [sd,sr,sa,sk].forEach(x=>x.addEventListener("input",()=>{t=1;draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M6 : fabriquer une classe FAT
+   ========================================================= */
+(function(){
+  const svg=$("#m6svg");if(!svg)return;
+  const sa=$("#m6a"),sf=$("#m6f"),ro=$("#m6r"),msg=$("#m6msg");
+  const C=1.65e-11,Y=2,CL=[36,40,45,50,56,63,71,80,90,100,112,125,140,160];
+  function draw(){
+    const W=svgW(svg),H=W<520?290:320;setVB(svg,W,H);clear(svg);
+    const ai=Math.pow(10,+sa.value)/1000,af=(+sf.value)/1000;
+    const Kc=2*(Math.pow(ai,-0.5)-Math.pow(af,-0.5))/(C*Y*Y*Y),FAT=Math.cbrt(Kc/2e6);
+    const x0=52,x1=W-14,y0=26,y1=H-42;
+    const X=N=>x0+(x1-x0)*(Math.log10(N)-4)/4,Yl=s=>y1-(y1-y0)*(Math.log10(s)-Math.log10(20))/(Math.log10(400)-Math.log10(20));
+    for(let e=4;e<=8;e++){el("line",{x1:X(Math.pow(10,e)),y1:y0,x2:X(Math.pow(10,e)),y2:y1,class:"gridbg",opacity:.7},svg);tx(svg,X(Math.pow(10,e)),y1+16,p10(e),{class:"lbl","text-anchor":"middle"});}
+    [20,50,100,200,400].forEach(s=>{el("line",{x1:x0,y1:Yl(s),x2:x1,y2:Yl(s),class:"gridbg",opacity:.7},svg);tx(svg,x0-6,Yl(s)+4,String(s),{class:"lbl","text-anchor":"end"});});
+    el("line",{x1:x0,y1:y1,x2:x1,y2:y1,class:"axis"},svg);el("line",{x1:x0,y1:y0,x2:x0,y2:y1,class:"axis"},svg);
+    tx(svg,x0-6,y0-10,"Δσ (MPa, log)",{class:"lbl"});tx(svg,x1,y1+31,"N (cycles)",{class:"lbl","text-anchor":"end"});
+    const line=(F,attrs)=>{const s1=F*Math.cbrt(2e6/1e4),s2=F*Math.cbrt(2e6/1e8);el("line",Object.assign({x1:X(1e4),y1:Yl(s1),x2:X(1e8),y2:Yl(s2)},attrs),svg);};
+    [71,80,90,100].forEach(F=>{line(F,{stroke:"var(--muted)","stroke-width":1.1,"stroke-dasharray":"2 4"});});
+    tx(svg,X(3e7),Yl(100*Math.cbrt(2e6/3e7))-6,"FAT 100",{class:"lbl","text-anchor":"end","font-size":"11"});tx(svg,X(3e7),Yl(71*Math.cbrt(2e6/3e7))+14,"FAT 71",{class:"lbl","text-anchor":"end","font-size":"11"});
+    line(FAT,{stroke:"var(--mat)","stroke-width":3});
+    el("line",{x1:X(2e6),y1:y0,x2:X(2e6),y2:y1,stroke:"var(--eps)","stroke-width":1.2,"stroke-dasharray":"3 3"},svg);
+    tx(svg,X(2e6)+4,y1-6,"2 × 10⁶",{fill:"var(--eps)","font-size":"12"});
+    el("circle",{cx:X(2e6),cy:Yl(FAT),r:7,fill:"var(--sig)",stroke:"var(--card)","stroke-width":2.5},svg);
+    tx(svg,X(2e6)-10,Yl(FAT)-10,"FAT éq ≈ "+nf(FAT,0),{fill:"var(--sig)","font-weight":"700","font-size":"13","text-anchor":"end"});
+    let below=CL[0];CL.forEach(F=>{if(F<=FAT+1e-9)below=F;});
+    $("#m6ao").textContent=mmTxt(ai);$("#m6fo").textContent=sf.value+" mm";
+    const N80=Kc/Math.pow(80,3);
+    ro.innerHTML="<span class='tau'>a<sub>i</sub> = "+mmTxt(ai)+"</span><span class='eps'>a<sub>f</sub> = "+sf.value+" mm</span><span class='mat'>Δσ³·N = "+sciS(Kc)+" MPa³</span><span class='sig'>FAT<sub>éq</sub> ≈ "+nf(FAT,1)+" MPa</span><span class='mat'>classe normalisée retenue : FAT "+below+"</span><span class='eps'>N à 80 MPa : "+sciS(N80)+"</span>";
+    let m="La droite a une pente 3, comme toutes les courbes FAT : c'est l'exposant de Paris. ";
+    if(ai>=0.25e-3)m+="Avec un défaut de "+mmTxt(ai)+" (un caniveau), on obtient une classe d'environ "+nf(FAT,0)+" : celle d'un détail courant, brut de soudage.";
+    else if(ai>=0.08e-3)m+="Avec des micro-défauts de "+mmTxt(ai)+", la classe monte vers "+nf(FAT,0)+".";
+    else m+="Avec un pied meulé (défauts de "+mmTxt(ai)+"), la classe atteint environ "+nf(FAT,0)+" : c'est le gain des techniques d'amélioration.";
+    m+=" La fissure finale a<sub>f</sub> pèse peu : passe de 5 à 20 mm pour le vérifier.";
+    msg.innerHTML=m;
+  }
+  [sa,sf].forEach(x=>x.addEventListener("input",draw));
+  $$("#m6ex .btn").forEach(b=>b.addEventListener("click",()=>{sa.value=b.dataset.a;draw();}));
+  redraws.push(draw);draw();
+})();
+/* =========================================================
+   Quiz, check-list, sommaire, thème
+   ========================================================= */
+(function(){
+  const box=$("#quiz");if(!box)return;
+  const Q=[
+    {q:"Pendant la phase de traction d'un cycle, la pointe de la fissure :",o:["s'affûte","s'émousse et avance un peu","se referme","ne bouge pas"],c:1,e:"La plastification en pointe l'<b>émousse</b> et la fait avancer d'un pas ; la compression l'affûtera ensuite."},
+    {q:"Une strie de fatigue correspond à :",o:["un arrêt du chargement","un cycle de chargement","une heure de service","une inclusion"],c:1,e:"Dans le régime de Paris, <b>une strie = un cycle</b> ; leur espacement vaut da/dN."},
+    {q:"Les lignes d'arrêt :",o:["se voient seulement au MEB","marquent une interruption ou un changement du chargement","comptent les cycles","sont des fissures secondaires"],c:1,e:"Visibles à l'œil nu, elles racontent les <b>événements</b> (arrêts, changements), pas les cycles."},
+    {q:"Une petite zone de fatigue et une grande zone de rupture brutale indiquent :",o:["une contrainte maximale faible","une contrainte maximale forte","un matériau très tenace","une corrosion"],c:1,e:"a<sub>C</sub> = (K<sub>IC</sub>/(Yσ<sub>max</sub>))² : un a<sub>C</sub> petit signale un σ<sub>max</sub> <b>élevé</b>."},
+    {q:"Δσ = 50 MPa, Y = 2, a = 4 mm. ΔK vaut environ :",o:["0,4 MPa·√m","6,3 MPa·√m","200 MPa·√m","12,6 MPa·√m"],c:1,e:"ΔK = 50 × 2 × √0,004 = 100 × 0,0632 ≈ <b>6,3 MPa·√m</b> (a en mètres !)."},
+    {q:"À Δσ constant, si la fissure devient quatre fois plus longue, ΔK :",o:["reste constant","double","quadruple","est divisé par deux"],c:1,e:"ΔK ∝ √a : √4 = 2, ΔK <b>double</b>."},
+    {q:"Sous le seuil ΔK<sub>S</sub> :",o:["la fissure se propage très vite","la fissure ne se propage pas","la pièce casse","la loi de Paris s'applique"],c:1,e:"Domaine 1 : <b>pas de propagation</b>, la fissure dort."},
+    {q:"Loi de Paris avec m = 3 : si ΔK double, la vitesse est :",o:["doublée","triplée","multipliée par 8","multipliée par 9"],c:2,e:"2³ = <b>8</b>."},
+    {q:"Pour passer C de (m/cycle ; MPa·√m) à (mm/cycle ; N·mm<sup>−3/2</sup>), on multiplie par :",o:["1 000","1 000/31,62<sup>m</sup>","31,62<sup>m</sup>","1/1 000"],c:1,e:"Facteur 1 000 pour les longueurs, divisé par 31,62<sup>m</sup> pour l'unité de K : <b>1 000/31,62<sup>m</sup></b>."},
+    {q:"La durée de propagation dépend surtout :",o:["de la longueur critique a<sub>C</sub>","de la taille du défaut initial a<sub>0</sub>","de R<sub>e</sub>","de la couleur de la cassure"],c:1,e:"N<sub>p</sub> ∝ 1/√a<sub>0</sub> − 1/√a<sub>C</sub> : le terme en <b>a<sub>0</sub></b> domine. « La vie est dans le petit »."},
+    {q:"Avec une taille détectable a<sub>d</sub>, l'intervalle d'inspection doit être au plus :",o:["N(a<sub>0</sub> → a<sub>C</sub>)","N(a<sub>d</sub> → a<sub>C</sub>)/2","2 × N(a<sub>d</sub> → a<sub>C</sub>)","10⁶ cycles"],c:1,e:"On veut au moins deux occasions de trouver la fissure entre a<sub>d</sub> et a<sub>C</sub> : <b>N(a<sub>d</sub> → a<sub>C</sub>)/2</b>."},
+    {q:"La pente 3 des courbes FAT des soudures vient :",o:["d'un choix arbitraire des normes","de l'exposant m ≈ 3 de la loi de Paris","de la loi de Basquin des éprouvettes lisses","de la limite d'élasticité"],c:1,e:"Une soudure passe sa vie à propager : Δσ³·N = constante découle de <b>Paris</b>."}
+  ];
+  let score=0,done=0;const sc=$("#qzScore");
+  function upd(){let t="Score : "+score+" / "+Q.length;if(done===Q.length)t+=score>=10?"  ·  🎉 série bouclée":score>=7?"  ·  relis les explications":"  ·  refais un tour des chapitres";sc.textContent=t;}
+  function render(){box.innerHTML="";score=0;done=0;
+    Q.forEach((it,n)=>{const d=document.createElement("div");d.className="qz";
+      d.innerHTML='<p class="qz-q"><b>'+(n+1)+".</b> "+it.q+'</p><div class="qz-o"></div><div class="qz-e" hidden></div>';
+      const o=d.querySelector(".qz-o"),ex=d.querySelector(".qz-e");let answered=false;
+      it.o.forEach((txt,i)=>{const b=document.createElement("button");b.type="button";b.className="qz-b";b.innerHTML=String.fromCharCode(65+i)+". "+txt;
+        b.addEventListener("click",()=>{if(answered)return;answered=true;done++;const ok=i===it.c;if(ok)score++;b.classList.add(ok?"ok":"ko");o.children[it.c].classList.add("ok");ex.hidden=false;ex.innerHTML=(ok?"✅ <b>Bien joué.</b> ":"❌ <b>Pas tout à fait.</b> ")+it.e;upd();});
+        o.appendChild(b);});
+      box.appendChild(d);});
+    upd();}
+  $("#qzReset").addEventListener("click",render);render();
+})();
+(function(){
+  const boxes=$$("#checklist input[type=checkbox]"),msg=$("#checkMsg"),KEY="fatigue-cours4-check";
+  if(!boxes.length)return;
+  let saved=[];try{saved=JSON.parse(localStorage.getItem(KEY)||"[]")||[];}catch(e){saved=[];}
+  boxes.forEach(b=>{b.checked=saved.indexOf(b.dataset.c)>=0;});
+  function upd(){const on=boxes.filter(b=>b.checked).map(b=>b.dataset.c);try{localStorage.setItem(KEY,JSON.stringify(on));}catch(e){}
+    msg.innerHTML=on.length===boxes.length?"🎉 <b>Tout est coché : la série est bouclée !</b>":on.length+" / "+boxes.length+" : reviens sur les points non cochés (les manipulations sont faites pour ça).";}
+  boxes.forEach(b=>b.addEventListener("change",upd));upd();
+})();
+(function(){
+  const links=$$(".toc a"),tin=$(".toc-in");
+  if(!links.length||!("IntersectionObserver" in window))return;
+  const map={};links.forEach(a=>{map[a.getAttribute("href").slice(1)]=a;});
+  const obs=new IntersectionObserver(ents=>{ents.forEach(en=>{if(!en.isIntersecting)return;const a=map[en.target.id];if(!a)return;
+    links.forEach(l=>l.classList.toggle("on",l===a));
+    if(tin){const tgt=a.offsetLeft-tin.clientWidth/2+a.offsetWidth/2;try{tin.scrollTo({left:tgt,behavior:RM?"auto":"smooth"});}catch(e){tin.scrollLeft=tgt;}}});},{rootMargin:"-45% 0px -50% 0px"});
+  Object.keys(map).forEach(id=>{const s=document.getElementById(id);if(s)obs.observe(s);});
+})();
+(function(){
+  const b=$("#themeBtn");if(!b)return;const KEY="fatigue-theme",root=document.documentElement;
+  const lab={auto:"◐ Thème : automatique",light:"☀️ Thème : clair",dark:"🌙 Thème : sombre"};
+  let t="auto";try{t=localStorage.getItem(KEY)||"auto";}catch(e){}
+  function apply(){if(t==="auto")root.removeAttribute("data-theme");else root.setAttribute("data-theme",t);b.textContent=lab[t];}
+  b.addEventListener("click",()=>{t=t==="auto"?"light":t==="light"?"dark":"auto";try{localStorage.setItem(KEY,t);}catch(e){}apply();});
+  apply();
+})();
+})();
+</script>
+<dialog class="photo-viewer" id="photo-viewer" aria-label="Photographie agrandie" aria-describedby="photo-viewer-title">
+  <div class="photo-viewer-head"><p class="photo-viewer-title" id="photo-viewer-title" role="heading" aria-level="2">Photographie</p><button class="btn" id="photo-close" type="button" autofocus>Fermer</button></div>
+  <div class="photo-viewer-toolbar"><button class="btn" id="photo-zoom" type="button" aria-pressed="false">Taille réelle</button><p id="photo-viewer-help">En taille réelle, fais défiler l’image pour explorer ses détails.</p></div>
+  <div class="photo-viewer-stage" id="photo-stage" tabindex="0" role="region" aria-label="Détails de la photographie" aria-describedby="photo-viewer-help"></div>
+  <div class="photo-viewer-caption" id="photo-caption"></div>
+</dialog>
+<script id="course-photo-script">
+(function(){
+  const viewer=document.getElementById('photo-viewer');
+  if(!viewer || typeof viewer.showModal!=='function')return;
+  const stage=document.getElementById('photo-stage'),caption=document.getElementById('photo-caption');
+  const title=document.getElementById('photo-viewer-title'),zoom=document.getElementById('photo-zoom');
+  let opener=null;
+  document.querySelectorAll('.course-photo').forEach(figure=>{
+    const button=figure.querySelector('.photo-open');
+    button.hidden=false;
+    button.addEventListener('click',()=>{
+      opener=button;
+      title.textContent=figure.querySelector('.photo-title').textContent;
+      const img=figure.querySelector('img').cloneNode(true);
+      img.loading='eager';
+      stage.replaceChildren(img);
+      caption.replaceChildren(figure.querySelector('.photo-legend').cloneNode(true),figure.querySelector('.photo-credit').cloneNode(true));
+      stage.classList.remove('is-zoomed');
+      zoom.setAttribute('aria-pressed','false');zoom.textContent='Taille réelle';
+      document.body.classList.add('photo-modal-open');
+      viewer.showModal();viewer.scrollTop=0;stage.scrollTo(0,0);
+    });
+  });
+  zoom.addEventListener('click',()=>{
+    const enlarged=stage.classList.toggle('is-zoomed');
+    zoom.setAttribute('aria-pressed',String(enlarged));
+    zoom.textContent=enlarged?'Vue d’ensemble':'Taille réelle';
+    stage.scrollTo(0,0);
+  });
+  document.getElementById('photo-close').addEventListener('click',()=>viewer.close());
+  viewer.addEventListener('click',event=>{
+    if(event.target!==viewer)return;
+    const rect=viewer.getBoundingClientRect();
+    if(event.clientX<rect.left || event.clientX>rect.right || event.clientY<rect.top || event.clientY>rect.bottom)viewer.close();
+  });
+  viewer.addEventListener('close',()=>{
+    document.body.classList.remove('photo-modal-open');
+    stage.replaceChildren();caption.replaceChildren();
+    if(opener)opener.focus({preventScroll:true});
+  });
+})();
+</script>
+</body>
+</html>

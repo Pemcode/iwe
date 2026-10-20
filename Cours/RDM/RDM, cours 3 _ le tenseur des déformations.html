@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RDM, cours 3 : le tenseur des déformations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@500;600;700&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F3F6F9; --paper-2:#E6ECF2; --card:#FFFFFF; --ink:#17212B; --muted:#56626F; --line:#C5CFD9;
+  --grid:rgba(40,90,160,.075);
+  --sig:#CF2438; --tau:#8A34B6; --eps:#1B5ED3; --gam:#06849A; --frc:#D46A00; --mat:#26844A;
+  --ok:#26844A; --warn:#B86E00; --bad:#C62828;
+  --lv2:#E4EBF2; --hl:#FFF3B0;
+  --font-body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-head:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --font-math:"STIX Two Text","Cambria Math","Cambria","Times New Roman",serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+    --grid:rgba(120,160,220,.07);
+    --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A;
+    --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+  --grid:rgba(120,160,220,.07);
+  --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A;
+  --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+  color-scheme: dark;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0;color:var(--ink);font-family:var(--font-body);font-size:17.5px;line-height:1.62;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;
+}
+img,svg{max-width:100%}
+.wrap{max-width:800px;margin:0 auto;padding:0 20px}
+.wide{max-width:980px}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.1;margin:0}
+h3{font-size:1.65rem;font-weight:600;margin:2rem 0 .6rem}
+h4{font-size:1.3rem;font-weight:600;margin:1.4rem 0 .4rem}
+p{margin:.7em 0}
+a{color:var(--eps)}
+b,strong{font-weight:700}
+small{font-size:.8em}
+sub{font-size:.72em}
+.m{font-family:var(--font-math);font-size:1.08em;white-space:nowrap}
+.sig{color:var(--sig)} .tau{color:var(--tau)} .eps{color:var(--eps)} .gam{color:var(--gam)} .frc{color:var(--frc)} .mat{color:var(--mat)} .mut{color:var(--muted)}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .12em;line-height:1.1}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 .2em .08em}
+.frac>span:last-child{padding:.08em .2em 0}
+.vec{position:relative;display:inline-block}
+.vec::after{content:"→";position:absolute;left:0;right:0;top:-.72em;font-size:.62em;text-align:center;font-family:var(--font-body)}
+
+/* ---------- hero ---------- */
+.hero{padding:34px 0 10px}
+.title-block{border:2.5px solid var(--ink);background:var(--card);display:grid;grid-template-columns:1fr 290px}
+.tb-main{padding:22px 24px;border-right:2.5px solid var(--ink)}
+.tb-series{margin:0 0 .5rem;color:var(--muted);font-size:.95rem}
+.hero h1{font-size:clamp(2.4rem,6vw,4.1rem);font-weight:700;letter-spacing:-.01em}
+.tb-cells{display:grid;grid-template-rows:repeat(4,1fr)}
+.tb-cells>div{padding:9px 16px;border-bottom:1.5px solid var(--ink);display:flex;flex-direction:column;justify-content:center}
+.tb-cells>div:last-child{border-bottom:0}
+.tb-cells small{color:var(--muted);font-size:.78rem}
+.tb-cells b{font-family:var(--font-head);font-size:1.3rem;font-weight:600;line-height:1.15}
+.lede{font-size:1.13rem;max-width:760px;margin:1.2rem 0}
+@media (max-width:760px){.title-block{grid-template-columns:1fr}.tb-main{border-right:0;border-bottom:2.5px solid var(--ink)}.tb-cells{grid-template-rows:none;grid-template-columns:1fr 1fr}.tb-cells>div:nth-child(odd){border-right:1.5px solid var(--ink)}.tb-cells>div:nth-child(3){border-bottom:0}}
+
+/* code couleur */
+.cc{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:stretch;margin:1rem 0 .4rem}
+.cc-box{background:var(--card);border:2px solid var(--line);padding:12px 14px;border-radius:4px}
+.cc-cause{border-color:var(--sig)} .cc-link{border-color:var(--mat)} .cc-eff{border-color:var(--eps)}
+.cc-box small{display:block;color:var(--muted);font-size:.82rem;line-height:1.3}
+.cc-syms{font-family:var(--font-math);font-size:2.3rem;line-height:1.2;display:flex;gap:.5em;margin:.2rem 0}
+.cc-box p{margin:0;font-size:.9rem;line-height:1.35}
+.cc-arrow{align-self:center;font-size:1.8rem;color:var(--muted)}
+@media (max-width:700px){.cc{grid-template-columns:1fr}.cc-arrow{transform:rotate(90deg);justify-self:center;line-height:1}}
+.cc-note{font-size:.95rem;color:var(--muted)}
+
+/* ---------- nav ---------- */
+.toc{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-bottom:1.5px solid var(--line);padding-top:env(safe-area-inset-top,0px);margin-top:18px}
+.toc-in{display:flex;gap:6px;overflow-x:auto;padding:9px 20px;max-width:980px;margin:0 auto;scrollbar-width:thin}
+.toc a{flex:none;text-decoration:none;color:var(--ink);font-size:.88rem;padding:4px 11px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);white-space:nowrap}
+.toc a.on{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.toc a:focus-visible,.btn:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--eps);outline-offset:2px}
+
+/* ---------- sections ---------- */
+section.chap{padding:46px 0 10px}
+.cartouche{display:grid;grid-template-columns:86px 1fr 240px;border:2.5px solid var(--ink);background:var(--card);margin-bottom:1.4rem}
+.c-num{font-family:var(--font-head);font-size:3.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;border-right:2.5px solid var(--ink)}
+.c-title{padding:14px 18px;border-right:2.5px solid var(--ink)}
+.c-title h2{font-size:2.1rem;font-weight:700}
+.c-title p{margin:.25rem 0 0;color:var(--muted)}
+.c-img{padding:12px 14px;display:flex;gap:12px;align-items:center;background:var(--paper-2)}
+.c-img .ico{font-size:2.3rem;line-height:1}
+.c-img small{display:block;color:var(--muted);font-size:.78rem}
+.c-img span{font-size:.95rem;line-height:1.3}
+@media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
+
+/* niveaux */
+.lv{margin:1.2rem 0;padding:6px 22px 14px;border-radius:4px}
+.lv1{background:var(--card);border:2px solid var(--ink)}
+.lv2{background:var(--lv2);border-left:6px solid var(--ink)}
+.lv-h{display:flex;align-items:center;gap:10px;font-family:var(--font-head);font-size:1.35rem;font-weight:600;margin:10px 0 4px}
+.lv-h .tag{font-size:.95rem;font-family:var(--font-body);font-weight:400;color:var(--muted)}
+
+/* formule */
+.fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:560px;text-align:center;border-radius:3px}
+.fx .big{font-family:var(--font-math);font-size:2.2rem;line-height:1.35}
+.fx .cap{font-size:.85rem;color:var(--muted);margin:.2rem 0 0}
+.syms{margin:.6rem 0;display:grid;grid-template-columns:auto 1fr;gap:.35rem 1rem;align-items:baseline}
+.syms dt{font-family:var(--font-math);font-size:1.3rem;text-align:right;white-space:nowrap}
+.syms dd{margin:0}
+.def{margin:.9rem 0;padding:.5rem .9rem;border-left:3px dotted var(--muted);font-size:.96rem;background:color-mix(in srgb,var(--card) 60%,transparent)}
+.def b:first-child{font-family:var(--font-head);font-size:1.08rem;font-weight:600}
+.tip{margin:1rem 0;padding:.7rem 1rem;border:1.5px dashed var(--mat);border-radius:4px;font-size:.97rem}
+.warn{margin:1rem 0;padding:.7rem 1rem;border:2px solid var(--bad);border-radius:4px;font-size:.97rem;background:color-mix(in srgb,var(--bad) 7%,transparent)}
+.meta{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--frc);border-radius:4px;background:color-mix(in srgb,var(--frc) 6%,transparent)}
+.mnemo{margin:1rem 0;padding:.7rem 1rem;background:var(--hl);border-radius:4px;font-size:.98rem}
+.fun{margin:1.2rem 0;padding:.8rem 1rem;border:2px dashed var(--muted);border-radius:10px;background:var(--card);font-size:.98rem}
+.fun-h{display:block;margin-bottom:.35rem;font-family:var(--font-head);font-size:1.15rem;font-weight:600;letter-spacing:.02em}
+
+/* labos (animations) */
+.lab{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:14px 16px 12px;margin:1.4rem 0}
+.lab-h{font-family:var(--font-head);font-size:1.3rem;font-weight:600;margin:0 0 .2rem}
+.lab-sub{margin:0 0 .6rem;color:var(--muted);font-size:.92rem}
+.lab svg{display:block;width:100%;height:auto;color:var(--ink);font-family:var(--font-body)}
+.ctrl{display:grid;grid-template-columns:minmax(120px,auto) 1fr minmax(90px,auto);gap:6px 12px;align-items:center;margin:.6rem 0}
+.ctrl label{font-size:.95rem}
+.ctrl output{font-family:var(--font-math);font-size:1.1rem;text-align:right}
+input[type=range]{width:100%;accent-color:var(--ink);height:28px}
+input.r-frc{accent-color:var(--frc)} input.r-eps{accent-color:var(--eps)} input.r-mat{accent-color:var(--mat)} input.r-geo{accent-color:var(--muted)} input.r-th{accent-color:var(--tau)}
+.btns{display:flex;flex-wrap:wrap;gap:6px;margin:.5rem 0}
+.btn{font-family:var(--font-body);font-size:.9rem;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 13px;cursor:pointer}
+.btn:hover{background:var(--paper-2)}
+.btn.on{background:var(--ink);color:var(--paper)}
+.readout{font-family:var(--font-math);font-size:1.12rem;background:var(--paper-2);border-radius:4px;padding:.5rem .8rem;margin:.5rem 0;overflow-x:auto}
+.status{font-size:.97rem;margin:.4rem 0}
+.gauge{position:relative;height:16px;background:var(--paper-2);border-radius:8px;margin:1.4rem 0 1.6rem;overflow:visible}
+.gauge .fill{position:absolute;left:0;top:0;bottom:0;border-radius:8px;transition:width .15s}
+.gauge .mk{position:absolute;top:-6px;bottom:-6px;width:2px;background:var(--ink)}
+.gauge .mk span{position:absolute;top:22px;left:50%;transform:translateX(-50%);font-size:.78rem;white-space:nowrap}
+.radios{display:flex;flex-wrap:wrap;gap:6px 14px;margin:.4rem 0;font-size:.95rem}
+.radios label{display:flex;gap:6px;align-items:center;cursor:pointer}
+
+/* svg classes */
+svg text{fill:currentColor;font-size:13px}
+svg .lbl{font-size:12.5px;fill:var(--muted)}
+svg .big{font-size:18px;font-family:var(--font-math);font-weight:600}
+svg .mth{font-family:var(--font-math);font-size:17px}
+.arr line{stroke:currentColor}
+.arr polygon{fill:currentColor}
+.arr.ink{color:var(--ink)}
+.arr.dim{opacity:.16}
+.arr.hl line{stroke-width:5}
+.arr[data-k]{cursor:pointer}
+svg .bar{fill:var(--paper-2);stroke:var(--ink);stroke-width:1.6}
+svg .ghost{opacity:.3}
+svg .cut{stroke:var(--ink);stroke-width:1.5;stroke-dasharray:6 4}
+svg .cutline{stroke:var(--ink);stroke-width:2.5}
+svg .thin-dash{fill:none;stroke:var(--muted);stroke-width:1.2;stroke-dasharray:4 4}
+svg .ref{stroke:var(--muted);stroke-width:1.3;stroke-dasharray:4 3}
+svg .ref-rect{fill:none;stroke:var(--muted);stroke-width:1.4;stroke-dasharray:6 4}
+svg .gridl{stroke:var(--eps);stroke-width:1.2;opacity:.75}
+svg .wall{fill:var(--muted);opacity:.55}
+svg .axis{stroke:var(--ink);stroke-width:1.4}
+svg .tick{stroke:var(--muted);stroke-width:1}
+svg .gridbg{stroke:var(--line);stroke-width:1}
+svg .curve-ghost{fill:none;stroke:var(--muted);stroke-width:2;opacity:.45}
+svg .curve{fill:none;stroke:var(--ink);stroke-width:3.2;stroke-linejoin:round}
+svg .unload{stroke:var(--mat);stroke-width:2.4;stroke-dasharray:7 4}
+svg .z-el{fill:var(--eps);opacity:.08} svg .z-pl{fill:var(--frc);opacity:.08} svg .z-str{fill:var(--sig);opacity:.09}
+svg .spec{fill:var(--paper-2);stroke:var(--ink);stroke-width:1.8}
+svg .grip{fill:var(--muted);opacity:.7}
+svg .card-a{fill:color-mix(in srgb,var(--gam) 22%,var(--card));stroke:var(--ink);stroke-width:1}
+svg .card-b{fill:color-mix(in srgb,var(--gam) 10%,var(--card));stroke:var(--ink);stroke-width:1}
+svg .plate{fill:var(--ink);opacity:.8}
+svg .arc{fill:none;stroke-width:2}
+svg .face{stroke:var(--ink);stroke-width:1.6}
+svg .face-front{fill:color-mix(in srgb,var(--eps) 7%,var(--card))}
+svg .face-right{fill:color-mix(in srgb,var(--eps) 14%,var(--card))}
+svg .face-top{fill:color-mix(in srgb,var(--eps) 20%,var(--card))}
+svg .hidden-e{stroke:var(--muted);stroke-width:1.2;stroke-dasharray:4 4}
+svg .trace{fill:none;stroke:var(--tau);stroke-width:2.6;stroke-linejoin:round;stroke-linecap:round}
+svg .mohr{fill:none;stroke:var(--ink);stroke-width:1.4;stroke-dasharray:6 5}
+svg .pt{stroke:var(--card);stroke-width:2}
+#spinner{transform-box:fill-box;transform-origin:center}
+#spinner.spinning{animation:spin 3.2s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){#spinner.spinning{animation:none;transform:rotate(22deg)}}
+
+/* matrice */
+.matrow{display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:center}
+.cubebox{flex:1 1 300px;max-width:400px}
+.matbox{flex:1 1 280px}
+.mtx{border-collapse:collapse;font-family:var(--font-math);font-size:1.25rem;margin:0 auto}
+.mtx th{font-family:var(--font-body);font-weight:400;font-size:.75rem;color:var(--muted);padding:2px 6px}
+.mtx td.c{padding:6px 12px;text-align:center;cursor:pointer;border-radius:4px;min-width:62px}
+.mtx td.c:hover{background:var(--paper-2)}
+.mtx td.c.act{background:var(--hl);outline:2px solid var(--ink)}
+.mtx td.c.zero{color:var(--muted)}
+.mtx td.bl{border-left:2.5px solid var(--ink);border-top:2.5px solid var(--ink);border-bottom:2.5px solid var(--ink);width:8px;padding:0}
+.mtx td.br{border-right:2.5px solid var(--ink);border-top:2.5px solid var(--ink);border-bottom:2.5px solid var(--ink);width:8px;padding:0}
+.mtx td.c.blk{box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--eps) 50%,transparent)}
+.mtx-txt{font-size:.95rem;min-height:4.6em;background:var(--paper-2);border-radius:4px;padding:.6rem .8rem;margin-top:.6rem}
+.emtx{font-family:var(--font-math);font-size:1.1rem;overflow-x:auto;background:var(--lv2);padding:.6rem .8rem;border-radius:4px;margin-top:.7rem}
+.inlinemat{display:inline-grid;grid-template-columns:repeat(3,auto);gap:2px 16px;padding:4px 10px;border-left:2px solid currentColor;border-right:2px solid currentColor;border-radius:6px;vertical-align:middle;text-align:center}
+
+/* tableaux */
+.tbl-wrap{overflow-x:auto;margin:1rem 0}
+table.data{border-collapse:collapse;width:100%;font-size:.95rem;background:var(--card)}
+table.data th,table.data td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:middle}
+table.data th{font-family:var(--font-head);font-weight:600;font-size:1.05rem;background:var(--paper-2)}
+.ebar{height:10px;background:var(--mat);border-radius:5px;min-width:2px}
+
+/* parcours */
+.route{list-style:none;padding:0;margin:1rem 0;position:relative}
+.route::before{content:"";position:absolute;left:17px;top:10px;bottom:10px;width:4px;background:var(--line);border-radius:2px}
+.route li{position:relative;padding:0 0 14px 52px}
+.route li .dot{position:absolute;left:4px;top:0;width:30px;height:30px;border-radius:50%;border:3px solid var(--ink);background:var(--card);font-family:var(--font-head);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+.route li.here .dot{background:var(--ink);color:var(--paper)}
+.route li b{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.route li p{margin:.1rem 0 0;font-size:.95rem}
+.route li .dur{color:var(--muted);font-size:.85rem}
+.plan48{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:.8rem 0}
+.plan48>div{background:var(--card);border:1.5px solid var(--line);padding:8px 10px;border-radius:4px;font-size:.9rem}
+.plan48 b{display:block;font-family:var(--font-head);font-size:1.05rem}
+@media (max-width:640px){.plan48{grid-template-columns:1fr 1fr}}
+
+/* mise au point */
+.fix{border:2.5px solid var(--ink);background:var(--card);padding:6px 22px 16px;margin:1.2rem 0}
+.fix-diag{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;margin:1rem 0;font-family:var(--font-math)}
+.fix-diag .bx{border:2.5px solid;padding:8px 14px;text-align:center;border-radius:4px;min-width:150px}
+.fix-diag .bx small{display:block;font-family:var(--font-body);font-size:.78rem;color:var(--muted)}
+.fix-diag .bx .s{font-size:1.9rem;line-height:1.2}
+.fix-diag .ar{font-size:1.4rem;color:var(--mat);text-align:center;font-family:var(--font-body)}
+.fix-diag .ar small{display:block;font-size:.78rem}
+
+/* exercices / quiz */
+.exo{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--ink);padding:6px 20px 12px;margin:1.2rem 0;border-radius:4px}
+.exo h4{margin-top:.8rem}
+.exo .lvtag{font-family:var(--font-body);font-size:.85rem;font-weight:400;color:var(--muted);margin-left:.4rem}
+details{margin:.6rem 0}
+summary{cursor:pointer;font-weight:700;padding:4px 0}
+details .sol{padding:.4rem .9rem;border-left:3px solid var(--mat);margin:.4rem 0}
+.qz{background:var(--card);border:1.5px solid var(--line);border-radius:6px;padding:10px 16px;margin:.8rem 0}
+.qz-q{margin:.3rem 0 .6rem}
+.qz-o{display:flex;flex-direction:column;gap:6px}
+.qz-b{text-align:left;font-family:var(--font-body);font-size:.97rem;padding:8px 12px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:5px;cursor:pointer}
+.qz-b:hover{border-color:var(--ink)}
+.qz-b.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--card))}
+.qz-b.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--card))}
+.qz-e{font-size:.94rem;margin:.6rem 0 .2rem}
+.score{position:sticky;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);display:inline-block;background:var(--ink);color:var(--paper);padding:6px 14px;border-radius:999px;font-size:.95rem;margin:.6rem 0}
+
+/* fiche mémoire */
+.fiche{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:2.5px solid var(--ink);background:var(--card);margin:1rem 0}
+.fiche>div{padding:12px 14px;border-right:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}
+.fiche>div:nth-child(3n){border-right:0}
+.fiche>div:nth-last-child(-n+3){border-bottom:0}
+.fiche .ic{font-size:1.9rem;line-height:1}
+.fiche h4{margin:.3rem 0 .2rem;font-size:1.15rem}
+.fiche .f{font-family:var(--font-math);font-size:1.15rem;margin:.2rem 0}
+.fiche p{margin:.2rem 0 0;font-size:.88rem;color:var(--muted)}
+@media (max-width:720px){.fiche{grid-template-columns:1fr 1fr}.fiche>div{border-right:1.5px solid var(--ink)!important;border-bottom:1.5px solid var(--ink)!important}.fiche>div:nth-child(2n){border-right:0!important}}
+.gloss{display:grid;grid-template-columns:minmax(150px,220px) 1fr;gap:0;border-top:1.5px solid var(--line);margin:1rem 0}
+.gloss dt,.gloss dd{border-bottom:1.5px solid var(--line);padding:7px 8px;margin:0}
+.gloss dt{font-weight:700}
+.gloss dd{font-size:.95rem}
+@media (max-width:600px){.gloss{grid-template-columns:1fr}.gloss dt{border-bottom:0;padding-bottom:0}}
+.check label{display:flex;gap:10px;align-items:flex-start;padding:5px 0;cursor:pointer}
+.check input{margin-top:.35em;width:18px;height:18px;accent-color:var(--mat)}
+footer{padding:40px 0 60px;color:var(--muted);font-size:.9rem}
+hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
+
+/* ---------- ajouts cours 2 ---------- */
+:root{--weld:#9A5B12}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--weld:#E7A95A}}
+:root[data-theme="dark"]{--weld:#E7A95A}
+.weld{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--weld);border-radius:4px;background:color-mix(in srgb,var(--weld) 7%,transparent)}
+.weld>b:first-child{font-family:var(--font-head);font-size:1.15rem;font-weight:600;color:var(--weld)}
+.recall{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:1rem 0}
+.recall>div{background:var(--card);border:1.5px solid var(--line);border-radius:4px;padding:8px 12px;font-size:.92rem}
+.recall .f{font-family:var(--font-math);font-size:1.15rem}
+@media (max-width:640px){.recall{grid-template-columns:1fr}}
+/* machine à multiplier */
+.mm-grid{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:center;margin:.6rem 0}
+.mm-in{display:grid;grid-template-columns:repeat(3,70px);gap:4px;padding:6px 8px;border-left:2.5px solid var(--ink);border-right:2.5px solid var(--ink);border-radius:8px}
+.mm-in input,.mm-v input,.wl-in input{width:100%;font-family:var(--font-math);font-size:1.05rem;text-align:center;border:1.5px solid var(--line);border-radius:4px;background:var(--paper);color:var(--ink);padding:3px 2px}
+.mm-in input[readonly]{background:var(--paper-2);color:var(--muted);border-style:dashed}
+.mm-in input.act,.mm-v input.act{background:var(--hl);border-color:var(--ink)}
+.mm-v{display:grid;grid-template-columns:88px;gap:4px;padding:6px 8px;border-left:2.5px solid var(--ink);border-right:2.5px solid var(--ink);border-radius:8px}
+.mm-T{display:grid;grid-template-columns:86px;gap:4px;padding:6px 8px;border-left:2.5px solid var(--ink);border-right:2.5px solid var(--ink);border-radius:8px}
+.mm-T div{font-family:var(--font-math);font-size:1.05rem;text-align:center;padding:3px 2px;min-height:1.9em;border-radius:4px;background:var(--paper-2)}
+.mm-T div.act{background:var(--hl);outline:2px solid var(--ink)}
+.mm-op{font-family:var(--font-math);font-size:1.6rem}
+.mm-lab{font-size:.78rem;color:var(--muted);text-align:center}
+.mm-col{display:flex;flex-direction:column;align-items:center;gap:3px}
+.mm-steps{font-family:var(--font-math);font-size:1.05rem;background:var(--paper-2);border-radius:4px;padding:.6rem .9rem;margin:.6rem 0;min-height:3em;overflow-x:auto}
+.mm-steps div{margin:.15rem 0}
+.mm-steps .now{background:var(--hl);border-radius:3px;padding:0 .3rem}
+/* cordon */
+.wl-in{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px 14px;margin:.6rem 0}
+.wl-in label{font-size:.88rem;color:var(--muted);display:flex;flex-direction:column;gap:2px}
+.wl-in select{font-family:var(--font-body);font-size:.95rem;border:1.5px solid var(--line);border-radius:4px;background:var(--paper);color:var(--ink);padding:4px}
+svg .plate2{fill:var(--paper-2);stroke:var(--ink);stroke-width:1.6}
+svg .weldf{fill:color-mix(in srgb,var(--weld) 30%,var(--card));stroke:var(--ink);stroke-width:1.6}
+svg .throat{stroke:var(--weld);stroke-width:3;stroke-dasharray:7 4}
+.arr.weldc{color:var(--weld)}
+input.r-gam{accent-color:var(--gam)}
+.hp{display:inline-block;font-size:.75rem;font-weight:700;padding:1px 7px;border-radius:9px;background:var(--weld);color:var(--card);vertical-align:middle;margin-left:6px}
+@media (max-width:700px){.m{white-space:normal}.fx{padding:12px 10px}.fx .big{font-size:1.45rem!important}}
+.fx{overflow-x:auto}
+</style>
+<style id="course-photo-style">
+/* Photographies documentées : compléments aux manipulations, lisibles hors ligne. */
+.photo-study{margin:1.8rem 0 2rem;padding-top:.4rem;border-top:3px solid var(--weld,var(--cL,#a46d40))}
+.photo-study>h3{margin:.6rem 0;font-size:1.65rem}
+.photo-intro{color:var(--muted,var(--ink2,#65717e));font-size:.96rem}
+.photo-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start}
+.course-photo{min-width:0;margin:1rem 0;background:var(--card,var(--paper,#fff));border:1.5px solid var(--line,var(--rule,#aeb9c2));border-radius:7px;overflow:hidden}
+.photo-media{position:relative;width:fit-content;max-width:100%;margin-inline:auto;line-height:0}
+.photo-media>img{display:block;max-width:100%;width:auto;height:auto;max-height:55vh;background:#fff}
+.course-photo figcaption{padding:12px 15px;font-size:.94rem}
+.photo-title{display:block;font-family:var(--font-head,inherit);font-size:1.3rem;line-height:1.2;color:var(--ink)}
+.photo-legend p{margin:.55rem 0}
+.photo-credit{font-size:.78rem;line-height:1.5;color:var(--muted,var(--ink2,#65717e));overflow-wrap:anywhere}
+.photo-open.btn{position:absolute;right:6px;bottom:calc(6px + var(--photo-footer,0%));display:grid;place-items:center;width:36px;height:36px;min-height:0;margin:0;padding:7px;border:1px solid rgba(255,255,255,.55);border-radius:6px;background:rgba(10,18,24,.48);color:#fff;opacity:.8;cursor:pointer;line-height:1;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.photo-open.btn:hover,.photo-open.btn:focus-visible{opacity:1;background:rgba(10,18,24,.8)}
+.photo-open.btn:focus-visible{outline:3px solid #f09828;outline-offset:2px}
+.photo-open svg{display:block;width:20px;height:20px;max-width:none;pointer-events:none}
+.photo-open.btn[hidden]{display:none}
+.photo-scale{font-size:.86rem;color:var(--muted,var(--ink2,#65717e))}
+.photo-question{padding:12px 16px;border-left:4px solid var(--mat,var(--good,#278158));background:var(--paper-2,var(--bg,#eef1f4));border-radius:0 5px 5px 0;font-size:.96rem}
+.photo-question details{margin-bottom:0}
+.photo-viewer{width:min(1120px,calc(100vw - 24px));max-width:calc(100vw - 24px);max-height:calc(100dvh - 24px);padding:16px;border:2px solid var(--line,var(--rule,#aeb9c2));border-radius:10px;background:var(--card,var(--paper,#fff));color:var(--ink);overflow:auto;overscroll-behavior:contain}
+.photo-viewer::backdrop{background:rgba(0,0,0,.78)}
+.photo-viewer-head{display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:-16px;background:var(--card,var(--paper,#fff));padding:8px 0;z-index:1}
+.photo-viewer-title{font-family:var(--font-head,inherit);font-size:1.45rem;font-weight:700;line-height:1.2;margin:0}
+.photo-viewer-head .btn{flex:none;min-height:42px}
+.photo-viewer-toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:4px 0 10px}
+.photo-viewer-toolbar p{font-size:.82rem;color:var(--muted,var(--ink2,#65717e));margin:0}
+.photo-viewer-stage{max-height:58vh;max-height:58dvh;overflow:auto;background:#e8e8e8;overscroll-behavior:contain;outline-offset:2px}
+.photo-viewer-stage:focus-visible{outline:3px solid var(--eps,var(--cL,#dc8c28))}
+.photo-viewer-stage img{display:block;max-height:58vh;max-height:58dvh;max-width:100%;width:auto;height:auto;margin:auto}
+.photo-viewer-stage.is-zoomed img{max-width:none;max-height:none;margin:0}
+.photo-viewer-caption{font-size:.94rem}
+body.photo-modal-open{overflow:hidden}
+@media(max-width:620px){.photo-pair{grid-template-columns:1fr}.photo-viewer{padding:12px}.photo-viewer-head{top:-12px}.photo-viewer-title{font-size:1.2rem}.photo-viewer-stage,.photo-viewer-stage img{max-height:48dvh}}
+@media print{.photo-open,.photo-viewer{display:none}.course-photo{break-inside:avoid}.photo-study{border-top-color:#555}}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="wrap wide">
+  <div class="title-block">
+    <div class="tb-main">
+      <p class="tb-series">Résistance des matériaux, série de 5 cours</p>
+      <h1>Comment la matière change de forme</h1>
+    </div>
+    <div class="tb-cells">
+      <div><small>Cours</small><b>3 sur 5 : le tenseur des déformations</b></div>
+      <div><small>Durée conseillée</small><b>≈ 2 h 30 avec les exercices</b></div>
+      <div><small>Prérequis</small><b>les cours 1 et 2</b></div>
+      <div><small>À la fin tu sais</small><b>passer d'un déplacement à [ε], et trouver les déformations principales</b></div>
+    </div>
+  </div>
+  <p class="lede">Le cours 2 t'a appris à faire parler la matrice des contraintes. Ce cours fait la même chose pour <b>l'autre</b> matrice, celle des déformations <span class="eps">[ε]</span> : d'où elle vient (du déplacement des points), pourquoi elle contient ce fameux <span class="gam">γ</span>/2, quand on a le droit de la simplifier, et comment on la mesure en vrai avec des jauges. Au passage, tu comprendras pourquoi une soudure refroidie reste tirée à sa limite d'élasticité.</p>
+  <div class="cc" role="img" aria-label="Code couleur inchangé : contraintes en couleurs chaudes, matériau en vert, déformations en couleurs froides">
+    <div class="cc-box cc-cause"><small>La cause : ce que la matière subit</small><div class="cc-syms"><span class="sig">σ</span><span class="tau">τ</span></div><p>les contraintes, en MPa</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-link"><small>Le lien : le matériau</small><div class="cc-syms"><span class="mat">E</span><span class="mat">ν</span><span class="mat">α</span></div><p>les constantes du matériau</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-eff"><small>L'effet : comment elle change de forme</small><div class="cc-syms"><span class="eps">ε</span><span class="gam">γ</span></div><p>les déformations, sans unité</p></div>
+  </div>
+  <p class="cc-note">Ce cours est celui des couleurs <b>froides</b> : allongements en <span class="eps">bleu</span>, glissements en <span class="gam">bleu-vert</span>. Nouveau venu en vert : <span class="mat">α</span>, le coefficient de dilatation thermique. Les déplacements (les flèches <b>u⃗</b>) sont dessinés en noir.</p>
+</div>
+</header>
+
+<nav class="toc" aria-label="Sommaire">
+  <div class="toc-in">
+    <a href="#avant">Avant de commencer</a>
+    <a href="#c1">1 Déplacement</a>
+    <a href="#c2">2 γ/2</a>
+    <a href="#c3">3 HPP</a>
+    <a href="#c4">4 Mohr des ε</a>
+    <a href="#c5">5 Thermique</a>
+    <a href="#c6">6 Rosettes</a>
+    <a href="#exos">Exercices</a>
+    <a href="#quiz-s">Quiz</a>
+    <a href="#fiche">Fiche mémoire</a>
+    <a href="#gloss">Glossaire</a>
+  </div>
+</nav>
+
+<main>
+<section class="chap" id="avant">
+<div class="wrap">
+  <h3 style="margin-top:0">Avant de commencer</h3>
+  <h4>Le cours 2 en trois cases</h4>
+  <div class="recall">
+    <div><div class="f"><span class="vec">T</span> = <span class="sig">[σ]</span>·<span class="vec">n</span></div>La matrice des contraintes donne le vecteur contrainte sur n'importe quelle facette. N'oublie jamais de <b>normaliser</b> n⃗.</div>
+    <div><div class="f">M-P-P</div>Multiplier (T⃗ = [σ]n⃗), Projeter (σₙ = T⃗·n⃗), Pythagoriser (|τ| = √(T² − σₙ²)).</div>
+    <div><div class="f">cercle C ± R</div>En 2D, le point (σₙ ; τ) décrit un cercle. Convention de la série : quand la facette tourne de θ, le point tourne de 2θ en sens inverse.</div>
+  </div>
+
+  <div class="def"><b>📘 Les notations de ce cours de RDM</b> (résistance des matériaux) : <b>ℇ</b> (un ε en écriture ronde ; on l'écrit aussi simplement ε dans ce cours) pour le tenseur des déformations, <b>ε<sub>x</sub>, ε<sub>y</sub>, ε<sub>xy</sub></b> pour ses composantes en 2D, <b>φ</b> pour l'angle de la facette, <b>𝔽</b> et <b>𝔼</b> (lettres à double barre) pour les tenseurs gradient de transformation et de Green-Lagrange, <b>𝕀</b> pour la matrice identité, et un <b>t</b> en exposant pour la transposée. Les chapitres 5 (thermique) et 6 (jauges et rosettes) sont signalés 🔥 : ils servent surtout dans la pratique du soudage.</div>
+
+  <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage (formation IWE)</b>
+    <p>(IWE : <i>International Welding Engineer</i>, ingénieur international en soudage.) Une soudure, c'est d'abord une histoire de <b>déformations</b> : le métal chauffé se dilate, le cordon se rétracte en refroidissant, les tôles se déforment (on parle de « distorsion »), et ce qui ne peut pas se déformer librement reste en contrainte. Le chapitre 5 te montre comment naît une contrainte résiduelle de soudage, et le chapitre 6 comment on la mesure avec une rosette de jauges.</p>
+  </div>
+
+  <h4>Le plan du cours</h4>
+  <ol class="route">
+    <li><span class="dot">1</span><b>Du déplacement au gradient</b><p>Chaque point bouge ; ce qui compte, c'est la différence de mouvement entre voisins.</p></li>
+    <li><span class="dot">2</span><b>Déformation ou rotation : d'où vient γ/2</b><p>Tu déformes un carré toi-même et tu vois le γ/2 apparaître.</p></li>
+    <li><span class="dot">3</span><b>Green-Lagrange ou petites déformations</b><p>Ce que l'hypothèse des petites perturbations (HPP) permet, et ce qu'elle interdit.</p></li>
+    <li><span class="dot">4</span><b>Le tenseur ε et son cercle de Mohr</b><p>Allongement dans une direction quelconque, déformations principales, déformation plane.</p></li>
+    <li><span class="dot">5</span><b>🔥 La déformation thermique</b><p>Pourquoi une soudure refroidie reste tirée à sa limite d'élasticité.</p></li>
+    <li><span class="dot">6</span><b>🔥 Jauges et rosettes</b><p>Mesurer [ε] sur une vraie pièce, puis en déduire les contraintes.</p></li>
+  </ol>
+</div>
+</section>
+
+<section class="chap" id="c1">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">1</div>
+    <div class="c-title"><h2>Du déplacement au gradient</h2><p>Ce n'est pas le mouvement qui déforme, c'est la différence de mouvement</p></div>
+    <div class="c-img"><span class="ico">🐦</span><span><small>Image à retenir</small>La nuée d'oiseaux qui garde sa forme ou se disloque</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">chaque point a sa flèche</span></div>
+    <p>Quand une pièce se charge, chacun de ses points bouge un peu. Le point qui était en P₀ arrive en P. La flèche qui va de P₀ à P est le <b>vecteur déplacement</b> :</p>
+    <div class="fx"><div class="big"><span class="vec">u</span> = <span style="text-decoration:overline">P₀P</span></div><p class="cap">en 2D, ses composantes s'appellent u (selon x) et v (selon y) ; en 3D on ajoute w (selon z)</p></div>
+    <p>L'ensemble des flèches de tous les points s'appelle le <b>champ de déplacement</b>. Pense à une nuée d'oiseaux : chaque oiseau a sa propre flèche de mouvement. Trois cas se présentent :</p>
+    <p><b>Translation :</b> toutes les flèches sont identiques. La nuée glisse en bloc, sa forme ne change pas.<br><b>Rotation :</b> les flèches tournent autour d'un centre et grandissent avec la distance. La nuée pivote, sa forme ne change toujours pas.<br><b>Déformation :</b> les flèches diffèrent de façon à changer les <b>distances</b> entre oiseaux ou les <b>angles</b> entre leurs directions. Là, la forme change.</p>
+    <p>Translation et rotation sont des <b>mouvements de corps rigide</b> : ils ne créent aucune contrainte (ils relèvent de la mécanique générale). La RDM ne s'intéresse qu'au troisième cas. La manipulation te fait vérifier le critère : on mesure deux segments et l'angle entre eux.</p>
+  </div>
+
+  <div class="lab" id="d1">
+    <p class="lab-h">Manipulation 1 : translation, rotation ou déformation ?</p>
+    <p class="lab-sub">Une grille de points avant (pointillés) et après le mouvement (trait plein). Les petites flèches noires sont les déplacements u⃗. Les deux segments épais partent du coin P : on surveille leurs longueurs et l'angle entre eux.</p>
+    <div class="btns" id="d1m">
+      <button class="btn on" type="button" data-m="tr">Translation</button>
+      <button class="btn" type="button" data-m="ro">Rotation</button>
+      <button class="btn" type="button" data-m="et">Étirement</button>
+      <button class="btn" type="button" data-m="ci">Glissement (cisaillement)</button>
+    </div>
+    <svg id="d1svg" viewBox="0 0 640 300" role="img" aria-label="Grille de points déplacée selon quatre types de mouvement"></svg>
+    <div class="ctrl"><label for="d1a">Amplitude</label><input id="d1a" class="r-frc" type="range" min="0" max="100" step="1" value="70"><output id="d1av"></output></div>
+    <div class="readout" id="d1out"></div>
+    <p class="status" id="d1note"></p>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : l'idée clé <span class="tag">comparer les voisins</span></div>
+    <p>Regarde la translation : les flèches sont énormes, mais identiques d'un point à son voisin, et rien ne se déforme. La déformation ne dépend donc pas de la taille des flèches, mais de la façon dont elles <b>changent d'un point à son voisin</b>. Au cours 1 (niveau 2), tu l'avais vu en 1D : <span class="m"><span class="eps">ε</span> = du/dx</span>, la variation du déplacement par millimètre de longueur.</p>
+    <p>En 2D, u et v peuvent varier quand on se décale selon x <b>ou</b> selon y. Cela fait quatre variations possibles, qu'on range dans un tableau : le <b>gradient du déplacement</b>.</p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">le gradient et le tenseur 𝔽</span></div>
+    <div class="def"><b>📖 Dérivée partielle ∂u/∂x :</b> le symbole ∂ (un « d » arrondi, qu'on lit « d rond ») désigne une dérivée <b>partielle</b> : de combien u varie quand on avance un tout petit peu selon x, <b>en gardant y fixe</b>. C'est la pente de u dans la direction x. De même, ∂u/∂y est la pente de u quand on avance selon y.</div>
+    <div class="fx" style="max-width:640px"><div class="big" style="font-size:1.3rem;line-height:1.7"><span style="text-decoration:overline">grad</span> <span class="vec">u</span> = <span class="inlinemat" style="grid-template-columns:repeat(2,auto)"><span>∂u/∂x</span><span>∂u/∂y</span><span>∂v/∂x</span><span>∂v/∂y</span></span> &nbsp; en 2D</div><p class="cap">ligne = la composante du déplacement (u, puis v) ; colonne = la direction dans laquelle on se décale (x, puis y) ; en 3D, c'est une matrice 3 × 3 avec w et z</p></div>
+    <p>Ce gradient suffit à décrire comment un tout petit segment d<span class="vec">X</span> (avant) devient d<span class="vec">x</span> (après) : <span class="m">d<span class="vec">x</span> = d<span class="vec">X</span> + <span style="text-decoration:overline">Grad</span> <span class="vec">u</span>·d<span class="vec">X</span></span> (Grad avec une majuscule : on dérive par rapport à la position initiale, voir ci-dessous). En factorisant, on obtient le <b>tenseur gradient de transformation</b> 𝔽 :</p>
+    <div class="fx"><div class="big">𝔽 = 𝕀 + <span style="text-decoration:overline">Grad</span> <span class="vec">u</span> &nbsp;&nbsp; et &nbsp;&nbsp; d<span class="vec">x</span> = 𝔽·d<span class="vec">X</span></div><p class="cap">𝕀 est la matrice identité : des 1 sur la diagonale, des 0 ailleurs ; elle ne change rien au vecteur qu'elle multiplie</p></div>
+    <dl class="syms">
+      <dt>𝔽</dt><dd>gradient de transformation : la « machine » qui transforme les petits segments de la pièce. 𝔽 = 𝕀 veut dire « rien ne bouge localement ». On le trouve aussi écrit <u>F</u>, F avec deux barres, ou F<sub>ij</sub> (écriture indicielle)</dd>
+      <dt>Grad, grad</dt><dd>Grad (majuscule) dérive par rapport à la position <b>initiale</b> X, grad (minuscule) par rapport à la position <b>actuelle</b> x. En HPP (chapitre 3), les deux sont égaux</dd>
+    </dl>
+    <p><b>Exemples.</b> Translation : u et v sont constants, toutes les dérivées sont nulles, 𝔽 = 𝕀. Étirement de 40 % selon x : u = 0,4x, donc ∂u/∂x = 0,4 et 𝔽 = diag(1,4 ; 1), où diag(a ; b) désigne la matrice qui a a et b sur sa diagonale et des zéros ailleurs. Rotation d'angle α : 𝔽 est la matrice de rotation, ses termes valent cos α et ± sin α. La manipulation affiche ce gradient pour chaque mouvement.</p>
+    <div class="warn">⚠️ <b>Ne confonds pas les deux descriptions</b> : on les inverse facilement. En description <b>lagrangienne</b> (celle de la RDM), on <b>suit chaque particule</b>, repérée par sa position initiale X. En description <b>eulérienne</b> (celle de la mécanique des fluides), on se place en un <b>point fixe de l'espace</b> et on regarde la matière qui y passe.</div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c2">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">2</div>
+    <div class="c-title"><h2>Déformation ou rotation : d'où vient γ/2</h2><p>Découper le gradient en deux morceaux</p></div>
+    <div class="c-img"><span class="ico">🚪</span><span><small>Image à retenir</small>La porte : tourner n'est pas se tordre</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">deux morceaux</span></div>
+    <p>Une porte qui tourne sur ses gonds bouge beaucoup, mais elle ne se tord pas. Le gradient du déplacement mélange ces deux choses : la vraie <b>déformation</b> (qui change longueurs et angles, et crée des contraintes) et la <b>rotation</b> (qui ne fait que faire pivoter, sans aucun effet sur la matière). On les sépare toujours de la même façon :</p>
+    <div class="fx" style="max-width:700px"><div class="big" style="font-size:1.35rem"><span style="text-decoration:overline">grad</span> <span class="vec">u</span> = <span class="eps">ε</span> + <span>ω</span> &nbsp; avec &nbsp; <span class="eps">ε</span> = ½(<span style="text-decoration:overline">grad</span> <span class="vec">u</span> + <span style="text-decoration:overline">grad</span> <span class="vec">u</span><sup>t</sup>)</div><p class="cap">ε est la partie symétrique : c'est le tenseur des petites déformations ; ω (« oméga ») est la partie antisymétrique : la rotation</p></div>
+    <div class="def"><b>📖 Transposée (exposant t) :</b> la matrice retournée autour de sa diagonale (on échange les lignes et les colonnes). Additionner une matrice et sa transposée, puis diviser par 2, fabrique une matrice <b>symétrique</b> : on fait la moyenne de chaque case et de sa jumelle.</div>
+    <p>Appliqué case par case, cela donne :</p>
+    <div class="fx" style="max-width:640px"><div class="big" style="font-size:1.3rem;line-height:1.9"><span class="eps">ε<sub>x</sub></span> = ∂u/∂x &nbsp;&nbsp; <span class="eps">ε<sub>y</sub></span> = ∂v/∂y &nbsp;&nbsp; <span class="gam">ε<sub>xy</sub></span> = ½(∂u/∂y + ∂v/∂x)</div></div>
+    <p>Et voici l'origine du fameux piège du cours 1. Quand un angle droit se referme, chacun de ses deux côtés penche : l'un de ∂u/∂y, l'autre de ∂v/∂x. L'angle perdu, la distorsion, est la somme des deux :</p>
+    <div class="fx"><div class="big"><span class="gam">γ</span> = ∂u/∂y + ∂v/∂x = 2<span class="gam">ε<sub>xy</sub></span></div><p class="cap">le tenseur range la <b>moitié</b> de l'angle perdu : ε<sub>xy</sub> = γ/2</p></div>
+    <div class="mnemo">🃏 <b>Le jeu de cartes, revisité.</b> Quand tu fais glisser le dessus d'un paquet de cartes, seul le côté vertical penche, de γ (∂u/∂y = γ, ∂v/∂x = 0). La manipulation montre que ce mouvement est la somme d'une <b>vraie déformation</b> où chaque côté penche de γ/2, et d'une <b>rotation</b> de γ/2 de l'ensemble. La matrice ε ne garde que la déformation : d'où le γ/2 dans chaque case.</div>
+  </div>
+
+  <div class="lab" id="g2">
+    <p class="lab-h">Manipulation 2 : le carré que tu déformes toi-même</p>
+    <p class="lab-sub">Règle les quatre termes du gradient du déplacement. À gauche, le carré transformé ; au milieu, sa part de déformation pure (ε) ; à droite, sa part de rotation (ω). Les valeurs sont très exagérées pour être visibles.</p>
+    <div class="btns" id="g2pre">
+      <button class="btn" type="button" data-v="20,0,0,0">Allongement selon x</button>
+      <button class="btn on" type="button" data-v="0,30,0,0">Glissement simple (cartes)</button>
+      <button class="btn" type="button" data-v="0,15,15,0">Cisaillement pur</button>
+      <button class="btn" type="button" data-v="0,-20,20,0">Rotation pure</button>
+    </div>
+    <svg id="g2svg" viewBox="0 0 640 300" role="img" aria-label="Carré déformé décomposé en déformation pure et rotation"></svg>
+    <div class="ctrl"><label for="g2a">∂u/∂x</label><input id="g2a" class="r-eps" type="range" min="-30" max="30" step="1"><output id="g2av"></output></div>
+    <div class="ctrl"><label for="g2b">∂u/∂y</label><input id="g2b" class="r-gam" type="range" min="-30" max="30" step="1"><output id="g2bv"></output></div>
+    <div class="ctrl"><label for="g2c">∂v/∂x</label><input id="g2c" class="r-gam" type="range" min="-30" max="30" step="1"><output id="g2cv"></output></div>
+    <div class="ctrl"><label for="g2d">∂v/∂y</label><input id="g2d" class="r-eps" type="range" min="-30" max="30" step="1"><output id="g2dv"></output></div>
+    <div class="readout" id="g2out"></div>
+    <p class="status" id="g2note"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">la rotation et les conséquences du γ/2</span></div>
+    <p>La partie antisymétrique <span class="m">ω = ½(<span style="text-decoration:overline">grad</span> <span class="vec">u</span> − <span style="text-decoration:overline">grad</span> <span class="vec">u</span><sup>t</sup>)</span> n'a qu'un seul nombre utile en 2D : l'angle de rotation locale <span class="m">ω<sub>z</sub> = ½(∂v/∂x − ∂u/∂y)</span> (en radians, positif dans le sens trigonométrique). Il ne crée aucune contrainte.</p>
+    <p>En 3D, on obtient le tenseur complet, symétrique par construction, donc avec 6 composantes indépendantes :</p>
+    <div class="fx" style="max-width:560px"><div class="big" style="font-size:1.25rem;line-height:1.7"><span class="eps">ε</span> = <span class="inlinemat"><span class="eps">ε<sub>xx</sub></span><span class="gam">ε<sub>xy</sub></span><span class="gam">ε<sub>xz</sub></span><span class="gam">ε<sub>xy</sub></span><span class="eps">ε<sub>yy</sub></span><span class="gam">ε<sub>yz</sub></span><span class="gam">ε<sub>xz</sub></span><span class="gam">ε<sub>yz</sub></span><span class="eps">ε<sub>zz</sub></span></span></div><p class="cap">avec ε<sub>xz</sub> = ½(∂u/∂z + ∂w/∂x) et ε<sub>yz</sub> = ½(∂v/∂z + ∂w/∂y)</p></div>
+    <p><b>Conséquence pour la loi de Hooke (cours 5).</b> Puisque <span class="m"><span class="tau">τ</span> = <span class="mat">G</span><span class="gam">γ</span></span> (cours 1) et <span class="m"><span class="gam">γ</span> = 2<span class="gam">ε<sub>xy</sub></span></span>, on a <span class="m"><span class="tau">σ<sub>xy</sub></span> = 2<span class="mat">G</span><span class="gam">ε<sub>xy</sub></span></span> (σ<sub>xy</sub> est une autre notation du cisaillement τ<sub>xy</sub>). C'est exactement le « 2μ » de la loi de Lamé (σ = 2μℇ + λ trace(ℇ)𝕀), où λ et μ (« lambda » et « mu ») sont les deux coefficients de Lamé du matériau, avec μ = G, et où trace(ℇ) est la somme de la diagonale de ℇ (cours 1). Le cours 5 détaille cette loi. Le 2 n'est pas mystérieux : il répare le γ/2.</p>
+    <div class="warn">⚠️ <b>Le piège, dans les deux sens.</b> Une jauge, un logiciel de calcul ou un fournisseur peut te donner γ (la distorsion « de l'ingénieur ») ou ε<sub>xy</sub> (la composante du tenseur). Demande-toi toujours lequel des deux tu as sous les yeux : ils diffèrent d'un facteur 2.</div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c3">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">3</div>
+    <div class="c-title"><h2>Green-Lagrange ou petites déformations</h2><p>La mesure exacte, la mesure simplifiée, et la frontière entre les deux</p></div>
+    <div class="c-img"><span class="ico">🎡</span><span><small>Image à retenir</small>La grande roue : la cabine tourne beaucoup sans jamais se déformer</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">deux façons de mesurer</span></div>
+    <p>Il existe deux tenseurs des déformations. Ils répondent à la même question (« de combien les longueurs et les angles ont-ils changé ? ») avec plus ou moins de précision.</p>
+    <p><b>Le tenseur de Green-Lagrange 𝔼, la mesure exacte.</b> Il compare les longueurs <b>au carré</b> avant et après. Or une rotation ne change aucune longueur : pour une cabine de grande roue qui tourne sans se déformer, 𝔼 vaut exactement zéro, quel que soit l'angle de rotation.</p>
+    <div class="fx" style="max-width:680px"><div class="big" style="font-size:1.3rem;line-height:1.8">𝔼 = ½(𝔽<sup>t</sup>𝔽 − 𝕀) = ½(<span style="text-decoration:overline">Grad</span> <span class="vec">u</span> + <span style="text-decoration:overline">Grad</span> <span class="vec">u</span><sup>t</sup> + <b><span style="text-decoration:overline">Grad</span> <span class="vec">u</span><sup>t</sup>·<span style="text-decoration:overline">Grad</span> <span class="vec">u</span></b>)</div><p class="cap">le dernier terme, en gras, est un produit de deux gradients : il est tout petit quand les gradients sont petits</p></div>
+    <p><b>Le tenseur des petites déformations ℇ, la mesure simplifiée.</b> Si tous les termes du gradient sont petits (quelques millièmes), leur produit est encore mille fois plus petit : on le jette. On retrouve le ℇ = ½(grad u + grad u<sup>t</sup>) du chapitre 2. C'est l'<b>hypothèse des petites perturbations</b> (HPP).</p>
+    <p><b>Le piège :</b> « gradients petits » ne veut pas seulement dire « petites déformations ». Une rotation, même sans aucune déformation, donne des termes de gradient de l'ordre de l'angle (sin α, cos α − 1). Si la pièce tourne trop, le tenseur simplifié invente une déformation qui n'existe pas. La manipulation le montre sur une rotation pure.</p>
+  </div>
+
+  <div class="lab" id="h3">
+    <p class="lab-h">Manipulation 3 : quand la mesure simplifiée se trompe</p>
+    <p class="lab-sub">Un carré tourne d'un angle α, sans se déformer (ou avec un vrai étirement de 1 % si tu coches la case). À droite, la composante selon x des deux mesures : Green-Lagrange (exacte, trait plein) et petites déformations (simplifiée, pointillés).</p>
+    <svg id="h3svg" viewBox="0 0 640 300" role="img" aria-label="Comparaison de la déformation de Green-Lagrange et de la déformation linéarisée pour une rotation"></svg>
+    <div class="ctrl"><label for="h3a">Rotation α</label><input id="h3a" class="r-th" type="range" min="0" max="30" step="0.5" value="5"><output id="h3av"></output></div>
+    <div class="btns"><label class="btn" style="display:inline-flex;gap:6px;align-items:center"><input type="checkbox" id="h3s"> Ajouter un vrai étirement de 1 % selon x</label></div>
+    <div class="readout" id="h3out"></div>
+    <p class="status" id="h3note"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">le calcul, et ce que ça change pour un soudeur</span></div>
+    <p><b>D'où vient 𝔼.</b> Un petit segment d<span class="vec">X</span> devient d<span class="vec">x</span> = 𝔽 d<span class="vec">X</span>. Sa longueur au carré vaut <span class="m">d<span class="vec">x</span><sup>t</sup>d<span class="vec">x</span> = d<span class="vec">X</span><sup>t</sup>𝔽<sup>t</sup>𝔽 d<span class="vec">X</span></span>. La variation des longueurs au carré s'écrit donc <span class="m">|d<span class="vec">x</span>|² − |d<span class="vec">X</span>|² = 2 d<span class="vec">X</span><sup>t</sup> 𝔼 d<span class="vec">X</span></span> : 𝔼 mesure exactement cette variation. En remplaçant 𝔽 par 𝕀 + H (H = Grad u), on obtient 𝔽<sup>t</sup>𝔽 − 𝕀 = H + H<sup>t</sup> + H<sup>t</sup>H.</p>
+    <p><b>Le calcul de la rotation pure.</b> Pour une rotation d'angle α, <span class="m">H = <span class="inlinemat" style="grid-template-columns:repeat(2,auto)"><span>cos α − 1</span><span>−sin α</span><span>sin α</span><span>cos α − 1</span></span></span>. Le tenseur simplifié donne <span class="m"><span class="eps">ε<sub>x</sub></span> = <span class="eps">ε<sub>y</sub></span> = cos α − 1 ≈ −α²/2</span> : une <b>fausse compression</b>. Le terme H<sup>t</sup>H vaut exactement l'opposé, et 𝔼 = 0.</p>
+    <p><b>L'ordre de grandeur qui fait réfléchir.</b> Pour α = 5°, la fausse déformation vaut cos 5° − 1 = −0,0038, soit −3 800 µε. Or l'acier de construction S235 atteint sa limite d'élasticité vers Rₑ/E = 235/210 000 = 1 120 µε. L'erreur est <b>plus de trois fois</b> la déformation élastique maximale de l'acier. Pour qu'elle reste sous 10 % de cette valeur, il faut une rotation inférieure à environ 0,9°.</p>
+    <div class="tip">💡 <b>Les conditions de l'HPP, précisément :</b> petites déformations (|ε| ≪ 1, le symbole ≪ se lisant « très petit devant ») <b>et</b> petites rotations, donc petits déplacements devant les dimensions de la pièce. On peut alors aussi confondre la géométrie avant et après (Grad = grad), et écrire l'équilibre sur la forme initiale. C'est le cadre de toute la RDM classique.</div>
+    <div class="weld"><b>🔥 Quand l'HPP ne suffit plus en soudage</b>
+      <p>Les structures élancées (poutres longues, tôles minces) peuvent tourner beaucoup tout en se déformant peu : c'est le cas du <b>voilement</b> d'une tôle mince sous l'effet du retrait des cordons, ou de la distorsion angulaire d'un assemblage. Les simulations numériques de soudage sur ces pièces utilisent alors des formulations en grandes transformations, basées sur 𝔼, et non la formule simplifiée.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c4">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">4</div>
+    <div class="c-title"><h2>Le tenseur ε et son cercle de Mohr</h2><p>Allongement dans une direction quelconque, déformations principales, déformation plane</p></div>
+    <div class="c-img"><span class="ico">🧭</span><span><small>Image à retenir</small>L'aiguille de la boussole qui tourne et mesure l'allongement</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la même méthode qu'au cours 2</span></div>
+    <p>Bonne nouvelle : tout ce que tu as appris sur <span class="sig">[σ]</span> au cours 2 se transpose tel quel à <span class="eps">ε</span>. Imagine une aiguille de boussole posée sur la pièce, orientée selon <span class="m"><span class="vec">n</span></span> (angle φ avec l'axe x). Deux questions :</p>
+    <p><b>1. De combien l'aiguille s'allonge-t-elle ?</b> C'est <span class="eps">ε<sub>n</sub></span>, l'allongement relatif dans la direction n⃗. Il se calcule avec les deux premiers gestes de la méthode M-P-P : multiplier (<span class="eps">ε</span>·<span class="vec">n</span>) puis projeter sur <span class="vec">n</span>.<br><b>2. De combien l'angle droit entre n⃗ et sa perpendiculaire t⃗ se referme-t-il ?</b> C'est <span class="gam">ε<sub>nt</sub></span>, le demi-glissement (encore le γ/2).</p>
+    <p>En 2D, cela donne deux formules à connaître par cœur :</p>
+    <div class="fx" style="max-width:720px"><div class="big" style="font-size:1.28rem;line-height:1.9">
+      <span class="eps">ε<sub>n</sub></span> = <span class="frac"><span>ε<sub>x</sub> + ε<sub>y</sub></span><span>2</span></span> + <span class="frac"><span>ε<sub>x</sub> − ε<sub>y</sub></span><span>2</span></span> cos 2φ + <span class="gam">ε<sub>xy</sub></span> sin 2φ<br>
+      <span class="gam">ε<sub>nt</sub></span> = −<span class="frac"><span>ε<sub>x</sub> − ε<sub>y</sub></span><span>2</span></span> sin 2φ + <span class="gam">ε<sub>xy</sub></span> cos 2φ
+    </div><p class="cap">ce sont les formules du cours 2, avec ε à la place de σ et ε<sub>xy</sub> à la place de τ<sub>xy</sub> ; même convention de signe (t⃗ = n⃗ tourné de +90°)</p></div>
+    <p><b>Les déformations principales</b> sont les allongements dans les deux directions où <span class="gam">ε<sub>nt</sub></span> = 0 (aucun angle droit ne se referme). On les trouve avec :</p>
+    <div class="fx" style="max-width:720px"><div class="big" style="font-size:1.28rem;line-height:1.9">
+      tan(2φ) = <span class="frac"><span>2ε<sub>xy</sub></span><span>ε<sub>x</sub> − ε<sub>y</sub></span></span> &nbsp;&nbsp;&nbsp; <span class="eps">ε<sub>I, II</sub></span> = <span class="frac"><span>ε<sub>x</sub> + ε<sub>y</sub></span><span>2</span></span> ± ½√((ε<sub>x</sub> − ε<sub>y</sub>)² + 4ε<sub>xy</sub>²)
+    </div><p class="cap">en abrégé : ε<sub>I, II</sub> = C ± R, avec C = (ε<sub>x</sub> + ε<sub>y</sub>)/2 le centre du cercle, a = (ε<sub>x</sub> − ε<sub>y</sub>)/2 et R = √(a² + ε<sub>xy</sub>²) = ½√((ε<sub>x</sub> − ε<sub>y</sub>)² + 4ε<sub>xy</sub>²) son rayon</p></div>
+    <div class="mnemo">🧭 <b>Le cercle de Mohr des déformations</b> : axe horizontal ε<sub>n</sub>, axe vertical ε<sub>nt</sub> (le demi-glissement, γ/2). Centre C sur l'axe, rayon R. L'aiguille posée selon x (φ = 0°) donne le point (ε<sub>x</sub> ; ε<sub>xy</sub>), l'aiguille selon y (φ = 90°) le point diamétralement opposé (ε<sub>y</sub> ; −ε<sub>xy</sub>). Quand l'aiguille tourne de φ, le point tourne de 2φ <b>dans l'autre sens</b>.</div>
+  </div>
+
+  <div class="lab" id="m4">
+    <p class="lab-h">Manipulation 4 : l'aiguille qui mesure l'allongement</p>
+    <p class="lab-sub">Règle l'état de déformation (en µε, microdéformations). À gauche, le petit carré déformé (très exagéré) et l'aiguille bleue orientée à φ ; les directions principales I et II sont en vert. À droite, le point (ε<sub>n</sub> ; ε<sub>nt</sub>) sur le cercle de Mohr des déformations, avec la convention de la série.</p>
+    <div class="btns" id="m4pre">
+      <button class="btn on" type="button" data-v="600,-200,300">Exemple de l'exercice 3</button>
+      <button class="btn" type="button" data-v="476,-143,0">Traction simple (acier)</button>
+      <button class="btn" type="button" data-v="0,0,400">Cisaillement pur</button>
+      <button class="btn" type="button" data-v="400,400,0">Dilatation égale (thermique)</button>
+    </div>
+    <svg id="m4svg" viewBox="0 0 680 340" role="img" aria-label="Carré déformé, jauge orientée et cercle de Mohr des déformations"></svg>
+    <div class="ctrl"><label for="m4a">Angle <b>φ</b> de l'aiguille</label><input id="m4a" class="r-th" type="range" min="-90" max="90" step="1" value="30"><output id="m4av"></output></div>
+    <div class="ctrl"><label for="m4x"><span class="eps">ε<sub>x</sub></span></label><input id="m4x" class="r-eps" type="range" min="-1000" max="1000" step="10"><output id="m4xv"></output></div>
+    <div class="ctrl"><label for="m4y"><span class="eps">ε<sub>y</sub></span></label><input id="m4y" class="r-eps" type="range" min="-1000" max="1000" step="10"><output id="m4yv"></output></div>
+    <div class="ctrl"><label for="m4g"><span class="gam">ε<sub>xy</sub></span></label><input id="m4g" class="r-gam" type="range" min="-1000" max="1000" step="10"><output id="m4gv"></output></div>
+    <div class="btns">
+      <button class="btn" id="m4play" type="button">▶ Faire tourner l'aiguille de −90° à +90°</button>
+      <button class="btn" id="m4clr" type="button">Effacer la trace</button>
+      <label class="btn" style="display:inline-flex;gap:6px;align-items:center"><input type="checkbox" id="m4circ" checked> Montrer le cercle</label>
+    </div>
+    <div class="readout" id="m4out"></div>
+    <p class="status" id="m4note"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">les pièges, la déformation plane et la 3D</span></div>
+    <h4>Piège 1 : tan(2φ) a deux solutions</h4>
+    <p>L'équation tan(2φ) = 2ε<sub>xy</sub>/(ε<sub>x</sub> − ε<sub>y</sub>) donne deux directions à 90° l'une de l'autre, sans dire laquelle est I (la plus grande). Deux façons de trancher : remplacer φ dans la formule de ε<sub>n</sub> et regarder laquelle donne C + R ; ou retenir la règle « si ε<sub>x</sub> &gt; ε<sub>y</sub>, l'angle calculé entre −45° et +45° est la direction I ». Sur un logiciel (Python, Excel), la fonction atan2, une arc tangente à deux arguments qui tient compte de leurs signes, tranche automatiquement : <span class="m">φ<sub>I</sub> = ½·atan2(2ε<sub>xy</sub>, ε<sub>x</sub> − ε<sub>y</sub>)</span>. Attention, Excel inverse l'ordre des deux arguments.</p>
+    <h4>Piège 2 : le glissement maximal vaut 2R, pas R</h4>
+    <p>Le point le plus haut du cercle donne ε<sub>nt, max</sub> = R, qui est un <b>demi</b>-glissement. La distorsion maximale est donc <span class="m"><span class="gam">γ</span><sub>max</sub> = 2R = ε<sub>I</sub> − ε<sub>II</sub></span>. Encore le facteur 2.</p>
+    <h4>Déformation plane et contrainte plane : ne pas confondre</h4>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th></th><th>Déformation plane</th><th>Contrainte plane</th></tr>
+      <tr><td>Hypothèse</td><td>u(x, y), v(x, y), pas de déplacement selon z</td><td>aucune force sur les faces de normale z</td></tr>
+      <tr><td>Conséquence</td><td><span class="eps">ε<sub>zz</sub></span> = 0, mais <span class="sig">σ<sub>zz</sub></span> ≠ 0</td><td><span class="sig">σ<sub>zz</sub></span> = 0, mais <span class="eps">ε<sub>zz</sub></span> ≠ 0 (Poisson)</td></tr>
+      <tr><td>Où la rencontrer</td><td>pièces très longues selon z et bloquées à leurs extrémités (tunnel, barrage, conduite enterrée) ; c'est aussi l'approximation utilisée pour simuler la section courante d'un long cordon dans une tôle épaisse</td><td>tôles minces, et <b>toute surface libre</b> (c'est là qu'on colle les jauges)</td></tr>
+    </table></div>
+    <p>Dans les deux cas, z est une direction principale et les formules de ε<sub>n</sub>, ε<sub>nt</sub> et le cercle dans le plan xy restent <b>identiques</b>. Seule la troisième déformation principale diffère : nulle en déformation plane, non nulle en contrainte plane.</p>
+    <h4>En 3D : trois cercles</h4>
+    <p>Dans la base principale, <span class="eps">ε</span> est diagonale : diag(ε<sub>I</sub> ; ε<sub>II</sub> ; ε<sub>III</sub>). On trace alors trois cercles, chacun construit sur deux des trois valeurs principales : c'est le <b>tricercle de Mohr</b>, que le cours 4 construit pas à pas pour les contraintes. Attention : quand on nomme « III » la direction z par simple convention, cela ne veut pas forcément dire que ε<sub>zz</sub> est la plus petite des trois.</p>
+    <div class="tip">💡 <b>Rappel du cours 1 :</b> la somme de la diagonale (la trace) ne dépend pas du repère, et elle vaut ΔV/V, la variation relative de volume. Vérifie-le sur le cercle : ε<sub>I</sub> + ε<sub>II</sub> = 2C = ε<sub>x</sub> + ε<sub>y</sub>, quel que soit l'angle.</div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c5">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">5</div>
+    <div class="c-title"><h2>La déformation thermique <span class="hp">🔥 métier</span></h2><p>Chauffer, brider, refroidir : la naissance d'une contrainte résiduelle</p></div>
+    <div class="c-img"><span class="ico">🌡️</span><span><small>Image à retenir</small>Le rail qui se tord en plein été</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">libre ou bridé</span></div>
+    <p>Chauffe une barre de ΔT degrés (ΔT, « delta T », est l'écart de température) : elle s'allonge dans <b>toutes</b> les directions du même pourcentage, sans aucun glissement. C'est la <b>déformation thermique</b> :</p>
+    <div class="fx"><div class="big"><span class="eps">ε<sub>th</sub></span> = <span class="mat">α</span>·ΔT &nbsp; dans chaque direction</div><p class="cap">en matrice : ε<sub>th</sub> = αΔT·𝕀 (la même valeur sur toute la diagonale, zéro ailleurs)</p></div>
+    <dl class="syms">
+      <dt class="mat">α</dt><dd>« alpha », coefficient de dilatation thermique, en K⁻¹ (par kelvin, soit par degré d'écart). Ordres de grandeur : acier au carbone ≈ 12 × 10⁻⁶, acier inoxydable austénitique ≈ 16 à 17 × 10⁻⁶, aluminium ≈ 23 × 10⁻⁶</dd>
+    </dl>
+    <p><b>Barre libre :</b> elle s'allonge tranquillement et <b>aucune contrainte</b> n'apparaît. Un rail de 100 m chauffé de 40 °C s'allonge de 12 × 10⁻⁶ × 40 × 100 000 mm ≈ 48 mm.</p>
+    <p><b>Barre bridée</b> entre deux murs immobiles : elle voudrait s'allonger mais ne peut pas. Les murs la compriment exactement de quoi annuler sa dilatation :</p>
+    <div class="fx"><div class="big"><span class="sig">σ</span> = −<span class="mat">E</span>·<span class="mat">α</span>·ΔT</div><p class="cap">acier : E·α = 210 000 × 12 × 10⁻⁶ ≈ 2,5 MPa par degré ; 100 °C bridés donnent déjà −252 MPa, plus que Rₑ = 235 MPa !</p></div>
+    <p>C'est le rail qui se déforme en été quand sa dilatation est empêchée, et c'est surtout <b>le cordon de soudure</b> : le métal chauffé à plus de 1 000 °C est entouré de métal froid qui l'empêche de se dilater. C'est une barre bridée. La manipulation te fait vivre un cycle complet de chauffe puis de refroidissement.</p>
+  </div>
+
+  <div class="lab" id="t5">
+    <p class="lab-h">Manipulation 5 : le cycle thermique d'une soudure, en une barre</p>
+    <p class="lab-sub">Une barre d'acier S235 (E = 210 GPa, α = 12 × 10⁻⁶ K⁻¹, Rₑ = 235 MPa) est chauffée de ΔT<sub>max</sub> puis ramenée à la température initiale. En bas, le trajet de la contrainte en fonction de l'échauffement. Modèle simplifié : E et Rₑ sont supposés constants avec la température.</p>
+    <div class="btns" id="t5mode">
+      <button class="btn on" type="button" data-m="b">Barre bridée (le cordon)</button>
+      <button class="btn" type="button" data-m="l">Barre libre</button>
+    </div>
+    <svg id="t5svg" viewBox="0 0 640 330" role="img" aria-label="Barre chauffée puis refroidie et trajet de sa contrainte"></svg>
+    <div class="ctrl"><label for="t5m">Échauffement maximal ΔT<sub>max</sub></label><input id="t5m" class="r-frc" type="range" min="40" max="600" step="10" value="300"><output id="t5mv"></output></div>
+    <div class="ctrl"><label for="t5p">Avancement du cycle</label><input id="t5p" class="r-geo" type="range" min="0" max="200" step="1" value="0"><output id="t5pv"></output></div>
+    <div class="btns"><button class="btn" id="t5play" type="button">▶ Lancer le cycle chauffe puis refroidissement</button></div>
+    <div class="readout" id="t5out"></div>
+    <p class="status" id="t5note"></p>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : ce qu'il faut retenir du cycle <span class="tag">quatre étapes</span></div>
+    <p><b>① Chauffe élastique :</b> la barre bridée se met en compression, 2,5 MPa par degré.<br><b>② Plastification en compression :</b> vers 93 °C, la compression atteint Rₑ. Au-delà, la barre ne peut plus pousser plus fort : elle se <b>raccourcit définitivement</b> (déformation plastique) pour s'adapter.<br><b>③ Refroidissement :</b> la barre, devenue « trop courte », veut se rétracter encore plus en refroidissant. Les murs la retiennent : la compression disparaît, puis elle passe en <b>traction</b>.<br><b>④ Fin du cycle :</b> si l'échauffement a dépassé environ 190 °C, la traction atteint Rₑ avant la fin du refroidissement. La barre finit tirée à <b>+Rₑ</b>, alors qu'elle est revenue à sa température de départ.</p>
+    <div class="mnemo">🌡️ <b>À retenir pour toute ta carrière :</b> au voisinage d'un cordon, la contrainte résiduelle longitudinale atteint couramment l'ordre de grandeur de la limite d'élasticité, en traction. C'est pour ça qu'on ne peut pas ignorer les contraintes résiduelles en fatigue, en corrosion sous contrainte ou en rupture fragile.</div>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">la décomposition des déformations</span></div>
+    <p>La déformation totale mesurée est la somme de morceaux d'origines différentes, et <b>seule la partie élastique crée des contraintes</b> :</p>
+    <div class="fx"><div class="big" style="font-size:1.55rem"><span class="eps">ε</span> = <span class="eps">ε<sub>él</sub></span> + <span class="eps">ε<sub>th</sub></span> + <span class="eps">ε<sub>p</sub></span> &nbsp;&nbsp;⇒&nbsp;&nbsp; <span class="sig">σ</span> = <span class="mat">E</span>(<span class="eps">ε</span> − <span class="mat">α</span>ΔT − <span class="eps">ε<sub>p</sub></span>) &nbsp;(en 1D)</div><p class="cap">ε<sub>él</sub> : élastique (réversible) ; ε<sub>th</sub> : thermique ; ε<sub>p</sub> : plastique (permanente)</p></div>
+    <p><b>Le calcul du cycle.</b> Barre bridée : ε = 0. À la chauffe, σ = −EαΔT jusqu'à −Rₑ, atteint pour <span class="m">ΔT<sub>1</sub> = Rₑ/(Eα) = 235/2,52 ≈ 93 °C</span>. Au-delà, σ reste à −Rₑ et la déformation plastique vaut <span class="m"><span class="eps">ε<sub>p</sub></span> = −αΔT + Rₑ/E</span>. Au sommet ΔT<sub>max</sub>, elle est figée. Au refroidissement : <span class="m"><span class="sig">σ</span> = Eα(ΔT<sub>max</sub> − ΔT) − Rₑ</span>. À la fin (ΔT = 0) : <span class="m"><span class="sig">σ<sub>résiduelle</sub></span> = min(EαΔT<sub>max</sub> − Rₑ ; Rₑ)</span>, qui vaut +Rₑ dès que <span class="m">ΔT<sub>max</sub> ≥ 2Rₑ/(Eα) ≈ 187 °C</span>.</p>
+    <p><b>En 3D</b>, la loi de Hooke s'écrit en ajoutant simplement la dilatation : <span class="m">ℇ = <span class="frac"><span>1 + ν</span><span>E</span></span>σ − <span class="frac"><span>ν</span><span>E</span></span> trace(σ)𝕀 + αΔT·𝕀</span>. Le cours 5 détaille cette loi.</p>
+    <div class="weld"><b>🔥 Trois conséquences pratiques</b>
+      <p><b>1. Distorsion.</b> La zone plastifiée en compression pendant la chauffe reste « trop courte » : le cordon tire sur les tôles, qui se déforment (retrait longitudinal et transversal, distorsion angulaire, voilement des tôles minces).</p>
+      <p><b>2. Inox austénitique.</b> Son α est environ 40 % plus grand que celui de l'acier au carbone, et il conduit beaucoup moins bien la chaleur : les gradients de température sont plus forts, et les distorsions nettement plus importantes.</p>
+      <p><b>3. Détensionnement.</b> Le modèle ci-dessus suppose Rₑ constant ; en réalité Rₑ chute fortement avec la température. Un traitement thermique de détensionnement exploite ce phénomène : à chaud, la limite d'élasticité baisse, la matière se relâche plastiquement, et les contraintes résiduelles redescendent au niveau de cette limite réduite.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c6">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">6</div>
+    <div class="c-title"><h2>Jauges et rosettes <span class="hp">🔥 métier</span></h2><p>Mesurer ε sur une vraie pièce, puis remonter aux contraintes</p></div>
+    <div class="c-img"><span class="ico">🌹</span><span><small>Image à retenir</small>La rose à trois pétales collée sur la pièce</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">une jauge, une direction</span></div>
+    <p>Une <b>jauge de déformation</b> est un fil métallique très fin, replié en zigzag sur un film plastique, qu'on colle sur la pièce. Quand la pièce s'allonge sous la jauge, le fil s'allonge et s'amincit : sa résistance électrique augmente, proportionnellement à la déformation :</p>
+    <div class="fx"><div class="big">ΔR/R = k·<span class="eps">ε<sub>n</sub></span></div><p class="cap">R : résistance électrique (en ohms) ; k : facteur de jauge, environ 2 pour les jauges métalliques courantes</p></div>
+    <p>Cette variation est minuscule (0,2 % pour 1 000 µε) : on la mesure avec un montage électrique de quatre résistances appelé <b>pont de Wheatstone</b>.</p>
+    <p>Une jauge ne mesure que <b>l'allongement dans sa propre direction</b> : c'est l'aiguille de la boussole du chapitre 4, en vrai. Or un état plan demande 3 nombres (ε<sub>x</sub>, ε<sub>y</sub>, ε<sub>xy</sub>). Il faut donc <b>trois jauges</b> dans trois directions différentes, collées au même endroit : une <b>rosette</b>. La plus courante est la rosette « à 45° », avec des jauges à 0°, 45° et 90°.</p>
+    <p>La formule de ε<sub>n</sub> (chapitre 4) donne directement, pour φ = 0°, 45° et 90° :</p>
+    <div class="fx" style="max-width:640px"><div class="big" style="font-size:1.35rem;line-height:1.9"><span class="eps">ε<sub>x</sub></span> = ε<sub>0</sub> &nbsp;&nbsp; <span class="eps">ε<sub>y</sub></span> = ε<sub>90</sub> &nbsp;&nbsp; <span class="gam">ε<sub>xy</sub></span> = ε<sub>45</sub> − <span class="frac"><span>ε<sub>0</sub> + ε<sub>90</sub></span><span>2</span></span></div><p class="cap">ensuite : déformations principales et directions avec les formules du chapitre 4</p></div>
+    <p>Dernière étape : passer aux contraintes. Une jauge est collée sur une <b>surface libre</b>, donc en <b>contrainte plane</b>. La loi de Hooke dans ce cas (démontrée au cours 5) donne :</p>
+    <div class="fx"><div class="big" style="font-size:1.45rem"><span class="sig">σ<sub>I</sub></span> = <span class="frac"><span>E</span><span>1 − ν²</span></span>(<span class="eps">ε<sub>I</sub></span> + ν<span class="eps">ε<sub>II</sub></span>) &nbsp;&nbsp; <span class="sig">σ<sub>II</sub></span> = <span class="frac"><span>E</span><span>1 − ν²</span></span>(<span class="eps">ε<sub>II</sub></span> + ν<span class="eps">ε<sub>I</sub></span>)</div></div>
+  </div>
+
+  <!-- Photographies pédagogiques : rdm-03-c6 -->
+<div class="photo-study" id="photos-jauge">
+<h3>Reconnaître la direction d’une vraie jauge</h3>
+<figure class="course-photo" id="photo-jauge" aria-labelledby="photo-jauge-title">
+  <div class="photo-media"><img src="data:image/jpeg;base64,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" width="500" height="325" alt="Jauge résistive non montée : longues pistes horizontales reliées en méandre, avec deux grandes plages de raccordement à droite." loading="lazy" decoding="async"><button class="btn photo-open" type="button" aria-label="Agrandir : Une grille résistive avant collage" hidden><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 9 3 3m0 5V3h5M15 9l6-6m-5 0h5v5M9 15l-6 6m5 0H3v-5M15 15l6 6m0-5v5h-5"/></svg></button></div>
+  <figcaption><strong class="photo-title" id="photo-jauge-title">Une grille résistive avant collage</strong><div class="photo-legend"><p>La grille métallique fait de nombreux allers-retours sur un support isolant. Sur cette photo, ses longues pistes sont <b>horizontales</b> : c’est la direction principale de mesure. Les deux grandes plages à droite servent au raccordement électrique.</p><p>Il s’agit d’une <b>jauge simple</b>, photographiée avant montage. Une rosette associe plusieurs directions de mesure ; cette grille seule ne fournit pas tout le tenseur des déformations.</p></div><p class="photo-credit">Pleriche (2017-08-22), <a href="https://commons.wikimedia.org/wiki/File:Unmounted_strain_gauge.jpg">Unmounted strain gauge.jpg</a> · <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>. Version réduite de Commons ; fichier JPEG conservé, sans recadrage ni retouche. Photo maintenue sous cette licence.</p></figcaption>
+</figure>
+<div class="photo-question"><p><b>À toi d’observer.</b> Cette jauge mesure-t-elle directement une contrainte ?</p><details><summary>Voir les repères</summary><p>Elle renseigne la déformation suivant sa direction. Pour obtenir une contrainte, il faut ensuite un modèle mécanique, les propriétés du matériau et les hypothèses adaptées à la pièce.</p></details></div>
+</div>
+<!-- Fin des photographies : rdm-03-c6 -->
+<div class="lab" id="r6">
+    <p class="lab-h">Manipulation 6 : la calculatrice de rosette</p>
+    <p class="lab-sub">Entre les trois lectures de ta rosette (en µε) et le matériau. Le dessin montre la rosette, le cercle de rayon 1 déformé (très exagéré, en bleu) et les directions principales (en vert). Tu peux t'en servir pour vérifier les exercices.</p>
+    <div class="btns" id="r6pre">
+      <button class="btn" type="button" data-v="476,167,-143">Traction de 100 MPa selon x</button>
+      <button class="btn on" type="button" data-v="405,250,95">Paroi de réservoir (cours 2)</button>
+      <button class="btn" type="button" data-v="0,371,0">Cisaillement pur de 60 MPa</button>
+    </div>
+    <div class="matrow">
+      <div class="cubebox"><svg id="r6svg" viewBox="0 0 360 320" role="img" aria-label="Rosette de jauges et directions principales"></svg></div>
+      <div class="matbox">
+        <div class="wl-in" style="grid-template-columns:repeat(3,1fr)">
+          <label><span>ε<sub>0</sub> (µε)</span><input id="r6a" type="number" step="any"></label>
+          <label><span>ε<sub>45</sub> (µε)</span><input id="r6b" type="number" step="any"></label>
+          <label><span>ε<sub>90</sub> (µε)</span><input id="r6c" type="number" step="any"></label>
+          <label><span>E (GPa)</span><input id="r6E" type="number" step="any" value="210"></label>
+          <label><span>ν</span><input id="r6n" type="number" step="any" value="0.3"></label>
+        </div>
+      </div>
+    </div>
+    <div class="mm-steps" id="r6out"></div>
+    <p class="status" id="r6note"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">démonstration et piège</span></div>
+    <p><b>D'où vient la formule de ε<sub>xy</sub>.</b> À φ = 45°, cos 2φ = 0 et sin 2φ = 1 : la formule de ε<sub>n</sub> devient <span class="m">ε<sub>45</sub> = (ε<sub>x</sub> + ε<sub>y</sub>)/2 + ε<sub>xy</sub></span>. On isole ε<sub>xy</sub>, et on remplace ε<sub>x</sub> et ε<sub>y</sub> par les lectures à 0° et 90°.</p>
+    <p><b>Le piège de la troisième direction.</b> En contrainte plane, σ<sub>zz</sub> = 0 mais la pièce s'amincit sous la jauge (effet Poisson) : <span class="m"><span class="eps">ε<sub>zz</sub></span> = −<span class="frac"><span>ν</span><span>1 − ν</span></span>(<span class="eps">ε<sub>x</sub></span> + <span class="eps">ε<sub>y</sub></span>)</span>, non nul. Si tu utilisais les hypothèses de la déformation plane (ε<sub>zz</sub> = 0), tu te tromperais sur les contraintes. Les formules de ε<sub>n</sub> et le cercle dans le plan, eux, restent justes.</p>
+    <p><b>Vérification rapide.</b> En traction simple σ selon x : ε<sub>0</sub> = σ/E, ε<sub>90</sub> = −νσ/E, et ε<sub>45</sub> = (1 − ν)σ/(2E). Pour σ = 100 MPa et l'acier, cela donne 476, −143 et 167 µε : c'est le premier exemple de la manipulation.</p>
+    <div class="weld"><b>🔥 Mesurer une contrainte résiduelle de soudage</b>
+      <p>Une jauge ne mesure qu'une <b>variation</b> de déformation depuis son collage : collée sur une soudure déjà refroidie, elle ne « voit » pas les contraintes résiduelles déjà présentes. L'astuce de la <b>méthode du trou incrémental</b> (normalisée notamment par la norme américaine ASTM E837, ASTM signifiant <i>American Society for Testing and Materials</i>) : on colle une rosette spéciale, on perce un petit trou de quelques millimètres en son centre, par paliers de profondeur. Le métal autour du trou se relâche, la rosette mesure ce relâchement, et un calcul (utilisant les formules de ce chapitre) remonte aux contraintes résiduelles qui existaient avant le perçage. C'est l'une des méthodes les plus utilisées sur les assemblages soudés.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="exos">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✎</div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Du champ de déplacement jusqu'à la rosette</p></div>
+    <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de muscu : on ne progresse qu'en soulevant soi-même</span></div>
+  </div>
+  <div class="lv lv1"><div class="lv-h">👁 Mode d'emploi <span class="tag">essaie de tête, puis la fiche, puis le cours</span></div>
+    <p>Essaie chaque question de tête 2 à 3 minutes. Si tu bloques, regarde d'abord la <b>fiche mémoire</b> en bas de page, puis le chapitre. Marque d'un ↺ ce que tu as dû chercher, et refais ces points à froid plus tard. Les manipulations 4 et 6 te permettent de vérifier les exercices 3 et 6.</p>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 1 : du déplacement au tenseur <span class="lvtag">N1 · chapitres 1 et 2</span></h4>
+    <p>Dans une plaque, le déplacement vaut (x et y en mm, u et v en mm) : <span class="m">u = 0,002x + 0,001y</span> et <span class="m">v = 0,003x − 0,001y</span>.</p>
+    <p><b>a)</b> Écris la matrice grad u.<br><b>b)</b> Calcule ε<sub>x</sub>, ε<sub>y</sub>, ε<sub>xy</sub> et la distorsion γ.<br><b>c)</b> Calcule la rotation locale ω<sub>z</sub>.<br><b>d)</b> Écris le tenseur ε en µε.</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> On dérive : ∂u/∂x = 0,002 ; ∂u/∂y = 0,001 ; ∂v/∂x = 0,003 ; ∂v/∂y = −0,001. Donc <span class="m">grad u = <span class="inlinemat" style="grid-template-columns:repeat(2,auto)"><span>0,002</span><span>0,001</span><span>0,003</span><span>−0,001</span></span></span>.</p>
+      <p><b>b)</b> <span class="m"><span class="eps">ε<sub>x</sub></span> = ∂u/∂x = <b>0,002</b></span> ; <span class="m"><span class="eps">ε<sub>y</sub></span> = ∂v/∂y = <b>−0,001</b></span> ; <span class="m"><span class="gam">ε<sub>xy</sub></span> = ½(0,001 + 0,003) = <b>0,002</b></span> ; et <span class="m"><span class="gam">γ</span> = 2ε<sub>xy</sub> = <b>0,004 rad</b></span>.</p>
+      <p><b>c)</b> <span class="m">ω<sub>z</sub> = ½(∂v/∂x − ∂u/∂y) = ½(0,003 − 0,001) = <b>0,001 rad</b></span> (≈ 0,06°), dans le sens trigonométrique. Elle ne crée aucune contrainte.</p>
+      <p><b>d)</b> <span class="m"><span class="eps">ε</span> = <span class="inlinemat" style="grid-template-columns:repeat(2,auto)"><span class="eps">2 000</span><span class="gam">2 000</span><span class="gam">2 000</span><span class="eps">−1 000</span></span> µε</span>. Vérification : grad u = ε + ω, avec ω = <span class="inlinemat" style="grid-template-columns:repeat(2,auto)"><span>0</span><span>−0,001</span><span>0,001</span><span>0</span></span> ✅.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 2 : le piège γ/2 en situation <span class="lvtag">N1 · chapitre 2</span></h4>
+    <p>Un petit carré de 10 × 10 mm subit un glissement simple : son côté supérieur se décale de 0,02 mm vers la droite, son côté inférieur reste fixe.</p>
+    <p><b>a)</b> Calcule la distorsion γ.<br><b>b)</b> Écris le tenseur ε en 2D.<br><b>c)</b> Ce mouvement contient-il une rotation ? Laquelle ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> Le côté vertical penche de 0,02/10 = 0,002 rad, l'autre ne bouge pas : <span class="m"><span class="gam">γ</span> = <b>0,002 rad</b></span>.</p>
+      <p><b>b)</b> Seuls ∂u/∂y = 0,002 et ∂v/∂x = 0 : ε<sub>x</sub> = ε<sub>y</sub> = 0 et <span class="m"><span class="gam">ε<sub>xy</sub></span> = ½(0,002 + 0) = <b>0,001</b></span>. Donc <span class="m"><span class="eps">ε</span> = <span class="inlinemat" style="grid-template-columns:repeat(2,auto)"><span>0</span><span class="gam">0,001</span><span class="gam">0,001</span><span>0</span></span></span>, et surtout pas 0,002 dans les cases.</p>
+      <p><b>c)</b> Oui : <span class="m">ω<sub>z</sub> = ½(0 − 0,002) = <b>−0,001 rad</b></span>, une rotation de γ/2 dans le sens horaire. Glissement simple = cisaillement pur (γ/2 de chaque côté) + rotation de γ/2 : c'est la manipulation 2.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 3 : déformations principales et cercle <span class="lvtag">N2 · chapitre 4</span></h4>
+    <p>En un point, <span class="m">ε<sub>x</sub> = 600 µε</span>, <span class="m">ε<sub>y</sub> = −200 µε</span>, <span class="m">ε<sub>xy</sub> = 300 µε</span>.</p>
+    <p><b>a)</b> Calcule le centre C et le rayon R du cercle de Mohr.<br><b>b)</b> Déduis ε<sub>I</sub>, ε<sub>II</sub> et la direction principale I.<br><b>c)</b> Calcule ε<sub>n</sub> et ε<sub>nt</sub> pour φ = 45°.<br><b>d)</b> Quelle est la distorsion maximale ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">C = (600 − 200)/2 = <b>200 µε</b></span>. Avec a = (ε<sub>x</sub> − ε<sub>y</sub>)/2 = 400 : <span class="m">R = √(400² + 300²) = <b>500 µε</b></span> (le triangle 3-4-5).</p>
+      <p><b>b)</b> <span class="m"><span class="eps">ε<sub>I</sub></span> = 200 + 500 = <b>700 µε</b></span> et <span class="m"><span class="eps">ε<sub>II</sub></span> = 200 − 500 = <b>−300 µε</b></span>. Puis tan 2φ = 2 × 300/800 = 0,75, donc 2φ = 36,9° et <b>φ<sub>I</sub> = 18,4°</b> (c'est bien I, car ε<sub>x</sub> &gt; ε<sub>y</sub> et l'angle est entre −45° et +45°).</p>
+      <p><b>c)</b> À 45° : cos 90° = 0 et sin 90° = 1. <span class="m"><span class="eps">ε<sub>n</sub></span> = 200 + 0 + 300 = <b>500 µε</b></span> et <span class="m"><span class="gam">ε<sub>nt</sub></span> = −400 × 1 + 300 × 0 = <b>−400 µε</b></span>.</p>
+      <p><b>d)</b> <span class="m"><span class="gam">γ</span><sub>max</sub> = 2R = ε<sub>I</sub> − ε<sub>II</sub> = <b>1 000 µε</b></span>, soit 0,001 rad. Attention : R seul est le demi-glissement.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 4 : jusqu'où l'HPP est-elle valable ? <span class="lvtag">N2 · chapitre 3</span></h4>
+    <p>Une pièce en acier S235 (E = 210 GPa) tourne en bloc, sans se déformer, d'un angle α.</p>
+    <p><b>a)</b> Pour α = 3°, que donnent ε<sub>x</sub> (petites déformations) et 𝔼<sub>xx</sub> (Green-Lagrange) ?<br><b>b)</b> Compare à la déformation élastique maximale de l'acier.<br><b>c)</b> Même question pour α = 0,1°.</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m"><span class="eps">ε<sub>x</sub></span> = cos 3° − 1 = <b>−0,00137</b></span> (−1 370 µε) : une compression fictive. <span class="m">𝔼<sub>xx</sub> = <b>0</b></span> exactement : aucune déformation réelle.</p>
+      <p><b>b)</b> Rₑ/E = 235/210 000 = 1 120 µε. L'erreur (1 370 µε) dépasse la déformation élastique maximale : le calcul HPP annoncerait une plastification qui n'existe pas.</p>
+      <p><b>c)</b> 0,1° = 0,001 75 rad ; cos 0,1° − 1 ≈ −α²/2 = <b>−1,5 µε</b>, soit 0,1 % de 1 120 µε : négligeable. L'HPP est valable.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 5 : la barre bridée <span class="lvtag">N1 puis N2 · chapitre 5</span></h4>
+    <p>Barre en acier S235 : E = 210 GPa, α = 12 × 10⁻⁶ K⁻¹, Rₑ = 235 MPa, longueur 2 m.</p>
+    <p><b>a)</b> Libre, on la chauffe de 60 °C : de combien s'allonge-t-elle ? Quelle contrainte ?<br><b>b)</b> Bridée, même échauffement : quelle contrainte ?<br><b>c)</b> Bridée, on la chauffe de 300 °C puis on la ramène à la température initiale : quelle contrainte résiduelle (modèle à Rₑ constant) ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">ΔL = αΔT·L = 12 × 10⁻⁶ × 60 × 2 000 = <b>1,44 mm</b></span>, et <b>aucune contrainte</b> : elle est libre.</p>
+      <p><b>b)</b> <span class="m"><span class="sig">σ</span> = −EαΔT = −210 000 × 12 × 10⁻⁶ × 60 = <b>−151 MPa</b></span> : compression, encore élastique (&lt; 235).</p>
+      <p><b>c)</b> Plastification en compression à ΔT<sub>1</sub> = 235/2,52 ≈ 93 °C. Au refroidissement, la contrainte remonte de 2,52 MPa par degré depuis −235 MPa : il faudrait 2,52 × 300 − 235 = 521 MPa, plus que Rₑ. Elle plafonne donc à <b>σ<sub>résiduelle</sub> = +235 MPa</b> en traction, dès que ΔT<sub>max</sub> dépasse 2 × 93 ≈ 187 °C. C'est le mécanisme des contraintes résiduelles de soudage.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 6 : la rosette sur le réservoir <span class="lvtag">N2 · chapitre 6</span></h4>
+    <p>Une rosette à 45° collée sur la paroi d'un réservoir (jauge 0° selon la circonférence) lit : ε<sub>0</sub> = 405 µε, ε<sub>45</sub> = 250 µε, ε<sub>90</sub> = 95 µε. Acier : E = 210 GPa, ν = 0,3.</p>
+    <p><b>a)</b> Calcule ε<sub>x</sub>, ε<sub>y</sub>, ε<sub>xy</sub>.<br><b>b)</b> Les axes de la rosette sont-ils principaux ?<br><b>c)</b> Calcule les contraintes, puis ε<sub>zz</sub>.<br><b>d)</b> Si R = 500 mm et e = 10 mm, quelle est la pression ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> ε<sub>x</sub> = 405 µε ; ε<sub>y</sub> = 95 µε ; <span class="m"><span class="gam">ε<sub>xy</sub></span> = 250 − (405 + 95)/2 = <b>0</b></span>.</p>
+      <p><b>b)</b> Oui : ε<sub>xy</sub> = 0, donc x et y sont les directions principales (circonférentielle et axiale, comme le prévoit le cours 2).</p>
+      <p><b>c)</b> E/(1 − ν²) = 210 000/0,91 = 230 769 MPa. <span class="m"><span class="sig">σ<sub>x</sub></span> = 230 769 × (405 + 0,3 × 95) × 10⁻⁶ = <b>100 MPa</b></span> et <span class="m"><span class="sig">σ<sub>y</sub></span> = 230 769 × (95 + 0,3 × 405) × 10⁻⁶ = <b>50 MPa</b></span>. Et <span class="m"><span class="eps">ε<sub>zz</sub></span> = −(0,3/0,7) × 500 = <b>−214 µε</b></span> : la paroi s'amincit.</p>
+      <p><b>d)</b> σ<sub>θθ</sub> = pR/e donne <span class="m">p = 100 × 10/500 = <b>2 MPa</b></span> (20 bar). C'est le réservoir du cours 2 : la rosette a « retrouvé » la pression.</p>
+    </div></details>
+  </div>
+
+  <div class="exo" style="border-left-color:var(--gam)">
+    <h4>Défi : la rosette qui cache un cisaillement <span class="lvtag">N2 · chapitres 4 et 6</span></h4>
+    <p>Lectures : ε<sub>0</sub> = 0, ε<sub>45</sub> = 371 µε, ε<sub>90</sub> = 0 (acier, E = 210 GPa, ν = 0,3). Trouve l'état de contrainte.</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p>ε<sub>xy</sub> = 371 − 0 = 371 µε, C = 0, R = 371 µε : ε<sub>I</sub> = 371 et ε<sub>II</sub> = −371 µε, à φ<sub>I</sub> = 45°. Contraintes : <span class="m"><span class="sig">σ<sub>I</sub></span> = 230 769 × (371 − 0,3 × 371) × 10⁻⁶ ≈ <b>60 MPa</b></span> et σ<sub>II</sub> ≈ <b>−60 MPa</b>. C'est un <b>cisaillement pur</b> de τ = 60 MPa dans les axes x et y. Vérification avec le cours 1 : τ = Gγ = 2Gε<sub>xy</sub> = 2 × 80 769 × 371 × 10⁻⁶ ≈ 60 MPa ✅.</p>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="quiz-s">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">?</div>
+    <div class="c-title"><h2>Quiz : 12 questions éclair</h2><p>Chaque réponse est expliquée, même quand tu as juste</p></div>
+    <div class="c-img"><span class="ico">🎯</span><span><small>Image à retenir</small>La cible : vise 10/12 avant le cours 4</span></div>
+  </div>
+  <div id="quiz"></div>
+  <div class="score" id="qzScore" aria-live="polite">Score : 0 / 12</div>
+  <div class="btns"><button class="btn" id="qzReset" type="button">↺ Recommencer le quiz</button></div>
+</div>
+</section>
+
+<section class="chap" id="fiche">
+<div class="wrap wide">
+  <div class="cartouche">
+    <div class="c-num">★</div>
+    <div class="c-title"><h2>Fiche mémoire du cours 3</h2><p>Neuf cases, neuf images : à photographier, puis à redessiner de tête</p></div>
+    <div class="c-img"><span class="ico">💧</span><span><small>Image à retenir</small>Un château d'eau secoué donne naissance à la jauge</span></div>
+  </div>
+  <div class="fiche">
+    <div><div class="ic">🐦</div><h4>Le déplacement</h4><div class="f"><span class="vec">u</span> = <span style="text-decoration:overline">P₀P</span></div><p>Translation et rotation : corps rigide, aucune contrainte. Seule la déformation compte.</p></div>
+    <div><div class="ic">🗺️</div><h4>Le gradient</h4><div class="f">𝔽 = 𝕀 + <span style="text-decoration:overline">Grad</span> <span class="vec">u</span></div><p>Les pentes ∂u/∂x, ∂u/∂y, ∂v/∂x, ∂v/∂y : la différence de mouvement entre voisins.</p></div>
+    <div><div class="ic">🚪</div><h4>Déformation + rotation</h4><div class="f"><span class="eps">ε</span> = ½(grad u + grad u<sup>t</sup>)</div><p>La porte : partie symétrique = déformation, partie antisymétrique ω = rotation (sans contrainte).</p></div>
+    <div><div class="ic">📐</div><h4>Le γ/2</h4><div class="f"><span class="gam">ε<sub>xy</sub></span> = ½(∂u/∂y + ∂v/∂x) = <span class="gam">γ</span>/2</div><p>Le tenseur range la moitié de l'angle perdu. Hooke : σ<sub>xy</sub> = 2Gε<sub>xy</sub>.</p></div>
+    <div><div class="ic">🎡</div><h4>HPP</h4><div class="f">𝔼 = ½(𝔽<sup>t</sup>𝔽 − 𝕀)</div><p>La grande roue : 𝔼 exacte (0 en rotation). HPP : on néglige Grad u<sup>t</sup>·Grad u → petites déformations <b>et</b> rotations.</p></div>
+    <div><div class="ic">🧭</div><h4>L'aiguille</h4><div class="f"><span class="eps">ε<sub>n</sub></span> = C + a cos 2φ + <span class="gam">ε<sub>xy</sub></span> sin 2φ</div><p><span class="gam">ε<sub>nt</sub></span> = −a sin 2φ + ε<sub>xy</sub> cos 2φ, avec a = (ε<sub>x</sub> − ε<sub>y</sub>)/2.</p></div>
+    <div><div class="ic">⭕</div><h4>Principales</h4><div class="f"><span class="eps">ε<sub>I, II</sub></span> = C ± R</div><p>tan 2φ = 2ε<sub>xy</sub>/(ε<sub>x</sub> − ε<sub>y</sub>). γ<sub>max</sub> = 2R. Le point tourne de 2φ en sens inverse.</p></div>
+    <div><div class="ic">🌡️</div><h4>Thermique</h4><div class="f"><span class="eps">ε<sub>th</sub></span> = <span class="mat">α</span>ΔT &nbsp; bridé : <span class="sig">σ</span> = −EαΔT</div><p>Acier : 2,5 MPa/°C. Chauffe puis refroidissement bridés : résiduelle ≈ +Rₑ.</p></div>
+    <div><div class="ic">🌹</div><h4>Rosette</h4><div class="f"><span class="gam">ε<sub>xy</sub></span> = ε<sub>45</sub> − (ε<sub>0</sub> + ε<sub>90</sub>)/2</div><p>Surface libre = contrainte plane. σ<sub>I</sub> = E/(1 − ν²)(ε<sub>I</sub> + νε<sub>II</sub>).</p></div>
+  </div>
+  <div class="fun"><span class="fun-h">💧 Fun fact : La jauge de déformation, née d'un château d'eau secoué</span>La jauge du <a href="#c6">chapitre 6</a> a été inventée deux fois en 1938, chacune de son côté. Au Caltech (California Institute of Technology), Edward Simmons cherchait à mesurer les efforts dans des essais de choc sur des métaux. Au MIT (Massachusetts Institute of Technology), près de Boston, le professeur Arthur Ruge étudiait l'effet des séismes sur une maquette de château d'eau posée sur une table vibrante. Pour mesurer les déformations de sa paroi, il y colle directement un fil métallique très fin, dont la résistance électrique varie quand il s'allonge. Le principe n'a pas changé : des jauges équipent aujourd'hui les ponts, les avions et la plupart des balances de cuisine électroniques, dont le capteur de force est une petite pièce d'aluminium munie de jauges.</div>
+</div>
+</section>
+
+<section class="chap" id="gloss">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">A–Z</div>
+    <div class="c-title"><h2>Glossaire</h2><p>Les mots, symboles et sigles nouveaux de ce cours</p></div>
+    <div class="c-img"><span class="ico">📖</span><span><small>Image à retenir</small>Le dictionnaire : un mot flou, un clic</span></div>
+  </div>
+  <p class="mut">Les termes des cours 1 et 2 sont dans leurs propres glossaires.</p>
+  <dl class="gloss">
+    <dt>α (dilatation)</dt><dd>Coefficient de dilatation thermique, en K⁻¹ : allongement relatif par degré d'échauffement. Acier ≈ 12 × 10⁻⁶.</dd>
+    <dt>Champ de déplacement</dt><dd>L'ensemble des vecteurs déplacement de tous les points d'un solide.</dd>
+    <dt>Contrainte plane</dt><dd>État où les contraintes selon une direction (z) sont nulles : σ<sub>zz</sub> = 0 mais ε<sub>zz</sub> ≠ 0. Cas des tôles minces et des surfaces libres.</dd>
+    <dt>Corps rigide (mouvement de)</dt><dd>Translation ou rotation qui ne change ni les distances ni les angles : aucune déformation, aucune contrainte.</dd>
+    <dt>∂ (dérivée partielle)</dt><dd>« d rond » : variation d'une grandeur quand une seule variable change, les autres restant fixes. ∂u/∂y : pente de u selon y.</dd>
+    <dt>Déformation plane</dt><dd>État où il n'y a ni déplacement selon z ni dépendance en z : ε<sub>zz</sub> = 0 mais σ<sub>zz</sub> ≠ 0. Cas des pièces très longues.</dd>
+    <dt>Déformation thermique</dt><dd>ε<sub>th</sub> = αΔT, identique dans toutes les directions, sans glissement. Ne crée de contrainte que si elle est empêchée.</dd>
+    <dt>Déformations principales</dt><dd>ε<sub>I</sub>, ε<sub>II</sub>, ε<sub>III</sub> : allongements dans les directions où aucun angle droit ne se referme (ε<sub>nt</sub> = 0).</dd>
+    <dt>Distorsion (de soudage)</dt><dd>Déformation permanente d'un assemblage causée par le retrait des cordons : retrait, déformation angulaire, voilement.</dd>
+    <dt>ε<sub>n</sub>, ε<sub>nt</sub></dt><dd>Allongement relatif dans la direction n⃗, et demi-glissement entre n⃗ et t⃗ (t⃗ = n⃗ tourné de +90°).</dd>
+    <dt>Eulérien / lagrangien</dt><dd>Lagrangien : on suit chaque particule depuis sa position initiale (RDM). Eulérien : on observe un point fixe de l'espace (fluides).</dd>
+    <dt>Facteur de jauge k</dt><dd>Rapport entre la variation relative de résistance d'une jauge et la déformation : ΔR/R = kε, avec k ≈ 2.</dd>
+    <dt>𝔽 (gradient de transformation)</dt><dd>𝔽 = 𝕀 + Grad u : transforme un petit segment d'avant en segment d'après (dx = 𝔽 dX).</dd>
+    <dt>Grad, grad</dt><dd>Gradient par rapport à la position initiale (Grad) ou actuelle (grad). Égaux en HPP.</dd>
+    <dt>Gradient du déplacement</dt><dd>Matrice des dérivées partielles ∂u<sub>i</sub>/∂x<sub>j</sub> : comment le déplacement varie d'un point à ses voisins.</dd>
+    <dt>𝔼 (Green-Lagrange)</dt><dd>Tenseur des déformations exact : 𝔼 = ½(𝔽<sup>t</sup>𝔽 − 𝕀). Nul pour toute rotation, même grande.</dd>
+    <dt>HPP</dt><dd>Hypothèse des petites perturbations : petites déformations et petites rotations, donc petits déplacements. Permet d'utiliser ℇ au lieu de 𝔼.</dd>
+    <dt>𝕀 (identité)</dt><dd>Matrice avec des 1 sur la diagonale et des 0 ailleurs : multiplier par 𝕀 ne change rien.</dd>
+    <dt>Jauge de déformation</dt><dd>Fil résistif très fin collé sur une pièce, dont la résistance varie avec l'allongement dans sa direction.</dd>
+    <dt>Méthode du trou incrémental</dt><dd>Mesure des contraintes résiduelles : on perce un petit trou par paliers au centre d'une rosette spéciale et on mesure le relâchement (notamment ASTM E837).</dd>
+    <dt>ω (rotation)</dt><dd>Partie antisymétrique du gradient du déplacement : rotation locale, sans déformation. En 2D, ω<sub>z</sub> = ½(∂v/∂x − ∂u/∂y).</dd>
+    <dt>Pont de Wheatstone</dt><dd>Montage électrique de 4 résistances qui permet de mesurer de très petites variations de résistance, donc les signaux des jauges.</dd>
+    <dt>Retrait</dt><dd>Contraction d'un cordon qui refroidit ; empêchée par le métal environnant, elle crée contraintes résiduelles et distorsions.</dd>
+    <dt>Rosette</dt><dd>Trois jauges collées au même endroit dans trois directions (souvent 0°, 45°, 90°) pour mesurer l'état de déformation plan complet.</dd>
+    <dt>ℇ (petites déformations)</dt><dd>Tenseur des déformations linéarisé : ℇ = ½(grad u + grad u<sup>t</sup>). Symétrique, 6 composantes.</dd>
+    <dt>Transposée (exposant t)</dt><dd>Matrice obtenue en échangeant lignes et colonnes.</dd>
+    <dt>Tricercle de Mohr</dt><dd>Les trois cercles construits sur les trois valeurs principales, deux à deux (cours 4).</dd>
+    <dt>VER</dt><dd>Volume élémentaire représentatif : le plus petit morceau de matière assez grand pour contenir beaucoup de grains, sur lequel on peut définir contrainte et déformation.</dd>
+  </dl>
+
+  <hr class="sep">
+  <h3>Check-list : suis-je prêt pour le cours 4 ?</h3>
+  <p>Coche seulement ce que tu sais faire <b>de tête</b>. Tes coches restent enregistrées dans ce navigateur.</p>
+  <div class="check" id="checklist">
+    <label><input type="checkbox" data-c="1"> Je sais distinguer translation, rotation et déformation dans un champ de déplacement.</label>
+    <label><input type="checkbox" data-c="2"> Je sais écrire grad u à partir de u(x, y) et v(x, y).</label>
+    <label><input type="checkbox" data-c="3"> Je sais calculer ε<sub>x</sub>, ε<sub>y</sub>, ε<sub>xy</sub> et la rotation ω<sub>z</sub>.</label>
+    <label><input type="checkbox" data-c="4"> Je sais expliquer d'où vient ε<sub>xy</sub> = γ/2.</label>
+    <label><input type="checkbox" data-c="5"> Je sais dire ce qui distingue 𝔼 et ℇ, et les deux conditions de l'HPP.</label>
+    <label><input type="checkbox" data-c="6"> Je connais par cœur les formules de ε<sub>n</sub> et ε<sub>nt</sub>.</label>
+    <label><input type="checkbox" data-c="7"> Je sais calculer ε<sub>I</sub>, ε<sub>II</sub>, la direction principale et γ<sub>max</sub>.</label>
+    <label><input type="checkbox" data-c="8"> Je sais faire la différence entre déformation plane et contrainte plane.</label>
+    <label><input type="checkbox" data-c="9"> Je sais calculer la contrainte d'une barre bridée chauffée, et expliquer la contrainte résiduelle de soudage.</label>
+    <label><input type="checkbox" data-c="10"> Je sais dépouiller une rosette 0/45/90 jusqu'aux contraintes principales.</label>
+  </div>
+  <p class="status" id="checkMsg"></p>
+
+  <div class="meta">🔭 <b>Au prochain épisode, cours 4 : directions principales et tricercle de Mohr.</b> On revient aux contraintes, en 3D cette fois. Tu apprendras à trouver les trois contraintes principales d'une matrice 3 × 3 (valeurs propres, invariants), à tracer le tricercle de Mohr, à lire le cisaillement maximal en 3D, et tu verras enfin sur le dessin pourquoi l'état triaxial d'une soudure épaisse empêche la plasticité.</div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="wrap">
+  <p>Cours 3 sur 5 de la série « Résistance des matériaux, de zéro aux matrices ». Valeurs des matériaux données comme ordres de grandeur usuels ; le modèle thermique de la manipulation 5 est volontairement simplifié (E et Rₑ constants). Pour les notations et les conventions, l'enseignement de ta formation fait foi.</p>
+</div>
+</footer>
+<script>
+(function(){
+"use strict";
+const NS="http://www.w3.org/2000/svg";
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const RM=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function el(tag,attrs,parent){
+  const e=document.createElementNS(NS,tag);
+  if(attrs){for(const k in attrs){const v=attrs[k];if(v===undefined||v===null)continue;
+    if(typeof v==="string"&&v.indexOf("var(")>=0&&k!=="style")e.style.setProperty(k,v);else e.setAttribute(k,v);}}
+  if(parent)parent.appendChild(e);
+  return e;
+}
+function tx(p,x,y,str,cls,extra){
+  const t=el("text",Object.assign({x:x,y:y},cls?{class:cls}:{},extra||{}),p);
+  t.textContent=str;return t;
+}
+function txSub(p,x,y,main,sub,cls,extra){
+  const t=el("text",Object.assign({x:x,y:y},cls?{class:cls}:{},extra||{}),p);
+  t.appendChild(document.createTextNode(main));
+  const s=el("tspan",{dy:"4",style:"font-size:.7em"},t);s.textContent=sub;
+  return t;
+}
+function clear(svg){while(svg.firstChild)svg.removeChild(svg.firstChild);}
+function arrow(p,x1,y1,x2,y2,cls,w,h){
+  w=w||3;h=h||11;
+  const g=el("g",{class:"arr "+(cls||"ink")},p);
+  const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy);
+  if(L<1)return g;
+  const ux=dx/L,uy=dy/L,hh=Math.min(h,L*0.65),bx=x2-ux*hh,by=y2-uy*hh,hw=hh*0.48+w*0.35;
+  el("line",{x1:x1,y1:y1,x2:bx,y2:by,"stroke-width":w,"stroke-linecap":"round"},g);
+  el("polygon",{points:x2+","+y2+" "+(bx-uy*hw)+","+(by+ux*hw)+" "+(bx+uy*hw)+","+(by-ux*hw)},g);
+  return g;
+}
+function nf(v,d){
+  if(d===undefined)d=1;
+  if(Math.abs(v)<0.5*Math.pow(10,-d))v=0;
+  return v.toLocaleString("fr-FR",{minimumFractionDigits:d,maximumFractionDigits:d}).replace("-","−");
+}
+const SUP={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function sci(v,d){
+  if(v===0)return "0";
+  const e=Math.floor(Math.log10(Math.abs(v)));
+  let m=v/Math.pow(10,e);
+  if(Math.abs(m)>=9.995){m/=10;return sci(v,d);}
+  return nf(m,d===undefined?2:d)+" × 10"+String(e).split("").map(c=>SUP[c]).join("");
+}
+function smart(v,d){return Math.abs(v)>0&&Math.abs(v)<1e-3?sci(v,2):nf(v,d);}
+const S=(c,t)=>'<span class="'+c+'">'+t+'</span>';
+
+/* =========================================================
+   d1 : translation, rotation ou déformation ?
+   ========================================================= */
+(function(){
+  const svg=$("#d1svg");if(!svg)return;
+  const ia=$("#d1a");let mode="tr";
+  const C=[250,160],sp=36,N=4; // grille 5x5, de -2 à +2
+  const f3=v=>nf(v,3);
+  function disp(mo,a,x,y){ // x,y relatifs au centre, repère math (y vers le haut) ; renvoie le point transformé
+    if(mo==="tr")return [x+90*a,y+30*a];
+    if(mo==="ro"){const t=40*a*Math.PI/180;return [x*Math.cos(t)-y*Math.sin(t),x*Math.sin(t)+y*Math.cos(t)];}
+    if(mo==="et")return [x*(1+0.4*a),y];
+    return [x+0.5*a*y,y];
+  }
+  function grad(mo,a){
+    if(mo==="tr")return [[0,0],[0,0]];
+    if(mo==="ro"){const t=40*a*Math.PI/180;return [[Math.cos(t)-1,-Math.sin(t)],[Math.sin(t),Math.cos(t)-1]];}
+    if(mo==="et")return [[0.4*a,0],[0,0]];
+    return [[0,0.5*a],[0,0]];
+  }
+  const S2=p=>[C[0]+p[0],C[1]-p[1]];
+  function draw(){
+    const a=+ia.value/100;$("#d1av").textContent=nf(a*100,0)+" %";
+    clear(svg);
+    const pts=[],P0=[];
+    for(let j=-2;j<=2;j++)for(let i=-2;i<=2;i++){P0.push([i*sp,j*sp]);pts.push(disp(mode,a,i*sp,j*sp));}
+    const id=(i,j)=>(j+2)*5+(i+2);
+    // grille initiale
+    for(let k=-2;k<=2;k++){
+      let A=S2([-2*sp,k*sp]),B=S2([2*sp,k*sp]);el("line",{x1:A[0],y1:A[1],x2:B[0],y2:B[1],class:"ref"},svg);
+      A=S2([k*sp,-2*sp]);B=S2([k*sp,2*sp]);el("line",{x1:A[0],y1:A[1],x2:B[0],y2:B[1],class:"ref"},svg);
+    }
+    // contour déformé
+    const cont=[];[[-2,-2],[2,-2],[2,2],[-2,2]].forEach(c=>{const p=S2(pts[id(c[0],c[1])]);cont.push(p[0].toFixed(1)+","+p[1].toFixed(1));});
+    el("polygon",{points:cont.join(" "),class:"bar",opacity:0.8},svg);
+    for(let k=-2;k<=2;k++){
+      let row=[],col=[];for(let m=-2;m<=2;m++){row.push(S2(pts[id(m,k)]));col.push(S2(pts[id(k,m)]));}
+      el("polyline",{points:row.map(p=>p.join(",")).join(" "),fill:"none",class:"gridl"},svg);
+      el("polyline",{points:col.map(p=>p.join(",")).join(" "),fill:"none",class:"gridl"},svg);
+    }
+    // flèches de déplacement
+    P0.forEach((p,k)=>{const A=S2(p),B=S2(pts[k]);if(Math.hypot(B[0]-A[0],B[1]-A[1])>4)arrow(svg,A[0],A[1],B[0],B[1],"ink",1.3,6);el("circle",{cx:A[0],cy:A[1],r:1.8,fill:"var(--muted)"},svg);});
+    // segments témoins depuis P (coin bas-gauche)
+    const P=pts[id(-2,-2)],Q=pts[id(2,-2)],R=pts[id(-2,2)];
+    const sP=S2(P),sQ=S2(Q),sR=S2(R);
+    el("line",{x1:sP[0],y1:sP[1],x2:sQ[0],y2:sQ[1],style:"stroke:var(--eps);stroke-width:4;stroke-linecap:round"},svg);
+    el("line",{x1:sP[0],y1:sP[1],x2:sR[0],y2:sR[1],style:"stroke:var(--gam);stroke-width:4;stroke-linecap:round"},svg);
+    tx(svg,sP[0]-8,sP[1]+16,"P","mth",{"text-anchor":"end"});tx(svg,sQ[0]+6,sQ[1]+16,"Q","mth");tx(svg,sR[0]-8,sR[1]-4,"R","mth",{"text-anchor":"end"});
+    const L0=4*sp,L1=Math.hypot(Q[0]-P[0],Q[1]-P[1]),L2=Math.hypot(R[0]-P[0],R[1]-P[1]);
+    const ang=Math.acos(((Q[0]-P[0])*(R[0]-P[0])+(Q[1]-P[1])*(R[1]-P[1]))/(L1*L2))*180/Math.PI;
+    // panneau de droite : bilan
+    const bx=470;
+    tx(svg,bx,60,"Bilan au point P","lbl",{style:"font-weight:700"});
+    tx(svg,bx,88,"PQ : ×"+nf(L1/L0,2),"mth eps");
+    tx(svg,bx,114,"PR : ×"+nf(L2/L0,2),"mth gam");
+    tx(svg,bx,140,"angle QPR : "+nf(ang,1)+"°","mth");
+    const rig=Math.abs(L1/L0-1)<0.005&&Math.abs(L2/L0-1)<0.005&&Math.abs(ang-90)<0.3;
+    tx(svg,bx,176,rig?"corps rigide":"déformation",rig?"lbl":"lbl",{style:"font-weight:700;fill:"+(rig?"var(--ok)":"var(--sig)")});
+    const g=grad(mode,a);
+    $("#d1out").innerHTML="grad u = "+'<span class="inlinemat" style="grid-template-columns:repeat(2,auto)"><span>'+f3(g[0][0])+"</span><span>"+f3(g[0][1])+"</span><span>"+f3(g[1][0])+"</span><span>"+f3(g[1][1])+"</span></span>"+
+      " &nbsp; → &nbsp; "+S("eps","ε<sub>x</sub> = ∂u/∂x = "+f3(g[0][0]))+" · "+S("eps","ε<sub>y</sub> = "+f3(g[1][1]))+" · "+S("gam","ε<sub>xy</sub> = ½(∂u/∂y + ∂v/∂x) = "+f3((g[0][1]+g[1][0])/2));
+    const NOTE={
+      tr:"🐦 <b>Translation</b> : les flèches sont grandes mais toutes identiques. Le gradient est nul : aucune déformation, aucune contrainte.",
+      ro:"🐦 <b>Rotation</b> : les flèches tournent autour du centre. Longueurs et angle droit sont conservés : corps rigide. Remarque : le gradient n'est pas nul et ε<sub>x</sub> affiche une valeur négative (une compression), alors que rien ne se déforme ! C'est le défaut de la mesure simplifiée, expliqué au chapitre 3.",
+      et:"🐦 <b>Étirement</b> : PQ s'allonge, PR ne bouge pas, l'angle reste droit. Seul ∂u/∂x est non nul : c'est ε<sub>x</sub>.",
+      ci:"🐦 <b>Glissement</b> : les longueurs changent peu mais l'angle droit se referme. Seul ∂u/∂y est non nul : le chapitre 2 montre que ε<sub>xy</sub> n'en garde que la moitié."
+    };
+    $("#d1note").innerHTML=NOTE[mode];
+  }
+  ia.addEventListener("input",draw);
+  $$("#d1m .btn").forEach(b=>b.addEventListener("click",()=>{$$("#d1m .btn").forEach(o=>o.classList.toggle("on",o===b));mode=b.dataset.m;draw();}));
+  draw();
+})();
+
+/* =========================================================
+   g2 : le carré que tu déformes toi-même
+   ========================================================= */
+(function(){
+  const svg=$("#g2svg");if(!svg)return;
+  const ids=["g2a","g2b","g2c","g2d"],I=ids.map(i=>$("#"+i));
+  const s=100,CX=[110,330,540],CY=165;
+  function sq(cx,H,cls,lab,showAng,col){
+    const c=[[-s/2,-s/2],[s/2,-s/2],[s/2,s/2],[-s/2,s/2]];
+    el("rect",{x:cx-s/2,y:CY-s/2,width:s,height:s,class:"ref-rect"},svg);
+    const t=c.map(p=>[p[0]+H[0][0]*p[0]+H[0][1]*p[1],p[1]+H[1][0]*p[0]+H[1][1]*p[1]]);
+    el("polygon",{points:t.map(p=>(cx+p[0]).toFixed(1)+","+(CY-p[1]).toFixed(1)).join(" "),class:cls},svg);
+    tx(svg,cx,CY-s/2-44,lab,"lbl",{"text-anchor":"middle",style:"font-weight:700"+(col?";fill:"+col:"")});
+    if(showAng){
+      const P=t[0],A=[t[1][0]-P[0],t[1][1]-P[1]],B=[t[3][0]-P[0],t[3][1]-P[1]];
+      const ang=Math.acos((A[0]*B[0]+A[1]*B[1])/(Math.hypot(...A)*Math.hypot(...B)))*180/Math.PI;
+      tx(svg,cx+P[0]+6,CY-P[1]-6,nf(ang,1)+"°","lbl");
+      return ang;
+    }
+    return null;
+  }
+  function draw(){
+    const v=I.map(i=>+i.value/100);
+    ids.forEach((id,k)=>{$("#"+id+"v").textContent=nf(v[k],2);});
+    const H=[[v[0],v[1]],[v[2],v[3]]],e=[[v[0],(v[1]+v[2])/2],[(v[1]+v[2])/2,v[3]]],w=[[0,(v[1]-v[2])/2],[(v[2]-v[1])/2,0]];
+    clear(svg);
+    const a1=sq(CX[0],H,"bar","ce que tu imposes : grad u",true);
+    tx(svg,(CX[0]+CX[1])/2,CY+6,"=","big",{"text-anchor":"middle"});
+    const a2=sq(CX[1],e,"bar","déformation pure : ε",true,"var(--eps)");
+    tx(svg,(CX[1]+CX[2])/2,CY+6,"+","big",{"text-anchor":"middle"});
+    sq(CX[2],w,"bar ghost","rotation : ω",false);
+    const wz=(v[2]-v[1])/2;
+    if(Math.abs(wz)>0.004){
+      const r=74,ang=Math.atan(wz)*2.2,ex=CX[2]+r*Math.cos(ang),ey=CY-r*Math.sin(ang);
+      el("path",{d:"M"+(CX[2]+r)+","+CY+" A"+r+","+r+" 0 0 "+(wz>0?0:1)+" "+ex.toFixed(1)+","+ey.toFixed(1),class:"arc",style:"stroke:var(--ink);stroke-width:2.2"},svg);
+      arrow(svg,ex+(wz>0?3:-3)*Math.sin(ang),ey+(wz>0?3:-3)*Math.cos(ang),ex,ey,"ink",2,9);
+      tx(svg,CX[2],CY+s/2+30,"ω = "+nf(wz,3)+" rad ("+nf(Math.atan(wz)*180/Math.PI,1)+"°)","lbl",{"text-anchor":"middle"});
+    }else tx(svg,CX[2],CY+s/2+30,"pas de rotation","lbl",{"text-anchor":"middle"});
+    const exy=(v[1]+v[2])/2,gam=2*exy;
+    tx(svg,CX[1],CY+s/2+30,"γ = 2·εxy = "+nf(gam,3)+" rad","lbl",{"text-anchor":"middle",style:"fill:var(--gam)"});
+    const M=m=>'<span class="inlinemat" style="grid-template-columns:repeat(2,auto)"><span>'+m.map(r=>r.map(x=>nf(x,3)).join("</span><span>")).join("</span><span>")+"</span></span>";
+    $("#g2out").innerHTML="grad u = "+M(H)+" = "+S("eps","ε")+" "+M(e)+" + ω "+M(w)+"<br>"+
+      S("eps","ε<sub>x</sub> = "+nf(v[0],3))+" · "+S("eps","ε<sub>y</sub> = "+nf(v[3],3))+" · "+S("gam","ε<sub>xy</sub> = ½("+nf(v[1],2)+" + "+nf(v[2],2)+") = "+nf(exy,3))+" · angle perdu mesuré sur le carré de gauche : "+nf(90-a1,2)+"° ≈ γ = "+nf(gam*180/Math.PI,2)+"°";
+    let n;
+    if(Math.abs(v[1])>0.004&&Math.abs(v[2])<0.004&&Math.abs(v[0])<0.004&&Math.abs(v[3])<0.004)n="🃏 <b>Glissement simple</b> : un seul côté penche de γ. Regarde le carré du milieu : la vraie déformation fait pencher <b>chaque</b> côté de γ/2, et le carré de droite tourne de γ/2. C'est pourquoi la case ε<sub>xy</sub> vaut γ/2.";
+    else if(Math.abs(v[1]-v[2])<0.004&&Math.abs(v[1])>0.004)n="✂️ <b>Cisaillement pur</b> : les deux côtés penchent autant, en sens opposés. Aucune rotation : tout le mouvement est de la déformation.";
+    else if(Math.abs(v[1]+v[2])<0.004&&Math.abs(v[1])>0.004&&Math.abs(v[0])<0.004&&Math.abs(v[3])<0.004)n="🚪 <b>Rotation pure</b> : ε est nulle, seul ω existe. Le carré de gauche a pourtant légèrement grossi : c'est l'approximation des petites rotations, qui devient fausse quand l'angle grandit (chapitre 3).";
+    else n="Chaque transformation se décompose en une déformation pure (symétrique) et une rotation (antisymétrique). Seule la première crée des contraintes.";
+    $("#g2note").innerHTML=n;
+  }
+  I.forEach(i=>i.addEventListener("input",()=>{$$("#g2pre .btn").forEach(b=>b.classList.remove("on"));draw();}));
+  $$("#g2pre .btn").forEach(b=>b.addEventListener("click",()=>{const v=b.dataset.v.split(",").map(Number);I.forEach((i,k)=>{i.value=v[k];});$$("#g2pre .btn").forEach(o=>o.classList.toggle("on",o===b));draw();}));
+  $$("#g2pre .btn")[1].click();
+})();
+
+/* =========================================================
+   h3 : Green-Lagrange ou petites déformations
+   ========================================================= */
+(function(){
+  const svg=$("#h3svg");if(!svg)return;
+  const ia=$("#h3a"),cb=$("#h3s");
+  const X0=330,X1=620,Y0=40,Y1=260,AM=30,VMIN=-0.14,VMAX=0.03;
+  const px=a=>X0+(X1-X0)*a/AM,py=v=>Y0+(Y1-Y0)*(VMAX-v)/(VMAX-VMIN);
+  const vals=(a,lam)=>{const r=a*Math.PI/180;return {eps:lam*Math.cos(r)-1,E:(lam*lam-1)/2};};
+  function draw(){
+    const a=+ia.value,lam=cb.checked?1.01:1,r=a*Math.PI/180;
+    $("#h3av").textContent=nf(a,1)+"°";
+    clear(svg);
+    // carré
+    const C=[150,160],h=60,c=[[-h,-h],[h,-h],[h,h],[-h,h]];
+    el("rect",{x:C[0]-h,y:C[1]-h,width:2*h,height:2*h,class:"ref-rect"},svg);
+    const t=c.map(p=>{const x=lam*p[0],y=p[1];return [x*Math.cos(r)-y*Math.sin(r),x*Math.sin(r)+y*Math.cos(r)];});
+    el("polygon",{points:t.map(p=>(C[0]+p[0]).toFixed(1)+","+(C[1]-p[1]).toFixed(1)).join(" "),class:"bar"},svg);
+    if(a>0.4){const R=80,ex=C[0]+R*Math.cos(r),ey=C[1]-R*Math.sin(r);el("line",{x1:C[0],y1:C[1],x2:C[0]+R,y2:C[1],class:"ref"},svg);el("line",{x1:C[0],y1:C[1],x2:ex,y2:ey,class:"ref"},svg);
+      el("path",{d:"M"+(C[0]+R)+","+C[1]+" A"+R+","+R+" 0 0 0 "+ex.toFixed(1)+","+ey.toFixed(1),class:"arc",style:"stroke:var(--tau)"},svg);tx(svg,C[0]+R+6,C[1]-R*Math.sin(r/2),"α","mth tau");}
+    tx(svg,C[0],290,cb.checked?"rotation + étirement réel de 1 %":"rotation pure, aucune déformation réelle","lbl",{"text-anchor":"middle"});
+    // graphique
+    el("line",{x1:X0,y1:py(0),x2:X1,y2:py(0),class:"axis"},svg);
+    el("line",{x1:X0,y1:Y0,x2:X0,y2:Y1,class:"axis"},svg);
+    [10,20,30].forEach(q=>{el("line",{x1:px(q),y1:Y0,x2:px(q),y2:Y1,class:"gridl"},svg);tx(svg,px(q),Y1+16,q+"°","lbl",{"text-anchor":"middle"});});
+    [0.02,-0.05,-0.1].forEach(q=>{el("line",{x1:X0-3,y1:py(q),x2:X0+3,y2:py(q),class:"tick"},svg);tx(svg,X0-6,py(q)+4,nf(q*100,0)+" %","lbl",{"text-anchor":"end"});});
+    tx(svg,X1+14,Y1+16,"α","mth",{"text-anchor":"end"});
+    const pE=[],pe=[];for(let q=0;q<=AM;q+=0.5){const w=vals(q,lam);pE.push(px(q).toFixed(1)+","+py(w.E).toFixed(1));pe.push(px(q).toFixed(1)+","+py(w.eps).toFixed(1));}
+    el("polyline",{points:pE.join(" "),fill:"none",style:"stroke:var(--eps);stroke-width:3"},svg);
+    el("polyline",{points:pe.join(" "),fill:"none",style:"stroke:var(--eps);stroke-width:2.4;stroke-dasharray:7 5"},svg);
+    tx(svg,px(20),py(vals(20,lam).E)-10,"𝔼ₓₓ Green-Lagrange (exacte)","lbl",{"text-anchor":"middle",style:"fill:var(--eps)"});
+    tx(svg,px(13),py(vals(13,lam).eps)+22,"εₓ petites déformations","lbl",{"text-anchor":"middle",style:"fill:var(--eps)"});
+    const w=vals(a,lam);
+    el("circle",{cx:px(a),cy:py(w.E),r:5.5,style:"fill:var(--eps)"},svg);
+    el("circle",{cx:px(a),cy:py(w.eps),r:5.5,style:"fill:var(--card);stroke:var(--eps);stroke-width:2.5"},svg);
+    const err=(w.eps-w.E)*1e6,ratio=Math.abs(err)/1120;
+    $("#h3out").innerHTML="α = "+nf(a,1)+"° &nbsp;·&nbsp; "+S("eps","𝔼<sub>xx</sub> = "+nf(w.E*1e6,0)+" µε")+" (exacte) &nbsp;·&nbsp; "+S("eps","ε<sub>x</sub> = "+nf(w.eps*1e6,0)+" µε")+" (HPP)<br>erreur de la mesure simplifiée : "+nf(err,0)+" µε, soit "+nf(ratio,2)+" fois la déformation élastique maximale de l'acier S235 (1 120 µε)";
+    let n;
+    if(ratio<0.1)n="✅ <b>HPP valable</b> : l'erreur reste sous 10 % de la déformation élastique maximale de l'acier. Les deux mesures se confondent.";
+    else if(ratio<1)n="⚠️ L'erreur devient sensible : l'HPP commence à fausser les résultats. La frontière (10 %) est vers 0,9° pour une rotation pure.";
+    else n="❌ <b>HPP fausse</b> : la mesure simplifiée se trompe de "+nf(Math.abs(err),0)+" µε, plus que tout le domaine élastique de l'acier, alors que "+(cb.checked?"la seule vraie déformation est l'étirement de 1 %":"rien ne se déforme")+". Il faut Green-Lagrange (grandes rotations).";
+    $("#h3note").innerHTML=n;
+  }
+  ia.addEventListener("input",draw);cb.addEventListener("change",draw);draw();
+})();
+
+/* =========================================================
+   m4 : l'aiguille et le cercle de Mohr des déformations (convention de la série)
+   ========================================================= */
+(function(){
+  const svg=$("#m4svg");if(!svg)return;
+  const ia=$("#m4a"),ix=$("#m4x"),iy=$("#m4y"),ig=$("#m4g"),cb=$("#m4circ"),bp=$("#m4play"),bc=$("#m4clr");
+  const C0=[170,165],H=60,O=[505,165];let vis=new Set([30]),last=30,anim=null;
+  const en=(s,f)=>{const r=2*f*Math.PI/180,Cc=(s.x+s.y)/2,a=(s.x-s.y)/2;return [Cc+a*Math.cos(r)+s.g*Math.sin(r),-a*Math.sin(r)+s.g*Math.cos(r)];};
+  function draw(){
+    const s={x:+ix.value,y:+iy.value,g:+ig.value},f=+ia.value,r=f*Math.PI/180,c=Math.cos(r),sn=Math.sin(r);
+    $("#m4av").textContent=nf(f,0)+"°";$("#m4xv").textContent=nf(s.x,0)+" µε";$("#m4yv").textContent=nf(s.y,0)+" µε";$("#m4gv").textContent=nf(s.g,0)+" µε";
+    const Cc=(s.x+s.y)/2,a=(s.x-s.y)/2,R=Math.hypot(a,s.g),v=en(s,f);
+    const ext=Math.max(Math.abs(Cc)+R,50),kk=Math.min(0.3,145/ext),K=Math.min(250,0.3/Math.max(ext*1e-6,1e-9));
+    clear(svg);
+    // carré déformé (exagéré)
+    el("rect",{x:C0[0]-H,y:C0[1]-H,width:2*H,height:2*H,class:"ref-rect"},svg);
+    const e=[[s.x*1e-6*K,s.g*1e-6*K],[s.g*1e-6*K,s.y*1e-6*K]];
+    const cs=[[-H,-H],[H,-H],[H,H],[-H,H]].map(p=>[p[0]+e[0][0]*p[0]+e[0][1]*p[1],p[1]+e[1][0]*p[0]+e[1][1]*p[1]]);
+    el("polygon",{points:cs.map(p=>(C0[0]+p[0]).toFixed(1)+","+(C0[1]-p[1]).toFixed(1)).join(" "),class:"bar"},svg);
+    // directions principales
+    if(R>1){
+      const fI=0.5*Math.atan2(2*s.g,s.x-s.y);
+      [[fI,"I"],[fI+Math.PI/2,"II"]].forEach(q=>{const dx=Math.cos(q[0]),dy=Math.sin(q[0]);
+        el("line",{x1:C0[0]-dx*95,y1:C0[1]+dy*95,x2:C0[0]+dx*95,y2:C0[1]-dy*95,style:"stroke:var(--mat);stroke-width:1.6;stroke-dasharray:4 5"},svg);
+        tx(svg,C0[0]+dx*104-4,C0[1]-dy*104+4,q[1],"lbl",{style:"fill:var(--mat);font-weight:700"});});
+    }
+    // aiguille (jauge)
+    const L=78*(1+v[0]*1e-6*K);
+    el("line",{x1:C0[0]-c*L,y1:C0[1]+sn*L,x2:C0[0]+c*L,y2:C0[1]-sn*L,style:"stroke:var(--eps);stroke-width:5;stroke-linecap:round"},svg);
+    el("circle",{cx:C0[0],cy:C0[1],r:4,fill:"var(--ink)"},svg);
+    tx(svg,C0[0]+c*(L+12)-6,C0[1]-sn*(L+12)+5,"n⃗","mth");
+    if(Math.abs(f)>=4){const ar=30,ex=C0[0]+ar*c,ey=C0[1]-ar*sn;el("path",{d:"M"+(C0[0]+ar)+","+C0[1]+" A"+ar+","+ar+" 0 0 "+(f>0?0:1)+" "+ex.toFixed(1)+","+ey.toFixed(1),class:"arc",style:"stroke:var(--tau)"},svg);tx(svg,C0[0]+40,C0[1]+(f>0?-8:16),"φ","mth tau");}
+    tx(svg,C0[0],318,"déformation exagérée ×"+nf(K,0),"lbl",{"text-anchor":"middle"});
+    // plan de Mohr
+    el("line",{x1:345,y1:O[1],x2:672,y2:O[1],class:"axis"},svg);
+    el("line",{x1:O[0],y1:O[1]+150,x2:O[0],y2:O[1]-150,class:"axis"},svg);
+    txSub(svg,668,O[1]-8,"ε","n","mth eps",{"text-anchor":"end"});txSub(svg,O[0]+8,O[1]-136,"ε","nt","mth gam");
+    const stp=ext>1200?1000:ext>500?500:ext>200?200:100;
+    for(let m=-3000;m<=3000;m+=stp){if(m===0)continue;const x=O[0]+m*kk;if(x>=350&&x<=660){el("line",{x1:x,y1:O[1]-3,x2:x,y2:O[1]+3,class:"tick"},svg);tx(svg,x,O[1]+16,nf(m,0),"lbl",{"text-anchor":"middle"});}
+      const y=O[1]-m*kk;if(y>=24&&y<=306){el("line",{x1:O[0]-3,y1:y,x2:O[0]+3,y2:y,class:"tick"},svg);tx(svg,O[0]-6,y+4,nf(m,0),"lbl",{"text-anchor":"end"});}}
+    tx(svg,668,O[1]+52,"(µε)","lbl",{"text-anchor":"end"});
+    if(cb.checked&&R>0.5){
+      el("circle",{cx:O[0]+Cc*kk,cy:O[1],r:R*kk,class:"mohr"},svg);
+      el("circle",{cx:O[0]+Cc*kk,cy:O[1],r:3,fill:"var(--ink)"},svg);
+      const X=[O[0]+s.x*kk,O[1]-s.g*kk],Y=[O[0]+s.y*kk,O[1]+s.g*kk];
+      el("line",{x1:X[0],y1:X[1],x2:Y[0],y2:Y[1],style:"stroke:var(--muted);stroke-width:1.2"},svg);
+      el("circle",{cx:X[0],cy:X[1],r:4.5,fill:"var(--ink)"},svg);tx(svg,X[0]+(X[0]>560?-7:7),X[1]+(s.g>=0?-8:16),"direction x","lbl",{"text-anchor":X[0]>560?"end":"start"});
+      el("circle",{cx:Y[0],cy:Y[1],r:4.5,fill:"var(--ink)"},svg);tx(svg,Y[0]+(Y[0]>560?-7:7),Y[1]+(s.g>=0?16:-8),"direction y","lbl",{"text-anchor":Y[0]>560?"end":"start"});
+      [[Cc+R,"I"],[Cc-R,"II"]].forEach(p=>{const x=O[0]+p[0]*kk;el("circle",{cx:x,cy:O[1],r:4.5,style:"fill:var(--mat)"},svg);txSub(svg,x+(p[1]==="I"?6:-6),O[1]-8,"ε",p[1],"lbl",{"text-anchor":p[1]==="I"?"start":"end",style:"fill:var(--mat);font-weight:700"});});
+    }
+    const arr=Array.from(vis).sort((x,y)=>x-y);let seg=[];
+    const flush=()=>{if(seg.length>1)el("polyline",{points:seg.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join(" "),class:"trace",style:"stroke:var(--gam)"},svg);seg=[];};
+    arr.forEach((q,i)=>{if(i>0&&q-arr[i-1]>1)flush();const w=en(s,q);seg.push([O[0]+w[0]*kk,O[1]-w[1]*kk]);});flush();
+    const P=[O[0]+v[0]*kk,O[1]-v[1]*kk];
+    el("line",{x1:O[0],y1:O[1],x2:P[0],y2:O[1],style:"stroke:var(--eps);stroke-width:5;stroke-linecap:round;opacity:.85"},svg);
+    el("line",{x1:O[0],y1:O[1],x2:O[0],y2:P[1],style:"stroke:var(--gam);stroke-width:5;stroke-linecap:round;opacity:.85"},svg);
+    el("line",{x1:P[0],y1:P[1],x2:P[0],y2:O[1],class:"thin-dash"},svg);el("line",{x1:P[0],y1:P[1],x2:O[0],y2:P[1],class:"thin-dash"},svg);
+    el("circle",{cx:P[0],cy:P[1],r:7,class:"pt",style:"fill:var(--gam)"},svg);
+    const fI=R>0.5?0.5*Math.atan2(2*s.g,s.x-s.y)*180/Math.PI:0;
+    $("#m4out").innerHTML=S("eps","ε<sub>n</sub> = <b>"+nf(v[0],0)+" µε</b>")+" &nbsp;·&nbsp; "+S("gam","ε<sub>nt</sub> = <b>"+nf(v[1],0)+" µε</b>")+"<br>C = "+nf(Cc,0)+" µε · R = "+nf(R,0)+" µε · "+S("eps","ε<sub>I</sub> = "+nf(Cc+R,0))+" · "+S("eps","ε<sub>II</sub> = "+nf(Cc-R,0))+" µε · direction I : φ = "+nf(fI,1)+"° · γ<sub>max</sub> = 2R = "+nf(2*R,0)+" µε";
+    let no;
+    if(R<0.5)no="💧 R = 0 : le cercle est un point. L'allongement est le même dans toutes les directions, aucun angle droit ne se referme : c'est la dilatation thermique libre (chapitre 5).";
+    else if(Math.abs(v[1])<R*0.0175+0.5)no="🎯 <b>ε<sub>nt</sub> = 0 : l'aiguille est sur une direction principale</b> ("+(v[0]>Cc?"I, l'allongement maximal":"II, l'allongement minimal")+"). Elle est alignée sur une ligne verte.";
+    else no="L'aiguille a tourné de φ = "+nf(f,0)+"° ; le point a tourné de <b>2φ = "+nf(2*f,0)+"° dans le sens contraire</b> sur le cercle (convention de la série). Cherche les deux positions où l'aiguille se pose sur une ligne verte.";
+    $("#m4note").innerHTML=no;
+  }
+  function addR(p,q){for(let k=Math.min(p,q);k<=Math.max(p,q);k++)vis.add(k);}
+  function stop(){if(anim){cancelAnimationFrame(anim);anim=null;}bp.textContent="▶ Faire tourner l'aiguille de −90° à +90°";}
+  ia.addEventListener("input",()=>{stop();const q=+ia.value;addR(last,q);last=q;draw();});
+  [ix,iy,ig].forEach(i=>i.addEventListener("input",()=>{$$("#m4pre .btn").forEach(b=>b.classList.remove("on"));draw();}));
+  cb.addEventListener("change",draw);
+  bc.addEventListener("click",()=>{vis=new Set([+ia.value]);last=+ia.value;draw();});
+  bp.addEventListener("click",()=>{
+    if(anim){stop();return;}
+    ia.value=-90;last=-90;vis=new Set([-90]);bp.textContent="⏸ Pause";
+    const step=()=>{const q=Math.min(90,+ia.value+(RM?6:1));ia.value=q;addR(last,q);last=q;if(q>=90){draw();stop();return;}draw();anim=requestAnimationFrame(step);};
+    anim=requestAnimationFrame(step);
+  });
+  $$("#m4pre .btn").forEach(b=>b.addEventListener("click",()=>{const v=b.dataset.v.split(",").map(Number);ix.value=v[0];iy.value=v[1];ig.value=v[2];$$("#m4pre .btn").forEach(o=>o.classList.toggle("on",o===b));draw();}));
+  $$("#m4pre .btn")[0].click();
+})();
+
+/* =========================================================
+   t5 : le cycle thermique d'une soudure, en une barre
+   ========================================================= */
+(function(){
+  const svg=$("#t5svg");if(!svg)return;
+  const im=$("#t5m"),ip=$("#t5p"),bp=$("#t5play");
+  const E=210000,AL=12e-6,RE=235;let mode="b",anim=null;
+  function path(Tm,p){ // renvoie la liste des états jusqu'à p
+    const out=[];let ep=0;
+    for(let k=0;k<=p;k++){
+      const dT=k<=100?Tm*k/100:Tm*(200-k)/100;
+      let s=0;
+      if(mode==="b"){s=E*(-AL*dT-ep);if(s>RE){ep=-AL*dT-RE/E;s=RE;}else if(s<-RE){ep=-AL*dT+RE/E;s=-RE;}}
+      out.push({dT:dT,s:s,ep:ep,k:k});
+    }
+    return out;
+  }
+  const X0=70,X1=610,YC=235,KS=0.3,xT=(dT,Tm)=>X0+(X1-X0)*dT/Math.max(Tm,1),yS=s=>YC-s*KS;
+  function draw(){
+    const Tm=+im.value,p=+ip.value,P=path(Tm,p),st=P[P.length-1];
+    $("#t5mv").textContent=nf(Tm,0)+" °C";
+    $("#t5pv").textContent=p<=100?"chauffe "+nf(p,0)+" %":"refroidissement "+nf(p-100,0)+" %";
+    clear(svg);
+    // barre
+    const hot=st.dT/600,col="hsl("+(30-10*hot).toFixed(0)+","+(20+75*hot).toFixed(0)+"%,"+(80-28*hot).toFixed(0)+"%)";
+    const bx=140,bw=320,by=48,bh=34,dL=mode==="l"?AL*st.dT*bw*40:0;
+    if(mode==="b"){el("rect",{x:bx-18,y:by-22,width:18,height:bh+44,class:"wall"},svg);el("rect",{x:bx+bw,y:by-22,width:18,height:bh+44,class:"wall"},svg);}
+    else{el("rect",{x:bx-18,y:by-22,width:18,height:bh+44,class:"wall"},svg);el("line",{x1:bx+bw,y1:by-14,x2:bx+bw,y2:by+bh+14,class:"ref"},svg);}
+    el("rect",{x:bx,y:by,width:bw+dL,height:bh,fill:col,stroke:"var(--ink)","stroke-width":1.6},svg);
+    tx(svg,bx+(bw+dL)/2,by+bh/2+5,"ΔT = "+nf(st.dT,0)+" °C","lbl",{"text-anchor":"middle",style:"font-weight:700;fill:#1b1b1b"});
+    if(mode==="b"&&Math.abs(st.s)>2){
+      const L=10+Math.abs(st.s)*0.12,y=by+bh/2;
+      if(st.s>0){arrow(svg,bx+L+4,y-26,bx+4,y-26,"sig",3,9);arrow(svg,bx+bw-L-4,y-26,bx+bw-4,y-26,"sig",3,9);}
+      else{arrow(svg,bx+4,y-26,bx+L+4,y-26,"sig",3,9);arrow(svg,bx+bw-4,y-26,bx+bw-L-4,y-26,"sig",3,9);}
+      tx(svg,bx+bw/2,by-12,st.s<0?"compression":"traction","lbl",{"text-anchor":"middle",style:"fill:var(--sig);font-weight:700"});
+    }
+    if(mode==="l"&&dL>1)tx(svg,bx+bw+dL+8,by+bh/2+5,"+"+nf(AL*st.dT*2000,2)+" mm (pour 2 m, ×40)","lbl");
+    // graphique
+    el("line",{x1:X0,y1:YC,x2:X1+10,y2:YC,class:"axis"},svg);el("line",{x1:X0,y1:YC-95,x2:X0,y2:YC+95,class:"axis"},svg);
+    [RE,-RE].forEach(q=>{el("line",{x1:X0,y1:yS(q),x2:X1,y2:yS(q),class:"ref"},svg);tx(svg,X1,yS(q)+(q>0?-5:14),(q>0?"+":"−")+"Rₑ = "+(q>0?"+":"−")+"235 MPa","lbl",{"text-anchor":"end"});});
+    tx(svg,X0+6,YC-98,"σ (MPa)","mth sig");tx(svg,X1+26,YC-6,"ΔT","mth",{"text-anchor":"end"});
+    [0.25,0.5,0.75,1].forEach(q=>{const x=X0+(X1-X0)*q;el("line",{x1:x,y1:YC-3,x2:x,y2:YC+3,class:"tick"},svg);tx(svg,x,YC+16,nf(Tm*q,0)+" °C","lbl",{"text-anchor":"middle"});});
+    if(mode==="b"){const x1=xT(RE/(E*AL),Tm);if(x1<X1){el("line",{x1:x1,y1:YC,x2:x1,y2:yS(-RE),class:"thin-dash"},svg);tx(svg,x1+4,YC+30,"93 °C","lbl");}}
+    const heat=P.filter(q=>q.k<=100),cool=P.filter(q=>q.k>=100);
+    if(heat.length>1)el("polyline",{points:heat.map(q=>xT(q.dT,Tm).toFixed(1)+","+yS(q.s).toFixed(1)).join(" "),fill:"none",style:"stroke:var(--sig);stroke-width:3"},svg);
+    if(cool.length>1)el("polyline",{points:cool.map(q=>xT(q.dT,Tm).toFixed(1)+","+yS(q.s).toFixed(1)).join(" "),fill:"none",style:"stroke:var(--sig);stroke-width:3;stroke-dasharray:8 5"},svg);
+    el("circle",{cx:xT(st.dT,Tm),cy:yS(st.s),r:6.5,class:"pt",style:"fill:var(--sig)"},svg);
+    tx(svg,X0+8,YC+92,"trait plein : chauffe · pointillés : refroidissement","lbl");
+    // textes
+    $("#t5out").innerHTML="ΔT = "+nf(st.dT,0)+" °C &nbsp;·&nbsp; "+S("eps","ε<sub>th</sub> = αΔT = "+nf(AL*st.dT*1e6,0)+" µε")+" &nbsp;·&nbsp; "+S("sig","σ = <b>"+nf(st.s,0)+" MPa</b>")+(mode==="b"?" &nbsp;·&nbsp; "+S("eps","ε<sub>p</sub> = "+nf(st.ep*1e6,0)+" µε")+" (déformation plastique cumulée)":"");
+    let n;
+    if(mode==="l")n="Barre libre : elle s'allonge puis revient, <b>sans aucune contrainte</b> à aucun moment. Une dilatation libre ne fait pas souffrir la matière.";
+    else if(p===0)n="Prêt : lance le cycle, ou fais avancer le curseur « Avancement ».";
+    else if(p<=100)n=st.s>-RE+0.5?"① <b>Chauffe élastique</b> : la barre voudrait s'allonger de "+nf(AL*st.dT*1e6,0)+" µε, les murs l'en empêchent : compression de 2,5 MPa par degré.":"② <b>Plastification en compression</b> : la contrainte plafonne à −Rₑ. La barre se raccourcit définitivement ("+nf(st.ep*1e6,0)+" µε de déformation plastique).";
+    else if(p<200)n=st.s<RE-0.5?"③ <b>Refroidissement</b> : la barre, devenue trop courte, veut encore se rétracter. La compression diminue, puis se change en traction.":"③ <b>Plastification en traction</b> : la traction plafonne à +Rₑ pendant la fin du refroidissement.";
+    else n=st.s>=RE-0.5?"④ <b>Fin du cycle : contrainte résiduelle de +235 MPa en traction</b>, alors que la barre est revenue à sa température initiale. C'est le cas dès que ΔT<sub>max</sub> dépasse environ 187 °C, largement dépassé près d'un cordon.":(st.s>0.5?"④ <b>Fin du cycle : contrainte résiduelle de +"+nf(st.s,0)+" MPa</b> en traction (ΔT<sub>max</sub> entre 93 et 187 °C).":"④ <b>Fin du cycle : aucune contrainte résiduelle</b>, car la barre est restée élastique (ΔT<sub>max</sub> &lt; 93 °C).");
+    $("#t5note").innerHTML=n;
+  }
+  function stop(){if(anim){cancelAnimationFrame(anim);anim=null;}bp.textContent="▶ Lancer le cycle chauffe puis refroidissement";}
+  im.addEventListener("input",()=>{stop();draw();});
+  ip.addEventListener("input",()=>{stop();draw();});
+  bp.addEventListener("click",()=>{if(anim){stop();return;}if(+ip.value>=200)ip.value=0;bp.textContent="⏸ Pause";
+    const step=()=>{ip.value=Math.min(200,+ip.value+(RM?10:1));draw();if(+ip.value<200)anim=requestAnimationFrame(step);else stop();};anim=requestAnimationFrame(step);});
+  $$("#t5mode .btn").forEach(b=>b.addEventListener("click",()=>{mode=b.dataset.m;$$("#t5mode .btn").forEach(o=>o.classList.toggle("on",o===b));stop();draw();}));
+  draw();
+})();
+
+/* =========================================================
+   r6 : la calculatrice de rosette
+   ========================================================= */
+(function(){
+  const svg=$("#r6svg");if(!svg)return;
+  const ia=$("#r6a"),ib=$("#r6b"),ic=$("#r6c"),iE=$("#r6E"),iN=$("#r6n");
+  const g=i=>{const v=parseFloat(String(i.value).replace(",","."));return isFinite(v)?v:0;};
+  const C=[180,160],R0=70;
+  function gauge(ang,lab,val){
+    const r=ang*Math.PI/180,c=Math.cos(r),s=Math.sin(r),d=48,px=C[0]+c*d,py=C[1]-s*d;
+    const grp=el("g",{transform:"translate("+px.toFixed(1)+","+py.toFixed(1)+") rotate("+(-ang)+")"},svg);
+    el("rect",{x:-22,y:-9,width:44,height:18,rx:2,style:"fill:color-mix(in srgb,var(--weld) 22%,var(--card));stroke:var(--weld);stroke-width:1.4"},grp);
+    let d2="M-18,-6";for(let k=0;k<6;k++){d2+=" h36 v"+(k%2?-2.4:2.4)+" h-36 v2.4";}
+    el("path",{d:"M-18,-6 H18 V-3.6 H-18 V-1.2 H18 V1.2 H-18 V3.6 H18 V6",fill:"none",style:"stroke:var(--weld);stroke-width:1"},grp);
+    tx(svg,C[0]+c*(d+36)-6,C[1]-s*(d+36)+5,lab,"lbl",{style:"font-weight:700;fill:var(--weld)"});
+  }
+  function draw(){
+    const e0=g(ia),e45=g(ib),e90=g(ic),Eg=g(iE),nu=g(iN),E=Eg*1000;
+    const ex=e0,ey=e90,exy=e45-(e0+e90)/2,Cc=(ex+ey)/2,a=(ex-ey)/2,R=Math.hypot(a,exy),eI=Cc+R,eII=Cc-R;
+    const fI=R>0.01?0.5*Math.atan2(2*exy,ex-ey)*180/Math.PI:0;
+    const k=E/(1-nu*nu),sI=k*(eI+nu*eII)*1e-6,sII=k*(eII+nu*eI)*1e-6,ezz=-nu/(1-nu)*(ex+ey);
+    clear(svg);
+    el("rect",{x:20,y:10,width:320,height:300,rx:6,style:"fill:var(--paper-2);stroke:var(--line)"},svg);
+    // cercle unité et sa déformée
+    el("circle",{cx:C[0],cy:C[1],r:R0,class:"thin-dash"},svg);
+    const ext=Math.max(Math.abs(eI),Math.abs(eII),1),K=0.35/(ext*1e-6);
+    const pts=[];for(let q=0;q<=360;q+=4){const f=q*Math.PI/180,enq=Cc+a*Math.cos(2*f)+exy*Math.sin(2*f),rr=R0*(1+enq*1e-6*K);pts.push((C[0]+rr*Math.cos(f)).toFixed(1)+","+(C[1]-rr*Math.sin(f)).toFixed(1));}
+    el("polyline",{points:pts.join(" "),fill:"none",style:"stroke:var(--eps);stroke-width:2.4"},svg);
+    // directions principales
+    if(R>0.01)[[fI,"I"],[fI+90,"II"]].forEach(q=>{const r=q[0]*Math.PI/180,dx=Math.cos(r),dy=Math.sin(r);
+      el("line",{x1:C[0]-dx*130,y1:C[1]+dy*130,x2:C[0]+dx*130,y2:C[1]-dy*130,style:"stroke:var(--mat);stroke-width:1.8;stroke-dasharray:5 5"},svg);
+      tx(svg,C[0]+dx*138-5,C[1]-dy*138+5,q[1],"lbl",{style:"fill:var(--mat);font-weight:700"});});
+    gauge(0,"0°",e0);gauge(45,"45°",e45);gauge(90,"90°",e90);
+    el("circle",{cx:C[0],cy:C[1],r:4,fill:"var(--ink)"},svg);
+    tx(svg,34,300,"bleu : cercle déformé (×"+nf(K,0)+")","lbl");
+    const L=[];
+    L.push(S("eps","ε<sub>x</sub> = ε<sub>0</sub> = "+nf(ex,0))+" · "+S("eps","ε<sub>y</sub> = ε<sub>90</sub> = "+nf(ey,0))+" · "+S("gam","ε<sub>xy</sub> = ε<sub>45</sub> − (ε<sub>0</sub> + ε<sub>90</sub>)/2 = "+nf(e45,0)+" − "+nf((e0+e90)/2,1)+" = <b>"+nf(exy,1)+"</b>")+" µε (γ<sub>xy</sub> = "+nf(2*exy,0)+" µε)");
+    L.push("C = "+nf(Cc,1)+" · R = √("+nf(a,1)+"² + "+nf(exy,1)+"²) = "+nf(R,1)+" &nbsp;→&nbsp; "+S("eps","<b>ε<sub>I</sub> = "+nf(eI,0)+"</b>")+" · "+S("eps","<b>ε<sub>II</sub> = "+nf(eII,0)+"</b>")+" µε · direction I : φ = "+nf(fI,1)+"°");
+    L.push("contrainte plane : "+S("eps","ε<sub>zz</sub> = −ν/(1 − ν)·(ε<sub>x</sub> + ε<sub>y</sub>) = "+nf(ezz,0)+" µε"));
+    L.push("E/(1 − ν²) = "+nf(k,0)+" MPa &nbsp;→&nbsp; "+S("sig","<b>σ<sub>I</sub> = "+nf(sI,1)+" MPa</b>")+" · "+S("sig","<b>σ<sub>II</sub> = "+nf(sII,1)+" MPa</b>")+" · cisaillement maximal dans le plan (σ<sub>I</sub> − σ<sub>II</sub>)/2 = "+nf((sI-sII)/2,1)+" MPa");
+    $("#r6out").innerHTML=L.map((l,i)=>'<div'+(i===3?' class="now"':'')+'>'+l+'</div>').join("");
+    let n;
+    if(Math.abs(exy)<1)n="ε<sub>xy</sub> ≈ 0 : les jauges à 0° et 90° sont déjà alignées sur les directions principales.";
+    else if(Math.abs(Cc)<1)n="C ≈ 0 : allongement et raccourcissement égaux à ±45° : c'est la signature d'un <b>cisaillement pur</b>.";
+    else n="Les directions principales ne sont pas celles des jauges : c'est tout l'intérêt de la rosette, qui permet de les retrouver.";
+    $("#r6note").innerHTML=n;
+  }
+  [ia,ib,ic,iE,iN].forEach(i=>i.addEventListener("input",()=>{if(i===ia||i===ib||i===ic)$$("#r6pre .btn").forEach(b=>b.classList.remove("on"));draw();}));
+  $$("#r6pre .btn").forEach(b=>b.addEventListener("click",()=>{const v=b.dataset.v.split(",");ia.value=v[0];ib.value=v[1];ic.value=v[2];$$("#r6pre .btn").forEach(o=>o.classList.toggle("on",o===b));draw();}));
+  $$("#r6pre .btn")[1].click();
+})();
+
+/* =========================================================
+   Quiz
+   ========================================================= */
+(function(){
+  const box=$("#quiz");if(!box)return;
+  const Q=[
+    {q:"Le vecteur déplacement u⃗ d'un point est :",o:["la flèche qui va de sa position initiale P₀ à sa position finale P","sa vitesse","la force qui s'exerce sur lui","son allongement relatif"],c:0,e:"u⃗ = P₀P⃗. L'ensemble des flèches de tous les points forme le <b>champ de déplacement</b>."},
+    {q:"Dans un champ de déplacement, toutes les flèches sont identiques. C'est :",o:["une déformation uniforme","une translation, sans aucune déformation","une rotation","un cisaillement"],c:1,e:"Flèches identiques = <b>translation</b> : le gradient est nul, rien ne se déforme. La déformation vient de la <b>différence</b> de déplacement entre voisins, pas de sa taille."},
+    {q:"La déformation ε<sub>x</sub> s'écrit :",o:["∂u/∂x","∂u/∂y","u/x","½(∂u/∂y + ∂v/∂x)"],c:0,e:"ε<sub>x</sub> = <b>∂u/∂x</b> : la pente du déplacement selon x quand on avance selon x. La 4e réponse est ε<sub>xy</sub>."},
+    {q:"Un angle droit se referme de γ = 0,004 rad. La case ε<sub>xy</sub> du tenseur vaut :",o:["0,004","0,002","0,008","0"],c:1,e:"ε<sub>xy</sub> = γ/2 = <b>0,002</b>. Le tenseur range la moitié de l'angle perdu : c'est le piège n° 1 depuis le cours 1."},
+    {q:"La partie antisymétrique du gradient du déplacement représente :",o:["une rotation locale, qui ne crée aucune contrainte","la déformation thermique","les contraintes","la variation de volume"],c:0,e:"grad u = ε (symétrique, la déformation) + ω (antisymétrique, la <b>rotation</b>). La porte qui tourne ne se tord pas."},
+    {q:"Une pièce tourne en bloc de 10°, sans se déformer. Le tenseur des petites déformations donne ε<sub>x</sub> ≈ :",o:["0, comme il se doit","−1,5 % : une fausse compression","+10 %","il n'est pas défini"],c:1,e:"ε<sub>x</sub> = cos 10° − 1 ≈ <b>−0,015</b>. Green-Lagrange donne 0 exactement. D'où la condition de petites rotations de l'HPP."},
+    {q:"L'hypothèse des petites perturbations (HPP) suppose :",o:["seulement de petites déformations","de petites déformations et de petites rotations (donc de petits déplacements)","des matériaux fragiles","l'absence de plasticité"],c:1,e:"Il faut que <b>tous</b> les termes du gradient soient petits : déformations <b>et</b> rotations. Sinon le terme Grad u<sup>t</sup>·Grad u n'est plus négligeable."},
+    {q:"ε<sub>x</sub> = 600, ε<sub>y</sub> = −200, ε<sub>xy</sub> = 300 µε. La déformation principale ε<sub>I</sub> vaut :",o:["700 µε","500 µε","800 µε","1 000 µε"],c:0,e:"C = 200, R = √(400² + 300²) = 500, donc ε<sub>I</sub> = C + R = <b>700 µε</b> (et ε<sub>II</sub> = −300 µε)."},
+    {q:"Sur le cercle de Mohr des déformations, l'axe vertical porte :",o:["ε<sub>nt</sub>, le demi-glissement","γ, le glissement complet","ε<sub>zz</sub>","la contrainte τ"],c:0,e:"Axe horizontal ε<sub>n</sub>, axe vertical <b>ε<sub>nt</sub></b> = γ<sub>nt</sub>/2. D'où γ<sub>max</sub> = 2R."},
+    {q:"Une barre d'acier bridée (E = 210 GPa, α = 12 × 10⁻⁶ K⁻¹) est chauffée de 50 °C. Sa contrainte vaut :",o:["−126 MPa","+126 MPa","0","−12,6 MPa"],c:0,e:"σ = −EαΔT = −210 000 × 12 × 10⁻⁶ × 50 = <b>−126 MPa</b> : compression, car les murs l'empêchent de s'allonger. Libre, elle serait à 0."},
+    {q:"Avec une rosette 0°/45°/90°, ε<sub>xy</sub> vaut :",o:["ε<sub>45</sub> − (ε<sub>0</sub> + ε<sub>90</sub>)/2","ε<sub>45</sub>","ε<sub>45</sub> − ε<sub>0</sub>","(ε<sub>0</sub> + ε<sub>90</sub>)/2"],c:0,e:"À 45°, la formule de ε<sub>n</sub> donne ε<sub>45</sub> = (ε<sub>x</sub> + ε<sub>y</sub>)/2 + ε<sub>xy</sub>, d'où <b>ε<sub>xy</sub> = ε<sub>45</sub> − (ε<sub>0</sub> + ε<sub>90</sub>)/2</b>."},
+    {q:"Une jauge est collée sur la surface libre d'une pièce. L'état au point de mesure est :",o:["une contrainte plane : σ<sub>zz</sub> = 0 mais ε<sub>zz</sub> ≠ 0","une déformation plane : ε<sub>zz</sub> = 0","un état hydrostatique","un état sans contrainte"],c:0,e:"Surface libre = <b>contrainte plane</b>. La pièce s'amincit sous la jauge (Poisson) : ε<sub>zz</sub> = −ν/(1 − ν)(ε<sub>x</sub> + ε<sub>y</sub>)."}
+  ];
+  let score=0,done=0;const sc=$("#qzScore");
+  function upd(){let t="Score : "+score+" / "+Q.length;if(done===Q.length)t+=score>=10?"  ·  🎉 prêt pour le cours 4":score>=7?"  ·  relis les explications":"  ·  refais un tour des chapitres";sc.textContent=t;}
+  function render(){
+    box.innerHTML="";score=0;done=0;
+    Q.forEach((it,n)=>{
+      const d=document.createElement("div");d.className="qz";
+      d.innerHTML='<p class="qz-q"><b>'+(n+1)+".</b> "+it.q+'</p><div class="qz-o"></div><div class="qz-e" hidden></div>';
+      const o=d.querySelector(".qz-o"),ex=d.querySelector(".qz-e");let answered=false;
+      it.o.forEach((txt,i)=>{
+        const b=document.createElement("button");b.type="button";b.className="qz-b";b.innerHTML=String.fromCharCode(65+i)+". "+txt;
+        b.addEventListener("click",()=>{
+          if(answered)return;answered=true;done++;
+          const ok=i===it.c;if(ok)score++;
+          b.classList.add(ok?"ok":"ko");o.children[it.c].classList.add("ok");
+          ex.hidden=false;ex.innerHTML=(ok?"✅ <b>Bien joué.</b> ":"❌ <b>Pas tout à fait.</b> ")+it.e;upd();
+        });
+        o.appendChild(b);
+      });
+      box.appendChild(d);
+    });
+    upd();
+  }
+  $("#qzReset").addEventListener("click",render);render();
+})();
+
+/* =========================================================
+   Check-list
+   ========================================================= */
+(function(){
+  const boxes=$$("#checklist input[type=checkbox]"),msg=$("#checkMsg"),KEY="rdm-cours3-check";
+  if(!boxes.length)return;
+  let saved=[];try{saved=JSON.parse(localStorage.getItem(KEY)||"[]")||[];}catch(e){saved=[];}
+  boxes.forEach(b=>{b.checked=saved.indexOf(b.dataset.c)>=0;});
+  function upd(){
+    const on=boxes.filter(b=>b.checked).map(b=>b.dataset.c);
+    try{localStorage.setItem(KEY,JSON.stringify(on));}catch(e){}
+    msg.innerHTML=on.length===boxes.length?"🎉 <b>Tout est coché : tu es prêt pour le cours 4 !</b>":on.length+" / "+boxes.length+" : reviens sur les points non cochés (les manipulations sont faites pour ça).";
+  }
+  boxes.forEach(b=>b.addEventListener("change",upd));upd();
+})();
+
+/* =========================================================
+   Sommaire
+   ========================================================= */
+(function(){
+  const links=$$(".toc a"),tin=$(".toc-in");
+  if(!links.length||!("IntersectionObserver" in window))return;
+  const map={};links.forEach(a=>{map[a.getAttribute("href").slice(1)]=a;});
+  const obs=new IntersectionObserver(ents=>{
+    ents.forEach(en=>{
+      if(!en.isIntersecting)return;const a=map[en.target.id];if(!a)return;
+      links.forEach(l=>l.classList.toggle("on",l===a));
+      if(tin){const tgt=a.offsetLeft-tin.clientWidth/2+a.offsetWidth/2;try{tin.scrollTo({left:tgt,behavior:RM?"auto":"smooth"});}catch(e){tin.scrollLeft=tgt;}}
+    });
+  },{rootMargin:"-45% 0px -50% 0px"});
+  Object.keys(map).forEach(id=>{const s=document.getElementById(id);if(s)obs.observe(s);});
+})();
+})();
+</script>
+<dialog class="photo-viewer" id="photo-viewer" aria-label="Photographie agrandie" aria-describedby="photo-viewer-title">
+  <div class="photo-viewer-head"><p class="photo-viewer-title" id="photo-viewer-title" role="heading" aria-level="2">Photographie</p><button class="btn" id="photo-close" type="button" autofocus>Fermer</button></div>
+  <div class="photo-viewer-toolbar"><button class="btn" id="photo-zoom" type="button" aria-pressed="false">Taille réelle</button><p id="photo-viewer-help">En taille réelle, fais défiler l’image pour explorer ses détails.</p></div>
+  <div class="photo-viewer-stage" id="photo-stage" tabindex="0" role="region" aria-label="Détails de la photographie" aria-describedby="photo-viewer-help"></div>
+  <div class="photo-viewer-caption" id="photo-caption"></div>
+</dialog>
+<script id="course-photo-script">
+(function(){
+  const viewer=document.getElementById('photo-viewer');
+  if(!viewer || typeof viewer.showModal!=='function')return;
+  const stage=document.getElementById('photo-stage'),caption=document.getElementById('photo-caption');
+  const title=document.getElementById('photo-viewer-title'),zoom=document.getElementById('photo-zoom');
+  let opener=null;
+  document.querySelectorAll('.course-photo').forEach(figure=>{
+    const button=figure.querySelector('.photo-open');
+    button.hidden=false;
+    button.addEventListener('click',()=>{
+      opener=button;
+      title.textContent=figure.querySelector('.photo-title').textContent;
+      const img=figure.querySelector('img').cloneNode(true);
+      img.loading='eager';
+      stage.replaceChildren(img);
+      caption.replaceChildren(figure.querySelector('.photo-legend').cloneNode(true),figure.querySelector('.photo-credit').cloneNode(true));
+      stage.classList.remove('is-zoomed');
+      zoom.setAttribute('aria-pressed','false');zoom.textContent='Taille réelle';
+      document.body.classList.add('photo-modal-open');
+      viewer.showModal();viewer.scrollTop=0;stage.scrollTo(0,0);
+    });
+  });
+  zoom.addEventListener('click',()=>{
+    const enlarged=stage.classList.toggle('is-zoomed');
+    zoom.setAttribute('aria-pressed',String(enlarged));
+    zoom.textContent=enlarged?'Vue d’ensemble':'Taille réelle';
+    stage.scrollTo(0,0);
+  });
+  document.getElementById('photo-close').addEventListener('click',()=>viewer.close());
+  viewer.addEventListener('click',event=>{
+    if(event.target!==viewer)return;
+    const rect=viewer.getBoundingClientRect();
+    if(event.clientX<rect.left || event.clientX>rect.right || event.clientY<rect.top || event.clientY>rect.bottom)viewer.close();
+  });
+  viewer.addEventListener('close',()=>{
+    document.body.classList.remove('photo-modal-open');
+    stage.replaceChildren();caption.replaceChildren();
+    if(opener)opener.focus({preventScroll:true});
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1391 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Métallurgie — Cours 02 — Aciers : cinétique, TTT, TRC et éléments d’addition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E7EBEF; --paper:#F8FAFB; --ink:#16202A; --ink2:#4A5968; --rule:#C2CCD6;
+  --grid:rgba(52,98,145,.08); --grid2:rgba(52,98,145,.15);
+  --cL:#E8820C; --cLs:#FCE0B8;
+  --cG:#C2303A; --cGs:#F5CDC9;
+  --cA:#4C6C8F; --cAs:#C4D3E2;
+  --cD:#7B61B8; --cDs:#DDD3F1;
+  --cC:#4B4F58; --cCs:#B9BEC6;
+  --cB:#1F8A70; --cBs:#BDE5D8;
+  --cM:#A33A8C; --cMs:#F0CFE6;
+  --good:#1E8657; --bad:#C23B3B;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#10161C; --paper:#18212A; --ink:#E3EAF1; --ink2:#98A8B8; --rule:#2C3947;
+    --grid:rgba(150,190,230,.06); --grid2:rgba(150,190,230,.12);
+    --cL:#FF9A3C; --cLs:#5A3310;
+    --cG:#F0646C; --cGs:#5A2226;
+    --cA:#8DB1D6; --cAs:#243748;
+    --cD:#B3A0EE; --cDs:#352B52;
+    --cC:#C9CED6; --cCs:#4A505A;
+    --cB:#4FCEA7; --cBs:#16433A;
+    --cM:#E27CCB; --cMs:#4A2342;
+    --good:#46C08A; --bad:#EF6B6B;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#10161C; --paper:#18212A; --ink:#E3EAF1; --ink2:#98A8B8; --rule:#2C3947;
+  --grid:rgba(150,190,230,.06); --grid2:rgba(150,190,230,.12);
+  --cL:#FF9A3C; --cLs:#5A3310;
+  --cG:#F0646C; --cGs:#5A2226;
+  --cA:#8DB1D6; --cAs:#243748;
+  --cD:#B3A0EE; --cDs:#352B52;
+  --cC:#C9CED6; --cCs:#4A505A;
+  --cB:#4FCEA7; --cBs:#16433A;
+  --cM:#E27CCB; --cMs:#4A2342;
+  --good:#46C08A; --bad:#EF6B6B;
+  color-scheme:dark;
+}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 100px);-webkit-text-size-adjust:100%}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Archivo,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.58}
+.defs{position:absolute;width:0;height:0;overflow:hidden}
+.hero{max-width:760px;margin:0 auto;padding:30px 18px 10px}
+.series{font-stretch:92%;font-weight:650;font-size:.9rem;color:var(--ink2);margin:0}
+h1{font-stretch:125%;font-weight:820;font-size:clamp(1.9rem,7.6vw,3.1rem);line-height:1.03;letter-spacing:-.015em;margin:.15em 0 .45em}
+.lead{font-size:1.07rem;color:var(--ink2);max-width:34em;margin:0}
+.ruler{margin:18px 0 4px}
+.ruler svg{display:block;width:100%;height:auto}
+.bar{position:sticky;top:0;padding-top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--rule)}
+@supports (backdrop-filter:blur(8px)){.bar{background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(8px)}}
+.bar-in{max-width:760px;margin:0 auto;padding:8px 18px;display:flex;gap:8px 10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.seg{display:inline-flex;border:1.5px solid var(--ink);border-radius:999px;overflow:hidden}
+.seg button{font:inherit;font-size:.8rem;font-stretch:90%;font-weight:600;padding:.34rem .65rem;background:transparent;color:var(--ink);border:0;cursor:pointer}
+.seg button.on{background:var(--ink);color:var(--bg)}
+.toc{display:flex;gap:4px;flex-wrap:wrap}
+.toc a{display:inline-grid;place-items:center;width:29px;height:29px;border-radius:50%;border:1.5px solid var(--rule);color:var(--ink);text-decoration:none;font-weight:750;font-size:.82rem}
+main{max-width:760px;margin:0 auto;padding:0 18px 90px}
+section{padding-top:38px}
+h2{font-stretch:116%;font-weight:780;font-size:clamp(1.4rem,5.4vw,2rem);line-height:1.12;margin:0 0 .5em;display:flex;gap:.45em;align-items:baseline}
+h2 .n{font-stretch:125%;font-weight:900;font-size:1.9em;line-height:.8;color:transparent;-webkit-text-stroke:1.6px var(--ink)}
+h3{font-stretch:106%;font-weight:720;font-size:1.13rem;margin:1.5em 0 .35em;line-height:1.25}
+p{margin:.6em 0}
+ul,ol{padding-left:1.25em;margin:.5em 0}
+li{margin:.3em 0}
+b,strong{font-weight:700}
+sub{font-size:.72em}
+.lv{margin:1.5rem 0;padding:.05rem 0 .05rem 14px;border-left:3px solid var(--ink)}
+.lv2{border-left:6px double var(--cA)}
+.tag{display:inline-block;font-size:.78rem;font-stretch:88%;font-weight:680;padding:.12rem .55rem;border-radius:4px;background:var(--ink);color:var(--bg);margin:0 0 .15rem}
+.lv2 .tag{background:var(--cA);color:var(--paper)}
+body[data-level="1"] .lv2, body[data-level="2"] .lv1{display:none}
+.fig{background-color:var(--paper);background-image:linear-gradient(var(--grid2) 1px,transparent 1px),linear-gradient(90deg,var(--grid2) 1px,transparent 1px),linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:40px 40px,40px 40px,8px 8px,8px 8px;border:1px solid var(--rule);border-radius:10px;padding:12px;margin:1.2rem -6px}
+.fig svg{display:block;width:100%;height:auto;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+.figt{font-stretch:104%;font-weight:720;font-size:.98rem;margin:0 0 .4rem}
+.cap{font-size:.86rem;color:var(--ink2);margin:.5rem 0 0}
+.btns{display:flex;flex-wrap:wrap;gap:6px;margin:.6rem 0}
+.btn{font:inherit;font-size:.84rem;font-stretch:94%;font-weight:620;padding:.42rem .78rem;border-radius:999px;border:1.5px solid var(--ink);background:var(--paper);color:var(--ink);cursor:pointer;line-height:1.2}
+.btn.on{background:var(--ink);color:var(--paper)}
+.btn:disabled{opacity:.35;cursor:default}
+.btn.ok{background:var(--good);border-color:var(--good);color:#fff}
+.btn.ko{background:var(--bad);border-color:var(--bad);color:#fff}
+.btns.sm .btn{font-size:.78rem;padding:.32rem .6rem}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--cL);outline-offset:2px}
+.eq{font-variant-numeric:tabular-nums;background:var(--paper);border:1px solid var(--rule);border-left:4px solid var(--cL);border-radius:6px;padding:.65rem .9rem;margin:.8rem 0;overflow-x:auto;line-height:2}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .22em;line-height:1.3}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 .25em}
+.note{border:1.5px dashed var(--rule);border-radius:8px;padding:.7rem .9rem;margin:1rem 0;background:var(--paper)}
+.note.hot{border-color:var(--cL)}
+.note p:first-child{margin-top:0}.note p:last-child{margin-bottom:0}
+.tw{overflow-x:auto;margin:.8rem 0}
+table{border-collapse:collapse;width:100%;font-size:.92rem;font-variant-numeric:tabular-nums}
+th,td{border-bottom:1px solid var(--rule);padding:.42rem .5rem;text-align:left;vertical-align:top}
+th{font-stretch:96%;font-weight:700;color:var(--ink2)}
+td.num,th.num{text-align:right;white-space:nowrap}
+.ph{display:inline-block;padding:0 .38em;border-radius:4px;font-weight:720;color:var(--ink);white-space:nowrap}
+.ph-L{background:var(--cLs)}.ph-g{background:var(--cGs)}.ph-a{background:var(--cAs)}.ph-d{background:var(--cDs)}.ph-c{background:var(--cCs)}
+.ph-p{background:repeating-linear-gradient(90deg,var(--cAs) 0 7px,var(--cCs) 7px 9px)}
+input[type=range]{width:100%;accent-color:var(--cL);margin:.3rem 0}
+.row{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.row>.grow{flex:1 1 200px;min-width:0}
+canvas.micro{display:block;width:100%;max-width:250px;aspect-ratio:1;height:auto;border-radius:50%;border:2px solid var(--ink);background:var(--paper)}
+canvas.cell{display:block;width:100%;max-width:300px;aspect-ratio:1;height:auto;margin:0 auto;touch-action:none;cursor:grab}
+.readT{font-stretch:120%;font-weight:820;font-size:1.9rem;line-height:1;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:.35em}
+.glow{display:inline-block;width:.62em;height:.62em;border-radius:50%;border:1.5px solid var(--ink)}
+.small{font-size:.86rem;color:var(--ink2)}
+.inp{display:grid;grid-template-columns:auto 1fr 78px;gap:6px 10px;align-items:center;margin:.4rem 0}
+.inp input[type=number]{font:inherit;font-size:.95rem;width:78px;padding:.3rem .4rem;border:1.5px solid var(--rule);border-radius:6px;background:var(--paper);color:var(--ink)}
+.stack{display:flex;height:34px;border-radius:6px;overflow:hidden;border:1.5px solid var(--ink);margin:.5rem 0}
+.stack>div{display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;transition:width .25s}
+.stk-lab{font-size:.8rem;font-weight:680;color:var(--ink2);margin:.6rem 0 0}
+.sw{display:inline-block;width:.8em;height:.8em;border-radius:2px;vertical-align:-.05em;margin-right:.3em;border:1px solid var(--ink)}
+.msg{background:var(--bg);border-radius:6px;padding:.55rem .7rem;font-size:.92rem;margin:.5rem 0 0}
+.quizfb{min-height:1.6em;font-weight:650}
+.pill{display:inline-block;border:1.5px solid var(--ink);border-radius:999px;padding:.05rem .55rem;font-size:.8rem;font-weight:650;margin-right:.3rem}
+.reg{cursor:pointer}
+.reg.sel{stroke:var(--cL);stroke-width:2.5}
+.map{display:grid;grid-template-columns:auto 1fr;gap:.3rem .7rem;font-size:.95rem;margin:.6rem 0}
+.map b{white-space:nowrap}
+.res{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:.8rem 0}
+.res>div{background:var(--paper);border:1px solid var(--rule);border-radius:8px;padding:.5rem .7rem}
+.res .v{font-stretch:108%;font-weight:800;font-size:1.18rem;font-variant-numeric:tabular-nums;line-height:1.15;overflow-wrap:anywhere}
+.res .k{font-size:.8rem;color:var(--ink2)}
+footer{max-width:760px;margin:0 auto;padding:0 18px 40px;color:var(--ink2);font-size:.85rem}
+@media (prefers-reduced-motion: reduce){.stack>div{transition:none}}
+@media (min-width:640px){.fig{margin:1.2rem 0;padding:16px}}
+
+.ph-b{background:var(--cBs)}.ph-m{background:var(--cMs)}
+.thumbs{display:grid;grid-template-columns:repeat(2,1fr);gap:12px 14px;margin:18px 0 6px}
+.thumbs figure{margin:0}
+.thumbs canvas{display:block;width:100%;aspect-ratio:1;height:auto;border-radius:50%;border:2px solid var(--ink)}
+.thumbs figcaption{font-size:.84rem;line-height:1.35;margin-top:.4rem;color:var(--ink2)}
+.thumbs figcaption b{display:block;color:var(--ink);font-size:.95rem}
+@media (min-width:640px){.thumbs{grid-template-columns:repeat(4,1fr)}}
+details.sol{border:1.5px solid var(--rule);border-radius:8px;background:var(--paper);margin:.6rem 0;padding:.1rem .9rem}
+details.sol summary{cursor:pointer;font-weight:700;padding:.5rem 0;list-style-position:outside}
+details.sol[open] summary{border-bottom:1px solid var(--rule);margin-bottom:.4rem}
+.ex{font-weight:720}
+.chk{display:flex;align-items:center;gap:.45rem;font-size:.9rem;font-weight:620;margin:.5rem 0}
+.chk input{width:1.1rem;height:1.1rem;accent-color:var(--cL)}
+.inp2{display:grid;grid-template-columns:5.2em 1fr 4.6em;gap:4px 10px;align-items:center;margin:.3rem 0;font-size:.9rem}
+.inp2 output{font-variant-numeric:tabular-nums;text-align:right;font-weight:650}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cmp>div{background:var(--paper);border:1px solid var(--rule);border-radius:8px;padding:.5rem .7rem;min-width:0}
+.cmp h4{margin:0 0 .3rem;font-size:.95rem;font-stretch:108%}
+</style>
+</head>
+<body data-level="both">
+
+<svg class="defs" aria-hidden="true" width="0" height="0">
+  <defs>
+    <pattern id="pHatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" style="fill:var(--cGs)"/><rect width="2.5" height="7" style="fill:var(--paper);opacity:.9"/></pattern>
+    <pattern id="pPc" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(30)"><rect width="9" height="9" style="fill:var(--cAs)"/><rect width="2" height="9" style="fill:var(--cC)"/></pattern>
+    <pattern id="pPf" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(30)"><rect width="4" height="4" style="fill:var(--cAs)"/><rect width="1.4" height="4" style="fill:var(--cC)"/></pattern>
+    <pattern id="pAPf" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><rect width="8" height="8" style="fill:var(--cAs)"/><rect width="3" height="8" style="fill:var(--cGs)"/></pattern>
+  </defs>
+</svg>
+
+<header class="hero">
+  <p class="series">Métallurgie · Cours 02 · Série Aciers</p>
+  <h1>Aciers : cinétique, TTT, TRC et éléments d’addition</h1>
+  <p class="lead">Le cours 1 supposait un refroidissement infiniment lent. Ici, on ajoute le temps. C’est lui qui décide si le même acier sort mou ou très dur, et c’est la composition qui règle cette horloge.</p>
+  <div class="thumbs" aria-label="Quatre microstructures d’un même acier à 0,76 % C">
+    <figure><canvas id="h1" width="300" height="300"></canvas><figcaption><b>Four</b>perlite grossière, ≈&nbsp;220&nbsp;HV</figcaption></figure>
+    <figure><canvas id="h2" width="300" height="300"></canvas><figcaption><b>Air</b>perlite fine, ≈&nbsp;280&nbsp;HV</figcaption></figure>
+    <figure><canvas id="h3" width="300" height="300"></canvas><figcaption><b>Bain de sel à 400&nbsp;°C</b>bainite, ≈&nbsp;480&nbsp;HV</figcaption></figure>
+    <figure><canvas id="h4" width="300" height="300"></canvas><figcaption><b>Eau</b>martensite, ≈&nbsp;850&nbsp;HV</figcaption></figure>
+  </div>
+  <p class="small">Même acier à 0,76&nbsp;% C, même austénite de départ, quatre refroidissements. Duretés : ordres de grandeur, microstructures schématiques.</p>
+</header>
+
+<nav class="bar" aria-label="Navigation du cours">
+  <div class="bar-in">
+    <div class="seg" role="group" aria-label="Niveau affiché">
+      <button data-l="both" class="on">Les deux niveaux</button><button data-l="1">Niveau 1</button><button data-l="2">Niveau 2</button>
+    </div>
+    <div class="toc"><a href="#s0" title="Avant de commencer">0</a><a href="#s1" title="Pourquoi des courbes en C">1</a><a href="#s2" title="Les mécanismes">2</a><a href="#s3" title="Courbes TTT">3</a><a href="#s4" title="Courbes TRC">4</a><a href="#s5" title="Éléments d’addition">5</a><a href="#s6" title="Fiche méthode">6</a></div>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============ 0 ============ -->
+<section id="s0">
+  <h2><span class="n">0</span><span>Avant de commencer</span></h2>
+  <p>Ce cours poursuit deux objectifs :</p>
+  <ul>
+    <li>comprendre les mécanismes des transformations <b>diffusives</b> à l’état solide (ferrite, perlite, bainite) et leurs conséquences technologiques ;</li>
+    <li>relier la composition chimique d’un acier aux microstructures obtenues en traitement thermique.</li>
+  </ul>
+  <p>La martensite, transformation <b>displacive</b>, apparaît déjà sur les diagrammes de ce cours. Son mécanisme sera détaillé dans le cours 3.</p>
+
+  <div class="note hot">
+    <p><b>Trois exercices corrigés</b>, dans le style habituel des examens, jalonnent ce cours : lecture d’un diagramme TTT (partie 3), lecture d’un diagramme TRC (partie 4), et effet des éléments d’addition (partie 5).</p>
+  </div>
+
+  <div class="note">
+    <p><b>À propos des diagrammes de ce cours.</b> Les courbes TTT et TRC sont calculées par un modèle simplifié, calé sur l’allure des diagrammes des manuels. Cela permet de les rendre interactifs : chaque résultat affiché est cohérent avec la courbe dessinée. En revanche, ce ne sont pas des données d’acier réelles. En examen, lis toujours le diagramme fourni : tes valeurs peuvent différer des miennes, la méthode reste la même.</p>
+  </div>
+
+  <p><b>Rappel du cours 1.</b> Au-dessus de A<sub>3</sub>, l’acier est de l’austénite γ (CFC) qui dissout tout le carbone. En refroidissant, le fer redevient α (CC) et doit expulser ce carbone. À l’équilibre, on obtient ferrite + perlite. Ce cours répond à la question suivante : que se passe-t-il quand on ne laisse pas le temps à ce tri du carbone ?</p>
+</section>
+
+<!-- ============ 1 ============ -->
+<section id="s1">
+  <h2><span class="n">1</span><span>Pourquoi les courbes sont en forme de C</span></h2>
+
+  <div class="lv lv1">
+    <span class="tag">Niveau 1</span>
+    <p>Une transformation à l’état solide se fait en deux temps. D’abord la <b>germination</b> : de tout petits îlots de la nouvelle phase apparaissent, surtout aux joints de grains. Puis la <b>croissance</b> : ces îlots grossissent en déplaçant des atomes. Deux effets s’opposent quand on transforme à une température T sous A<sub>1</sub> :</p>
+    <ul>
+      <li><b>la force motrice</b> : plus on descend sous 727&nbsp;°C, plus l’austénite est instable et « a envie » de se transformer. Elle augmente quand T baisse ;</li>
+      <li><b>la mobilité des atomes</b> : le carbone doit diffuser, et la diffusion ralentit très vite quand T baisse.</li>
+    </ul>
+    <p>Juste sous 727&nbsp;°C, les atomes sont mobiles mais rien ne pousse : c’est lent. Très bas, tout pousse mais plus rien ne bouge : c’est lent aussi. Entre les deux, vers 540&nbsp;°C pour un acier eutectoïde, le produit des deux est maximal. Le temps nécessaire pour démarrer est alors minimal : c’est le <b>nez</b> de la courbe en C.</p>
+  </div>
+
+  <div class="fig">
+    <p class="figt">Force motrice × mobilité = vitesse</p>
+    <svg id="kin" viewBox="0 0 360 270" role="img" aria-label="Force motrice, mobilité et temps de démarrage en fonction de la température"></svg>
+    <input type="range" id="kinT" min="220" max="720" step="1" value="650" aria-label="Température de transformation">
+    <p id="kinTxt" class="msg"></p>
+    <p class="cap">À gauche, les deux effets (normalisés) et leur produit. À droite, le temps de démarrage qui en découle, sur une échelle logarithmique : chaque graduation multiplie le temps par 10.</p>
+  </div>
+
+  <div class="lv lv1">
+    <span class="tag">Niveau 1</span>
+    <h3>Du début à la fin d’une transformation : la courbe en S</h3>
+    <p>À température fixe, la fraction transformée suit une courbe en S : rien pendant un temps d’<b>incubation</b>, puis une accélération (de plus en plus de germes, de plus en plus grands), puis un ralentissement quand les colonies se touchent et qu’il ne reste plus d’austénite. Par convention, le <b>début</b> de la transformation est lu à 1&nbsp;% et la <b>fin</b> à 99&nbsp;%.</p>
+  </div>
+
+  <div class="fig">
+    <p class="figt">Germination et croissance de la perlite à température fixe</p>
+    <div class="row">
+      <div style="flex:0 1 240px;min-width:170px;margin:0 auto"><canvas class="micro" id="jm" width="440" height="440" aria-label="Germination et croissance de colonies de perlite"></canvas></div>
+      <div class="grow">
+        <div class="readT"><span class="glow" id="jmGlow"></span><span id="jmTv"></span></div>
+        <p id="jmTxt" class="msg"></p>
+      </div>
+    </div>
+    <svg id="jmPlot" viewBox="0 0 360 150" role="img" aria-label="Fraction transformée en fonction du temps"></svg>
+    <input type="range" id="jmT" min="560" max="715" step="5" value="680" aria-label="Température du palier">
+    <div class="btns sm"><button class="btn" id="jmPlay">Lecture</button><button class="btn" data-jt="700">700&nbsp;°C</button><button class="btn" data-jt="650">650&nbsp;°C</button><button class="btn" data-jt="580">580&nbsp;°C</button></div>
+    <p class="cap">Les germes naissent surtout sur les joints de grains de l’austénite. Compare 700&nbsp;°C (peu de colonies, grosses, lamelles épaisses) et 580&nbsp;°C (beaucoup de colonies, lamelles fines). La courbe en S se lit sur un axe des temps réel, calé sur le diagramme TTT de la partie 3.</p>
+  </div>
+
+  <div class="lv lv2">
+    <span class="tag">Niveau 2</span>
+    <h3>La germination en équations</h3>
+    <p>Pour un germe sphérique de rayon r, l’enthalpie libre gagnée en volume et payée en surface s’écrit ΔG(r)&nbsp;=&nbsp;−(4/3)πr³Δg<sub>v</sub>&nbsp;+&nbsp;4πr²γ, où Δg<sub>v</sub> est la force motrice par unité de volume et γ l’énergie d’interface. ΔG passe par un maximum en r*&nbsp;=&nbsp;2γ/Δg<sub>v</sub>, la barrière valant ΔG*&nbsp;=&nbsp;16πγ³/(3Δg<sub>v</sub>²). Comme Δg<sub>v</sub> est à peu près proportionnelle au sous-refroidissement ΔT, la barrière varie en 1/ΔT² : elle est énorme près de A<sub>1</sub> et s’effondre en descendant.</p>
+    <p>La vitesse de germination est le produit d’un terme de barrière, exp(−ΔG*/kT), et d’un terme de diffusion, exp(−Q/RT). Le premier croît quand T baisse, le second décroît : d’où le maximum. Aux joints de grains, une partie de l’interface préexiste et γ effectif diminue : la barrière est plus basse. C’est pourquoi un gros grain d’austénite, qui offre moins de joints, retarde la transformation. On y reviendra pour la zone à gros grains d’une soudure.</p>
+    <h3>La loi d’Avrami</h3>
+    <p>La courbe en S suit l’équation de Johnson-Mehl-Avrami-Kolmogorov : f(t)&nbsp;=&nbsp;1&nbsp;−&nbsp;exp(−k&nbsp;t<sup>n</sup>). Le terme k t<sup>n</sup> est le volume qu’occuperaient les colonies si elles pouvaient se chevaucher ; l’exponentielle corrige ces chevauchements. L’exposant n (souvent entre 1 et 4) dépend du mode de germination et de croissance. Entre 1&nbsp;% et 99&nbsp;%, le rapport des temps vaut (ln&nbsp;100/ln&nbsp;(1/0,99))<sup>1/n</sup>&nbsp;≈&nbsp;458<sup>1/n</sup> : pour n&nbsp;=&nbsp;2, la fin arrive environ 21 fois plus tard que le début.</p>
+    <h3>Le carbone va vite, le fer et les éléments d’alliage lentement</h3>
+    <p>Le carbone diffuse par sauts entre sites interstitiels ; le fer et les éléments substitutionnels (Mn, Cr, Mo, Ni…) doivent attendre qu’une lacune passe. Avec les données de Callister (C dans γ : D<sub>0</sub>&nbsp;=&nbsp;2,3·10<sup>−5</sup>&nbsp;m²/s, Q&nbsp;=&nbsp;148&nbsp;kJ/mol ; Fe dans γ : D<sub>0</sub>&nbsp;=&nbsp;5·10<sup>−5</sup>&nbsp;m²/s, Q&nbsp;=&nbsp;284&nbsp;kJ/mol), la distance parcourue en 1&nbsp;s à 900&nbsp;°C, √(Dt), vaut environ 2,4&nbsp;µm pour le carbone et quelques nanomètres pour le fer. Ce facteur de l’ordre de mille sur les distances explique, en partie 5, pourquoi les éléments d’alliage ralentissent tant les transformations.</p>
+  </div>
+</section>
+
+<!-- ============ 2 ============ -->
+<section id="s2">
+  <h2><span class="n">2</span><span>Ferrite, perlite, bainite : les mécanismes</span></h2>
+
+  <div class="lv lv1">
+    <span class="tag">Niveau 1</span>
+    <p>Toutes les transformations diffusives de l’austénite résolvent le même problème : fabriquer du fer α, qui ne garde presque pas de carbone. Ce qui change avec la température, c’est <b>la distance que le carbone peut parcourir</b> pendant la transformation. Plus on transforme bas, plus cette distance est courte, et plus la structure est fine et dure.</p>
+  </div>
+
+  <div class="fig">
+    <p class="figt">Galerie des microstructures</p>
+    <div class="row">
+      <div style="flex:0 1 250px;min-width:180px;margin:0 auto"><canvas class="micro" id="gal" width="440" height="440" aria-label="Microstructure schématique"></canvas></div>
+      <div class="grow">
+        <div class="btns sm" id="galBtns">
+          <button class="btn on" data-g="Pc">Perlite grossière</button><button class="btn" data-g="Pf">Perlite fine</button><button class="btn" data-g="Bu">Bainite supérieure</button><button class="btn" data-g="Bl">Bainite inférieure</button><button class="btn" data-g="M">Martensite</button><button class="btn" data-g="FP">Ferrite + perlite</button>
+        </div>
+        <div class="btns sm" id="galMode"><button class="btn on" data-m="schema">Couleurs des phases</button><button class="btn" data-m="nital">Aspect au nital</button></div>
+      </div>
+    </div>
+    <p id="galTxt" class="msg"></p>
+  </div>
+
+  <div class="lv lv1">
+    <span class="tag">Niveau 1</span>
+    <div class="tw"><table>
+      <thead><tr><th>Produit (acier eutectoïde)</th><th>Formé vers</th><th>Comment se loge le carbone</th><th class="num">Dureté</th></tr></thead>
+      <tbody>
+        <tr><td><span class="ph ph-a">Perlite grossière</span></td><td>650–727&nbsp;°C</td><td>lamelles α / Fe<sub>3</sub>C épaisses, diffusion sur ≈&nbsp;1&nbsp;µm</td><td class="num">≈ 200–250&nbsp;HV</td></tr>
+        <tr><td><span class="ph ph-a">Perlite fine</span></td><td>540–650&nbsp;°C</td><td>mêmes lamelles, beaucoup plus serrées</td><td class="num">≈ 300–380&nbsp;HV</td></tr>
+        <tr><td><span class="ph ph-b">Bainite supérieure</span></td><td>350–540&nbsp;°C</td><td>lattes de ferrite ; carbures <b>entre</b> les lattes</td><td class="num">≈ 400–500&nbsp;HV</td></tr>
+        <tr><td><span class="ph ph-b">Bainite inférieure</span></td><td>M<sub>s</sub>–350&nbsp;°C</td><td>lattes plus fines ; carbures <b>dans</b> les lattes</td><td class="num">≈ 500–600&nbsp;HV</td></tr>
+        <tr><td><span class="ph ph-m">Martensite</span></td><td>sous M<sub>s</sub></td><td>le carbone reste piégé : pas de diffusion (cours&nbsp;3)</td><td class="num">≈ 850&nbsp;HV</td></tr>
+      </tbody>
+    </table></div>
+    <p>Les températures sont celles d’un acier à 0,76&nbsp;% C ; elles se décalent avec la composition (partie 5).</p>
+
+    <h3>La perlite : plus bas, plus fine</h3>
+    <p>Tu as vu au cours 1 que le carbone file latéralement des lamelles de ferrite vers les lamelles de cémentite. Plus T est basse, plus ce trajet doit être court : l’espacement des lamelles diminue, à peu près comme 1/ΔT. Une perlite fine est plus dure et plus résistante, car les interfaces α/Fe<sub>3</sub>C freinent les dislocations.</p>
+
+    <h3>La bainite : la ferrite pousse en lattes</h3>
+    <p>Sous le nez, la ferrite ne pousse plus en lamelles coopératives avec la cémentite : elle se forme en fines <b>lattes</b>, groupées en paquets (les « gerbes »). Le carbone qu’elle contient en trop doit sortir ou précipiter :</p>
+  </div>
+
+  <div class="fig">
+    <p class="figt">Bainite supérieure et inférieure : où finit le carbone</p>
+    <svg id="bain" viewBox="0 0 360 200" role="img" aria-label="Schéma des bainites supérieure et inférieure"></svg>
+    <p class="cap">À gauche, le carbone a le temps de sortir des lattes : il s’accumule dans l’austénite entre elles, qui précipite de la cémentite en films. À droite, il n’a plus le temps : il précipite sur place, en fins carbures inclinés d’environ 60° dans chaque latte.</p>
+  </div>
+
+  <div class="lv lv1">
+    <span class="tag">Niveau 1</span>
+    <h3>La ferrite proeutectoïde change de forme selon la vitesse</h3>
+    <p>Dans un acier hypoeutectoïde, la ferrite qui se forme avant la perlite ne pousse pas toujours en grains ronds :</p>
+  </div>
+
+  <div class="fig">
+    <p class="figt">Trois morphologies de ferrite</p>
+    <svg id="morph" viewBox="0 0 360 220" role="img" aria-label="Morphologies de la ferrite"></svg>
+    <div class="btns sm" id="morphBtns"><button class="btn on" data-f="allo">Aux joints de grains</button><button class="btn" data-f="wid">Widmanstätten</button><button class="btn" data-f="aci">Aciculaire</button></div>
+    <p id="morphTxt" class="msg"></p>
+  </div>
+
+  <div class="lv lv2">
+    <span class="tag">Niveau 2</span>
+    <h3>Conséquences technologiques</h3>
+    <ul>
+      <li><b>Dureté et limite d’élasticité</b> augmentent quand la structure s’affine : c’est l’esprit de la loi de Hall-Petch, où la résistance croît comme 1/√d, d étant la taille de grain ou l’espacement caractéristique.</li>
+      <li><b>Ténacité.</b> Une structure fine et désordonnée dévie les fissures : c’est le cas de la bainite inférieure et de la ferrite aciculaire. Les longues plaquettes parallèles de la ferrite de Widmanstätten ou les films de cémentite de la bainite supérieure offrent au contraire des chemins faciles. La bainite supérieure est souvent moins tenace que l’inférieure, à dureté comparable.</li>
+      <li><b>En soudage.</b> Dans le métal fondu d’un acier C-Mn, on recherche la <b>ferrite aciculaire</b>, qui germe sur de fines inclusions d’oxydes (souvent à base de titane) et forme un enchevêtrement de petites aiguilles très tenace. Dans la zone affectée à gros grains, l’austénite grossie favorise au contraire la ferrite de Widmanstätten et la bainite supérieure, moins tenaces.</li>
+    </ul>
+    <h3>La bainite est-elle vraiment « diffusive » ?</h3>
+    <p>C’est un débat ancien. La croissance des lattes de ferrite bainitique présente des traits displacifs (relief de surface, relations d’orientation proches de la martensite), tandis que la précipitation des carbures exige la diffusion du carbone. On la classe souvent avec les transformations diffusives, parce que sa cinétique dépend du temps et de la température comme celle de la perlite. Retiens qu’elle est <b>intermédiaire</b> entre perlite et martensite, par sa température, sa dureté et son mécanisme.</p>
+  </div>
+</section>
+
+<!-- ============ 3 ============ -->
+<section id="s3">
+  <h2><span class="n">3</span><span>Les courbes TTT, transformation à température constante</span></h2>
+
+  <div class="lv lv1">
+    <span class="tag">Niveau 1</span>
+    <p><b>TTT</b> signifie Temps, Température, Transformation. On l’appelle aussi diagramme de transformation <b>isotherme</b>. Pour le construire, on austénitise de petits échantillons, on les plonge brutalement dans un bain à la température T choisie, on les y maintient un temps t, puis on les trempe pour figer l’état. En répétant pour beaucoup de T et de t, on trace deux courbes :</p>
+    <ul>
+      <li>la courbe de <b>début</b> de transformation (1&nbsp;% transformé) ;</li>
+      <li>la courbe de <b>fin</b> de transformation (99&nbsp;%).</li>
+    </ul>
+    <p>L’axe des temps est <b>logarithmique</b> : il couvre de 0,1&nbsp;s à plusieurs jours. Sous la courbe en C, les lignes horizontales M<sub>s</sub>, M<sub>50</sub> et M<sub>90</sub> indiquent l’apparition de la martensite, qui ne dépend pas du temps.</p>
+    <p><b>Règle d’or de lecture.</b> Un diagramme TTT ne se lit que le long de trajets faits de <b>paliers horizontaux</b> et de <b>trempes verticales</b>. On suppose les trempes instantanées : pendant une trempe, rien ne se transforme, sauf la martensite quand on passe sous M<sub>s</sub>.</p>
+  </div>
+
+  <div class="fig">
+    <p class="figt">Diagramme TTT d’un acier eutectoïde : construis ton traitement</p>
+    <svg id="ttt" viewBox="0 0 360 300" role="img" aria-label="Diagramme TTT avec le trajet du traitement"></svg>
+    <div class="btns sm" id="tttPre">
+      <button class="btn" data-p="a">a</button><button class="btn" data-p="b">b</button><button class="btn" data-p="c">c</button><button class="btn" data-p="d">d</button><button class="btn" data-p="e">e</button><button class="btn" data-p="f">f</button>
+    </div>
+    <div class="inp2"><label for="t1T">Palier 1</label><input type="range" id="t1T" min="230" max="720" step="5" value="600"><output id="t1Tv"></output></div>
+    <div class="inp2"><label for="t1t">Durée 1</label><input type="range" id="t1t" min="0" max="5" step="0.05" value="2"><output id="t1tv"></output></div>
+    <label class="chk"><input type="checkbox" id="t2on"> Ajouter un second palier</label>
+    <div id="t2box" hidden>
+      <div class="inp2"><label for="t2T">Palier 2</label><input type="range" id="t2T" min="230" max="720" step="5" value="400"><output id="t2Tv"></output></div>
+      <div class="inp2"><label for="t2t">Durée 2</label><input type="range" id="t2t" min="0" max="5" step="0.05" value="3"><output id="t2tv"></output></div>
+    </div>
+    <div class="btns sm"><button class="btn" id="tttPlay">Lancer le traitement</button></div>
+    <div class="row">
+      <div class="grow">
+        <p id="tttNow" class="msg"></p>
+        <div class="tw"><table id="tttTab"></table></div>
+      </div>
+      <div style="flex:0 1 220px;min-width:160px;margin:0 auto"><canvas class="micro" id="tttMc" width="400" height="400" aria-label="Microstructure du traitement"></canvas></div>
+    </div>
+    <p class="cap">Le trajet part de l’austénite au-dessus de A<sub>1</sub>, descend instantanément au palier, puis finit par une trempe à l’eau jusqu’à 20&nbsp;°C. La courbe en pointillés au milieu marque 50&nbsp;% de transformation.</p>
+  </div>
+
+  <div class="lv lv1">
+    <span class="tag">Niveau 1</span>
+    <h3><span class="ex">Exercice 1.</span> Six traitements d’un acier eutectoïde</h3>
+    <p>Un acier à 0,76&nbsp;% C est austénitisé, puis subit les traitements ci-dessous. Tous les changements de température sont instantanés et chaque traitement se termine par une trempe à l’ambiante. Donne la microstructure finale et ses proportions. Utilise les boutons a à f pour placer chaque trajet sur le diagramme.</p>
+    <ol type="a">
+      <li>Palier de 10<sup>4</sup>&nbsp;s à 690&nbsp;°C.</li>
+      <li>Palier de 100&nbsp;s à 600&nbsp;°C.</li>
+      <li>Palier de 10<sup>4</sup>&nbsp;s à 300&nbsp;°C.</li>
+      <li>Palier de 20&nbsp;s à 450&nbsp;°C.</li>
+      <li>Palier de 100&nbsp;s à 250&nbsp;°C.</li>
+      <li>Palier de 10&nbsp;s à 630&nbsp;°C, puis palier de 1000&nbsp;s à 400&nbsp;°C.</li>
+    </ol>
+    <details class="sol"><summary>Voir la correction</summary>
+      <p><b>Méthode.</b> À la température du palier, lis le temps de début t<sub>d</sub> et de fin t<sub>f</sub>, puis compare avec la durée du palier. Si la durée dépasse t<sub>f</sub>, tout est transformé. Si elle est inférieure à t<sub>d</sub>, rien ne l’est. Entre les deux, on estime la fraction, par exemple avec la courbe des 50&nbsp;%. L’austénite restante devient martensite à la trempe finale. La nature du produit se lit à la température du palier.</p>
+      <ol type="a">
+        <li>À 690&nbsp;°C, la fin est vers 300&nbsp;s ≪ 10<sup>4</sup>&nbsp;s : <b>100&nbsp;% perlite grossière</b> (≈&nbsp;230&nbsp;HV).</li>
+        <li>À 600&nbsp;°C, la fin est vers 13&nbsp;s &lt; 100&nbsp;s : <b>100&nbsp;% perlite fine</b> (≈&nbsp;320&nbsp;HV).</li>
+        <li>À 300&nbsp;°C, la fin est vers 2800&nbsp;s &lt; 10<sup>4</sup>&nbsp;s : <b>100&nbsp;% bainite inférieure</b> (≈&nbsp;545&nbsp;HV).</li>
+        <li>À 450&nbsp;°C, le début est vers 3&nbsp;s et la fin vers 56&nbsp;s. À 20&nbsp;s, on est un peu avant la courbe des 50&nbsp;% : environ <b>43&nbsp;% de bainite supérieure</b>. Les 57&nbsp;% d’austénite restante deviennent <b>martensite</b> à la trempe.</li>
+        <li>À 250&nbsp;°C, le début n’arrive qu’après ≈&nbsp;400&nbsp;s : rien ne se passe en 100&nbsp;s. À la trempe, tout devient <b>martensite</b> (≈&nbsp;850&nbsp;HV). Le palier n’a servi à rien, sauf à égaliser la température dans la pièce : c’est l’idée du « martempering » (cours&nbsp;3).</li>
+        <li>À 630&nbsp;°C, début vers 2&nbsp;s, fin vers 22&nbsp;s : en 10&nbsp;s, environ <b>45&nbsp;% de perlite fine</b>. À 400&nbsp;°C, l’austénite restante (55&nbsp;%) a largement le temps de finir (fin vers 200&nbsp;s) : <b>55&nbsp;% de bainite supérieure</b>. Aucune martensite.</li>
+      </ol>
+      <p class="small">Valeurs lues sur le diagramme de ce cours. Sur un autre diagramme, les temps changent, le raisonnement reste le même.</p>
+    </details>
+  </div>
+
+  <div class="lv lv2">
+    <span class="tag">Niveau 2</span>
+    <h3>Deux paliers successifs : ce qu’on néglige</h3>
+    <p>Au second palier, on a lu les courbes comme si le chronomètre repartait de zéro pour l’austénite restante. C’est l’usage en exercice, mais c’est une approximation : l’austénite a déjà « consommé » une partie de son incubation au premier palier, et elle s’est un peu enrichie en carbone près des colonies de perlite. La règle d’additivité de Scheil formalise la première correction : la transformation démarre quand Σ&nbsp;Δt<sub>i</sub>/t<sub>d</sub>(T<sub>i</sub>)&nbsp;=&nbsp;1. C’est exactement ce qu’on utilise pour passer du TTT au TRC (partie 4).</p>
+    <h3>Et l’austénite résiduelle ?</h3>
+    <p>Pour un acier eutectoïde, la fin de transformation martensitique M<sub>f</sub> est proche de l’ambiante, voire en dessous. Une trempe à 20&nbsp;°C laisse donc quelques pourcents d’<b>austénite résiduelle</b>. Les exercices la négligent ; on en reparlera au cours 3 (traitement par le froid, revenu).</p>
+    <h3>TTT d’un acier hypoeutectoïde</h3>
+    <p>Pour un acier à 0,4&nbsp;% C par exemple, le diagramme gagne une horizontale A<sub>3</sub> et une courbe supplémentaire « début de formation de la ferrite », à gauche de la courbe de la perlite, entre A<sub>3</sub> et A<sub>1</sub>. Le nez se décale vers les temps courts (moins de carbone à trier) et M<sub>s</sub> monte. C’est ce qui rend les aciers doux si difficiles à tremper.</p>
+  </div>
+</section>
+
+<!-- ============ 4 ============ -->
+<section id="s4">
+  <h2><span class="n">4</span><span>Les courbes TRC, refroidissement continu</span></h2>
+
+  <div class="lv lv1">
+    <span class="tag">Niveau 1</span>
+    <p>Dans la réalité, une pièce qu’on sort du four se refroidit <b>en continu</b> : au four, à l’air, dans l’huile ou dans l’eau. On utilise alors les diagrammes <b>TRC</b> (Transformation en Refroidissement Continu, en anglais CCT). Ils se construisent par dilatométrie, en refroidissant de petites éprouvettes à vitesse contrôlée : chaque transformation se voit comme un accident sur la courbe de longueur (cours&nbsp;1).</p>
+    <p>Par rapport au TTT, les courbes de début et de fin sont <b>décalées vers le bas et vers la droite</b> : quand la température descend pendant l’incubation, il faut plus de temps pour démarrer, et on démarre plus bas. Un TRC se lit <b>le long des courbes de refroidissement</b> tracées dessus, et seulement ainsi.</p>
+    <p>Deux vitesses critiques résument le diagramme :</p>
+    <ul>
+      <li>au-dessus de la <b>vitesse critique de trempe</b>, la courbe passe à gauche du nez : pas de perlite, 100&nbsp;% de martensite ;</li>
+      <li>en dessous d’une seconde vitesse, la courbe traverse toute la zone perlitique : 100&nbsp;% de perlite.</li>
+    </ul>
+    <p>Entre les deux, on obtient un mélange de perlite et de martensite.</p>
+  </div>
+
+  <div class="fig">
+    <p class="figt">Diagramme TRC d’un acier eutectoïde</p>
+    <svg id="trc" viewBox="0 0 360 300" role="img" aria-label="Diagramme TRC avec courbes de refroidissement"></svg>
+    <div class="btns sm" id="trcPre"><button class="btn" data-v="0.03">Four</button><button class="btn" data-v="2">Air</button><button class="btn on" data-v="40">Huile</button><button class="btn" data-v="200">Eau</button></div>
+    <div class="inp2"><label for="trcV">Vitesse</label><input type="range" id="trcV" min="-2" max="3" step="0.02" value="1.6"><output id="trcVv"></output></div>
+    <label class="chk"><input type="checkbox" id="trcGhost" checked> Superposer le TTT en pointillés</label>
+    <div class="row">
+      <div class="grow"><p id="trcTxt" class="msg"></p><div class="stack" id="trcStk"></div></div>
+      <div style="flex:0 1 200px;min-width:150px;margin:0 auto"><canvas class="micro" id="trcMc" width="400" height="400" aria-label="Microstructure après refroidissement"></canvas></div>
+    </div>
+    <p class="cap">Vitesse mesurée à 700&nbsp;°C. Les vitesses des boutons sont des ordres de grandeur pour une petite pièce ; elles dépendent énormément de l’épaisseur. Pour l’acier eutectoïde au carbone, la bainite n’apparaît pas en refroidissement continu : la perlite consomme l’austénite avant.</p>
+  </div>
+
+  <div class="lv lv1">
+    <span class="tag">Niveau 1</span>
+    <h3><span class="ex">Exercice 2.</span> Lire le TRC</h3>
+    <ol>
+      <li>Quelle microstructure obtient-on pour des vitesses de 1, 30 et 300&nbsp;°C/s à 700&nbsp;°C ?</li>
+      <li>Estime la vitesse critique de trempe de cet acier.</li>
+      <li>Une barre de 10&nbsp;mm trempée à l’huile refroidit vers 40&nbsp;°C/s au cœur. Sera-t-elle entièrement martensitique ?</li>
+    </ol>
+    <details class="sol"><summary>Voir la correction</summary>
+      <ol>
+        <li><b>1&nbsp;°C/s</b> : la courbe traverse toute la zone perlitique vers 690–640&nbsp;°C : <b>100&nbsp;% perlite</b>, plutôt grossière. <b>30&nbsp;°C/s</b> : la courbe entre dans la zone perlitique puis rencontre la ligne d’arrêt vers 500&nbsp;°C avant la fin : environ <b>73&nbsp;% de perlite fine</b>, et les 27&nbsp;% d’austénite restante deviennent <b>martensite</b> sous M<sub>s</sub>. <b>300&nbsp;°C/s</b> : la courbe passe à gauche du nez : <b>100&nbsp;% martensite</b>.</li>
+        <li>La vitesse critique est celle de la courbe qui frôle le nez de la courbe de début : environ <b>190&nbsp;°C/s</b> sur ce diagramme. Callister donne environ 140&nbsp;°C/s pour un acier eutectoïde réel : même ordre de grandeur.</li>
+        <li>Non : 40&nbsp;°C/s est bien sous la vitesse critique. On obtient environ 45&nbsp;% de perlite fine et 55&nbsp;% de martensite. Un acier au carbone de ce type se trempe à l’eau, et seulement en petites sections. C’est tout l’intérêt des éléments d’alliage (partie 5).</li>
+      </ol>
+    </details>
+  </div>
+
+  <div class="lv lv2">
+    <span class="tag">Niveau 2</span>
+    <h3>Comment on passe du TTT au TRC</h3>
+    <p>Un refroidissement continu se découpe en une suite de petits paliers Δt<sub>i</sub> aux températures T<sub>i</sub>. Selon la règle d’additivité de Scheil, la transformation démarre quand la somme des fractions d’incubation consommées atteint 1 : Σ&nbsp;Δt<sub>i</sub>/t<sub>d</sub>(T<sub>i</sub>)&nbsp;=&nbsp;1. Chaque petit palier « compte » d’autant moins que t<sub>d</sub>(T<sub>i</sub>) est long, d’où le décalage vers la droite et vers le bas. Le diagramme de ce cours est calculé exactement ainsi à partir du TTT de la partie 3.</p>
+    <h3>Les diagrammes TRC des aciers de construction et du soudage</h3>
+    <p>Les TRC industriels indiquent, au bout de chaque courbe, la <b>dureté finale</b> (souvent entourée) et, le long de la courbe, le <b>pourcentage</b> de chaque constituant formé dans chaque domaine (F, P, B, M). Pour le soudage, on les trace en fonction du temps de refroidissement entre 800 et 500&nbsp;°C, le <b>t<sub>8/5</sub></b>, avec un cycle thermique de soudage au lieu d’une austénitisation au four. Le cours&nbsp;3 montre comment calculer t<sub>8/5</sub> à partir de l’énergie de soudage et de l’épaisseur.</p>
+  </div>
+</section>
+
+<!-- ============ 5 ============ -->
+<section id="s5">
+  <h2><span class="n">5</span><span>Les éléments d’addition</span></h2>
+
+  <div class="lv lv1">
+    <span class="tag">Niveau 1</span>
+    <p>Un acier n’est jamais du Fe–C pur : il contient toujours du manganèse et du silicium issus de l’élaboration, et souvent du chrome, du nickel, du molybdène, du vanadium… On les range en trois catégories.</p>
+    <div class="tw"><table>
+      <thead><tr><th>Catégorie</th><th>Éléments</th><th>Effet principal</th></tr></thead>
+      <tbody>
+        <tr><td><b>Gammagènes</b></td><td>Ni, Mn, C, N, Cu, Co</td><td>élargissent le domaine γ : A<sub>3</sub> et A<sub>1</sub> descendent. À forte teneur, l’austénite reste stable jusqu’à l’ambiante (inox 304 : 18&nbsp;% Cr + 8–10&nbsp;% Ni).</td></tr>
+        <tr><td><b>Alphagènes</b></td><td>Cr, Mo, Si, W, V, Ti, Al, Nb</td><td>rétrécissent le domaine γ : A<sub>3</sub> et A<sub>1</sub> montent. Au-delà d’environ 12–13&nbsp;% Cr, plus d’austénite du tout : acier ferritique (inox 430).</td></tr>
+        <tr><td><b>Carburigènes</b></td><td>du plus au moins avide de carbone : Ti, Zr, Nb, V, W, Mo, Cr, (Mn)</td><td>forment des carbures plus stables que la cémentite : durcissement, grains fins, tenue à chaud.</td></tr>
+      </tbody>
+    </table></div>
+    <p>Un élément peut appartenir à deux catégories : le chrome est à la fois alphagène et carburigène. Le silicium et le nickel, eux, ne forment pas de carbures : ils restent en solution dans la ferrite.</p>
+  </div>
+
+  <div class="fig">
+    <p class="figt">Gammagène ou alphagène : ce que devient le domaine γ</p>
+    <svg id="loop" viewBox="0 0 360 260" role="img" aria-label="Diagrammes fer-élément schématiques"></svg>
+    <div class="btns sm" id="loopBtns"><button class="btn on" data-e="ni">Nickel (gammagène)</button><button class="btn" data-e="cr">Chrome (alphagène)</button></div>
+    <input type="range" id="loopX" min="0" max="20" step="0.5" value="0" aria-label="Teneur en élément">
+    <p id="loopTxt" class="msg"></p>
+    <p class="cap">Allures schématiques des diagrammes binaires fer–nickel et fer–chrome, sans carbone. Avec le chrome, le domaine γ se referme en « boucle » : au-delà, le fer reste cubique centré du solide jusqu’à l’ambiante, et ne peut donc pas prendre la trempe.</p>
+  </div>
+
+  <div class="lv lv1">
+    <span class="tag">Niveau 1</span>
+    <h3>Les deux effets qui comptent pour les traitements</h3>
+    <p><b>1. Les températures de transformation bougent.</b> Les deux abaques classiques de l’effet des éléments d’addition sur le point eutectoïde le montrent : la température eutectoïde monte avec Ti, Mo, Si, W, Cr et descend avec Mn et Ni ; la teneur en carbone de l’eutectoïde diminue avec presque tous les éléments. Un acier allié peut donc être « eutectoïde » avec bien moins de 0,76&nbsp;% C.</p>
+    <p><b>2. Les courbes TTT et TRC se décalent vers la droite</b>, avec tous les éléments usuels sauf le cobalt. Les atomes substitutionnels diffusent des milliers de fois moins vite que le carbone : pour former de la ferrite ou de la perlite, il faut qu’ils se redistribuent, ou au moins qu’ils freinent les interfaces. L’acier peut alors être refroidi moins vite tout en évitant la perlite : sa <b>trempabilité</b> augmente. C’est pour cela qu’on allie un acier de traitement.</p>
+  </div>
+
+  <div class="fig">
+    <p class="figt">Même carbone, alliage différent : C45 contre 42CrMo4</p>
+    <svg id="trc2" viewBox="0 0 360 300" role="img" aria-label="Diagramme TRC comparé"></svg>
+    <div class="btns sm" id="trc2S"><button class="btn on" data-s="C45">C45 (0,45 C, 0,7 Mn)</button><button class="btn" data-s="42CrMo4">42CrMo4 (+1 Cr, 0,2 Mo)</button></div>
+    <div class="btns sm" id="trc2Pre"><button class="btn" data-v="0.03">Four</button><button class="btn" data-v="2">Air</button><button class="btn on" data-v="40">Huile</button><button class="btn" data-v="200">Eau</button></div>
+    <div class="inp2"><label for="trc2V">Vitesse</label><input type="range" id="trc2V" min="-2" max="3" step="0.02" value="1.6"><output id="trc2Vv"></output></div>
+    <div class="cmp" id="trc2Cmp"></div>
+    <p class="cap">Domaines : F ferrite, P perlite, B bainite, M martensite. Les nombres au bas des courbes sont les duretés finales estimées (HV). Modèle simplifié : il reproduit l’écart de trempabilité entre les deux nuances, pas leurs diagrammes officiels.</p>
+  </div>
+
+  <div class="lv lv1">
+    <span class="tag">Niveau 1</span>
+    <h3>Les formules empiriques des points de transformation</h3>
+    <p>Des formules établies sur des centaines d’aciers faiblement alliés (Andrews, Steven et Haynes) donnent ces températures à partir de la composition, en % massique :</p>
+    <div class="eq">
+      Ac<sub>1</sub> = 723 − 10,7&nbsp;Mn − 16,9&nbsp;Ni + 29,1&nbsp;Si + 16,9&nbsp;Cr<br>
+      Ac<sub>3</sub> = 910 − 203&nbsp;√C − 15,2&nbsp;Ni + 44,7&nbsp;Si + 31,5&nbsp;Mo<br>
+      M<sub>s</sub> = 539 − 423&nbsp;C − 30,4&nbsp;Mn − 17,7&nbsp;Ni − 12,1&nbsp;Cr − 7,5&nbsp;Mo<br>
+      B<sub>s</sub> = 830 − 270&nbsp;C − 90&nbsp;Mn − 37&nbsp;Ni − 70&nbsp;Cr − 83&nbsp;Mo
+    </div>
+    <p>Lis les signes : ils disent tout. Ni et Mn, gammagènes, abaissent Ac<sub>1</sub> ; Si et Cr, alphagènes, l’élèvent. Tous les éléments abaissent M<sub>s</sub> et B<sub>s</sub>, le carbone surtout.</p>
+  </div>
+
+  <div class="fig">
+    <p class="figt">Calcule les points de transformation d’une nuance</p>
+    <div class="btns sm" id="calcPre"><button class="btn" data-k="S355">S355</button><button class="btn" data-k="C45">C45</button><button class="btn on" data-k="42CrMo4">42CrMo4</button><button class="btn" data-k="35NCD16">35NiCrMo16</button></div>
+    <div id="calcIn"></div>
+    <svg id="calcSvg" viewBox="0 0 360 200" role="img" aria-label="Points de transformation calculés"></svg>
+    <p id="calcTxt" class="msg"></p>
+    <p class="cap">Les barres grises donnent les valeurs d’un acier au carbone seul, au même % C ; les barres colorées celles de la nuance, avec entre parenthèses l’écart dû aux éléments d’addition. Formules valables pour les aciers faiblement alliés, environ C&nbsp;&lt;&nbsp;0,6&nbsp;% et moins de 5&nbsp;% d’éléments.</p>
+  </div>
+
+  <div class="lv lv1">
+    <span class="tag">Niveau 1</span>
+    <h3><span class="ex">Exercice 3.</span> C45 ou 42CrMo4 ?</h3>
+    <ol>
+      <li>Classe les éléments du 42CrMo4 (C 0,42 ; Mn 0,75 ; Si 0,25 ; Cr 1,05 ; Mo 0,22) : gammagène ou alphagène, carburigène ou non.</li>
+      <li>Calcule Ac<sub>1</sub>, Ac<sub>3</sub>, M<sub>s</sub> et B<sub>s</sub> pour le C45 (C 0,45 ; Mn 0,70 ; Si 0,25) et le 42CrMo4.</li>
+      <li>À l’aide des TRC ci-dessus, explique pourquoi on trempe le 42CrMo4 à l’huile et le C45 à l’eau.</li>
+      <li>On soude ces deux aciers. Lequel risque le plus de former de la martensite dure dans la zone affectée thermiquement ?</li>
+    </ol>
+    <details class="sol"><summary>Voir la correction</summary>
+      <ol>
+        <li>C : gammagène (interstitiel), forme la cémentite. Mn : gammagène, faiblement carburigène (il entre dans la cémentite). Si : alphagène, non carburigène, reste dans la ferrite. Cr : alphagène et carburigène. Mo : alphagène et fortement carburigène.</li>
+        <li>C45 : Ac<sub>1</sub> ≈ 723 − 7,5 + 7,3 = <b>723&nbsp;°C</b> ; Ac<sub>3</sub> ≈ 910 − 136,2 + 11,2 = <b>785&nbsp;°C</b> ; M<sub>s</sub> ≈ 539 − 190,4 − 21,3 = <b>327&nbsp;°C</b> ; B<sub>s</sub> ≈ 830 − 121,5 − 63 = <b>646&nbsp;°C</b>.<br>42CrMo4 : Ac<sub>1</sub> ≈ 723 − 8,0 + 7,3 + 17,7 = <b>740&nbsp;°C</b> ; Ac<sub>3</sub> ≈ 910 − 131,6 + 11,2 + 6,9 = <b>797&nbsp;°C</b> ; M<sub>s</sub> ≈ 539 − 177,7 − 22,8 − 12,7 − 1,7 = <b>324&nbsp;°C</b> ; B<sub>s</sub> ≈ 830 − 113,4 − 67,5 − 73,5 − 18,3 = <b>557&nbsp;°C</b>.<br>Le chrome remonte Ac<sub>1</sub> de 17&nbsp;°C ; M<sub>s</sub> ne bouge presque pas, car le carbone est le même ; B<sub>s</sub> baisse de 90&nbsp;°C.</li>
+        <li>Sur ces TRC, le C45 n’est entièrement martensitique qu’au-delà d’environ <b>240&nbsp;°C/s</b> : seule l’eau y parvient, en petite section. Le 42CrMo4 l’est dès environ <b>11&nbsp;°C/s</b> : l’huile suffit, même au cœur de pièces assez épaisses. Le chrome et le molybdène ont repoussé ferrite et perlite d’environ deux décades vers la droite. Bonus : une trempe à l’huile, plus douce, déforme moins et fissure moins qu’une trempe à l’eau.</li>
+        <li>Le <b>42CrMo4</b> : sa trempabilité fait qu’une zone affectée, même refroidie assez lentement, devient martensitique. Avec 0,42&nbsp;% C, cette martensite est très dure et fragile, et sensible à la fissuration à froid par l’hydrogène. Il faut préchauffer et souvent traiter après soudage (cours&nbsp;3). Le C45 n’est pas pour autant facile à souder : son carbone élevé le rend lui aussi sensible, mais sur une plage de vitesses plus étroite.</li>
+      </ol>
+    </details>
+  </div>
+
+  <div class="lv lv2">
+    <span class="tag">Niveau 2</span>
+    <h3>Pourquoi les carburigènes séparent perlite et bainite</h3>
+    <p>Dans un acier au Cr–Mo, la perlite exige que Cr et Mo se partagent entre ferrite et carbures : c’est très lent. La bainite, qui se forme sans redistribution des éléments substitutionnels, est beaucoup moins freinée. Le diagramme TTT se creuse alors en deux « nez » séparés par une baie, où l’austénite peut rester longtemps : c’est ce que montre le TRC du 42CrMo4, avec un large domaine bainitique.</p>
+    <h3>Le grain d’austénite et le bore</h3>
+    <p>La trempabilité ne dépend pas que de la composition. Un gros grain d’austénite, qui offre moins de joints pour germer, décale aussi les courbes vers la droite. C’est le cas de la zone à gros grains d’une soudure, chauffée près de 1400&nbsp;°C. À l’inverse, quelques ppm de <b>bore</b> ségrégés aux joints de grains empêchent la ferrite d’y germer, et augmentent fortement la trempabilité pour un coût dérisoire.</p>
+    <h3>Mesurer la trempabilité : l’essai Jominy</h3>
+    <p>On austénitise une barre de 25&nbsp;mm de diamètre et on arrose une seule de ses extrémités. Chaque point de la barre voit une vitesse de refroidissement différente, de très rapide au bout arrosé à lente à l’autre bout. La courbe dureté–distance résume en une mesure la position des courbes TRC : plus la dureté se maintient loin du bout trempé, plus l’acier est trempant.</p>
+    <h3>Le cobalt, l’exception</h3>
+    <p>Le cobalt est le seul élément courant qui accélère les transformations diffusives : il augmente la force motrice de la transformation γ&nbsp;→&nbsp;α. Il diminue donc la trempabilité.</p>
+  </div>
+</section>
+
+<!-- ============ 6 ============ -->
+<section id="s6">
+  <h2><span class="n">6</span><span>Fiche méthode et pièges</span></h2>
+  <div class="lv lv1">
+    <span class="tag">Niveau 1</span>
+    <h3>Lire un TTT</h3>
+    <ol>
+      <li>Vérifie que le traitement est fait de paliers et de trempes instantanées.</li>
+      <li>Pour chaque palier, lis t<sub>début</sub> et t<sub>fin</sub> à cette température et compare avec la durée.</li>
+      <li>Nomme le produit d’après la température du palier : perlite grossière, perlite fine, bainite supérieure ou inférieure.</li>
+      <li>L’austénite qui reste en passant sous M<sub>s</sub> devient martensite (pour 100&nbsp;% sous M<sub>f</sub>).</li>
+    </ol>
+    <h3>Lire un TRC</h3>
+    <ol>
+      <li>Repère la courbe de refroidissement correspondant à la pièce (vitesse, milieu de trempe ou t<sub>8/5</sub>).</li>
+      <li>Suis-la de haut en bas et note chaque domaine traversé, avec le pourcentage indiqué.</li>
+      <li>Lis la dureté au bout de la courbe.</li>
+      <li>Ne trace jamais de palier sur un TRC, et ne lis jamais un refroidissement continu sur un TTT.</li>
+    </ol>
+    <h3>Les pièges</h3>
+    <ul>
+      <li>Oublier que l’axe des temps est logarithmique : 10 et 100&nbsp;s sont aussi éloignés que 100 et 1000&nbsp;s.</li>
+      <li>Appeler « perlite » ce qui se forme sous le nez : c’est de la bainite.</li>
+      <li>Croire que la martensite a besoin de temps : sa quantité ne dépend que de la température atteinte sous M<sub>s</sub>.</li>
+      <li>Utiliser un TTT ou un TRC d’un autre acier, ou d’une autre austénitisation : la taille de grain déplace les courbes.</li>
+      <li>Penser qu’un élément d’alliage durcit la martensite : c’est le carbone qui fait sa dureté. Les éléments d’alliage rendent la martensite plus <b>facile à obtenir</b>.</li>
+    </ul>
+  </div>
+  <div class="lv lv2">
+    <span class="tag">Niveau 2</span>
+    <h3>La suite : cours 3</h3>
+    <p>On ouvre la boîte noire de la martensite : pourquoi elle se forme sans diffusion, pourquoi elle est si dure, comment le revenu la rend utilisable. Puis on passe au soudage : calcul du t<sub>8/5</sub>, lecture d’un TRC de soudage, carbone équivalent et choix du préchauffage.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>Cours 2 sur 3, métallurgie des aciers. Diagrammes TTT et TRC calculés par un modèle simplifié (courbes d’Avrami et règle d’additivité), calé sur l’allure des diagrammes des manuels ; duretés estimées par loi des mélanges.</p>
+</footer>
+<script>
+(() => {
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag, attrs, parent) { const e = document.createElementNS(NS, tag); if (attrs) for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+function tx(parent, x, y, s, style, attrs) { const t = el('text', Object.assign({ x: x, y: y, style: style || '' }, attrs || {}), parent); t.textContent = s; return t; }
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const fmt = (v, d = 1) => (Math.round(v * Math.pow(10, d)) / Math.pow(10, d)).toFixed(d).replace('.', ',');
+const NB = '\u00a0';
+const RM = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } })();
+function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function cssv(n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+function hex2rgb(h) { h = (h || '#888888').replace('#', ''); if (h.length === 3) h = h.split('').map(x => x + x).join(''); const n = parseInt(h, 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
+function onVisible(node, cb) { try { new IntersectionObserver(es => es.forEach(e => cb(e.isIntersecting)), { threshold: 0.05 }).observe(node); } catch (e) { cb(true); } }
+const easeIO = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+const GLOW = [[20, '#5b636d'], [480, '#5b636d'], [540, '#4a1812'], [620, '#6e1a12'], [700, '#951f14'], [780, '#b82817'], [860, '#d6361a'], [950, '#ec5a1c'], [1050, '#f5801f'], [1150, '#faa532'], [1250, '#fcc653'], [1350, '#fde08a'], [1450, '#fff0c2'], [1700, '#fffbea']];
+function glow(T) {
+  if (T <= GLOW[0][0]) return GLOW[0][1];
+  for (let i = 1; i < GLOW.length; i++) if (T <= GLOW[i][0]) { const [t0, c0] = GLOW[i - 1], [t1, c1] = GLOW[i], u = (T - t0) / (t1 - t0), a = hex2rgb(c0), b = hex2rgb(c1); return 'rgb(' + a.map((v, k) => Math.round(lerp(v, b[k], u))).join(',') + ')'; }
+  return GLOW[GLOW.length - 1][1];
+}
+const isDark = () => (cssv('--bg') || '').toLowerCase() === '#10161c';
+const sup = n => String(n).split('').map(ch => '⁰¹²³⁴⁵⁶⁷⁸⁹'['0123456789'.indexOf(ch)] || '⁻').join('');
+const fmtT = t => t < 1 ? fmt(t, 1) + NB + 's' : t < 100 ? fmt(t, t < 10 ? 1 : 0) + NB + 's' : t < 3600 ? Math.round(t) + NB + 's' : t < 86400 ? fmt(t / 3600, 1) + NB + 'h' : fmt(t / 86400, 1) + NB + 'j';
+const redraws = [];
+function radio(box, attr, cb) { $$('button', box).forEach(b => b.addEventListener('click', () => { $$('button', box).forEach(x => x.classList.toggle('on', x === b)); cb(b.dataset[attr], b); })); }
+
+// MODEL START
+function mono(pts) {
+  const n = pts.length, x = pts.map(p => p[0]), y = pts.map(p => p[1]), d = [], m = new Array(n);
+  for (let i = 0; i < n - 1; i++) d.push((y[i + 1] - y[i]) / (x[i + 1] - x[i]));
+  m[0] = d[0]; m[n - 1] = d[n - 2];
+  for (let i = 1; i < n - 1; i++) m[i] = d[i - 1] * d[i] <= 0 ? 0 : (d[i - 1] + d[i]) / 2;
+  for (let i = 0; i < n - 1; i++) {
+    if (d[i] === 0) { m[i] = m[i + 1] = 0; continue; }
+    const a = m[i] / d[i], b = m[i + 1] / d[i], s = a * a + b * b;
+    if (s > 9) { const t = 3 / Math.sqrt(s); m[i] = t * a * d[i]; m[i + 1] = t * b * d[i]; }
+  }
+  return X => {
+    if (X <= x[0]) return y[0] + m[0] * (X - x[0]);
+    if (X >= x[n - 1]) return y[n - 1] + m[n - 1] * (X - x[n - 1]);
+    let i = 0; while (X > x[i + 1]) i++;
+    const h = x[i + 1] - x[i], t = (X - x[i]) / h, t2 = t * t, t3 = t2 * t;
+    return (2 * t3 - 3 * t2 + 1) * y[i] + (t3 - 2 * t2 + t) * h * m[i] + (-2 * t3 + 3 * t2) * y[i + 1] + (t3 - t2) * h * m[i + 1];
+  };
+}
+const MS = 220, A1 = 727;
+const ttS = mono([[220, 3.1], [250, 2.6], [300, 1.95], [350, 1.35], [400, 0.85], [450, 0.45], [500, 0.05], [520, -0.1], [540, -0.15], [560, -0.1], [600, 0.1], [650, 0.5], [680, 1.0], [700, 1.5], [720, 2.8]]);
+const ttF = mono([[220, 4.6], [250, 4.1], [300, 3.45], [350, 2.85], [400, 2.3], [450, 1.75], [500, 1.2], [520, 0.95], [540, 0.85], [560, 0.9], [600, 1.1], [650, 1.6], [680, 2.2], [700, 2.8], [720, 4.3]]);
+const LN = Math.log(Math.log(100) / -Math.log(0.99));
+function jm(T, S, F) { const ts = Math.pow(10, S(T)), tf = Math.pow(10, F(T)), n = LN / Math.log(tf / ts); return { n: n, b: -Math.log(0.99) / Math.pow(ts, n), ts: ts, tf: tf }; }
+const fAt = (T, t) => { const k = jm(T, ttS, ttF); return 1 - Math.exp(-k.b * Math.pow(t, k.n)); };
+const t50 = T => { const k = jm(T, ttS, ttF); return Math.pow(Math.LN2 / k.b, 1 / k.n); };
+const prodOf = T => T >= 650 ? 'Pc' : T >= 540 ? 'Pf' : T >= 350 ? 'Bu' : 'Bl';
+const hvOf = (p, T) => p[0] === 'P' ? 200 + (720 - T) / 180 * 180 : p[0] === 'B' ? 380 + (540 - T) / 320 * 220 : 850;
+const PNAME = { Pc: 'perlite grossière', Pf: 'perlite fine', Bu: 'bainite supérieure', Bl: 'bainite inférieure', M: 'martensite', A: 'austénite', F: 'ferrite', P: 'perlite', B: 'bainite' };
+function pathRes(stages) {
+  let g = 1; const out = []; let hv = 0;
+  stages.forEach(s => {
+    const f = fAt(s.T, s.t), p = prodOf(s.T), a = g * f;
+    out.push({ k: p, f: a, T: s.T }); hv += a * hvOf(p, s.T); g -= a;
+  });
+  out.push({ k: 'M', f: g }); hv += g * 850;
+  return { out: out, hv: hv };
+}
+function coolE(v, trace) {
+  const tau = 680 / v, T = t => 20 + 830 * Math.exp(-t / tau);
+  let X = 0, tp = 0, start = null, fin = null, stop = null, Tsum = 0; const tr = [];
+  for (let k = 0; k <= 9 * 80; k++) {
+    const t = Math.pow(10, -3 + k / 80), dt = t - tp, Tm = T((t + tp) / 2); tp = t;
+    if (Tm < 727 && Tm >= 500 && X < 0.999) {
+      const j = jm(Tm, ttS, ttF), te = Math.pow(-Math.log(1 - X) / j.b, 1 / j.n) + dt, X2 = 1 - Math.exp(-j.b * Math.pow(te, j.n));
+      const cross = thr => { const tc = t - dt + (thr - X) / (X2 - X) * dt; return [tc, T(tc)]; };
+      if (!start && X < 0.01 && X2 >= 0.01) start = cross(0.01);
+      if (!fin && X < 0.99 && X2 >= 0.99) fin = cross(0.99);
+      Tsum += (X2 - X) * Tm; X = X2;
+    }
+    if (Tm < 500 && !stop && X > 0.01 && X < 0.99) stop = [t, 500];
+    if (trace) tr.push({ t: t, T: Tm, X: X });
+    if (Tm < 25) break;
+  }
+  return { v: v, tau: tau, X: X, start: start, fin: fin, stop: stop, Tavg: X > 1e-6 ? Tsum / X : null, tr: tr };
+}
+// --- aciers alliés (C45 / 42CrMo4) ---
+const shiftA = (pts, d) => pts.map(([T, l]) => [T, l + d]);
+function mkSteel(o) { return Object.assign({}, o, { FS: mono(o.F), FF: mono(shiftA(o.F, o.dF)), PS: mono(o.P), PF: mono(shiftA(o.P, o.dP)), BS: mono(o.B), BF: mono(shiftA(o.B, o.dB)) }); }
+function cA3x(T, Ae3, C0) {
+  const TA3 = c => 912 - 347.9 * c + 137.5 * c * c, T0 = T - (Ae3 - TA3(C0));
+  if (T0 >= 727) return (347.9 - Math.sqrt(Math.max(0, 347.9 * 347.9 - 550 * (912 - T0)))) / 275;
+  return 0.76 + (727 - T0) / 138.9;
+}
+const STEELS = {
+  C45: mkSteel({ name: 'C45', C: 0.45, Ae3: 785, Ae1: 723, Bs: 646, Ms: 327, hvM: 650, hvF: 150,
+    F: [[600, 0.2], [650, -0.2], [700, 0.0], [740, 0.6], [770, 1.6], [785, 3.2]], dF: 1.0,
+    P: [[480, 0.4], [520, 0.0], [560, -0.15], [600, 0.0], [650, 0.35], [700, 1.2], [725, 3.0]], dP: 1.0,
+    B: [[330, 1.9], [380, 1.2], [430, 0.7], [480, 0.5], [530, 0.6], [580, 1.0], [620, 1.6], [646, 3.0]], dB: 1.5 }),
+  '42CrMo4': mkSteel({ name: '42CrMo4', C: 0.42, Ae3: 796, Ae1: 740, Bs: 557, Ms: 324, hvM: 630, hvF: 170,
+    F: [[600, 2.8], [650, 2.2], [700, 2.0], [740, 2.2], [770, 2.8], [790, 4.3]], dF: 1.0,
+    P: [[600, 3.2], [640, 2.7], [680, 2.5], [710, 2.7], [740, 4.5]], dP: 1.0,
+    B: [[330, 2.2], [380, 1.6], [430, 1.3], [480, 1.4], [530, 1.9], [557, 2.8]], dB: 1.5 })
+};
+function coolS(st, v) {
+  const tau = 680 / v, Tf = t => 20 + 830 * Math.exp(-t / tau);
+  let F = 0, P = 0, B = 0, tp = 0, gMs = null;
+  const rec = { F: null, P: null, B: null, end: null, Ms: null };
+  const step = (X, S, Fi, T, dt) => { const k = jm(T, S, Fi); const te = Math.pow(-Math.log(1 - Math.min(X, 0.9999)) / k.b, 1 / k.n) + dt; return 1 - Math.exp(-k.b * Math.pow(te, k.n)); };
+  for (let i = 0; i <= 9 * 80; i++) {
+    const t = Math.pow(10, -3 + i / 80), dt = t - tp, T = Tf((t + tp) / 2); tp = t;
+    let g = 1 - F - P - B; const F0 = F, P0 = P, B0 = B;
+    if (g > 1e-4 && T > st.Ms) {
+      if (T < st.Ae3 && T > 600) {
+        const ca = cA3x(T, st.Ae3, st.C), feq = Math.min(clamp((ca - st.C) / (ca - 0.02), 0, 0.95), (0.76 - st.C) / 0.74);
+        if (feq > F + 1e-6) { const y = step(F / feq, st.FS, st.FF, T, dt); F = Math.max(F, Math.min(y * feq, F + g)); }
+      }
+      g = 1 - F - P - B;
+      if (T < st.Ae1 && T > 480 && g > 1e-4) { const base = P + g; P = step(P / base, st.PS, st.PF, T, dt) * base; }
+      g = 1 - F - P - B;
+      if (T < st.Bs && g > 1e-4) { const base = B + g; B = step(B / base, st.BS, st.BF, T, dt) * base; }
+      const cr = (key, a0, a1, thr) => { if (!rec[key] && a0 < thr && a1 >= thr) { const tc = t - dt + (thr - a0) / (a1 - a0) * dt; rec[key] = [tc, Tf(tc)]; } };
+      cr('F', F0, F, 0.01); cr('P', P0, P, 0.01); cr('B', B0, B, 0.01); cr('end', F0 + P0 + B0, F + P + B, 0.99);
+    }
+    if (T <= st.Ms && gMs === null) { gMs = 1 - F - P - B; if (gMs > 0.01) rec.Ms = [t, st.Ms]; }
+    if (T < 25) break;
+  }
+  if (gMs === null) gMs = 1 - F - P - B;
+  const lv = Math.log10(v), M = Math.max(0, gMs);
+  return { v: v, F: F, P: P, B: B, M: M, hv: F * st.hvF + P * (230 + 25 * lv) + B * (340 + 25 * lv) + M * st.hvM, rec: rec };
+}
+// MODEL END
+
+/* ================= TEXTURES DE MICROSTRUCTURE ================= */
+class Tex {
+  constructor(cv, seed, N, g, k) {
+    this.cv = cv; this.N = N || 200; this.mode = 'schema';
+    this.off = document.createElement('canvas'); this.off.width = this.off.height = this.N;
+    this.octx = this.off.getContext('2d'); this.img = this.octx.createImageData(this.N, this.N);
+    const n = this.N, P = n * n, rnd = mulberry32(seed || 5);
+    const jit = (m, j) => { const s = []; for (let i = 0; i < m; i++) for (let q = 0; q < m; q++) s.push([(i + 0.5 + (rnd() - 0.5) * j) * n / m, (q + 0.5 + (rnd() - 0.5) * j) * n / m]); return s; };
+    const gs = jit(g || 4, 0.85), cs = jit(k || 12, 0.9), cs2 = jit(Math.max(3, Math.round((k || 12) / 2)), 0.9);
+    const ang = () => { const a = rnd() * Math.PI; return [Math.cos(a), Math.sin(a), rnd(), rnd(), rnd()]; };
+    this.cc = cs.map(ang); this.cc2 = cs2.map(ang);
+    const near2 = (S, x, y) => {
+      let a = 0, b = 0, da = 1e18, db = 1e18;
+      for (let i = 0; i < S.length; i++) { const dx = x - S[i][0], dy = y - S[i][1], d = dx * dx + dy * dy; if (d < da) { db = da; b = a; da = d; a = i; } else if (d < db) { db = d; b = i; } }
+      return [a, (db - da) / (2 * Math.hypot(S[a][0] - S[b][0], S[a][1] - S[b][1]))];
+    };
+    this.bd = new Float32Array(P); this.cbd = new Float32Array(P); this.cid = new Int16Array(P); this.cid2 = new Int16Array(P); this.cbd2 = new Float32Array(P);
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+      const i = y * n + x, g1 = near2(gs, x + 0.5, y + 0.5), c1 = near2(cs, x + 0.5, y + 0.5), c2 = near2(cs2, x + 0.5, y + 0.5);
+      this.bd[i] = g1[1]; this.cid[i] = c1[0]; this.cbd[i] = c1[1]; this.cid2[i] = c2[0]; this.cbd2[i] = c2[1];
+    }
+    const idx = Array.from({ length: P }, (_, i) => i); idx.sort((a, b) => this.bd[a] - this.bd[b]);
+    this.qB = new Float32Array(P); idx.forEach((p, r) => { this.qB[p] = (r + 0.5) / P; });
+  }
+  pal() {
+    const g = n => hex2rgb(cssv(n)), dk = isDark();
+    const mix = (a, b, u) => a.map((v, i) => Math.round(v + (b[i] - v) * u));
+    if (this.mode === 'nital') return { A: [214, 208, 200], F: [238, 236, 230], Fb: [170, 168, 162], Pca: [124, 120, 114], Pcc: [40, 38, 36], Pfa: [84, 80, 76], Pfc: [36, 34, 32], Bu: [150, 142, 132], Buc: [46, 42, 38], Bl: [126, 118, 110], Blc: [42, 38, 34], M1: [206, 198, 186], M2: [176, 166, 154], Mn: [104, 96, 88], Cp: [252, 252, 248], gb: [70, 66, 62] };
+    const a = g('--cAs'), c = dk ? [205, 210, 218] : g('--cC'), bs = g('--cBs'), b = g('--cB'), ms = g('--cMs'), m = g('--cM');
+    return { A: g('--cGs'), F: a, Fb: mix(a, g('--cA'), 0.45), Pca: a, Pcc: c, Pfa: a, Pfc: c, Bu: bs, Buc: c, Bl: mix(bs, b, 0.3), Blc: c, M1: ms, M2: mix(ms, m, 0.3), Mn: mix(ms, m, 0.75), Cp: c, gb: dk ? [150, 170, 190] : [60, 70, 82] };
+  }
+  draw(mix) {
+    const n = this.N, P = n * n, d = this.img.data, C = this.pal(), cum = [];
+    let s = 0; mix.forEach(m => { s += m.f; cum.push([s, m.k]); });
+    const frac = x => x - Math.floor(x);
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+      const i = y * n + x, q = this.qB[i];
+      let k = 'A'; for (const [cu, kk] of cum) if (q < cu) { k = kk; break; }
+      const big = k === 'Pc' || k === 'Pf' || k === 'Bu' || k === 'Bl', cc = big ? this.cc2[this.cid2[i]] : this.cc[this.cid[i]], u = x * cc[0] + y * cc[1], v = -x * cc[1] + y * cc[0];
+      let col, gb = false;
+      if (k === 'A') { col = C.A; gb = this.bd[i] < 0.8; }
+      else if (k === 'F') { col = (this.cbd[i] < 0.5 || this.bd[i] < 0.5) ? C.Fb : C.F; }
+      else if (k === 'Cp') { col = C.Cp; }
+      else if (k === 'Pc' || k === 'Pf') {
+        const lam = k === 'Pc' ? 7.5 : 3.2, w = 0.13, h = 0.6 / lam, sv = frac(v / lam + cc[2]);
+        let cov = 0; for (const o of [-1, 0, 1]) { const lo = Math.max(sv - h, o), hi = Math.min(sv + h, o + w); if (hi > lo) cov += hi - lo; }
+        cov = clamp(cov / (2 * h), 0, 1);
+        const A = k === 'Pc' ? C.Pca : C.Pfa, B = k === 'Pc' ? C.Pcc : C.Pfc;
+        col = [A[0] + (B[0] - A[0]) * cov, A[1] + (B[1] - A[1]) * cov, A[2] + (B[2] - A[2]) * cov];
+      } else if (k === 'Bu') {
+        const sv = frac(v / 6 + cc[2]);
+        col = (sv < 0.2 && frac(u / 3.5 + cc[3]) < 0.62) ? C.Buc : C.Bu;
+        gb = this.bd[i] < 0.6;
+      } else if (k === 'Bl') {
+        const L = 7, sv = frac(v / L + cc[2]), row = Math.floor(v / L + cc[2]);
+        const w2 = u * 0.5 + v * 0.866;
+        col = sv < 0.07 ? C.Blc : (frac(w2 / 2.8 + cc[3]) < 0.22 && frac(u / 6 + cc[4] + row * 0.37) < 0.55) ? C.Blc : C.Bl;
+        gb = this.bd[i] < 0.6;
+      } else {
+        const sv = frac(v / 3 + cc[2]);
+        col = (frac(v / 11 + cc[3]) < 0.08 || this.cbd[i] < 0.4) ? C.Mn : sv < 0.5 ? C.M1 : C.M2;
+        gb = this.bd[i] < 0.6;
+      }
+      const j = i * 4;
+      if (gb) { d[j] = C.gb[0]; d[j + 1] = C.gb[1]; d[j + 2] = C.gb[2]; } else { d[j] = col[0]; d[j + 1] = col[1]; d[j + 2] = col[2]; }
+      d[j + 3] = 255;
+    }
+    this.octx.putImageData(this.img, 0, 0);
+    const ctx = this.cv.getContext('2d'); ctx.imageSmoothingEnabled = true;
+    ctx.clearRect(0, 0, this.cv.width, this.cv.height); ctx.drawImage(this.off, 0, 0, this.cv.width, this.cv.height);
+  }
+}
+
+/* ---------- niveaux ---------- */
+$$('.seg button').forEach(b => b.addEventListener('click', () => { document.body.dataset.level = b.dataset.l; $$('.seg button').forEach(x => x.classList.toggle('on', x === b)); }));
+
+/* ================= HÉROS ================= */
+(function hero() {
+  const L = [['h1', 'Pc'], ['h2', 'Pf'], ['h3', 'Bu'], ['h4', 'M']].map(([id, k], i) => { const t = new Tex($('#' + id), 11 + i * 7, 150, 3, 9); return () => t.draw([{ k: k, f: 1 }]); });
+  const all = () => L.forEach(f => f());
+  all(); redraws.push(all);
+})();
+
+/* ================= PARTIE 1 : cinétique ================= */
+const KQ = 15000, KM = 4.24;
+const kForce = T => Math.pow(Math.max(0, 727 - T) / 507, KM);
+const kMob = T => Math.exp(-KQ / (T + 273) + KQ / 1000);
+let KMAX = 0; for (let T = 220; T <= 726; T++) KMAX = Math.max(KMAX, kForce(T) * kMob(T));
+const kRate = T => kForce(T) * kMob(T) / KMAX;
+(function part1a() {
+  const s = $('#kin'), sl = $('#kinT');
+  const Y = T => 22 + (727 - T) / 527 * 212, XL = g => 44 + g * 136, XR = l => 210 + (l + 1) / 6 * 140;
+  const base = el('g', null, s), mk = el('g', null, s);
+  el('rect', { x: 44, y: 22, width: 136, height: 212, style: 'fill:var(--paper);stroke:var(--ink);stroke-width:1' }, base);
+  el('rect', { x: 210, y: 22, width: 140, height: 212, style: 'fill:var(--paper);stroke:var(--ink);stroke-width:1' }, base);
+  for (let T = 300; T <= 700; T += 100) { el('line', { x1: 44, x2: 350, y1: Y(T), y2: Y(T), style: 'stroke:var(--grid2)' }, base); tx(base, 40, Y(T) + 3.5, String(T), 'font-size:9px;fill:var(--ink2);text-anchor:end'); }
+  tx(base, 40, Y(727) + 3.5, '727', 'font-size:9px;font-weight:700;fill:var(--ink);text-anchor:end');
+  tx(base, 4, 14, '°C', 'font-size:9.5px;fill:var(--ink2)');
+  for (let l = -1; l <= 5; l++) { el('line', { x1: XR(l), x2: XR(l), y1: 234, y2: 238, style: 'stroke:var(--ink)' }, base); tx(base, XR(l), 248, l === 0 ? '1' : l === 1 ? '10' : l === -1 ? '0,1' : '10' + sup(l), 'font-size:8.5px;fill:var(--ink2);text-anchor:middle'); }
+  tx(base, 280, 262, 'temps de démarrage (s)', 'font-size:9.5px;fill:var(--ink2);text-anchor:middle');
+  tx(base, 112, 248, 'relatif (0 à 1)', 'font-size:9px;fill:var(--ink2);text-anchor:middle');
+  const line = (f, col, w, dash) => { let d = ''; for (let T = 222; T <= 726; T += 2) d += (d ? 'L' : 'M') + XL(clamp(f(T), 0, 1)).toFixed(1) + ' ' + Y(T).toFixed(1); el('path', { d: d, style: 'fill:none;stroke:' + col + ';stroke-width:' + w + (dash ? ';stroke-dasharray:' + dash : '') }, base); };
+  line(kForce, 'var(--cG)', 2); line(kMob, 'var(--cA)', 2); line(kRate, 'var(--cL)', 3);
+  tx(base, 50, Y(245), 'force motrice', 'font-size:9.5px;font-weight:700;fill:var(--cG)');
+  tx(base, 176, Y(705), 'mobilité', 'font-size:9.5px;font-weight:700;fill:var(--cA);text-anchor:end');
+  tx(base, 176, Y(600), 'vitesse', 'font-size:10px;font-weight:800;fill:var(--cL);text-anchor:end');
+  let d = '';
+  for (let T = 222; T <= 726; T += 1) { const l = clamp(-0.15 - Math.log10(kRate(T)), -1, 5.2); d += (d ? 'L' : 'M') + XR(l).toFixed(1) + ' ' + Y(T).toFixed(1); }
+  el('path', { d: d, style: 'fill:none;stroke:var(--ink);stroke-width:2.4' }, base);
+  tx(base, XR(-0.15) + 6, Y(560), 'nez', 'font-size:10px;font-weight:800;fill:var(--ink)');
+  el('line', { x1: 44, x2: 350, y1: Y(727), y2: Y(727), style: 'stroke:var(--ink);stroke-width:1.3;stroke-dasharray:5 3' }, base);
+  function upd() {
+    const T = +sl.value, y = Y(T), fo = kForce(T), mo = kMob(T), r = kRate(T), l = -0.15 - Math.log10(r);
+    mk.innerHTML = '';
+    el('line', { x1: 44, x2: 350, y1: y, y2: y, style: 'stroke:var(--cL);stroke-width:1.2;stroke-dasharray:3 3' }, mk);
+    [[fo, 'var(--cG)'], [mo, 'var(--cA)'], [r, 'var(--cL)']].forEach(([g, c]) => el('circle', { cx: XL(clamp(g, 0, 1)), cy: y, r: 4.5, style: 'fill:var(--paper);stroke:' + c + ';stroke-width:2.2' }, mk));
+    if (l < 5.2) el('circle', { cx: XR(l), cy: y, r: 5, style: 'fill:var(--cL);stroke:var(--ink);stroke-width:1.3' }, mk);
+    $('#kinTxt').textContent = 'À ' + T + ' °C (sous-refroidissement ' + (727 - T) + ' °C) : force motrice ' + fmt(fo * 100, 0) + ' % du maximum tracé, mobilité ' + fmt(mo * 100, mo < 0.1 ? 1 : 0) + ' % de celle à 727 °C. Produit : ' + fmt(r * 100, 0) + ' % de la vitesse maximale, soit un démarrage vers ' + (l > 5.1 ? 'plus de 10⁵ s' : fmtT(Math.pow(10, l))) + '.';
+  }
+  sl.addEventListener('input', upd); upd();
+})();
+
+/* ---------- germination-croissance (JMAK) ---------- */
+(function part1b() {
+  const cv = $('#jm'), N = 200, P = N * N, ctx = cv.getContext('2d');
+  const off = document.createElement('canvas'); off.width = off.height = N;
+  const octx = off.getContext('2d'), img = octx.createImageData(N, N), d = img.data;
+  const rnd0 = mulberry32(4);
+  const gs = []; for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) gs.push([(i + 0.5 + (rnd0() - 0.5) * 0.8) * N / 3, (j + 0.5 + (rnd0() - 0.5) * 0.8) * N / 3]);
+  const bd = new Float32Array(P), bpx = [];
+  for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+    let da = 1e18, db = 1e18, a = 0, b = 0;
+    gs.forEach((s, i) => { const dd = (x - s[0]) ** 2 + (y - s[1]) ** 2; if (dd < da) { db = da; b = a; da = dd; a = i; } else if (dd < db) { db = dd; b = i; } });
+    const v = (db - da) / (2 * Math.hypot(gs[a][0] - gs[b][0], gs[a][1] - gs[b][1]));
+    bd[y * N + x] = v; if (v < 1) bpx.push([x, y]);
+  }
+  const arr = new Float32Array(P), own = new Int16Array(P);
+  let nuc = [], tEnd = 1, T = 680, curve = [], scale = 1, t = 0, playing = false, vis = false, lam = 5;
+  function gen() {
+    const rnd = mulberry32(17 + T);
+    const Nc = Math.round(6 + 70 * Math.pow((715 - T) / 155, 1.3));
+    lam = 2.2 + 6.5 * (T - 560) / 155;
+    const R = Math.sqrt(P / (Math.PI * Nc)), cand = [];
+    for (let i = 0; i < Nc * 1.6; i++) { const on = rnd() < 0.75, p = on ? bpx[Math.floor(rnd() * bpx.length)] : [rnd() * N, rnd() * N]; cand.push({ x: p[0], y: p[1], t: rnd() * R * 0.9 }); }
+    cand.sort((a, b) => a.t - b.t);
+    arr.fill(1e9); nuc = [];
+    cand.forEach(c => {
+      const ii = Math.min(N - 1, Math.floor(c.y)) * N + Math.min(N - 1, Math.floor(c.x));
+      if (arr[ii] <= c.t) return;
+      const k = nuc.length, a = rnd() * Math.PI; nuc.push({ x: c.x, y: c.y, t: c.t, c: Math.cos(a), s: Math.sin(a), ph: rnd() });
+      for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) { const i = y * N + x, tt = c.t + Math.hypot(x + 0.5 - c.x, y + 0.5 - c.y); if (tt < arr[i]) { arr[i] = tt; own[i] = k; } }
+    });
+    const srt = Float32Array.from(arr).sort();
+    tEnd = srt[P - 1];
+    const t01 = srt[Math.floor(P * 0.01)], t99 = srt[Math.floor(P * 0.99)];
+    const k = jm(T, ttS, ttF); scale = k.ts / t01;
+    curve = []; for (let q = 0; q <= 200; q++) { const f = q / 200, i = Math.min(P - 1, Math.floor(f * (P - 1))); curve.push([srt[i] * scale, f]); }
+    $('#jmTxt').innerHTML = '<b>' + nuc.length + ' colonies</b> dans le champ. Début (1 %) vers ' + fmtT(k.ts) + ', fin (99 %) vers ' + fmtT(t99 * scale) + '. ' + (T >= 650 ? 'Perlite grossière : peu de germes, lamelles épaisses.' : 'Perlite fine : beaucoup de germes, lamelles serrées.');
+    $('#jmTv').textContent = T + NB + '°C'; $('#jmGlow').style.background = glow(T);
+  }
+  function draw() {
+    const g = hex2rgb(cssv('--cGs')), a = hex2rgb(cssv('--cAs')), c = isDark() ? [205, 210, 218] : hex2rgb(cssv('--cC')), gb = isDark() ? [150, 170, 190] : [60, 70, 82];
+    const frac = x => x - Math.floor(x), w = 0.13, h = 0.6 / lam;
+    for (let i = 0; i < P; i++) {
+      const j = i * 4; let col;
+      if (arr[i] <= t) {
+        const n = nuc[own[i]], x = i % N, y = (i / N) | 0, sv = frac((-x * n.s + y * n.c) / lam + n.ph);
+        let cov = 0; for (const o of [-1, 0, 1]) { const lo = Math.max(sv - h, o), hi = Math.min(sv + h, o + w); if (hi > lo) cov += hi - lo; }
+        cov = clamp(cov / (2 * h), 0, 1); col = [a[0] + (c[0] - a[0]) * cov, a[1] + (c[1] - a[1]) * cov, a[2] + (c[2] - a[2]) * cov];
+      } else col = bd[i] < 0.8 ? gb : g;
+      d[j] = col[0]; d[j + 1] = col[1]; d[j + 2] = col[2]; d[j + 3] = 255;
+    }
+    octx.putImageData(img, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height); ctx.drawImage(off, 0, 0, cv.width, cv.height);
+    plot();
+  }
+  const ps = $('#jmPlot');
+  function plot() {
+    ps.innerHTML = '';
+    const k = jm(T, ttS, ttF), l0 = Math.floor(Math.log10(k.ts)) - 1, l1 = l0 + 4;
+    const X = tt => 40 + (Math.log10(Math.max(tt, 1e-9)) - l0) / (l1 - l0) * 305, Y = f => 122 - f * 104;
+    el('rect', { x: 40, y: 18, width: 305, height: 104, style: 'fill:var(--paper);stroke:var(--ink)' }, ps);
+    for (let l = l0; l <= l1; l++) { el('line', { x1: X(Math.pow(10, l)), x2: X(Math.pow(10, l)), y1: 122, y2: 126, style: 'stroke:var(--ink)' }, ps); tx(ps, X(Math.pow(10, l)), 136, l === 0 ? '1 s' : l === 1 ? '10 s' : l < 0 ? fmt(Math.pow(10, l), -l) + ' s' : '10' + sup(l) + ' s', 'font-size:8.5px;fill:var(--ink2);text-anchor:middle'); }
+    [0, 0.5, 1].forEach(f => tx(ps, 36, Y(f) + 3, fmt(f * 100, 0) + ' %', 'font-size:8.5px;fill:var(--ink2);text-anchor:end'));
+    [[0.01, 'début 1 %'], [0.99, 'fin 99 %']].forEach(([f, lab]) => { el('line', { x1: 40, x2: 345, y1: Y(f), y2: Y(f), style: 'stroke:var(--cL);stroke-dasharray:3 3' }, ps); });
+    let dd = ''; curve.forEach(([tt, f], i) => { dd += (i ? 'L' : 'M') + clamp(X(tt), 40, 345).toFixed(1) + ' ' + Y(f).toFixed(1); });
+    el('path', { d: dd, style: 'fill:none;stroke:var(--ink);stroke-width:2.2' }, ps);
+    const i1 = curve.find(q => q[1] >= 0.01), i9 = curve.find(q => q[1] >= 0.99);
+    if (i1) { el('circle', { cx: X(i1[0]), cy: Y(0.01), r: 3.5, style: 'fill:var(--cL)' }, ps); tx(ps, X(i1[0]) - 3, Y(0.01) - 5, 'début', 'font-size:9px;font-weight:700;fill:var(--ink);text-anchor:end'); }
+    if (i9) { el('circle', { cx: X(i9[0]), cy: Y(0.99), r: 3.5, style: 'fill:var(--cL)' }, ps); tx(ps, X(i9[0]) + 4, Y(0.99) + 12, 'fin', 'font-size:9px;font-weight:700;fill:var(--ink)'); }
+    let f = 0; for (const [tt, ff] of curve) if (tt <= t * scale) f = ff;
+    const xt = X(Math.max(t * scale, Math.pow(10, l0)));
+    el('line', { x1: xt, x2: xt, y1: 18, y2: 122, style: 'stroke:var(--cL);stroke-width:1.5' }, ps);
+    tx(ps, 44, 12, 'fraction de perlite : ' + fmt(f * 100, 0) + ' %   (temps en échelle log)', 'font-size:9.5px;font-weight:650;fill:var(--ink2)');
+  }
+  let raf = null;
+  function stop() { playing = false; if (raf) cancelAnimationFrame(raf); raf = null; $('#jmPlay').textContent = 'Lecture'; }
+  function play() {
+    if (playing) { stop(); return; }
+    if (t >= tEnd) t = 0;
+    playing = true; $('#jmPlay').textContent = 'Pause';
+    let last = performance.now();
+    const f = now => { const dt = Math.min(0.05, (now - last) / 1000); last = now; t += dt * tEnd / 5; if (t >= tEnd) { t = tEnd; draw(); stop(); return; } draw(); raf = requestAnimationFrame(f); };
+    raf = requestAnimationFrame(f);
+  }
+  $('#jmPlay').addEventListener('click', play);
+  const setT = v => { stop(); T = v; $('#jmT').value = v; gen(); t = tEnd; draw(); };
+  $('#jmT').addEventListener('change', e => setT(+e.target.value));
+  $('#jmT').addEventListener('input', e => { $('#jmTv').textContent = e.target.value + NB + '°C'; });
+  $$('#s1 [data-jt]').forEach(b => b.addEventListener('click', () => { setT(+b.dataset.jt); t = 0; play(); }));
+  gen(); t = tEnd * 0.45; draw();
+  onVisible(cv, v => { if (v && !vis && !RM) { vis = true; t = 0; play(); } });
+  redraws.push(draw);
+})();
+
+/* ================= PARTIE 2 : mécanismes ================= */
+(function part2() {
+  const tex = new Tex($('#gal'), 21, 220, 4, 12);
+  const GT = {
+    Pc: 'Perlite grossière : colonies de lamelles alternées ferrite et cémentite, espacées d’environ 0,5 à 1 µm. Formée juste sous 727 °C, par exemple au refroidissement dans un four (recuit).',
+    Pf: 'Perlite fine : mêmes lamelles, beaucoup plus serrées (de l’ordre de 0,1 à 0,2 µm). Au microscope optique elles ne sont plus résolues : la perlite paraît presque noire au nital. Typique d’un refroidissement à l’air (normalisation).',
+    Bu: 'Bainite supérieure : paquets de lattes de ferrite parallèles, avec des films de cémentite entre les lattes. Aspect « plumeux » au microscope.',
+    Bl: 'Bainite inférieure : lattes plus fines, carbures très fins à l’intérieur des lattes, inclinés d’environ 60°. Aspect sombre et aciculaire, proche d’une martensite revenue.',
+    M: 'Martensite : lattes ou plaquettes enchevêtrées, orientées en paquets dans chaque ancien grain d’austénite, dont on devine encore les joints. Pas de carbures : le carbone reste piégé dans la maille (cours 3).',
+    FP: 'Ferrite + perlite : un acier hypoeutectoïde refroidi lentement (cours 1), ici vers 0,4 % C. La ferrite proeutectoïde, claire, borde les anciens grains d’austénite.'
+  };
+  let cur = 'Pc';
+  const draw = () => { tex.draw(cur === 'FP' ? [{ k: 'F', f: 0.5 }, { k: 'Pf', f: 0.5 }] : [{ k: cur, f: 1 }]); $('#galTxt').textContent = GT[cur]; };
+  radio($('#galBtns'), 'g', g => { cur = g; draw(); });
+  radio($('#galMode'), 'm', m => { tex.mode = m; draw(); });
+  draw(); redraws.push(draw);
+
+  // --- bainite sup / inf ---
+  const s = $('#bain');
+  [[10, 'Bainite supérieure', '350 à 540 °C', 'up'], [190, 'Bainite inférieure', 'Ms à 350 °C', 'low']].forEach(([x0, t1, t2, kind]) => {
+    tx(s, x0 + 80, 14, t1, 'font-size:11px;font-weight:800;fill:var(--ink);text-anchor:middle');
+    tx(s, x0 + 80, 27, t2, 'font-size:9.5px;fill:var(--ink2);text-anchor:middle');
+    const g = el('g', null, s);
+    el('rect', { x: x0, y: 34, width: 160, height: 150, rx: 6, style: 'fill:var(--cGs);stroke:var(--ink);stroke-width:1' }, g);
+    const n = 4, w = kind === 'up' ? 30 : 26, gap = kind === 'up' ? 8 : 10;
+    for (let i = 0; i < n; i++) {
+      const x = x0 + 14 + i * (w + gap);
+      el('rect', { x: x, y: 44, width: w, height: 130, rx: 3, style: 'fill:var(--cBs);stroke:var(--cB);stroke-width:1.2' }, g);
+      if (kind === 'up') {
+        if (i < n - 1) for (let y = 48; y < 170; y += 11) el('rect', { x: x + w + 1.5, y: y, width: gap - 3, height: 7, rx: 1.5, style: 'fill:var(--cC)' }, g);
+        el('path', { d: 'M' + (x + w / 2) + ' 108h' + (w / 2 + 2), style: 'stroke:var(--ink);stroke-width:1.2', 'marker-end': 'url(#bar)' }, g);
+      } else {
+        for (let y = 52; y < 168; y += 10) el('line', { x1: x + 5, y1: y + 7, x2: x + w - 5, y2: y + 7 - (w - 10) * 0.58, style: 'stroke:var(--cC);stroke-width:2.2;stroke-linecap:round' }, g);
+      }
+    }
+    tx(g, x0 + 80, 196, kind === 'up' ? 'films de Fe₃C entre les lattes' : 'carbures à ≈ 60° dans les lattes', 'font-size:9.5px;font-weight:650;fill:var(--ink2);text-anchor:middle');
+  });
+  const mk = el('marker', { id: 'bar', viewBox: '0 0 10 10', refX: 8, refY: 5, markerWidth: 5, markerHeight: 5, orient: 'auto' }, el('defs', null, s));
+  el('path', { d: 'M0 0L10 5L0 10Z', style: 'fill:var(--ink)' }, mk);
+  s.setAttribute('viewBox', '0 0 360 204');
+
+  // --- morphologies de la ferrite ---
+  const m = $('#morph');
+  const E = [[[0, 60], [80, 50]], [[80, 50], [140, 0]], [[80, 50], [100, 120]], [[100, 120], [0, 150]], [[100, 120], [190, 105]], [[190, 105], [210, 180]], [[210, 180], [160, 220]], [[210, 180], [300, 150]], [[300, 150], [360, 175]], [[300, 150], [250, 84]], [[190, 105], [290, 70]], [[290, 70], [262, 0]], [[290, 70], [360, 40]]];
+  const MT = {
+    allo: 'Ferrite allotriomorphe : elle germe sur les joints de grains de l’austénite et les recouvre d’un liseré, puis s’épaissit en grains. C’est la forme des refroidissements lents (cours 1).',
+    wid: 'Ferrite de Widmanstätten : à refroidissement plus rapide ou sur gros grain, la ferrite pousse depuis les joints en longues plaquettes parallèles, comme des dents de scie. Fréquente dans la zone à gros grains d’une soudure ; elle abaisse la ténacité.',
+    aci: 'Ferrite aciculaire : dans le métal fondu, de petites aiguilles germent sur les fines inclusions d’oxydes à l’intérieur des grains et s’enchevêtrent en tous sens. Ce « panier tressé » arrête les fissures : c’est la structure recherchée dans les soudures d’aciers C-Mn.'
+  };
+  function morph(kind) {
+    m.innerHTML = '';
+    el('rect', { x: 0, y: 0, width: 360, height: 220, rx: 6, style: 'fill:var(--cGs)' }, m);
+    const rnd = mulberry32(9);
+    const bw = kind === 'allo' ? 13 : kind === 'wid' ? 6 : 4;
+    E.forEach(([a, b]) => el('line', { x1: a[0], y1: a[1], x2: b[0], y2: b[1], style: 'stroke:var(--cAs);stroke-width:' + bw + ';stroke-linecap:round' }, m));
+    if (kind === 'allo') E.forEach(([a, b]) => { const L = Math.hypot(b[0] - a[0], b[1] - a[1]); for (let s2 = 14; s2 < L - 6; s2 += 18 + rnd() * 10) { const u = s2 / L, x = a[0] + (b[0] - a[0]) * u, y = a[1] + (b[1] - a[1]) * u, nx = -(b[1] - a[1]) / L, ny = (b[0] - a[0]) / L; el('line', { x1: x - nx * 6.5, y1: y - ny * 6.5, x2: x + nx * 6.5, y2: y + ny * 6.5, style: 'stroke:var(--cA);stroke-width:.8' }, m); } });
+    if (kind === 'wid') E.forEach(([a, b], ei) => {
+      const L = Math.hypot(b[0] - a[0], b[1] - a[1]), tx0 = (b[0] - a[0]) / L, ty0 = (b[1] - a[1]) / L, side = ei % 2 ? 1 : -1, nx = -ty0 * side, ny = tx0 * side;
+      const ang = 0.25 * (rnd() - 0.5), ca = Math.cos(ang), sa = Math.sin(ang), dx = nx * ca - ny * sa, dy = nx * sa + ny * ca;
+      for (let s2 = 8; s2 < L - 6; s2 += 9) {
+        const x = a[0] + tx0 * s2, y = a[1] + ty0 * s2, len = 22 + rnd() * 22, w2 = 2.6;
+        el('path', { d: 'M' + (x - tx0 * w2) + ' ' + (y - ty0 * w2) + 'L' + (x + dx * len) + ' ' + (y + dy * len) + 'L' + (x + tx0 * w2) + ' ' + (y + ty0 * w2) + 'Z', style: 'fill:var(--cAs);stroke:var(--cA);stroke-width:.6' }, m);
+      }
+    });
+    if (kind === 'aci') for (let i = 0; i < 70; i++) {
+      const x = 8 + rnd() * 344, y = 8 + rnd() * 204;
+      const nn = 3 + Math.floor(rnd() * 3);
+      for (let k = 0; k < nn; k++) { const a = rnd() * Math.PI * 2, L = 8 + rnd() * 12; el('line', { x1: x, y1: y, x2: x + Math.cos(a) * L, y2: y + Math.sin(a) * L, style: 'stroke:var(--cAs);stroke-width:3.4;stroke-linecap:round' }, m); el('line', { x1: x, y1: y, x2: x + Math.cos(a) * L, y2: y + Math.sin(a) * L, style: 'stroke:var(--cA);stroke-width:.6' }, m); }
+      el('circle', { cx: x, cy: y, r: 1.6, style: 'fill:var(--ink)' }, m);
+    }
+    E.forEach(([a, b]) => el('line', { x1: a[0], y1: a[1], x2: b[0], y2: b[1], style: 'stroke:var(--ink);stroke-width:.8;stroke-opacity:.5' }, m));
+    const lab = (x, y, t) => tx(m, x, y, t, 'font-size:10.5px;font-weight:800;fill:var(--ink);paint-order:stroke;stroke:var(--paper);stroke-width:3px');
+    lab(30, 105, 'γ'); lab(170, 60, 'γ'); lab(320, 110, 'γ');
+    if (kind === 'aci') lab(200, 212, '• inclusions d’oxydes');
+    else lab(200, 212, kind === 'allo' ? 'α le long des joints' : 'plaquettes d’α depuis les joints');
+    $('#morphTxt').textContent = MT[kind];
+  }
+  radio($('#morphBtns'), 'f', morph); morph('allo');
+})();
+
+/* ================= PARTIE 3 : TTT ================= */
+const TX = l => 44 + (l + 1) / 6 * 306, TY = T => 12 + (800 - T) / 800 * 254;
+function drawTTT(g, opts) {
+  opts = opts || {};
+  const X = opts.X || TX, Y = opts.Y || TY, x1 = opts.x1 || 350, lmin = opts.lmin == null ? -1 : opts.lmin, lmax = opts.lmax || 5;
+  const Ts = []; for (let T = 222; T <= 724; T += 2) Ts.push(T);
+  const cl = l => clamp(l, lmin, lmax);
+  const S = Ts.map(T => [X(cl(T > 720 ? 2.8 + (T - 720) * 0.9 : ttS(T))), Y(T)]), F = Ts.map(T => [X(cl(T > 720 ? 4.3 + (T - 720) * 0.9 : ttF(T))), Y(T)]);
+  const pth = (pts, close) => pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join('') + (close ? 'Z' : '');
+  if (!opts.ghost) {
+    el('rect', { x: X(lmin), y: Y(800), width: x1 - X(lmin), height: Y(MS) - Y(800), style: 'fill:var(--cGs)' }, g);
+    const bands = [[650, 724, 'url(#pPc)'], [540, 650, 'url(#pPf)'], [350, 540, 'var(--cBs)'], [222, 350, 'var(--cBs)']];
+    bands.forEach(([a, b, f]) => { const seg = F.filter((p, i) => Ts[i] >= a && Ts[i] <= b); if (seg.length < 2) return; el('path', { d: pth(seg.concat([[x1, seg[seg.length - 1][1]], [x1, seg[0][1]]]), true), style: 'fill:' + f + (a < 350 ? ';opacity:.75' : '') }, g); });
+    el('path', { d: pth(S.concat(F.slice().reverse()), true), style: 'fill:url(#pHatch)' }, g);
+    el('rect', { x: X(lmin), y: Y(MS), width: x1 - X(lmin), height: Y(0) - Y(MS), style: 'fill:var(--cMs)' }, g);
+  }
+  const st = opts.ghost ? 'fill:none;stroke:var(--ink2);stroke-width:1.2;stroke-dasharray:4 3' : 'fill:none;stroke:var(--ink);stroke-width:2';
+  el('path', { d: pth(S), style: st }, g); el('path', { d: pth(F), style: st }, g);
+  if (!opts.ghost) {
+    const H = Ts.map(T => [X(cl(T > 720 ? 3.5 : Math.log10(t50(T)))), Y(T)]);
+    el('path', { d: pth(H), style: 'fill:none;stroke:var(--ink);stroke-width:1;stroke-dasharray:2 3' }, g);
+    [[MS, 'Ms'], [160, 'M50'], [105, 'M90']].forEach(([T, l]) => { el('line', { x1: X(lmin), x2: x1, y1: Y(T), y2: Y(T), style: 'stroke:var(--cM);stroke-width:' + (T === MS ? 1.6 : 1) + (T === MS ? '' : ';stroke-dasharray:4 3') }, g); tx(g, x1 - 3, Y(T) - 3, l, 'font-size:9px;font-weight:700;fill:var(--cM);text-anchor:end'); });
+    const lb = (l, T, s, w) => tx(g, X(l), Y(T), s, 'font-size:' + (w || 9.5) + 'px;font-weight:750;fill:var(--ink);paint-order:stroke;stroke:var(--paper);stroke-width:3px');
+    lb(-0.8, 760, 'austénite stable'); lb(-0.85, 692, 'austénite'); lb(-0.85, 668, 'instable', 9);
+    lb(3.0, 690, 'perlite grossière'); lb(2.4, 590, 'perlite fine'); lb(2.9, 450, 'bainite sup.'); lb(3.6, 300, 'bainite inf.');
+    lb(-0.8, 70, 'martensite (+ austénite)');
+    tx(g, X(0.2), Y(470) + 3, 'début', 'font-size:9px;font-weight:700;fill:var(--ink);text-anchor:end;paint-order:stroke;stroke:var(--paper);stroke-width:3px');
+    tx(g, X(1.62), Y(470) + 3, 'fin', 'font-size:9px;font-weight:700;fill:var(--ink);paint-order:stroke;stroke:var(--paper);stroke-width:3px');
+  }
+}
+function axesLog(g, X, Y, lmin, lmax, x1, yb, Tmax) {
+  for (let T = 0; T <= Tmax; T += 100) { el('line', { x1: X(lmin), x2: x1, y1: Y(T), y2: Y(T), style: 'stroke:var(--grid2)' }, g); tx(g, X(lmin) - 4, Y(T) + 3.5, String(T), 'font-size:9px;fill:var(--ink2);text-anchor:end'); }
+  for (let l = lmin; l <= lmax; l++) { el('line', { x1: X(l), x2: X(l), y1: yb, y2: yb + 4, style: 'stroke:var(--ink)' }, g); tx(g, X(l), yb + 14, l === 0 ? '1' : l === 1 ? '10' : l === -1 ? '0,1' : '10' + sup(l), 'font-size:8.5px;fill:var(--ink2);text-anchor:middle'); }
+  tx(g, (X(lmin) + x1) / 2, yb + 28, 'temps (s), échelle logarithmique', 'font-size:9.5px;fill:var(--ink2);text-anchor:middle');
+  tx(g, 4, 10, '°C', 'font-size:9.5px;fill:var(--ink2)');
+}
+(function part3() {
+  const s = $('#ttt'), gB = el('g', null, s), gA = el('g', null, s), gP = el('g', null, s);
+  axesLog(gA, TX, TY, -1, 5, 350, TY(0), 800);
+  drawTTT(gB);
+  el('line', { x1: TX(-1), x2: 350, y1: TY(A1), y2: TY(A1), style: 'stroke:var(--ink);stroke-width:1.3;stroke-dasharray:6 3' }, gA);
+  tx(gA, 347, TY(A1) - 4, 'A1 = 727 °C', 'font-size:9px;font-weight:700;fill:var(--ink);text-anchor:end');
+  el('rect', { x: TX(-1), y: TY(800), width: 306, height: TY(0) - TY(800), style: 'fill:none;stroke:var(--ink);stroke-width:1.2' }, gA);
+  const tex = new Tex($('#tttMc'), 31, 200, 4, 12);
+  const PRE = { a: [[690, 4]], b: [[600, 2]], c: [[300, 4]], d: [[450, Math.log10(20)]], e: [[250, 2]], f: [[630, 1], [400, 3]] };
+  const inp = id => $('#' + id);
+  function stages() {
+    const st = [{ T: +inp('t1T').value, t: Math.pow(10, +inp('t1t').value) }];
+    if (inp('t2on').checked) st.push({ T: +inp('t2T').value, t: Math.pow(10, +inp('t2t').value) });
+    return st;
+  }
+  let anim = null, prog = 1;
+  function labels() {
+    inp('t1Tv').textContent = inp('t1T').value + NB + '°C'; inp('t1tv').textContent = fmtT(Math.pow(10, +inp('t1t').value));
+    inp('t2Tv').textContent = inp('t2T').value + NB + '°C'; inp('t2tv').textContent = fmtT(Math.pow(10, +inp('t2t').value));
+    inp('t2box').hidden = !inp('t2on').checked;
+  }
+  function render() {
+    labels();
+    const st = stages();
+    // segments du trajet en coordonnées (log t, T)
+    const segs = [[[-1, 800], [-1, st[0].T]]];
+    let tc = 0;
+    st.forEach((q, i) => { const l0 = i === 0 ? -1 : Math.log10(tc); tc += q.t; segs.push([[l0, q.T], [Math.log10(tc), q.T]]); if (i < st.length - 1) segs.push([[Math.log10(tc), q.T], [Math.log10(tc), st[i + 1].T]]); });
+    segs.push([[Math.log10(tc), st[st.length - 1].T], [Math.log10(tc), 20]]);
+    const lens = segs.map(sg => Math.hypot(TX(sg[1][0]) - TX(sg[0][0]), TY(sg[1][1]) - TY(sg[0][1])) + 1), tot = lens.reduce((a, b) => a + b, 0);
+    let rem = prog * tot, si = 0; while (si < segs.length - 1 && rem > lens[si]) { rem -= lens[si]; si++; }
+    const u = clamp(rem / lens[si], 0, 1);
+    gP.innerHTML = '';
+    let d = ''; segs.forEach((sg, i) => { if (i > si) return; const b = i < si ? sg[1] : [lerp(sg[0][0], sg[1][0], u), lerp(sg[0][1], sg[1][1], u)]; d += (d ? 'L' : 'M') + TX(sg[0][0]).toFixed(1) + ' ' + TY(sg[0][1]).toFixed(1) + 'L' + TX(b[0]).toFixed(1) + ' ' + TY(b[1]).toFixed(1); });
+    el('path', { d: d, style: 'fill:none;stroke:var(--cL);stroke-width:3.2;stroke-linejoin:round;stroke-linecap:round' }, gP);
+    const cur = si < segs.length ? [lerp(segs[si][0][0], segs[si][1][0], u), lerp(segs[si][0][1], segs[si][1][1], u)] : segs[segs.length - 1][1];
+    el('circle', { cx: TX(cur[0]), cy: TY(cur[1]), r: 5.5, style: 'fill:var(--cL);stroke:var(--ink);stroke-width:1.3' }, gP);
+    // fractions à l’instant courant
+    let g = 1; const mix = []; let hv = 0, now = '';
+    st.forEach((q, i) => {
+      const segIdx = 1 + i * 2;
+      let tt = 0;
+      if (si > segIdx) tt = q.t; else if (si === segIdx) tt = Math.pow(10, lerp(Math.log10(i === 0 ? 0.1 : st.slice(0, i).reduce((a, b) => a + b.t, 0)), Math.log10(st.slice(0, i + 1).reduce((a, b) => a + b.t, 0)), u)) - (i === 0 ? 0 : st.slice(0, i).reduce((a, b) => a + b.t, 0));
+      if (si === segIdx) now = 'Palier ' + (i + 1) + ' à ' + q.T + ' °C, depuis ' + fmtT(Math.max(tt, 0)) + ' : ' + (tt < jm(q.T, ttS, ttF).ts ? 'incubation, rien ne se voit encore.' : 'formation de ' + PNAME[prodOf(q.T)] + '.');
+      const a = g * fAt(q.T, Math.max(tt, 0)); if (a > 1e-4) { mix.push({ k: prodOf(q.T), f: a, T: q.T }); hv += a * hvOf(prodOf(q.T), q.T); } g -= a;
+    });
+    const quenched = si === segs.length - 1 ? (cur[1] < MS ? 1 : 0) : 0;
+    if (si === segs.length - 1) now = cur[1] > MS ? 'Trempe finale : l’austénite restante descend vers M' + 's.' : 'Trempe finale : sous M' + 's, l’austénite restante devient martensite.';
+    if (si === 0) now = 'Trempe instantanée depuis l’austénite jusqu’au palier.';
+    if (prog >= 1) now = 'Traitement terminé.';
+    const fM = quenched ? g * clamp((MS - cur[1]) / (MS - 20), 0, 1) : 0;
+    if (fM > 0) { mix.push({ k: 'M', f: fM }); hv += fM * 850; }
+    const fA = g - fM; if (fA > 1e-4) mix.push({ k: 'A', f: fA });
+    $('#tttNow').textContent = now;
+    const rows = mix.map(m => '<tr><td><span class="ph ' + (m.k[0] === 'P' ? 'ph-a' : m.k[0] === 'B' ? 'ph-b' : m.k === 'M' ? 'ph-m' : 'ph-g') + '">' + PNAME[m.k] + '</span></td><td class="num"><b>' + fmt(m.f * 100, 0) + NB + '%</b></td><td class="num">' + (m.k === 'A' ? '–' : '≈' + NB + Math.round((m.k === 'M' ? 850 : hvOf(m.k, m.T)) / 10) * 10 + NB + 'HV') + '</td></tr>').join('');
+    $('#tttTab').innerHTML = '<thead><tr><th>Constituant</th><th class="num">Fraction</th><th class="num">Dureté</th></tr></thead><tbody>' + rows + (prog >= 1 ? '<tr><td><b>Mélange final</b></td><td></td><td class="num"><b>≈' + NB + Math.round(hv / 10) * 10 + NB + 'HV</b></td></tr>' : '') + '</tbody>';
+    tex.draw(mix.map(m => ({ k: m.k, f: m.f })));
+  }
+  function play() {
+    cancelAnimationFrame(anim); prog = 0;
+    if (RM) { prog = 1; render(); return; }
+    const t0 = performance.now(), D = 6500;
+    const f = now => { prog = clamp((now - t0) / D, 0, 1); render(); if (prog < 1) anim = requestAnimationFrame(f); };
+    anim = requestAnimationFrame(f);
+  }
+  ['t1T', 't1t', 't2T', 't2t'].forEach(id => inp(id).addEventListener('input', () => { cancelAnimationFrame(anim); prog = 1; $$('#tttPre button').forEach(b => b.classList.remove('on')); render(); }));
+  inp('t2on').addEventListener('change', () => { cancelAnimationFrame(anim); prog = 1; render(); });
+  $('#tttPlay').addEventListener('click', play);
+  $$('#tttPre button').forEach(b => b.addEventListener('click', () => {
+    $$('#tttPre button').forEach(x => x.classList.toggle('on', x === b));
+    const p = PRE[b.dataset.p];
+    inp('t1T').value = p[0][0]; inp('t1t').value = p[0][1];
+    inp('t2on').checked = p.length > 1; if (p.length > 1) { inp('t2T').value = p[1][0]; inp('t2t').value = p[1][1]; }
+    play();
+  }));
+  render();
+  redraws.push(render);
+})();
+
+/* ================= PARTIE 4 : TRC eutectoïde ================= */
+const vFmt = v => (v < 1 ? fmt(v, v < 0.1 ? 2 : 1) : v < 10 ? fmt(v, 1) : Math.round(v)) + NB + '°C/s';
+const coolT = (v, t) => 20 + 830 * Math.exp(-t * v / 680);
+(function part4() {
+  const s = $('#trc'), cpd = el('clipPath', { id: 'trcclip' }, el('defs', null, s)); el('rect', { x: 44, y: 12, width: 306, height: 254 }, cpd);
+  const gB = el('g', null, s), gG = el('g', null, s), gC = el('g', { 'clip-path': 'url(#trcclip)' }, s), gA = el('g', null, s), gP = el('g', null, s);
+  const X = TX, Y = TY;
+  axesLog(gA, X, Y, -1, 5, 350, Y(0), 800);
+  el('rect', { x: X(-1), y: Y(800), width: 306, height: Y(0) - Y(800), style: 'fill:none;stroke:var(--ink);stroke-width:1.2' }, gA);
+  el('line', { x1: X(-1), x2: 350, y1: Y(A1), y2: Y(A1), style: 'stroke:var(--ink);stroke-width:1.3;stroke-dasharray:6 3' }, gA);
+  tx(gA, 347, Y(A1) - 4, 'A1', 'font-size:9px;font-weight:700;fill:var(--ink);text-anchor:end');
+  // balayage des vitesses
+  const sweep = []; for (let k = 0; k <= 110; k++) sweep.push(coolE(Math.pow(10, -2 + k * 5.5 / 110)));
+  const Lg = t => clamp(Math.log10(t), -1, 5);
+  const pts = key => sweep.filter(r => r[key]).map(r => [X(Lg(r[key][0])), Y(r[key][1])]).sort((a, b) => a[1] - b[1]);
+  const pth = p => p.map((q, i) => (i ? 'L' : 'M') + q[0].toFixed(1) + ' ' + q[1].toFixed(1)).join('');
+  el('rect', { x: X(-1), y: Y(800), width: 306, height: Y(0) - Y(800), style: 'fill:var(--paper)' }, gB);
+  el('rect', { x: X(-1), y: Y(MS), width: 306, height: Y(0) - Y(MS), style: 'fill:var(--cMs);opacity:.7' }, gB);
+  const S = pts('start'), F = pts('fin'), St = pts('stop');
+  el('path', { d: pth(S.slice().sort((a, b) => a[1] - b[1])), style: 'fill:none;stroke:var(--ink);stroke-width:2.2' }, gA);
+  el('path', { d: pth(F), style: 'fill:none;stroke:var(--ink);stroke-width:2.2' }, gA);
+  if (St.length) { const xs = St.map(p => p[0]); el('line', { x1: Math.min.apply(null, xs), x2: Math.max.apply(null, xs), y1: Y(500), y2: Y(500), style: 'stroke:var(--ink);stroke-width:2;stroke-dasharray:6 3' }, gA); tx(gA, Math.max.apply(null, xs) + 4, Y(500) + 3, 'arrêt', 'font-size:9px;font-weight:700;fill:var(--ink)'); }
+  el('line', { x1: X(-1), x2: 350, y1: Y(MS), y2: Y(MS), style: 'stroke:var(--cM);stroke-width:1.6' }, gA);
+  tx(gA, 347, Y(MS) - 3, 'Ms', 'font-size:9px;font-weight:700;fill:var(--cM);text-anchor:end');
+  const lb = (l, T, t, a) => tx(gA, X(l), Y(T), t, 'font-size:9.5px;font-weight:750;fill:var(--ink);text-anchor:' + (a || 'start') + ';paint-order:stroke;stroke:var(--paper);stroke-width:3px');
+  lb(3.3, 660, 'perlite'); lb(-0.9, 600, 'austénite'); lb(-0.9, 100, 'martensite');
+  const vc = (() => { let lo = 1, hi = 3000; for (let i = 0; i < 40; i++) { const m = Math.sqrt(lo * hi); if (coolE(m).X < 0.01) hi = m; else lo = m; } return hi; })();
+  const vf = (() => { let lo = 0.1, hi = 1000; for (let i = 0; i < 40; i++) { const m = Math.sqrt(lo * hi); if (coolE(m).X < 0.99) hi = m; else lo = m; } return lo; })();
+  const curve = (v, st) => { let d = ''; for (let l = -1; l <= 5.001; l += 0.02) { const T = coolT(v, Math.pow(10, l)); d += (d ? 'L' : 'M') + X(l).toFixed(1) + ' ' + Y(T).toFixed(1); if (T < 22) break; } return el('path', { d: d, style: st }, gC); };
+  [0.03, 0.3, 2, 10, 40, 200, 1000].forEach(v => curve(v, 'fill:none;stroke:var(--ink2);stroke-width:.9;opacity:.55'));
+  curve(vc, 'fill:none;stroke:var(--cM);stroke-width:1.6;stroke-dasharray:5 3');
+  const lvc = Math.log10(680 / vc * Math.log(830 / 280));
+  tx(gA, X(lvc) + 3, Y(300), 'vitesse critique ≈ ' + Math.round(vc / 10) * 10 + ' °C/s', 'font-size:8.5px;font-weight:700;fill:var(--cM);paint-order:stroke;stroke:var(--paper);stroke-width:3px');
+  const ghost = () => { gG.innerHTML = ''; if ($('#trcGhost').checked) drawTTT(gG, { ghost: true }); };
+  $('#trcGhost').addEventListener('change', ghost); ghost();
+  const tex = new Tex($('#trcMc'), 41, 200, 4, 12);
+  let v = 40, sel = null, raf = null;
+  function show() {
+    const r = coolE(v, true), X1 = r.X, pk = r.Tavg && r.Tavg >= 650 ? 'Pc' : 'Pf';
+    $('#trcVv').textContent = vFmt(v); $('#trcV').value = Math.log10(v);
+    if (sel) sel.remove();
+    sel = curve(v, 'fill:none;stroke:var(--cL);stroke-width:3');
+    const t85 = 680 / v * Math.log(780 / 480);
+    const hv = X1 * (r.Tavg ? hvOf('P', r.Tavg) : 0) + (1 - X1) * 850;
+    let txt = 'Vitesse ' + vFmt(v) + ' à 700 °C (temps de passage de 800 à 500 °C ≈ ' + fmtT(t85) + '). ';
+    if (X1 > 0.99) txt += '100 % de ' + PNAME[pk] + ', formée vers ' + Math.round(r.Tavg) + ' °C en moyenne.';
+    else if (X1 < 0.01) txt += 'La courbe passe à gauche du nez : 100 % de martensite.';
+    else txt += 'La courbe rencontre la ligne d’arrêt avant la fin : ' + fmt(X1 * 100, 0) + ' % de ' + PNAME[pk] + ', puis ' + fmt((1 - X1) * 100, 0) + ' % de martensite sous Ms.';
+    txt += ' Dureté estimée ≈ ' + Math.round(hv / 10) * 10 + ' HV. Sur ce diagramme : 100 % perlite sous ≈ ' + Math.round(vf) + ' °C/s, 100 % martensite au-delà de ≈ ' + Math.round(vc / 10) * 10 + ' °C/s.';
+    $('#trcTxt').textContent = txt;
+    stackFill($('#trcStk'), [[X1, pk === 'Pc' ? 'url(#pPc)' : 'repeating-linear-gradient(90deg,var(--cAs) 0 4px,var(--cC) 4px 5.5px)', PNAME[pk], 'P'], [1 - X1, 'var(--cMs)', 'martensite', 'M']]);
+    tex.draw([{ k: pk, f: X1 }, { k: 'M', f: 1 - X1 }]);
+    // point animé le long de la courbe
+    cancelAnimationFrame(raf); gP.innerHTML = '';
+    const dot = el('circle', { r: 5, style: 'fill:var(--cL);stroke:var(--ink);stroke-width:1.3' }, gP);
+    const tr = r.tr.filter(q => q.t >= 0.1);
+    const place = i => { const q = tr[Math.min(tr.length - 1, i)]; dot.setAttribute('cx', X(Lg(q.t))); dot.setAttribute('cy', Y(q.T)); };
+    if (RM) { place(tr.length - 1); return; }
+    const t0 = performance.now();
+    const f = now => { const u = clamp((now - t0) / 3500, 0, 1); place(Math.floor(u * (tr.length - 1))); if (u < 1) raf = requestAnimationFrame(f); };
+    raf = requestAnimationFrame(f);
+  }
+  $('#trcV').addEventListener('input', e => { v = Math.pow(10, +e.target.value); $$('#trcPre button').forEach(b => b.classList.remove('on')); show(); });
+  radio($('#trcPre'), 'v', val => { v = +val; show(); });
+  show();
+  redraws.push(show);
+})();
+
+function stackFill(box, segs) {
+  box.innerHTML = '';
+  const W = box.clientWidth || 300;
+  segs.filter(q => q[0] > 0.0005).forEach(([f, bg, lab, sh]) => {
+    const d = document.createElement('div');
+    d.style.width = (f * 100).toFixed(2) + '%'; d.style.background = bg;
+    const pc = fmt(f * 100, 0) + NB + '%', av = W * f - 8;
+    d.title = lab + ' ' + pc;
+    d.textContent = [lab + ' ' + pc, (sh || lab) + ' ' + pc, pc, ''].find(t => t.length * 6.4 <= av) || '';
+    if (/url|gradient/.test(bg)) d.style.textShadow = '0 0 3px var(--paper),0 0 3px var(--paper)';
+    box.appendChild(d);
+  });
+}
+
+/* ================= PARTIE 5 : éléments d’addition ================= */
+function pip(pt, poly) { let c = false; for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) { const [xi, yi] = poly[i], [xj, yj] = poly[j]; if ((yi > pt[1]) !== (yj > pt[1]) && pt[0] < (xj - xi) * (pt[1] - yi) / (yj - yi) + xi) c = !c; } return c; }
+(function part5a() {
+  const s = $('#loop'), X = x => 44 + x / 20 * 306, Y = T => 12 + (1600 - T) / 1200 * 214;
+  const NI = {
+    L: [[0, 1538], [4, 1515], [20, 1470], [20, 1700], [0, 1700]],
+    d: [[0, 1538], [3, 1512], [0, 1394]],
+    g: [[0, 1394], [3, 1512], [4, 1515], [20, 1455], [20, 590], [15, 650], [10, 720], [5, 810], [0, 912]],
+    ag: [[0, 912], [5, 810], [10, 720], [15, 650], [20, 590], [20, 300], [11, 300], [10, 420], [8, 480], [6, 560], [4, 650], [2, 760]],
+    a: [[0, 912], [2, 760], [4, 650], [6, 560], [8, 480], [10, 420], [11, 300], [0, 300]],
+    Lg: [[4, 1515], [20, 1470], [20, 1455]],
+    Ld: [[0, 1538], [4, 1515], [3, 1512]]
+  };
+  const CR = {
+    L: [[0, 1538], [20, 1505], [20, 1700], [0, 1700]],
+    La: [[0, 1538], [20, 1505], [20, 1500]],
+    a: [[0, 1538], [20, 1500], [20, 300], [0, 300]],
+    ag: [[0, 912], [3, 862], [6, 838], [8, 840], [10, 870], [11.8, 925], [12.8, 1000], [11.9, 1085], [10.3, 1160], [8, 1225], [6, 1280], [3, 1348], [0, 1394]],
+    g: [[0, 912], [3, 868], [6, 846], [8, 850], [10, 880], [11.3, 930], [11.8, 1000], [11.3, 1080], [10, 1150], [8, 1215], [6, 1270], [3, 1340], [0, 1394]]
+  };
+  const FILL = { L: 'var(--cLs)', d: 'var(--cDs)', g: 'var(--cGs)', a: 'var(--cAs)', ag: 'url(#pAPf)', Lg: 'var(--cLs)', Ld: 'var(--cLs)', La: 'var(--cLs)' };
+  const NAME = { L: 'liquide', d: 'ferrite δ', g: 'austénite γ', a: 'ferrite α', ag: 'α + γ', Lg: 'L + γ', Ld: 'L + δ', La: 'L + α' };
+  let el_ = 'ni';
+  const base = el('g', null, s), mk = el('g', null, s);
+  const defs = el('defs', null, s), cp = el('clipPath', { id: 'loopc' }, defs); el('rect', { x: 44, y: 12, width: 306, height: 214 }, cp);
+  function drawBase() {
+    base.innerHTML = '';
+    const D = el_ === 'ni' ? NI : CR, g = el('g', { 'clip-path': 'url(#loopc)' }, base);
+    const order = el_ === 'ni' ? ['L', 'd', 'g', 'ag', 'a'] : ['a', 'L', 'ag', 'g'];
+    order.forEach(k => el('path', { d: D[k].map((p, i) => (i ? 'L' : 'M') + X(p[0]).toFixed(1) + ' ' + Y(p[1]).toFixed(1)).join('') + 'Z', style: 'fill:' + FILL[k] + ';stroke:var(--ink);stroke-width:1.2' }, g));
+    for (let T = 400; T <= 1600; T += 200) tx(base, 40, Y(T) + 3.5, String(T), 'font-size:9px;fill:var(--ink2);text-anchor:end');
+    for (let x = 0; x <= 20; x += 5) tx(base, X(x), 240, String(x), 'font-size:9px;fill:var(--ink2);text-anchor:middle');
+    tx(base, 197, 255, '% massique de ' + (el_ === 'ni' ? 'nickel' : 'chrome'), 'font-size:9.5px;fill:var(--ink2);text-anchor:middle');
+    tx(base, 4, 10, '°C', 'font-size:9.5px;fill:var(--ink2)');
+    el('rect', { x: 44, y: 12, width: 306, height: 214, style: 'fill:none;stroke:var(--ink);stroke-width:1.2' }, base);
+    const lb = (x, T, t, w) => tx(base, X(x), Y(T), t, 'font-size:' + (w || 12) + 'px;font-weight:800;fill:var(--ink);text-anchor:middle;paint-order:stroke;stroke:var(--paper);stroke-width:3px');
+    if (el_ === 'ni') { lb(12, 1560, 'L'); lb(12, 1050, 'γ'); lb(15, 520, 'α + γ', 10); lb(3, 480, 'α'); lb(1.2, 1470, 'δ', 10); tx(base, X(19.6), Y(1180), 'domaine γ élargi', 'font-size:9.5px;font-weight:700;fill:var(--cG);text-anchor:end'); }
+    else { lb(10, 1565, 'L'); lb(5, 1080, 'γ'); lb(16, 700, 'α (CC) partout', 11); lb(3, 620, 'α'); tx(base, X(13.2), Y(1020), 'boucle γ', 'font-size:9.5px;font-weight:700;fill:var(--cG)'); }
+  }
+  function upd() {
+    const x = +$('#loopX').value, D = el_ === 'ni' ? NI : CR;
+    mk.innerHTML = '';
+    el('line', { x1: X(x), x2: X(x), y1: 12, y2: 226, style: 'stroke:var(--cL);stroke-width:2;stroke-dasharray:5 3' }, mk);
+    const at = T => { for (const k of ['L', 'Lg', 'Ld', 'La', 'd', 'g', 'ag', 'a']) if (D[k] && pip([x + 1e-6, T], D[k])) return k; return null; };
+    const seq2 = []; let last = null;
+    for (let T = 1590; T >= 400; T -= 5) { const k = at(T); if (k && k !== last) { seq2.push([k, T]); last = k; } }
+    let txt = 'À ' + fmt(x, 1) + ' % ' + (el_ === 'ni' ? 'Ni' : 'Cr') + ', en refroidissant : ' + seq2.map(([k, T], i) => NAME[k] + (i ? ' (dès ' + Math.round(T / 5) * 5 + ' °C)' : '')).join(' → ') + '. ';
+    if (el_ === 'cr' && x >= 12.8) txt += 'Plus aucune austénite : l’acier ne peut pas être trempé, il reste ferritique. C’est le cas des inox ferritiques comme le 430 (17 % Cr).';
+    else if (el_ === 'cr') txt += 'Le chrome rétrécit le domaine γ : A3 monte, A4 descend, jusqu’à ce que la boucle se referme vers 12–13 %.';
+    else txt += 'Le nickel abaisse A3 et élargit le domaine γ. À l’équilibre, la transformation γ → α devient très lente à basse température ; associé à 18 % de chrome, 8 à 10 % de nickel suffisent à garder l’austénite à l’ambiante (inox 304).';
+    $('#loopTxt').textContent = txt;
+  }
+  radio($('#loopBtns'), 'e', e => { el_ = e; drawBase(); upd(); });
+  $('#loopX').addEventListener('input', upd);
+  drawBase(); upd();
+})();
+
+(function part5b() {
+  const s = $('#trc2'), X = l => 44 + (l + 1) / 7 * 306, Y = TY;
+  const cache = {}; let st = 'C45', v = 40;
+  const sweepOf = name => cache[name] || (cache[name] = (() => { const a = []; for (let k = 0; k <= 100; k++) a.push(coolS(STEELS[name], Math.pow(10, -2 + k * 5.3 / 100))); return a; })());
+  const cpd = el('clipPath', { id: 'trc2clip' }, el('defs', null, s)); el('rect', { x: 44, y: 12, width: 306, height: 254 }, cpd);
+  const gB = el('g', null, s), gC = el('g', { 'clip-path': 'url(#trc2clip)' }, s), gS = el('g', { 'clip-path': 'url(#trc2clip)' }, s);
+  const Lg = t => clamp(Math.log10(t), -1, 6);
+  const curvePath = vv => { let d = ''; for (let l = -1; l <= 6.001; l += 0.02) { const T = coolT(vv, Math.pow(10, l)); d += (d ? 'L' : 'M') + X(l).toFixed(1) + ' ' + Y(T).toFixed(1); if (T < 22) break; } return d; };
+  function drawBase() {
+    gB.innerHTML = ''; gC.innerHTML = '';
+    const S = STEELS[st], sw = sweepOf(st);
+    el('rect', { x: X(-1), y: Y(800), width: 306, height: Y(0) - Y(800), style: 'fill:var(--paper)' }, gB);
+    el('rect', { x: X(-1), y: Y(S.Ms), width: 306, height: Y(0) - Y(S.Ms), style: 'fill:var(--cMs);opacity:.6' }, gB);
+    axesLog(gB, X, Y, -1, 6, 350, Y(0), 800);
+    [[S.Ae3, 'Ac3', 1], [S.Ae1, 'Ac1', 0]].forEach(([T, l, top]) => { el('line', { x1: X(-1), x2: 350, y1: Y(T), y2: Y(T), style: 'stroke:var(--ink);stroke-width:1;stroke-dasharray:6 3' }, gB); tx(gB, top ? X(-1) + 16 : 347, top ? Y(T) + 10 : Y(T) - 3, l + ' ' + T + ' °C', 'font-size:8.5px;font-weight:700;fill:var(--ink);text-anchor:' + (top ? 'start' : 'end') + ';paint-order:stroke;stroke:var(--paper);stroke-width:2.5px'); });
+    el('line', { x1: X(-1), x2: 350, y1: Y(S.Ms), y2: Y(S.Ms), style: 'stroke:var(--cM);stroke-width:1.6' }, gB);
+    tx(gB, 347, Y(S.Ms) - 3, 'Ms ' + S.Ms + ' °C', 'font-size:8.5px;font-weight:700;fill:var(--cM);text-anchor:end');
+    const line = (key, col, w, dash) => {
+      const p = sw.filter(r => r.rec[key]).map(r => [X(Lg(r.rec[key][0])), Y(r.rec[key][1])]);
+      if (p.length < 2) return null;
+      p.sort((a, b) => a[0] - b[0]);
+      el('path', { d: p.map((q, i) => (i ? 'L' : 'M') + q[0].toFixed(1) + ' ' + q[1].toFixed(1)).join(''), style: 'fill:none;stroke:' + col + ';stroke-width:' + w + (dash ? ';stroke-dasharray:' + dash : '') + ';stroke-linejoin:round' }, gB);
+      return p;
+    };
+    const pF = line('F', 'var(--cA)', 2.2), pP = line('P', 'var(--ink)', 2.2), pB = line('B', 'var(--cB)', 2.2); line('end', 'var(--ink2)', 1.3, '4 3');
+    const lab = (p, t, col, dx, dy) => { if (!p || p.length < 8) return; const q = p[Math.floor(p.length * 0.35)]; tx(gB, q[0] + dx, q[1] + dy, t, 'font-size:12px;font-weight:800;fill:' + col + ';paint-order:stroke;stroke:var(--paper);stroke-width:3px'); };
+    lab(pF, 'F', 'var(--cA)', 4, -6); lab(pP, 'P', 'var(--ink)', 6, 14); lab(pB, 'B', 'var(--cB)', 8, 12);
+    tx(gB, X(-0.9), Y(120), 'M', 'font-size:12px;font-weight:800;fill:var(--cM)');
+    tx(gB, X(-0.9), Y(690), 'A', 'font-size:12px;font-weight:800;fill:var(--cG)');
+    el('rect', { x: X(-1), y: Y(800), width: 306, height: Y(0) - Y(800), style: 'fill:none;stroke:var(--ink);stroke-width:1.2' }, gB);
+    [0.03, 0.3, 2, 10, 40, 200, 1000].forEach(vv => {
+      el('path', { d: curvePath(vv), style: 'fill:none;stroke:var(--ink2);stroke-width:.9;opacity:.6' }, gC);
+      const r = coolS(S, vv), tt = 680 / vv * Math.log(830 / 90);
+      if (Math.log10(tt) < 6) tx(gC, X(Lg(tt)), Y(70), String(Math.round(r.hv / 10) * 10), 'font-size:8px;font-weight:700;fill:var(--ink);text-anchor:middle;paint-order:stroke;stroke:var(--paper);stroke-width:2.5px');
+    });
+  }
+  function show() {
+    $('#trc2Vv').textContent = vFmt(v); $('#trc2V').value = Math.log10(v);
+    gS.innerHTML = '';
+    el('path', { d: curvePath(v), style: 'fill:none;stroke:var(--cL);stroke-width:3' }, gS);
+    $('#trc2Cmp').innerHTML = ['C45', '42CrMo4'].map(n => {
+      const r = coolS(STEELS[n], v), row = (k, lab, cls) => r[k] > 0.005 ? '<div><span class="ph ' + cls + '">' + lab + '</span> ' + fmt(r[k] * 100, 0) + NB + '%</div>' : '';
+      return '<div' + (n === st ? ' style="border-color:var(--cL);border-width:2px"' : '') + '><h4>' + n + '</h4>' + row('F', 'ferrite', 'ph-a') + row('P', 'perlite', 'ph-c') + row('B', 'bainite', 'ph-b') + row('M', 'martensite', 'ph-m') + '<div style="margin-top:.3rem"><b>≈' + NB + Math.round(r.hv / 10) * 10 + NB + 'HV</b></div></div>';
+    }).join('');
+  }
+  radio($('#trc2S'), 's', n => { st = n; drawBase(); show(); });
+  radio($('#trc2Pre'), 'v', val => { v = +val; show(); });
+  $('#trc2V').addEventListener('input', e => { v = Math.pow(10, +e.target.value); $$('#trc2Pre button').forEach(b => b.classList.remove('on')); show(); });
+  onVisible(s, vis => { if (vis && !gB.childNodes.length) { drawBase(); show(); } });
+  redraws.push(() => { if (gB.childNodes.length) { drawBase(); show(); } });
+})();
+
+(function part5c() {
+  const EL = [['C', 0.05, 0.8, 0.01], ['Mn', 0, 2, 0.05], ['Si', 0, 1, 0.05], ['Cr', 0, 3, 0.05], ['Ni', 0, 4.5, 0.05], ['Mo', 0, 1, 0.01]];
+  const PRE = { S355: { C: 0.18, Mn: 1.4, Si: 0.3, Cr: 0, Ni: 0, Mo: 0 }, C45: { C: 0.45, Mn: 0.7, Si: 0.25, Cr: 0, Ni: 0, Mo: 0 }, '42CrMo4': { C: 0.42, Mn: 0.75, Si: 0.25, Cr: 1.05, Ni: 0, Mo: 0.22 }, '35NCD16': { C: 0.35, Mn: 0.45, Si: 0.25, Cr: 1.8, Ni: 3.9, Mo: 0.35 } };
+  const box = $('#calcIn');
+  box.innerHTML = EL.map(([k, a, b, st]) => '<div class="inp2"><label for="ce' + k + '">' + k + ' (%)</label><input type="range" id="ce' + k + '" min="' + a + '" max="' + b + '" step="' + st + '"><output id="ce' + k + 'v"></output></div>').join('');
+  const val = () => { const o = {}; EL.forEach(([k]) => { o[k] = +$('#ce' + k).value; }); return o; };
+  const pts = c => ({
+    Ac1: 723 - 10.7 * c.Mn - 16.9 * c.Ni + 29.1 * c.Si + 16.9 * c.Cr,
+    Ac3: 910 - 203 * Math.sqrt(c.C) - 15.2 * c.Ni + 44.7 * c.Si + 31.5 * c.Mo,
+    Bs: 830 - 270 * c.C - 90 * c.Mn - 37 * c.Ni - 70 * c.Cr - 83 * c.Mo,
+    Ms: 539 - 423 * c.C - 30.4 * c.Mn - 17.7 * c.Ni - 12.1 * c.Cr - 7.5 * c.Mo
+  });
+  const s = $('#calcSvg'), X = T => 70 + (T - 200) / 800 * 275;
+  function upd() {
+    const c = val(); EL.forEach(([k]) => { $('#ce' + k + 'v').textContent = fmt(c[k], 2); });
+    const p = pts(c), r = pts({ C: c.C, Mn: 0, Si: 0, Cr: 0, Ni: 0, Mo: 0 });
+    s.innerHTML = '';
+    for (let T = 200; T <= 1000; T += 100) { el('line', { x1: X(T), x2: X(T), y1: 8, y2: 176, style: 'stroke:var(--grid2)' }, s); tx(s, X(T), 190, String(T), 'font-size:9px;fill:var(--ink2);text-anchor:middle'); }
+    [['Ac3', 'var(--cG)'], ['Ac1', 'var(--cG)'], ['Bs', 'var(--cB)'], ['Ms', 'var(--cM)']].forEach(([k, col], i) => {
+      const y = 14 + i * 42;
+      tx(s, 62, y + 17, k, 'font-size:11px;font-weight:800;fill:var(--ink);text-anchor:end');
+      el('rect', { x: X(200), y: y, width: X(r[k]) - X(200), height: 11, rx: 2, style: 'fill:var(--rule)' }, s);
+      el('rect', { x: X(200), y: y + 14, width: Math.max(0, X(p[k]) - X(200)), height: 13, rx: 2, style: 'fill:' + col }, s);
+      const dd = Math.round(p[k] - r[k]);
+      tx(s, X(p[k]) + 4, y + 25, Math.round(p[k]) + ' °C (' + (dd >= 0 ? '+' : '−') + Math.abs(dd) + ')', 'font-size:10px;font-weight:800;fill:var(--ink)');
+    });
+    const sum = c.Mn + c.Si + c.Cr + c.Ni + c.Mo;
+    $('#calcTxt').textContent = 'Écart Ac3 − Ac1 : ' + Math.round(p.Ac3 - p.Ac1) + ' °C (domaine α + γ au chauffage). Ms à ' + Math.round(p.Ms) + ' °C, Bs à ' + Math.round(p.Bs) + ' °C.' + (c.C > 0.6 || sum > 5 ? ' Attention : composition hors du domaine de validité des formules.' : '');
+  }
+  function preset(k) { const o = PRE[k]; EL.forEach(([e]) => { $('#ce' + e).value = o[e]; }); upd(); }
+  radio($('#calcPre'), 'k', preset);
+  EL.forEach(([k]) => $('#ce' + k).addEventListener('input', () => { $$('#calcPre button').forEach(b => b.classList.remove('on')); upd(); }));
+  preset('42CrMo4');
+})();
+
+try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => redraws.forEach(f => { try { f(); } catch (e) {} })); } catch (e) {}
+})();
+</script>
+</body>
+</html>

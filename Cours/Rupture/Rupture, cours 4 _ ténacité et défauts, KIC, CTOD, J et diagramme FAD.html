@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rupture, cours 4 : ténacité et défauts, KIC, CTOD, J et diagramme FAD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@500;600;700&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F3F6F9; --paper-2:#E6ECF2; --card:#FFFFFF; --ink:#17212B; --muted:#56626F; --line:#C5CFD9;
+  --grid:rgba(40,90,160,.075);
+  --sig:#CF2438; --tau:#8A34B6; --eps:#1B5ED3; --gam:#06849A; --frc:#D46A00; --mat:#26844A; --weld:#9A5B12;
+  --ok:#26844A; --warn:#B86E00; --bad:#C62828;
+  --lv2:#E4EBF2; --hl:#FFF3B0;
+  --font-body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-head:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --font-math:"STIX Two Text","Cambria Math","Cambria","Times New Roman",serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+    --grid:rgba(120,160,220,.07);
+    --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+    --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+  --grid:rgba(120,160,220,.07);
+  --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+  --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+  color-scheme: dark;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0;color:var(--ink);font-family:var(--font-body);font-size:17.5px;line-height:1.62;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;overflow-x:hidden;
+}
+img,svg{max-width:100%}
+.wrap{max-width:800px;margin:0 auto;padding:0 20px}
+.wide{max-width:980px}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.1;margin:0}
+h3{font-size:1.65rem;font-weight:600;margin:2rem 0 .6rem}
+h4{font-size:1.3rem;font-weight:600;margin:1.4rem 0 .4rem}
+p{margin:.7em 0}
+a{color:var(--eps)}
+b,strong{font-weight:700}
+small{font-size:.8em}
+sub{font-size:.72em}
+.m{font-family:var(--font-math);font-size:1.08em;white-space:nowrap}
+.sig{color:var(--sig)} .tau{color:var(--tau)} .eps{color:var(--eps)} .gam{color:var(--gam)} .frc{color:var(--frc)} .mat{color:var(--mat)} .mut{color:var(--muted)} .wcol{color:var(--weld)}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .12em;line-height:1.1}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 .2em .08em}
+.frac>span:last-child{padding:.08em .2em 0}
+ul,ol{padding-left:1.4em}
+li{margin:.25em 0}
+
+/* ---------- en-tête ---------- */
+.hero{padding:34px 0 10px}
+.title-block{border:2.5px solid var(--ink);background:var(--card);display:grid;grid-template-columns:1fr 300px}
+.tb-main{padding:22px 24px;border-right:2.5px solid var(--ink);display:flex;flex-direction:column;justify-content:space-between;gap:14px}
+.tb-series{margin:0 0 .5rem;color:var(--muted);font-size:.95rem}
+.hero h1{font-size:clamp(2.3rem,6vw,4rem);font-weight:700;letter-spacing:-.01em}
+.tb-cells{display:grid;grid-template-rows:repeat(4,auto)}
+.tb-cells>div{padding:9px 16px;border-bottom:1.5px solid var(--ink);display:flex;flex-direction:column;justify-content:center}
+.tb-cells>div:last-child{border-bottom:0}
+.tb-cells small{color:var(--muted);font-size:.78rem}
+.tb-cells b{font-family:var(--font-head);font-size:1.25rem;font-weight:600;line-height:1.15}
+.lede{font-size:1.13rem;max-width:760px;margin:1.2rem 0}
+.theme-btn{align-self:flex-start;font-family:var(--font-body);font-size:.85rem;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
+@media (max-width:760px){.title-block{grid-template-columns:1fr}.tb-main{border-right:0;border-bottom:2.5px solid var(--ink)}.tb-cells{grid-template-rows:none;grid-template-columns:1fr 1fr}.tb-cells>div:nth-child(odd){border-right:1.5px solid var(--ink)}.tb-cells>div:nth-child(3){border-bottom:0}}
+@media (max-width:420px){.tb-cells{grid-template-columns:1fr}.tb-cells>div:nth-child(odd){border-right:0}.tb-cells>div:nth-child(3){border-bottom:1.5px solid var(--ink)}}
+
+/* code couleur */
+.cc{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:stretch;margin:1rem 0 .4rem}
+.cc-box{background:var(--card);border:2px solid var(--line);padding:12px 14px;border-radius:4px}
+.cc-cause{border-color:var(--sig)} .cc-link{border-color:var(--mat)} .cc-eff{border-color:var(--eps)}
+.cc-box small{display:block;color:var(--muted);font-size:.82rem;line-height:1.3}
+.cc-syms{font-family:var(--font-math);font-size:1.7rem;line-height:1.25;display:flex;flex-wrap:wrap;gap:.1em .45em;margin:.2rem 0}
+.cc-box p{margin:0;font-size:.9rem;line-height:1.35}
+.cc-arrow{align-self:center;font-size:1.8rem;color:var(--muted)}
+@media (max-width:700px){.cc{grid-template-columns:1fr}.cc-arrow{transform:rotate(90deg);justify-self:center;line-height:1}}
+.cc-more{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:.5rem 0}
+.cc-more>div{border:2px solid var(--line);background:var(--card);border-radius:4px;padding:6px 10px;font-size:.9rem}
+@media (max-width:640px){.cc-more{grid-template-columns:1fr}}
+
+/* ---------- sommaire ---------- */
+.toc{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-bottom:1.5px solid var(--line);padding-top:env(safe-area-inset-top,0px);margin-top:18px}
+.toc-in{display:flex;gap:6px;overflow-x:auto;padding:9px 20px;max-width:980px;margin:0 auto;scrollbar-width:thin}
+.toc a{flex:none;text-decoration:none;color:var(--ink);font-size:.88rem;padding:4px 11px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);white-space:nowrap}
+.toc a.on{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.toc a:focus-visible,.btn:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--eps);outline-offset:2px}
+
+/* ---------- sections ---------- */
+section.chap{padding:46px 0 10px}
+.cartouche{display:grid;grid-template-columns:86px 1fr 250px;border:2.5px solid var(--ink);background:var(--card);margin-bottom:1.4rem}
+.c-num{font-family:var(--font-head);font-size:3.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;border-right:2.5px solid var(--ink)}
+.c-title{padding:14px 18px;border-right:2.5px solid var(--ink)}
+.c-title h2{font-size:2.1rem;font-weight:700}
+.c-title p{margin:.25rem 0 0;color:var(--muted)}
+.c-img{padding:12px 14px;display:flex;gap:12px;align-items:center;background:var(--paper-2)}
+.c-img .ico{font-size:2.3rem;line-height:1}
+.c-img small{display:block;color:var(--muted);font-size:.78rem}
+.c-img span{font-size:.95rem;line-height:1.3}
+@media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
+
+/* niveaux */
+.lv{margin:1.2rem 0;padding:6px 22px 14px;border-radius:4px}
+.lv1{background:var(--card);border:2px solid var(--ink)}
+.lv2{background:var(--lv2);border-left:6px solid var(--ink)}
+.lv-h{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;font-family:var(--font-head);font-size:1.35rem;font-weight:600;margin:10px 0 4px}
+.lv-h .tag{font-size:.95rem;font-family:var(--font-body);font-weight:400;color:var(--muted)}
+@media (max-width:520px){.lv{padding:6px 14px 12px}}
+
+/* formules et encadrés */
+.fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:600px;text-align:center;border-radius:3px;overflow-x:auto}
+.fx .big{font-family:var(--font-math);font-size:1.9rem;line-height:1.4}
+.fx .cap{font-size:.85rem;color:var(--muted);margin:.3rem 0 0}
+.fx .row{display:flex;flex-wrap:wrap;justify-content:center;gap:.2em 1.4em}
+.syms{margin:.6rem 0;display:grid;grid-template-columns:auto 1fr;gap:.35rem 1rem;align-items:baseline}
+.syms dt{font-family:var(--font-math);font-size:1.25rem;text-align:right;white-space:nowrap}
+.syms dd{margin:0}
+.def{margin:.9rem 0;padding:.5rem .9rem;border-left:3px dotted var(--muted);font-size:.96rem;background:color-mix(in srgb,var(--card) 60%,transparent)}
+.def>b:first-child{font-family:var(--font-head);font-size:1.08rem;font-weight:600}
+.tip{margin:1rem 0;padding:.7rem 1rem;border:1.5px dashed var(--mat);border-radius:4px;font-size:.97rem}
+.warn{margin:1rem 0;padding:.7rem 1rem;border:2px solid var(--bad);border-radius:4px;font-size:.97rem;background:color-mix(in srgb,var(--bad) 7%,transparent)}
+.mnemo{margin:1rem 0;padding:.7rem 1rem;background:var(--hl);border-radius:4px;font-size:.98rem}
+.fun{margin:1.2rem 0;padding:.8rem 1rem;border:2px dashed var(--muted);border-radius:10px;background:var(--card);font-size:.98rem}
+.fun-h{display:block;margin-bottom:.35rem;font-family:var(--font-head);font-size:1.15rem;font-weight:600;letter-spacing:.02em}
+.meta{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--frc);border-radius:4px;background:color-mix(in srgb,var(--frc) 6%,transparent)}
+.weld{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--weld);border-radius:4px;background:color-mix(in srgb,var(--weld) 7%,transparent)}
+.weld>b:first-child{font-family:var(--font-head);font-size:1.15rem;font-weight:600;color:var(--weld)}
+.hp{display:inline-block;font-size:.72rem;font-weight:700;padding:1px 7px;border-radius:9px;background:var(--weld);color:var(--card);vertical-align:middle;margin-left:4px;white-space:nowrap}
+.recall{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:1rem 0}
+.recall>div{background:var(--card);border:1.5px solid var(--line);border-radius:4px;padding:8px 12px;font-size:.92rem}
+.recall .f{font-family:var(--font-math);font-size:1.2rem;margin-bottom:.2rem}
+@media (max-width:640px){.recall{grid-template-columns:1fr}}
+.hist{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:1rem 0}
+.hist>div{background:var(--card);border:1.5px solid var(--weld);border-radius:4px;padding:8px 12px;font-size:.93rem}
+.hist .yr{font-family:var(--font-head);font-size:1.6rem;font-weight:700;color:var(--weld);line-height:1}
+@media (max-width:720px){.hist{grid-template-columns:1fr}}
+
+/* manipulations */
+.lab{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:14px 16px 12px;margin:1.4rem 0}
+.lab-h{font-family:var(--font-head);font-size:1.3rem;font-weight:600;margin:0 0 .2rem}
+.lab-sub{margin:0 0 .6rem;color:var(--muted);font-size:.92rem}
+.lab svg{display:block;width:100%;height:auto;color:var(--ink);font-family:var(--font-body);touch-action:pan-y}
+.ctrl{display:grid;grid-template-columns:minmax(110px,auto) 1fr minmax(92px,auto);gap:4px 12px;align-items:center;margin:.5rem 0}
+.ctrl label{font-size:.95rem}
+.ctrl output{font-family:var(--font-math);font-size:1.08rem;text-align:right;white-space:nowrap}
+@media (max-width:520px){.ctrl{grid-template-columns:1fr auto}.ctrl input[type=range]{grid-column:1/-1;grid-row:2}}
+input[type=range]{width:100%;accent-color:var(--ink);height:28px;margin:0}
+input.r-sig{accent-color:var(--sig)} input.r-tau{accent-color:var(--tau)} input.r-frc{accent-color:var(--frc)} input.r-mat{accent-color:var(--mat)} input.r-eps{accent-color:var(--eps)}
+.btns{display:flex;flex-wrap:wrap;gap:6px;margin:.5rem 0}
+.btn{font-family:var(--font-body);font-size:.9rem;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 13px;cursor:pointer;line-height:1.3}
+.btn:hover{background:var(--paper-2)}
+.btn.on{background:var(--ink);color:var(--paper)}
+.btn.play{border-color:var(--eps);color:var(--eps);font-weight:700}
+.btn:disabled{opacity:.45;cursor:default}
+.readout{font-family:var(--font-math);font-size:1.08rem;background:var(--paper-2);border-radius:4px;padding:.5rem .8rem;margin:.5rem 0;overflow-x:auto;display:flex;flex-wrap:wrap;gap:.2em 1.3em}
+.readout>span{white-space:nowrap}
+.status{font-size:.97rem;margin:.5rem 0;padding:.5rem .8rem;border-left:4px solid var(--eps);background:color-mix(in srgb,var(--eps) 6%,transparent);border-radius:0 4px 4px 0;min-height:2.6em}
+.radios{display:flex;flex-wrap:wrap;gap:6px 14px;margin:.4rem 0;font-size:.95rem}
+.radios label{display:inline-block;cursor:pointer}
+.radios input{margin:0 6px 0 0;vertical-align:middle}
+
+/* svg */
+svg text{fill:currentColor;font-size:13px}
+svg .lbl{font-size:12.5px;fill:var(--muted)}
+svg .mth{font-family:var(--font-math);font-size:16px}
+svg .ttl{font-family:var(--font-head);font-size:15px;font-weight:600}
+svg .axis{stroke:var(--ink);stroke-width:1.4;fill:none}
+svg .tick{stroke:var(--muted);stroke-width:1}
+svg .gridbg{stroke:var(--line);stroke-width:1}
+svg .ref{stroke:var(--muted);stroke-width:1.3;stroke-dasharray:4 3;fill:none}
+.arr line{stroke:currentColor}
+.arr polygon{fill:currentColor}
+
+/* tableaux */
+.tbl-wrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch}
+table.data{border-collapse:collapse;width:100%;font-size:.94rem;background:var(--card)}
+table.data th,table.data td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:middle}
+table.data th{font-family:var(--font-head);font-weight:600;font-size:1.05rem;background:var(--paper-2)}
+table.data td.n{font-family:var(--font-math);white-space:nowrap}
+table.data tr.now td{background:var(--hl)}
+
+/* parcours */
+.route{list-style:none;padding:0;margin:1rem 0;position:relative}
+.route::before{content:"";position:absolute;left:17px;top:10px;bottom:10px;width:4px;background:var(--line);border-radius:2px}
+.route li{position:relative;padding:0 0 14px 52px;margin:0}
+.route li .dot{position:absolute;left:4px;top:0;width:30px;height:30px;border-radius:50%;border:3px solid var(--ink);background:var(--card);font-family:var(--font-head);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+.route li b{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.route li p{margin:.1rem 0 0;font-size:.95rem}
+.series{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:.8rem 0}
+.series>div{background:var(--card);border:1.5px solid var(--line);padding:8px 10px;border-radius:4px;font-size:.88rem}
+.series>div.here{border:2.5px solid var(--ink)}
+.series b{display:block;font-family:var(--font-head);font-size:1.05rem}
+@media (max-width:700px){.series{grid-template-columns:1fr 1fr}}
+
+/* exercices et quiz */
+.exo{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--ink);padding:6px 20px 12px;margin:1.2rem 0;border-radius:4px}
+.exo.defi{border-left-color:var(--weld)}
+.exo h4{margin-top:.8rem}
+.exo .lvtag{font-family:var(--font-body);font-size:.85rem;font-weight:400;color:var(--muted);margin-left:.4rem}
+.exo .q{margin:.25rem 0}
+details{margin:.6rem 0}
+summary{cursor:pointer;font-weight:700;padding:4px 0}
+details .sol{padding:.4rem .9rem;border-left:3px solid var(--mat);margin:.4rem 0}
+details .sol p{margin:.45em 0}
+.qz{background:var(--card);border:1.5px solid var(--line);border-radius:6px;padding:10px 16px;margin:.8rem 0}
+.qz-q{margin:.3rem 0 .6rem}
+.qz-o{display:flex;flex-direction:column;gap:6px}
+.qz-b{text-align:left;font-family:var(--font-body);font-size:.97rem;padding:8px 12px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:5px;cursor:pointer}
+.qz-b:hover{border-color:var(--ink)}
+.qz-b.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--card))}
+.qz-b.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--card))}
+.qz-e{font-size:.94rem;margin:.6rem 0 .2rem}
+.score{position:sticky;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);display:inline-block;background:var(--ink);color:var(--paper);padding:6px 14px;border-radius:999px;font-size:.95rem;margin:.6rem 0}
+
+/* fiche mémoire */
+.fiche{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:2.5px solid var(--ink);background:var(--card);margin:1rem 0}
+.fiche>div{padding:12px 14px;border-right:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}
+.fiche>div:nth-child(3n){border-right:0}
+.fiche>div:nth-last-child(-n+3){border-bottom:0}
+.fiche .ic{font-size:1.9rem;line-height:1}
+.fiche h4{margin:.3rem 0 .2rem;font-size:1.15rem}
+.fiche .f{font-family:var(--font-math);font-size:1.1rem;margin:.2rem 0}
+.fiche p{margin:.2rem 0 0;font-size:.88rem;color:var(--muted)}
+@media (max-width:720px){.fiche{grid-template-columns:1fr 1fr}.fiche>div{border-right:1.5px solid var(--ink)!important;border-bottom:1.5px solid var(--ink)!important}.fiche>div:nth-child(2n){border-right:0!important}.fiche>div:last-child{border-bottom:0!important}}
+@media (max-width:440px){.fiche{grid-template-columns:1fr}.fiche>div{border-right:0!important}}
+.gloss{display:grid;grid-template-columns:minmax(150px,230px) 1fr;gap:0;border-top:1.5px solid var(--line);margin:1rem 0}
+.gloss dt,.gloss dd{border-bottom:1.5px solid var(--line);padding:7px 8px;margin:0}
+.gloss dt{font-weight:700}
+.gloss dd{font-size:.95rem}
+@media (max-width:600px){.gloss{grid-template-columns:1fr}.gloss dt{border-bottom:0;padding-bottom:0}}
+.check label{display:flex;gap:10px;align-items:flex-start;padding:5px 0;cursor:pointer}
+.check input{margin-top:.35em;width:18px;height:18px;accent-color:var(--mat);flex:none}
+footer{padding:40px 0 60px;color:var(--muted);font-size:.9rem}
+hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
+@media (max-width:700px){.m{white-space:normal}.fx{padding:12px 10px}.fx .big{font-size:1.4rem}}
+@media (max-width:400px){body{font-size:16.5px}.wrap{padding:0 14px}.lab{padding:12px 10px}}
+
+/* compléments de la série Rupture */
+.btn.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,var(--card))}
+.btn.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--card))}
+.ctrl[hidden]{display:none}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="wrap wide">
+  <div class="title-block">
+    <div class="tb-main">
+      <div>
+        <p class="tb-series">Mécanique de la rupture, série 1 : de la cassure au défaut acceptable</p>
+        <h1>Ténacité et défauts : K<sub>IC</sub>, CTOD, J et diagramme FAD</h1>
+      </div>
+      <button class="theme-btn" id="themeBtn" type="button" aria-label="Changer de thème">◐ Thème : automatique</button>
+    </div>
+    <div class="tb-cells">
+      <div><small>Cours</small><b>4 sur 4 : juger un défaut, du laboratoire à la soudure</b></div>
+      <div><small>Durée conseillée</small><b>≈ 2 h 30 à 3 h avec les exercices</b></div>
+      <div><small>Prérequis</small><b>cours 1 à 3, surtout K = σY√a (cours 3) et la résilience Charpy (cours 2)</b></div>
+      <div><small>À la fin tu sais</small><b>utiliser K<sub>IC</sub>, en connaître la mesure et ses limites, lire un CTOD et une courbe J, et placer un défaut de soudure sur un diagramme FAD</b></div>
+    </div>
+  </div>
+  <p class="lede">Un contrôle par ultrasons trouve un manque de fusion de 16 mm dans une soudure de réservoir. Réparer, c'est vidanger, gouger, ressouder, recontrôler, traiter thermiquement peut-être : des semaines d'arrêt, et une nouvelle soudure qui aura ses propres défauts. Laisser en service, c'est accepter un risque. Entre les deux, l'ingénieur calcule. Le cours 3 a donné la sévérité du défaut, son facteur K. Ce cours donne la résistance du matériau, sa <b>ténacité</b> : K<sub>IC</sub> quand il est fragile, le <b>CTOD</b> (l'ouverture du fond de fissure) ou l'<b>intégrale J</b> quand il plastifie. Puis il réunit tout dans un seul dessin, le <b>diagramme d'évaluation de la défaillance</b> (FAD) : un point dans une zone sûre, et le défaut peut rester ; un point dehors, et il faut réparer.</p>
+
+  <h4>Le code couleur de la série</h4>
+  <div class="cc" role="img" aria-label="Code couleur : les causes en rouge et violet, les propriétés du matériau en vert, les effets en bleu">
+    <div class="cc-box cc-cause"><small>Les causes</small><div class="cc-syms"><span class="sig">K</span><span class="sig">G</span><span class="sig">J</span><span class="tau">σ<sub>res</sub></span></div><p><span class="sig">rouge</span> : ce qui pousse la fissure (K, l'énergie libérée G, l'intégrale J, la contrainte σ) ; <span class="tau">violet</span> : ce qui aggrave (contraintes résiduelles, froid, épaisseur)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-link"><small>Les liens et paramètres</small><div class="cc-syms"><span class="mat">K<sub>IC</sub></span><span class="mat">J<sub>IC</sub></span><span class="mat">R<sub>e</sub></span><span class="mat">K<sub>mat</sub></span></div><p>en <span class="mat">vert</span> : la résistance du matériau (ténacités, limite d'élasticité, module E) et la géométrie (épaisseur B, largeur W)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-eff"><small>Les effets</small><div class="cc-syms"><span class="eps">a</span><span class="eps">δ</span><span class="eps">Δa</span><span class="gam">r<sub>Y</sub></span></div><p><span class="eps">bleu</span> : la fissure, son ouverture δ (CTOD), son avancée Δa ; <span class="gam">bleu-vert</span> : la zone plastique à sa pointe</p></div>
+  </div>
+  <div class="cc-more">
+    <div><b class="frc">Orange</b> : les actions extérieures, forces <span class="frc">F</span>.</div>
+    <div><b>Noir</b> : les vecteurs et la géométrie dessinée (éprouvettes, fissures, repères).</div>
+    <div><b class="wcol">Bronze</b> : les encadrés « métier » 🔥, tournés vers le soudage.</div>
+  </div>
+</div>
+</header>
+
+<nav class="toc" aria-label="Sommaire">
+  <div class="toc-in">
+    <a href="#avant">Avant de commencer</a>
+    <a href="#c1">1 Le critère K<sub>IC</sub></a>
+    <a href="#c2">2 L'épaisseur</a>
+    <a href="#c3">3 La mesure</a>
+    <a href="#c4">4 L'énergie G</a>
+    <a href="#c5">5 CTOD et J</a>
+    <a href="#c6">6 Le FAD</a>
+    <a href="#exos">Exercices</a>
+    <a href="#quiz-s">Quiz</a>
+    <a href="#fiche">Fiche mémoire</a>
+    <a href="#gloss">Glossaire</a>
+    <a href="#check">Check-list</a>
+  </div>
+</nav>
+
+<main>
+<section class="chap" id="avant">
+<div class="wrap">
+  <h3 style="margin-top:0">Avant de commencer</h3>
+  <h4>Le cours 3 en trois cases</h4>
+  <div class="recall">
+    <div><div class="f"><span class="sig">σ<sub>r</sub></span> ∝ 1/√<span class="eps">a</span></div>Les défauts gouvernent la rupture : un cristal parfait supporterait E/10, mais une fissure concentre l'effort à sa pointe. La contrainte de rupture varie comme l'inverse de la racine de la taille du défaut.</div>
+    <div><div class="f"><span class="sig">σ<sub>yy</sub></span> = <span class="sig">K</span>/√(2π<span class="mat">r</span>)</div>Autour de toutes les fissures, le champ de contrainte a la même forme ; un seul nombre, le facteur d'intensité de contrainte K, en règle le volume. Deux fissures de même K sont équivalentes pour la matière.</div>
+    <div><div class="f"><span class="sig">K</span> = <span class="sig">σ</span>·<span class="mat">Y</span>·√<span class="eps">a</span></div>Y ≈ 1,77 pour une fissure centrale (a = demi-longueur), 1,99 débouchante, 1,13 noyée circulaire. a en mètres ; les contraintes résiduelles s'ajoutent à la contrainte appliquée.</div>
+  </div>
+
+  <div class="def"><b>📘 Ce que ce cours résume</b> : les démonstrations les plus longues (fermeture virtuelle d'Irwin, calcul de la correction de Dugdale, définition de J par un contour) ne sont données ici que par leurs résultats ; elles ne sont pas nécessaires pour utiliser ces outils.</div>
+
+  <div class="def"><b>🔎 Quatre remarques de lecture</b>
+    <p><b>1. Condition sur le ligament.</b> On lit parfois « condition sur la longueur du ligament à fracturer : a &gt; 50 r<sub>Y</sub> » : il faut lire <b>(w − a) &gt; 50 r<sub>Y</sub></b>, le ligament étant la partie non fissurée, de longueur w − a. Avec r<sub>Y</sub> = (1/6π)(K<sub>IC</sub>/R<sub>e</sub>)², 50 r<sub>Y</sub> ≈ 2,65 (K<sub>IC</sub>/R<sub>e</sub>)², arrondi à la valeur normalisée 2,5.</p>
+    <p><b>2. Le facteur √3.</b> Écrire σ<sub>yy</sub> = √3·R<sub>e</sub> à la frontière plastique en déformation plane est une convention d'Irwin, qui donne r<sub>Y</sub> = (1/6π)(K/R<sub>e</sub>)². Le critère de von Mises appliqué au champ du cours 3 donne, devant la pointe et pour ν = 0,3, une zone encore plus petite (manipulation 4 du cours 3). Retiens la valeur conventionnelle, c'est celle des normes.</p>
+    <p><b>3. La grande égalité.</b> L'égalité parfois écrite « résilience K = WOF = 2γ<sub>s</sub> = J<sub>IC</sub> = G<sub>IC</sub> » n'est qu'un ordre d'idées pour les matériaux quasi fragiles. La résilience Charpy est mesurée en choc, sur une entaille émoussée, et inclut la plasticité de toute l'éprouvette ; 2γ<sub>s</sub> ne vaut que pour une rupture parfaitement fragile. Pour un acier, ces grandeurs diffèrent souvent d'un facteur 10 à 1 000. Le symbole K de la résilience (KC, cours 2) n'a rien à voir avec le facteur d'intensité K.</p>
+    <p><b>4. Unités anglo-saxonnes.</b> Les graphiques américains sont souvent gradués en ksi√in et ksi : 1 ksi√in = 1,099 MPa·√m et 1 ksi = 6,895 MPa. Ainsi, 145 ksi√in font 159 MPa·√m, et 250 ksi font 1 724 MPa.</p>
+  </div>
+
+  <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage</b>
+    <p>(Formation IWE : <i>International Welding Engineer</i>, ingénieur international en soudage.) La mécanique de la rupture est l'outil de l'<b>évaluation critique d'ingénierie</b> (en anglais ECA, <i>engineering critical assessment</i>), aussi appelée aptitude au service : décider si un défaut trouvé par contrôle non destructif (CND) peut rester, et fixer des critères d'acceptation fondés sur le calcul plutôt que sur l'habitude. Elle est au cœur des normes BS 7910 (Royaume-Uni), R6 (nucléaire britannique) et API 579 (pétrochimie). Dans l'offshore et les pipelines, les soudures sont qualifiées par des <b>essais CTOD</b> en métal fondu et en zone affectée thermiquement (ZAT), et les critères d'acceptation des contrôles automatiques par ultrasons des soudures de pipelines sont souvent issus d'une ECA.</p>
+  </div>
+
+  <h4>La série en quatre cours</h4>
+  <div class="series">
+    <div><b>1 Les visages</b>Ductile ou fragile : lire une cassure et remonter à sa cause.</div>
+    <div><b>2 Charpy</b>La résilience et la transition ductile-fragile des aciers.</div>
+    <div><b>3 Le facteur K</b>Du défaut à la fissure : concentration et intensité de contrainte.</div>
+    <div class="here"><b>4 Ténacité et défauts</b>K<sub>IC</sub>, CTOD, J et le diagramme FAD : un défaut est-il acceptable ?</div>
+  </div>
+
+  <h4>Le plan du cours</h4>
+  <ol class="route">
+    <li><span class="dot">1</span><b>Le critère K<sub>IC</sub></b><p>K = K<sub>IC</sub> : contrainte admissible, taille critique, et pourquoi résistance et ténacité s'opposent.</p></li>
+    <li><span class="dot">2</span><b>Épaisseur et zone plastique</b><p>La zone plastique r<sub>Y</sub>, la déformation plane et les tôles épaisses.</p></li>
+    <li><span class="dot">3</span><b>Mesurer K<sub>IC</sub></b><p>Éprouvettes, préfissure, F<sub>Q</sub>, et des conditions de validité très exigeantes.</p></li>
+    <li><span class="dot">4</span><b>L'approche énergétique G</b><p>L'énergie libérée par la fissure, G = K²/E, et ce qu'elle révèle.</p></li>
+    <li><span class="dot">5</span><b>CTOD et intégrale J</b><p>Quand l'acier plastifie : l'ouverture du fond de fissure et la courbe de résistance.</p></li>
+    <li><span class="dot">6</span><b>Le diagramme FAD</b><p>Rupture fragile ou effondrement plastique : juger un défaut de soudure.</p></li>
+  </ol>
+</div>
+</section>
+<section class="chap" id="c1">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">1</div>
+    <div class="c-title"><h2>Le critère K<sub>IC</sub></h2><p>Quand l'intensité atteint la ténacité, la fissure part</p></div>
+    <div class="c-img"><span class="ico">⚖️</span><span><small>Image à retenir</small>La balance : sur un plateau K (le défaut et la charge), sur l'autre K<sub>IC</sub> (le matériau) ; quand K l'emporte, tout bascule</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la balance</span></div>
+    <p>Charge progressivement une pièce fissurée : le facteur d'intensité K = σY√a augmente avec la contrainte (cours 3). À un certain moment, la matière de la pointe ne tient plus et la fissure se propage brutalement. La valeur de K à cet instant est une <b>propriété du matériau</b> : le <b>facteur d'intensité de contrainte critique</b>, ou <b>ténacité</b>, noté K<sub>IC</sub> (I pour le mode I d'ouverture, C pour critique).</p>
+    <div class="fx"><div class="big"><span class="sig">K</span> = <span class="sig">σ</span>·<span class="mat">Y</span>·√<span class="eps">a</span> &nbsp;≥&nbsp; <span class="mat">K<sub>IC</sub></span> &nbsp;⟹&nbsp; rupture</div><p class="cap">à gauche, la sollicitation (charge et défaut) ; à droite, la résistance du matériau à la propagation des fissures</p></div>
+    <p>C'est une balance : sur un plateau, ce que la structure impose à la fissure ; sur l'autre, ce que le matériau peut encaisser. Elle s'utilise dans trois sens :</p>
+    <ul>
+      <li>je connais le défaut, je cherche la <b>contrainte admissible</b> : σ<sub>r</sub> = K<sub>IC</sub>/(Y√a) ;</li>
+      <li>je connais la contrainte, je cherche la <b>taille critique</b> du défaut : a<sub>c</sub> = (K<sub>IC</sub>/(Yσ))² ;</li>
+      <li>je connais les deux, je cherche le <b>matériau</b> : il faut K<sub>IC</sub> &gt; σY√a, avec une marge.</li>
+    </ul>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Matériau</th><th>K<sub>IC</sub> (MPa·√m)</th></tr>
+      <tr><td>Verre</td><td class="n">0,5 à 1</td></tr>
+      <tr><td>Roches, céramiques</td><td class="n">1 à 5</td></tr>
+      <tr><td>Métaux fragiles (par exemple à basse température)</td><td class="n">5 à 10</td></tr>
+      <tr><td>Alliages d'aluminium</td><td class="n">≈ 30 à 40</td></tr>
+      <tr><td>Aciers</td><td class="n">50 à 150</td></tr>
+      <tr><td>Métaux ductiles purs</td><td class="n">150 à 200</td></tr>
+    </table></div>
+    <p class="mut" style="font-size:.9rem">Ordres de grandeur usuels.</p>
+  </div>
+
+  <div class="lab" id="m1">
+    <p class="lab-h">Manipulation 1 : la carte contrainte-défaut</p>
+    <p class="lab-sub">Pour une fissure débouchante (Y = 1,99), la courbe rouge σ<sub>r</sub> = K<sub>IC</sub>/(Y√a) sépare les défauts qui tiennent de ceux qui cassent ; la ligne verte est la limite d'élasticité R<sub>e</sub>. Choisis un matériau, puis place ton point (contrainte, taille de défaut). Échelles logarithmiques.</p>
+    <div class="btns" id="m1mat">
+      <button class="btn" data-k="verre" type="button">Verre</button>
+      <button class="btn" data-k="cer" type="button">Alumine</button>
+      <button class="btn" data-k="alu" type="button">Alliage d'aluminium</button>
+      <button class="btn" data-k="hle" type="button">Acier à haute limite d'élasticité</button>
+      <button class="btn on" data-k="acier" type="button">Acier de construction</button>
+      <button class="btn" data-k="froid" type="button">Acier au palier fragile</button>
+    </div>
+    <div class="ctrl"><label for="m1s">Contrainte <span class="sig">σ</span></label><input type="range" id="m1s" class="r-sig" min="0" max="1000" step="1" value="622"><output id="m1so"></output></div>
+    <div class="ctrl"><label for="m1a">Profondeur <span class="eps">a</span></label><input type="range" id="m1a" class="r-eps" min="0" max="1000" step="1" value="540"><output id="m1ao"></output></div>
+    <div class="btns"><button class="btn play" id="m1play" type="button">▶ Faire grandir le défaut</button></div>
+    <svg id="m1svg" role="img" aria-label="Carte contrainte en fonction de la taille de défaut, avec la courbe de rupture et la limite d'élasticité"></svg>
+    <div class="readout" id="m1r"></div>
+    <p class="status" id="m1msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">utiliser le critère, et ses limites</span></div>
+    <div class="def"><b>📖 Ténacité K<sub>IC</sub></b> : valeur critique du facteur d'intensité de contrainte en mode I, à laquelle une fissure se propage brutalement. Propriété du matériau, indépendante de la géométrie de chargement et de l'éprouvette (à condition de respecter les conditions de validité, chapitre 3). Elle caractérise <b>la résistance du matériau à la propagation des fissures</b>. Unité : MPa·√m.</div>
+    <div class="fx"><div class="row big" style="font-size:1.5rem"><span><span class="mat">K<sub>IC</sub></span> = <span class="sig">σ<sub>r</sub></span>·<span class="mat">Y</span>·√<span class="eps">a</span></span><span><span class="sig">σ<sub>r</sub></span> = <span class="frac"><span><span class="mat">K<sub>IC</sub></span></span><span><span class="mat">Y</span>√<span class="eps">a</span></span></span></span><span><span class="eps">a<sub>c</sub></span> = <span style="font-size:1.2em">(</span><span class="frac"><span><span class="mat">K<sub>IC</sub></span></span><span><span class="mat">Y</span><span class="sig">σ</span></span></span><span style="font-size:1.2em">)</span>²</span></div><p class="cap">σ<sub>r</sub> : contrainte nominale de rupture ; a<sub>c</sub> : taille critique de défaut pour la contrainte σ</p></div>
+    <p><b>Exemple.</b> Acier de K<sub>IC</sub> = 80 MPa·√m, fissure débouchante (Y = 1,99), σ = 200 MPa : <span class="m">a<sub>c</sub> = (80/(1,99 × 200))² = 0,201² = 0,0404 m ≈ <b>40 mm</b></span>. Avec un défaut de 5 mm : <span class="m">σ<sub>r</sub> = 80/(1,99 × √0,005) ≈ <b>569 MPa</b></span>, au-dessus de R<sub>e</sub> : la pièce plastifierait avant de casser.</p>
+    <p>Conséquence importante : la contrainte de rupture d'une pièce fissurée <b>n'est pas une propriété du matériau</b>. Elle dépend de sa ténacité (propriété du matériau) et de la taille des défauts (propriété de la fabrication).</p>
+    <h4>Résistance et ténacité : le grand compromis</h4>
+    <p>Le diagramme d'Ashby place les matériaux selon leur ténacité K<sub>C</sub> et leur limite d'élasticité σ<sub>y</sub>. Des polymères aux aciers, les deux augmentent ensemble ; les céramiques, résistantes mais peu tenaces, font exception. Les droites diagonales du diagramme, notées K<sub>C</sub>²/(πσ<sub>y</sub>²) = 0,1 mm, 1 mm, 10 mm, 100 mm, ont un sens simple : c'est la taille de défaut (demi-longueur d'une fissure centrale) pour laquelle rupture et plastification arrivent ensemble. Au-dessous, le matériau plastifie d'abord ; au-dessus, il casse avant de plastifier. Un acier de construction tolère des défauts de plusieurs centimètres, une céramique moins d'un dixième de millimètre.</p>
+    <p>Mais <b>à l'intérieur d'une même famille</b>, résistance et ténacité varient en sens inverse : en durcissant un acier par trempe ou par précipitation, on relève sa limite d'élasticité et l'on abaisse sa ténacité. Ces effets tiennent à l'aptitude du matériau à se déformer plastiquement en fond de fissure, pour en « lisser » l'effet.</p>
+    <div class="warn"><b>⚠️ Piège : ne pas confondre les trois K.</b> K (cours 3) est la sollicitation de la fissure. K<sub>IC</sub> est la ténacité du matériau. KC ou KCV (cours 2) est la <b>résilience</b> Charpy, une énergie par unité d'aire en J/cm². Seuls les deux premiers se comparent.</div>
+    <div class="warn"><b>⚠️ Piège : K<sub>IC</sub> dépend de la température.</b> Comme l'énergie Charpy, la ténacité des aciers ferritiques chute dans la transition ductile-fragile : quelques dizaines de MPa·√m au palier fragile, plus de 150 au palier ductile. Une taille critique calculée à +20 °C ne vaut rien à −30 °C.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « K sollicite, K<sub>IC</sub> résiste »</b>. Et pour la taille critique : « a<sub>c</sub> au carré, comme la ténacité sur la charge ».</div>
+    <div class="weld"><b>🔥 Plus résistant, moins tolérant</b>
+      <p>Les aciers à haute limite d'élasticité (S690, S960) permettent des structures plus légères, car on les calcule à des contraintes plus élevées. Mais a<sub>c</sub> varie comme (K<sub>IC</sub>/σ)² : si la contrainte de calcul double et que la ténacité baisse un peu, la taille critique est divisée par plus de quatre. Leurs soudures demandent donc des niveaux de qualité plus exigeants, des contrôles plus fins, et une maîtrise sévère de l'hydrogène et de la ZAT.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c2">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">2</div>
+    <div class="c-title"><h2>Épaisseur et zone plastique</h2><p>La surface glisse, le cœur est coincé</p></div>
+    <div class="c-img"><span class="ico">🥪</span><span><small>Image à retenir</small>Le sandwich : les tranches de pain (les surfaces) s'écrasent librement, la garniture (le cœur) est coincée entre elles</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le sandwich</span></div>
+    <p>La contrainte infinie prévue par l'élasticité à la pointe d'une fissure n'existe pas : dès qu'elle dépasse R<sub>e</sub>, la matière plastifie dans une petite <b>zone plastique</b> de taille r<sub>Y</sub>, qui « émousse » la fissure. Mais cette zone n'a pas la même taille partout le long du front de fissure.</p>
+    <ul>
+      <li>Près des <b>surfaces libres</b> de la pièce, rien n'empêche la matière de s'amincir : c'est l'état de <b>contrainte plane</b>. Elle glisse facilement, à 45° (cours 1) : la zone plastique est grande, et la cassure y forme des <b>lèvres de cisaillement</b> obliques.</li>
+      <li>Au <b>cœur</b> d'une pièce épaisse, la matière ne peut pas s'amincir, retenue par celle qui l'entoure : c'est la <b>déformation plane</b>. L'état est triaxial, le glissement est bridé, la zone plastique est environ trois fois plus petite, et la rupture s'ouvre à plat.</li>
+    </ul>
+    <p>Comme dans un sandwich qu'on écrase : les tranches de pain s'écrasent librement, la garniture, coincée, ne peut pas fuir. Plus le sandwich est épais, plus la garniture domine. Une <b>tôle mince</b> est presque entièrement en contrainte plane : elle plastifie beaucoup et paraît très tenace. Une <b>tôle épaisse</b> est surtout en déformation plane : elle résiste moins à la propagation. La ténacité « vraie », la plus faible, est celle de la déformation plane : c'est K<sub>IC</sub>.</p>
+  </div>
+
+  <div class="lab" id="m2">
+    <p class="lab-h">Manipulation 2 : l'épaisseur qui change tout</p>
+    <p class="lab-sub">En haut, la ténacité apparente K<sub>C</sub> en fonction de l'épaisseur B : elle descend vers K<sub>IC</sub> quand la tôle s'épaissit. En bas, la cassure vue dans l'épaisseur : zone plate au cœur, lèvres à 45° près des faces, dont la largeur suit la zone plastique en contrainte plane. Choisis un matériau et fais varier l'épaisseur.</p>
+    <div class="btns" id="m2mat">
+      <button class="btn on" data-k="hle" type="button">Acier HLE (K<sub>IC</sub> 60, R<sub>e</sub> 700)</button>
+      <button class="btn" data-k="alu" type="button">Alliage d'aluminium (K<sub>IC</sub> 30, R<sub>e</sub> 400)</button>
+      <button class="btn" data-k="acier" type="button">Acier de construction (K<sub>IC</sub> 120, R<sub>e</sub> 355)</button>
+    </div>
+    <div class="ctrl"><label for="m2B">Épaisseur <span class="mat">B</span></label><input type="range" id="m2B" class="r-mat" min="0" max="1000" step="1" value="500"><output id="m2Bo"></output></div>
+    <div class="btns"><button class="btn play" id="m2play" type="button">▶ De la tôle mince à la tôle épaisse</button></div>
+    <svg id="m2svg" role="img" aria-label="Ténacité apparente en fonction de l'épaisseur, et cassure vue dans l'épaisseur avec ses lèvres de cisaillement"></svg>
+    <div class="readout" id="m2r"></div>
+    <p class="status" id="m2msg" aria-live="polite"></p>
+    <p class="mut" style="font-size:.85rem;margin:0">Courbe K<sub>C</sub>(B) selon la relation empirique d'Irwin (1964), K<sub>C</sub> = K<sub>IC</sub>·√(1 + 1,4β²) avec β = (K<sub>IC</sub>/R<sub>e</sub>)²/B ; schéma de cassure illustratif.</p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">r<sub>Y</sub> et la condition d'épaisseur</span></div>
+    <p>Devant la pointe, la contrainte d'ouverture vaut K/√(2πr) (cours 3). On cherche où elle atteint la limite de plasticité : R<sub>e</sub> en contrainte plane, √3·R<sub>e</sub> en déformation plane, où la triaxialité relève le seuil (convention d'Irwin) :</p>
+    <div class="fx"><div class="row big" style="font-size:1.5rem"><span><span class="gam">r<sub>Y</sub></span> = <span class="frac"><span>1</span><span>2π</span></span><span style="font-size:1.15em">(</span><span class="frac"><span><span class="sig">K</span></span><span><span class="mat">R<sub>e</sub></span></span></span><span style="font-size:1.15em">)</span>² <small>contrainte plane</small></span><span><span class="gam">r<sub>Y</sub></span> = <span class="frac"><span>1</span><span>6π</span></span><span style="font-size:1.15em">(</span><span class="frac"><span><span class="sig">K</span></span><span><span class="mat">R<sub>e</sub></span></span></span><span style="font-size:1.15em">)</span>² <small>déformation plane</small></span></div><p class="cap">r<sub>Y</sub> en m avec K en MPa·√m et R<sub>e</sub> en MPa ; la zone est trois fois plus petite au cœur</p></div>
+    <p><b>Exemple.</b> K<sub>IC</sub> = 50 MPa·√m, R<sub>e</sub> = 500 MPa : (K/R<sub>e</sub>)² = 0,01 m. En contrainte plane, <span class="m">r<sub>Y</sub> = 0,01/(2π) = <b>1,6 mm</b></span> ; en déformation plane, <span class="m">0,01/(6π) = <b>0,53 mm</b></span>.</p>
+    <p>Pour qu'une éprouvette (ou une pièce) soit majoritairement en déformation plane, sa part en contrainte plane près des faces doit rester négligeable. La condition normalisée s'écrit :</p>
+    <div class="fx"><div class="big"><span class="mat">B</span> ≥ 2,5·<span style="font-size:1.15em">(</span><span class="frac"><span><span class="mat">K<sub>IC</sub></span></span><span><span class="mat">R<sub>e</sub></span></span></span><span style="font-size:1.15em">)</span>²</div><p class="cap">B : épaisseur ; cela revient à environ 50 fois la zone plastique de déformation plane</p></div>
+    <p>Pour l'exemple : <span class="m">B ≥ 2,5 × 0,01 = 0,025 m = <b>25 mm</b></span>. Pour un acier de construction très tenace (K<sub>IC</sub> = 150 MPa·√m, R<sub>e</sub> = 355 MPa) : <span class="m">2,5 × (150/355)² = <b>0,45 m</b></span>, soit 45 cm d'épaisseur ! On ne mesure pas un tel K<sub>IC</sub> : on passe au CTOD ou à J (chapitre 5).</p>
+    <div class="def"><b>📖 K<sub>C</sub> et K<sub>IC</sub></b> : K<sub>C</sub> est la ténacité apparente mesurée pour une épaisseur donnée, plus élevée pour les tôles minces ; elle n'est pas une propriété du seul matériau. K<sub>IC</sub> est sa valeur minimale, atteinte en déformation plane ; c'est la valeur prudente, utilisable pour toutes les épaisseurs.</div>
+    <div class="warn"><b>⚠️ Piège : la zone plastique croît comme K².</b> Doubler la ténacité, ou diviser R<sub>e</sub> par deux, multiplie r<sub>Y</sub> et l'épaisseur d'éprouvette nécessaire par quatre.</div>
+    <div class="warn"><b>⚠️ Piège : mince ne veut pas dire sûr.</b> Une tôle mince paraît plus tenace, mais elle a aussi une plus petite section : sa taille critique de défaut n'est pas forcément meilleure. Et une tôle épaisse se calcule toujours avec la valeur de déformation plane.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « 2π dehors, 6π dedans, 2,5 pour l'épaisseur »</b>. La surface (le pain) plastifie trois fois plus que le cœur (la garniture).</div>
+    <div class="weld"><b>🔥 Les soudures épaisses</b>
+      <p>Les nœuds de plateformes offshore, les viroles d'appareils à pression ou les tubes de fortes épaisseurs (50 à 150 mm) travaillent en déformation plane, avec en prime les contraintes résiduelles triaxiales du soudage multipasse. C'est pourquoi les essais de ténacité des soudures (CTOD, chapitre 5) se font de préférence sur des éprouvettes de <b>pleine épaisseur</b>, découpées dans le joint réel, et pourquoi l'Eurocode 3 partie 1-10 exige des nuances plus tenaces quand l'épaisseur augmente (cours 2).</p>
+    </div>
+  </div>
+</div>
+</section>
+<section class="chap" id="c3">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">3</div>
+    <div class="c-title"><h2>Mesurer K<sub>IC</sub></h2><p>Une petite éprouvette fendue, et des règles très strictes</p></div>
+    <div class="c-img"><span class="ico">🗜️</span><span><small>Image à retenir</small>La pince : on écarte les deux mâchoires d'une éprouvette fendue jusqu'à ce que la fente avance</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">l'essai de ténacité</span></div>
+    <p>Le principe est simple : on usine dans le matériau une entaille de longueur a connue, dans une éprouvette dont le facteur Y est connu ; on la charge en mode I jusqu'à la rupture ; la force de rupture donne K<sub>IC</sub> = σ<sub>r</sub>Y√a. Trois éprouvettes sont courantes :</p>
+    <ul>
+      <li>la <b>SENT</b> (<i>single edge notched tension</i>, entaillée sur un bord et tirée) ;</li>
+      <li>la <b>SENB</b> (<i>single edge notched bending</i>, entaillée sur un bord et fléchie), en flexion trois ou quatre points ;</li>
+      <li>la <b>CT</b> (<i>compact tension</i>, compacte de traction) : un bloc fendu, ouvert par deux goupilles, comme une pince qu'on écarte.</li>
+    </ul>
+    <p>Trois précautions font toute la difficulté :</p>
+    <ol>
+      <li><b>Une vraie fissure, pas une entaille.</b> Une entaille usinée a un rayon en fond ρ trop grand : la ténacité « mesurée » serait faussée vers le haut. On prolonge donc l'entaille par une <b>préfissure de fatigue</b> : quelques dizaines de milliers de cycles sous faible charge créent une fissure parfaitement aiguë.</li>
+      <li><b>Peu de plasticité.</b> La courbe force-ouverture doit rester presque droite jusqu'à la rupture.</li>
+      <li><b>Une éprouvette assez grande</b> devant la zone plastique, en particulier assez épaisse pour la déformation plane (chapitre 2).</li>
+    </ol>
+    <p>Si une seule condition n'est pas remplie, la valeur obtenue n'est qu'une ténacité provisoire, notée <b>K<sub>Q</sub></b>, et non K<sub>IC</sub>.</p>
+  </div>
+
+  <div class="lab" id="m3">
+    <p class="lab-h">Manipulation 3 : l'essai de ténacité virtuel</p>
+    <p class="lab-sub">Éprouvette CT de largeur W = 2B et de fissure a = W/2. Choisis le matériau et l'épaisseur, puis lance l'essai : la courbe force-ouverture se trace, la droite sécante à 95 % donne F<sub>Q</sub>, et les conditions de validité sont vérifiées une à une.</p>
+    <div class="btns" id="m3mat">
+      <button class="btn on" data-k="trem" type="button">Acier trempé (R<sub>e</sub> 1 200)</button>
+      <button class="btn" data-k="alu" type="button">Alliage d'aluminium 7075</button>
+      <button class="btn" data-k="froid" type="button">Acier de construction à −40 °C</button>
+      <button class="btn" data-k="amb" type="button">Acier de construction à +20 °C</button>
+    </div>
+    <div class="ctrl"><label for="m3B">Épaisseur <span class="mat">B</span></label><input type="range" id="m3B" class="r-mat" min="10" max="100" step="1" value="25"><output id="m3Bo"></output></div>
+    <div class="btns"><button class="btn play" id="m3play" type="button">▶ Lancer l'essai</button></div>
+    <svg id="m3svg" role="img" aria-label="Courbe force-ouverture d'un essai de ténacité, droite sécante à 95 % et conditions de validité"></svg>
+    <div class="readout" id="m3r"></div>
+    <p class="status" id="m3msg" aria-live="polite"></p>
+    <p class="mut" style="font-size:.85rem;margin:0">Modèle illustratif : la non-linéarité de la courbe croît avec la zone plastique ; la rupture survient quand K atteint la ténacité apparente de l'épaisseur choisie (chapitre 2).</p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">calcul de K<sub>Q</sub> et validité</span></div>
+    <p>Pour l'éprouvette CT, avec F la force, b l'épaisseur (notée B dans ce cours), w la largeur mesurée depuis l'axe des goupilles, et α = a/w :</p>
+    <div class="fx"><div class="big" style="font-size:1.25rem"><span class="sig">K</span> = <span class="frac"><span><span class="frc">F</span></span><span><span class="mat">B</span>√<span class="mat">W</span></span></span>·<span class="frac"><span>2 + α</span><span>(1 − α)<sup>3/2</sup></span></span>·[0,886 + 4,64α − 13,32α² + 14,72α³ − 5,6α⁴]</div><p class="cap">valable pour 0,2 ≤ α ≤ 1 environ ; pour α = 0,5, le facteur vaut 9,66</p></div>
+    <p>Pour la SENB en flexion trois points (portée L = 4w), on calcule d'abord la contrainte nominale de flexion σ = 3FL/(2bw²), puis K = σY√a avec Y = 1,93 − 3,07α + 14,53α² − 25,11α³ + 25,80α⁴.</p>
+    <p><b>Exemple.</b> CT de B = 25 mm, W = 50 mm, a = 25 mm, en acier trempé (R<sub>e</sub> = 900 MPa) ; F<sub>Q</sub> = 30 kN. <span class="m">K<sub>Q</sub> = 30 000/(25 × √50) × 9,66 = 169,7 × 9,66 = 1 639 N·mm<sup>−3/2</sup> = <b>51,8 MPa·√m</b></span>. Validité : <span class="m">2,5 × (51,8/900)² = 0,0083 m = 8,3 mm</span>, inférieur à B, a et W − a (25 mm) ✅ ; si F<sub>max</sub> ≤ 1,1 F<sub>Q</sub> ✅, alors <b>K<sub>IC</sub> = 51,8 MPa·√m</b>.</p>
+    <h4>Les conditions de validité</h4>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Condition</th><th>Pourquoi</th></tr>
+      <tr><td class="n">a ≥ 2,5 (K<sub>Q</sub>/R<sub>e</sub>)²</td><td>fissure grande devant la zone plastique (≈ 50 r<sub>Y</sub>)</td></tr>
+      <tr><td class="n">W − a ≥ 2,5 (K<sub>Q</sub>/R<sub>e</sub>)²</td><td>ligament (la partie non fissurée) grand devant la zone plastique</td></tr>
+      <tr><td class="n">B ≥ 2,5 (K<sub>Q</sub>/R<sub>e</sub>)²</td><td>déformation plane majoritaire</td></tr>
+      <tr><td>préfissure de fatigue, ρ &lt; ρ<sub>c</sub></td><td>une vraie fissure aiguë</td></tr>
+      <tr><td class="n">F<sub>max</sub> ≤ 1,1 F<sub>Q</sub></td><td>courbe presque linéaire : comportement quasi fragile</td></tr>
+    </table></div>
+    <div class="def"><b>📖 F<sub>Q</sub></b> : force à l'intersection de la courbe de chargement et d'une droite issue de l'origine, de pente égale à <b>95 %</b> de la pente initiale. Elle repère la fin du domaine quasi linéaire ; elle correspond à une avancée apparente de la fissure d'environ 2 % de sa longueur. Si la courbe casse avant de l'atteindre, F<sub>Q</sub> = F<sub>max</sub>.</div>
+    <p>Les normes d'essai sont l'ASTM E399 et l'ISO 12135. Pour l'acier très tenace du chapitre 2 (K<sub>IC</sub> ≈ 150 MPa·√m, R<sub>e</sub> = 355 MPa), il faudrait une éprouvette d'environ 45 cm d'épaisseur : en pratique, <b>on ne mesure jamais un K<sub>IC</sub> valide sur un acier de construction à température ambiante</b>. C'est la raison d'être du CTOD et de l'intégrale J (chapitre 5).</p>
+    <div class="warn"><b>⚠️ Piège : K<sub>Q</sub> n'est pas K<sub>IC</sub>.</b> Tant que toutes les conditions ne sont pas vérifiées, la valeur reste provisoire. Une éprouvette trop petite donne en général un K<sub>Q</sub> <b>supérieur</b> au vrai K<sub>IC</sub> : l'erreur n'est pas prudente.</div>
+    <div class="warn"><b>⚠️ Piège : les unités de la formule CT.</b> Avec F en N, B et W en mm, K sort en N·mm<sup>−3/2</sup> : diviser par 31,62 pour obtenir des MPa·√m.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « préfissure, 95 %, 1,1 et 2,5 »</b> : une vraie fissure, la sécante à 95 %, F<sub>max</sub> sous 1,1 F<sub>Q</sub>, et toutes les dimensions au-dessus de 2,5 (K/R<sub>e</sub>)².</div>
+    <div class="weld"><b>🔥 Mesurer la ténacité d'une soudure</b>
+      <p>Sur un joint soudé, il faut placer la préfissure exactement dans la zone visée : axe du métal fondu, ou ZAT à gros grains au ras de la ligne de fusion, qu'on vérifie après essai par une coupe métallographique. Les contraintes résiduelles déforment souvent le front de la préfissure de fatigue ; les normes d'essais sur soudures (ISO 15653) prévoient des techniques pour les atténuer avant la préfissuration, comme une légère compression locale.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c4">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">4</div>
+    <div class="c-title"><h2>L'approche énergétique G</h2><p>L'énergie que la fissure libère en avançant</p></div>
+    <div class="c-img"><span class="ico">🏹</span><span><small>Image à retenir</small>L'arc bandé : son bois stocke de l'énergie élastique ; la fissure en libère une partie à chaque millimètre gagné</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">l'arc bandé</span></div>
+    <p>Une pièce chargée stocke de l'énergie élastique, comme un arc bandé ou un ressort comprimé. Quand une fissure s'allonge, la pièce devient plus souple : une partie de cette énergie se libère. Griffith (cours 3) a eu l'idée de faire le bilan : la fissure avance si l'énergie libérée suffit à « payer » la création des nouvelles surfaces.</p>
+    <p>L'énergie libérée par mètre carré de fissure nouvelle s'appelle le <b>taux de restitution de l'énergie</b> G (en J/m²). Elle existe pour tout chargement, même avant la rupture : c'est la « force motrice » de la fissure, comme K. Quand G atteint une valeur critique <b>G<sub>IC</sub></b>, l'énergie qu'il faut pour rompre, la fissure se propage. G<sub>IC</sub> est, comme K<sub>IC</sub>, une propriété du matériau.</p>
+    <p>Pour un verre, G<sub>IC</sub> vaut à peine plus que l'énergie des deux surfaces créées, quelques J/m². Pour un acier, la pointe plastifie et l'énergie dissipée se compte en <b>dizaines de milliers</b> de J/m² : c'est la plasticité qui fait la ténacité des métaux. Et G et K disent la même chose, d'une autre façon : <b>G = K²/E</b> (à un facteur 1 − ν² près).</p>
+  </div>
+
+  <div class="lab" id="m4">
+    <p class="lab-h">Manipulation 4 : le triangle de l'énergie</p>
+    <p class="lab-sub">En haut, la courbe force-déplacement d'une éprouvette fissurée, avant (pente 1/C<sub>1</sub>) et après (pente 1/C<sub>2</sub>) une petite avancée de la fissure. L'aire du triangle OAB (bleu-vert) est l'énergie disponible pour la rupture, à force imposée comme à déplacement imposé. En bas, G<sub>IC</sub> = K<sub>IC</sub>²/E pour cinq matériaux.</p>
+    <div class="btns" id="m4mode">
+      <button class="btn on" data-k="F" type="button">Force imposée</button>
+      <button class="btn" data-k="u" type="button">Déplacement imposé</button>
+    </div>
+    <div class="ctrl"><label for="m4da">Avancée <span class="eps">δa</span></label><input type="range" id="m4da" class="r-eps" min="0" max="100" step="1" value="40"><output id="m4dao"></output></div>
+    <div class="btns"><button class="btn play" id="m4play" type="button">▶ Charger, fissurer, décharger</button></div>
+    <svg id="m4svg" role="img" aria-label="Courbes de chargement avant et après extension de la fissure et aire OAB ; énergies de rupture de cinq matériaux"></svg>
+    <div class="readout" id="m4r"></div>
+    <p class="status" id="m4msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">G, complaisance et équivalence avec K</span></div>
+    <p><b>Le bilan</b> : le travail δW fourni par les forces extérieures pendant que la fissure gagne l'aire δS se partage entre la variation d'énergie élastique stockée δU<sub>e</sub> et l'énergie de rupture δU<sub>r</sub> :</p>
+    <div class="fx"><div class="row big" style="font-size:1.45rem"><span>δ<span class="frc">W</span> = δU<sub>e</sub> + δU<sub>r</sub></span><span><span class="sig">G</span> = <span class="frac"><span>δU<sub>r</sub></span><span>δ<span class="eps">S</span></span></span></span></div><p class="cap">δ : « petite variation de » ; à force imposée, δU<sub>r</sub> = +δU<sub>e</sub> ; à déplacement imposé, δU<sub>r</sub> = −δU<sub>e</sub> ; dans les deux cas, δU<sub>r</sub> = aire OAB</p></div>
+    <div class="def"><b>📖 Complaisance C</b> : souplesse de l'éprouvette, inverse de la pente élastique, définie par u = C·F (u : déplacement du point d'application de la force). Plus la fissure est longue, plus l'éprouvette est complaisante. Pour une éprouvette d'épaisseur B :</div>
+    <div class="fx"><div class="big"><span class="sig">G</span> = <span class="frac"><span><span class="frc">F</span>²</span><span>2<span class="mat">B</span></span></span>·<span class="frac"><span>d<span class="mat">C</span></span><span>d<span class="eps">a</span></span></span></div><p class="cap">on mesure la complaisance de plusieurs éprouvettes de fissures différentes, on en déduit la pente dC/da, et la force de rupture donne G<sub>IC</sub></p></div>
+    <p><b>L'équivalence de G et K</b>, établie par George Irwin en refermant virtuellement la fissure sur une petite longueur :</p>
+    <div class="fx"><div class="row big" style="font-size:1.5rem"><span><span class="mat">G<sub>IC</sub></span> = <span class="frac"><span><span class="mat">K<sub>IC</sub></span>²</span><span><span class="mat">E</span></span></span>(1 − <span class="mat">ν</span>²) <small>déformation plane</small></span><span><span class="mat">G<sub>IC</sub></span> = <span class="frac"><span><span class="mat">K<sub>IC</sub></span>²</span><span><span class="mat">E</span></span></span> <small>contrainte plane</small></span></div><p class="cap">K en Pa·√m et E en Pa : G en J/m² ; ν : coefficient de Poisson (0,3 pour l'acier, soit 1 − ν² = 0,91)</p></div>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Matériau</th><th>E</th><th>K<sub>IC</sub></th><th>G<sub>IC</sub> ≈ K<sub>IC</sub>²/E</th></tr>
+      <tr><td>Céramique</td><td class="n">200 GPa</td><td class="n">3 MPa·√m</td><td class="n">45 J/m²</td></tr>
+      <tr><td>Polymère</td><td class="n">1 GPa</td><td class="n">3 MPa·√m</td><td class="n">9 000 J/m²</td></tr>
+      <tr><td>Acier</td><td class="n">200 GPa</td><td class="n">100 MPa·√m</td><td class="n">50 000 J/m²</td></tr>
+    </table></div>
+    <p>La céramique et le polymère ont la même ténacité K<sub>IC</sub> : à défaut et géométrie égaux, ils cassent sous la <b>même force</b>. Mais le polymère, deux cents fois plus souple, absorbe deux cents fois plus d'énergie avant de rompre.</p>
+    <div class="def"><b>📖 Travail de rupture</b> (en anglais WOF, <i>work of fracture</i>) : aire totale sous la courbe force-déplacement d'un essai mené jusqu'à rupture complète, divisée par l'aire du ligament rompu. C'est un G<sub>IC</sub> moyen sur toute la rupture, plus facile à mesurer mais moins précis.</div>
+    <div class="warn"><b>⚠️ Piège : G est un taux, en J/m².</b> Ce n'est pas une énergie totale : c'est une énergie par unité d'aire de fissure créée. Ne pas la comparer à des joules Charpy.</div>
+    <div class="warn"><b>⚠️ Piège : même K<sub>IC</sub> ne veut pas dire même G<sub>IC</sub>.</b> Le module E intervient : un matériau souple a un G<sub>IC</sub> bien plus grand qu'un matériau rigide de même ténacité.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « G = K² sur E »</b>, la même information en énergie. Et l'aire OAB, le triangle de l'arc qui se détend.</div>
+    <div class="weld"><b>🔥 Pourquoi l'acier « boit » des milliers de fois plus que le verre</b>
+      <p>L'énergie de surface d'un acier est de l'ordre de 2 J/m², la même que celle d'une céramique. Si son G<sub>IC</sub> atteint 50 000 J/m², c'est que presque toute l'énergie part dans la <b>déformation plastique</b> de la zone en pointe de fissure. Tout ce qui gêne cette plasticité (froid, triaxialité des fortes épaisseurs, ZAT dure et à gros grains, cours 1 et 2) fait chuter la ténacité. Et quand la plasticité devient importante, G et K ne suffisent plus : on les généralise par l'intégrale J (chapitre 5).</p>
+    </div>
+  </div>
+</div>
+</section>
+<section class="chap" id="c5">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">5</div>
+    <div class="c-title"><h2>CTOD et intégrale J</h2><p>Quand l'acier plastifie avant de casser</p></div>
+    <div class="c-img"><span class="ico">🐊</span><span><small>Image à retenir</small>La gueule du crocodile : avant d'avancer, le fond de la fissure s'ouvre et s'arrondit ; on mesure l'écartement de ses mâchoires</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la fissure qui s'émousse</span></div>
+    <p>On distingue trois situations :</p>
+    <ul>
+      <li><b>la mécanique linéaire élastique de la rupture</b> (MLER) : zone plastique minuscule, K et K<sub>IC</sub> suffisent ;</li>
+      <li><b>la plasticité confinée</b> : zone plastique petite mais non négligeable ; on corrige la MLER en allongeant fictivement la fissure ;</li>
+      <li><b>la plasticité étendue</b> : la zone plastique est comparable à la fissure ou au ligament ; c'est le cas des aciers de construction et de leurs soudures à température ambiante. Il faut d'autres outils.</li>
+    </ul>
+    <p>Dans un acier tenace, la pointe de fissure ne reste pas aiguë sous charge : elle <b>s'émousse</b>, s'arrondit et s'ouvre, comme la gueule d'un crocodile. L'ouverture de ce fond de fissure, de l'ordre du dixième de millimètre, se mesure : c'est le <b>CTOD</b> (en anglais <i>crack tip opening displacement</i>, déplacement d'ouverture en fond de fissure). Plus l'acier est tenace, plus la fissure s'ouvre avant d'avancer.</p>
+    <p>Ensuite, la fissure avance par <b>déchirure ductile</b> (les cupules du cours 1), et il faut de plus en plus d'énergie pour la faire avancer encore : la résistance croît avec l'avancée. On la décrit par une <b>courbe de résistance</b>, ou courbe R, en fonction de l'intégrale J, une généralisation de l'énergie G aux matériaux qui plastifient.</p>
+  </div>
+
+  <div class="lab" id="m5">
+    <p class="lab-h">Manipulation 5 : la gueule qui s'ouvre et la courbe J</p>
+    <p class="lab-sub">En haut, le fond de fissure grossi : en augmentant K, il s'émousse ; le CTOD δ se lit à l'intersection des lèvres et de deux droites à 45° issues de la pointe. En bas, la courbe de résistance J(Δa) d'un acier, la droite d'émoussement décalée de 0,2 mm, et la valeur J<sub>IC</sub> à leur intersection.</p>
+    <div class="btns" id="m5mat">
+      <button class="btn on" data-k="s355" type="button">Acier S355, palier ductile</button>
+      <button class="btn" data-k="zat" type="button">ZAT à gros grains</button>
+      <button class="btn" data-k="mf" type="button">Métal fondu tenace</button>
+    </div>
+    <div class="ctrl"><label for="m5K">Sollicitation <span class="sig">K</span></label><input type="range" id="m5K" class="r-sig" min="5" max="250" step="1" value="60"><output id="m5Ko"></output></div>
+    <div class="ctrl"><label for="m5m">Facteur <span class="mat">m</span></label><input type="range" id="m5m" class="r-mat" min="10" max="20" step="1" value="15"><output id="m5mo"></output></div>
+    <div class="btns"><button class="btn play" id="m5play" type="button">▶ Charger</button></div>
+    <svg id="m5svg" role="img" aria-label="Fond de fissure émoussé avec la mesure du CTOD, et courbe de résistance J avec la détermination de JIC"></svg>
+    <div class="readout" id="m5r"></div>
+    <p class="status" id="m5msg" aria-live="polite"></p>
+    <p class="mut" style="font-size:.85rem;margin:0">E = 210 GPa, ν = 0,3. Courbes J(Δa) illustratives, de la forme J = C·Δa<sup>0,5</sup> ; droite d'émoussement J = 2R<sub>e</sub>·Δa.</p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">corrections, CTOD, J et leurs liens</span></div>
+    <h4>Plasticité confinée : allonger la fissure</h4>
+    <p>Irwin plafonne la contrainte à R<sub>e</sub> dans la zone plastique et décale le champ pour conserver l'effort transmis : tout se passe comme si la fissure était plus longue de r<sub>Y</sub>. Dugdale et Barenblatt modélisent la zone plastique par une bande de longueur r<sub>p</sub> où règne R<sub>e</sub> ; pour σ ≪ R<sub>e</sub>, r<sub>p</sub> ≈ (a/2)(πσ/(2R<sub>e</sub>))². Les deux corrections donnent des résultats comparables :</p>
+    <div class="fx"><div class="big"><span class="mat">K<sub>IC</sub></span> = <span class="sig">σ<sub>r</sub></span>·<span class="mat">Y</span>·√(<span class="eps">a</span> + <span class="gam">r<sub>Y</sub></span>)</div><p class="cap">comme r<sub>Y</sub> dépend lui-même de K, on obtient une équation du second degré en K<sub>IC</sub></p></div>
+    <h4>Le CTOD</h4>
+    <div class="def"><b>📖 CTOD δ</b> : écartement des lèvres de la fissure émoussée, mesuré à l'intersection des lèvres et de deux droites à 45° issues de la pointe (soit un angle droit). Il s'exprime en mm. Une analyse élasto-plastique donne, en déformation plane :</div>
+    <div class="fx"><div class="row big" style="font-size:1.45rem"><span><span class="eps">δ</span> = <span class="frac"><span><span class="sig">K</span>²(1 − <span class="mat">ν</span>²)</span><span><span class="mat">m</span>·<span class="mat">R<sub>e</sub></span>·<span class="mat">E</span></span></span></span><span><small>forme simplifiée :</small> <span class="eps">δ</span> ≈ <span class="frac"><span><span class="sig">K</span>²</span><span><span class="mat">R<sub>e</sub></span>·<span class="mat">E</span></span></span></span></div><p class="cap">m : facteur de contrainte, entre 1 et 2, qui dépend de l'éprouvette et du matériau (rapport R<sub>e</sub>/R<sub>m</sub>)</p></div>
+    <p><b>Exemple.</b> K = 60 MPa·√m, R<sub>e</sub> = 400 MPa, E = 210 GPa, m = 1,5 : <span class="m">δ = (60 × 10⁶)² × 0,91/(1,5 × 400 × 10⁶ × 210 × 10⁹) = 2,6 × 10⁻⁵ m = <b>0,026 mm</b></span>. Inversement, un CTOD exigé de 0,25 mm correspond à un K équivalent d'environ <b>186 MPa·√m</b> : une valeur qu'aucun essai de K<sub>IC</sub> valide ne pourrait mesurer sur un acier de construction.</p>
+    <p>On ne mesure pas δ directement. L'essai CTOD (une éprouvette SENB fléchie en trois points, souvent de pleine épaisseur) mesure l'ouverture à l'embouchure de l'entaille, le <b>CMOD</b> (<i>crack mouth opening displacement</i>), avec un capteur à lames (extensomètre) ; une relation, qui dépend de la géométrie et de l'écrouissage du matériau, en déduit le CTOD (annexe).</p>
+    <div class="def"><b>📖 Trois CTOD</b> : les normes (BS 7448, ISO 12135, ISO 15653 pour les soudures) distinguent δ<sub>c</sub>, mesuré à une rupture par clivage sans déchirure ductile préalable ; δ<sub>u</sub>, à un clivage précédé de déchirure ductile ; et δ<sub>m</sub>, au maximum de la force quand l'éprouvette se déchire sans casser. Un δ<sub>c</sub> signale un comportement fragile, et c'est le plus pénalisant.</div>
+    <h4>L'intégrale J</h4>
+    <p>J est une intégrale calculée sur un contour Γ qui entoure la pointe, d'une lèvre à l'autre ; elle a la propriété d'être <b>indépendante du contour choisi</b>. C'est l'énergie qui « s'écoule » vers la pointe quand la fissure avance, par unité d'aire : en élasticité, <b>J = G</b>. Elle se mesure par la différence d'énergie de deux éprouvettes de fissures légèrement différentes, et se trace en fonction de l'avancée de fissure Δa : c'est la <b>courbe de résistance J</b>. Sa partie initiale correspond à l'émoussement ; on trace une droite parallèle à cette « droite d'émoussement », décalée de 0,2 mm, et son intersection avec la courbe donne <b>J<sub>IC</sub></b>, la valeur d'amorçage de la déchirure.</p>
+    <div class="fx"><div class="row big" style="font-size:1.45rem"><span><span class="mat">K<sub>J</sub></span> = √<span style="font-size:1.1em">(</span><span class="frac"><span><span class="mat">J<sub>IC</sub></span>·<span class="mat">E</span></span><span>1 − <span class="mat">ν</span>²</span></span><span style="font-size:1.1em">)</span></span><span><span class="mat">J</span> ≈ <span class="mat">m</span>·<span class="mat">R<sub>e</sub></span>·<span class="eps">δ</span></span></div><p class="cap">K<sub>J</sub> : ténacité équivalente, utilisable comme un K<sub>IC</sub> (on trouve aussi K<sub>IJ</sub> = √(J<sub>IC</sub>E), sans le facteur 1 − ν², forme de la contrainte plane) ; la seconde relation découle de la formule du CTOD</p></div>
+    <div class="warn"><b>⚠️ Piège : les unités.</b> δ est une longueur (mm), J une énergie par unité d'aire (J/m² ou kJ/m²), K un facteur en MPa·√m. Pour comparer, on les convertit tous en K équivalent.</div>
+    <div class="warn"><b>⚠️ Piège : la courbe R n'est pas la rupture.</b> J<sub>IC</sub> marque le début de la déchirure ductile, qui est stable : la fissure n'avance que si l'on augmente la charge. La rupture vient plus tard, ou par un clivage brutal si l'acier est dans sa transition.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « δ s'ouvre, J s'écoule, K s'équivaut »</b>. Et le lien des trois : J = mR<sub>e</sub>δ et K = √(JE/(1 − ν²)).</div>
+    <div class="weld"><b>🔥 L'essai CTOD des soudures</b>
+      <p>Né au Royaume-Uni dans les années 1960 pour les aciers de construction, le CTOD est devenu l'essai de référence des soudures offshore, des pipelines et des appareils à pression. On prélève une éprouvette SENB de pleine épaisseur dans le joint, on place l'entaille dans le métal fondu ou dans la ZAT à gros grains, et on l'essaie à la température minimale de service. Après l'essai, une coupe vérifie que la préfissure se trouvait bien dans la microstructure visée. Les cahiers des charges imposent couramment des CTOD de l'ordre de 0,1 à 0,25 mm. Un résultat faible en ZAT conduit à revoir l'énergie de soudage (cours 2), voire la nuance d'acier.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c6">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">6</div>
+    <div class="c-title"><h2>Le diagramme FAD</h2><p>Rupture fragile ou effondrement plastique : juger un défaut</p></div>
+    <div class="c-img"><span class="ico">🗺️</span><span><small>Image à retenir</small>La carte du randonneur : une zone sûre bordée de deux précipices, la falaise de la rupture en haut et celle de l'effondrement à droite</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">une carte et deux précipices</span></div>
+    <p>Une pièce fissurée peut ruiner de deux façons :</p>
+    <ul>
+      <li>par <b>rupture</b> : la fissure se propage, quand K atteint la ténacité K<sub>mat</sub> du matériau. C'est le domaine de la mécanique de la rupture ;</li>
+      <li>par <b>effondrement plastique</b> : la section restante, affaiblie par le défaut, plastifie tout entière. C'est le domaine de la plasticité.</li>
+    </ul>
+    <p>Dans un monde idéal, il suffirait de vérifier les deux séparément : K &lt; K<sub>mat</sub> et σ &lt; σ<sub>y</sub> (la limite d'élasticité), soit un rectangle de sécurité. Mais les deux mécanismes interagissent : la plasticité en pointe de fissure accélère la rupture, et la fissure affaiblit la section. Le rectangle s'arrondit.</p>
+    <p>On trace donc une carte en coordonnées réduites : en ordonnée, <b>K<sub>r</sub> = K/K<sub>mat</sub></b>, la proximité de la rupture ; en abscisse, <b>L<sub>r</sub> = σ<sub>ref</sub>/σ<sub>y</sub></b>, la proximité de l'effondrement. Une courbe, la <b>ligne d'évaluation de la défaillance</b>, délimite la zone sûre. Le défaut, avec sa charge, est un point : à l'intérieur, il est acceptable ; dehors, il ne l'est pas. Et si l'on augmente la charge, le point s'éloigne de l'origine sur une droite : un grand défaut atteint la ligne par le haut (rupture), un petit défaut par la droite (effondrement plastique).</p>
+  </div>
+
+  <div class="lab" id="m6">
+    <p class="lab-h">Manipulation 6 : l'évaluation d'un défaut de soudure</p>
+    <p class="lab-sub">Une plaque soudée de largeur W = 200 mm contient une fissure traversante centrale de longueur 2a. Règle la contrainte de service, la taille du défaut et les contraintes résiduelles, choisis la ténacité (directe ou estimée par l'essai Charpy), et lis le verdict : facteur de réserve, taille critique.</p>
+    <div class="ctrl"><label for="m6s">Contrainte <span class="sig">σ</span></label><input type="range" id="m6s" class="r-sig" min="20" max="350" step="5" value="150"><output id="m6so"></output></div>
+    <div class="ctrl"><label for="m6a">Longueur <span class="eps">2a</span></label><input type="range" id="m6a" class="r-eps" min="2" max="120" step="1" value="20"><output id="m6ao"></output></div>
+    <div class="btns" id="m6res">
+      <button class="btn on" data-v="0" type="button">Sans résiduelles</button>
+      <button class="btn" data-v="0.3" type="button">Détensionné (0,3 σ<sub>y</sub>)</button>
+      <button class="btn" data-v="1" type="button">Brut de soudage (σ<sub>y</sub>)</button>
+    </div>
+    <div class="btns" id="m6k">
+      <button class="btn on" data-k="dir" type="button">Ténacité donnée</button>
+      <button class="btn" data-k="cv" type="button">Ténacité estimée par Charpy</button>
+    </div>
+    <div class="ctrl" id="m6kd"><label for="m6K">Ténacité <span class="mat">K<sub>mat</sub></span></label><input type="range" id="m6K" class="r-mat" min="20" max="250" step="1" value="80"><output id="m6Ko"></output></div>
+    <div class="ctrl" id="m6kc1" hidden><label for="m6T">T<sub>27J</sub> de la zone</label><input type="range" id="m6T" class="r-mat" min="-80" max="20" step="1" value="-40"><output id="m6To"></output></div>
+    <div class="ctrl" id="m6kc2" hidden><label for="m6Ts">Température de service</label><input type="range" id="m6Ts" class="r-tau" min="-60" max="20" step="1" value="-10"><output id="m6Tso"></output></div>
+    <div class="btns"><button class="btn play" id="m6play" type="button">▶ Augmenter la charge jusqu'à la ligne</button></div>
+    <svg id="m6svg" role="img" aria-label="Diagramme d'évaluation de la défaillance avec la ligne de défaillance, le point du défaut et sa droite de chargement"></svg>
+    <div class="readout" id="m6r"></div>
+    <p class="status" id="m6msg" aria-live="polite"></p>
+    <p class="mut" style="font-size:.85rem;margin:0">Acier S355 (σ<sub>y</sub> = 355 MPa, σ<sub>u</sub> = 490 MPa). Ligne de défaillance de l'option 1 sous sa forme courante, contrainte de référence en section nette, sans coefficients partiels de sécurité ni correction de plasticité : un modèle d'apprentissage, pas un outil de calcul réglementaire.</p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">K<sub>r</sub>, L<sub>r</sub> et la ligne de défaillance</span></div>
+    <div class="fx"><div class="row big" style="font-size:1.5rem"><span><span class="sig">K<sub>r</sub></span> = <span class="frac"><span><span class="sig">K<sub>I</sub></span></span><span><span class="mat">K<sub>mat</sub></span></span></span></span><span><span class="sig">L<sub>r</sub></span> = <span class="frac"><span><span class="sig">σ<sub>ref</sub></span></span><span><span class="mat">σ<sub>y</sub></span></span></span></span></div><p class="cap">K<sub>mat</sub> : ténacité du matériau (K<sub>IC</sub>, K<sub>J</sub> ou équivalent CTOD) ; σ<sub>ref</sub> : contrainte de référence, qui mesure la proximité de l'effondrement plastique de la section affaiblie</p></div>
+    <p><b>La contrainte de référence.</b> Pour une plaque de largeur w contenant un défaut de taille a, la section portante est réduite à w − a : la contrainte moyenne y est plus forte d'un facteur w/(w − a), et la plastification généralisée arrive dès σ<sub>nom</sub> = σ<sub>y</sub>(w − a)/w. Pour la fissure centrale 2a de la manipulation, σ<sub>ref</sub> = σ·W/(W − 2a). Dans les cas réels, σ<sub>ref</sub> se calcule par des formules normalisées ou par simulation numérique.</p>
+    <div class="def"><b>📖 Ligne d'évaluation de la défaillance</b>, sous la forme courante de l'option 1 des méthodes R6 et BS 7910 :</div>
+    <div class="fx"><div class="big" style="font-size:1.35rem"><span class="sig">K<sub>r</sub></span> = (1 + 0,5 <span class="sig">L<sub>r</sub></span>²)<sup>−1/2</sup>·[0,3 + 0,7·exp(−0,6 <span class="sig">L<sub>r</sub></span>⁶)] &nbsp; pour <span class="sig">L<sub>r</sub></span> ≤ <span class="mat">L<sub>r,max</sub></span> = <span class="frac"><span><span class="mat">σ<sub>y</sub></span> + <span class="mat">σ<sub>u</sub></span></span><span>2<span class="mat">σ<sub>y</sub></span></span></span></div><p class="cap">σ<sub>u</sub> : résistance à la traction ; la coupure à L<sub>r,max</sub> traduit l'effondrement plastique, quand la contrainte de référence atteint la contrainte d'écoulement, moyenne de σ<sub>y</sub> et σ<sub>u</sub></p></div>
+    <p><b>Exemple.</b> W = 200 mm, 2a = 20 mm, σ = 150 MPa, K<sub>mat</sub> = 80 MPa·√m, S355. <span class="m">K = 150 × √(π × 0,01) = 26,6 MPa·√m</span> (×1,006 pour la largeur finie) : <span class="m">K<sub>r</sub> = 26,8/80 = <b>0,33</b></span>. <span class="m">σ<sub>ref</sub> = 150 × 200/180 = 167 MPa</span>, <span class="m">L<sub>r</sub> = 167/355 = <b>0,47</b></span>. La ligne vaut 0,94 à cette abscisse : le point est largement à l'intérieur, <b>acceptable</b>.</p>
+    <h4>Contraintes primaires et secondaires</h4>
+    <p>Les contraintes <b>primaires</b> viennent des charges extérieures ; elles comptent dans K<sub>r</sub> et dans L<sub>r</sub>. Les contraintes <b>secondaires</b>, comme les contraintes résiduelles de soudage ou thermiques, s'autolimitent : elles ne peuvent pas provoquer à elles seules l'effondrement d'une section. Elles comptent donc dans <b>K<sub>r</sub> seulement</b>. À l'état brut de soudage, on suppose souvent des résiduelles égales à la limite d'élasticité ; après détensionnement, une fraction (de l'ordre de 20 à 30 %). Sur l'exemple, les résiduelles brutes de soudage portent K<sub>r</sub> de 0,33 à <span class="m">(150 + 355) × 0,1784/80 = <b>1,13</b></span> : le défaut n'est plus acceptable ; détensionné (0,3 σ<sub>y</sub>), K<sub>r</sub> redescend à 0,57.</p>
+    <h4>Quelle ténacité ? <span class="hp">complément</span></h4>
+    <p>Idéalement, un essai de ténacité (K<sub>IC</sub>, CTOD ou J) à la température de service, dans la zone du défaut. À défaut, les règles d'évaluation admettent des corrélations avec l'essai Charpy, prudentes. La plus utilisée passe par la <b>courbe maîtresse</b> des aciers ferritiques (norme ASTM E1921) : on estime la température de référence T<sub>0</sub> ≈ T<sub>27J</sub> − 18 °C, puis, pour une épaisseur de 25 mm :</p>
+    <div class="fx"><div class="row big" style="font-size:1.35rem"><span><span class="mat">K<sub>méd</sub></span> = 30 + 70·exp[0,019(<span class="mat">T</span> − <span class="mat">T<sub>0</sub></span>)]</span><span><span class="mat">K<sub>5 %</sub></span> = 25,4 + 37,8·exp[0,019(<span class="mat">T</span> − <span class="mat">T<sub>0</sub></span>)]</span></div><p class="cap">en MPa·√m, T en °C ; K<sub>méd</sub> : ténacité médiane, K<sub>5 %</sub> : borne inférieure à 5 % de probabilité, celle qu'on retient pour évaluer</p></div>
+    <p>Pour T<sub>27J</sub> = −40 °C et un service à −10 °C : T<sub>0</sub> = −58 °C, exp[0,019 × 48] = 2,49, d'où <span class="m">K<sub>5 %</sub> = 25,4 + 37,8 × 2,49 ≈ <b>119 MPa·√m</b></span>.</p>
+    <div class="warn"><b>⚠️ Piège : les résiduelles vont dans K<sub>r</sub>, pas dans L<sub>r</sub>.</b> Les ajouter à σ<sub>ref</sub> serait trop pessimiste ; les oublier dans K<sub>r</sub> serait dangereux.</div>
+    <div class="warn"><b>⚠️ Piège : la ténacité de la zone du défaut.</b> Un défaut en ZAT s'évalue avec la ténacité de la ZAT, souvent bien plus faible que celle de la tôle (cours 2), et à la température minimale de service.</div>
+    <div class="warn"><b>⚠️ Piège : ce modèle n'est pas réglementaire.</b> Une vraie évaluation applique les formules de K et de σ<sub>ref</sub> de la norme pour la géométrie réelle (défauts de surface, noyés, pied de cordon), une correction de plasticité, et des coefficients partiels de sécurité sur les contraintes, la taille du défaut et la ténacité.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « K<sub>r</sub> vers le ciel, L<sub>r</sub> vers la droite »</b>. En haut on casse, à droite on s'effondre, au milieu on fait les deux ; et les résiduelles ne font que monter.</div>
+    <div class="weld"><b>🔥 Les étapes d'une évaluation de défaut (ECA)</b>
+      <ol>
+        <li><b>Caractériser le défaut</b> par CND : position (métal fondu, ZAT, pied, racine), dimensions, puis l'idéaliser en fissure (cours 3, chapitre 5).</li>
+        <li><b>Établir les contraintes</b> : primaires (charges, pression), secondaires (résiduelles, thermiques), concentration du pied de cordon.</li>
+        <li><b>Choisir les propriétés</b> à la température minimale de service : σ<sub>y</sub>, σ<sub>u</sub> et ténacité de la zone concernée (CTOD, J, ou corrélation Charpy).</li>
+        <li><b>Placer le point</b> sur le FAD, avec les coefficients de sécurité de la norme.</li>
+        <li><b>En fatigue</b>, faire croître le défaut cycle après cycle par la loi de Paris (série Fatigue, cours 4) jusqu'à la fin de la vie prévue, et refaire le FAD avec la taille finale.</li>
+      </ol>
+      <p>Le résultat est soit « acceptable en l'état », soit une taille de défaut tolérable qui devient le critère d'acceptation du contrôle, soit une réparation justifiée.</p>
+    </div>
+  </div>
+</div>
+</section>
+<section class="chap" id="exos">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✎</div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Six exercices et un défi, du laboratoire à l'évaluation d'une soudure</p></div>
+    <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de musculation : on ne progresse qu'en soulevant soi-même</span></div>
+  </div>
+  <div class="lv lv1"><div class="lv-h">👁 Mode d'emploi <span class="tag">longueurs en mètres, et K en MPa·√m</span></div>
+    <p>Cherche chaque question sur papier avant d'ouvrir la correction. Écris la formule littérale, puis les valeurs avec leurs unités. Les manipulations 1, 2, 3, 5 et 6 permettent de vérifier tes résultats ; le défi se refait entièrement dans la manipulation 6.</p>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 1 : la balance K / K<sub>IC</sub> <span class="lvtag">N1 · chapitre 1</span></h4>
+    <p>Fissure débouchante (Y = 1,99).</p>
+    <p class="q"><b>a)</b> Un acier a K<sub>IC</sub> = 80 MPa·√m et travaille à 200 MPa. Quelle est la taille critique de défaut ?</p>
+    <p class="q"><b>b)</b> Dans le même acier (R<sub>e</sub> = 355 MPa), quelle contrainte provoque la rupture d'un défaut de 5 mm ? Qu'en conclus-tu ?</p>
+    <p class="q"><b>c)</b> Un verre (K<sub>IC</sub> = 0,75 MPa·√m) porte une rayure de 10 µm. Quelle contrainte de rupture ?</p>
+    <p class="q"><b>d)</b> L'acier de a) refroidi au palier fragile n'a plus que K<sub>IC</sub> = 30 MPa·√m. Que devient la taille critique ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">a<sub>c</sub> = (K<sub>IC</sub>/(Yσ))² = (80/(1,99 × 200))² = 0,201² = 0,0404 m ≈ <b>40 mm</b></span>.</p>
+      <p><b>b)</b> <span class="m">σ<sub>r</sub> = K<sub>IC</sub>/(Y√a) = 80/(1,99 × √0,005) = 80/0,1407 ≈ <b>569 MPa</b></span> &gt; R<sub>e</sub> = 355 MPa : la pièce plastifie avant de rompre. Pour ce petit défaut, la rupture fragile n'est pas le premier danger : c'est la plasticité, qui relève du diagramme FAD (chapitre 6).</p>
+      <p><b>c)</b> <span class="m">σ<sub>r</sub> = 0,75/(1,99 × √(10⁻⁵)) = 0,75/0,00629 ≈ <b>119 MPa</b></span>.</p>
+      <p><b>d)</b> <span class="m">a<sub>c</sub> = (30/(1,99 × 200))² = 0,0754² = 0,0057 m ≈ <b>5,7 mm</b></span> : sept fois plus petite. a<sub>c</sub> varie comme K<sub>IC</sub>², et (80/30)² ≈ 7,1.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 2 : la zone plastique et l'épaisseur <span class="lvtag">N1 · chapitre 2</span></h4>
+    <p class="q"><b>a)</b> Un acier HLE a K<sub>IC</sub> = 50 MPa·√m et R<sub>e</sub> = 500 MPa. Calcule r<sub>Y</sub> en contrainte plane et en déformation plane.</p>
+    <p class="q"><b>b)</b> Quelle épaisseur minimale faut-il pour mesurer un K<sub>IC</sub> valide ?</p>
+    <p class="q"><b>c)</b> Même question pour un acier de construction de K<sub>IC</sub> = 150 MPa·√m et R<sub>e</sub> = 355 MPa. Conclus.</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">(K<sub>IC</sub>/R<sub>e</sub>)² = (50/500)² = 0,01 m</span>. Contrainte plane : <span class="m">r<sub>Y</sub> = 0,01/(2π) = <b>1,6 mm</b></span> ; déformation plane : <span class="m">0,01/(6π) = <b>0,53 mm</b></span>.</p>
+      <p><b>b)</b> <span class="m">B ≥ 2,5 × 0,01 = <b>25 mm</b></span> (et de même pour a et W − a).</p>
+      <p><b>c)</b> <span class="m">2,5 × (150/355)² = 2,5 × 0,1785 = <b>0,45 m</b></span> : une éprouvette de 45 cm d'épaisseur, irréalisable. Pour les aciers de construction à température ambiante, on mesure le CTOD ou J à la place.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 3 : dépouiller un essai sur éprouvette CT <span class="lvtag">N2 · chapitre 3</span></h4>
+    <p>Éprouvette CT : B = 25 mm, W = 50 mm, a = 25 mm (préfissure de fatigue comprise). Acier trempé, R<sub>e</sub> = 900 MPa. La droite sécante à 95 % coupe la courbe à F<sub>Q</sub> = 30,0 kN ; la force maximale vaut F<sub>max</sub> = 31,5 kN.</p>
+    <p class="q"><b>a)</b> Calcule le facteur géométrique de la CT pour α = a/W = 0,5.</p>
+    <p class="q"><b>b)</b> Calcule K<sub>Q</sub>.</p>
+    <p class="q"><b>c)</b> Vérifie toutes les conditions de validité. K<sub>Q</sub> est-il un K<sub>IC</sub> ?</p>
+    <p class="q"><b>d)</b> Un autre acier (R<sub>e</sub> = 355 MPa), essayé dans la même éprouvette, donne K<sub>Q</sub> = 120 MPa·√m. Valide ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">(2 + 0,5)/(0,5)<sup>3/2</sup> = 2,5/0,3536 = 7,071</span> ; crochet : <span class="m">0,886 + 2,32 − 3,33 + 1,84 − 0,35 = 1,366</span> ; produit : <span class="m"><b>9,66</b></span>.</p>
+      <p><b>b)</b> <span class="m">K<sub>Q</sub> = F<sub>Q</sub>/(B√W) × 9,66</span> <span class="m">= 30 000/(25 × 7,071) × 9,66</span> <span class="m">= 169,7 × 9,66 = 1 639 N·mm<sup>−3/2</sup></span>, soit <span class="m">1 639/31,62 = <b>51,8 MPa·√m</b></span>.</p>
+      <p><b>c)</b> <span class="m">2,5 × (51,8/900)² = 2,5 × 0,00331 = 0,0083 m = 8,3 mm</span> ≤ a = 25 mm ✅, ≤ W − a = 25 mm ✅, ≤ B = 25 mm ✅. <span class="m">F<sub>max</sub>/F<sub>Q</sub> = 31,5/30,0 = 1,05</span> ≤ 1,1 ✅. Préfissure de fatigue ✅. Toutes les conditions sont remplies : <b>K<sub>IC</sub> = 51,8 MPa·√m</b>.</p>
+      <p><b>d)</b> <span class="m">2,5 × (120/355)² = 0,286 m = 286 mm</span>, bien plus que 25 mm : <b>non valide</b>. 120 MPa·√m n'est qu'un K<sub>Q</sub>, probablement supérieur au vrai K<sub>IC</sub> ; il faudrait un essai CTOD ou J.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 4 : la même ténacité, des énergies différentes <span class="lvtag">N2 · chapitre 4</span></h4>
+    <p class="q"><b>a)</b> Calcule G<sub>IC</sub> ≈ K<sub>IC</sub>²/E pour une céramique (E = 200 GPa, K<sub>IC</sub> = 3 MPa·√m), un polymère (1 GPa, 3 MPa·√m) et un acier (200 GPa, 100 MPa·√m).</p>
+    <p class="q"><b>b)</b> Refais le calcul de l'acier en déformation plane (ν = 0,3).</p>
+    <p class="q"><b>c)</b> L'énergie de surface du fer vaut environ 2 J/m². Combien de fois G<sub>IC</sub> de l'acier dépasse-t-il 2γ<sub>s</sub> ? D'où vient la différence ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> Avec K en Pa·√m et E en Pa : céramique, <span class="m">(3 × 10⁶)²/(200 × 10⁹) = <b>45 J/m²</b></span> ; polymère, <span class="m">9 × 10¹²/10⁹ = <b>9 000 J/m²</b></span> ; acier, <span class="m">10¹⁶/(2 × 10¹¹) = <b>50 000 J/m²</b></span>.</p>
+      <p><b>b)</b> <span class="m">50 000 × (1 − 0,3²) = 50 000 × 0,91 = <b>45 500 J/m²</b></span> : la différence entre les deux états reste de 9 %.</p>
+      <p><b>c)</b> <span class="m">50 000/(2 × 2) = <b>12 500</b></span> fois plus. Presque toute l'énergie part dans la <b>déformation plastique</b> de la zone en pointe de fissure : c'est elle qui fait la ténacité des métaux.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 5 : du CTOD au K équivalent <span class="lvtag">N2 · chapitre 5</span></h4>
+    <p>Acier : R<sub>e</sub> = 400 MPa, E = 210 GPa, ν = 0,3 ; on prend m = 1,5.</p>
+    <p class="q"><b>a)</b> Calcule le CTOD correspondant à K = 60 MPa·√m, avec la formule complète puis la forme simplifiée.</p>
+    <p class="q"><b>b)</b> Un cahier des charges impose δ ≥ 0,25 mm. À quel K équivalent cela correspond-il ?</p>
+    <p class="q"><b>c)</b> Calcule le J correspondant, et vérifie que K<sub>J</sub> = √(JE/(1 − ν²)) redonne le même K.</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">δ = K²(1 − ν²)/(mR<sub>e</sub>E)</span>. Numérateur : <span class="m">(60 × 10⁶)² × 0,91 = 3,28 × 10¹⁵</span> ; dénominateur : <span class="m">1,5 × 400 × 10⁶ × 210 × 10⁹</span> <span class="m">= 1,26 × 10²⁰</span>. D'où <span class="m">δ = 2,6 × 10⁻⁵ m = <b>0,026 mm</b></span>. Forme simplifiée : <span class="m">K²/(R<sub>e</sub>E) = 3,6 × 10¹⁵/8,4 × 10¹⁹ = <b>0,043 mm</b></span>, plus prudente pour calculer un K à partir d'un CTOD mesuré.</p>
+      <p><b>b)</b> <span class="m">K = √(δmR<sub>e</sub>E/(1 − ν²))</span>, avec <span class="m">δmR<sub>e</sub>E = 0,25 × 10⁻³ × 1,5</span> <span class="m">× 400 × 10⁶ × 210 × 10⁹</span> <span class="m">= 3,15 × 10¹⁶</span>, divisé par 0,91 : <span class="m">3,46 × 10¹⁶</span>. D'où <span class="m">K ≈ <b>186 MPa·√m</b></span>.</p>
+      <p><b>c)</b> <span class="m">J = mR<sub>e</sub>δ</span> <span class="m">= 1,5 × 400 × 10⁶ × 0,25 × 10⁻³</span> <span class="m">= <b>150 000 J/m²</b></span> (150 kJ/m²). <span class="m">K<sub>J</sub> = √(150 000 × 210 × 10⁹/0,91)</span> <span class="m">= √(3,46 × 10¹⁶) ≈ 186 MPa·√m</span> ✅ : les trois grandeurs disent la même chose.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 6 : un premier diagramme FAD <span class="lvtag">N2 · chapitre 6</span></h4>
+    <p>Plaque soudée en S355 (σ<sub>y</sub> = 355 MPa, σ<sub>u</sub> = 490 MPa), largeur W = 200 mm, fissure traversante centrale 2a = 20 mm, σ = 150 MPa, K<sub>mat</sub> = 80 MPa·√m. On prendra K = σ√(πa) × 1,006 (correction de largeur finie).</p>
+    <p class="q"><b>a)</b> Calcule K<sub>r</sub> et L<sub>r</sub>, sans contraintes résiduelles.</p>
+    <p class="q"><b>b)</b> Calcule L<sub>r,max</sub> et la valeur de la ligne de défaillance à ton L<sub>r</sub>. Le défaut est-il acceptable ?</p>
+    <p class="q"><b>c)</b> Reprends K<sub>r</sub> à l'état brut de soudage (σ<sub>res</sub> = σ<sub>y</sub>), puis après détensionnement (σ<sub>res</sub> = 0,3 σ<sub>y</sub>). Pourquoi L<sub>r</sub> ne change-t-il pas ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">√(πa) = √(π × 0,01) = 0,1772 √m</span> ; <span class="m">K = 150 × 0,1772 × 1,006 = 26,8 MPa·√m</span>, <span class="m">K<sub>r</sub> = 26,8/80 = <b>0,33</b></span>. <span class="m">σ<sub>ref</sub> = σW/(W − 2a) = 150 × 200/180 = 167 MPa</span>, <span class="m">L<sub>r</sub> = 167/355 = <b>0,47</b></span>.</p>
+      <p><b>b)</b> <span class="m">L<sub>r,max</sub> = (355 + 490)/(2 × 355) = <b>1,19</b></span>. Ligne : <span class="m">(1 + 0,5 × 0,47²)<sup>−1/2</sup> × [0,3 + 0,7 × exp(−0,6 × 0,47⁶)] = 0,949 × 0,996 ≈ <b>0,94</b></span>. Le point (0,47 ; 0,33) est sous la ligne : <b>acceptable</b>, avec une bonne marge.</p>
+      <p><b>c)</b> Brut de soudage : <span class="m">K<sub>r</sub> = (150 + 355) × 0,1772 × 1,006/80 = <b>1,13</b></span> &gt; 0,94 : <b>non acceptable</b>. Détensionné : <span class="m">(150 + 106,5) × 0,1784/80 = <b>0,57</b></span> : acceptable. L<sub>r</sub> ne change pas, car les contraintes résiduelles sont <b>secondaires</b> : elles s'autolimitent et ne peuvent pas provoquer l'effondrement plastique de la section ; elles n'entrent que dans K<sub>r</sub>.</p>
+    </div></details>
+  </div>
+
+  <div class="exo defi">
+    <h4>🏆 Défi : le manque de fusion du réservoir <span class="lvtag">N2 · chapitres 1 à 6</span></h4>
+    <p>Un contrôle par ultrasons détecte, dans la ZAT d'une virole soudée en S355 (σ<sub>y</sub> = 355 MPa, σ<sub>u</sub> = 490 MPa), un défaut plan traversant que l'on idéalise en fissure centrale de 2a = 16 mm, dans une bande de largeur W = 200 mm. La contrainte de service perpendiculaire au défaut vaut 180 MPa. Le joint est brut de soudage. Les essais de qualification donnent, pour la ZAT, T<sub>27J</sub> = −40 °C ; la température minimale de service est −10 °C. Épaisseur : 25 mm.</p>
+    <p class="q"><b>a)</b> Estime la ténacité de la ZAT à −10 °C par la courbe maîtresse (borne à 5 %).</p>
+    <p class="q"><b>b)</b> Calcule K<sub>r</sub> (avec σ<sub>res</sub> = σ<sub>y</sub>) et L<sub>r</sub>, sachant que √(πa) × √(sec(πa/W)) = 0,1592 √m. Le défaut est-il acceptable ?</p>
+    <p class="q"><b>c)</b> Avec la manipulation 6, trouve le facteur de réserve sur la charge et la taille critique 2a<sub>c</sub>.</p>
+    <p class="q"><b>d)</b> Un client veut utiliser le réservoir jusqu'à −30 °C. Refais l'évaluation. Que proposes-tu ?</p>
+    <p class="q"><b>e)</b> Que faudrait-il encore vérifier si le réservoir subit des cycles de remplissage ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">T<sub>0</sub> = T<sub>27J</sub> − 18 = −58 °C</span> ; <span class="m">exp[0,019 × (−10 + 58)] = exp(0,912) = 2,49</span> ; <span class="m">K<sub>mat</sub> = 25,4 + 37,8 × 2,49 ≈ <b>119,5 MPa·√m</b></span>.</p>
+      <p><b>b)</b> <span class="m">K<sub>p</sub> = 180 × 0,1592 = 28,6</span> et <span class="m">K<sub>s</sub> = 355 × 0,1592 = 56,5 MPa·√m</span> ; <span class="m">K<sub>r</sub> = (28,6 + 56,5)/119,5 = <b>0,71</b></span>. <span class="m">σ<sub>ref</sub> = 180 × 200/184 = 195,7 MPa</span>, <span class="m">L<sub>r</sub> = <b>0,55</b></span>. La ligne vaut 0,92 en L<sub>r</sub> = 0,55 : <b>acceptable</b>. Les résiduelles pèsent deux fois plus que la charge de service dans K<sub>r</sub>.</p>
+      <p><b>c)</b> Facteur de réserve ≈ <b>1,39</b> (la charge pourrait augmenter de 39 % avant d'atteindre la ligne) ; taille critique 2a<sub>c</sub> ≈ <b>26 mm</b>. La marge sur la taille est modeste : 16 mm détectés pour 26 mm critiques, avant tout coefficient de sécurité réglementaire.</p>
+      <p><b>d)</b> À −30 °C : <span class="m">exp[0,019 × 28] = 1,70</span>, <span class="m">K<sub>mat</sub> = 25,4 + 37,8 × 1,70 ≈ 89,7 MPa·√m</span>, <span class="m">K<sub>r</sub> = 85,1/89,7 = <b>0,95</b></span> &gt; 0,92 : <b>non acceptable</b>. Parades : un <b>traitement de détensionnement</b> (avec σ<sub>res</sub> = 0,3 σ<sub>y</sub> : K<sub>r</sub> = 0,51, acceptable, 2a<sub>c</sub> ≈ 45 mm), ou la <b>réparation</b> du défaut avec un mode opératoire donnant une ZAT plus tenace (énergie de soudage plus faible, cours 2), ou une limitation de la température de service. On peut aussi mesurer la vraie ténacité de la ZAT par des essais CTOD, souvent moins pessimistes que la corrélation Charpy.</p>
+      <p><b>e)</b> La <b>croissance par fatigue</b> du défaut : intégrer la loi de Paris sur le nombre de cycles prévu (série Fatigue, cours 4), puis refaire le FAD avec la taille finale du défaut, qui sera plus grande.</p>
+    </div></details>
+  </div>
+</div>
+</section>
+<section class="chap" id="quiz-s">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">?</div>
+    <div class="c-title"><h2>Quiz : 12 questions éclair</h2><p>Chaque réponse est expliquée, même quand tu as juste</p></div>
+    <div class="c-img"><span class="ico">🎯</span><span><small>Image à retenir</small>La cible : vise 10 sur 12</span></div>
+  </div>
+  <div id="quiz"></div>
+  <div class="score" id="qzScore" aria-live="polite">Score : 0 / 12</div>
+  <div class="btns"><button class="btn" id="qzReset" type="button">↺ Recommencer le quiz</button></div>
+</div>
+</section>
+
+<section class="chap" id="fiche">
+<div class="wrap wide">
+  <div class="cartouche">
+    <div class="c-num">★</div>
+    <div class="c-title"><h2>Fiche mémoire du cours 4</h2><p>Neuf cases, neuf images : à photographier, puis à redessiner de tête</p></div>
+    <div class="c-img"><span class="ico">🔧</span><span><small>Image à retenir</small>Le CTOD, né chez les soudeurs</span></div>
+  </div>
+  <div class="fiche">
+    <div><div class="ic">⚖️</div><h4>La balance</h4><div class="f"><span class="sig">K</span> = <span class="sig">σ</span><span class="mat">Y</span>√<span class="eps">a</span> ≥ <span class="mat">K<sub>IC</sub></span></div><p>σ<sub>r</sub> = K<sub>IC</sub>/(Y√a) ; a<sub>c</sub> = (K<sub>IC</sub>/(Yσ))². Aciers : 50 à 150 MPa·√m.</p></div>
+    <div><div class="ic">📉</div><h4>La bascule résistance-ténacité</h4><div class="f">↑ <span class="mat">R<sub>e</sub></span> ⇒ ↓ <span class="mat">K<sub>IC</sub></span></div><p>Dans une même famille, durcir abaisse la ténacité. Droites d'Ashby K²/(πσ<sub>y</sub>²) : la taille de transition.</p></div>
+    <div><div class="ic">🥪</div><h4>Le sandwich</h4><div class="f"><span class="gam">r<sub>Y</sub></span> = (1/2π) ou (1/6π)·(<span class="sig">K</span>/<span class="mat">R<sub>e</sub></span>)²</div><p>Surface en contrainte plane, cœur en déformation plane. K<sub>IC</sub> = la valeur des pièces épaisses.</p></div>
+    <div><div class="ic">🗜️</div><h4>La pince</h4><div class="f"><span class="mat">B</span>, <span class="eps">a</span>, <span class="mat">W</span> − <span class="eps">a</span> ≥ 2,5(<span class="mat">K<sub>Q</sub></span>/<span class="mat">R<sub>e</sub></span>)²</div><p>Préfissure de fatigue, sécante à 95 %, F<sub>max</sub> ≤ 1,1 F<sub>Q</sub> ; sinon, ce n'est qu'un K<sub>Q</sub>.</p></div>
+    <div><div class="ic">🏹</div><h4>L'arc bandé</h4><div class="f"><span class="mat">G<sub>IC</sub></span> = <span class="mat">K<sub>IC</sub></span>²(1 − ν²)/<span class="mat">E</span></div><p>L'énergie libérée par m² de fissure. Acier : 50 000 J/m², dont presque tout en plasticité.</p></div>
+    <div><div class="ic">🐊</div><h4>La gueule du crocodile</h4><div class="f"><span class="eps">δ</span> = <span class="sig">K</span>²(1 − ν²)/(<span class="mat">m</span><span class="mat">R<sub>e</sub></span><span class="mat">E</span>)</div><p>CTOD : l'ouverture du fond émoussé, mesurée par le CMOD. 0,25 mm ↔ ≈ 186 MPa·√m.</p></div>
+    <div><div class="ic">🌊</div><h4>Le courant J</h4><div class="f"><span class="mat">K<sub>J</sub></span> = √(<span class="mat">J<sub>IC</sub></span><span class="mat">E</span>/(1 − ν²)) ; <span class="sig">J</span> ≈ <span class="mat">m</span><span class="mat">R<sub>e</sub></span><span class="eps">δ</span></div><p>J, l'énergie qui s'écoule vers la pointe ; courbe R et droite décalée de 0,2 mm.</p></div>
+    <div><div class="ic">🗺️</div><h4>La carte du randonneur</h4><div class="f"><span class="sig">K<sub>r</sub></span> = <span class="sig">K</span>/<span class="mat">K<sub>mat</sub></span> ; <span class="sig">L<sub>r</sub></span> = <span class="sig">σ<sub>ref</sub></span>/<span class="mat">σ<sub>y</sub></span></div><p>En haut la rupture, à droite l'effondrement. Point sous la ligne : acceptable.</p></div>
+    <div><div class="ic">🎒</div><h4>Le sac à dos des résiduelles</h4><div class="f"><span class="sig">K<sub>r</sub></span> = (<span class="sig">σ</span> + <span class="tau">σ<sub>res</sub></span>)<span class="mat">Y</span>√<span class="eps">a</span>/<span class="mat">K<sub>mat</sub></span></div><p>Les résiduelles chargent K<sub>r</sub>, jamais L<sub>r</sub>. Détensionner allège le sac.</p></div>
+  </div>
+  <div class="fun"><span class="fun-h">🔧 Fun fact : Le CTOD est né dans un laboratoire de soudage</span>À la fin des années 1950, au BWRA (British Welding Research Association, devenue le TWI, The Welding Institute), Alan Wells veut appliquer le facteur K aux aciers de construction des ouvrages soudés. Surprise : ces aciers sont si tenaces que la pointe de la fissure s'émousse et s'ouvre nettement avant de rompre, et la mécanique linéaire de la rupture ne s'applique plus. Bonne nouvelle pour les constructeurs, mauvaise pour la théorie ! En 1961, Wells propose de mesurer directement cette ouverture : c'est le COD (<i>crack opening displacement</i>, l'ouverture de la fissure), devenu le CTOD du <a href="#c5">chapitre 5</a>, une idée avancée aussi de son côté par Alan Cottrell. Il reste aujourd'hui une mesure de ténacité de référence pour les plateformes offshore, les appareils à pression et les pipelines.</div>
+</div>
+</section>
+
+<section class="chap" id="gloss">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">A–Z</div>
+    <div class="c-title"><h2>Glossaire</h2><p>Les mots, symboles et sigles de ce cours</p></div>
+    <div class="c-img"><span class="ico">📖</span><span><small>Image à retenir</small>Le dictionnaire : un mot flou, un clic</span></div>
+  </div>
+  <dl class="gloss">
+    <dt>a, a<sub>c</sub>, Δa</dt><dd>Taille de la fissure (demi-longueur, profondeur ou rayon selon le cas, en m) ; taille critique ; avancée de la fissure lors d'une déchirure (en mm).</dd>
+    <dt>API 579, BS 7910, R6</dt><dd>Méthodes d'évaluation de l'aptitude au service des structures contenant des défauts (pétrochimie américaine, norme britannique, méthode nucléaire britannique).</dd>
+    <dt>ASTM E399, ISO 12135</dt><dd>Normes de mesure de la ténacité K<sub>IC</sub> (et, pour l'ISO 12135, du CTOD et de J).</dd>
+    <dt>ASTM E1921, courbe maîtresse</dt><dd>Méthode de description de la ténacité des aciers ferritiques dans la transition, repérée par la température T<sub>0</sub>.</dd>
+    <dt>B, W, α</dt><dd>Épaisseur et largeur d'une éprouvette ; α = a/W.</dd>
+    <dt>BS 7448, ISO 15653</dt><dd>Normes d'essais CTOD ; l'ISO 15653 est consacrée aux joints soudés.</dd>
+    <dt>C (complaisance)</dt><dd>Souplesse d'une éprouvette : u = C·F. Elle augmente avec la longueur de fissure.</dd>
+    <dt>CMOD</dt><dd><i>Crack mouth opening displacement</i> : ouverture à l'embouchure de l'entaille, mesurée par un capteur à lames.</dd>
+    <dt>CND</dt><dd>Contrôles non destructifs (ultrasons, radiographie, magnétoscopie, ressuage…).</dd>
+    <dt>Contraintes primaires, secondaires</dt><dd>Dues aux charges extérieures (elles comptent dans K<sub>r</sub> et L<sub>r</sub>) ; autolimitées, comme les résiduelles et thermiques (dans K<sub>r</sub> seulement).</dd>
+    <dt>Contrainte plane, déformation plane</dt><dd>État des surfaces et des tôles minces (pas de contrainte dans l'épaisseur) ; état du cœur des pièces épaisses (pas de déformation dans l'épaisseur).</dd>
+    <dt>Courbe R (de résistance)</dt><dd>Ténacité (J ou CTOD) en fonction de l'avancée de la fissure lors d'une déchirure ductile.</dd>
+    <dt>CT, SENB, SENT</dt><dd>Éprouvettes de ténacité : compacte de traction ; entaillée sur un bord et fléchie ; entaillée sur un bord et tirée.</dd>
+    <dt>CTOD δ, δ<sub>c</sub>, δ<sub>u</sub>, δ<sub>m</sub></dt><dd>Ouverture du fond de fissure, en mm ; mesurée à un clivage sans déchirure préalable, à un clivage après déchirure, ou au maximum de force.</dd>
+    <dt>Déchirure ductile</dt><dd>Avancée stable d'une fissure par croissance et coalescence de cavités ; elle demande une charge croissante.</dd>
+    <dt>Dugdale-Barenblatt</dt><dd>Modèle de zone plastique en bande, de longueur r<sub>p</sub>, soumise à R<sub>e</sub>.</dd>
+    <dt>E, ν</dt><dd>Module d'Young (210 GPa pour l'acier) et coefficient de Poisson (0,3).</dd>
+    <dt>ECA</dt><dd><i>Engineering critical assessment</i> : évaluation critique d'ingénierie d'un défaut, ou aptitude au service.</dd>
+    <dt>F, F<sub>Q</sub>, F<sub>max</sub></dt><dd>Force ; force à la sécante 95 % ; force maximale de l'essai.</dd>
+    <dt>FAD, ligne d'évaluation</dt><dd><i>Failure assessment diagram</i> : diagramme K<sub>r</sub>-L<sub>r</sub> ; la ligne y sépare la zone sûre de la zone de défaillance.</dd>
+    <dt>G, G<sub>IC</sub></dt><dd>Taux de restitution de l'énergie (J/m²) ; sa valeur critique, une propriété du matériau.</dd>
+    <dt>J, J<sub>IC</sub>, K<sub>J</sub></dt><dd>Intégrale de Rice, énergie qui s'écoule vers la pointe (J/m²) ; sa valeur à l'amorçage de la déchirure ; ténacité équivalente √(J<sub>IC</sub>E/(1 − ν²)).</dd>
+    <dt>K, K<sub>Q</sub>, K<sub>IC</sub>, K<sub>C</sub>, K<sub>mat</sub></dt><dd>Facteur d'intensité de contrainte ; valeur provisoire d'un essai ; ténacité en déformation plane ; ténacité apparente d'une épaisseur donnée ; ténacité retenue pour une évaluation. En MPa·√m.</dd>
+    <dt>K<sub>r</sub>, L<sub>r</sub>, L<sub>r,max</sub></dt><dd>Coordonnées du FAD : K/K<sub>mat</sub> et σ<sub>ref</sub>/σ<sub>y</sub> ; coupure plastique (σ<sub>y</sub> + σ<sub>u</sub>)/(2σ<sub>y</sub>).</dd>
+    <dt>Ligament</dt><dd>Partie non fissurée de la section, de longueur W − a.</dd>
+    <dt>m</dt><dd>Facteur de contrainte de la formule du CTOD, entre 1 et 2.</dd>
+    <dt>MLER</dt><dd>Mécanique linéaire élastique de la rupture : celle de K et G, valable quand la zone plastique est petite.</dd>
+    <dt>Plasticité confinée, étendue</dt><dd>Zone plastique petite devant la fissure et le ligament ; zone comparable à ces dimensions.</dd>
+    <dt>R<sub>e</sub>, σ<sub>y</sub>, σ<sub>u</sub></dt><dd>Limite d'élasticité (notée σ<sub>y</sub> dans les FAD) et résistance à la traction (R<sub>m</sub>), en MPa.</dd>
+    <dt>r<sub>Y</sub>, r<sub>p</sub></dt><dd>Taille de la zone plastique selon Irwin, (1/2π) ou (1/6π)(K/R<sub>e</sub>)² ; selon Dugdale.</dd>
+    <dt>σ<sub>ref</sub></dt><dd>Contrainte de référence : mesure de la proximité de l'effondrement plastique de la section fissurée.</dd>
+    <dt>σ<sub>res</sub></dt><dd>Contraintes résiduelles de soudage : ≈ σ<sub>y</sub> à l'état brut, une fraction après détensionnement.</dd>
+    <dt>T<sub>0</sub>, T<sub>27J</sub></dt><dd>Température de référence de la courbe maîtresse (≈ T<sub>27J</sub> − 18 °C) ; température de transition Charpy à 27 J (cours 2).</dd>
+    <dt>WOF</dt><dd><i>Work of fracture</i>, travail de rupture : énergie totale de rupture divisée par l'aire du ligament.</dd>
+    <dt>Y</dt><dd>Facteur géométrique de K = σY√a (contient √π dans la convention de la série).</dd>
+    <dt>ZAT</dt><dd>Zone affectée thermiquement par le soudage.</dd>
+  </dl>
+</div>
+</section>
+
+<section class="chap" id="check">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✓</div>
+    <div class="c-title"><h2>Ai-je bouclé la série ?</h2><p>Dix points à cocher de tête</p></div>
+    <div class="c-img"><span class="ico">🏁</span><span><small>Image à retenir</small>Le drapeau à damier : la série est terminée quand tout est coché</span></div>
+  </div>
+  <p>Coche seulement ce que tu sais faire <b>sans regarder</b>. Tes coches restent enregistrées dans ce navigateur.</p>
+  <div class="check" id="checklist">
+    <label><input type="checkbox" data-c="1"> <span>Je sais utiliser K = K<sub>IC</sub> pour calculer une contrainte admissible ou une taille critique.</span></label>
+    <label><input type="checkbox" data-c="2"> <span>Je sais expliquer pourquoi ténacité et résistance s'opposent dans une même famille d'aciers.</span></label>
+    <label><input type="checkbox" data-c="3"> <span>Je sais calculer la zone plastique r<sub>Y</sub> en contrainte plane et en déformation plane.</span></label>
+    <label><input type="checkbox" data-c="4"> <span>Je sais pourquoi une tôle épaisse est plus critique, et ce que vaut la condition B ≥ 2,5(K/R<sub>e</sub>)².</span></label>
+    <label><input type="checkbox" data-c="5"> <span>Je sais dépouiller un essai sur éprouvette CT et en vérifier la validité.</span></label>
+    <label><input type="checkbox" data-c="6"> <span>Je sais passer de K à G et expliquer pourquoi l'acier absorbe tant d'énergie.</span></label>
+    <label><input type="checkbox" data-c="7"> <span>Je sais définir le CTOD et la courbe J, et convertir un CTOD ou un J en K équivalent.</span></label>
+    <label><input type="checkbox" data-c="8"> <span>Je sais placer un défaut sur un diagramme FAD et dire s'il est acceptable.</span></label>
+    <label><input type="checkbox" data-c="9"> <span>Je sais où mettre les contraintes résiduelles (dans K<sub>r</sub>, pas dans L<sub>r</sub>) et ce que change un détensionnement.</span></label>
+    <label><input type="checkbox" data-c="10"> <span>Je sais enchaîner les étapes d'une évaluation de défaut de soudure, y compris le lien avec la fatigue.</span></label>
+  </div>
+  <p class="status" id="checkMsg"></p>
+
+  <div class="weld"><b>🔥 Le bilan de la série : de la cassure au défaut acceptable</b>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Question</th><th>L'outil</th><th>Cours</th><th>Le réflexe du soudeur</th></tr>
+      <tr><td>Comment a-t-elle cassé ?</td><td>faciès : cupules, clivage, intergranulaire, fatigue</td><td class="n">1</td><td>lire la cassure, ne jamais remboîter</td></tr>
+      <tr><td>L'acier est-il tenace au froid ?</td><td>essai Charpy, T<sub>27J</sub>, nuances J2, NL…</td><td class="n">2</td><td>exiger la résilience en ZAT et en métal fondu</td></tr>
+      <tr><td>Ce défaut est-il sévère ?</td><td>K = σY√a, K<sub>t</sub>, modes</td><td class="n">3</td><td>caractériser et idéaliser le défaut</td></tr>
+      <tr><td>Peut-il rester en service ?</td><td>K<sub>IC</sub>, CTOD, J, diagramme FAD</td><td class="n">4</td><td>calculer plutôt que réparer par principe</td></tr>
+    </table></div>
+  </div>
+  <div class="meta">🔭 <b>Et après ?</b> La série Fatigue prolonge celle-ci : un défaut accepté aujourd'hui peut grandir sous les cycles de service, à une vitesse fixée par l'étendue ΔK du facteur d'intensité (loi de Paris, Fatigue, cours 4). Le fluage, rupture lente à haute température, fait l'objet de la série Fluage.</div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="wrap">
+  <p>Cours 4 sur 4 de la série « Mécanique de la rupture : de la cassure au défaut acceptable ». Pour les notations et les conventions, l'enseignement de ta formation fait foi.</p>
+</div>
+</footer>
+<script>
+(function(){
+"use strict";
+const NS="http://www.w3.org/2000/svg";
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const RM=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function el(tag,attrs,parent){
+  const e=document.createElementNS(NS,tag);
+  if(attrs){for(const k in attrs){const v=attrs[k];if(v===undefined||v===null)continue;
+    if(typeof v==="string"&&v.indexOf("var(")>=0&&k!=="style")e.style.setProperty(k,v);else e.setAttribute(k,v);}}
+  if(parent)parent.appendChild(e);
+  return e;
+}
+function tx(p,x,y,str,attrs){const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);t.textContent=str;return t;}
+function txs(p,x,y,parts,attrs){/* parts: [["σ",""],["max","sub"],[" = 3",""]] */
+  const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);
+  parts.forEach(pt=>{const s=el("tspan",pt[1]==="sub"?{"font-size":"0.72em",dy:"3"}:(pt[2]?{dy:pt[2]}:{}),t);s.textContent=pt[0];
+    if(pt[1]==="sub"){const r=el("tspan",{dy:"-3"},t);r.textContent="\u200b";}});
+  return t;
+}
+function clear(svg){while(svg.firstChild)svg.removeChild(svg.firstChild);}
+function fitText(t,x0,x1,gap){/* garde un texte SVG entre x0 et x1 : il passe de l'autre côté de son repère (écart gap), sinon il glisse */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const a=t.getAttribute("text-anchor")||"start",x=+t.getAttribute("x");
+  if(gap&&a!=="middle"&&(b.x<x0||b.x+b.width>x1)){t.setAttribute("text-anchor",a==="end"?"start":"end");t.setAttribute("x",a==="end"?x+2*gap:x-2*gap);b=t.getBBox();}
+  const nx=+t.getAttribute("x");
+  if(b.x+b.width>x1)t.setAttribute("x",nx-(b.x+b.width-x1));else if(b.x<x0)t.setAttribute("x",nx+(x0-b.x));
+  return t;}
+function arrow(p,x1,y1,x2,y2,color,w,h){
+  w=w||2.4;h=h||10;
+  const g=el("g",{class:"arr"},p);g.style.color=color||"var(--ink)";
+  const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy);
+  if(L<1)return g;
+  const ux=dx/L,uy=dy/L,hh=Math.min(h,L*0.6),bx=x2-ux*hh,by=y2-uy*hh,hw=hh*0.45+w*0.3;
+  el("line",{x1:x1,y1:y1,x2:bx,y2:by,"stroke-width":w,"stroke-linecap":"round"},g);
+  el("polygon",{points:x2+","+y2+" "+(bx-uy*hw)+","+(by+ux*hw)+" "+(bx+uy*hw)+","+(by-ux*hw)},g);
+  return g;
+}
+function darrow(p,x,y1,y2,color,w){/* double flèche verticale */
+  const g=el("g",{},p);const m=(y1+y2)/2;
+  if(Math.abs(y2-y1)<4){el("line",{x1:x-5,y1:y1,x2:x+5,y2:y1,stroke:color,"stroke-width":2},g);return g;}
+  arrow(g,x,m,x,y1,color,w||2,8);arrow(g,x,m,x,y2,color,w||2,8);return g;
+}
+function nf(v,d){
+  if(d===undefined)d=1;
+  if(Math.abs(v)<0.5*Math.pow(10,-d))v=0;
+  return v.toLocaleString("fr-FR",{minimumFractionDigits:d,maximumFractionDigits:d}).replace("-","−").replace(/[\u202f\u2009]/g,"\u00a0");
+}
+const SUP={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function sci(v,d){
+  if(v===0)return "0";
+  if(!isFinite(v))return "∞";
+  let e=Math.floor(Math.log10(Math.abs(v)));
+  let m=v/Math.pow(10,e);
+  const dd=d===undefined?1:d;
+  if(Math.abs(Number(m.toFixed(dd)))>=10){m/=10;e+=1;}
+  return nf(m,dd)+" × 10"+String(e).split("").map(c=>SUP[c]).join("");
+}
+function bigN(v){/* nombre de cycles lisible */
+  if(!isFinite(v))return "∞";
+  if(v===0)return "0";
+  if(v<10)return nf(v,v<1?2:0);
+  if(v<1e5)return nf(Math.round(v),0);
+  return sci(v,1);
+}
+function dur(s){
+  if(!isFinite(s))return "∞";
+  if(s<60)return nf(s,s<10?1:0)+" s";
+  if(s<3600)return nf(s/60,0)+" min";
+  if(s<86400)return nf(s/3600,1)+" h";
+  if(s<86400*365)return nf(s/86400,1)+" jours";
+  return nf(s/(86400*365),1)+" ans";
+}
+function svgW(svg){const r=svg.getBoundingClientRect();return Math.max(290,Math.round(r.width||(svg.parentNode&&svg.parentNode.clientWidth)||600));}
+function setVB(svg,W,H){svg.setAttribute("viewBox","0 0 "+W+" "+H);}
+const redraws=[];
+let rzT=null,lastWW=window.innerWidth;
+window.addEventListener("resize",()=>{if(window.innerWidth===lastWW)return;lastWW=window.innerWidth;clearTimeout(rzT);rzT=setTimeout(()=>redraws.forEach(f=>{try{f();}catch(e){console.error(e);}}),120);});
+
+function niceStep(range,n){const raw=range/(n||5),p=Math.pow(10,Math.floor(Math.log10(raw))),m=raw/p;return (m<1.5?1:m<3?2:m<7?5:10)*p;}
+function setOn(sel,btn){$$(sel+" .btn").forEach(b=>b.classList.toggle("on",b===btn));}
+function fmtmm(mm){return mm<0.1?nf(mm*1000,0)+" µm":mm<10?nf(mm,mm<1?2:1)+" mm":nf(mm,0)+" mm";}
+function axes(svg,x0,x1,y0,y1,xmin,xmax,ymin,ymax,xlab,ylab,xstep,ystep,xfmt,yfmt){
+  const X=v=>x0+(x1-x0)*(v-xmin)/(xmax-xmin),Y=v=>y1-(y1-y0)*(v-ymin)/(ymax-ymin);
+  for(let v=Math.ceil(ymin/ystep-1e-9)*ystep;v<=ymax+1e-9;v+=ystep){el("line",{x1:x0,y1:Y(v),x2:x1,y2:Y(v),class:"gridbg"},svg);tx(svg,x0-5,Y(v)+4,yfmt?yfmt(v):nf(v,ystep<1?1:0),{class:"lbl","text-anchor":"end"});}
+  for(let v=Math.ceil(xmin/xstep-1e-9)*xstep;v<=xmax+1e-9;v+=xstep){el("line",{x1:X(v),y1:y1,x2:X(v),y2:y1+4,class:"tick"},svg);tx(svg,X(v),y1+17,xfmt?xfmt(v):nf(v,xstep<1?1:0),{class:"lbl","text-anchor":"middle"});}
+  el("line",{x1:x0,y1:y1,x2:x1,y2:y1,class:"axis"},svg);el("line",{x1:x0,y1:y0-4,x2:x0,y2:y1,class:"axis"},svg);
+  tx(svg,x0+4,y0-10,ylab,{class:"lbl"});tx(svg,x1,y1+32,xlab,{class:"lbl","text-anchor":"end"});
+  return {X:X,Y:Y};
+}
+function animate(btn,label,dur,onStep,onEnd){
+  let raf=null,run=false;
+  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;btn.textContent=label;}
+  function start(){if(run){stop();return;}if(RM){onStep(1);stop();if(onEnd)onEnd();return;}
+    run=true;btn.textContent="⏸ Pause";const t0=performance.now();
+    const step=now=>{const p=Math.min(1,(now-t0)/dur);onStep(p);if(p>=1){stop();if(onEnd)onEnd();return;}raf=requestAnimationFrame(step);};raf=requestAnimationFrame(step);}
+  btn.addEventListener("click",start);return {stop:stop,running:()=>run};
+}
+
+/* =========================================================
+   M1 : la carte contrainte-défaut
+   ========================================================= */
+(function(){
+  const svg=$("#m1svg");if(!svg)return;
+  const ss=$("#m1s"),sa=$("#m1a"),ro=$("#m1r"),msg=$("#m1msg"),Y=1.99;
+  const MAT={verre:{n:"verre",K:0.75,Re:null},cer:{n:"alumine",K:4,Re:null},alu:{n:"alliage d'aluminium",K:35,Re:450},hle:{n:"acier à haute limite d'élasticité",K:50,Re:1000},acier:{n:"acier de construction",K:100,Re:355},froid:{n:"acier au palier fragile",K:35,Re:450}};
+  let key="acier";
+  const sOf=()=>Math.pow(10,3.7*(+ss.value)/1000),aOf=()=>Math.pow(10,-2+5*(+sa.value)/1000);/* MPa, mm */
+  function draw(){
+    const W=svgW(svg),H=W<520?330:350;setVB(svg,W,H);clear(svg);
+    const m=MAT[key],s=sOf(),a=aOf(),K=s*Y*Math.sqrt(a/1000),ac=Math.pow(m.K/(Y*s),2)*1000,sr=m.K/(Y*Math.sqrt(a/1000));
+    const x0=W<520?54:62,x1=W-16,y0=30,y1=H-46;
+    const ax=axes(svg,x0,x1,y0,y1,-2,3,0,3.7,"profondeur du défaut a (échelle log)","contrainte σ (MPa, log)",1,1,v=>["10 µm","0,1 mm","1 mm","10 mm","100 mm","1 m"][Math.round(v)+2],v=>["1","10","100","1 000"][Math.round(v)]);
+    const X=ax.X,YY=ax.Y,lg=Math.log10;
+    /* zones */
+    let dR="M"+X(-2)+" "+y0;for(let i=0;i<=100;i++){const la=-2+5*i/100,v=lg(m.K/(Y*Math.sqrt(Math.pow(10,la)/1000)));dR+=" L"+X(la).toFixed(1)+" "+YY(Math.min(3.7,Math.max(0,v))).toFixed(1);}dR+=" L"+X(3)+" "+y0+" Z";
+    el("path",{d:dR,fill:"var(--sig)",opacity:.10},svg);
+    if(m.Re){el("rect",{x:x0,y:y0,width:x1-x0,height:YY(lg(m.Re))-y0,fill:"var(--mat)",opacity:.08},svg);
+      el("line",{x1:x0,y1:YY(lg(m.Re)),x2:x1,y2:YY(lg(m.Re)),stroke:"var(--mat)","stroke-width":2,"stroke-dasharray":"7 4"},svg);
+      txs(svg,x0+6,YY(lg(m.Re))-6,[["R",""],["e","sub"],[" = "+m.Re+" MPa",""]],{"font-size":"12",fill:"var(--mat)"});
+      const as=Math.pow(m.K/(Y*m.Re),2)*1000;if(as>0.01&&as<1000){el("line",{x1:X(lg(as)),y1:YY(lg(m.Re)),x2:X(lg(as)),y2:y1,stroke:"var(--muted)","stroke-width":1,"stroke-dasharray":"3 3"},svg);
+        tx(svg,X(lg(as))+4,y1-6,"a* = "+fmtmm(as),{"font-size":"11.5",fill:"var(--muted)"});}}
+    let d="";for(let i=0;i<=100;i++){const la=-2+5*i/100,v=lg(m.K/(Y*Math.sqrt(Math.pow(10,la)/1000)));if(v>3.75||v<-0.05)continue;d+=(d?"L":"M")+X(la).toFixed(1)+" "+YY(v).toFixed(1)+" ";}
+    el("path",{d:d,fill:"none",stroke:"var(--sig)","stroke-width":2.8},svg);
+    tx(svg,x1-6,y0+16,"rupture brutale",{"font-size":"12",fill:"var(--sig)","text-anchor":"end","font-weight":"700"});
+    const broke=K>=m.K,yld=m.Re&&s>=m.Re;
+    el("circle",{cx:X(lg(a)),cy:YY(lg(s)),r:7,fill:broke?"var(--sig)":yld?"var(--mat)":"var(--eps)",stroke:"var(--card)","stroke-width":2},svg);
+    $("#m1so").textContent=nf(s,s<10?1:0)+" MPa";$("#m1ao").textContent=fmtmm(a);
+    ro.innerHTML="<span>K = <b class='sig'>"+nf(K,K<10?2:1)+" MPa·√m</b></span><span>K<sub>IC</sub> = <b class='mat'>"+m.K+"</b></span><span>K/K<sub>IC</sub> = "+nf(K/m.K,2)+"</span><span>a<sub>c</sub> (à "+nf(s,0)+" MPa) = <b class='eps'>"+fmtmm(ac)+"</b></span><span>σ<sub>r</sub> (pour "+fmtmm(a)+") = "+nf(sr,sr<10?1:0)+" MPa</span>";
+    let t;
+    if(broke&&!yld)t="💥 <b>Rupture brutale</b> : K = "+nf(K,1)+" ≥ K<sub>IC</sub> = "+m.K+" MPa·√m"+(m.Re?", sous R<sub>e</sub> : la pièce casse sans plastifier, sans prévenir.":".");
+    else if(broke&&yld)t="⚠️ Rupture <b>et</b> plastification : on est au-dessus des deux limites. C'est la zone où les deux mécanismes interagissent : le diagramme FAD (chapitre 6) est fait pour elle.";
+    else if(yld)t="La section plastifie (σ ≥ R<sub>e</sub>) avant que la fissure ne se propage : pour ce petit défaut, la ténacité n'est pas le facteur limitant.";
+    else t="✅ Défaut stable : K = "+nf(K,1)+" MPa·√m, soit "+nf(100*K/m.K,0)+" % de K<sub>IC</sub>. À cette contrainte, il faudrait un défaut de "+fmtmm(ac)+" pour casser.";
+    if(m.Re){const as=Math.pow(m.K/(Y*m.Re),2)*1000;t+=" Taille de transition a* = (K<sub>IC</sub>/(Y·R<sub>e</sub>))² ≈ "+fmtmm(as)+" : en dessous, la plasticité arrive d'abord ; au-dessus, la rupture.";}
+    msg.innerHTML=t;
+  }
+  const A=animate($("#m1play"),"▶ Faire grandir le défaut",4000,p=>{sa.value=Math.round(1000*p);draw();});
+  [ss,sa].forEach(e=>e.addEventListener("input",()=>{A.stop();draw();}));
+  $$("#m1mat .btn").forEach(b=>b.addEventListener("click",()=>{key=b.dataset.k;setOn("#m1mat",b);draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M2 : l'épaisseur qui change tout
+   ========================================================= */
+(function(){
+  const svg=$("#m2svg");if(!svg)return;
+  const sB=$("#m2B"),ro=$("#m2r"),msg=$("#m2msg");
+  const MAT={hle:{K:60,Re:700},alu:{K:30,Re:400},acier:{K:120,Re:355}};
+  let key="hle";
+  const BOf=()=>Math.pow(10,2.5*(+sB.value)/1000);/* mm */
+  const KC=(m,B)=>Math.min(3*m.K,m.K*Math.sqrt(1+1.4*Math.pow(Math.pow(m.K/m.Re,2)/(B/1000),2)));
+  function draw(){
+    const W=svgW(svg),narrow=W<560,H=narrow?520:330;setVB(svg,W,H);clear(svg);
+    const m=MAT[key],B=BOf(),kc=KC(m,B),Bstar=2.5*Math.pow(m.K/m.Re,2)*1000,rps=Math.pow(kc/m.Re,2)/(2*Math.PI)*1000,rpd=Math.pow(m.K/m.Re,2)/(6*Math.PI)*1000;
+    /* courbe K_C(B) */
+    const gx0=52,gx1=narrow?W-30:W*0.56,gy0=34,gy1=narrow?250:H-46;
+    const ax=axes(svg,gx0,gx1,gy0,gy1,0,2.5,0,3.2*m.K,"épaisseur B (log)","",0.5,niceStep(3.2*m.K,4),v=>nf(Math.pow(10,v),Math.pow(10,v)<10?1:0)+" mm",v=>nf(v,0));
+    txs(svg,gx0+4,gy0-10,[["K",""],["C","sub"],[" (MPa·√m)",""]],{class:"lbl"});
+    const X=ax.X,Y=ax.Y;
+    el("line",{x1:gx0,y1:Y(m.K),x2:gx1,y2:Y(m.K),stroke:"var(--mat)","stroke-width":1.6,"stroke-dasharray":"6 4"},svg);
+    txs(svg,gx0+6,Y(m.K)-6,[["K",""],["IC","sub"],[" = "+m.K,""]],{"font-size":"12",fill:"var(--mat)"});
+    if(Bstar>1&&Bstar<316){el("line",{x1:X(Math.log10(Bstar)),y1:gy0,x2:X(Math.log10(Bstar)),y2:gy1,stroke:"var(--gam)","stroke-width":1.4,"stroke-dasharray":"4 3"},svg);
+      fitText(tx(svg,X(Math.log10(Bstar))+4,gy0+12,"B* = "+nf(Bstar,0)+" mm",{"font-size":"11.5",fill:"var(--gam)"}),gx0+4,gx1-2,4);}
+    else if(Bstar>=316)tx(svg,gx1-4,gy0+12,"B* = "+nf(Bstar,0)+" mm, hors cadre",{"font-size":"11.5",fill:"var(--gam)","text-anchor":"end"});
+    let d="";for(let i=0;i<=120;i++){const lb=2.5*i/120;d+=(i?"L":"M")+X(lb).toFixed(1)+" "+Y(KC(m,Math.pow(10,lb))).toFixed(1)+" ";}
+    el("path",{d:d,fill:"none",stroke:"var(--sig)","stroke-width":2.8},svg);
+    el("circle",{cx:X(Math.log10(B)),cy:Y(kc),r:6,fill:"var(--sig)",stroke:"var(--card)","stroke-width":2},svg);
+    /* cassure dans l'épaisseur */
+    const cx0=narrow?20:W*0.62,cw=narrow?W-40:W*0.36,cy0=narrow?gy1+70:60,ch=narrow?150:180;
+    tx(svg,cx0,cy0-14,"La cassure vue dans l'épaisseur",{class:"ttl"});
+    const sc=cw/B,lip=Math.min(B/2,rps),full=lip>=B/2-1e-6;
+    const lw=lip*sc,rise=lw*Math.min(0.9,(ch*0.45-8)/(cw/2));
+    el("rect",{x:cx0,y:cy0,width:cw,height:ch,fill:"color-mix(in srgb, var(--ink) 12%, var(--card))",stroke:"var(--ink)","stroke-width":1.5},svg);
+    if(!full)el("rect",{x:cx0+lw,y:cy0+ch*0.45,width:cw-2*lw,height:4,fill:"var(--eps)"},svg);
+    [[cx0,1],[cx0+cw,-1]].forEach(e=>{const x=e[0],sg=e[1];el("polygon",{points:x+","+(cy0+ch*0.45-rise)+" "+(x+sg*lw)+","+(cy0+ch*0.45)+" "+(x+sg*lw)+","+(cy0+ch*0.45+4)+" "+x+","+(cy0+ch*0.45+4-rise),fill:"var(--gam)",opacity:.75},svg);});
+    tx(svg,cx0+cw/2,cy0+ch*0.45+(full?24:-10),full?"cassure entièrement oblique":"zone plate (déformation plane)",{"font-size":"11.5","text-anchor":"middle",fill:"var(--eps)"});
+    tx(svg,cx0+4,cy0+ch-8,"lèvres : "+nf(lip,lip<1?2:1)+" mm de chaque côté",{"font-size":"11.5",fill:"var(--gam)"});
+    darrow(svg,cx0+cw+0,cy0,cy0,"var(--ink)",1);
+    el("line",{x1:cx0,y1:cy0+ch+12,x2:cx0+cw,y2:cy0+ch+12,stroke:"var(--ink)","stroke-width":1},svg);tx(svg,cx0+cw/2,cy0+ch+26,"B = "+nf(B,B<10?1:0)+" mm",{"font-size":"12","text-anchor":"middle"});
+    $("#m2Bo").textContent=nf(B,B<10?1:0)+" mm";
+    const fr=100*Math.min(1,2*lip/B);
+    ro.innerHTML="<span>K<sub>C</sub> = <b class='sig'>"+(kc>=2.99*m.K?"&gt; "+nf(3*m.K,0):nf(kc,0))+" MPa·√m</b></span><span>r<sub>Y</sub> contrainte plane = "+nf(rps,rps<1?2:1)+" mm</span><span>r<sub>Y</sub> déformation plane = "+nf(rpd,2)+" mm</span><span>lèvres : "+nf(fr,0)+" % de la cassure</span><span>B* = 2,5(K<sub>IC</sub>/R<sub>e</sub>)² = "+nf(Bstar,0)+" mm</span>";
+    if(B>=Bstar)msg.innerHTML="✅ B = "+nf(B,0)+" mm ≥ B* : la <b>déformation plane</b> domine, la cassure est plate avec de minces lèvres, et la ténacité apparente est très proche de K<sub>IC</sub>. C'est la valeur à retenir pour les pièces épaisses.";
+    else if(kc>=2.99*m.K)msg.innerHTML="La tôle est si mince devant la zone plastique (r<sub>Y</sub> ≈ "+nf(rps,1)+" mm) qu'elle casse presque entièrement en <b>contrainte plane</b>, par cisaillement oblique : la ténacité apparente dépasse 3 K<sub>IC</sub>, et la mécanique linéaire ne s'applique plus. Il faudrait B ≥ "+nf(Bstar,0)+" mm pour mesurer K<sub>IC</sub>.";
+    else msg.innerHTML="Épaisseur intermédiaire : K<sub>C</sub> = "+nf(kc,0)+" MPa·√m, supérieur à K<sub>IC</sub>. Les lèvres de contrainte plane occupent "+nf(fr,0)+" % de la cassure. Augmente B : K<sub>C</sub> descend vers K<sub>IC</sub>.";
+  }
+  const A=animate($("#m2play"),"▶ De la tôle mince à la tôle épaisse",4000,p=>{sB.value=Math.round(1000*p);draw();});
+  sB.addEventListener("input",()=>{A.stop();draw();});
+  $$("#m2mat .btn").forEach(b=>b.addEventListener("click",()=>{key=b.dataset.k;setOn("#m2mat",b);draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M3 : l'essai de ténacité virtuel (éprouvette CT)
+   ========================================================= */
+(function(){
+  const svg=$("#m3svg");if(!svg)return;
+  const sB=$("#m3B"),ro=$("#m3r"),msg=$("#m3msg");
+  const MAT={trem:{n:"acier trempé",K:50,Re:1200,E:210000},alu:{n:"alliage d'aluminium 7075",K:28,Re:500,E:72000},froid:{n:"acier de construction à −40 °C",K:60,Re:420,E:210000},amb:{n:"acier de construction à +20 °C",K:150,Re:355,E:210000}};
+  let key="trem",prog=1;const FA=9.659;/* facteur géométrique de la CT pour a/W = 0,5 */
+  function test(){
+    const m=MAT[key],B=+sB.value,Wd=2*B,a=B,lig=Wd-a;
+    const KC=Math.min(3.5*m.K,m.K*Math.sqrt(1+1.4*Math.pow(Math.pow(m.K/m.Re,2)/(B/1000),2)));
+    const Kof=F=>F/(B*Math.sqrt(Wd))*FA/31.62;/* MPa·√m */
+    const Fof=K=>K*31.62*B*Math.sqrt(Wd)/FA;
+    const PL=0.5*B*lig*m.Re,C=25/(m.E*B);
+    const del=F=>{const rY=Math.pow(Kof(F)/m.Re,2)/(6*Math.PI)*1000;return C*F*(1+2.5*rY/a)/Math.sqrt(Math.max(1e-6,1-Math.pow(F/PL,4)));};
+    let Fend=Fof(KC),collapse=false;if(Fend>0.985*PL){Fend=0.985*PL;collapse=true;}
+    /* F_Q : sécante à 95 % */
+    let FQ=Fend,lo=0,hi=Fend;if(del(Fend)>C*Fend/0.95){for(let i=0;i<60;i++){const mid=(lo+hi)/2;if(del(mid)>C*mid/0.95)hi=mid;else lo=mid;}FQ=(lo+hi)/2;}
+    const KQ=Kof(FQ),lim=2.5*Math.pow(KQ/m.Re,2)*1000;
+    return {m:m,B:B,Wd:Wd,a:a,lig:lig,del:del,Fend:Fend,FQ:FQ,KQ:KQ,lim:lim,collapse:collapse,C:C,ratio:Fend/FQ};
+  }
+  function draw(){
+    const W=svgW(svg),narrow=W<600,H=narrow?560:340;setVB(svg,W,H);clear(svg);
+    const t=test();
+    const gx0=58,gx1=narrow?W-14:W*0.6,gy0=34,gy1=narrow?300:H-46;
+    const dmax=t.del(t.Fend)*1.12,fmax=t.Fend/1000*1.15;
+    const ax=axes(svg,gx0,gx1,gy0,gy1,0,dmax,0,fmax,"ouverture δ (mm)","F (kN)",niceStep(dmax,4),niceStep(fmax,4),v=>nf(v,dmax<1?2:1),v=>nf(v,0));
+    const X=ax.X,Y=ax.Y;
+    const Fn=t.Fend*prog;let d="";
+    for(let i=0;i<=200;i++){const F=Fn*i/200;d+=(i?"L":"M")+X(t.del(F)).toFixed(1)+" "+Y(F/1000).toFixed(1)+" ";}
+    if(prog>=1&&!t.collapse){d+=" L"+X(t.del(t.Fend)*1.02).toFixed(1)+" "+Y(t.Fend/1000*0.25).toFixed(1);}
+    el("path",{d:d,fill:"none",stroke:"var(--frc)","stroke-width":2.8},svg);
+    const d0=Math.min(dmax*0.97,t.C*fmax*1000*0.98);/* pente initiale arrêtée sous le haut du graphique */
+    el("line",{x1:X(0),y1:Y(0),x2:X(d0),y2:Y(d0/t.C/1000),stroke:"var(--muted)","stroke-width":1.2,"stroke-dasharray":"2 4"},svg);
+    if(prog>=1){
+      const ds=Math.min(dmax*0.97,t.C*fmax*1000/0.95*0.98);el("line",{x1:X(0),y1:Y(0),x2:X(ds),y2:Y(ds*0.95/t.C/1000),stroke:"var(--mat)","stroke-width":1.6,"stroke-dasharray":"6 4"},svg);
+      el("circle",{cx:X(t.del(t.FQ)),cy:Y(t.FQ/1000),r:6,fill:"var(--mat)",stroke:"var(--card)","stroke-width":2},svg);
+      const fq=fitText(txs(svg,X(t.del(t.FQ))+8,Y(t.FQ/1000)+16,[["F",""],["Q","sub"],[" = "+nf(t.FQ/1000,1)+" kN",""]],{"font-size":"12",fill:"var(--mat)","font-weight":"700"}),gx0+4,gx1-2,8);
+      if(fq.getAttribute("text-anchor")==="end"){fq.setAttribute("x",X(t.del(t.FQ))-18);fq.setAttribute("y",Y(t.FQ/1000)-10);}
+      if(t.ratio>1.005){el("line",{x1:gx0,y1:Y(t.Fend/1000),x2:X(t.del(t.Fend)),y2:Y(t.Fend/1000),stroke:"var(--frc)","stroke-width":1,"stroke-dasharray":"3 3"},svg);
+        txs(svg,gx0+4,Y(t.Fend/1000)-5,[["F",""],["max","sub"],[" = "+nf(t.Fend/1000,1)+" kN",""]],{"font-size":"12",fill:"var(--frc)"});}
+      tx(svg,X(t.del(t.Fend)),Y(t.Fend/1000)-10,t.collapse?"plastification":"💥",{"font-size":t.collapse?"11.5":"15","text-anchor":"middle",fill:"var(--frc)"});}
+    /* tableau de validité */
+    const vx=narrow?20:W*0.64,vy=narrow?gy1+70:50;
+    tx(svg,vx,vy-16,"Conditions de validité",{class:"ttl"});
+    const rows=[["a = "+nf(t.a,0)+" mm ≥ "+nf(t.lim,1)+" mm",t.a>=t.lim],["W − a = "+nf(t.lig,0)+" mm ≥ "+nf(t.lim,1)+" mm",t.lig>=t.lim],["B = "+nf(t.B,0)+" mm ≥ "+nf(t.lim,1)+" mm",t.B>=t.lim],["Fmax/FQ = "+nf(t.ratio,2)+" ≤ 1,1",t.ratio<=1.1],["préfissure de fatigue",true]];
+    rows.forEach((r,i)=>{const yy=vy+i*26;tx(svg,vx,yy+4,prog>=1?(r[1]?"✅":"❌"):"…",{"font-size":"14"});tx(svg,vx+24,yy+4,r[0],{"font-size":"12.5"});});
+    const valid=rows.every(r=>r[1]);
+    $("#m3Bo").textContent=t.B+" mm (W = "+t.Wd+" mm)";
+    ro.innerHTML="<span>K<sub>Q</sub> = <b class='sig'>"+nf(t.KQ,1)+" MPa·√m</b></span><span>2,5(K<sub>Q</sub>/R<sub>e</sub>)² = "+nf(t.lim,1)+" mm</span><span>F<sub>max</sub>/F<sub>Q</sub> = "+nf(t.ratio,2)+"</span><span>vrai K<sub>IC</sub> du modèle : "+t.m.K+" MPa·√m</span>";
+    if(prog<1){msg.innerHTML="⏳ La machine ouvre l'éprouvette à vitesse constante…";return;}
+    if(valid)msg.innerHTML="✅ <b>Essai valide</b> : K<sub>IC</sub> = "+nf(t.KQ,1)+" MPa·√m pour "+t.m.n+". La courbe est restée presque droite jusqu'à la rupture brutale, et l'éprouvette est assez grande devant la zone plastique.";
+    else if(t.collapse)msg.innerHTML="❌ <b>Essai non valide</b> : "+t.m.n+" plastifie dans toute l'éprouvette avant que la fissure ne se propage brutalement ; F<sub>max</sub>/F<sub>Q</sub> = "+nf(t.ratio,1)+". Aucune épaisseur raisonnable ne donnerait un K<sub>IC</sub> valide : il faut mesurer le CTOD ou J (chapitre 5).";
+    else msg.innerHTML="❌ <b>Essai non valide</b> : K<sub>Q</sub> = "+nf(t.KQ,1)+" MPa·√m n'est qu'une valeur provisoire. "+(t.ratio>1.1?"La courbe s'est trop courbée avant la rupture (F<sub>max</sub>/F<sub>Q</sub> = "+nf(t.ratio,2)+"). ":"")+(t.B<t.lim?"L'éprouvette est trop mince : il faudrait B ≥ "+nf(t.lim,0)+" mm. ":"")+"Augmente l'épaisseur.";
+  }
+  const A=animate($("#m3play"),"▶ Lancer l'essai",2500,p=>{prog=p;draw();});
+  sB.addEventListener("input",()=>{A.stop();prog=1;draw();});
+  $$("#m3mat .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();key=b.dataset.k;setOn("#m3mat",b);prog=1;draw();}));
+  redraws.push(draw);draw();
+})();
+/* =========================================================
+   M4 : le triangle de l'énergie
+   ========================================================= */
+(function(){
+  const svg=$("#m4svg");if(!svg)return;
+  const sd=$("#m4da"),ro=$("#m4r"),msg=$("#m4msg");
+  let mode="F",prog=1;
+  const MATS=[["verre",0.75,70],["céramique",3,200],["polymère",3,1],["aluminium",35,70],["acier",100,200]];
+  function draw(){
+    const W=svgW(svg),narrow=W<600,H=narrow?560:330;setVB(svg,W,H);clear(svg);
+    const k=+sd.value/100,C1=1,C2=1+0.5*k;
+    /* --- triangle --- */
+    const gx0=50,gx1=narrow?W-14:W*0.52,gy0=34,gy1=narrow?280:H-46;
+    const F0=1,u1=C1*F0,umax=1.6,X=v=>gx0+(gx1-gx0)*v/umax,Y=v=>gy1-(gy1-gy0)*v/1.2;
+    el("line",{x1:gx0,y1:gy1,x2:gx1,y2:gy1,class:"axis"},svg);el("line",{x1:gx0,y1:gy0-4,x2:gx0,y2:gy1,class:"axis"},svg);
+    tx(svg,gx0+4,gy0-10,"force F",{class:"lbl"});tx(svg,gx1,gy1+18,"déplacement u",{class:"lbl","text-anchor":"end"});
+    let A,B;
+    if(mode==="F"){A=[u1,F0];B=[C2*F0,F0];}else{A=[u1,u1/C1];B=[u1,u1/C2];}
+    const ph=prog;/* 0-1/3 chargement, 1/3-2/3 avancée, 2/3-1 déchargement */
+    const p1=Math.min(1,ph*3),p2=Math.max(0,Math.min(1,ph*3-1)),p3=Math.max(0,Math.min(1,ph*3-2));
+    if(ph>=1)el("polygon",{points:[[0,0],A,B].map(p=>X(p[0])+","+Y(p[1])).join(" "),fill:"var(--gam)",opacity:.3},svg);
+    el("line",{x1:X(0),y1:Y(0),x2:X(A[0]*p1),y2:Y(A[1]*p1),stroke:"var(--ink)","stroke-width":2.4},svg);
+    if(p2>0)el("line",{x1:X(A[0]),y1:Y(A[1]),x2:X(A[0]+(B[0]-A[0])*p2),y2:Y(A[1]+(B[1]-A[1])*p2),stroke:"var(--eps)","stroke-width":2.6},svg);
+    if(p3>0)el("line",{x1:X(B[0]),y1:Y(B[1]),x2:X(B[0]*(1-p3)),y2:Y(B[1]*(1-p3)),stroke:"var(--ink)","stroke-width":2.4,"stroke-dasharray":"6 4"},svg);
+    const F2=Math.min(1.15,1.55/C2);
+    el("line",{x1:X(0),y1:Y(0),x2:X(1.15),y2:Y(1.15/C1),stroke:"var(--muted)","stroke-width":1,"stroke-dasharray":"2 4"},svg);
+    el("line",{x1:X(0),y1:Y(0),x2:X(F2*C2),y2:Y(F2),stroke:"var(--muted)","stroke-width":1,"stroke-dasharray":"2 4"},svg);
+    [["O",0,0,-12,14],["A",A[0],A[1],-4,-8],["B",B[0],B[1],6,mode==="F"?-8:14]].forEach(l=>tx(svg,X(l[1])+l[3],Y(l[2])+l[4],l[0],{class:"mth"}));
+    const uL=narrow?0.85:0.45;fitText(tx(svg,X(uL)-6,Y(uL/C1)-6,"pente 1/C₁ (fissure a)",{"font-size":"11",fill:"var(--muted)","text-anchor":"end"}),gx0+4,gx1);
+    if(k>0.05)fitText(tx(svg,X(0.45*C2)+8,Y(0.45)+14,"pente 1/C₂ (a + δa)",{"font-size":"11",fill:"var(--muted)"}),gx0+4,gx1);
+    const area=0.5*Math.abs(A[0]*B[1]-B[0]*A[1]);
+    /* --- énergies des matériaux --- */
+    const bx0=narrow?110:W*0.6+90,bx1=W-50,by0=narrow?gy1+70:54,lmin=0,lmax=5;
+    txs(svg,narrow?14:W*0.6,by0-20,[["G",""],["IC","sub"],[" ≈ K",""],["IC","sub"],["²/E (J/m², log)",""]],{class:"ttl"});
+    const BX=g=>bx0+(bx1-bx0)*(Math.log10(g)-lmin)/(lmax-lmin);
+    for(let p=lmin;p<=lmax;p++){el("line",{x1:BX(Math.pow(10,p)),y1:by0-4,x2:BX(Math.pow(10,p)),y2:by0+MATS.length*30,class:"gridbg"},svg);tx(svg,BX(Math.pow(10,p)),by0+MATS.length*30+14,p===0?"1":"10"+String(p).split("").map(c=>SUP[c]).join(""),{class:"lbl","text-anchor":"middle"});}
+    el("line",{x1:BX(4),y1:by0-6,x2:BX(4),y2:by0+MATS.length*30,stroke:"var(--mat)","stroke-width":1.4,"stroke-dasharray":"4 3"},svg);
+    txs(svg,BX(4)+3,by0-8,[["2γ",""],["s","sub"],[" ≈ 4",""]],{"font-size":"11",fill:"var(--mat)"});
+    MATS.forEach((mt,i)=>{const g=Math.pow(mt[1]*1e6,2)/(mt[2]*1e9),y=by0+i*30;
+      tx(svg,bx0-6,y+14,mt[0],{"font-size":"11.5","text-anchor":"end"});
+      el("rect",{x:bx0,y:y+3,width:Math.max(1,BX(g)-bx0),height:16,rx:3,fill:"var(--sig)",opacity:.75},svg);
+      tx(svg,BX(g)+5,y+15,nf(g,0),{"font-size":"11.5"});});
+    $("#m4dao").textContent="+"+nf(50*k,0)+" % de complaisance";
+    const uF=0.5*F0*F0*(C2-C1),uU=0.5*u1*u1*(1/C1-1/C2);
+    ro.innerHTML="<span>aire OAB = <b class='gam'>"+nf(area,3)+"</b> (unités F·u)</span><span>force imposée : "+nf(uF,3)+"</span><span>déplacement imposé : "+nf(uU,3)+"</span>"+(k>0?"<span>écart entre les deux : "+nf(100*(uF-uU)/uF,0)+" %</span>":"");
+    if(prog<1){msg.innerHTML="⏳ Chargement O→A, avancée de la fissure A→B, déchargement B→O…";return;}
+    msg.innerHTML=(k===0?"Sans avancée de fissure, aucune énergie n'est libérée : charge et décharge suivent la même droite.":(mode==="F"?"<b>Force imposée</b> : pendant l'avancée, la force reste constante et le point d'application recule (A→B). Les forces extérieures travaillent : la moitié de ce travail va dans l'énergie élastique, l'autre moitié, l'aire OAB, paie la rupture.":"<b>Déplacement imposé</b> : les mors ne bougent plus, la force chute (A→B) quand la pièce s'assouplit. Aucun travail extérieur : c'est l'énergie élastique elle-même qui paie la rupture, l'aire OAB.")+" Pour une petite avancée, les deux aires sont presque égales : G ne dépend pas du mode de chargement.")+" En bas : à ténacité égale (3 MPa·√m), le polymère libère 200 fois plus d'énergie que la céramique, car il est 200 fois plus souple.";
+  }
+  const A=animate($("#m4play"),"▶ Charger, fissurer, décharger",3000,p=>{prog=p;draw();});
+  sd.addEventListener("input",()=>{A.stop();prog=1;draw();});
+  $$("#m4mode .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();mode=b.dataset.k;setOn("#m4mode",b);prog=1;draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M5 : CTOD et courbe J
+   ========================================================= */
+(function(){
+  const svg=$("#m5svg");if(!svg)return;
+  const sK=$("#m5K"),sm=$("#m5m"),ro=$("#m5r"),msg=$("#m5msg");
+  const E=210e9,NU=0.3;
+  const MAT={s355:{n:"S355 au palier ductile",Re:355,C:400},zat:{n:"ZAT à gros grains",Re:450,C:120},mf:{n:"métal fondu tenace",Re:460,C:300}};
+  let key="s355";
+  function jic(m){let lo=0.2,hi=5;for(let i=0;i<60;i++){const x=(lo+hi)/2;if(m.C*Math.sqrt(x)>2*m.Re*(x-0.2))lo=x;else hi=x;}const x=(lo+hi)/2;return {da:x,J:m.C*Math.sqrt(x)};}/* kJ/m² */
+  function draw(){
+    const W=svgW(svg),narrow=W<600,H=narrow?600:330;setVB(svg,W,H);clear(svg);
+    const m=MAT[key],K=+sK.value,mm=+sm.value/10;
+    const del=K*K*1e12*(1-NU*NU)/(mm*m.Re*1e6*E)*1000;/* mm */
+    const J=K*K*1e12*(1-NU*NU)/E/1000;/* kJ/m² */
+    /* --- fond de fissure --- */
+    const px0=10,pw=narrow?W-20:W*0.44,py0=34,ph=narrow?220:H-60,tipx=px0+pw*0.62,cy=py0+ph/2,sc=300;/* px par mm */
+    tx(svg,px0,18,"Le fond de fissure (grossi)",{class:"ttl"});
+    el("rect",{x:px0,y:py0,width:pw,height:ph,fill:"color-mix(in srgb, var(--gam) 8%, var(--card))",stroke:"var(--line)","stroke-width":1.2},svg);
+    const h=Math.min(ph*0.42,del*sc/2),sl=0.06,xb=tipx-h;/* lèvres en coin, arrondi de rayon h : CTOD = 2h */
+    const up=x=>h+sl*(xb-x);
+    const d="M"+px0+" "+(cy-up(px0)).toFixed(1)+" L"+xb.toFixed(1)+" "+(cy-h).toFixed(1)+" A"+h.toFixed(1)+" "+h.toFixed(1)+" 0 0 1 "+xb.toFixed(1)+" "+(cy+h).toFixed(1)+" L"+px0+" "+(cy+up(px0)).toFixed(1)+" Z";
+    if(h>2)el("circle",{cx:tipx,cy:cy,r:Math.min(ph*0.45,h*2.2+6),fill:"var(--gam)",opacity:.12},svg);
+    el("path",{d:d,fill:"var(--paper)",stroke:"var(--ink)","stroke-width":1.8},svg);
+    /* les droites à 45° issues de la pointe coupent les lèvres là où l'arrondi rejoint le flanc */
+    const L=Math.min(tipx-px0-4,ph/2-4,Math.max(30,h*2.6));
+    el("line",{x1:tipx,y1:cy,x2:tipx-L,y2:cy-L,stroke:"var(--mat)","stroke-width":1.2,"stroke-dasharray":"4 3"},svg);
+    el("line",{x1:tipx,y1:cy,x2:tipx-L,y2:cy+L,stroke:"var(--mat)","stroke-width":1.2,"stroke-dasharray":"4 3"},svg);
+    if(h>1.5){darrow(svg,xb,cy-h,cy+h,"var(--eps)",1.6);tx(svg,xb-6,cy+4,"δ",{class:"mth",style:"fill:var(--eps)","text-anchor":"end"});}
+    arrow(svg,px0+20,py0+ph-6,px0+20,py0+ph-26,"var(--frc)",2,6);arrow(svg,px0+20,py0+6,px0+20,py0+26,"var(--frc)",2,6);
+    el("line",{x1:px0+pw-12-0.1*sc,y1:py0+ph-12,x2:px0+pw-12,y2:py0+ph-12,stroke:"var(--ink)","stroke-width":2.5},svg);tx(svg,px0+pw-12-0.05*sc,py0+ph-18,"0,1 mm",{"font-size":"11","text-anchor":"middle"});
+    /* --- courbe J --- */
+    const gx0=narrow?56:W*0.52+44,gx1=W-14,gy0=narrow?py0+ph+56:40,gy1=H-44,jm=Math.max(m.C*Math.sqrt(2)*1.15,J*1.1,100);
+    const ax=axes(svg,gx0,gx1,gy0,gy1,0,2,0,jm,"avancée Δa (mm)","J (kJ/m²)",0.5,niceStep(jm,4),v=>nf(v,1),v=>nf(v,0));
+    const X=ax.X,Y=ax.Y,jc=jic(m);
+    let dr="";for(let i=0;i<=100;i++){const x=2*i/100;dr+=(i?"L":"M")+X(x).toFixed(1)+" "+Y(m.C*Math.sqrt(x)).toFixed(1)+" ";}
+    el("path",{d:dr,fill:"none",stroke:"var(--eps)","stroke-width":2.6},svg);
+    const bl=x=>2*m.Re*x;el("line",{x1:X(0),y1:Y(0),x2:X(Math.min(2,jm/(2*m.Re))),y2:Y(bl(Math.min(2,jm/(2*m.Re)))),stroke:"var(--muted)","stroke-width":1.4},svg);
+    const xe=Math.min(2,0.2+jm/(2*m.Re));el("line",{x1:X(0.2),y1:Y(0),x2:X(xe),y2:Y(bl(xe-0.2)),stroke:"var(--mat)","stroke-width":1.6,"stroke-dasharray":"6 4"},svg);
+    fitText(tx(svg,X(xe)+6,Y(bl(xe-0.2))+12,"décalée de 0,2 mm",{"font-size":"11",fill:"var(--mat)"}),gx0+4,gx1-2,6);
+    el("circle",{cx:X(jc.da),cy:Y(jc.J),r:6,fill:"var(--mat)",stroke:"var(--card)","stroke-width":2},svg);
+    txs(svg,X(jc.da)+8,Y(jc.J)+16,[["J",""],["IC","sub"],[" = "+nf(jc.J,0),""]],{"font-size":"12",fill:"var(--mat)","font-weight":"700"});
+    if(J<jm){el("line",{x1:gx0,y1:Y(J),x2:gx1,y2:Y(J),stroke:"var(--sig)","stroke-width":1.4,"stroke-dasharray":"3 3"},svg);
+      tx(svg,gx1-4,Y(J)-5,"J appliqué",{"font-size":"11.5",fill:"var(--sig)","text-anchor":"end"});}
+    const KJ=Math.sqrt(jc.J*1000*E/(1-NU*NU))/1e6;
+    $("#m5Ko").textContent=K+" MPa·√m";$("#m5mo").textContent=nf(mm,1);
+    ro.innerHTML="<span>CTOD δ = <b class='eps'>"+nf(del,3)+" mm</b></span><span>J = <b class='sig'>"+nf(J,1)+" kJ/m²</b></span><span>J<sub>IC</sub> = "+nf(jc.J,0)+" kJ/m²</span><span>K<sub>J</sub> = <b class='mat'>"+nf(KJ,0)+" MPa·√m</b></span><span>δ à l'amorçage ≈ "+nf(jc.J/(mm*m.Re),2)+" mm</span>";
+    const tear=J>jc.J,da=tear?Math.pow(J/m.C,2):0;
+    msg.innerHTML="Pour K = "+K+" MPa·√m, le fond de fissure de "+m.n+" (R<sub>e</sub> = "+m.Re+" MPa) s'ouvre de δ = "+nf(del,3)+" mm, et J = mR<sub>e</sub>δ = "+nf(J,1)+" kJ/m². "+(tear?"⚠️ J dépasse J<sub>IC</sub> : la <b>déchirure ductile</b> a commencé ; la courbe R donne une avancée stable d'environ "+nf(Math.min(da,9.99),2)+" mm.":"J reste sous J<sub>IC</sub> = "+nf(jc.J,0)+" kJ/m² : la fissure s'émousse sans avancer.")+(key==="zat"?" La ZAT à gros grains a une courbe R bien plus basse : c'est elle qui limite souvent l'acceptation d'une soudure.":"");
+  }
+  const A=animate($("#m5play"),"▶ Charger",3500,p=>{sK.value=Math.round(5+245*p);draw();});
+  [sK,sm].forEach(e=>e.addEventListener("input",()=>{A.stop();draw();}));
+  $$("#m5mat .btn").forEach(b=>b.addEventListener("click",()=>{key=b.dataset.k;setOn("#m5mat",b);draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M6 : le diagramme FAD
+   ========================================================= */
+(function(){
+  const svg=$("#m6svg");if(!svg)return;
+  const ss=$("#m6s"),sa=$("#m6a"),sK=$("#m6K"),sT=$("#m6T"),sTs=$("#m6Ts"),ro=$("#m6r"),msg=$("#m6msg");
+  const SY=355,SU=490,W=0.2,LRMAX=(SY+SU)/(2*SY);
+  let rf=0,ksrc="dir",anim=null;
+  const fal=L=>Math.pow(1+0.5*L*L,-0.5)*(0.3+0.7*Math.exp(-0.6*Math.pow(L,6)));
+  function kmat(){if(ksrc==="dir")return +sK.value;const T0=+sT.value-18;return 25.4+37.8*Math.exp(0.019*(+sTs.value-T0));}
+  function pt(a,sp,Km){const g=Math.sqrt(Math.PI*a)*Math.sqrt(1/Math.cos(Math.PI*a/W));return {Kp:sp*g,Ks:rf*SY*g,Kr:(sp+rf*SY)*g/Km,Lr:sp*W/(W-2*a)/SY};}
+  const ok=(a,sp,Km)=>{const p=pt(a,sp,Km);return p.Lr<=LRMAX&&p.Kr<=fal(p.Lr);};
+  function lam(a,sp,Km){let lo=0,hi=30;for(let i=0;i<70;i++){const m=(lo+hi)/2;if(ok(a,sp*m,Km))lo=m;else hi=m;}return lo;}
+  function acrit(sp,Km){let lo=1e-6,hi=W/2*0.999;if(!ok(lo,sp,Km))return 0;for(let i=0;i<70;i++){const m=(lo+hi)/2;if(ok(m,sp,Km))lo=m;else hi=m;}return lo;}
+  function draw(){
+    const Wd=svgW(svg),H=Wd<520?360:380;setVB(svg,Wd,H);clear(svg);
+    const sp=+ss.value,a=(+sa.value)/2000,Km=kmat(),p=pt(a,sp,Km),f=fal(p.Lr),L=lam(a,sp,Km),ac=acrit(sp,Km);
+    const x0=50,x1=Wd-16,y0=30,y1=H-46;
+    const ax=axes(svg,x0,x1,y0,y1,0,1.5,0,1.4,"Lr = σref/σy (effondrement plastique)","Kr = K/Kmat (rupture)",0.25,0.2,v=>nf(v,2),v=>nf(v,1));
+    const X=ax.X,Y=ax.Y;
+    let d="M"+X(0)+" "+Y(0);for(let i=0;i<=120;i++){const L2=LRMAX*i/120;d+=" L"+X(L2).toFixed(1)+" "+Y(fal(L2)).toFixed(1);}d+=" L"+X(LRMAX)+" "+Y(0)+" Z";
+    el("path",{d:d,fill:"var(--gam)",opacity:.14},svg);
+    let dl="";for(let i=0;i<=120;i++){const L2=LRMAX*i/120;dl+=(i?"L":"M")+X(L2).toFixed(1)+" "+Y(fal(L2)).toFixed(1)+" ";}dl+=" L"+X(LRMAX)+" "+Y(0);
+    el("path",{d:dl,fill:"none",stroke:"var(--ink)","stroke-width":2.6},svg);
+    tx(svg,X(0.06),Y(1.03)-6,"ligne d'évaluation",{"font-size":"11.5"});
+    fitText(txs(svg,X(LRMAX)+4,Y(0.08),[["L",""],["r,max","sub"],[" = "+nf(LRMAX,2),""]],{"font-size":"11.5"}),x0+4,x1-2,4);
+    fitText(tx(svg,X(0.3),Y(0.1),"zone acceptable",{"font-size":"13",fill:"var(--gam)","font-weight":"700","text-anchor":"middle"}),x0+4,x1-2);
+    tx(svg,X(1.3),Y(1.25),"défaillance",{"font-size":"13",fill:"var(--sig)","font-weight":"700","text-anchor":"middle"});
+    /* droite de chargement : origine en (0, Ks/Kmat), passe par le point */
+    const k0=p.Ks/Km,pc=pt(a,sp*L,Km);
+    let tEnd=Math.min(Math.max(1.6,L*1.15),1.5/Math.max(p.Lr,1e-6));
+    if(p.Kr>k0)tEnd=Math.min(tEnd,(1.4-k0)/(p.Kr-k0));
+    if(k0<1.4)el("line",{x1:X(0),y1:Y(k0),x2:X(p.Lr*tEnd),y2:Y(k0+(p.Kr-k0)*tEnd),stroke:"var(--frc)","stroke-width":1.4,"stroke-dasharray":"6 4"},svg);
+    if(L<29&&pc.Lr<=1.5&&pc.Kr<=1.4){el("circle",{cx:X(pc.Lr),cy:Y(pc.Kr),r:5,fill:"none",stroke:"var(--sig)","stroke-width":2},svg);}
+    if(anim!==null){const t=anim*L,pa=pt(a,sp*t,Km);el("circle",{cx:X(Math.min(1.5,pa.Lr)),cy:Y(Math.min(1.4,pa.Kr)),r:6,fill:"var(--frc)"},svg);}
+    const inside=p.Lr<=LRMAX&&p.Kr<=f;
+    el("circle",{cx:X(Math.min(1.5,p.Lr)),cy:Y(Math.min(1.4,p.Kr)),r:7,fill:inside?"var(--gam)":"var(--sig)",stroke:"var(--card)","stroke-width":2},svg);
+    $("#m6so").textContent=sp+" MPa";$("#m6ao").textContent=(+sa.value)+" mm";$("#m6Ko").textContent=(+sK.value)+" MPa·√m";$("#m6To").textContent=(+sT.value>0?"+":"")+sT.value+" °C";$("#m6Tso").textContent=(+sTs.value>0?"+":"")+sTs.value+" °C";
+    ro.innerHTML="<span>K<sub>mat</sub> = <b class='mat'>"+nf(Km,1)+" MPa·√m</b>"+(ksrc==="cv"?" (Charpy, 5 %)":"")+"</span><span>K = "+nf(p.Kp,1)+" + "+nf(p.Ks,1)+" (résiduelles)</span><span>K<sub>r</sub> = <b class='sig'>"+nf(p.Kr,3)+"</b></span><span>L<sub>r</sub> = <b class='sig'>"+nf(p.Lr,3)+"</b></span><span>ligne en L<sub>r</sub> : "+nf(f,3)+"</span><span>facteur de réserve ≈ <b>"+(L>=29?"> 29":nf(L,2))+"</b></span><span>2a critique ≈ <b class='eps'>"+(ac>0?nf(2*ac*1000,1)+" mm":"—")+"</b></span>";
+    const mode=pc.Lr>0.85*LRMAX?"l'<b>effondrement plastique</b> de la section":pc.Lr<0.4?"la <b>rupture fragile</b> (K atteint K<sub>mat</sub>)":"une rupture <b>élasto-plastique</b>, où les deux mécanismes se combinent";
+    msg.innerHTML=(inside?"✅ <b>Défaut acceptable</b> (dans ce modèle) : le point est sous la ligne. La charge pourrait être multipliée par ≈ "+nf(L,2)+" avant d'atteindre la ligne, ":(L<0.02?"❌ <b>Défaut non acceptable</b> : même sans charge de service, les contraintes résiduelles suffiraient à amorcer la rupture. Il faut ":"❌ <b>Défaut non acceptable</b> : le point est hors de la zone sûre. Il faudrait réduire la charge d'un facteur "+nf(1/L,2)+", ou "))+(inside?"et la défaillance viendrait alors par "+mode+".":"réparer, détensionner, ou mesurer une ténacité réelle plus élevée.")+(rf>0?" Les résiduelles (σ<sub>res</sub> = "+nf(rf*SY,0)+" MPa) comptent dans K<sub>r</sub> seulement : la droite de chargement part de K<sub>r</sub> = "+nf(k0,2)+".":"")+(ac>0?" Taille critique à cette charge : 2a ≈ "+nf(2*ac*1000,1)+" mm.":"");
+  }
+  function startAnim(){if(anim!==null)return;if(RM){anim=null;draw();return;}const t0=performance.now();anim=0;$("#m6play").textContent="…";
+    const step=now=>{anim=Math.min(1,(now-t0)/2500);draw();if(anim>=1){setTimeout(()=>{anim=null;$("#m6play").textContent="▶ Augmenter la charge jusqu'à la ligne";draw();},700);return;}requestAnimationFrame(step);};requestAnimationFrame(step);}
+  $("#m6play").addEventListener("click",startAnim);
+  [ss,sa,sK,sT,sTs].forEach(e=>e.addEventListener("input",draw));
+  $$("#m6res .btn").forEach(b=>b.addEventListener("click",()=>{rf=+b.dataset.v;setOn("#m6res",b);draw();}));
+  $$("#m6k .btn").forEach(b=>b.addEventListener("click",()=>{ksrc=b.dataset.k;setOn("#m6k",b);$("#m6kd").hidden=ksrc!=="dir";$("#m6kc1").hidden=ksrc==="dir";$("#m6kc2").hidden=ksrc==="dir";draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   Quiz, check-list, sommaire, thème
+   ========================================================= */
+(function(){
+  const box=$("#quiz");if(!box)return;
+  const Q=[
+    {q:"Fissure débouchante (Y = 1,99) dans un acier de K<sub>IC</sub> = 80 MPa·√m chargé à 200 MPa : la taille critique vaut environ :",o:["4 mm","400 mm","40 mm","0,4 mm"],c:2,e:"a<sub>c</sub> = (K<sub>IC</sub>/(Yσ))² = (80/398)² = 0,040 m ≈ <b>40 mm</b>."},
+    {q:"Si la ténacité est divisée par 2 (par exemple au froid), la taille critique est :",o:["divisée par 4","divisée par 2","inchangée","multipliée par 2"],c:0,e:"a<sub>c</sub> varie comme K<sub>IC</sub>² : elle est <b>divisée par 4</b>."},
+    {q:"Dans une même famille d'aciers, relever la limite d'élasticité par trempe :",o:["augmente toujours la ténacité","ne change pas la ténacité","rend la ténacité infinie","abaisse en général la ténacité"],c:3,e:"Résistance et ténacité varient <b>en sens inverse</b> dans une même famille : moins de plasticité possible en fond de fissure."},
+    {q:"La zone plastique en déformation plane est, par rapport à celle en contrainte plane :",o:["deux fois plus grande","environ trois fois plus petite","identique","dix fois plus grande"],c:1,e:"(1/6π) contre (1/2π) : <b>trois fois plus petite</b>, car la triaxialité bride la plasticité au cœur."},
+    {q:"Pour qu'un essai donne un K<sub>IC</sub> valide, il faut notamment :",o:["B ≥ 0,25(K/R<sub>e</sub>)²","une entaille émoussée","B, a et W − a ≥ 2,5(K<sub>Q</sub>/R<sub>e</sub>)²","F<sub>max</sub> ≥ 2 F<sub>Q</sub>"],c:2,e:"Toutes les dimensions doivent dépasser <b>2,5(K<sub>Q</sub>/R<sub>e</sub>)²</b>, avec une préfissure de fatigue et F<sub>max</sub> ≤ 1,1 F<sub>Q</sub>."},
+    {q:"La force F<sub>Q</sub> d'un essai de ténacité se détermine par :",o:["la force maximale","l'intersection de la courbe avec une droite de pente égale à 95 % de la pente initiale","la force à 0,2 % d'allongement","la force de préfissuration"],c:1,e:"C'est la <b>sécante à 95 %</b> ; si la rupture survient avant, F<sub>Q</sub> = F<sub>max</sub>."},
+    {q:"Une céramique (E = 200 GPa) et un polymère (E = 1 GPa) ont le même K<sub>IC</sub> = 3 MPa·√m. Lequel a le plus grand G<sub>IC</sub> ?",o:["la céramique","les deux ont le même","impossible à dire","le polymère, environ 200 fois plus"],c:3,e:"G<sub>IC</sub> = K<sub>IC</sub>²/E : 45 J/m² contre <b>9 000 J/m²</b>. Même force de rupture, mais bien plus d'énergie absorbée."},
+    {q:"Le CTOD est :",o:["l'ouverture du fond de fissure émoussé, en mm","une énergie par unité d'aire","la longueur critique de fissure","l'énergie Charpy"],c:0,e:"<i>Crack tip opening displacement</i> : l'<b>ouverture du fond de fissure</b>, de l'ordre du dixième de millimètre pour un acier tenace."},
+    {q:"Sur la courbe de résistance J, on lit J<sub>IC</sub> :",o:["au maximum de la courbe","à Δa = 0","à l'intersection avec la droite d'émoussement décalée de 0,2 mm","à J = 0"],c:2,e:"La droite parallèle à la <b>droite d'émoussement</b>, décalée de 0,2 mm, coupe la courbe en J<sub>IC</sub> : le début de la déchirure."},
+    {q:"Dans un diagramme FAD, K<sub>r</sub> et L<sub>r</sub> mesurent :",o:["la température et la ténacité","la dureté et la résilience","la contrainte et l'allongement","la proximité de la rupture et celle de l'effondrement plastique"],c:3,e:"K<sub>r</sub> = K/K<sub>mat</sub> (rupture) en ordonnée, L<sub>r</sub> = σ<sub>ref</sub>/σ<sub>y</sub> (effondrement) en abscisse."},
+    {q:"Les contraintes résiduelles de soudage interviennent dans le FAD :",o:["dans K<sub>r</sub> seulement","dans L<sub>r</sub> seulement","dans K<sub>r</sub> et L<sub>r</sub>","nulle part"],c:0,e:"Ce sont des contraintes <b>secondaires</b>, autolimitées : elles poussent la fissure (K<sub>r</sub>) mais ne peuvent pas faire s'effondrer la section (L<sub>r</sub>)."},
+    {q:"Un défaut est jugé acceptable sur le FAD si son point est :",o:["au-dessus de la ligne","sous la ligne d'évaluation et à gauche de la coupure L<sub>r,max</sub>","sur l'axe des L<sub>r</sub>","à droite de L<sub>r,max</sub>"],c:1,e:"Le point doit rester <b>dans la zone délimitée</b> par la ligne et la coupure plastique, avec les coefficients de sécurité de la norme."}
+  ];
+  let score=0,done=0;const sc=$("#qzScore");
+  function upd(){let t="Score : "+score+" / "+Q.length;if(done===Q.length)t+=score>=10?"  ·  🎉 série bouclée":score>=7?"  ·  relis les explications":"  ·  refais un tour des chapitres";sc.textContent=t;}
+  function render(){box.innerHTML="";score=0;done=0;
+    Q.forEach((it,n)=>{const d=document.createElement("div");d.className="qz";
+      d.innerHTML='<p class="qz-q"><b>'+(n+1)+".</b> "+it.q+'</p><div class="qz-o"></div><div class="qz-e" hidden></div>';
+      const o=d.querySelector(".qz-o"),ex=d.querySelector(".qz-e");let answered=false;
+      it.o.forEach((txt,i)=>{const b=document.createElement("button");b.type="button";b.className="qz-b";b.innerHTML=String.fromCharCode(65+i)+". "+txt;
+        b.addEventListener("click",()=>{if(answered)return;answered=true;done++;const ok=i===it.c;if(ok)score++;b.classList.add(ok?"ok":"ko");o.children[it.c].classList.add("ok");ex.hidden=false;ex.innerHTML=(ok?"✅ <b>Bien joué.</b> ":"❌ <b>Pas tout à fait.</b> ")+it.e;upd();});
+        o.appendChild(b);});
+      box.appendChild(d);});
+    upd();}
+  $("#qzReset").addEventListener("click",render);render();
+})();
+(function(){
+  const boxes=$$("#checklist input[type=checkbox]"),msg=$("#checkMsg"),KEY="rupture-cours4-check";
+  if(!boxes.length)return;
+  let saved=[];try{saved=JSON.parse(localStorage.getItem(KEY)||"[]")||[];}catch(e){saved=[];}
+  boxes.forEach(b=>{b.checked=saved.indexOf(b.dataset.c)>=0;});
+  function upd(){const on=boxes.filter(b=>b.checked).map(b=>b.dataset.c);try{localStorage.setItem(KEY,JSON.stringify(on));}catch(e){}
+    msg.innerHTML=on.length===boxes.length?"🎉 <b>Tout est coché : la série est bouclée !</b>":on.length+" / "+boxes.length+" : reviens sur les points non cochés (les manipulations sont faites pour ça).";}
+  boxes.forEach(b=>b.addEventListener("change",upd));upd();
+})();
+(function(){
+  const links=$$(".toc a"),tin=$(".toc-in");
+  if(!links.length||!("IntersectionObserver" in window))return;
+  const map={};links.forEach(a=>{map[a.getAttribute("href").slice(1)]=a;});
+  const obs=new IntersectionObserver(ents=>{ents.forEach(en=>{if(!en.isIntersecting)return;const a=map[en.target.id];if(!a)return;
+    links.forEach(l=>l.classList.toggle("on",l===a));
+    if(tin){const tgt=a.offsetLeft-tin.clientWidth/2+a.offsetWidth/2;try{tin.scrollTo({left:tgt,behavior:RM?"auto":"smooth"});}catch(e){tin.scrollLeft=tgt;}}});},{rootMargin:"-45% 0px -50% 0px"});
+  Object.keys(map).forEach(id=>{const s=document.getElementById(id);if(s)obs.observe(s);});
+})();
+(function(){
+  const b=$("#themeBtn");if(!b)return;const KEY="rupture-theme",root=document.documentElement;
+  const lab={auto:"◐ Thème : automatique",light:"☀️ Thème : clair",dark:"🌙 Thème : sombre"};
+  let t="auto";try{t=localStorage.getItem(KEY)||"auto";}catch(e){}
+  function apply(){if(t==="auto")root.removeAttribute("data-theme");else root.setAttribute("data-theme",t);b.textContent=lab[t];}
+  b.addEventListener("click",()=>{t=t==="auto"?"light":t==="light"?"dark":"auto";try{localStorage.setItem(KEY,t);}catch(e){}apply();});
+  apply();
+})();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Traitements thermiques · Révisions IWE</title>
+  <meta name="description" content="Laboratoire interactif des traitements thermiques : suivre la microstructure et les propriétés tout au long du cycle, de l’échelle de l’œil à celle de la maille.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@500;600;700&family=STIX+Two+Text:ital@0;1&display=swap">
+  <link rel="stylesheet" href="assets/style.css">
+  <script>try { var t = localStorage.getItem('traitements-thermiques-theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}</script>
+  <script defer src="js/outils.js"></script>
+  <script defer src="data/alliages.js"></script>
+  <script defer src="data/traitements.js"></script>
+  <script defer src="data/vignettes.js"></script>
+  <script defer src="js/mecanismes.js"></script>
+  <script defer src="js/moteur.js"></script>
+  <script defer src="js/geometrie.js"></script>
+  <script defer src="js/echelles.js"></script>
+  <script defer src="js/cycle.js"></script>
+  <script defer src="js/app.js"></script>
+</head>
+<body>
+  <a class="evitement" href="#labo">Aller au laboratoire</a>
+
+  <header class="barre">
+    <div class="marque">
+      <svg class="logo" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M4 4v24h24"/><path d="M7 25 12 9h7l2 16"/><path d="m21 25 2-6h5"/></svg>
+      <span class="marque-texte"><strong>Traitements thermiques</strong><small>Laboratoire interactif · IWE</small></span>
+    </div>
+    <button type="button" class="choix" id="choisir" aria-haspopup="dialog" aria-controls="banque">
+      <img class="choix-vignette" id="choix-vignette" src="assets/vignettes/trempe-revenu-42crmo4.webp" alt="" width="40" height="40">
+      <span class="choix-texte"><strong id="choix-titre">Trempe et revenu</strong><small id="choix-alliage">42CrMo4</small></span>
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+    </button>
+    <div class="outils">
+      <div class="niveaux" role="radiogroup" aria-label="Niveau des explications">
+        <button type="button" role="radio" aria-checked="true" data-niveau="1"><span aria-hidden="true">👁</span> Voir</button>
+        <button type="button" role="radio" aria-checked="false" data-niveau="2"><span aria-hidden="true">🎓</span> Maîtriser</button>
+      </div>
+      <button type="button" class="bouton-icone" id="bouton-theme" title="Changer de thème">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+        <span class="sr">Changer de thème</span>
+      </button>
+      <button type="button" class="bouton-icone" id="bouton-aide" title="Mode d’emploi" aria-haspopup="dialog" aria-controls="aide">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.1-2.4 3.6M12 17.2v.1"/></svg>
+        <span class="sr">Mode d’emploi</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="labo" id="labo" tabindex="-1">
+    <section class="vue" aria-labelledby="vue-titre">
+      <div class="vue-tete">
+        <h2 id="vue-titre"><span id="echelle-nom">Microscope optique</span> <small id="echelle-champ"></small></h2>
+        <div class="vue-options">
+          <div class="segmente" id="points" role="radiogroup" aria-label="Point observé"></div>
+          <div class="segmente" id="modes" role="radiogroup" aria-label="Rendu">
+            <button type="button" role="radio" aria-checked="true" data-mode="microscope">Aspect réel</button>
+            <button type="button" role="radio" aria-checked="false" data-mode="phases">Phases</button>
+          </div>
+        </div>
+      </div>
+      <div class="toile-cadre" id="toile-cadre">
+        <canvas id="toile" role="img" aria-label="Microstructure"></canvas>
+        <div class="echelles" id="echelles" role="radiogroup" aria-label="Échelle d’observation"></div>
+        <div class="zoom">
+          <button type="button" class="bouton-icone" id="zoom-moins" title="Échelle plus grande (dézoomer)"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5M7.5 10.5h6"/></svg><span class="sr">Dézoomer</span></button>
+          <button type="button" class="bouton-icone" id="zoom-plus" title="Échelle plus fine (zoomer)"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5M7.5 10.5h6M10.5 7.5v6"/></svg><span class="sr">Zoomer</span></button>
+        </div>
+      </div>
+      <div class="vue-pied">
+        <ul class="legende" id="legende" aria-label="Légende"></ul>
+        <p class="mention" id="mention">Vue schématique calculée par le modèle : ce n’est pas une micrographie.</p>
+      </div>
+    </section>
+
+    <section class="cycle" aria-labelledby="cycle-titre">
+      <div class="transport">
+        <h2 id="cycle-titre" class="sr">Cycle thermique</h2>
+        <div class="boutons-transport">
+          <button type="button" class="bouton-icone" id="debut" title="Début du cycle"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 5v14M18 6l-9 6 9 6z"/></svg><span class="sr">Début du cycle</span></button>
+          <button type="button" class="bouton-icone" id="etape-prec" title="Étape précédente"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m15 6-6 6 6 6"/></svg><span class="sr">Étape précédente</span></button>
+          <button type="button" class="lecture" id="lecture" aria-pressed="false"><svg class="ico-lire" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 5v14l12-7z"/></svg><svg class="ico-pause" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 5v14M16 5v14"/></svg><span id="lecture-libelle">Lecture</span></button>
+          <button type="button" class="bouton-icone" id="etape-suiv" title="Étape suivante"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 6 6 6-6 6"/></svg><span class="sr">Étape suivante</span></button>
+          <button type="button" class="bouton-icone" id="fin" title="Fin du cycle"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M18 5v14M6 6l9 6-9 6z"/></svg><span class="sr">Fin du cycle</span></button>
+          <label class="vitesse"><span class="sr">Vitesse de lecture</span><select id="vitesse"><option value="0.5">×½</option><option value="1" selected>×1</option><option value="2">×2</option><option value="4">×4</option></select></label>
+        </div>
+        <p class="lecture-valeurs" id="lecture-valeurs" aria-live="off"></p>
+        <p class="astuce" id="astuce" hidden>👆 Glisse le curseur orange le long du cycle, ou lance la lecture.</p>
+        <span class="cycle-legende" id="cycle-legende"></span>
+      </div>
+      <svg id="cycle" class="graphe-cycle" role="slider" tabindex="0" aria-label="Instant du cycle" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></svg>
+    </section>
+
+    <aside class="panneau" aria-label="Explications, propriétés et réglages">
+      <div class="commentaire" id="commentaire">
+        <p class="etape-nom" id="etape-nom"></p>
+        <p class="etape-texte" id="etape-texte"></p>
+        <p class="evenement" id="evenement" aria-live="polite"></p>
+      </div>
+      <div class="onglets" role="tablist" aria-label="Contenu du panneau">
+        <button type="button" role="tab" id="onglet-proprietes" aria-controls="volet-proprietes" aria-selected="true">Propriétés</button>
+        <button type="button" role="tab" id="onglet-reglages" aria-controls="volet-reglages" aria-selected="false" tabindex="-1">Réglages</button>
+        <button type="button" role="tab" id="onglet-savoir" aria-controls="volet-savoir" aria-selected="false" tabindex="-1">En savoir plus</button>
+      </div>
+      <div class="volet" role="tabpanel" id="volet-proprietes" aria-labelledby="onglet-proprietes">
+        <p class="superposer"><label for="superposer">Tracer sur le cycle</label> <select id="superposer"></select></p>
+        <p class="note-jauges"><span class="m-init" aria-hidden="true"></span> au départ <span class="m-fin" aria-hidden="true"></span> en fin de cycle <span class="m-ref" aria-hidden="true"></span> réglages par défaut. Valeurs à 20 °C de la structure présente à l’instant choisi.</p>
+        <div class="repartition" id="repartition"></div>
+        <div class="jauges" id="jauges"></div>
+      </div>
+      <div class="volet" role="tabpanel" id="volet-reglages" aria-labelledby="onglet-reglages" hidden>
+        <p class="volet-titre">Exemples</p>
+        <div class="exemples" id="exemples"></div>
+        <p class="volet-titre">Paramètres du cycle</p>
+        <form class="reglages" id="reglages"></form>
+      </div>
+      <div class="volet savoir" role="tabpanel" id="volet-savoir" aria-labelledby="onglet-savoir" hidden></div>
+    </aside>
+  </main>
+
+  <dialog class="dialogue" id="banque" aria-labelledby="banque-titre">
+    <div class="dialogue-tete">
+      <h2 id="banque-titre">Banque de traitements</h2>
+      <button type="button" class="bouton-icone fermer" data-fermer title="Fermer"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg><span class="sr">Fermer</span></button>
+    </div>
+    <div class="filtres" id="filtres" role="group" aria-label="Filtrer par famille d’alliages"></div>
+    <div class="cartes" id="cartes"></div>
+    <details class="a-venir"><summary>Bientôt dans la banque <span id="nb-a-venir"></span></summary><ul id="liste-a-venir"></ul></details>
+  </dialog>
+
+  <dialog class="dialogue" id="aide" aria-labelledby="aide-titre">
+    <div class="dialogue-tete">
+      <h2 id="aide-titre">Mode d’emploi</h2>
+      <button type="button" class="bouton-icone fermer" data-fermer title="Fermer"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg><span class="sr">Fermer</span></button>
+    </div>
+    <ol class="aide-liste">
+      <li><b>Fais avancer le temps</b> : glisse le curseur sur le cycle, utilise les flèches du clavier, ou lance la lecture. Les losanges marquent les événements (Ac1, Ms, pic de durcissement…) : clique dessus pour y sauter.</li>
+      <li><b>Change d’échelle</b> : de l’œil à la maille avec les boutons de gauche, la molette, les touches + et −, ou un clic sur l’image (Maj + clic pour reculer). Le cadre orange montre où regarde l’échelle suivante.</li>
+      <li><b>Regarde les propriétés</b> : chaque jauge compare l’état de départ, l’instant choisi et la fin du cycle. « Superposer » trace une propriété sur le cycle.</li>
+      <li><b>Modifie le traitement</b> dans « Réglages » : température, durée, milieu de trempe, épaisseur… ou choisis un exemple, y compris les pièges classiques.</li>
+      <li><b>Deux niveaux</b> : « Voir » donne l’intuition, « Maîtriser » ajoute les lois et les ordres de grandeur. Les sigles sont expliqués dans « En savoir plus ».</li>
+    </ol>
+    <p class="aide-note">Le modèle est semi-quantitatif : des lois physiques simples, calées sur des valeurs publiées pour un alliage de référence. Les chiffres sont des ordres de grandeur, pas des valeurs de calcul. Les vues sont des schémas, pas des micrographies.</p>
+    <p class="aide-note">Les photographies de la banque sont, elles, de vraies micrographies, pièces ou installations : leur légende, leur auteur et leur licence sont donnés dans « En savoir plus » et sous chaque carte.</p>
+    <p class="aide-note">Clavier : flèches = temps, Pg↑/Pg↓ = étapes, Début/Fin, Espace = lecture, + et − = échelle.</p>
+  </dialog>
+
+  <noscript><p class="sans-js">Ce laboratoire a besoin de JavaScript. Les cours du wiki restent accessibles depuis le menu.</p></noscript>
+</body>
+</html>

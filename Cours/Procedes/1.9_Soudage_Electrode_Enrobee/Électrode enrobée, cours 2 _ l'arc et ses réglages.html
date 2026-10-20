@@ -1,0 +1,1663 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Électrode enrobée, cours 2 : l'arc et ses réglages</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@500;600;700&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F3F6F9; --paper-2:#E6ECF2; --card:#FFFFFF; --ink:#17212B; --muted:#56626F; --line:#C5CFD9;
+  --grid:rgba(40,90,160,.075);
+  --sig:#CF2438; --tau:#8A34B6; --eps:#1B5ED3; --gam:#06849A; --frc:#D46A00; --mat:#26844A; --weld:#9A5B12;
+  --ok:#26844A; --warn:#B86E00; --bad:#C62828;
+  --lv2:#E4EBF2; --hl:#FFF3B0;
+  --font-body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-head:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --font-math:"STIX Two Text","Cambria Math","Cambria","Times New Roman",serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+    --grid:rgba(120,160,220,.07);
+    --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+    --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+  --grid:rgba(120,160,220,.07);
+  --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+  --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+  color-scheme: dark;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0;color:var(--ink);font-family:var(--font-body);font-size:17.5px;line-height:1.62;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;overflow-x:hidden;
+}
+img,svg{max-width:100%}
+.wrap{max-width:800px;margin:0 auto;padding:0 20px}
+.wide{max-width:980px}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.1;margin:0}
+h3{font-size:1.65rem;font-weight:600;margin:2rem 0 .6rem}
+h4{font-size:1.3rem;font-weight:600;margin:1.4rem 0 .4rem}
+p{margin:.7em 0}
+a{color:var(--eps)}
+b,strong{font-weight:700}
+small{font-size:.8em}
+sub{font-size:.72em}
+.m{font-family:var(--font-math);font-size:1.08em;white-space:nowrap}
+.sig{color:var(--sig)} .tau{color:var(--tau)} .eps{color:var(--eps)} .gam{color:var(--gam)} .frc{color:var(--frc)} .mat{color:var(--mat)} .mut{color:var(--muted)} .wcol{color:var(--weld)}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .12em;line-height:1.1}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 .2em .08em}
+.frac>span:last-child{padding:.08em .2em 0}
+ul,ol{padding-left:1.4em}
+li{margin:.25em 0}
+
+/* ---------- en-tête ---------- */
+.hero{padding:34px 0 10px}
+.title-block{border:2.5px solid var(--ink);background:var(--card);display:grid;grid-template-columns:1fr 300px}
+.tb-main{padding:22px 24px;border-right:2.5px solid var(--ink);display:flex;flex-direction:column;justify-content:space-between;gap:14px}
+.tb-series{margin:0 0 .5rem;color:var(--muted);font-size:.95rem}
+.hero h1{font-size:clamp(2.3rem,6vw,4rem);font-weight:700;letter-spacing:-.01em}
+.tb-cells{display:grid;grid-template-rows:repeat(4,auto)}
+.tb-cells>div{padding:9px 16px;border-bottom:1.5px solid var(--ink);display:flex;flex-direction:column;justify-content:center}
+.tb-cells>div:last-child{border-bottom:0}
+.tb-cells small{color:var(--muted);font-size:.78rem}
+.tb-cells b{font-family:var(--font-head);font-size:1.25rem;font-weight:600;line-height:1.15}
+.lede{font-size:1.13rem;max-width:760px;margin:1.2rem 0}
+.theme-btn{align-self:flex-start;font-family:var(--font-body);font-size:.85rem;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
+@media (max-width:760px){.title-block{grid-template-columns:1fr}.tb-main{border-right:0;border-bottom:2.5px solid var(--ink)}.tb-cells{grid-template-rows:none;grid-template-columns:1fr 1fr}.tb-cells>div:nth-child(odd){border-right:1.5px solid var(--ink)}.tb-cells>div:nth-child(3){border-bottom:0}}
+@media (max-width:420px){.tb-cells{grid-template-columns:1fr}.tb-cells>div:nth-child(odd){border-right:0}.tb-cells>div:nth-child(3){border-bottom:1.5px solid var(--ink)}}
+
+/* code couleur */
+.cc{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:stretch;margin:1rem 0 .4rem}
+.cc-box{background:var(--card);border:2px solid var(--line);padding:12px 14px;border-radius:4px}
+.cc-cause{border-color:var(--sig)} .cc-link{border-color:var(--mat)} .cc-eff{border-color:var(--eps)}
+.cc-box small{display:block;color:var(--muted);font-size:.82rem;line-height:1.3}
+.cc-syms{font-family:var(--font-math);font-size:1.7rem;line-height:1.25;display:flex;flex-wrap:wrap;gap:.1em .45em;margin:.2rem 0}
+.cc-box p{margin:0;font-size:.9rem;line-height:1.35}
+.cc-arrow{align-self:center;font-size:1.8rem;color:var(--muted)}
+@media (max-width:700px){.cc{grid-template-columns:1fr}.cc-arrow{transform:rotate(90deg);justify-self:center;line-height:1}}
+.cc-more{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:.5rem 0}
+.cc-more>div{border:2px solid var(--line);background:var(--card);border-radius:4px;padding:6px 10px;font-size:.9rem}
+@media (max-width:640px){.cc-more{grid-template-columns:1fr}}
+
+/* ---------- sommaire ---------- */
+.toc{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-bottom:1.5px solid var(--line);padding-top:env(safe-area-inset-top,0px);margin-top:18px}
+.toc-in{display:flex;gap:6px;overflow-x:auto;padding:9px 20px;max-width:980px;margin:0 auto;scrollbar-width:thin}
+.toc a{flex:none;text-decoration:none;color:var(--ink);font-size:.88rem;padding:4px 11px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);white-space:nowrap}
+.toc a.on{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.toc a:focus-visible,.btn:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--eps);outline-offset:2px}
+
+/* ---------- sections ---------- */
+section.chap{padding:46px 0 10px}
+.cartouche{display:grid;grid-template-columns:86px 1fr 250px;border:2.5px solid var(--ink);background:var(--card);margin-bottom:1.4rem}
+.c-num{font-family:var(--font-head);font-size:3.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;border-right:2.5px solid var(--ink)}
+.c-title{padding:14px 18px;border-right:2.5px solid var(--ink)}
+.c-title h2{font-size:2.1rem;font-weight:700}
+.c-title p{margin:.25rem 0 0;color:var(--muted)}
+.c-img{padding:12px 14px;display:flex;gap:12px;align-items:center;background:var(--paper-2)}
+.c-img .ico{font-size:2.3rem;line-height:1}
+.c-img small{display:block;color:var(--muted);font-size:.78rem}
+.c-img span{font-size:.95rem;line-height:1.3}
+@media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
+
+/* niveaux */
+.lv{margin:1.2rem 0;padding:6px 22px 14px;border-radius:4px}
+.lv1{background:var(--card);border:2px solid var(--ink)}
+.lv2{background:var(--lv2);border-left:6px solid var(--ink)}
+.lv-h{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;font-family:var(--font-head);font-size:1.35rem;font-weight:600;margin:10px 0 4px}
+.lv-h .tag{font-size:.95rem;font-family:var(--font-body);font-weight:400;color:var(--muted)}
+@media (max-width:520px){.lv{padding:6px 14px 12px}}
+
+/* formules et encadrés */
+.fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:600px;text-align:center;border-radius:3px;overflow-x:auto}
+.fx .big{font-family:var(--font-math);font-size:1.9rem;line-height:1.4}
+.fx .cap{font-size:.85rem;color:var(--muted);margin:.3rem 0 0}
+.fx .row{display:flex;flex-wrap:wrap;justify-content:center;gap:.2em 1.4em}
+.syms{margin:.6rem 0;display:grid;grid-template-columns:auto 1fr;gap:.35rem 1rem;align-items:baseline}
+.syms dt{font-family:var(--font-math);font-size:1.25rem;text-align:right;white-space:nowrap}
+.syms dd{margin:0}
+.def{margin:.9rem 0;padding:.5rem .9rem;border-left:3px dotted var(--muted);font-size:.96rem;background:color-mix(in srgb,var(--card) 60%,transparent)}
+.def>b:first-child{font-family:var(--font-head);font-size:1.08rem;font-weight:600}
+.tip{margin:1rem 0;padding:.7rem 1rem;border:1.5px dashed var(--mat);border-radius:4px;font-size:.97rem}
+.warn{margin:1rem 0;padding:.7rem 1rem;border:2px solid var(--bad);border-radius:4px;font-size:.97rem;background:color-mix(in srgb,var(--bad) 7%,transparent)}
+.mnemo{margin:1rem 0;padding:.7rem 1rem;background:var(--hl);border-radius:4px;font-size:.98rem}
+.fun{margin:1.2rem 0;padding:.8rem 1rem;border:2px dashed var(--muted);border-radius:10px;background:var(--card);font-size:.98rem}
+.fun-h{display:block;margin-bottom:.35rem;font-family:var(--font-head);font-size:1.15rem;font-weight:600;letter-spacing:.02em}
+.meta{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--frc);border-radius:4px;background:color-mix(in srgb,var(--frc) 6%,transparent)}
+.weld{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--weld);border-radius:4px;background:color-mix(in srgb,var(--weld) 7%,transparent)}
+.weld>b:first-child{font-family:var(--font-head);font-size:1.15rem;font-weight:600;color:var(--weld)}
+.hp{display:inline-block;font-size:.72rem;font-weight:700;padding:1px 7px;border-radius:9px;background:var(--weld);color:var(--card);vertical-align:middle;margin-left:4px;white-space:nowrap}
+.recall{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:1rem 0}
+.recall>div{background:var(--card);border:1.5px solid var(--line);border-radius:4px;padding:8px 12px;font-size:.92rem}
+.recall .f{font-family:var(--font-math);font-size:1.2rem;margin-bottom:.2rem}
+@media (max-width:640px){.recall{grid-template-columns:1fr}}
+.hist{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:1rem 0}
+.hist>div{background:var(--card);border:1.5px solid var(--weld);border-radius:4px;padding:8px 12px;font-size:.93rem}
+.hist .yr{font-family:var(--font-head);font-size:1.6rem;font-weight:700;color:var(--weld);line-height:1}
+@media (max-width:720px){.hist{grid-template-columns:1fr}}
+
+/* manipulations */
+.lab{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:14px 16px 12px;margin:1.4rem 0}
+.lab-h{font-family:var(--font-head);font-size:1.3rem;font-weight:600;margin:0 0 .2rem}
+.lab-sub{margin:0 0 .6rem;color:var(--muted);font-size:.92rem}
+.lab svg{display:block;width:100%;height:auto;color:var(--ink);font-family:var(--font-body);touch-action:pan-y}
+.ctrl{display:grid;grid-template-columns:minmax(110px,auto) 1fr minmax(92px,auto);gap:4px 12px;align-items:center;margin:.5rem 0}
+.ctrl label{font-size:.95rem}
+.ctrl output{font-family:var(--font-math);font-size:1.08rem;text-align:right;white-space:nowrap}
+@media (max-width:520px){.ctrl{grid-template-columns:1fr auto}.ctrl input[type=range]{grid-column:1/-1;grid-row:2}}
+input[type=range]{width:100%;accent-color:var(--ink);height:28px;margin:0}
+input.r-sig{accent-color:var(--sig)} input.r-tau{accent-color:var(--tau)} input.r-frc{accent-color:var(--frc)} input.r-mat{accent-color:var(--mat)} input.r-eps{accent-color:var(--eps)}
+.btns{display:flex;flex-wrap:wrap;gap:6px;margin:.5rem 0}
+.btn{font-family:var(--font-body);font-size:.9rem;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 13px;cursor:pointer;line-height:1.3}
+.btn:hover{background:var(--paper-2)}
+.btn.on{background:var(--ink);color:var(--paper)}
+.btn.play{border-color:var(--eps);color:var(--eps);font-weight:700}
+.btn:disabled{opacity:.45;cursor:default}
+.readout{font-family:var(--font-math);font-size:1.08rem;background:var(--paper-2);border-radius:4px;padding:.5rem .8rem;margin:.5rem 0;overflow-x:auto;display:flex;flex-wrap:wrap;gap:.2em 1.3em}
+.readout>span{white-space:nowrap}
+.status{font-size:.97rem;margin:.5rem 0;padding:.5rem .8rem;border-left:4px solid var(--eps);background:color-mix(in srgb,var(--eps) 6%,transparent);border-radius:0 4px 4px 0;min-height:2.6em}
+.radios{display:flex;flex-wrap:wrap;gap:6px 14px;margin:.4rem 0;font-size:.95rem}
+.radios label{display:inline-block;cursor:pointer}
+.radios input{margin:0 6px 0 0;vertical-align:middle}
+
+/* svg */
+svg text{fill:currentColor;font-size:13px}
+svg .lbl{font-size:12.5px;fill:var(--muted)}
+svg .mth{font-family:var(--font-math);font-size:16px}
+svg .ttl{font-family:var(--font-head);font-size:15px;font-weight:600}
+svg .axis{stroke:var(--ink);stroke-width:1.4;fill:none}
+svg .tick{stroke:var(--muted);stroke-width:1}
+svg .gridbg{stroke:var(--line);stroke-width:1}
+svg .ref{stroke:var(--muted);stroke-width:1.3;stroke-dasharray:4 3;fill:none}
+.arr line{stroke:currentColor}
+.arr polygon{fill:currentColor}
+
+/* tableaux */
+.tbl-wrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch}
+table.data{border-collapse:collapse;width:100%;font-size:.94rem;background:var(--card)}
+table.data th,table.data td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:middle}
+table.data th{font-family:var(--font-head);font-weight:600;font-size:1.05rem;background:var(--paper-2)}
+table.data td.n{font-family:var(--font-math);white-space:nowrap}
+table.data tr.now td{background:var(--hl)}
+
+/* parcours */
+.route{list-style:none;padding:0;margin:1rem 0;position:relative}
+.route::before{content:"";position:absolute;left:17px;top:10px;bottom:10px;width:4px;background:var(--line);border-radius:2px}
+.route li{position:relative;padding:0 0 14px 52px;margin:0}
+.route li .dot{position:absolute;left:4px;top:0;width:30px;height:30px;border-radius:50%;border:3px solid var(--ink);background:var(--card);font-family:var(--font-head);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+.route li b{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.route li p{margin:.1rem 0 0;font-size:.95rem}
+.series{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:.8rem 0}
+.series>div{background:var(--card);border:1.5px solid var(--line);padding:8px 10px;border-radius:4px;font-size:.88rem}
+.series>div.here{border:2.5px solid var(--ink)}
+.series b{display:block;font-family:var(--font-head);font-size:1.05rem}
+@media (max-width:700px){.series{grid-template-columns:1fr 1fr}}
+
+/* exercices et quiz */
+.exo{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--ink);padding:6px 20px 12px;margin:1.2rem 0;border-radius:4px}
+.exo.defi{border-left-color:var(--weld)}
+.exo h4{margin-top:.8rem}
+.exo .lvtag{font-family:var(--font-body);font-size:.85rem;font-weight:400;color:var(--muted);margin-left:.4rem}
+.exo .q{margin:.25rem 0}
+details{margin:.6rem 0}
+summary{cursor:pointer;font-weight:700;padding:4px 0}
+details .sol{padding:.4rem .9rem;border-left:3px solid var(--mat);margin:.4rem 0}
+details .sol p{margin:.45em 0}
+.qz{background:var(--card);border:1.5px solid var(--line);border-radius:6px;padding:10px 16px;margin:.8rem 0}
+.qz-q{margin:.3rem 0 .6rem}
+.qz-o{display:flex;flex-direction:column;gap:6px}
+.qz-b{text-align:left;font-family:var(--font-body);font-size:.97rem;padding:8px 12px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:5px;cursor:pointer}
+.qz-b:hover{border-color:var(--ink)}
+.qz-b.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--card))}
+.qz-b.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--card))}
+.qz-e{font-size:.94rem;margin:.6rem 0 .2rem}
+.score{position:sticky;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);display:inline-block;background:var(--ink);color:var(--paper);padding:6px 14px;border-radius:999px;font-size:.95rem;margin:.6rem 0}
+
+/* fiche mémoire */
+.fiche{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:2.5px solid var(--ink);background:var(--card);margin:1rem 0}
+.fiche>div{padding:12px 14px;border-right:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}
+.fiche>div:nth-child(3n){border-right:0}
+.fiche>div:nth-last-child(-n+3){border-bottom:0}
+.fiche .ic{font-size:1.9rem;line-height:1}
+.fiche h4{margin:.3rem 0 .2rem;font-size:1.15rem}
+.fiche .f{font-family:var(--font-math);font-size:1.1rem;margin:.2rem 0}
+.fiche p{margin:.2rem 0 0;font-size:.88rem;color:var(--muted)}
+@media (max-width:720px){.fiche{grid-template-columns:1fr 1fr}.fiche>div{border-right:1.5px solid var(--ink)!important;border-bottom:1.5px solid var(--ink)!important}.fiche>div:nth-child(2n){border-right:0!important}.fiche>div:last-child{border-bottom:0!important}}
+@media (max-width:440px){.fiche{grid-template-columns:1fr}.fiche>div{border-right:0!important}}
+.gloss{display:grid;grid-template-columns:minmax(150px,230px) 1fr;gap:0;border-top:1.5px solid var(--line);margin:1rem 0}
+.gloss dt,.gloss dd{border-bottom:1.5px solid var(--line);padding:7px 8px;margin:0}
+.gloss dt{font-weight:700}
+.gloss dd{font-size:.95rem}
+@media (max-width:600px){.gloss{grid-template-columns:1fr}.gloss dt{border-bottom:0;padding-bottom:0}}
+.check label{display:flex;gap:10px;align-items:flex-start;padding:5px 0;cursor:pointer}
+.check input{margin-top:.35em;width:18px;height:18px;accent-color:var(--mat);flex:none}
+footer{padding:40px 0 60px;color:var(--muted);font-size:.9rem}
+hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
+@media (max-width:700px){.m{white-space:normal}.fx{padding:12px 10px}.fx .big{font-size:1.4rem}}
+@media (max-width:400px){body{font-size:16.5px}.wrap{padding:0 14px}.lab{padding:12px 10px}}
+
+/* compléments de la série Rupture */
+.btn.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,var(--card))}
+.btn.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--card))}
+.ctrl[hidden]{display:none}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="wrap wide">
+  <div class="title-block">
+    <div class="tb-main">
+      <div>
+        <p class="tb-series">Soudage à l'électrode enrobée, série 1.9 : du poste de soudage au cordon contrôlé</p>
+        <h1>L'arc et ses réglages : courant, polarité, intensité, tension, vitesse et soufflage</h1>
+      </div>
+      <button class="theme-btn" id="themeBtn" type="button" aria-label="Changer de thème">◐ Thème : automatique</button>
+    </div>
+    <div class="tb-cells">
+      <div><small>Cours</small><b>2 sur 5 : régler l'arc et prévoir la forme du cordon</b></div>
+      <div><small>Durée conseillée</small><b>≈ 2 h 30 à 3 h avec les exercices</b></div>
+      <div><small>Prérequis</small><b>cours 1 de la série (procédé 111, caractéristique tombante, point de fonctionnement, tension à vide)</b></div>
+      <div><small>À la fin tu sais</small><b>choisir le courant et la polarité selon l'électrode et le métal, régler intensité, hauteur d'arc, vitesse et angles en prévoyant le cordon, calculer l'énergie de soudage et reconnaître puis combattre le soufflage magnétique</b></div>
+    </div>
+  </div>
+  <p class="lede">Le poste est branché, l'électrode serrée dans la pince : il reste à régler l'arc. Courant continu ou alternatif ? Électrode au pôle positif ou au pôle négatif ? Combien d'ampères, quelle hauteur d'arc, quelle vitesse, quel angle ? Chaque réglage change la forme du cordon : sa largeur, sa hauteur, sa pénétration dans la pièce, et la part de métal de base qu'il contient. Ensemble, ils fixent l'énergie apportée à chaque millimètre de joint, qui commande à son tour le refroidissement et donc la métallurgie de la zone soudée. Et parfois, l'arc dévie tout seul, poussé par un champ magnétique : c'est le soufflage. Ce cours relie <b>chaque bouton</b> du poste et <b>chaque geste</b> du soudeur à ce qu'ils produisent dans le joint.</p>
+
+  <h4>Le code couleur de la série</h4>
+  <div class="cc" role="img" aria-label="Code couleur : les causes en rouge et violet, les paramètres en vert, les effets en bleu et bleu-vert">
+    <div class="cc-box cc-cause"><small>Les causes</small><div class="cc-syms"><span class="sig">E</span><span class="sig">Q</span><span class="sig">P</span><span class="tau">soufflage</span></div><p><span class="sig">rouge</span> : la chaleur et l'énergie (énergie de l'arc E, énergie de soudage Q, puissance P) ; <span class="tau">violet</span> : les ennemis du joint (soufflage magnétique, porosités, caniveaux, collage, manque de fusion)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-link"><small>Les paramètres</small><div class="cc-syms"><span class="mat">I</span><span class="mat">U</span><span class="mat">l</span><span class="mat">v</span><span class="mat">α</span><span class="mat">±</span></div><p>en <span class="mat">vert</span> : ce que l'on règle et les données (intensité I, tension U, hauteur d'arc l, vitesse d'avance v, inclinaison α de l'électrode, polarité ±, diamètre d)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-eff"><small>Les effets</small><div class="cc-syms"><span class="eps">p</span><span class="eps">w</span><span class="eps">h</span><span class="gam">δ</span><span class="gam">t<sub>8/5</sub></span></div><p><span class="eps">bleu</span> : la forme du cordon (pénétration p, largeur w, surépaisseur h) ; <span class="gam">bleu-vert</span> : la métallurgie (dilution δ, temps de refroidissement t<sub>8/5</sub>, gaz et laitier)</p></div>
+  </div>
+  <div class="cc-more">
+    <div><b class="frc">Orange</b> : les actions et les forces (électrons et ions qui circulent, force magnétique, geste et angles du soudeur).</div>
+    <div><b>Noir</b> : la géométrie dessinée (pièces, électrode, coupes de cordons).</div>
+    <div><b class="wcol">Bronze</b> : les encadrés « métier » 🔥, tournés vers l'atelier et le chantier.</div>
+  </div>
+</div>
+</header>
+
+<nav class="toc" aria-label="Sommaire">
+  <div class="toc-in">
+    <a href="#avant">Avant de commencer</a>
+    <a href="#c1">1 CC ou CA</a>
+    <a href="#c2">2 Polarité</a>
+    <a href="#c3">3 Intensité</a>
+    <a href="#c4">4 Hauteur d'arc</a>
+    <a href="#c5">5 Vitesse et énergie</a>
+    <a href="#c6">6 Soufflage</a>
+    <a href="#exos">Exercices</a>
+    <a href="#quiz-s">Quiz</a>
+    <a href="#fiche">Fiche mémoire</a>
+    <a href="#gloss">Glossaire</a>
+    <a href="#check">Check-list</a>
+  </div>
+</nav>
+
+<main>
+<section class="chap" id="avant">
+<div class="wrap">
+  <h3 style="margin-top:0">Avant de commencer</h3>
+  <h4>Le cours 1 en trois cases</h4>
+  <div class="recall">
+    <div><div class="f">âme → métal ; enrobage → gaz + laitier</div>Le procédé 111 : l'âme de l'électrode fond et forme le métal déposé ; l'enrobage produit des gaz qui chassent l'air, un laitier qui couvre le bain, et un cratère qui guide l'arc. L'âme fond à raison de c<sub>f</sub> ≈ 10 g par ampère et par heure : une électrode de 3,2 mm à 110 A dure environ une minute.</div>
+    <div><div class="f"><span class="eps">U<sub>2</sub></span> = 20 + 0,04·<span class="mat">I<sub>2</sub></span></div>Le générateur a une caractéristique tombante (ou à courant constant) : le courant reste presque constant quand la hauteur d'arc varie, c'est la tension qui suit. Le point de fonctionnement est le croisement des caractéristiques du générateur et de l'arc ; la droite conventionnelle U<sub>2</sub> = 20 + 0,04·I<sub>2</sub> sert aux essais et aux plaques.</div>
+    <div><div class="f"><span class="mat">U<sub>0</sub></span> ≤ 113 V crête (CC) ; 48 V eff. (CA, S)</div>La tension à vide U<sub>0</sub> sert à amorcer et à réamorcer l'arc, mais elle est dangereuse : la norme IEC 60974-1 la limite, plus sévèrement en courant alternatif. Le démarrage à chaud, l'arc force et l'anti-collage aident l'arc ; le facteur de marche limite la durée de soudage.</div>
+  </div>
+
+  <div class="def"><b>📘 Correspondance avec le planning et le référentiel</b>. Ce cours poursuit le sujet <b>1.9 « Soudage à l'électrode enrobée »</b> du planning de la formation. Il est consacré à l'arc et à ses réglages :
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Chapitre du cours</th><th>Ce qu'il apporte à l'IWE</th></tr>
+      <tr><td>1 Courant continu ou alternatif</td><td>comprendre l'arc en CA et le rôle ionisant de l'enrobage</td></tr>
+      <tr><td>2 Polarité et choix du courant</td><td>choisir courant et polarité pour une électrode et un métal</td></tr>
+      <tr><td>3 L'intensité et la pénétration</td><td>régler l'intensité, prévoir la pénétration</td></tr>
+      <tr><td>4 La tension, la hauteur d'arc et le transfert</td><td>tenir un arc court, reconnaître les modes de transfert</td></tr>
+      <tr><td>5 La vitesse, l'orientation et l'énergie</td><td>calculer l'énergie de soudage, régler vitesse et angles</td></tr>
+      <tr><td>6 Le soufflage magnétique</td><td>expliquer et combattre la déviation de l'arc</td></tr>
+    </table></div>
+    Dans le référentiel de l'IIW (<i>International Institute of Welding</i>, l'Institut international de la soudure) pour la formation IWE (<i>International Welding Engineer</i>, ingénieur international en soudage), ce cours couvre les attendus : caractéristiques de l'arc selon le type de courant, réglages du générateur et leurs effets sur le joint, influence des constituants de l'enrobage sur la stabilité de l'arc et le transfert des gouttes, influence des paramètres sur la forme du cordon. Le chapitre 5 rejoint le cours 3 de la série Métallurgie, où le t<sub>8/5</sub> et les diagrammes de soudage sont détaillés.
+  </div>
+
+  <div class="def"><b>📖 Les normes et les sigles de ce cours</b>. ISO : Organisation internationale de normalisation ; EN : norme européenne ; ISO/TR : rapport technique de l'ISO.
+    <ul>
+      <li><b>ISO 2560</b> : la classification des électrodes enrobées pour aciers non alliés ; son tableau 4B associe à chaque type d'enrobage le courant et la polarité admis.</li>
+      <li><b>ISO/TR 17671-1</b> et <b>EN 1011-1</b> : les recommandations générales pour le soudage à l'arc, dont la définition de l'énergie de soudage Q et du rendement thermique k ; <b>ISO/TR 18491</b> : la mesure de l'énergie de l'arc E ; <b>EN 1011-2</b> : le soudage des aciers ferritiques, avec les formules du temps de refroidissement t<sub>8/5</sub>.</li>
+      <li><b>CC</b>, <b>CA</b> : courant continu, courant alternatif (en anglais DC et AC). <b>CC+</b> : électrode au pôle positif, dite <b>polarité inverse</b> (en anglais DCEP, <i>direct current electrode positive</i>) ; <b>CC−</b> : électrode au pôle négatif, dite <b>polarité directe</b> (DCEN, <i>electrode negative</i>).</li>
+      <li><b>DMOS</b> : descriptif de mode opératoire de soudage, le document qui fixe les paramètres d'une soudure.</li>
+    </ul>
+    Les modèles des manipulations (réamorçage en courant alternatif, partage de la chaleur selon la polarité, forme du cordon, soufflage magnétique) sont pédagogiques : ils reproduisent les tendances et les ordres de grandeur, pas les valeurs d'une électrode donnée. Les formules de l'énergie de soudage et du t<sub>8/5</sub> sont, elles, celles des normes citées. Pour un cas réel, la fiche du fabricant, le DMOS et l'enseignement de la formation font foi.
+  </div>
+
+  <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage</b>
+    <p>Un DMOS de soudage à l'électrode enrobée fixe le type de courant, la polarité, la plage d'intensité, la vitesse ou la longueur de cordon par électrode, et souvent une plage d'énergie de soudage. Le coordinateur en soudage doit savoir d'où viennent ces valeurs, les faire respecter, et lire dans un cordon raté le réglage qui a dérapé : arc trop long, intensité trop faible, vitesse trop rapide, mauvaise polarité, soufflage magnétique.</p>
+  </div>
+
+  <h4>La série en cinq cours</h4>
+  <div class="series" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">
+    <div><b>1 Le procédé et son poste</b>Principe, usages, générateur, tension à vide, facteur de marche, câbles.</div>
+    <div class="here"><b>2 L'arc et ses réglages</b>Courant, polarité, intensité, tension, vitesse, énergie, soufflage magnétique.</div>
+    <div><b>3 L'électrode</b>Fabrication, enrobages, hydrogène, étuvage, rendement, désignation.</div>
+    <div><b>4 Préparer et souder</b>Préparation des bords, préchauffage, geste, positions, bout à bout et angle.</div>
+    <div><b>5 Qualité et sécurité</b>Défauts, cas particuliers, gougeage arc-air, hygiène et sécurité.</div>
+  </div>
+
+  <h4>Le plan du cours</h4>
+  <ol class="route">
+    <li><span class="dot">1</span><b>Courant continu ou alternatif</b><p>Un arc qui s'éteint et se rallume cent fois par seconde.</p></li>
+    <li><span class="dot">2</span><b>Polarité et choix du courant</b><p>Électrode au + ou au − : ce que dit l'enrobage, ce que demande le métal.</p></li>
+    <li><span class="dot">3</span><b>L'intensité et la pénétration</b><p>Le bouton principal : il règle la fusion et l'enfoncement du cordon.</p></li>
+    <li><span class="dot">4</span><b>La tension, la hauteur d'arc et le transfert</b><p>Un arc court et serré, sinon l'air entre et les gouttes s'envolent.</p></li>
+    <li><span class="dot">5</span><b>La vitesse, l'orientation et l'énergie</b><p>Le geste du soudeur et l'énergie de soudage, jusqu'au refroidissement.</p></li>
+    <li><span class="dot">6</span><b>Le soufflage magnétique</b><p>Quand le champ magnétique pousse l'arc, et comment le ramener.</p></li>
+  </ol>
+</div>
+</section>
+<section class="chap" id="c1">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">1</div>
+    <div class="c-title"><h2>Courant continu ou alternatif</h2><p>Un arc qui s'éteint et se rallume cent fois par seconde</p></div>
+    <div class="c-img"><span class="ico">🕯️</span><span><small>Image à retenir</small>La bougie magique : on la souffle cent fois par seconde, et elle se rallume seule tant que sa mèche reste chaude</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la bougie magique</span></div>
+    <p>En <b>courant continu</b> (CC), le courant garde toujours le même sens et la même valeur : l'arc brûle sans interruption. Ce courant vient d'un redresseur, d'un onduleur ou d'un groupe (cours 1).</p>
+    <p>En <b>courant alternatif</b> (CA), le courant change de sens cent fois par seconde, puisque le réseau européen vibre à <b>50 Hz</b> (50 hertz : 50 périodes par seconde, avec deux passages par zéro à chaque période). À chaque passage par zéro, le courant s'annule un instant : l'arc s'éteint presque, et sa colonne de gaz commence à refroidir. Pour qu'il se rallume dans l'autre sens, il faut que la tension remonte au-dessus d'un seuil, la <b>tension de réamorçage</b>.</p>
+    <p>C'est une bougie magique qu'on soufflerait cent fois par seconde. Elle se rallume seule à trois conditions :</p>
+    <ul>
+      <li><b>une mèche encore chaude</b> : le gaz de l'arc reste chaud et conducteur pendant quelques dixièmes de milliseconde ;</li>
+      <li><b>une mèche facile à rallumer</b> : l'enrobage contient des éléments qui s'<b>ionisent</b> facilement, comme le potassium et le sodium. Un atome ionisé a perdu un électron ; un gaz riche en ions et en électrons libres conduit le courant ;</li>
+      <li><b>une étincelle assez forte</b> : une tension à vide suffisante, et un transformateur dont la tension est « en avance » sur le courant, de sorte qu'au passage par zéro du courant la tension est déjà haute.</li>
+    </ul>
+    <p>Si l'une des conditions manque, l'arc crépite, devient instable, ou s'éteint. Voilà pourquoi toutes les électrodes ne s'emploient pas en alternatif : les basiques et les cellulosiques prévues pour le seul courant continu n'ont pas assez d'éléments ionisants.</p>
+  </div>
+
+  <div class="lab" id="m1">
+    <p class="lab-h">Manipulation 1 : l'oscilloscope du courant alternatif</p>
+    <p class="lab-sub">L'oscilloscope montre deux périodes (40 ms) de la tension <span class="eps">u</span> entre la pince et la pièce (en haut) et du courant <span class="eps">i</span> (en bas). Choisis le type de courant, l'électrode et le transformateur, règle la tension à vide <span class="mat">U<sub>0</sub></span> (valeur efficace) et l'intensité <span class="mat">I</span> (valeur efficace), puis lance ▶. En pointillés, la tension que le transformateur offre pour réamorcer l'arc. Modèle pédagogique : tensions de réamorçage de 30 V (rutile riche en potassium), 50 V (basique prévue pour le CA) et 130 V (électrodes prévues pour le seul CC) ; l'arc s'éteint quand le courant tombe sous 8 A.</p>
+    <div class="btns" id="m1cur">
+      <button class="btn" data-k="cc" type="button">Courant continu</button>
+      <button class="btn on" data-k="ca" type="button">Courant alternatif 50 Hz</button>
+    </div>
+    <div class="btns" id="m1el">
+      <button class="btn on" data-k="r13" type="button">Rutile (type 13)</button>
+      <button class="btn" data-k="b16" type="button">Basique « CA » (type 16)</button>
+      <button class="btn" data-k="b15" type="button">Basique « CC » (type 15)</button>
+      <button class="btn" data-k="c10" type="button">Cellulosique (type 10)</button>
+    </div>
+    <div class="btns" id="m1x">
+      <button class="btn on" data-k="60" type="button">Transformateur à réactance (φ = 60°)</button>
+      <button class="btn" data-k="0" type="button">Cas d'école sans réactance (φ = 0°)</button>
+    </div>
+    <div class="ctrl"><label for="m1U">Tension à vide <span class="mat">U<sub>0</sub></span></label><input type="range" id="m1U" class="r-mat" min="40" max="80" step="1" value="50"><output id="m1Uo"></output></div>
+    <div class="ctrl"><label for="m1I">Intensité <span class="mat">I</span></label><input type="range" id="m1I" class="r-mat" min="60" max="200" step="5" value="110"><output id="m1Io"></output></div>
+    <div class="btns"><button class="btn play" id="m1play" type="button">▶ Faire défiler l'oscilloscope</button></div>
+    <svg id="m1svg" role="img" aria-label="Oscillogramme de la tension et du courant d'arc en courant alternatif ou continu, avec les extinctions et les réamorçages"></svg>
+    <div class="readout" id="m1r"></div>
+    <p class="status" id="m1msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">réamorçage, phase et choix du courant</span></div>
+    <h4>Le courant alternatif en équations</h4>
+    <p>La tension d'un transformateur à vide varie comme une sinusoïde :</p>
+    <div class="fx"><div class="row big" style="font-size:1.5rem"><span><span class="eps">e</span>(t) = √2·<span class="mat">U<sub>0</sub></span>·sin(ω·t + <span class="mat">φ</span>)</span><span>ω = 2π·<span class="mat">f</span></span><span>T = 1/<span class="mat">f</span> = 20 ms</span></div><p class="cap">e(t) : tension disponible à l'instant t (V) ; U<sub>0</sub> : tension à vide efficace (V), √2·U<sub>0</sub> sa valeur crête ; sin : fonction sinus ; ω (« oméga ») : pulsation, en radians par seconde (rad/s) ; f : fréquence, 50 Hz ; T : période ; φ (« phi ») : avance de la tension sur le courant, due à la réactance du transformateur</p></div>
+    <p>Le courant passe par zéro toutes les T/2 = 10 ms. Juste après, l'arc ne se rallume que lorsque la tension disponible dépasse la tension de réamorçage U<sub>r</sub>. Le retard de réamorçage vaut :</p>
+    <div class="fx"><div class="big"><span class="eps">t<sub>r</sub></span> = <span class="frac"><span>arcsin(<span class="mat">U<sub>r</sub></span>/(√2·<span class="mat">U<sub>0</sub></span>)) − <span class="mat">φ</span></span><span>ω</span></span></div><p class="cap">t<sub>r</sub> : retard de réamorçage après le passage par zéro du courant (s), nul si le numérateur est négatif ; arcsin : fonction réciproque du sinus (l'angle dont le sinus vaut…) ; si U<sub>r</sub> dépasse √2·U<sub>0</sub>, l'arc ne se rallume jamais</p></div>
+    <p><b>Exemple</b> : U<sub>0</sub> = 50 V (70,7 V crête) et une rutile qui se rallume à 30 V. Sans réactance (φ = 0), <span class="m">arcsin(30/70,7) ≈ 25,1°</span>, soit <span class="m">t<sub>r</sub> ≈ 25,1/360 × 20 ms ≈ 1,4 ms</span> : l'arc reste éteint 14 % de chaque demi-période, il crépite. Avec un transformateur à réactance (φ = 60°), la tension vaut déjà <span class="m">70,7 × sin 60° ≈ 61 V</span> quand le courant passe par zéro : l'arc repart aussitôt. Une électrode qui demanderait 130 V ne se rallumerait jamais, même à 80 V efficaces (113 V crête), la limite de la norme.</p>
+    <div class="def"><b>📖 Réactance et déphasage</b> : un transformateur de soudage régule son courant par une <b>réactance</b>, c'est-à-dire une opposition au courant alternatif due à ses bobinages (cours 1, caractéristique tombante). Elle décale le courant en retard sur la tension, d'un angle φ. Ce décalage, gênant sur un réseau ordinaire, est précieux pour l'arc : il fournit une tension élevée au moment exact où l'arc doit se rallumer.</div>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th></th><th>Courant continu</th><th>Courant alternatif</th></tr>
+      <tr><td>Arc</td><td>stable, continu</td><td>s'éteint et se rallume 100 fois par seconde</td></tr>
+      <tr><td>Électrodes</td><td>toutes (dans la polarité prévue)</td><td>seulement celles prévues pour le CA (types 11, 12, 13, 16, 18… de l'ISO 2560)</td></tr>
+      <tr><td>Tension à vide</td><td>limite 113 V crête</td><td>il en faut assez pour réamorcer, mais 80 V eff. au plus (48 V en milieu à risque accru)</td></tr>
+      <tr><td>Soufflage magnétique</td><td>fréquent (chapitre 6)</td><td>fortement réduit</td></tr>
+      <tr><td>Matériel</td><td>redresseur, onduleur, groupe</td><td>transformateur simple et robuste</td></tr>
+    </table></div>
+    <div class="tip">💡 <b>Un arc qui crépite et casse en alternatif</b> : vérifie d'abord que l'électrode est prévue pour le CA (fiche, boîte, désignation ISO 2560), qu'elle est sèche, et que la tension à vide du poste convient. Un arc plus court aide aussi au réamorçage.</div>
+    <div class="warn"><b>⚠️ Piège : brancher une électrode « CC+ seulement » sur un transformateur.</b> Une cellulosique de type 10 ou une basique de type 15 ne se réamorce pas en alternatif avec les tensions à vide admises : l'arc s'éteint ou devient inutilisable.</div>
+    <div class="warn"><b>⚠️ Piège : juger le courant alternatif « moins bon ».</b> Il est moins stable, mais c'est le meilleur remède au soufflage magnétique, et il suffit pour beaucoup de rutiles et de basiques prévues pour lui.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « cent fois éteint, cent fois rallumé »</b>, grâce à une mèche chaude (gaz ionisé), une mèche facile (potassium) et une étincelle en avance (réactance).</div>
+    <div class="weld"><b>🔥 Le transformateur de chantier</b>
+      <p>Un vieux transformateur de soudage ne délivre que du courant alternatif. Avant de lancer un travail, le coordinateur vérifie que les électrodes prévues par le DMOS acceptent le CA ; sinon, il faut un redresseur ou un onduleur. Le CA retrouve son intérêt sur les grosses pièces magnétisées, où le continu ferait souffler l'arc.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c2">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">2</div>
+    <div class="c-title"><h2>Polarité et choix du courant</h2><p>Électrode au + ou au − : l'enrobage décide, le métal oriente</p></div>
+    <div class="c-img"><span class="ico">⚖️</span><span><small>Image à retenir</small>La balance presque équilibrée : en 111, la chaleur se partage entre électrode et pièce ; la polarité ne fait que pencher un peu la balance</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la balance presque équilibrée</span></div>
+    <p>En courant continu, l'un des deux pôles de l'arc est la <b>cathode</b> (−), l'autre l'<b>anode</b> (+). Les <b>électrons</b>, très légers, partent de la cathode et frappent l'anode ; les <b>ions positifs</b>, lourds et lents, vont en sens inverse et frappent la cathode. Les deux pôles reçoivent donc de la chaleur, mais pas exactement la même part.</p>
+    <ul>
+      <li><b>CC+, polarité inverse</b> : électrode au pôle positif, pièce au négatif. C'est la polarité la plus employée en 111 ; elle donne en général une <b>pénétration plus profonde</b>.</li>
+      <li><b>CC−, polarité directe</b> : électrode au pôle négatif. L'électrode fond un peu plus vite, la pénétration et la dilution baissent : utile sur tôle mince ou pour une racine ouverte qui risquerait de percer.</li>
+      <li><b>CA</b> : la polarité change cent fois par seconde ; le résultat se situe entre les deux, et le soufflage magnétique recule.</li>
+    </ul>
+    <p>En 111, contrairement au soudage TIG (électrode de tungstène qui ne fond pas, sous gaz inerte, procédé 141), la balance reste <b>presque équilibrée</b> : le métal de l'électrode passe lui-même dans le bain et y emporte sa chaleur. C'est surtout <b>l'enrobage</b> qui décide : chaque électrode est conçue pour un courant et une polarité, écrits sur sa boîte et dans sa désignation. Le métal à souder oriente ensuite le choix de l'électrode, donc du courant.</p>
+  </div>
+
+  <div class="lab" id="m2">
+    <p class="lab-h">Manipulation 2 : électrons, ions et partage de la chaleur</p>
+    <p class="lab-sub">Choisis la polarité et le type d'électrode (symboles de l'ISO 2560, système B), règle l'intensité <span class="mat">I</span>, et observe le sens des charges, le partage de la chaleur entre l'électrode et la pièce, la vitesse de fusion et la pénétration relatives. Le bouton ▶ inverse la polarité. Modèle pédagogique : parts de chaleur et coefficients relatifs illustratifs (pénétration plus forte en CC+, fusion de l'électrode environ 10 % plus rapide en CC−) ; la compatibilité affichée est celle du tableau 4B de l'ISO 2560.</p>
+    <div class="btns" id="m2pol">
+      <button class="btn on" data-k="+" type="button">CC+ (électrode au +)</button>
+      <button class="btn" data-k="-" type="button">CC− (électrode au −)</button>
+      <button class="btn" data-k="ca" type="button">CA</button>
+    </div>
+    <div class="btns" id="m2el">
+      <button class="btn" data-k="13" type="button">13 rutile</button>
+      <button class="btn" data-k="12" type="button">12 rutile</button>
+      <button class="btn on" data-k="15" type="button">15 basique</button>
+      <button class="btn" data-k="16" type="button">16 basique</button>
+      <button class="btn" data-k="10" type="button">10 cellulosique</button>
+    </div>
+    <div class="ctrl"><label for="m2I">Intensité <span class="mat">I</span></label><input type="range" id="m2I" class="r-mat" min="60" max="200" step="5" value="110"><output id="m2Io"></output></div>
+    <div class="btns"><button class="btn play" id="m2play" type="button">▶ Inverser la polarité</button></div>
+    <svg id="m2svg" role="img" aria-label="Arc entre électrode et pièce avec le sens des électrons et des ions et le partage de la chaleur selon la polarité"></svg>
+    <div class="readout" id="m2r"></div>
+    <p class="status" id="m2msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">vocabulaire, ISO 2560 et choix selon le métal</span></div>
+    <h4>Directe ou inverse</h4>
+    <div class="def"><b>📖 Polarité</b> : en courant continu, le pôle auquel est reliée l'électrode. <b>Polarité directe</b> (CC−) : électrode au pôle négatif, pièce au positif. <b>Polarité inverse</b> (CC+) : électrode au pôle positif. Les termes anglais suivent la même logique : <i>straight polarity</i> pour l'électrode au −, <i>reverse polarity</i> pour l'électrode au +.</div>
+    <p>Les ordres de grandeur publiés convergent : à réglages égaux, le CC+ pénètre davantage ; le CC− fond l'électrode plus vite, réduit la pénétration et la dilution du métal de base dans le cordon. Mais l'écart reste modéré, et l'enrobage pèse plus que la polarité : une cellulosique en CC+ pénètre bien plus qu'une rutile, quelle que soit la polarité de celle-ci.</p>
+    <h4>Ce que dit l'ISO 2560</h4>
+    <p>Dans le système B de l'ISO 2560 (classification d'après la résistance à la traction), deux chiffres de la désignation donnent le type d'enrobage, qui fixe les positions et le courant. Extrait du tableau 4B :</p>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Symbole</th><th>Type d'enrobage</th><th>Courant admis</th></tr>
+      <tr><td class="n">10</td><td>cellulosique</td><td class="n">CC (+)</td></tr>
+      <tr><td class="n">11</td><td>cellulosique</td><td class="n">CA et CC (+)</td></tr>
+      <tr><td class="n">12</td><td>rutile</td><td class="n">CA et CC (−)</td></tr>
+      <tr><td class="n">13</td><td>rutile</td><td class="n">CA et CC (±)</td></tr>
+      <tr><td class="n">15</td><td>basique</td><td class="n">CC (+)</td></tr>
+      <tr><td class="n">16</td><td>basique</td><td class="n">CA et CC (+)</td></tr>
+      <tr><td class="n">18</td><td>basique + poudre de fer</td><td class="n">CA et CC (+)</td></tr>
+      <tr><td class="n">24</td><td>rutile + poudre de fer</td><td class="n">CA et CC (±)</td></tr>
+    </table></div>
+    <p>CC (+) : électrode au pôle positif ; CC (−) : au pôle négatif ; CC (±) : l'un ou l'autre. Le cours 3 détaillera la désignation complète et les enrobages.</p>
+    <h4>Le choix selon le métal soudé</h4>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Métal</th><th>Électrodes usuelles</th><th>Courant et polarité usuels</th></tr>
+      <tr><td>Aciers non alliés et faiblement alliés</td><td>rutiles, basiques, cellulosiques</td><td>selon l'enrobage (tableau ci-dessus) ; basiques le plus souvent en CC+</td></tr>
+      <tr><td>Aciers inoxydables</td><td>rutiles, basiques</td><td>CC+ ; certaines rutiles marquées « AC/DC » acceptent aussi le CA</td></tr>
+      <tr><td>Aluminium et alliages</td><td>électrodes Al-Si (par exemple 5 % de silicium)</td><td>CC+ uniquement</td></tr>
+      <tr><td>Fontes</td><td>électrodes au nickel</td><td>CC+ de préférence, CA possible selon la fiche ; faible intensité, cordons courts</td></tr>
+    </table></div>
+    <p>La fiche du fabricant fait foi : elle donne le courant, la polarité et la plage d'intensité de chaque diamètre. Le cours 5 reviendra sur l'aluminium et les fontes.</p>
+    <div class="tip">💡 <b>Vérifie le branchement</b> : câble de pince sur la borne + du poste, câble de masse sur la borne − : c'est du CC+. Sur beaucoup de postes, les deux raccords sont identiques, et une inversion passe inaperçue jusqu'au premier cordon raté.</div>
+    <div class="warn"><b>⚠️ Piège : « directe » ne veut pas dire « électrode au + »</b>. C'est l'inverse : polarité directe = électrode au −, polarité inverse = électrode au +. Dans un DMOS, écris plutôt « CC+ » ou « CC− », sans ambiguïté.</div>
+    <div class="warn"><b>⚠️ Piège : croire que la polarité règle seule la pénétration.</b> L'intensité, le type d'enrobage et la préparation du joint pèsent bien plus. On choisit d'abord l'électrode adaptée au métal et à la position, puis la polarité qu'elle impose.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « Directe, l'électrode Dessous zéro »</b> : directe = électrode au −. Et « l'Inverse, c'est l'électrode en plus ».</div>
+    <div class="weld"><b>🔥 La racine sur tôle mince</b>
+      <p>Pour une première passe sur une tôle mince ou une racine ouverte qui perce facilement, une rutile de type 12 ou 13 en CC− fond plus vite et pénètre moins : le bain reste maîtrisable. Sur un acier épais où l'on craint le manque de fusion, une basique en CC+ pénètre mieux. Le choix entre dans le DMOS et ne se change pas en cours de route.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c3">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">3</div>
+    <div class="c-title"><h2>L'intensité et la pénétration</h2><p>Le bouton principal : il règle la fusion et l'enfoncement du cordon</p></div>
+    <div class="c-img"><span class="ico">🍳</span><span><small>Image à retenir</small>La poêle : feu trop doux, l'œuf colle et reste cru ; feu trop fort, il brûle sur les bords</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la poêle</span></div>
+    <p>L'intensité est le premier réglage du soudeur. Elle commande à la fois la <b>fusion de l'électrode</b>, donc la quantité de métal déposé, et la <b>pénétration</b>, c'est-à-dire la profondeur à laquelle l'arc fait fondre la pièce sous le cordon. La pénétration croît plus vite que l'intensité : 20 % d'ampères en plus donnent environ 30 % de profondeur en plus.</p>
+    <p>Chaque diamètre d'électrode a sa <b>plage d'intensité</b>, donnée par le fabricant (cours 1 : de l'ordre de 80 à 150 A pour une rutile de 3,2 mm). Comme pour une poêle :</p>
+    <ul>
+      <li><b>feu trop doux</b> (intensité trop faible) : l'arc est mou et instable, l'électrode colle, le cordon reste étroit et bombé, posé sur la tôle sans s'y lier : c'est le <b>manque de fusion</b>, et le laitier peut rester piégé ;</li>
+      <li><b>feu trop fort</b> (intensité trop forte) : l'électrode rougit avant la fin, son enrobage se fissure, les projections se multiplient, le bain se creuse en <b>caniveaux</b> le long du cordon, et une tôle mince peut percer.</li>
+    </ul>
+    <p>En position verticale ou au plafond, le bain risque de couler : on baisse l'intensité de 10 à 20 % environ, ou l'on prend un diamètre plus petit.</p>
+  </div>
+
+  <div class="lab" id="m3">
+    <p class="lab-h">Manipulation 3 : la coupe du cordon et la fenêtre d'intensité</p>
+    <p class="lab-sub">Choisis le diamètre et la position, puis règle l'intensité <span class="mat">I</span>. La coupe montre le cordon sur la tôle : métal déposé en gris, métal de base fondu en bleu-vert, avec la largeur <span class="eps">w</span>, la surépaisseur <span class="eps">h</span> et la pénétration <span class="eps">p</span>. La barre du bas place ton réglage dans la plage indicative du diamètre. Le bouton ▶ monte l'intensité d'un bout à l'autre. Modèle pédagogique d'un cordon sur tôle, rutile en CC+, arc de 3 mm, 3 mm/s.</p>
+    <div class="btns" id="m3d">
+      <button class="btn" data-k="2.5" type="button">⌀ 2,5</button>
+      <button class="btn on" data-k="3.2" type="button">⌀ 3,2</button>
+      <button class="btn" data-k="4" type="button">⌀ 4,0</button>
+      <button class="btn" data-k="5" type="button">⌀ 5,0</button>
+    </div>
+    <div class="btns" id="m3pos">
+      <button class="btn on" data-k="plat" type="button">À plat</button>
+      <button class="btn" data-k="vert" type="button">Verticale ou plafond</button>
+    </div>
+    <div class="ctrl"><label for="m3I">Intensité <span class="mat">I</span></label><input type="range" id="m3I" class="r-mat" min="40" max="300" step="5" value="110"><output id="m3Io"></output></div>
+    <div class="btns"><button class="btn play" id="m3play" type="button">▶ Monter l'intensité</button></div>
+    <svg id="m3svg" role="img" aria-label="Coupe d'un cordon sur tôle avec la largeur, la surépaisseur et la pénétration, et la plage d'intensité de l'électrode"></svg>
+    <div class="readout" id="m3r"></div>
+    <p class="status" id="m3msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">métal déposé, dilution, densité de courant</span></div>
+    <h4>Ce que fixe l'intensité</h4>
+    <p>Le métal déposé par millimètre de cordon (sa section) découle directement du cours 1 : l'âme fond à c<sub>f</sub>·I grammes par heure, dont une part r se retrouve dans le cordon.</p>
+    <div class="fx"><div class="row big" style="font-size:1.45rem"><span><span class="eps">A<sub>d</sub></span> = <span class="frac"><span>r·<span class="mat">c<sub>f</sub></span>·<span class="mat">I</span></span><span>ρ·<span class="mat">v</span></span></span></span><span><span class="gam">δ</span> = <span class="frac"><span><span class="eps">A<sub>b</sub></span></span><span><span class="eps">A<sub>b</sub></span> + <span class="eps">A<sub>d</sub></span></span></span></span><span><span class="mat">J</span> = <span class="frac"><span><span class="mat">I</span></span><span>π·<span class="mat">d</span>²/4</span></span></span></div><p class="cap">A<sub>d</sub> : section du métal déposé (mm²) ; r : rendement, 0,95 dans nos modèles ; c<sub>f</sub> : coefficient de fusion, 9,5 g/(A·h) = 2,64 × 10⁻³ g/(A·s) ; ρ : masse volumique de l'acier, 7,85 × 10⁻³ g/mm³ ; v : vitesse d'avance (mm/s) ; δ (« delta ») : dilution, part de métal de base fondu dans le cordon ; A<sub>b</sub> : section de métal de base fondu (mm²) ; J : densité de courant dans l'âme (A/mm²) ; d : diamètre de l'âme (mm)</p></div>
+    <p><b>Exemple</b> : 3,2 mm, 3 mm/s. À 110 A, <span class="m">A<sub>d</sub> = 0,95 × 2,64 × 10⁻³ × 110/(7,85 × 10⁻³ × 3) ≈ 11,7 mm²</span>. Le modèle de la manipulation donne alors une pénétration d'environ 1,7 mm et une dilution d'environ 36 %. À 80 A : 8,5 mm² déposés et 1,0 mm de pénétration ; à 140 A : 14,9 mm² et 2,4 mm. Le métal déposé suit l'intensité (proportionnel à I), la pénétration la devance (proportionnelle à I<sup>1,5</sup> dans le modèle, exposant illustratif).</p>
+    <p>À 140 A, la densité de courant vaut <span class="m">140/(π × 3,2²/4) ≈ 17,4 A/mm²</span> dans une âme de 3,2 mm, mais seulement <span class="m">11,1 A/mm²</span> dans une âme de 4 mm : à intensité égale, le plus petit diamètre donne un arc plus concentré et pénètre un peu plus, mais il chauffe plus vite.</p>
+    <div class="def"><b>📖 Pénétration et dilution</b> : la pénétration p est la profondeur, sous la surface d'origine de la tôle, du métal de base fondu par l'arc ; la dilution δ est la part de ce métal de base dans le cordon solidifié. Une pénétration trop faible trahit un manque de fusion ; une dilution forte mélange au cordon les éléments du métal de base, ce qui compte quand l'électrode et la pièce n'ont pas la même composition (cours 4 et 5).</div>
+    <h4>Les facteurs de la pénétration</h4>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Facteur</th><th>Pour pénétrer plus</th><th>Chapitre</th></tr>
+      <tr><td>Intensité</td><td>l'augmenter (facteur principal)</td><td>3</td></tr>
+      <tr><td>Type d'enrobage</td><td>cellulosique &gt; basique &gt; rutile</td><td>3 ; cours 3</td></tr>
+      <tr><td>Polarité</td><td>CC+ plutôt que CC−</td><td>2</td></tr>
+      <tr><td>Densité de courant</td><td>diamètre plus petit à intensité égale</td><td>3</td></tr>
+      <tr><td>Hauteur d'arc</td><td>arc court</td><td>4</td></tr>
+      <tr><td>Vitesse d'avance</td><td>ni trop rapide, ni trop lente (le bain qui coule devant l'arc l'amortit)</td><td>5</td></tr>
+      <tr><td>Inclinaison</td><td>électrode tirée (pointe vers le cordon déjà fait)</td><td>5</td></tr>
+      <tr><td>Préparation</td><td>chanfrein, écartement, talon adaptés</td><td>cours 4</td></tr>
+    </table></div>
+    <div class="tip">💡 <b>Règle l'intensité sur une chute</b> : pars du milieu de la plage du fabricant, fais un cordon d'essai sur une chute de la même épaisseur, puis ajuste. Un bon réglage s'entend : un grésillement régulier, comme une friture ; et se voit : un cordon bien raccordé à la tôle, sans caniveaux.</div>
+    <div class="warn"><b>⚠️ Piège : monter l'intensité pour « faire passer » une racine mal préparée.</b> On obtient des caniveaux, des projections et du perçage. C'est l'écartement et le talon qu'il faut corriger (cours 4).</div>
+    <div class="warn"><b>⚠️ Piège : garder l'intensité du plat en position.</b> En vertical montant ou au plafond, le bain trop chaud coule : on baisse de 10 à 20 % environ, ou l'on change de diamètre.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « l'intensité creuse, la tension étale »</b> : l'intensité fait la pénétration, la tension (chapitre 4) fait la largeur.</div>
+    <div class="weld"><b>🔥 L'électrode qui rougit</b>
+      <p>Une électrode qui rougit dans sa seconde moitié est trop chargée : l'âme chauffe par effet Joule, l'enrobage se dégrade et ne protège plus le bain. Le soudeur baisse l'intensité ou passe au diamètre supérieur. C'est aussi un signe que l'électrode est peut-être d'un diamètre plus petit que prévu dans le DMOS.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c4">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">4</div>
+    <div class="c-title"><h2>La tension, la hauteur d'arc et le transfert</h2><p>Un arc court et serré, sinon l'air entre et les gouttes s'envolent</p></div>
+    <div class="c-img"><span class="ico">🔦</span><span><small>Image à retenir</small>La lampe de poche : tout près, un petit point brillant et chaud ; trop loin, une grande tache pâle qui tremble</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la lampe de poche</span></div>
+    <p>La <b>hauteur d'arc</b> (ou longueur d'arc) l est la distance entre le bout de l'électrode et le bain. Avec un générateur à caractéristique tombante ou à courant constant (cours 1), c'est elle qui fixe la <b>tension</b> : plus l'arc est long, plus sa tension monte, alors que le courant ne bouge presque pas. Sur le poste, on règle l'intensité ; la tension, c'est la main du soudeur qui la tient.</p>
+    <p>La règle de l'<b>arc court</b> : une hauteur d'arc de l'ordre du diamètre de l'âme, voire moins pour les basiques. Comme une lampe de poche approchée d'un mur :</p>
+    <ul>
+      <li><b>arc court</b> : énergie concentrée, bonne pénétration, cordon bien formé, gaz et laitier qui protègent bien le bain, peu de projections ;</li>
+      <li><b>arc long</b> : arc qui s'étale et vagabonde, cordon plus large et plus plat, pénétration plus faible, projections, caniveaux ; surtout, l'air s'infiltre dans l'arc : l'azote et l'oxygène attaquent le métal fondu et forment des <b>soufflures</b> (porosités), en particulier avec les électrodes basiques ;</li>
+      <li><b>arc trop court</b> : l'électrode touche le bain, colle, et le cordon devient irrégulier.</li>
+    </ul>
+    <p>La hauteur d'arc change aussi la façon dont le métal passe de l'électrode au bain : c'est le <b>mode de transfert</b>. Selon l'enrobage, le métal part en fines gouttes, en grosses gouttes qui touchent le bain, ou projeté par un arc très violent.</p>
+    <svg id="f4trans" style="display:block;width:100%;height:auto" role="img" aria-label="Trois modes de transfert : fines gouttes avec une rutile, grosses gouttes et courts-circuits avec une basique, jet violent avec une cellulosique"></svg>
+  </div>
+
+  <div class="lab" id="m4">
+    <p class="lab-h">Manipulation 4 : allonger l'arc</p>
+    <p class="lab-sub">Choisis l'enrobage, règle l'intensité <span class="mat">I</span> et la hauteur d'arc <span class="mat">l</span> d'une électrode de 3,2 mm. À gauche, l'arc agrandi : les gouttes, la cloche de gaz protecteur et l'air qui entre quand l'arc s'allonge. À droite, la coupe du cordon à 3 mm/s. Le bouton ▶ allonge l'arc de 1 à 8 mm. Modèle pédagogique : U = 14 + 0,04·I + 2·l (U en V, I en A, l en mm), cohérent avec le cours 1 ; risques indicatifs.</p>
+    <div class="btns" id="m4co">
+      <button class="btn on" data-k="R" type="button">Rutile</button>
+      <button class="btn" data-k="B" type="button">Basique</button>
+      <button class="btn" data-k="C" type="button">Cellulosique</button>
+    </div>
+    <div class="ctrl"><label for="m4I">Intensité <span class="mat">I</span></label><input type="range" id="m4I" class="r-mat" min="60" max="160" step="5" value="110"><output id="m4Io"></output></div>
+    <div class="ctrl"><label for="m4l">Hauteur d'arc <span class="mat">l</span></label><input type="range" id="m4l" class="r-mat" min="0.5" max="8" step="0.1" value="3"><output id="m4lo"></output></div>
+    <div class="btns"><button class="btn play" id="m4play" type="button">▶ Allonger l'arc</button></div>
+    <svg id="m4svg" role="img" aria-label="Arc agrandi avec le transfert des gouttes et la protection gazeuse, et coupe du cordon selon la hauteur d'arc"></svg>
+    <div class="readout" id="m4r"></div>
+    <p class="status" id="m4msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">tension d'arc, transfert, protection</span></div>
+    <h4>La tension d'arc</h4>
+    <p>La tension d'un arc se décompose en deux chutes de tension concentrées près de l'électrode et de la pièce, de l'ordre d'une dizaine de volts au total, et une chute dans la colonne de l'arc, proportionnelle à sa longueur :</p>
+    <div class="fx"><div class="big"><span class="eps">U</span> ≈ a + b·<span class="mat">l</span></div><p class="cap">U : tension d'arc (V) ; a : somme des chutes de tension aux deux pôles et d'un terme qui croît un peu avec le courant (V) ; b : champ électrique dans la colonne, de l'ordre de 1 à 2 V par millimètre ; l : hauteur d'arc (mm). Dans nos modèles : a = 14 + 0,04·I et b = 2 V/mm, ce qui redonne la droite conventionnelle U<sub>2</sub> = 20 + 0,04·I<sub>2</sub> pour un arc de 3 mm.</p></div>
+    <p><b>Exemple</b> : à 120 A, un arc de 3 mm donne <span class="m">U = 14 + 4,8 + 6 = 24,8 V</span> ; un arc de 6 mm, <span class="m">30,8 V</span>. Le courant restant le même, la puissance de l'arc et l'énergie par millimètre de cordon augmentent de 24 % : le cordon s'élargit et s'aplatit, mais la pénétration baisse, car l'énergie s'étale et se perd davantage par rayonnement.</p>
+    <h4>Les modes de transfert</h4>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Enrobage</th><th>Transfert typique</th><th>Conséquences</th></tr>
+      <tr><td>Rutile, acide</td><td>fines gouttes, nombreuses</td><td>arc doux et stable, peu de projections, bel aspect</td></tr>
+      <tr><td>Basique</td><td>grosses gouttes, souvent avec de brefs courts-circuits quand elles touchent le bain</td><td>arc plus « dur » ; exige un arc très court, sinon soufflures</td></tr>
+      <tr><td>Cellulosique</td><td>gouttes moyennes projetées par un arc très énergique, riche en gaz</td><td>forte pénétration, projections, adapté à la descente (pipelines)</td></tr>
+    </table></div>
+    <p>Dans tous les cas, le cratère d'enrobage canalise les gouttes, et le laitier fondu enrobe chaque goutte pendant son vol. Le cours 3 relie ces comportements à la composition de l'enrobage.</p>
+    <div class="def"><b>📖 Soufflure</b> : cavité arrondie remplie de gaz, piégée dans le métal en se solidifiant. En 111, elle vient surtout d'un arc trop long (azote de l'air), d'une électrode humide (hydrogène, cours 3) ou d'une surface sale (rouille, peinture, graisse).</div>
+    <div class="tip">💡 <b>Écoute l'arc</b> : un arc court grésille finement et régulièrement ; un arc long souffle, siffle et crache des projections. Le repère visuel : l'espace entre le cratère d'enrobage et le bain ne dépasse pas l'épaisseur de l'électrode.</div>
+    <div class="warn"><b>⚠️ Piège : allonger l'arc pour mieux voir le bain.</b> C'est le chemin le plus court vers les soufflures, surtout avec une basique. On incline plutôt légèrement l'électrode et l'on règle bien son masque.</div>
+    <div class="warn"><b>⚠️ Piège : chercher le bouton de la tension.</b> Sur un poste à courant constant, on ne règle pas la tension : la main la fixe par la hauteur d'arc, et le voltmètre ne fait que la constater.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « un diamètre, pas plus »</b> : la hauteur d'arc ne dépasse pas le diamètre de l'âme. Et « arc court, cordon sûr ».</div>
+    <div class="weld"><b>🔥 Le soudage au contact</b>
+      <p>Certaines électrodes à enrobage très épais, chargé de poudre de fer (type 24 de l'ISO 2560, en position à plat et en corniche), se soudent en appuyant la collerette d'enrobage sur la pièce : la hauteur d'arc est alors fixée par l'épaisseur de la collerette, et même un soudeur débutant tient un arc régulier.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c5">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">5</div>
+    <div class="c-title"><h2>La vitesse, l'orientation et l'énergie</h2><p>Le geste du soudeur et l'énergie apportée à chaque millimètre</p></div>
+    <div class="c-img"><span class="ico">🖌️</span><span><small>Image à retenir</small>Le pinceau : lent, il dépose une couche épaisse qui déborde ; rapide, un trait mince qui saute ; et son angle pousse ou tire la peinture</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le pinceau</span></div>
+    <p>La <b>vitesse d'avance</b> v est la vitesse à laquelle l'arc se déplace le long du joint. Comme un pinceau :</p>
+    <ul>
+      <li><b>trop lent</b> : le cordon devient épais et large, le bain coule devant l'arc et amortit sa pénétration, le laitier peut passer devant et rester piégé ; trop de chaleur grossit le grain du métal ;</li>
+      <li><b>trop rapide</b> : le cordon est mince et étroit, mal raccordé, avec des caniveaux et du manque de fusion, et le laitier n'a pas le temps de remonter.</li>
+    </ul>
+    <p>Deux angles décrivent la position de l'électrode :</p>
+    <ul>
+      <li>l'<b>orientation</b>, vue dans le plan perpendiculaire au joint : l'électrode vise la bissectrice du joint, à 90° des tôles pour un bout à bout à plat, vers 45° pour une soudure d'angle ;</li>
+      <li>l'<b>inclinaison</b>, vue dans le plan du joint : l'électrode penche de 10 à 30° par rapport à la perpendiculaire. En 111, on la tient le plus souvent <b>tirée</b> : la poignée devance la pointe, qui vise le cordon déjà fait. L'arc repousse alors le laitier vers l'arrière et creuse davantage. <b>Poussée</b>, la pointe vise l'avant : le cordon s'aplatit, pénètre moins, et le laitier risque de passer devant.</li>
+    </ul>
+    <svg id="f5ang" style="display:block;width:100%;height:auto" role="img" aria-label="Orientation de l'électrode vue en coupe du joint, et inclinaison tirée ou poussée vue dans le plan du joint"></svg>
+    <p>Intensité, tension et vitesse se combinent enfin en une seule grandeur : l'<b>énergie</b> apportée à chaque millimètre de joint. Elle décide de la forme du cordon, mais aussi de la vitesse à laquelle la zone soudée refroidit, donc de sa dureté et de sa ténacité.</p>
+  </div>
+
+  <div class="lab" id="m5">
+    <p class="lab-h">Manipulation 5 : souder un cordon et calculer son énergie</p>
+    <p class="lab-sub">Règle l'intensité <span class="mat">I</span>, la hauteur d'arc <span class="mat">l</span> (qui donne la tension U), la vitesse <span class="mat">v</span> et l'inclinaison <span class="mat">α</span> (positive : électrode tirée ; négative : poussée), puis l'épaisseur <span class="mat">e</span> de la tôle et le type de joint pour le t<sub>8/5</sub>. Le bouton ▶ soude un cordon en accéléré. Énergie de l'arc E = U·I/v et énergie de soudage Q = k·E avec k = 0,8 (EN 1011-1) ; t<sub>8/5</sub> selon l'EN 1011-2, préchauffage nul (T<sub>0</sub> = 20 °C) ; forme du cordon : modèle pédagogique ; longueur de cordon pour une électrode de 3,2 × 350 mm (modèle du cours 1).</p>
+    <div class="btns" id="m5j">
+      <button class="btn on" data-k="1" type="button">Cordon sur tôle (F = 1)</button>
+      <button class="btn" data-k="0.9" type="button">Bout à bout (F = 0,9)</button>
+      <button class="btn" data-k="0.67" type="button">Angle en T (F = 0,67)</button>
+    </div>
+    <div class="ctrl"><label for="m5I">Intensité <span class="mat">I</span></label><input type="range" id="m5I" class="r-mat" min="60" max="250" step="5" value="110"><output id="m5Io"></output></div>
+    <div class="ctrl"><label for="m5l">Hauteur d'arc <span class="mat">l</span></label><input type="range" id="m5l" class="r-mat" min="1" max="8" step="0.1" value="3"><output id="m5lo"></output></div>
+    <div class="ctrl"><label for="m5v">Vitesse <span class="mat">v</span></label><input type="range" id="m5v" class="r-mat" min="0.5" max="8" step="0.1" value="3"><output id="m5vo"></output></div>
+    <div class="ctrl"><label for="m5a">Inclinaison <span class="mat">α</span></label><input type="range" id="m5a" class="r-mat" min="-30" max="40" step="5" value="15"><output id="m5ao"></output></div>
+    <div class="ctrl"><label for="m5e">Épaisseur <span class="mat">e</span></label><input type="range" id="m5e" class="r-mat" min="4" max="40" step="1" value="20"><output id="m5eo"></output></div>
+    <div class="btns"><button class="btn play" id="m5play" type="button">▶ Souder un cordon</button><button class="btn" id="m5defi" type="button">Défi : basique 3,2, 120 A, 24 V</button></div>
+    <svg id="m5svg" role="img" aria-label="Vue de côté de l'électrode qui avance, coupe du cordon et énergie de soudage avec le temps de refroidissement"></svg>
+    <div class="readout" id="m5r"></div>
+    <p class="status" id="m5msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">énergie de l'arc, énergie de soudage, t<sub>8/5</sub></span></div>
+    <h4>Deux énergies à ne pas confondre</h4>
+    <div class="fx"><div class="row big" style="font-size:1.5rem"><span><span class="sig">E</span> = <span class="frac"><span><span class="mat">U</span>·<span class="mat">I</span></span><span><span class="mat">v</span></span></span>·10⁻³</span><span><span class="sig">Q</span> = k·<span class="sig">E</span></span></div><p class="cap">E : énergie de l'arc (kJ/mm), selon l'ISO/TR 18491 ; Q : énergie de soudage, ou apport de chaleur (kJ/mm), selon l'ISO/TR 17671-1 et l'EN 1011-1 ; U : tension d'arc (V) ; I : intensité (A) ; v : vitesse d'avance (mm/s) ; le facteur 10⁻³ convertit les J/mm en kJ/mm ; k : rendement thermique du procédé, rapport entre la chaleur qui entre dans la pièce et l'énergie électrique de l'arc, 0,8 pour le 111 (1,0 pour l'arc submergé, 0,6 pour le TIG)</p></div>
+    <p><b>Exemple</b> : U = 24,4 V, I = 110 A, v = 3 mm/s : <span class="m">E = 24,4 × 110/3 × 10⁻³ ≈ 0,89 kJ/mm</span> et <span class="m">Q = 0,8 × 0,89 ≈ 0,72 kJ/mm</span>.</p>
+    <p>En 111, la vitesse est difficile à mesurer en cours de passe. On mesure plutôt la <b>longueur de cordon déposée par une électrode</b>, L<sub>c</sub>, et sa durée de fusion t<sub>e</sub> (cours 1) : la vitesse vaut v = L<sub>c</sub>/t<sub>e</sub>, et <span class="m">E = U·I·t<sub>e</sub>/L<sub>c</sub></span>. Une électrode de 3,2 × 350 mm qui brûle en 67 s en déposant 202 mm donne bien <span class="m">24,4 × 110 × 67/202 ≈ 0,89 kJ/mm</span>. Pour tenir une énergie, on fixe donc une longueur de cordon par électrode.</p>
+    <h4>Du réglage au refroidissement (EN 1011-2)</h4>
+    <p>L'énergie de soudage commande le refroidissement de la zone soudée, mesuré par le <b>t<sub>8/5</sub></b> : le temps que met le métal pour passer de 800 °C à 500 °C, l'intervalle où se décide la structure des aciers. Le cours 3 de la série Métallurgie en détaille les conséquences ; voici les formules de l'EN 1011-2 :</p>
+    <div class="fx"><div class="row big" style="font-size:1.25rem"><span>3D : <span class="gam">t<sub>8/5</sub></span> = (6700 − 5<span class="mat">T<sub>0</sub></span>)·<span class="sig">Q</span>·[1/(500 − <span class="mat">T<sub>0</sub></span>) − 1/(800 − <span class="mat">T<sub>0</sub></span>)]·F<sub>3</sub></span><span>2D : <span class="gam">t<sub>8/5</sub></span> = (4300 − 4,3<span class="mat">T<sub>0</sub></span>)·10⁵·(<span class="sig">Q</span>²/<span class="mat">e</span>²)·[1/(500 − <span class="mat">T<sub>0</sub></span>)² − 1/(800 − <span class="mat">T<sub>0</sub></span>)²]·F<sub>2</sub></span></div><p class="cap">t<sub>8/5</sub> : temps de refroidissement de 800 à 500 °C (s) ; T<sub>0</sub> : température initiale de la pièce, 20 °C sans préchauffage (°C) ; Q : énergie de soudage (kJ/mm) ; e : épaisseur (mm) ; F<sub>3</sub>, F<sub>2</sub> : facteurs de forme (1 pour un cordon sur tôle, 0,9 pour les passes d'un bout à bout, 0,67 pour un angle en T en écoulement 3D). La formule 3D vaut pour les tôles épaisses, la 2D pour les tôles minces ; on passe de l'une à l'autre à l'épaisseur de transition e<sub>t</sub>.</p></div>
+    <p><b>Exemple</b> : Q = 0,72 kJ/mm, T<sub>0</sub> = 20 °C, cordon sur tôle. En 3D : <span class="m">t<sub>8/5</sub> = 6 600 × 0,716 × (1/480 − 1/780) ≈ 3,8 s</span>. L'épaisseur de transition vaut environ 12,4 mm : une tôle de 20 mm refroidit en 3,8 s, une tôle de 10 mm, plus lentement, en 5,8 s (formule 2D).</p>
+    <div class="def"><b>📖 Le t<sub>8/5</sub> et la zone affectée thermiquement</b> : la zone affectée thermiquement (ZAT) est la partie du métal de base chauffée par le soudage sans avoir fondu. Le t<sub>8/5</sub> mesure la vitesse à laquelle elle refroidit entre 800 et 500 °C. Trop court, il laisse se former des structures dures et fragiles (martensite) ; trop long, il fait grossir le grain et baisser la ténacité. L'énergie de soudage, l'épaisseur et le préchauffage (cours 4) sont les trois leviers pour le régler.</div>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Réglage qui augmente</th><th>Largeur w</th><th>Surépaisseur h</th><th>Pénétration p</th><th>Énergie Q</th></tr>
+      <tr><td>Intensité I</td><td>↑</td><td>↑</td><td>↑↑</td><td>↑</td></tr>
+      <tr><td>Hauteur d'arc l (tension U)</td><td>↑</td><td>↓</td><td>↓</td><td>↑</td></tr>
+      <tr><td>Vitesse v</td><td>↓</td><td>↓</td><td>↓ (et ↓ aussi si trop lente)</td><td>↓</td></tr>
+      <tr><td>Inclinaison tirée α</td><td>↓</td><td>↑</td><td>↑</td><td>=</td></tr>
+    </table></div>
+    <div class="tip">💡 <b>Mesure tes cordons</b> : un DMOS de 111 donne souvent, pour chaque diamètre, une longueur minimale de cordon par électrode. Un soudeur qui ralentit dépose des cordons plus courts : l'énergie monte sans que l'ampèremètre ne bouge.</div>
+    <div class="warn"><b>⚠️ Piège : confondre énergie de l'arc E et énergie de soudage Q.</b> Les deux s'expriment en kJ/mm ; seule Q contient le rendement k. Un DMOS ou une norme précise toujours laquelle il impose.</div>
+    <div class="warn"><b>⚠️ Piège : ralentir pour « remplir ».</b> L'énergie grimpe, le grain grossit, et le bain qui coule devant l'arc réduit la pénétration. Pour remplir, on ajoute des passes.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « k-U-I sur v »</b> : le rendement, la tension et l'intensité, divisés par la vitesse, donnent l'énergie de soudage.</div>
+    <div class="weld"><b>🔥 Une fenêtre d'énergie</b>
+      <p>Pour les aciers à haute limite d'élasticité, le DMOS impose souvent une plage d'énergie : assez pour éviter une zone trop dure et fragile, pas trop pour garder un grain fin et tenace. Le soudeur la respecte en tenant intensité, hauteur d'arc et longueur de cordon par électrode ; le coordinateur la vérifie en mesurant.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c6">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">6</div>
+    <div class="c-title"><h2>Le soufflage magnétique</h2><p>Quand le champ magnétique pousse l'arc, et comment le ramener</p></div>
+    <div class="c-img"><span class="ico">🧭</span><span><small>Image à retenir</small>La boussole affolée : près des bouts de la tôle et de la prise de masse, l'arc dévie comme une aiguille près d'un aimant</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la boussole affolée</span></div>
+    <p>Tout courant crée autour de lui un <b>champ magnétique</b>. Le courant de soudage traverse l'électrode, l'arc et la pièce, et crée donc un champ autour de l'arc. Or l'arc est un conducteur souple, fait de gaz : si le champ est plus fort d'un côté que de l'autre, une force le pousse vers le côté où il est le plus faible. L'arc dévie : c'est le <b>soufflage magnétique</b>.</p>
+    <p>Le champ devient dissymétrique dans quatre situations :</p>
+    <ul>
+      <li><b>près des bouts de la tôle</b> : le champ, qui se referme dans l'acier, se tasse vers le bord. L'arc est repoussé des extrémités, vers la masse de métal ;</li>
+      <li><b>selon la place de la prise de masse</b> : le courant qui file vers elle crée son propre champ. L'arc s'écarte du côté de la prise de masse ;</li>
+      <li><b>dans un angle, un chanfrein étroit, une passe de racine épaisse</b>, où l'acier entoure l'arc de façon inégale ;</li>
+      <li><b>quand la pièce est aimantée</b> (magnétisme rémanent), après un levage par électro-aimant ou un contrôle magnétique.</li>
+    </ul>
+    <p>On parle de <b>soufflage arrière</b> quand l'arc est repoussé vers le cordon déjà fait, ce qui arrive en soudant vers la prise de masse ou en arrivant au bout du joint, et de <b>soufflage avant</b> quand il est poussé vers l'avant, au départ du joint ou en s'éloignant de la prise de masse. Le soufflage est surtout gênant en <b>courant continu</b> : en alternatif, le champ change de sens cent fois par seconde et s'affaiblit beaucoup.</p>
+    <p>Un arc qui souffle s'allonge, projette, protège mal le bain, et ne fond plus le bon endroit : soufflures, manque de fusion, caniveaux, inclusions de laitier.</p>
+  </div>
+
+  <div class="lab" id="m6">
+    <p class="lab-h">Manipulation 6 : avancer vers le bord</p>
+    <p class="lab-sub">Une tôle de 400 mm soudée de gauche à droite. Choisis la place de la prise de masse, le type de courant, des appendices en bout de joint, règle l'intensité <span class="mat">I</span>, l'aimantation rémanente <span class="mat">B<sub>r</sub></span> de la pièce et la position <span class="mat">x</span> de l'arc. En haut, la tôle vue de dessus ; en bas, l'arc vu de côté, avec sa déviation. Le bouton ▶ soude le joint d'un bout à l'autre. Modèle pédagogique : déviation proportionnelle à I², effet des bords et de la prise de masse, effet de l'aimantation, réduction de 85 % en courant alternatif ; angles indicatifs.</p>
+    <div class="btns" id="m6m">
+      <button class="btn on" data-k="debut" type="button">Masse au départ</button>
+      <button class="btn" data-k="fin" type="button">Masse à l'arrivée</button>
+      <button class="btn" data-k="deux" type="button">Deux prises de masse</button>
+    </div>
+    <div class="btns" id="m6c">
+      <button class="btn on" data-k="cc" type="button">Courant continu</button>
+      <button class="btn" data-k="ca" type="button">Courant alternatif</button>
+      <button class="btn" id="m6tab" type="button" aria-pressed="false">Appendices en bout de joint</button>
+    </div>
+    <div class="ctrl"><label for="m6I">Intensité <span class="mat">I</span></label><input type="range" id="m6I" class="r-mat" min="60" max="250" step="5" value="150"><output id="m6Io"></output></div>
+    <div class="ctrl"><label for="m6B">Aimantation <span class="mat">B<sub>r</sub></span></label><input type="range" id="m6B" class="r-mat" min="0" max="100" step="5" value="0"><output id="m6Bo"></output></div>
+    <div class="ctrl"><label for="m6x">Position <span class="mat">x</span></label><input type="range" id="m6x" class="r-mat" min="5" max="395" step="5" value="200"><output id="m6xo"></output></div>
+    <div class="btns"><button class="btn play" id="m6play" type="button">▶ Avancer vers le bord</button></div>
+    <svg id="m6svg" role="img" aria-label="Tôle vue de dessus avec la prise de masse et le cordon, et arc vu de côté dévié par le soufflage magnétique"></svg>
+    <div class="readout" id="m6r"></div>
+    <p class="status" id="m6msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">champ, force et remèdes</span></div>
+    <h4>Un champ qui n'est pas négligeable</h4>
+    <p>Autour d'un conducteur rectiligne parcouru par un courant I, le champ magnétique vaut, à la distance r :</p>
+    <div class="fx"><div class="row big" style="font-size:1.5rem"><span><span class="tau">B</span> = <span class="frac"><span>μ<sub>0</sub>·<span class="mat">I</span></span><span>2π·r</span></span></span><span><span class="frc">F</span> = <span class="mat">I</span>·L·<span class="tau">B</span></span></div><p class="cap">B : champ magnétique (T, tesla ; 1 mT = 10 gauss) ; μ<sub>0</sub> = 4π × 10⁻⁷ T·m/A, perméabilité du vide ; I : courant (A) ; r : distance au conducteur (m) ; F : force de Laplace sur une longueur L de conducteur placée dans un champ B perpendiculaire (N)</p></div>
+    <p><b>Exemple</b> : à 5 mm d'un courant de 200 A, <span class="m">B = 4π × 10⁻⁷ × 200/(2π × 0,005) = 8 × 10⁻³ T = 8 mT</span>, soit 80 gauss. Une pièce dont l'aimantation rémanente dépasse environ 50 gauss (5 mT), valeur souvent citée comme seuil de gêne, crée donc un champ du même ordre que celui de l'arc lui-même. Le champ propre de l'arc croît avec I, et la force aussi : la déviation croît comme I². Monter l'intensité aggrave le soufflage.</p>
+    <h4>Les remèdes</h4>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Remède</th><th>Pourquoi il agit</th></tr>
+      <tr><td>passer en courant alternatif (au moins pour la racine)</td><td>le champ s'inverse cent fois par seconde et s'affaiblit</td></tr>
+      <tr><td>déplacer la prise de masse : au départ si l'arc souffle vers l'arrière, à l'arrivée s'il souffle vers l'avant ; ou souder vers une grosse pointe</td><td>le champ du courant de retour compense celui des bords</td></tr>
+      <tr><td>plusieurs prises de masse</td><td>les courants de retour se partagent et leurs effets se compensent</td></tr>
+      <tr><td>arc court, intensité la plus faible possible</td><td>l'arc court est plus raide ; la force décroît comme I²</td></tr>
+      <tr><td>incliner l'électrode pour que sa pointe vise le côté opposé à la déviation</td><td>la poussée de l'arc compense la force magnétique</td></tr>
+      <tr><td>appendices (plaquettes) en début et en fin de joint, pointages lourds aux extrémités</td><td>les bords magnétiques s'éloignent de la zone soudée</td></tr>
+      <tr><td>démagnétiser la pièce, contrôler au gaussmètre (appareil de mesure du champ magnétique) ; enrouler le câble autour de la pièce pour créer un champ opposé</td><td>on supprime ou on compense le magnétisme rémanent</td></tr>
+    </table></div>
+    <div class="def"><b>📖 Magnétisme rémanent</b> : aimantation qui reste dans un acier après qu'il a été soumis à un champ magnétique (levage par électro-aimant, contrôle magnétoscopique, c'est-à-dire recherche de fissures avec un champ magnétique et une poudre, transport près de lignes électriques). Elle se mesure au gaussmètre.</div>
+    <div class="tip">💡 <b>Le premier réflexe</b> : déplacer la prise de masse et raccourcir l'arc. C'est gratuit, rapide, et cela suffit souvent ; le passage en alternatif ou la démagnétisation viennent ensuite.</div>
+    <div class="warn"><b>⚠️ Piège : confondre soufflage et électrode défectueuse.</b> Un arc qui dévie toujours du même côté de l'électrode, où qu'on soit sur la pièce, trahit un enrobage excentré (cours 3). Un arc qui dévie selon l'endroit de la pièce et la place de la masse, c'est du soufflage magnétique.</div>
+    <div class="warn"><b>⚠️ Piège : monter l'intensité pour « raidir » l'arc.</b> La force magnétique croît comme le carré du courant : le soufflage empire.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « l'arc fuit la masse et fuit les bouts »</b>.</div>
+    <div class="weld"><b>🔥 Les tubes aimantés</b>
+      <p>Des tubes levés par électro-aimant ou contrôlés par magnétoscopie arrivent parfois aimantés : la racine devient impossible en courant continu. On mesure au gaussmètre aux extrémités, on démagnétise ou l'on compense avec un câble enroulé, et l'on soude la racine en courant alternatif si l'électrode le permet.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="exos">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✎</div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Six exercices et un défi, du passage par zéro au soufflage</p></div>
+    <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de musculation : on ne progresse qu'en soulevant soi-même</span></div>
+  </div>
+  <div class="lv lv1"><div class="lv-h">👁 Mode d'emploi <span class="tag">courants en A, tensions en V, vitesses en mm/s, énergies en kJ/mm</span></div>
+    <p>Cherche chaque question sur papier avant d'ouvrir la correction. Écris la formule littérale, puis les valeurs avec leurs unités. Les manipulations 1 à 6 permettent de vérifier tes résultats ; le défi se rejoue dans la manipulation 5.</p>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 1 : cent rallumages par seconde <span class="lvtag">N1 · chapitre 1</span></h4>
+    <p>Un transformateur de soudage a une tension à vide U<sub>0</sub> = 50 V efficaces, à 50 Hz. Une rutile de type 13 se rallume dès que la tension disponible dépasse U<sub>r</sub> = 30 V (modèle).</p>
+    <p class="q"><b>a)</b> Combien de fois par seconde le courant passe-t-il par zéro ? Combien dure une demi-période ?</p>
+    <p class="q"><b>b)</b> Sans réactance (φ = 0), calcule le retard de réamorçage et la part de la demi-période où l'arc reste éteint.</p>
+    <p class="q"><b>c)</b> Avec un transformateur à réactance (φ = 60°), quelle tension est disponible au passage par zéro du courant ? Conclus.</p>
+    <p class="q"><b>d)</b> Une basique de type 15 demanderait ici 130 V. Que se passe-t-il, même à 80 V efficaces ? Que dit l'ISO 2560 ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> Deux passages par période, 50 périodes par seconde : <b>100 passages par zéro</b> par seconde. Une demi-période dure <span class="m">T/2 = 1/(2 × 50) = 10 ms</span>.</p>
+      <p><b>b)</b> Tension crête <span class="m">√2 × 50 ≈ 70,7 V</span> ; <span class="m">arcsin(30/70,7) ≈ 25,1°</span> ; <span class="m">t<sub>r</sub> = 25,1/360 × 20 ms ≈ 1,4 ms</span>, soit <b>14 %</b> des 10 ms : l'arc crépite. Manipulation 1 : rutile, « cas d'école », 50 V.</p>
+      <p><b>c)</b> <span class="m">70,7 × sin 60° ≈ 61 V</span> &gt; 30 V : l'arc se rallume <b>aussitôt</b>. La réactance du transformateur met la tension en avance sur le courant, juste quand l'arc en a besoin.</p>
+      <p><b>d)</b> À 80 V efficaces, la crête n'atteint que <span class="m">√2 × 80 ≈ 113 V</span> &lt; 130 V : l'arc <b>ne se rallume jamais</b> après le premier passage par zéro. L'ISO 2560 réserve le type 15 au <b>CC+</b>.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 2 : la bonne polarité <span class="lvtag">N1 · chapitre 2</span></h4>
+    <p class="q"><b>a)</b> Le câble de la pince est branché sur la borne − du poste. Comment s'appelle cette polarité ?</p>
+    <p class="q"><b>b)</b> Pour les électrodes de types 10, 12, 13, 15 et 16 (ISO 2560, système B), dis si elles conviennent sur ce branchement, puis sur un transformateur.</p>
+    <p class="q"><b>c)</b> Racine ouverte sur une tôle de 3 mm qui perce facilement : quelle électrode et quelle polarité proposer ?</p>
+    <p class="q"><b>d)</b> Quelle polarité pour une électrode d'aluminium ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> Électrode au pôle négatif : <b>CC−</b>, dite <b>polarité directe</b>.</p>
+      <p><b>b)</b> En CC− : <b>12</b> (CA et CC−) et <b>13</b> (CA et CC±) conviennent ; 10, 15 et 16 non (ils demandent CC+ en continu). Sur un transformateur (CA) : <b>12, 13 et 16</b> conviennent ; <b>10 et 15</b> non (CC+ seulement). Manipulation 2 : la compatibilité s'affiche pour chaque couple.</p>
+      <p><b>c)</b> Une rutile de type 12 ou 13 en <b>CC−</b> : l'électrode fond plus vite, la pénétration et la dilution baissent, le risque de percer aussi.</p>
+      <p><b>d)</b> <b>CC+</b> uniquement.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 3 : l'intensité fait le trou <span class="lvtag">N2 · chapitre 3</span></h4>
+    <p>Cordon sur tôle avec une électrode de 3,2 mm à 3 mm/s ; r = 0,95, c<sub>f</sub> = 9,5 g/(A·h), ρ = 7,85 g/cm³.</p>
+    <p class="q"><b>a)</b> Calcule la section de métal déposé A<sub>d</sub> à 110 A.</p>
+    <p class="q"><b>b)</b> Le cordon mesure w = 7,3 mm de large ; avec un profil parabolique (A<sub>d</sub> = 2/3·w·h), calcule sa surépaisseur h.</p>
+    <p class="q"><b>c)</b> On monte à 132 A (+20 %). De combien augmentent A<sub>d</sub> et la pénétration du modèle (proportionnelle à I<sup>1,5</sup>) ?</p>
+    <p class="q"><b>d)</b> Calcule la densité de courant à 140 A dans une âme de 3,2 mm et de 4 mm.</p>
+    <p class="q"><b>e)</b> On soudait à 120 A à plat. Quelle plage viser en vertical montant ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> c<sub>f</sub> = 9,5/3 600 = 2,64 × 10⁻³ g/(A·s) ; <span class="m">A<sub>d</sub> = r·c<sub>f</sub>·I/(ρ·v) = 0,95 × 2,64 × 10⁻³ × 110/(7,85 × 10⁻³ × 3) ≈ 11,7 mm²</span>.</p>
+      <p><b>b)</b> <span class="m">h = 3·A<sub>d</sub>/(2·w) = 3 × 11,7/(2 × 7,3) ≈ 2,4 mm</span>.</p>
+      <p><b>c)</b> A<sub>d</sub> suit I : <b>× 1,20</b> (14,1 mm²). La pénétration : <span class="m">1,2<sup>1,5</sup> ≈ 1,31</span>, soit <b>+31 %</b> (de 1,7 à 2,2 mm dans la manipulation 3).</p>
+      <p><b>d)</b> <span class="m">J = I/(π·d²/4)</span> : <span class="m">140/8,04 ≈ 17,4 A/mm²</span> pour 3,2 mm, <span class="m">140/12,6 ≈ 11,1 A/mm²</span> pour 4 mm. L'âme fine concentre davantage l'arc mais chauffe plus vite.</p>
+      <p><b>e)</b> 10 à 20 % de moins : environ <b>96 à 108 A</b>.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 4 : la hauteur d'arc <span class="lvtag">N1 · chapitre 4</span></h4>
+    <p>Modèle : U = 14 + 0,04·I + 2·l (U en V, I en A, l en mm). Électrode de 3,2 mm à 120 A.</p>
+    <p class="q"><b>a)</b> Calcule la tension pour un arc de 2, 3 et 6 mm.</p>
+    <p class="q"><b>b)</b> À vitesse égale, de combien augmente l'énergie de l'arc quand l'arc passe de 3 à 6 mm ? Comment change le cordon ?</p>
+    <p class="q"><b>c)</b> Pourquoi les électrodes basiques exigent-elles un arc très court ?</p>
+    <p class="q"><b>d)</b> Diagnostic : cordon large et plat, nombreuses projections, soufflures. Puis : électrode qui colle, cordon bosselé. Quelle hauteur d'arc dans chaque cas ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> 2 mm : <span class="m">14 + 4,8 + 4 = 22,8 V</span> ; 3 mm : <b>24,8 V</b> ; 6 mm : <b>30,8 V</b>.</p>
+      <p><b>b)</b> <span class="m">30,8/24,8 ≈ 1,24</span> : <b>+24 %</b>. Le cordon s'élargit et s'aplatit, la pénétration baisse, les projections augmentent (manipulation 4).</p>
+      <p><b>c)</b> Leur gaz de protection est moins abondant et leurs grosses gouttes traversent l'arc lentement : un arc long laisse entrer l'air, dont l'azote forme des soufflures. Un arc court garde le bain sous la cloche de gaz et de laitier.</p>
+      <p><b>d)</b> Premier cas : <b>arc trop long</b>. Second cas : <b>arc trop court</b>. La bonne hauteur est de l'ordre du diamètre de l'âme.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 5 : énergie et refroidissement <span class="lvtag">N2 · chapitre 5</span></h4>
+    <p>Cordon sur tôle : U = 24,4 V, I = 110 A, v = 3 mm/s ; k = 0,8 ; pas de préchauffage (T<sub>0</sub> = 20 °C).</p>
+    <p class="q"><b>a)</b> Calcule l'énergie de l'arc E et l'énergie de soudage Q.</p>
+    <p class="q"><b>b)</b> L'électrode de 3,2 × 350 mm a brûlé en 67 s en déposant 202 mm de cordon. Retrouve v et E à partir de ces mesures.</p>
+    <p class="q"><b>c)</b> Calcule le t<sub>8/5</sub> en écoulement 3D, l'épaisseur de transition, puis le t<sub>8/5</sub> d'une tôle de 10 mm.</p>
+    <p class="q"><b>d)</b> Le soudeur passe d'une électrode tirée à 15° à une électrode poussée. Qu'attends-tu ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">E = U·I/v × 10⁻³ = 24,4 × 110/3 × 10⁻³ ≈ 0,89 kJ/mm</span> ; <span class="m">Q = 0,8 × 0,895 ≈ 0,72 kJ/mm</span>.</p>
+      <p><b>b)</b> <span class="m">v = 202/67 ≈ 3,0 mm/s</span> ; <span class="m">E = U·I·t<sub>e</sub>/L<sub>c</sub> = 24,4 × 110 × 67,4/202 × 10⁻³ ≈ 0,89 kJ/mm</span> : même résultat, sans chronométrer la vitesse.</p>
+      <p><b>c)</b> 3D : <span class="m">t<sub>8/5</sub> = (6 700 − 100) × 0,716 × (1/480 − 1/780) ≈ 3,8 s</span>. Transition : <span class="m">e<sub>t</sub> = √[(4 300 − 86)/(6 600) × 10⁵ × 0,716 × (1/480 + 1/780)] ≈ 12,4 mm</span>. À 10 mm &lt; e<sub>t</sub>, formule 2D : <span class="m">t<sub>8/5</sub> = 4 214 × 10⁵ × (0,716/10)² × (1/480² − 1/780²) ≈ 5,8 s</span>. La tôle mince refroidit plus lentement (manipulation 5).</p>
+      <p><b>d)</b> Cordon plus large et plus plat, pénétration plus faible, et risque que le laitier passe devant l'arc et reste piégé. L'énergie, elle, ne change pas.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 6 : l'arc qui souffle <span class="lvtag">N1 et N2 · chapitre 6</span></h4>
+    <p class="q"><b>a)</b> Calcule le champ magnétique à 5 mm d'un courant de 200 A, en mT et en gauss. Compare à une aimantation rémanente de 50 gauss.</p>
+    <p class="q"><b>b)</b> Une tôle est soudée en courant continu en s'éloignant de la prise de masse, placée au départ. Comment l'arc dévie-t-il au départ et en arrivant au bout ?</p>
+    <p class="q"><b>c)</b> Racine d'un tube aimanté, électrode basique de type 16 en CC+. Classe trois remèdes, du plus simple au plus lourd.</p>
+    <p class="q"><b>d)</b> L'arc dévie toujours du même côté de l'électrode, où qu'on soit sur la pièce. Diagnostic ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">B = μ<sub>0</sub>·I/(2π·r) = 4π × 10⁻⁷ × 200/(2π × 0,005) = 8 × 10⁻³ T = 8 mT = 80 gauss</span> : une aimantation de 50 gauss est du même ordre, d'où un soufflage marqué.</p>
+      <p><b>b)</b> Au départ, l'arc fuit le bord et la prise de masse, tous deux derrière lui : <b>soufflage avant</b>, fort. Au bout, le bord de tôle le repousse vers l'arrière : <b>soufflage arrière</b> (manipulation 6, « Masse au départ », x de 10 à 390 mm).</p>
+      <p><b>c)</b> 1) Déplacer la prise de masse et raccourcir l'arc ; 2) passer la racine en <b>courant alternatif</b>, que le type 16 accepte ; 3) <b>démagnétiser</b> le tube ou compenser avec un câble enroulé, en contrôlant au gaussmètre.</p>
+      <p><b>d)</b> Ce n'est pas du soufflage magnétique, qui dépend de l'endroit : c'est un <b>enrobage excentré</b>, défaut de l'électrode (cours 3).</p>
+    </div></details>
+  </div>
+
+  <div class="exo defi">
+    <h4>🏆 Défi : tenir une fenêtre d'énergie <span class="lvtag">N2 · chapitres 4 et 5, à rejouer dans la manipulation 5</span></h4>
+    <p>Le DMOS des passes de remplissage d'un bout à bout en acier S355 (acier de construction de limite d'élasticité 355 MPa) de 20 mm prescrit : électrode basique de 3,2 × 350 mm en CC+, 120 A, arc court donnant 24 V, et une énergie de soudage comprise entre 0,8 et 1,2 kJ/mm (k = 0,8). Sans préchauffage, T<sub>0</sub> = 20 °C.</p>
+    <p class="q"><b>a)</b> Calcule la plage de vitesses d'avance qui respecte le DMOS, en mm/s puis en mm/min.</p>
+    <p class="q"><b>b)</b> L'électrode dure 61,8 s à 120 A (modèle du cours 1). Traduis la plage en longueur de cordon par électrode.</p>
+    <p class="q"><b>c)</b> Calcule le t<sub>8/5</sub> aux deux bornes (passes de bout à bout, F<sub>3</sub> = 0,9) après avoir vérifié le type d'écoulement.</p>
+    <p class="q"><b>d)</b> Le soudeur allonge l'arc à 28 V. Que devient Q à 2,4 mm/s ? Et à 2,0 mm/s ? Quel autre risque court-il ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">v = k·U·I/Q</span> : <span class="m">v<sub>min</sub> = 0,8 × 24 × 120/1 200 = 1,92 mm/s</span> et <span class="m">v<sub>max</sub> = 0,8 × 24 × 120/800 = 2,88 mm/s</span>, soit <b>115 à 173 mm/min</b>. Manipulation 5, bouton « Défi », puis v = 2,0 et 2,8 mm/s : dans la fenêtre ; 1,9 et 2,9 mm/s : hors fenêtre.</p>
+      <p><b>b)</b> <span class="m">L<sub>c</sub> = v·t<sub>e</sub></span> : de <span class="m">1,92 × 61,8 ≈ 119 mm</span> à <span class="m">2,88 × 61,8 ≈ 178 mm</span> par électrode. C'est cette consigne que le soudeur peut vérifier avec un réglet.</p>
+      <p><b>c)</b> L'épaisseur de transition vaut 16,1 mm à Q = 1,2 kJ/mm (13,1 mm à 0,8) : à 20 mm, l'écoulement est <b>3D</b>. <span class="m">t<sub>8/5</sub> = 6 600 × Q × (1/480 − 1/780) × 0,9</span> : <b>3,8 s</b> à 0,8 kJ/mm et <b>5,7 s</b> à 1,2 kJ/mm.</p>
+      <p><b>d)</b> À 2,4 mm/s : <span class="m">Q = 0,8 × 28 × 120/2,4 × 10⁻³ = 1,12 kJ/mm</span>, +17 %, encore dans la fenêtre. À 2,0 mm/s : <span class="m">1,34 kJ/mm</span>, hors fenêtre. Et surtout, un arc long avec une basique, c'est le risque de <b>soufflures</b> (chapitre 4) : la règle est de tenir l'arc court, pas de compenser par la vitesse.</p>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="quiz-s">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">?</div>
+    <div class="c-title"><h2>Quiz : 12 questions éclair</h2><p>Chaque réponse est expliquée, même quand tu as juste</p></div>
+    <div class="c-img"><span class="ico">🎯</span><span><small>Image à retenir</small>La cible : vise 10 sur 12 avant le cours 3</span></div>
+  </div>
+  <div id="quiz"></div>
+  <div class="score" id="qzScore" aria-live="polite">Score : 0 / 12</div>
+  <div class="btns"><button class="btn" id="qzReset" type="button">↺ Recommencer le quiz</button></div>
+</div>
+</section>
+
+<section class="chap" id="fiche">
+<div class="wrap wide">
+  <div class="cartouche">
+    <div class="c-num">★</div>
+    <div class="c-title"><h2>Fiche mémoire du cours 2</h2><p>Neuf cases, neuf images : à photographier, puis à redessiner de tête</p></div>
+    <div class="c-img"><span class="ico">🌈</span><span><small>Image à retenir</small>L'arche de Davy, devenue l'arc</span></div>
+  </div>
+  <div class="fiche">
+    <div><div class="ic">🕯️</div><h4>La bougie magique</h4><div class="f"><span class="eps">t<sub>r</sub></span> = [arcsin(<span class="mat">U<sub>r</sub></span>/√2<span class="mat">U<sub>0</sub></span>) − <span class="mat">φ</span>]/ω</div><p>CA à 50 Hz : 100 passages par zéro par seconde. Gaz chaud, potassium et réactance rallument l'arc.</p></div>
+    <div><div class="ic">⚖️</div><h4>La balance</h4><div class="f">inverse = CC+ = électrode au +</div><p>CC+ pénètre plus ; CC− fond plus vite, dilue moins. En 111 la chaleur reste presque équilibrée : l'enrobage décide.</p></div>
+    <div><div class="ic">🏷️</div><h4>L'étiquette</h4><div class="f">10, 15 : CC+ · 12 : CA, CC− · 13 : CA, CC± · 16 : CA, CC+</div><p>Tableau 4B de l'ISO 2560. Aluminium : CC+. Fonte au nickel : CC+ (CA possible).</p></div>
+    <div><div class="ic">🍳</div><h4>La poêle</h4><div class="f"><span class="eps">A<sub>d</sub></span> = r·<span class="mat">c<sub>f</sub></span>·<span class="mat">I</span>/(ρ·<span class="mat">v</span>)</div><p>L'intensité creuse : +20 % d'ampères, ≈ +30 % de pénétration. Trop faible : collage ; trop forte : caniveaux. Position : −10 à −20 %.</p></div>
+    <div><div class="ic">🔦</div><h4>La lampe de poche</h4><div class="f"><span class="eps">U</span> ≈ a + b·<span class="mat">l</span> ; <span class="mat">l</span> ≤ <span class="mat">d</span></div><p>La main tient la tension. Arc long : cordon large et plat, projections, soufflures (surtout en basique).</p></div>
+    <div><div class="ic">🌧️</div><h4>La pluie de gouttes</h4><div class="f">fines · grosses · projetées</div><p>Rutile : fines gouttes ; basique : grosses gouttes et courts-circuits ; cellulosique : arc violent et pénétrant.</p></div>
+    <div><div class="ic">🖌️</div><h4>Le pinceau</h4><div class="f"><span class="mat">α</span> tirée de 10 à 30°</div><p>Vitesse trop lente : bain devant l'arc ; trop rapide : caniveaux. Orientation sur la bissectrice ; pointe vers le cordon fait.</p></div>
+    <div><div class="ic">⏱️</div><h4>Le chronomètre</h4><div class="f"><span class="sig">Q</span> = k·<span class="mat">U</span>·<span class="mat">I</span>/<span class="mat">v</span> ; k = 0,8</div><p>E sans k (ISO/TR 18491), Q avec k (EN 1011-1). Q commande le t<sub>8/5</sub> (EN 1011-2). Longueur de cordon par électrode.</p></div>
+    <div><div class="ic">🧭</div><h4>La boussole affolée</h4><div class="f"><span class="tau">B</span> = μ<sub>0</sub>·<span class="mat">I</span>/(2π·r)</div><p>L'arc fuit la masse et les bouts. CA, prise de masse, arc court, angle, appendices, démagnétisation (≲ 50 gauss).</p></div>
+  </div>
+  <div class="fun"><span class="fun-h">🌈 Fun fact : Pourquoi l'arc s'appelle un arc</span>Au début du XIX<sup>e</sup> siècle, le chimiste anglais Humphry Davy fait jaillir, entre deux baguettes de charbon placées à l'horizontale, une décharge électrique éblouissante. L'air qu'elle chauffe, plus léger, monte et l'entraîne : la décharge se bombe vers le haut, comme une arche. Davy la baptise donc « arc ». Le nom est resté, même si l'arc de soudage, long de quelques millimètres, n'a plus la place de se courber. Sauf quand un champ magnétique le pousse de côté : c'est le soufflage magnétique du <a href="#c6">chapitre 6</a>.</div>
+</div>
+</section>
+
+<section class="chap" id="gloss">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">A–Z</div>
+    <div class="c-title"><h2>Glossaire</h2><p>Les mots, symboles et sigles de ce cours</p></div>
+    <div class="c-img"><span class="ico">📖</span><span><small>Image à retenir</small>Le dictionnaire : un mot flou, un clic</span></div>
+  </div>
+  <dl class="gloss">
+    <dt>A<sub>d</sub>, A<sub>b</sub></dt><dd>Section du métal déposé ; section du métal de base fondu, vues en coupe (mm²).</dd>
+    <dt>Anode, cathode</dt><dd>Pôle positif de l'arc, frappé par les électrons ; pôle négatif, frappé par les ions positifs.</dd>
+    <dt>Appendices</dt><dd>Plaquettes soudées en début et en fin de joint pour y amorcer et y finir les cordons, et éloigner les bords magnétiques de la zone utile.</dd>
+    <dt>Arc court, arc long</dt><dd>Hauteur d'arc de l'ordre du diamètre de l'âme ou moins ; hauteur nettement supérieure, source de projections et de soufflures.</dd>
+    <dt>arcsin</dt><dd>Fonction réciproque du sinus : arcsin(x) est l'angle dont le sinus vaut x.</dd>
+    <dt>B, μ<sub>0</sub>, gauss</dt><dd>Champ magnétique (T, tesla) ; perméabilité du vide, 4π × 10⁻⁷ T·m/A ; ancienne unité de champ, 1 mT = 10 gauss.</dd>
+    <dt>CA, CC</dt><dd>Courant alternatif, qui change de sens ; courant continu, de sens constant.</dd>
+    <dt>CC+, CC− (DCEP, DCEN)</dt><dd>Courant continu, électrode au pôle positif (polarité inverse) ; électrode au pôle négatif (polarité directe).</dd>
+    <dt>Caniveau</dt><dd>Sillon creusé dans la tôle le long du bord du cordon et non rempli ; signe d'une intensité, d'un arc ou d'une vitesse trop élevés.</dd>
+    <dt>Collage</dt><dd>Électrode qui se soude au bain ou à la pièce, par intensité trop faible ou arc trop court.</dd>
+    <dt>c<sub>f</sub>, r</dt><dd>Coefficient de fusion de l'âme (≈ 10 g par ampère et par heure) ; rendement, part du métal fondu qui se retrouve dans le cordon.</dd>
+    <dt>DMOS</dt><dd>Descriptif de mode opératoire de soudage.</dd>
+    <dt>Densité de courant J</dt><dd>Intensité divisée par la section de l'âme (A/mm²).</dd>
+    <dt>Dilution δ</dt><dd>Part de métal de base fondu dans le cordon : A<sub>b</sub>/(A<sub>b</sub> + A<sub>d</sub>).</dd>
+    <dt>e, e<sub>t</sub></dt><dd>Épaisseur de la tôle ; épaisseur de transition entre écoulement de chaleur 2D et 3D (mm).</dd>
+    <dt>E (énergie de l'arc)</dt><dd>U·I/v, sans rendement (kJ/mm), selon l'ISO/TR 18491.</dd>
+    <dt>Électron, ion</dt><dd>Particule négative très légère ; atome qui a perdu (ou gagné) des électrons et porte une charge, ici positive.</dd>
+    <dt>EN 1011-1, EN 1011-2</dt><dd>Recommandations pour le soudage à l'arc : générales (énergie de soudage, rendement k) ; aciers ferritiques (t<sub>8/5</sub>, préchauffage).</dd>
+    <dt>F<sub>2</sub>, F<sub>3</sub></dt><dd>Facteurs de forme du joint dans les formules du t<sub>8/5</sub> (1 cordon sur tôle, 0,9 bout à bout, 0,67 angle en T en 3D).</dd>
+    <dt>f, T, ω</dt><dd>Fréquence (50 Hz) ; période (20 ms) ; pulsation 2π·f (rad/s).</dd>
+    <dt>Force de Laplace</dt><dd>Force exercée par un champ magnétique sur un conducteur parcouru par un courant : F = I·L·B.</dd>
+    <dt>Gaussmètre, magnétoscopie</dt><dd>Appareil de mesure du champ magnétique ; contrôle qui révèle les fissures à l'aide d'un champ magnétique et d'une poudre, et peut laisser la pièce aimantée.</dd>
+    <dt>Hertz (Hz), radian par seconde (rad/s)</dt><dd>Unité de fréquence, nombre de périodes par seconde ; unité de pulsation.</dd>
+    <dt>Hauteur d'arc l</dt><dd>Distance entre le bout de l'électrode et le bain (mm).</dd>
+    <dt>Inclinaison α</dt><dd>Angle de l'électrode dans le plan du joint, compté depuis la perpendiculaire : tirée (pointe vers le cordon fait) ou poussée (pointe vers l'avant).</dd>
+    <dt>Ionisation</dt><dd>Arrachement d'électrons aux atomes d'un gaz, qui le rend conducteur ; facilitée par le potassium et le sodium de l'enrobage.</dd>
+    <dt>ISO 2560 (tableau 4B)</dt><dd>Classification des électrodes pour aciers non alliés ; le tableau 4B donne, pour chaque type d'enrobage (10, 11, 12, 13, 15, 16…), les positions et le courant admis.</dd>
+    <dt>ISO/TR 17671-1, ISO/TR 18491</dt><dd>Rapports techniques de l'ISO : recommandations générales de soudage à l'arc (énergie de soudage Q) ; mesure des énergies de soudage (énergie de l'arc E).</dd>
+    <dt>k</dt><dd>Rendement thermique : part de l'énergie de l'arc qui entre dans la pièce ; 0,8 pour le 111.</dd>
+    <dt>L<sub>c</sub>, t<sub>e</sub></dt><dd>Longueur de cordon déposée par une électrode (mm) ; durée de fusion d'une électrode (s).</dd>
+    <dt>Magnétisme rémanent</dt><dd>Aimantation qui reste dans un acier après exposition à un champ ; gênante au-delà d'environ 50 gauss.</dd>
+    <dt>Manque de fusion</dt><dd>Absence de liaison entre le cordon et la tôle ou entre deux passes.</dd>
+    <dt>Martensite</dt><dd>Structure très dure et fragile qui se forme dans un acier refroidi rapidement (série Métallurgie, cours 3).</dd>
+    <dt>Mode de transfert</dt><dd>Manière dont le métal passe de l'électrode au bain : fines gouttes, grosses gouttes avec courts-circuits, gouttes projetées.</dd>
+    <dt>Orientation</dt><dd>Angle de l'électrode dans le plan perpendiculaire au joint (90° en bout à bout à plat, ≈ 45° en angle).</dd>
+    <dt>p, w, h</dt><dd>Pénétration, largeur et surépaisseur du cordon (mm).</dd>
+    <dt>Plage d'intensité</dt><dd>Intervalle d'intensité donné par le fabricant pour un diamètre d'électrode.</dd>
+    <dt>Polarité directe, inverse</dt><dd>Électrode au pôle négatif (CC−) ; électrode au pôle positif (CC+).</dd>
+    <dt>Q (énergie de soudage)</dt><dd>k·U·I/v (kJ/mm), aussi appelée apport de chaleur.</dd>
+    <dt>Réactance, déphasage φ</dt><dd>Opposition des bobinages au courant alternatif ; décalage entre la tension et le courant qu'elle produit.</dd>
+    <dt>S355</dt><dd>Acier de construction de limite d'élasticité minimale 355 MPa.</dd>
+    <dt>Soudage au contact</dt><dd>Soudage avec une électrode à enrobage épais dont la collerette s'appuie sur la pièce et fixe la hauteur d'arc.</dd>
+    <dt>Soufflage magnétique (avant, arrière)</dt><dd>Déviation de l'arc par un champ magnétique dissymétrique, vers l'avant ou vers le cordon déjà fait.</dd>
+    <dt>Soufflure</dt><dd>Cavité remplie de gaz piégée dans le métal solidifié.</dd>
+    <dt>T<sub>0</sub></dt><dd>Température initiale de la pièce (°C) : 20 °C sans préchauffage.</dd>
+    <dt>t<sub>8/5</sub></dt><dd>Temps de refroidissement de 800 à 500 °C dans la zone soudée (s).</dd>
+    <dt>t<sub>r</sub>, U<sub>r</sub></dt><dd>Retard de réamorçage après le passage par zéro (ms) ; tension de réamorçage de l'arc (V).</dd>
+    <dt>Tension crête, efficace</dt><dd>Valeur maximale instantanée ; valeur qui chaufferait autant en continu. En sinusoïdal, crête = efficace × √2.</dd>
+    <dt>TIG</dt><dd>Soudage à l'arc avec électrode de tungstène non fusible, sous gaz inerte (procédé 141).</dd>
+    <dt>U, I, U<sub>0</sub></dt><dd>Tension d'arc (V) ; intensité (A) ; tension à vide (V).</dd>
+    <dt>v</dt><dd>Vitesse d'avance (mm/s).</dd>
+    <dt>ZAT</dt><dd>Zone affectée thermiquement : métal de base chauffé par le soudage sans avoir fondu.</dd>
+  </dl>
+</div>
+</section>
+
+<section class="chap" id="check">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✓</div>
+    <div class="c-title"><h2>Suis-je prêt pour la suite ?</h2><p>Dix points à cocher de tête</p></div>
+    <div class="c-img"><span class="ico">🚦</span><span><small>Image à retenir</small>Le feu passe au vert quand tout est coché</span></div>
+  </div>
+  <p>Coche seulement ce que tu sais faire <b>sans regarder</b>. Tes coches restent enregistrées dans ce navigateur.</p>
+  <div class="check" id="checklist">
+    <label><input type="checkbox" data-c="1"> <span>Je sais expliquer pourquoi l'arc s'éteint et se rallume en courant alternatif, et ce qui aide au réamorçage.</span></label>
+    <label><input type="checkbox" data-c="2"> <span>Je sais calculer un retard de réamorçage et dire si une électrode peut s'employer en CA.</span></label>
+    <label><input type="checkbox" data-c="3"> <span>Je sais nommer sans erreur polarité directe et inverse, et dire ce que changent CC+ et CC−.</span></label>
+    <label><input type="checkbox" data-c="4"> <span>Je sais lire le courant admis d'une électrode dans le tableau 4B de l'ISO 2560 et choisir le courant selon le métal.</span></label>
+    <label><input type="checkbox" data-c="5"> <span>Je sais prévoir l'effet de l'intensité sur le métal déposé, la pénétration et la dilution, et reconnaître une intensité trop faible ou trop forte.</span></label>
+    <label><input type="checkbox" data-c="6"> <span>Je sais relier la hauteur d'arc à la tension, et expliquer pourquoi l'arc doit rester court.</span></label>
+    <label><input type="checkbox" data-c="7"> <span>Je sais décrire les modes de transfert selon l'enrobage.</span></label>
+    <label><input type="checkbox" data-c="8"> <span>Je sais régler vitesse, orientation et inclinaison, et prévoir leur effet sur le cordon.</span></label>
+    <label><input type="checkbox" data-c="9"> <span>Je sais calculer E, Q et un t<sub>8/5</sub>, et traduire une énergie en longueur de cordon par électrode.</span></label>
+    <label><input type="checkbox" data-c="10"> <span>Je sais expliquer le soufflage magnétique et choisir ses remèdes.</span></label>
+  </div>
+  <p class="status" id="checkMsg"></p>
+
+  <div class="meta">🔭 <b>Au prochain épisode, cours 3 : l'électrode, de la fabrication à l'étuve.</b> On a vu ce que l'enrobage fait à l'arc ; reste à ouvrir l'électrode. On suivra sa fabrication, de l'âme tréfilée à l'enrobage filé et cuit, et ses défauts possibles, comme l'excentricité qui fait dévier l'arc. On détaillera les rôles électriques, physiques et métallurgiques de l'enrobage, puis les grandes familles : rutile, basique, cellulosique, acide. On verra pourquoi l'hydrogène impose de conserver et d'étuver les électrodes, comment calculer un rendement et une consommation, et comment lire la désignation complète d'une électrode selon l'ISO 2560.</div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="wrap">
+  <p>Cours 2 sur 5 de la série « Soudage à l'électrode enrobée : du poste de soudage au cordon contrôlé » (sujet 1.9 du planning). Vocabulaire aligné sur l'ISO 2560, l'ISO/TR 17671-1, l'ISO/TR 18491, l'EN 1011-1 et l'EN 1011-2 ; pour les notations et les conventions, l'enseignement de ta formation fait foi.</p>
+</div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+const NS="http://www.w3.org/2000/svg";
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const RM=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function el(tag,attrs,parent){
+  const e=document.createElementNS(NS,tag);
+  if(attrs){for(const k in attrs){const v=attrs[k];if(v===undefined||v===null)continue;
+    if(typeof v==="string"&&v.indexOf("var(")>=0&&k!=="style")e.style.setProperty(k,v);else e.setAttribute(k,v);}}
+  if(parent)parent.appendChild(e);
+  return e;
+}
+function tx(p,x,y,str,attrs){const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);t.textContent=str;return t;}
+function txs(p,x,y,parts,attrs){/* parts: [["σ",""],["max","sub"],[" = 3",""]] */
+  const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);
+  parts.forEach(pt=>{const s=el("tspan",pt[1]==="sub"?{"font-size":"0.72em",dy:"3"}:(pt[2]?{dy:pt[2]}:{}),t);s.textContent=pt[0];
+    if(pt[1]==="sub"){const r=el("tspan",{dy:"-3"},t);r.textContent="\u200b";}});
+  return t;
+}
+function clear(svg){while(svg.firstChild)svg.removeChild(svg.firstChild);}
+function fitText(t,x0,x1,gap){/* garde un texte SVG entre x0 et x1 : il passe de l'autre côté de son repère (écart gap), sinon il glisse */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const a=t.getAttribute("text-anchor")||"start",x=+t.getAttribute("x");
+  if(gap&&a!=="middle"&&(b.x<x0||b.x+b.width>x1)){t.setAttribute("text-anchor",a==="end"?"start":"end");t.setAttribute("x",a==="end"?x+2*gap:x-2*gap);b=t.getBBox();}
+  const nx=+t.getAttribute("x");
+  if(b.x+b.width>x1)t.setAttribute("x",nx-(b.x+b.width-x1));else if(b.x<x0)t.setAttribute("x",nx+(x0-b.x));
+  return t;}
+function arrow(p,x1,y1,x2,y2,color,w,h){
+  w=w||2.4;h=h||10;
+  const g=el("g",{class:"arr"},p);g.style.color=color||"var(--ink)";
+  const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy);
+  if(L<1)return g;
+  const ux=dx/L,uy=dy/L,hh=Math.min(h,L*0.6),bx=x2-ux*hh,by=y2-uy*hh,hw=hh*0.45+w*0.3;
+  el("line",{x1:x1,y1:y1,x2:bx,y2:by,"stroke-width":w,"stroke-linecap":"round"},g);
+  el("polygon",{points:x2+","+y2+" "+(bx-uy*hw)+","+(by+ux*hw)+" "+(bx+uy*hw)+","+(by-ux*hw)},g);
+  return g;
+}
+function darrow(p,x,y1,y2,color,w){/* double flèche verticale */
+  const g=el("g",{},p);const m=(y1+y2)/2;
+  if(Math.abs(y2-y1)<4){el("line",{x1:x-5,y1:y1,x2:x+5,y2:y1,stroke:color,"stroke-width":2},g);return g;}
+  arrow(g,x,m,x,y1,color,w||2,8);arrow(g,x,m,x,y2,color,w||2,8);return g;
+}
+function nf(v,d){
+  if(d===undefined)d=1;
+  if(Math.abs(v)<0.5*Math.pow(10,-d))v=0;
+  return v.toLocaleString("fr-FR",{minimumFractionDigits:d,maximumFractionDigits:d}).replace("-","−").replace(/[\u202f\u2009]/g,"\u00a0");
+}
+const SUP={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function sci(v,d){
+  if(v===0)return "0";
+  if(!isFinite(v))return "∞";
+  let e=Math.floor(Math.log10(Math.abs(v)));
+  let m=v/Math.pow(10,e);
+  const dd=d===undefined?1:d;
+  if(Math.abs(Number(m.toFixed(dd)))>=10){m/=10;e+=1;}
+  return nf(m,dd)+" × 10"+String(e).split("").map(c=>SUP[c]).join("");
+}
+function bigN(v){/* nombre de cycles lisible */
+  if(!isFinite(v))return "∞";
+  if(v===0)return "0";
+  if(v<10)return nf(v,v<1?2:0);
+  if(v<1e5)return nf(Math.round(v),0);
+  return sci(v,1);
+}
+function dur(s){
+  if(!isFinite(s))return "∞";
+  if(s<60)return nf(s,s<10?1:0)+" s";
+  if(s<3600)return nf(s/60,0)+" min";
+  if(s<86400)return nf(s/3600,1)+" h";
+  if(s<86400*365)return nf(s/86400,1)+" jours";
+  return nf(s/(86400*365),1)+" ans";
+}
+function svgW(svg){const r=svg.getBoundingClientRect();return Math.max(290,Math.round(r.width||(svg.parentNode&&svg.parentNode.clientWidth)||600));}
+function setVB(svg,W,H){svg.setAttribute("viewBox","0 0 "+W+" "+H);}
+const redraws=[];
+let rzT=null,lastWW=window.innerWidth;
+window.addEventListener("resize",()=>{if(window.innerWidth===lastWW)return;lastWW=window.innerWidth;clearTimeout(rzT);rzT=setTimeout(()=>redraws.forEach(f=>{try{f();}catch(e){console.error(e);}}),120);});
+
+function niceStep(range,n){const raw=range/(n||5),p=Math.pow(10,Math.floor(Math.log10(raw))),m=raw/p;return (m<1.5?1:m<3?2:m<7?5:10)*p;}
+function setOn(sel,btn){$$(sel+" .btn").forEach(b=>b.classList.toggle("on",b===btn));}
+function fmtmm(mm){return mm<0.1?nf(mm*1000,0)+" µm":mm<10?nf(mm,mm<1?2:1)+" mm":nf(mm,0)+" mm";}
+function axes(svg,x0,x1,y0,y1,xmin,xmax,ymin,ymax,xlab,ylab,xstep,ystep,xfmt,yfmt){
+  const X=v=>x0+(x1-x0)*(v-xmin)/(xmax-xmin),Y=v=>y1-(y1-y0)*(v-ymin)/(ymax-ymin);
+  for(let v=Math.ceil(ymin/ystep-1e-9)*ystep;v<=ymax+1e-9;v+=ystep){el("line",{x1:x0,y1:Y(v),x2:x1,y2:Y(v),class:"gridbg"},svg);tx(svg,x0-5,Y(v)+4,yfmt?yfmt(v):nf(v,ystep<1?1:0),{class:"lbl","text-anchor":"end"});}
+  for(let v=Math.ceil(xmin/xstep-1e-9)*xstep;v<=xmax+1e-9;v+=xstep){el("line",{x1:X(v),y1:y1,x2:X(v),y2:y1+4,class:"tick"},svg);tx(svg,X(v),y1+17,xfmt?xfmt(v):nf(v,xstep<1?1:0),{class:"lbl","text-anchor":"middle"});}
+  el("line",{x1:x0,y1:y1,x2:x1,y2:y1,class:"axis"},svg);el("line",{x1:x0,y1:y0-4,x2:x0,y2:y1,class:"axis"},svg);
+  tx(svg,x0+4,y0-10,ylab,{class:"lbl"});tx(svg,x1,y1+32,xlab,{class:"lbl","text-anchor":"end"});
+  return {X:X,Y:Y};
+}
+function animate(btn,label,dur,onStep,onEnd){
+  let raf=null,run=false;
+  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;btn.textContent=label;}
+  function start(){if(run){stop();return;}if(RM){onStep(1);stop();if(onEnd)onEnd();return;}
+    run=true;btn.textContent="⏸ Pause";const t0=performance.now();
+    const step=now=>{const p=Math.min(1,(now-t0)/dur);onStep(p);if(p>=1){stop();if(onEnd)onEnd();return;}raf=requestAnimationFrame(step);};raf=requestAnimationFrame(step);}
+  btn.addEventListener("click",start);return {stop:stop,running:()=>run};
+}
+
+
+function sig2(v){/* arrondi à deux chiffres significatifs */
+  if(v<=0)return 0;const p=Math.pow(10,Math.floor(Math.log10(v))-1);return Math.round(v/p)*p;}
+function halo(t,svg){/* liseré de fond, puis passage au premier plan */
+  t.setAttribute("paint-order","stroke");t.style.setProperty("stroke","var(--card)");t.setAttribute("stroke-width","4");t.setAttribute("stroke-linejoin","round");if(svg)svg.appendChild(t);return t;}
+function plate(t,svg){/* fond plein derrière une étiquette */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const r=el("rect",{x:b.x-3,y:b.y-1,width:b.width+6,height:b.height+2,fill:"var(--card)",opacity:.92,rx:2});svg.appendChild(r);svg.appendChild(t);return t;}
+function le(n,f){return /^[aeiouyhéèâî]/i.test(n)?"l'"+n:(f?"la ":"le ")+n;}
+function du(n,f){return /^[aeiouyhéèâî]/i.test(n)?"de l'"+n:(f?"de la ":"du ")+n;}
+function fmtG(v){return nf(v,v<0.1?3:2)+" N/m";}
+function fmtPa(p){return p<1000?nf(p,0)+" Pa":p<1e5?nf(p/1000,1)+" kPa":nf(p/1e5,2)+" bar";}
+function fmtLen(m){/* m en mètres */
+  const mm=m*1000;if(mm<1)return nf(mm*1000,0)+" µm";if(mm<10)return nf(mm,1)+" mm";if(mm<1000)return nf(mm,0)+" mm";return nf(m,1)+" m";}
+function fmtT(s){if(!isFinite(s))return "∞";if(s<0.01)return nf(s*1000,1)+" ms";if(s<1)return nf(s,3)+" s";if(s<60)return nf(s,s<10?1:0)+" s";return nf(s/60,s<600?1:0)+" min";}
+
+function spread(items,gap,ymin,ymax){/* écarte verticalement des étiquettes {y} triées */
+  items.sort((a,b)=>a.y-b.y);
+  for(let i=1;i<items.length;i++)if(items[i].y-items[i-1].y<gap)items[i].y=items[i-1].y+gap;
+  if(items.length&&items[items.length-1].y>ymax){items[items.length-1].y=ymax;for(let i=items.length-2;i>=0;i--)if(items[i+1].y-items[i].y<gap)items[i].y=items[i+1].y-gap;}
+  if(items.length&&items[0].y<ymin){items[0].y=ymin;for(let i=1;i<items.length;i++)if(items[i].y-items[i-1].y<gap)items[i].y=items[i-1].y+gap;}
+  return items;}
+function declutter(ts,ymin,ymax){/* décale verticalement les textes qui se chevauchent */
+  const box=t=>{try{return t.getBBox();}catch(e){return null;}};
+  for(let i=1;i<ts.length;i++){const ti=ts[i];if(!ti)continue;
+    for(let pass=0;pass<6;pass++){const bi=box(ti);if(!bi)break;let moved=false;
+      for(let j=0;j<i;j++){const bj=ts[j]&&box(ts[j]);if(!bj)continue;
+        const ix=Math.min(bi.x+bi.width,bj.x+bj.width)-Math.max(bi.x,bj.x),iy=Math.min(bi.y+bi.height,bj.y+bj.height)-Math.max(bi.y,bj.y);
+        if(ix>1&&iy>1){let dy=(bi.y+bi.height/2>=bj.y+bj.height/2)?(bj.y+bj.height-bi.y+1):-(bi.y+bi.height-bj.y+1);
+          if(bi.y+dy<ymin||bi.y+bi.height+dy>ymax)dy=dy>0?-(bi.y+bi.height-bj.y+1):(bj.y+bj.height-bi.y+1);
+          ti.setAttribute("y",+ti.getAttribute("y")+dy);moved=true;break;}}
+      if(!moved)break;}}
+  return ts;}
+const SUPD={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function p10(e){return "10"+String(e).split("").map(c=>SUPD[c]||c).join("");}
+function fmtP(p){/* pression en Pa, lisible */
+  if(p>=1e5)return nf(p/1e5,1)+" bar";if(p>=1000)return nf(p/1000,p<1e4?1:0)+" kPa";if(p>=1)return nf(p,p<10?1:0)+" Pa";return sci(p,1)+" Pa";}
+
+
+
+function rng(seed){/* générateur pseudo-aléatoire reproductible */
+  let a=seed>>>0;return ()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296;};}
+
+/* =========================================================
+   Données et modèles communs du cours
+   ========================================================= */
+const RHO=7.85e-3,CF=9.5,RD=0.95,STUB=40,K111=0.8;/* acier (g/mm³) ; coefficient de fusion (g/(A·h)) ; rendement ; bout jeté (mm) ; rendement thermique du 111 */
+const ELEC={"2.5":{d:2.5,L:350,lo:60,hi:100},"3.2":{d:3.2,L:350,lo:80,hi:140},"4":{d:4,L:450,lo:120,hi:200},"5":{d:5,L:450,lo:170,hi:250}};
+const Uarc=(I,l)=>14+0.04*I+2*l;/* modèle pédagogique, cohérent avec le cours 1 : 20 + 0,04·I + 2·(l − 3) */
+function bead(o){/* forme d'un cordon sur tôle (modèle pédagogique) ; o : I, l, v, d, ang, pol, coat */
+  const I=o.I,l=o.l===undefined?3:o.l,v=o.v||3,d=o.d||3.2,ang=o.ang||0,pol=o.pol||"+",coat=o.coat||"R";
+  const fdep={"+":1,"ca":1.05,"-":1.1}[pol],Ad=RD*CF*I/3600/(RHO*v)*fdep;
+  let w=(3.3+0.036*I)*(1+0.1*(l-3))*Math.pow(3/v,0.35)*(1-0.004*ang);w=Math.max(w,0.6*d);
+  const fpol={"+":1,"ca":0.92,"-":0.85}[pol],fco={"R":1,"B":1.05,"C":1.35}[coat],fslow=v<1.5?0.55+0.45*v/1.5:1;
+  const p=Math.max(0,1.45*Math.pow(I/100,1.5)*Math.pow(3/v,0.3)*(1-0.07*(l-3))*fpol*fco*(1+0.005*ang)*fslow*Math.pow(3.2/d,0.4));
+  const Ab=2/3*0.8*w*p,U=Uarc(I,l);
+  return {U:U,E:U*I/v/1000,Ad:Ad,w:w,h:1.5*Ad/w,p:p,Ab:Ab,dil:Ab/(Ab+Ad)};}
+function t85(Q,e,T0,F){/* EN 1011-2 : t8/5 en 3D et en 2D, épaisseur de transition */
+  const a=1/(500-T0)-1/(800-T0),b=1/Math.pow(500-T0,2)-1/Math.pow(800-T0,2);
+  const t3=(6700-5*T0)*Q*a*F,et=Math.sqrt((4300-4.3*T0)/(6700-5*T0)*1e5*Q*(1/(500-T0)+1/(800-T0))),t2=(4300-4.3*T0)*1e5*Q*Q/(e*e)*b*F;
+  return {t3:t3,t2:t2,et:et,dim:e>=et?"3D":"2D",t:e>=et?t3:t2};}
+function fmtDur(s){if(!isFinite(s))return "∞";s=Math.round(s);if(s<60)return s+" s";const m=Math.floor(s/60),r=s%60;return m+" min"+(r?" "+String(r).padStart(2,"0")+" s":"");}
+function fitSize(t,maxW,min){/* réduit la police d'un texte SVG trop large (style en ligne, prioritaire sur la feuille de style) */
+  let b;try{b=t.getBBox();}catch(e){return t;}let fs=parseFloat(getComputedStyle(t).fontSize)||13;
+  while(b.width>maxW&&fs>(min||9)){fs-=0.5;t.style.fontSize=fs+"px";b=t.getBBox();}return t;}
+function drawBead(svg,cx,ys,k,B,o){/* coupe d'un cordon : surface de tôle à y = ys, k px/mm ; renvoie les étiquettes */
+  o=o||{};const w=B.w*k,h=B.h*k,wp=0.8*B.w*k,p=B.p*k,L=[];
+  const plw=o.plw||Math.max(w*1.8,26*k),pth=o.pth||Math.max(p+18,7*k);
+  el("rect",{x:cx-plw/2,y:ys,width:plw,height:pth,fill:"var(--paper-2)",stroke:"var(--ink)","stroke-width":1.2},svg);
+  if(p>0.3)el("path",{d:"M"+(cx-wp/2)+" "+ys+" Q"+cx+" "+(ys+2*p)+" "+(cx+wp/2)+" "+ys+" Z",fill:"var(--gam)",opacity:.55,stroke:"var(--gam)","stroke-width":1.2},svg);
+  el("path",{d:"M"+(cx-w/2)+" "+ys+" Q"+cx+" "+(ys-2*h)+" "+(cx+w/2)+" "+ys+" Z",fill:"var(--line)",stroke:"var(--ink)","stroke-width":1.3},svg);
+  if(o.dims!==false){const dy=ys-h-12;
+    el("line",{x1:cx-w/2,y1:dy,x2:cx+w/2,y2:dy,stroke:"var(--eps)","stroke-width":1.2},svg);[cx-w/2,cx+w/2].forEach(x=>el("line",{x1:x,y1:dy-4,x2:x,y2:dy+4,stroke:"var(--eps)","stroke-width":1.2},svg));
+    L.push(tx(svg,cx,dy-6,"w = "+nf(B.w,1)+" mm",{fill:"var(--eps)","text-anchor":"middle"}));
+    const hx=cx+w/2+8;el("line",{x1:hx,y1:ys,x2:hx,y2:ys-h,stroke:"var(--eps)","stroke-width":1.2},svg);
+    L.push(tx(svg,hx+5,ys-h/2+4,"h = "+nf(B.h,1),{fill:"var(--eps)"}));
+    if(p>0.3){const px=cx+wp/2+8;el("line",{x1:px,y1:ys,x2:px,y2:ys+p,stroke:"var(--eps)","stroke-width":1.2},svg);
+      L.push(tx(svg,px+5,ys+p/2+8,"p = "+nf(B.p,1),{fill:"var(--eps)"}));}}
+  return L;}
+
+/* =========================================================
+   M1 : l'oscilloscope du courant alternatif
+   ========================================================= */
+(function(){
+  const svg=$("#m1svg");if(!svg)return;
+  const sU=$("#m1U"),sI=$("#m1I"),ro=$("#m1r"),msg=$("#m1msg");
+  const EL={r13:{n:"rutile de type 13",Ur:30,ca:true},b16:{n:"basique de type 16",Ur:50,ca:true},b15:{n:"basique de type 15",Ur:130,ca:false},c10:{n:"cellulosique de type 10",Ur:130,ca:false}};
+  let cur="ca",ke="r13",phi=60,prog=null;
+  const W50=2*Math.PI*50,IEXT=8,T=40,DT=0.02;
+  function sim(){const U0=+sU.value,I=+sI.value,e=EL[ke],Ua=20+0.04*I,pts=[],dead=[];let on=true,tz=null,delays=[],off=0,never=false;
+    for(let n=0;n<=Math.round(T/DT);n++){const t=n*DT,ps=W50*t/1000+Math.PI/4,iw=Math.SQRT2*I*Math.sin(ps),ev=Math.SQRT2*U0*Math.sin(ps+phi*Math.PI/180);
+      if(cur==="cc"){pts.push({t:t,u:Ua,i:I,e:null,on:true});continue;}
+      if(on&&Math.abs(iw)<IEXT&&Math.abs(Math.sin(ps))<Math.abs(Math.sin(ps-0.01))){on=false;tz=null;dead.push({t0:t,t1:T});}
+      if(!on){const crossed=tz!==null;if(tz===null&&Math.abs(Math.sin(ps))<Math.abs(Math.sin(ps+0.01)))tz=t;/* passage par zéro franchi */
+        if(crossed&&Math.abs(iw)>=IEXT&&Math.sign(ev)===Math.sign(iw)&&Math.abs(ev)>=e.Ur){on=true;delays.push(t-tz);dead[dead.length-1].t1=t;}}
+      if(!on)off+=DT;
+      pts.push({t:t,u:on?Math.sign(iw)*Ua:ev,i:on?iw:0,e:ev,on:on});}
+    if(cur==="ca"&&dead.length&&dead[dead.length-1].t1===T&&!delays.length)never=true;
+    return {pts:pts,dead:dead,delay:delays.length?delays.reduce((a,b)=>a+b,0)/delays.length:null,offFrac:off/T,never:never,Ua:Ua,U0:U0,I:I};}
+  function draw(){
+    const W=svgW(svg),n=W<520,H=n?330:310,S=sim(),e=EL[ke];setVB(svg,W,H);clear(svg);
+    $("#m1Uo").textContent=S.U0+" V";$("#m1Io").textContent=S.I+" A";
+    const x0=n?40:50,x1=W-12,X=t=>x0+(x1-x0)*t/T,u0=24,u1=n?140:132,i0=u1+40,i1=H-34;
+    const Um=120,Im=Math.ceil(Math.SQRT2*S.I*1.15/50)*50,YU=u=>(u0+u1)/2-(u1-u0)/2*u/Um,YI=i=>(i0+i1)/2-(i1-i0)/2*i/Im;
+    const tc=prog===null?T:prog*T;
+    S.dead.forEach(d=>{if(d.t0>tc)return;el("rect",{x:X(d.t0),y:u0,width:Math.max(1.5,X(Math.min(d.t1,tc))-X(d.t0)),height:i1-u0,fill:"var(--tau)",opacity:.14},svg);});
+    const grid=(a,b,m,stp,Yf,lab)=>{for(let v=-m;v<=m+1e-9;v+=stp){el("line",{x1:x0,y1:Yf(v),x2:x1,y2:Yf(v),class:v===0?"axis":"gridbg"},svg);tx(svg,x0-5,Yf(v)+4,nf(v,0),{class:"lbl","text-anchor":"end"});}
+      el("line",{x1:x0,y1:a,x2:x0,y2:b,class:"axis"},svg);tx(svg,x0+4,a-6,lab,{class:"lbl"});};
+    grid(u0,u1,Um,n?120:60,YU,"u (V)");grid(i0,i1,Im,Im,YI,"i (A)");
+    for(let t=0;t<=T+1e-9;t+=10){el("line",{x1:X(t),y1:i1,x2:X(t),y2:i1+4,class:"tick"},svg);tx(svg,X(t),i1+17,String(t),{class:"lbl","text-anchor":"middle"});}
+    tx(svg,x1,i1+30,"temps (ms)",{class:"lbl","text-anchor":"end"});
+    if(cur==="ca"){let de="";S.pts.forEach(p=>{if(p.t<=tc+1e-9)de+=(de?"L":"M")+X(p.t).toFixed(1)+" "+YU(Math.max(-Um,Math.min(Um,p.e))).toFixed(1)+" ";});
+      el("path",{d:de,fill:"none",stroke:"var(--mat)","stroke-width":1.3,"stroke-dasharray":"4 3"},svg);
+      [e.Ur,-e.Ur].forEach(v=>{if(Math.abs(v)<=Um)el("line",{x1:x0,y1:YU(v),x2:x1,y2:YU(v),stroke:"var(--tau)","stroke-width":1,"stroke-dasharray":"2 3"},svg);});}
+    const path=(key,Yf,cl)=>{let d="";S.pts.forEach(p=>{if(p.t<=tc+1e-9)d+=(d?"L":"M")+X(p.t).toFixed(1)+" "+Yf(Math.max(-Um*1.5,Math.min(Um*1.5,p[key]))).toFixed(1)+" ";});el("path",{d:d,fill:"none",stroke:cl,"stroke-width":2.2},svg);};
+    path("u",YU,"var(--eps)");path("i",YI,"var(--eps)");
+    const LL=[];
+    if(cur==="ca"&&e.Ur<=Um)LL.push(tx(svg,x1-4,YU(e.Ur)-5,"réamorçage "+e.Ur+" V",{"font-size":"11",fill:"var(--tau)","text-anchor":"end"}));
+    if(cur==="ca")LL.push(tx(svg,x1-4,u1+14,n?"pointillés verts : tension disponible":"pointillés verts : tension disponible e(t) ; en violet : arc éteint",{class:"lbl","text-anchor":"end"}));
+    LL.forEach(t=>{fitText(t,x0+2,x1);halo(t,svg);});declutter(LL,u0,i0-6);
+    const st=cur==="cc"?"stable":S.never?"éteint":S.delay>0.5?"crépite":"stable";
+    ro.innerHTML="<span>f = 50 Hz</span><span>"+(cur==="cc"?"aucun passage par zéro":"100 passages par zéro/s")+"</span><span>retard de réamorçage <b class='eps'>"+(cur==="cc"?"—":S.never?"∞":nf(S.delay,2)+" ms")+"</b></span><span>arc éteint <b class='tau'>"+nf(100*S.offFrac,0)+" %</b></span><span>état : "+st+"</span>";
+    let m;
+    if(cur==="cc")m="✅ En courant continu, le courant ne passe jamais par zéro : l'arc de la "+e.n+" brûle sans interruption, sous "+nf(S.Ua,1)+" V.";
+    else if(S.never)m="❌ <b>L'arc s'éteint</b> au premier passage par zéro : la "+e.n+" demande "+e.Ur+" V pour se rallumer, et la tension disponible plafonne à √2 × "+S.U0+" ≈ "+nf(Math.SQRT2*S.U0,0)+" V. L'ISO 2560 la réserve au courant continu (CC+).";
+    else if(S.delay>0.5)m="⚠️ L'arc se rallume, mais avec "+nf(S.delay,2)+" ms de retard à chaque passage par zéro : il reste éteint "+nf(100*S.offFrac,0)+" % du temps et crépite."+(phi===0?" Sans réactance, la tension et le courant passent par zéro ensemble : il faut attendre que la tension remonte à "+e.Ur+" V.":" Monte la tension à vide.");
+    else m="✅ L'arc se rallume aussitôt après chaque passage par zéro"+(phi===60?" : grâce à la réactance, la tension disponible est déjà de "+nf(Math.SQRT2*S.U0*Math.sin(Math.PI/3),0)+" V quand le courant s'annule.":".")+" La "+e.n+" est prévue pour le CA.";
+    if(cur==="ca"&&!e.ca&&!S.never)m+=" Attention : l'ISO 2560 ne prévoit pas cette électrode en CA.";
+    msg.innerHTML=m;
+  }
+  const A=animate($("#m1play"),"▶ Faire défiler l'oscilloscope",4000,p=>{prog=p;draw();},()=>{prog=null;draw();});
+  [sU,sI].forEach(e=>e.addEventListener("input",()=>{A.stop();prog=null;draw();}));
+  $$("#m1cur .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;cur=b.dataset.k;setOn("#m1cur",b);draw();}));
+  $$("#m1el .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;ke=b.dataset.k;setOn("#m1el",b);draw();}));
+  $$("#m1x .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;phi=+b.dataset.k;setOn("#m1x",b);draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M2 : électrons, ions et partage de la chaleur
+   ========================================================= */
+(function(){
+  const svg=$("#m2svg");if(!svg)return;
+  const sI=$("#m2I"),ro=$("#m2r"),msg=$("#m2msg");
+  const EL={"10":{n:"cellulosique 10",co:"C",ok:{"+":true,"-":false,"ca":false}},"12":{n:"rutile 12",co:"R",ok:{"+":false,"-":true,"ca":true}},"13":{n:"rutile 13",co:"R",ok:{"+":true,"-":true,"ca":true}},
+    "15":{n:"basique 15",co:"B",ok:{"+":true,"-":false,"ca":false}},"16":{n:"basique 16",co:"B",ok:{"+":true,"-":false,"ca":true}}};
+  const SH={"+":42,"-":52,"ca":47},FUS={"+":1,"-":1.1,"ca":1.05},NOM={"+":"CC+ (polarité inverse)","-":"CC− (polarité directe)","ca":"CA"};
+  let pol="+",ke="15",ph=0,flip=null;
+  function draw(){
+    const W=svgW(svg),n=W<520,H=n?300:270,I=+sI.value,e=EL[ke],pl=flip?flip.pol:pol,B=bead({I:I,pol:pl,coat:e.co}),B0=bead({I:I,pol:"+",coat:e.co});setVB(svg,W,H);clear(svg);
+    $("#m2Io").textContent=I+" A";
+    const cx=n?W*0.36:W*0.3,ty=34,tipY=n?150:140,py=tipY+(n?54:50),ew=26,L=[];
+    /* pièce et électrode */
+    el("rect",{x:cx-(n?110:150),y:py,width:n?220:300,height:24,fill:"var(--paper-2)",stroke:"var(--ink)","stroke-width":1.3},svg);
+    el("rect",{x:cx-ew/2,y:ty,width:ew,height:tipY-ty+8,fill:"var(--paper-2)",stroke:"var(--ink)","stroke-width":1.2},svg);
+    el("rect",{x:cx-7,y:ty,width:14,height:tipY-ty,fill:"var(--muted)",opacity:.85},svg);
+    el("path",{d:"M"+(cx-ew/2+2)+" "+(tipY+8)+" L"+(cx-30)+" "+py+" L"+(cx+30)+" "+py+" L"+(cx+ew/2-2)+" "+(tipY+8)+" Z",fill:"var(--sig)",opacity:.18},svg);
+    /* charges */
+    const elecFromTop=pl==="-"||(pl==="ca"&&Math.sin(ph*Math.PI*4)<0);/* électrode négative : les électrons partent de l'électrode vers la pièce */
+    for(let j=0;j<7;j++){const u=((ph*3+j/7)%1),y=elecFromTop?tipY+10+u*(py-tipY-12):py-2-u*(py-tipY-12),xx=cx-18+j*6;
+      el("circle",{cx:xx,cy:y,r:2.6,fill:"var(--frc)"},svg);}
+    for(let j=0;j<3;j++){const u=((ph*1.2+j/3)%1),y=elecFromTop?py-6-u*(py-tipY-16):tipY+12+u*(py-tipY-16),xx=cx+8+j*11;
+      el("circle",{cx:xx,cy:y,r:5,fill:"var(--card)",stroke:"var(--frc)","stroke-width":1.6},svg);tx(svg,xx,y+4,"+",{"text-anchor":"middle",fill:"var(--frc)","font-weight":"700"});}
+    const eSign=pl==="ca"?(elecFromTop?"−":"+"):(pl==="+"?"+":"−"),pSign=eSign==="+"?"−":"+";
+    L.push(tx(svg,cx+ew/2+8,tipY,"électrode : "+(eSign==="+"?"anode (+)":"cathode (−)"),{"font-weight":"700"}));
+    L.push(tx(svg,cx+(n?-106:-146),py+40,"pièce : "+(pSign==="+"?"anode (+)":"cathode (−)"),{"font-weight":"700"}));
+    L.push(tx(svg,cx-ew/2-8,ty+30,n?"• électrons":"• électrons ⊕ ions",{"text-anchor":"end",fill:"var(--frc)"}));
+    if(n)L.push(tx(svg,cx-ew/2-8,ty+48,"⊕ ions",{"text-anchor":"end",fill:"var(--frc)"}));
+    /* bilan de chaleur */
+    const sh=SH[pl],bx=n?W*0.66:W*0.62,bw=n?W*0.3:W*0.3,by=n?60:56;
+    tx(svg,bx,by-14,n?"chaleur (modèle)":"partage de la chaleur (modèle)",{class:"ttl"});
+    [["électrode",sh],["pièce",100-sh]].forEach((r,i)=>{const yy=by+i*44;tx(svg,bx,yy+6,r[0],{class:"lbl"});
+      el("rect",{x:bx,y:yy+12,width:bw,height:16,fill:"var(--paper-2)",stroke:"var(--line)"},svg);el("rect",{x:bx,y:yy+12,width:bw*r[1]/100,height:16,fill:"var(--sig)",opacity:.75},svg);
+      const t=tx(svg,bx+bw*r[1]/100+4,yy+25,r[1]+" %",{"font-weight":"700",fill:"var(--sig)"});fitText(t,bx,W-4);});
+    const gy=by+104;tx(svg,bx,gy,"fusion ×"+nf(FUS[pl],2),{fill:"var(--eps)"});tx(svg,bx,gy+20,(n?"p = ":"pénétration ")+nf(B.p,1)+" mm",{fill:"var(--eps)"});
+    tx(svg,bx,gy+40,(e.ok[pl]?"✅ prévu":"❌ non prévu")+(n?"":" (ISO 2560)"),{"font-weight":"700",fill:e.ok[pl]?"var(--ok)":"var(--bad)"});
+    L.forEach(t=>{fitText(t,4,W-4);halo(t,svg);});declutter(L,ty,H-4);
+    ro.innerHTML="<span>"+NOM[pl]+"</span><span>électrode <b class='sig'>"+sh+" %</b></span><span>pièce <b class='sig'>"+(100-sh)+" %</b></span><span>fusion ×"+nf(FUS[pl],2)+"</span><span>p ≈ <b class='eps'>"+nf(B.p,1)+" mm</b> (CC+ : "+nf(B0.p,1)+")</span><span>"+(e.ok[pl]?"✅ ISO 2560":"❌ ISO 2560")+"</span>";
+    let m;
+    if(flip)m="🔄 Inversion : en "+NOM[pl]+", les électrons partent "+(elecFromTop?"de l'électrode et frappent la pièce":"de la pièce et frappent l'électrode")+".";
+    else{m=pl==="+"?"En CC+, l'électrode est l'anode : les électrons la frappent, la pièce reçoit les ions. Dans le modèle, la pièce reçoit "+(100-sh)+" % de la chaleur : pénétration la plus forte. ":pl==="-"?"En CC−, l'électrode est la cathode : elle fond environ 10 % plus vite, la pénétration baisse (≈ "+nf(B.p,1)+" mm au lieu de "+nf(B0.p,1)+") et la dilution aussi. ":"En CA, les rôles s'échangent cent fois par seconde : résultat intermédiaire, et soufflage magnétique réduit. ";
+      m+=e.ok[pl]?"✅ La "+e.n+" est prévue pour ce courant par l'ISO 2560.":"❌ La "+e.n+" n'est pas prévue pour ce courant par l'ISO 2560 : "+(ke==="10"||ke==="15"?"CC+ seulement.":ke==="16"?"CA ou CC+.":"CA ou CC−.");}
+    msg.innerHTML=m;
+  }
+  const A=animate($("#m2play"),"▶ Inverser la polarité",4000,p=>{ph=p*4;const to=pol==="-"?"+":"-";flip={pol:p<0.5?pol:to};draw();},()=>{pol=pol==="-"?"+":"-";flip=null;setOn("#m2pol",$("#m2pol .btn[data-k='"+pol+"']"));draw();});
+  sI.addEventListener("input",()=>{A.stop();flip=null;draw();});
+  $$("#m2pol .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();flip=null;pol=b.dataset.k;setOn("#m2pol",b);draw();}));
+  $$("#m2el .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();flip=null;ke=b.dataset.k;setOn("#m2el",b);draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M3 : la coupe du cordon et la fenêtre d'intensité
+   ========================================================= */
+(function(){
+  const svg=$("#m3svg");if(!svg)return;
+  const sI=$("#m3I"),ro=$("#m3r"),msg=$("#m3msg");let kd="3.2",pos="plat";
+  function win(){const e=ELEC[kd],f=pos==="vert"?0.85:1;return {lo:Math.round(e.lo*f/5)*5,hi:Math.round(e.hi*f/5)*5,d:e.d};}
+  function draw(){
+    const W=svgW(svg),n=W<520,H=n?310:290,I=+sI.value,Wd=win(),B=bead({I:I,d:Wd.d}),J=I/(Math.PI*Wd.d*Wd.d/4);setVB(svg,W,H);clear(svg);
+    $("#m3Io").textContent=I+" A";
+    const ys=n?120:112,k=Math.min(n?13:16,(W-40)/26,(ys-34)/Math.max(0.5,B.h),(W-130)/B.w),cx=W/2;
+    const L=drawBead(svg,cx,ys,k,B,{plw:Math.min(W-16,26*k),pth:Math.min(H-ys-80,7.5*k)});
+    const lo=Wd.lo,hi=Wd.hi,cold=I<lo,hot=I>hi;
+    if(cold){[-1,1].forEach(s=>{const x=cx+s*B.w*k/2;el("line",{x1:x-s*2,y1:ys-1,x2:x-s*B.w*k*0.18,y2:ys-1,stroke:"var(--tau)","stroke-width":3},svg);});
+      L.push(tx(svg,cx-B.w*k/2-6,ys+20,"manque de fusion",{fill:"var(--tau)","text-anchor":"end","font-weight":"700"}));}
+    if(hot){[-1,1].forEach(s=>{const x=cx+s*(B.w*k/2+3);el("path",{d:"M"+(x-5)+" "+ys+" Q"+x+" "+(ys+7)+" "+(x+5)+" "+ys,fill:"var(--card)",stroke:"var(--tau)","stroke-width":2},svg);});
+      const r=rng(7);for(let i=0;i<9;i++)el("circle",{cx:cx+(r()-0.5)*W*0.7,cy:ys-6-r()*40,r:1.8+r()*1.5,fill:"var(--muted)"},svg);
+      L.push(tx(svg,cx+B.w*k/2+10,ys+22,I>hi*1.2?"caniveaux, risque de perçage":"caniveaux, projections",{fill:"var(--tau)","font-weight":"700"}));}
+    /* fenêtre d'intensité */
+    const bx0=n?14:40,bx1=W-14,by=H-52,Imn=40,Imx=300,X=i=>bx0+(bx1-bx0)*(i-Imn)/(Imx-Imn);
+    el("rect",{x:bx0,y:by,width:bx1-bx0,height:14,fill:"var(--paper-2)",stroke:"var(--line)"},svg);
+    el("rect",{x:X(lo),y:by,width:X(hi)-X(lo),height:14,fill:"var(--mat)",opacity:.45},svg);
+    for(let i=50;i<=300;i+=50){el("line",{x1:X(i),y1:by+14,x2:X(i),y2:by+18,class:"tick"},svg);tx(svg,X(i),by+30,String(i),{class:"lbl","text-anchor":"middle"});}
+    el("polygon",{points:X(I)+","+(by-2)+" "+(X(I)-6)+","+(by-11)+" "+(X(I)+6)+","+(by-11),fill:"var(--ink)"},svg);
+    const lw=tx(svg,(X(lo)+X(hi))/2,by-16,"plage "+lo+" à "+hi+" A"+(pos==="vert"?" (en position)":""),{fill:"var(--mat)","text-anchor":"middle","font-weight":"700"});L.push(lw);
+    tx(svg,bx0,by+46,"intensité (A)",{class:"lbl"});
+    L.forEach(t=>{fitText(t,4,W-4);halo(t,svg);});declutter(L,4,by-4);
+    ro.innerHTML="<span>A<sub>d</sub> = <b class='eps'>"+nf(B.Ad,1)+" mm²</b></span><span>w = <b class='eps'>"+nf(B.w,1)+" mm</b></span><span>h = <b class='eps'>"+nf(B.h,1)+" mm</b></span><span>p = <b class='eps'>"+nf(B.p,1)+" mm</b></span><span>δ = <b class='gam'>"+nf(100*B.dil,0)+" %</b></span><span>J = "+nf(J,1)+" A/mm²</span>";
+    let m;
+    if(cold)m="❄️ <b>Intensité trop faible</b> pour ⌀ "+nf(Wd.d,1)+" mm"+(pos==="vert"?" en position":"")+" (plage "+lo+" à "+hi+" A) : arc mou, électrode qui colle, cordon étroit et bombé qui ne pénètre que de "+nf(B.p,1)+" mm : risque de manque de fusion et de laitier piégé.";
+    else if(hot)m="🔥 <b>Intensité trop forte</b> (plage "+lo+" à "+hi+" A) : l'électrode rougit, projections, caniveaux le long du cordon"+(I>hi*1.2?", et une tôle mince percerait":"")+". "+(pos==="vert"?"En position, le bain trop chaud coule.":"");
+    else m="✅ Intensité dans la plage ("+lo+" à "+hi+" A) : cordon de "+nf(B.w,1)+" mm de large, pénétration "+nf(B.p,1)+" mm, dilution "+nf(100*B.dil,0)+" %. "+(I>(lo+hi)/2?"Haut de plage : pénétration et cadence, mais électrode plus chaude.":"Bas de plage : bain calme, utile en position ou sur tôle mince.");
+    msg.innerHTML=m;
+  }
+  const A=animate($("#m3play"),"▶ Monter l'intensité",5000,p=>{const w=win(),a=Math.max(40,Math.round(w.lo*0.6/5)*5),b=Math.min(300,Math.round(w.hi*1.3/5)*5);sI.value=Math.round((a+(b-a)*p)/5)*5;draw();});
+  sI.addEventListener("input",()=>{A.stop();draw();});
+  $$("#m3d .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();kd=b.dataset.k;const w=win();sI.value=Math.round((w.lo+w.hi)/10)*5;setOn("#m3d",b);draw();}));
+  $$("#m3pos .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();pos=b.dataset.k;setOn("#m3pos",b);draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   Figure du chapitre 4 : les modes de transfert
+   ========================================================= */
+(function(){
+  const svg=$("#f4trans");if(!svg)return;
+  const P=[["Rutile","fines gouttes"],["Basique","grosses gouttes, courts-circuits"],["Cellulosique","jet violent, pénétrant"]];
+  function draw(){
+    const W=svgW(svg),n=W<520,cols=n?1:3,pw=(W-8-(cols-1)*10)/cols,ph=n?150:200,H=(n?3:1)*(ph+8);setVB(svg,W,H);clear(svg);
+    P.forEach((t,i)=>{const c=n?0:i,r=n?i:0,x0=4+c*(pw+10),y0=4+r*(ph+8),cx=n?x0+pw*0.3:x0+pw/2,ty=y0+(n?14:34),tip=y0+(n?70:110),by=y0+ph-(n?28:40);
+      el("rect",{x:x0,y:y0,width:pw,height:ph,rx:6,fill:"var(--card)",stroke:"var(--line)","stroke-width":1.2},svg);
+      el("rect",{x:cx-12,y:ty,width:24,height:tip-ty+6,fill:"var(--paper-2)",stroke:"var(--ink)","stroke-width":1.2},svg);
+      el("rect",{x:cx-6,y:ty,width:12,height:tip-ty,fill:"var(--muted)",opacity:.85},svg);
+      el("rect",{x:x0+10,y:by,width:pw-20,height:12,fill:"var(--paper-2)",stroke:"var(--ink)","stroke-width":1.2},svg);
+      const dp=i===2?16:i===1?9:6;el("path",{d:"M"+(cx-24)+" "+by+" Q"+cx+" "+(by+dp)+" "+(cx+24)+" "+by+" Z",fill:"var(--gam)",opacity:.6},svg);
+      el("path",{d:"M"+(cx-10)+" "+(tip+6)+" L"+(cx-(i===2?30:20))+" "+by+" L"+(cx+(i===2?30:20))+" "+by+" L"+(cx+10)+" "+(tip+6)+" Z",fill:"var(--sig)",opacity:i===2?.32:.2},svg);
+      const gap=by-tip-6;
+      if(i===0){for(let j=0;j<6;j++)el("circle",{cx:cx+(j%2?2:-2),cy:tip+10+j*gap/6.5,r:2.2,fill:"var(--gam)",stroke:"var(--ink)","stroke-width":.5},svg);}
+      else if(i===1){el("ellipse",{cx:cx,cy:tip+gap*0.55,rx:7,ry:gap*0.45,fill:"var(--gam)",stroke:"var(--ink)","stroke-width":.7},svg);el("circle",{cx:cx,cy:tip+9,r:5,fill:"var(--gam)",stroke:"var(--ink)","stroke-width":.7},svg);}
+      else{for(let j=0;j<5;j++)el("circle",{cx:cx+(j-2)*5,cy:tip+12+j*gap/6,r:3.4,fill:"var(--gam)",stroke:"var(--ink)","stroke-width":.6},svg);
+        [-1,1].forEach(s=>arrow(svg,cx+s*14,tip+10,cx+s*24,tip+30,"var(--frc)",1.8,6));
+        [[-34,-4],[30,-10],[38,6]].forEach(q=>el("circle",{cx:cx+q[0],cy:by-14+q[1],r:1.8,fill:"var(--muted)"},svg));}
+      const tt=tx(svg,n?x0+pw*0.55:cx,n?y0+ph/2-6:y0+20,t[0],{class:"ttl","text-anchor":n?"start":"middle"});
+      (n?t[1].split(", "):[t[1]]).forEach((s,j)=>{const ts=tx(svg,n?x0+pw*0.55:cx,n?y0+ph/2+14+j*17:y0+ph-12,s+(n&&j<t[1].split(", ").length-1?",":""),{"text-anchor":n?"start":"middle"});fitSize(ts,n?pw*0.43:pw-10,10);});});
+  }
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M4 : allonger l'arc
+   ========================================================= */
+(function(){
+  const svg=$("#m4svg");if(!svg)return;
+  const sI=$("#m4I"),sl=$("#m4l"),ro=$("#m4r"),msg=$("#m4msg");let co="R";
+  const CO={R:{n:"rutile",lc:1.5,tr:"fines gouttes"},B:{n:"basique",lc:0.9,tr:"grosses gouttes, courts-circuits"},C:{n:"cellulosique",lc:1.6,tr:"gouttes projetées, arc violent"}};
+  function draw(){
+    const W=svgW(svg),n=W<520,H=n?420:270,I=+sI.value,l=+sl.value,d=3.2,c=CO[co],B=bead({I:I,l:l,coat:co}),lc=c.lc*d,longA=l>lc,tooShort=l<0.6;setVB(svg,W,H);clear(svg);
+    $("#m4Io").textContent=I+" A";$("#m4lo").textContent=nf(l,1)+" mm";
+    const L=[];
+    /* arc agrandi */
+    const zw=n?W:W*0.5,cx=zw/2,s=n?13:15,ty=14,tip=ty+70,by=tip+l*s+8;
+    el("rect",{x:cx-14,y:ty,width:28,height:tip-ty+6,fill:"var(--paper-2)",stroke:"var(--ink)","stroke-width":1.2},svg);
+    el("rect",{x:cx-7,y:ty,width:14,height:tip-ty,fill:"var(--muted)",opacity:.85},svg);
+    el("rect",{x:8,y:by,width:zw-16,height:14,fill:"var(--paper-2)",stroke:"var(--ink)","stroke-width":1.2},svg);
+    el("path",{d:"M"+(cx-28)+" "+by+" Q"+cx+" "+(by+10)+" "+(cx+28)+" "+by+" Z",fill:"var(--gam)",opacity:.6},svg);
+    const spread=10+l*4.5;
+    el("path",{d:"M"+(cx-10)+" "+(tip+6)+" L"+(cx-spread)+" "+by+" L"+(cx+spread)+" "+by+" L"+(cx+10)+" "+(tip+6)+" Z",fill:"var(--sig)",opacity:Math.max(0.12,0.36-0.03*l)},svg);
+    const bell=Math.max(20,46-2*l);el("path",{d:"M"+(cx-bell)+" "+by+" Q"+(cx-bell-6)+" "+(tip-10)+" "+cx+" "+(tip-16)+" Q"+(cx+bell+6)+" "+(tip-10)+" "+(cx+bell)+" "+by,fill:"none",stroke:"var(--gam)","stroke-width":1.6,"stroke-dasharray":"5 4",opacity:longA?.45:1},svg);
+    const gap=by-tip-6,r=rng(Math.round(l*10));
+    if(co==="R"){for(let j=0;j<Math.max(3,Math.round(gap/9));j++)el("circle",{cx:cx+(r()-0.5)*4,cy:tip+9+j*9,r:2.2,fill:"var(--gam)",stroke:"var(--ink)","stroke-width":.5},svg);}
+    else if(co==="B"){if(l<2.2)el("ellipse",{cx:cx,cy:tip+6+gap/2,rx:7,ry:gap/2+1,fill:"var(--gam)",stroke:"var(--ink)","stroke-width":.7},svg);
+      else{el("circle",{cx:cx,cy:tip+12,r:6.5,fill:"var(--gam)",stroke:"var(--ink)","stroke-width":.7},svg);el("circle",{cx:cx+(r()-0.5)*8,cy:tip+gap*0.65,r:6,fill:"var(--gam)",stroke:"var(--ink)","stroke-width":.7},svg);}}
+    else{for(let j=0;j<4;j++)el("circle",{cx:cx+(r()-0.5)*14,cy:tip+12+j*gap/4.5,r:3.2,fill:"var(--gam)",stroke:"var(--ink)","stroke-width":.6},svg);[-1,1].forEach(q=>arrow(svg,cx+q*13,tip+10,cx+q*22,tip+26,"var(--frc)",1.8,6));}
+    const nsp=Math.round(Math.max(0,(l-lc))*4+(co==="C"?3:0));for(let j=0;j<nsp;j++)el("circle",{cx:cx+(r()-0.5)*zw*0.8,cy:tip+(r())*(gap+10)-14,r:1.6,fill:"var(--muted)"},svg);
+    const dx=cx+Math.max(40,spread+12);
+    if(longA){arrow(svg,cx-spread-44,by-gap*0.45,cx-spread-8,by-gap*0.45,"var(--tau)",2,7);
+      L.push(tx(svg,cx-spread-26,by-gap*0.45-12,"air : N₂, O₂",{fill:"var(--tau)","font-weight":"700","text-anchor":"middle"}));}
+    el("line",{x1:dx,y1:tip+6,x2:dx,y2:by,stroke:"var(--mat)","stroke-width":1.3},svg);[tip+6,by].forEach(y=>el("line",{x1:dx-4,y1:y,x2:dx+4,y2:y,stroke:"var(--mat)","stroke-width":1.3},svg));
+    L.push(tx(svg,dx+8,(tip+by)/2+4,"l = "+nf(l,1)+" mm",{fill:"var(--mat)","font-weight":"700"}));
+    L.push(tx(svg,cx-30,ty+20,"U = "+nf(B.U,1)+" V",{fill:"var(--eps)","font-weight":"700","text-anchor":"end"}));
+    /* coupe du cordon */
+    const bys=n?300:150,k=Math.min(n?11:14,(W*0.5-20)/22,(bys-40)/Math.max(0.5,B.h),((n?W:W*0.5)-100)/B.w),bcx=n?W/2:W*0.75;
+    const BL=drawBead(svg,bcx,bys,k,B,{plw:n?Math.min(W-16,24*k):Math.min(W*0.5-12,24*k),pth:7*k});
+    if(n)tx(svg,8,218,"coupe du cordon (3 mm/s)",{class:"lbl"});else tx(svg,W*0.5+10,24,"coupe du cordon (3 mm/s)",{class:"lbl"});
+    L.concat(BL).forEach(t=>{fitText(t,4,W-4);halo(t,svg);});declutter(L.concat(BL),4,H-4);
+    const por=longA?(co==="B"?"élevé":"moyen"):"faible";
+    ro.innerHTML="<span>U = <b class='eps'>"+nf(B.U,1)+" V</b></span><span>E (3 mm/s) = <b class='sig'>"+nf(B.E,2)+" kJ/mm</b></span><span>w = "+nf(B.w,1)+" mm</span><span>p = "+nf(B.p,1)+" mm</span><span>transfert : "+c.tr+"</span><span>soufflures : <b class='tau'>"+por+"</b></span>";
+    let m;
+    if(tooShort)m="⚠️ <b>Arc trop court</b> ("+nf(l,1)+" mm) : l'électrode touche le bain et colle, le cordon devient bosselé.";
+    else if(longA)m="❌ <b>Arc long</b> ("+nf(l,1)+" mm pour une "+c.n+" de 3,2 mm) : la tension monte à "+nf(B.U,1)+" V, le cordon s'élargit ("+nf(B.w,1)+" mm) et s'aplatit, la pénétration tombe à "+nf(B.p,1)+" mm, les projections se multiplient et l'air entre dans l'arc."+(co==="B"?" Avec une basique, les soufflures sont presque assurées.":"");
+    else m="✅ <b>Arc court</b> ("+nf(l,1)+" mm, pas plus que l'âme"+(co==="B"?" ; une basique se soude même plus court encore":"")+") : tension "+nf(B.U,1)+" V, bain bien protégé, pénétration "+nf(B.p,1)+" mm. Transfert : "+c.tr+".";
+    msg.innerHTML=m;
+  }
+  const A=animate($("#m4play"),"▶ Allonger l'arc",5000,p=>{sl.value=(1+7*p).toFixed(1);draw();});
+  [sI,sl].forEach(e=>e.addEventListener("input",()=>{A.stop();draw();}));
+  $$("#m4co .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();co=b.dataset.k;setOn("#m4co",b);draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   Figure du chapitre 5 : orientation et inclinaison
+   ========================================================= */
+(function(){
+  const svg=$("#f5ang");if(!svg)return;
+  function draw(){
+    const W=svgW(svg),n=W<520,pw=n?W-8:(W-18)/2,ph=190,H=n?2*ph+12:ph+4;setVB(svg,W,H);clear(svg);
+    [0,1].forEach(i=>{const x0=n?4:4+i*(pw+10),y0=n?4+i*(ph+8):2,L=[];
+      el("rect",{x:x0,y:y0,width:pw,height:ph,rx:6,fill:"var(--card)",stroke:"var(--line)","stroke-width":1.2},svg);
+      L.push(tx(svg,x0+10,y0+20,i?"Inclinaison, dans le plan du joint":"Orientation, en coupe du joint",{class:"ttl"}));
+      if(!i){const cx=x0+pw*0.42,cy=y0+ph-34;
+        el("rect",{x:cx-6,y:y0+60,width:12,height:cy-y0-60,fill:"var(--paper-2)",stroke:"var(--ink)","stroke-width":1.2},svg);
+        el("rect",{x:cx-6,y:cy,width:Math.min(pw*0.5,150),height:12,fill:"var(--paper-2)",stroke:"var(--ink)","stroke-width":1.2},svg);
+        el("polygon",{points:(cx+6)+","+cy+" "+(cx+20)+","+cy+" "+(cx+6)+","+(cy-14),fill:"var(--line)",stroke:"var(--ink)","stroke-width":1},svg);
+        const a=Math.PI/4,tl=[cx+12,cy-8],te=[tl[0]+90*Math.cos(a),tl[1]-90*Math.sin(a)];
+        el("line",{x1:tl[0],y1:tl[1],x2:te[0],y2:te[1],stroke:"var(--ink)","stroke-width":5,"stroke-linecap":"round"},svg);
+        el("path",{d:"M"+(cx+40)+" "+cy+" A34 34 0 0 0 "+(tl[0]+30*Math.cos(a))+" "+(tl[1]-30*Math.sin(a)),fill:"none",stroke:"var(--frc)","stroke-width":1.6},svg);
+        L.push(tx(svg,cx+46,cy-14,"≈ 45°",{fill:"var(--frc)","font-weight":"700"}));
+        L.push(tx(svg,x0+10,y0+40,"soudure d'angle : sur la bissectrice",{class:"lbl"}));}
+      else{const py=y0+ph-40,xs=x0+16,xe=x0+pw-16,xa=x0+pw*0.55;
+        el("rect",{x:xs,y:py,width:xe-xs,height:12,fill:"var(--paper-2)",stroke:"var(--ink)","stroke-width":1.2},svg);
+        el("path",{d:"M"+xs+" "+py+" Q"+((xs+xa)/2)+" "+(py-9)+" "+(xa-6)+" "+py+" Z",fill:"var(--line)",stroke:"var(--ink)","stroke-width":1},svg);
+        el("rect",{x:xs,y:py-11,width:xa-xs-24,height:3,fill:"var(--gam)",opacity:.6},svg);
+        const al=20*Math.PI/180,len=100,top=[xa+len*Math.sin(al),py-4-len*Math.cos(al)];
+        el("line",{x1:xa,y1:py-4,x2:top[0],y2:top[1],stroke:"var(--ink)","stroke-width":5,"stroke-linecap":"round"},svg);
+        const pt=[xa-len*Math.sin(al),py-4-len*Math.cos(al)];el("line",{x1:xa,y1:py-4,x2:pt[0],y2:pt[1],stroke:"var(--muted)","stroke-width":3,"stroke-dasharray":"5 4"},svg);
+        el("line",{x1:xa,y1:py-4,x2:xa,y2:py-110,stroke:"var(--muted)","stroke-width":1,"stroke-dasharray":"2 3"},svg);
+        el("path",{d:"M"+xa+" "+(py-64)+" A60 60 0 0 1 "+(xa+60*Math.sin(al))+" "+(py-4-60*Math.cos(al)),fill:"none",stroke:"var(--frc)","stroke-width":1.6},svg);
+        L.push(tx(svg,xa+16,py-72,"α",{fill:"var(--frc)","font-weight":"700"}));
+        arrow(svg,xe-60,py+28,xe-4,py+28,"var(--frc)",2,8);L.push(tx(svg,xe-62,py+32,"avance",{fill:"var(--frc)","text-anchor":"end"}));
+        L.push(tx(svg,top[0]+8,top[1]+8,"tirée",{"font-weight":"700"}));L.push(tx(svg,pt[0]-6,pt[1]+8,"poussée",{fill:"var(--muted)","text-anchor":"end"}));
+        L.push(tx(svg,xs+4,py-18,"cordon fait",{class:"lbl"}));}
+      L.forEach(t=>{fitText(t,x0+4,x0+pw-4);halo(t,svg);});declutter(L,y0+4,y0+ph-2);});
+  }
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M5 : souder un cordon et calculer son énergie
+   ========================================================= */
+(function(){
+  const svg=$("#m5svg");if(!svg)return;
+  const sI=$("#m5I"),sl=$("#m5l"),sv=$("#m5v"),sa=$("#m5a"),se=$("#m5e"),ro=$("#m5r"),msg=$("#m5msg");
+  let F=1,prog=null,defi=false;
+  function state(){const I=+sI.value,l=+sl.value,v=+sv.value,ang=+sa.value,e=+se.value,B=bead({I:I,l:l,v:v,ang:ang}),Q=K111*B.E,T=t85(Q,e,20,F);
+    const mu=Math.PI/4*3.2*3.2*(350-STUB)*RHO,te=mu/(CF*I/3600);return {I:I,l:l,v:v,ang:ang,e:e,B:B,Q:Q,T:T,te:te,Lc:v*te};}
+  function draw(){
+    const S=state(),W=svgW(svg),n=W<520,H=n?400:300;setVB(svg,W,H);clear(svg);
+    $("#m5Io").textContent=S.I+" A";$("#m5lo").textContent=nf(S.l,1)+" mm ("+nf(S.B.U,1)+" V)";$("#m5vo").textContent=nf(S.v,1)+" mm/s";$("#m5ao").textContent=(S.ang>0?"tirée ":S.ang<0?"poussée ":"")+Math.abs(S.ang)+"°";$("#m5eo").textContent=S.e+" mm";
+    const L=[];
+    /* vue de côté */
+    const vw=n?W:W*0.56,py=n?110:120,xs=10,xe=vw-10,p=prog===null?0.62:prog,xa=xs+30+(xe-xs-60)*p;
+    el("rect",{x:xs,y:py,width:xe-xs,height:14,fill:"var(--paper-2)",stroke:"var(--ink)","stroke-width":1.2},svg);
+    const hb=Math.min(10,S.B.h*3.2);el("path",{d:"M"+(xs+6)+" "+py+" L"+(xs+6)+" "+(py-hb)+" L"+(xa-8)+" "+(py-hb)+" L"+(xa-4)+" "+py+" Z",fill:"var(--line)",stroke:"var(--ink)","stroke-width":1},svg);
+    for(let x=xs+12;x<xa-10;x+=Math.max(4,10*S.v/3))el("path",{d:"M"+x+" "+(py-hb)+" q4 3 0 6",fill:"none",stroke:"var(--muted)","stroke-width":.8},svg);
+    el("rect",{x:xs+6,y:py-hb-3,width:Math.max(0,xa-xs-24),height:3,fill:"var(--gam)",opacity:.6},svg);
+    const al=S.ang*Math.PI/180,len=n?80:90,top=[xa+len*Math.sin(al),py-6-len*Math.cos(al)];
+    el("line",{x1:xa,y1:py-6,x2:top[0],y2:top[1],stroke:"var(--muted)","stroke-width":8,opacity:.5},svg);el("line",{x1:xa,y1:py-6,x2:top[0],y2:top[1],stroke:"var(--ink)","stroke-width":3},svg);
+    el("polygon",{points:xa+","+(py-6)+" "+(xa-7)+","+py+" "+(xa+7)+","+py,fill:"var(--sig)",opacity:.8},svg);
+    arrow(svg,xe-56,py+30,xe-6,py+30,"var(--frc)",2,8);L.push(tx(svg,xe-60,py+34,"v = "+nf(S.v,1)+" mm/s",{fill:"var(--frc)","text-anchor":"end"}));
+    L.push(tx(svg,top[0]+(S.ang>=0?8:-8),top[1]+10,"α = "+(S.ang>0?"tirée ":S.ang<0?"poussée ":"")+Math.abs(S.ang)+"°",{fill:"var(--mat)","text-anchor":S.ang>=0?"start":"end"}));
+    if(prog!==null){const dist=(xe-xs-60)*p,mm=dist/((xe-xs-60)/200);L.push(tx(svg,xs+4,py+34,"t = "+fmtDur(mm/S.v)+" pour "+nf(mm,0)+" mm",{class:"lbl"}));}
+    /* coupe */
+    const bys=n?py+120:100,k=Math.min(n?10:Math.min(12,(W-vw-24)/22),(bys-(n?py+50:34))/Math.max(0.5,S.B.h),((n?W:W-vw)-100)/S.B.w),bcx=n?W/2:vw+(W-vw)/2;
+    const BL=drawBead(svg,bcx,bys,k,S.B,{plw:n?Math.min(W-16,22*k):Math.min(W-vw-10,22*k),pth:6.5*k});
+    /* jauge d'énergie */
+    const gx0=n?14:20,gx1=W-16,gy=H-52,Qm=2.5,X=q=>gx0+(gx1-gx0)*Math.min(q,Qm)/Qm;
+    el("rect",{x:gx0,y:gy,width:gx1-gx0,height:14,fill:"var(--paper-2)",stroke:"var(--line)"},svg);
+    if(defi)el("rect",{x:X(0.8),y:gy,width:X(1.2)-X(0.8),height:14,fill:"var(--mat)",opacity:.45},svg);
+    el("rect",{x:gx0,y:gy+3,width:X(S.Q)-gx0,height:8,fill:"var(--sig)",opacity:.8},svg);
+    for(let q=0;q<=Qm+1e-9;q+=0.5){el("line",{x1:X(q),y1:gy+14,x2:X(q),y2:gy+18,class:"tick"},svg);tx(svg,X(q),gy+30,nf(q,1),{class:"lbl","text-anchor":"middle"});}
+    tx(svg,gx0,gy+46,"Q (kJ/mm)",{class:"lbl"});
+    const lq=tx(svg,X(S.Q),gy-8,"Q = "+nf(S.Q,2)+" kJ/mm"+(defi?" (fenêtre 0,8–1,2)":""),{fill:"var(--sig)","font-weight":"700","text-anchor":"middle"});L.push(lq);
+    L.concat(BL).forEach(t=>{fitText(t,4,W-4);halo(t,svg);});declutter(L.concat(BL),4,gy-2);
+    ro.innerHTML="<span>U = "+nf(S.B.U,1)+" V</span><span>E = <b class='sig'>"+nf(S.B.E,2)+" kJ/mm</b></span><span>Q = <b class='sig'>"+nf(S.Q,2)+" kJ/mm</b></span><span>t<sub>8/5</sub> = <b class='gam'>"+nf(S.T.t,1)+" s</b> ("+S.T.dim+", e<sub>t</sub> = "+nf(S.T.et,1)+" mm)</span><span>L<sub>c</sub> = "+nf(S.Lc,0)+" mm/électrode</span><span>p = "+nf(S.B.p,1)+" mm</span>";
+    let m="Énergie de soudage Q = 0,8 × "+nf(S.B.U,1)+" × "+S.I+"/"+nf(S.v,1)+" × 10⁻³ = "+nf(S.Q,2)+" kJ/mm. ";
+    if(defi)m+=(S.Q>=0.8-1e-9&&S.Q<=1.2+1e-9)?"✅ Dans la fenêtre du DMOS (0,8 à 1,2 kJ/mm). ":"❌ Hors de la fenêtre du DMOS (0,8 à 1,2 kJ/mm) : "+(S.Q>1.2?"accélère ou raccourcis l'arc. ":"ralentis. ");
+    if(S.v<1.5)m+="Vitesse très lente : le bain coule devant l'arc, la pénétration baisse et le laitier risque de passer devant. ";
+    else if(S.B.w<1.6*3.2)m+="Vitesse rapide : cordon étroit, risque de caniveaux et de manque de fusion. ";
+    if(S.ang<0)m+="Électrode poussée : cordon plus plat, laitier qui peut passer devant. ";
+    m+="Refroidissement : t<sub>8/5</sub> = "+nf(S.T.t,1)+" s en écoulement "+S.T.dim+" (épaisseur "+S.e+" mm, transition "+nf(S.T.et,1)+" mm). Une électrode de 3,2 × 350 dure "+fmtDur(S.te)+" et dépose "+nf(S.Lc,0)+" mm de cordon.";
+    msg.innerHTML=m;
+  }
+  const A=animate($("#m5play"),"▶ Souder un cordon",5000,p=>{prog=p;draw();},()=>{prog=null;draw();});
+  [sI,sl,sv,sa,se].forEach(e=>e.addEventListener("input",()=>{A.stop();prog=null;draw();}));
+  $$("#m5j .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;F=+b.dataset.k;setOn("#m5j",b);draw();}));
+  $("#m5defi").addEventListener("click",()=>{A.stop();prog=null;defi=true;sI.value=120;sl.value=2.6;sv.value=2.4;sa.value=15;se.value=20;F=0.9;setOn("#m5j",$("#m5j .btn[data-k='0.9']"));draw();});
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M6 : le soufflage magnétique
+   ========================================================= */
+(function(){
+  const svg=$("#m6svg");if(!svg)return;
+  const sI=$("#m6I"),sB=$("#m6B"),sx=$("#m6x"),ro=$("#m6r"),msg=$("#m6msg"),bt=$("#m6tab");
+  let clamp="debut",cur="cc",tabs=false;const LP=400;
+  function theta(x){const I=+sI.value,a=30+(tabs?60:0),edge=1/((x+a)/100)-1/((LP-x+a)/100),h=d=>1/(1+d/150);
+    const c=clamp==="debut"?h(x+20):clamp==="fin"?-h(LP+20-x):0.5*h(x+20)-0.5*h(LP+20-x);
+    return (Math.pow(I/150,2)*(6*edge+8*c)+0.2*(+sB.value))*(cur==="ca"?0.15:1);}
+  function draw(){
+    const W=svgW(svg),n=W<520,H=n?430:360,I=+sI.value,x=+sx.value,th=theta(x),Bg=4e-7*Math.PI*I/(2*Math.PI*0.005)*1e4;setVB(svg,W,H);clear(svg);
+    $("#m6Io").textContent=I+" A";$("#m6Bo").textContent=sB.value+" gauss";$("#m6xo").textContent=x+" mm";
+    const L=[];
+    /* vue de dessus */
+    const px0=n?38:44,px1=W-(n?16:40),X=v=>px0+(px1-px0)*v/LP,py=30,ph=46;
+    if(tabs){[[-34,0],[LP,34]].forEach(t=>el("rect",{x:t[0]<0?X(0)-14:X(LP),y:py+8,width:14,height:ph-16,fill:"var(--paper-2)",stroke:"var(--ink)","stroke-width":1},svg));}
+    el("rect",{x:X(0),y:py,width:X(LP)-X(0),height:ph,fill:"var(--paper-2)",stroke:"var(--ink)","stroke-width":1.3},svg);
+    el("line",{x1:X(0),y1:py+ph/2,x2:X(LP),y2:py+ph/2,stroke:"var(--muted)","stroke-width":1,"stroke-dasharray":"6 4"},svg);
+    el("rect",{x:X(0),y:py+ph/2-4,width:X(x)-X(0),height:8,fill:"var(--line)",stroke:"var(--ink)","stroke-width":.8},svg);
+    const cl=s=>{const cx=s==="debut"?X(0)-4:X(LP)+4;el("rect",{x:cx-6,y:py+ph-4,width:12,height:12,fill:"var(--ink)"},svg);
+      L.push(tx(svg,cx,py+ph+24,"masse",{"text-anchor":"middle"}));};
+    if(clamp!=="fin")cl("debut");if(clamp!=="debut")cl("fin");
+    [10,18,26].forEach((r,i)=>el("ellipse",{cx:X(x)+(th>0?-1:1)*Math.min(8,Math.abs(th)*0.4)*(i+1)/3,cy:py+ph/2,rx:r,ry:r*0.8,fill:"none",stroke:"var(--tau)","stroke-width":1,opacity:.6},svg));
+    el("circle",{cx:X(x),cy:py+ph/2,r:5,fill:"var(--sig)"},svg);
+    if(Math.abs(th)>0.5)arrow(svg,X(x),py+ph/2,X(x)+Math.sign(th)*Math.min(70,6+Math.abs(th)*2.5),py+ph/2,"var(--frc)",2.6,9);
+    arrow(svg,X(LP)-70,py-12,X(LP)-10,py-12,"var(--muted)",1.6,7);L.push(tx(svg,X(LP)-74,py-8,"sens de soudage",{class:"lbl","text-anchor":"end"}));
+    /* profil de soufflage */
+    const g0=py+ph+40,g1=n?g0+120:g0+110,Tm=40,Y=t=>(g0+g1)/2-(g1-g0)/2*Math.max(-Tm,Math.min(Tm,t))/Tm;
+    el("rect",{x:X(0),y:Y(5),width:X(LP)-X(0),height:Y(-5)-Y(5),fill:"var(--ok)",opacity:.12},svg);
+    [-40,-20,0,20,40].forEach(v=>{el("line",{x1:X(0),y1:Y(v),x2:X(LP),y2:Y(v),class:v===0?"axis":"gridbg"},svg);tx(svg,X(0)-4,Y(v)+4,(v>0?"+":v<0?"−":"")+Math.abs(v)+"°",{class:"lbl","text-anchor":"end"});});
+    let d="";for(let v=5;v<=395;v+=5)d+=(v===5?"M":"L")+X(v).toFixed(1)+" "+Y(theta(v)).toFixed(1)+" ";
+    el("path",{d:d,fill:"none",stroke:"var(--tau)","stroke-width":2.2},svg);
+    el("circle",{cx:X(x),cy:Y(th),r:5,fill:"var(--frc)",stroke:"var(--card)","stroke-width":1.5},svg);
+    L.push(tx(svg,X(LP),g0-6,"+ : vers l'avant ; − : vers l'arrière",{class:"lbl","text-anchor":"end"}));
+    /* vue de côté */
+    const sy=n?g1+30:g1+26,scx=W/2,sb=H-24;
+    el("rect",{x:scx-90,y:sb,width:180,height:10,fill:"var(--paper-2)",stroke:"var(--ink)","stroke-width":1.1},svg);
+    el("rect",{x:scx-5,y:sy,width:10,height:sb-sy-36,fill:"var(--muted)",stroke:"var(--ink)","stroke-width":1},svg);
+    const tipY=sb-36,ad=Math.max(-55,Math.min(55,th))*Math.PI/180,ax=scx+Math.tan(ad)*34;
+    el("path",{d:"M"+(scx-4)+" "+tipY+" L"+(ax-8)+" "+sb+" L"+(ax+8)+" "+sb+" L"+(scx+4)+" "+tipY+" Z",fill:"var(--sig)",opacity:.45},svg);
+    L.push(tx(svg,scx+(th>=0?96:-96),sb-6,(Math.abs(th)<0.5?"arc droit":"θ = "+nf(Math.abs(th),0)+"° "+(th>0?"vers l'avant":"vers l'arrière")),{fill:"var(--tau)","font-weight":"700","text-anchor":th>=0?"start":"end"}));
+    L.forEach(t=>{fitText(t,4,W-4);halo(t,svg);});declutter(L,4,H-2);
+    const lvl=Math.abs(th)<5?"faible":Math.abs(th)<15?"gênant":"fort";
+    ro.innerHTML="<span>θ = <b class='tau'>"+(th>=0?"+":"−")+nf(Math.abs(th),1)+"°</b></span><span>"+(Math.abs(th)<0.5?"arc droit":th>0?"soufflage avant":"soufflage arrière")+"</span><span>niveau : "+lvl+"</span><span>champ de l'arc à 5 mm ≈ "+nf(Bg,0)+" G</span><span>rémanence "+sB.value+" G</span>";
+    let m;
+    if(lvl==="faible")m="✅ Arc presque droit ("+nf(Math.abs(th),1)+"°) : soudage normal.";
+    else m=(lvl==="fort"?"❌ ":"⚠️ ")+"<b>Soufflage "+(th>0?"avant":"arrière")+"</b> de "+nf(Math.abs(th),0)+"° : l'arc "+(th>0?"est poussé vers le joint encore vide":"est repoussé vers le cordon déjà fait")+(lvl==="fort"?" ; projections, soufflures et manque de fusion menacent":"")+". ";
+    if(lvl!=="faible"){const tips=[];if(cur==="cc")tips.push("passe en courant alternatif");
+      if(th<0&&clamp!=="debut")tips.push("mets la prise de masse au départ");if(th>0&&clamp!=="fin")tips.push("mets la prise de masse à l'arrivée");
+      if(!tabs&&(x<80||x>320))tips.push("ajoute des appendices en bout de joint");if(+sB.value>=30)tips.push("démagnétise la pièce");if(I>120)tips.push("baisse l'intensité et raccourcis l'arc");
+      tips.push("incline l'électrode pour que sa pointe vise "+(th>0?"l'arrière":"l'avant"));m+="Remèdes : "+tips.join(", ")+".";}
+    msg.innerHTML=m;
+  }
+  const A=animate($("#m6play"),"▶ Avancer vers le bord",6000,p=>{sx.value=Math.round((5+390*p)/5)*5;draw();});
+  [sI,sB,sx].forEach(e=>e.addEventListener("input",()=>{A.stop();draw();}));
+  $$("#m6m .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();clamp=b.dataset.k;setOn("#m6m",b);draw();}));
+  $$("#m6c .btn[data-k]").forEach(b=>b.addEventListener("click",()=>{A.stop();cur=b.dataset.k;$$("#m6c .btn[data-k]").forEach(x=>x.classList.toggle("on",x===b));draw();}));
+  bt.addEventListener("click",()=>{A.stop();tabs=!tabs;bt.classList.toggle("on",tabs);bt.setAttribute("aria-pressed",tabs?"true":"false");draw();});
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   Quiz, check-list, sommaire, thème
+   ========================================================= */
+(function(){
+  const box=$("#quiz");if(!box)return;
+  const Q=[
+    {q:"En courant alternatif à 50 Hz, le courant de soudage passe par zéro :",o:["50 fois par seconde","100 fois par seconde","une fois par seconde","jamais"],c:1,e:"Deux passages par période, 50 périodes par seconde : <b>100 passages par zéro</b>, donc cent extinctions et cent réamorçages."},
+    {q:"Ce qui aide le plus l'arc à se rallumer en courant alternatif :",o:["la poudre de fer de l'enrobage","les éléments facilement ionisables de l'enrobage (potassium, sodium)","une électrode plus longue","une vitesse d'avance plus élevée"],c:1,e:"Le <b>potassium</b> et le sodium s'ionisent facilement et gardent le gaz de l'arc conducteur au passage par zéro."},
+    {q:"La réactance d'un transformateur de soudage aide l'arc en courant alternatif parce que :",o:["elle supprime les passages par zéro","elle met la tension en avance sur le courant : la tension est déjà haute quand le courant s'annule","elle augmente la fréquence","elle réduit la tension à vide"],c:1,e:"Le courant est en retard sur la tension : au passage par zéro du courant, la tension disponible vaut déjà √2·U<sub>0</sub>·sin φ, et l'arc <b>repart aussitôt</b>."},
+    {q:"La « polarité inverse » désigne :",o:["l'électrode au pôle négatif","l'électrode au pôle positif (CC+)","le courant alternatif","une erreur de branchement"],c:1,e:"Polarité inverse = <b>électrode au +</b> ; polarité directe = électrode au −. Dans un DMOS, on écrit CC+ ou CC− pour éviter toute ambiguïté."},
+    {q:"Selon le tableau 4B de l'ISO 2560, une électrode basique de type 15 s'emploie :",o:["en CA et en CC±","en CC+ seulement","en CC− seulement","en CA seulement"],c:1,e:"Le type 15 est réservé au <b>CC+</b> ; le type 16, basique lui aussi, accepte en plus le CA."},
+    {q:"Par rapport au CC+, une électrode soudée en CC− :",o:["pénètre plus et fond moins vite","fond plus vite et pénètre moins","ne change rien","ne peut plus s'amorcer"],c:1,e:"En CC−, l'électrode <b>fond plus vite</b> (≈ +10 %) et la pénétration et la dilution baissent : utile sur tôle mince ou racine ouverte, si l'enrobage l'admet."},
+    {q:"On augmente l'intensité de 20 %. Dans le modèle du cours, la pénétration :",o:["baisse","augmente d'environ 20 %","augmente d'environ 30 %","double"],c:2,e:"Le métal déposé suit I (+20 %), la pénétration la devance : <b>1,2<sup>1,5</sup> ≈ 1,31</b>, soit environ +30 %. L'intensité creuse."},
+    {q:"Un arc trop long provoque surtout :",o:["un cordon étroit et bombé","des soufflures, des projections et un cordon large et plat","le collage de l'électrode","une pénétration plus forte"],c:1,e:"L'arc long laisse entrer l'air (azote) et s'étale : <b>soufflures</b>, projections, cordon large et plat, pénétration plus faible, surtout avec une basique."},
+    {q:"La hauteur d'arc à viser en 111 est de l'ordre :",o:["du diamètre de l'âme de l'électrode, ou moins","de 2 cm","de la longueur de l'électrode","de l'épaisseur de la tôle"],c:0,e:"Règle de l'<b>arc court</b> : pas plus que le diamètre de l'âme, et encore moins pour une basique."},
+    {q:"U = 25 V, I = 120 A, v = 2,5 mm/s, k = 0,8. L'énergie de soudage Q vaut :",o:["1,2 kJ/mm","0,96 kJ/mm","3,0 kJ/mm","0,75 kJ/mm"],c:1,e:"E = 25 × 120/2,5 × 10⁻³ = 1,2 kJ/mm ; <b>Q = 0,8 × 1,2 = 0,96 kJ/mm</b>. Sans le k, on obtient l'énergie de l'arc E."},
+    {q:"Une électrode « tirée » :",o:["a sa pointe dirigée vers l'avant, vers le joint vide","a sa pointe dirigée vers le cordon déjà fait, la poignée en avant","est tenue à la perpendiculaire","est tirée hors de la pince"],c:1,e:"Tirée : la poignée devance la pointe, qui vise le cordon fait. L'arc repousse le laitier vers l'arrière et <b>pénètre davantage</b>."},
+    {q:"En arrivant au bout d'un joint, l'arc souffle vers l'arrière en courant continu. Le premier remède à essayer :",o:["monter l'intensité","allonger l'arc","déplacer la prise de masse au départ du joint ou passer en courant alternatif","souder plus vite"],c:2,e:"L'arc fuit la masse et les bouts : on <b>déplace la prise de masse</b>, on passe en <b>CA</b>, on raccourcit l'arc. Monter l'intensité aggrave le soufflage (force en I²)."}
+  ];
+  let score=0,done=0;const sc=$("#qzScore");
+  function upd(){let t="Score : "+score+" / "+Q.length;if(done===Q.length)t+=score>=10?"  ·  🎉 prêt pour le cours 3":score>=7?"  ·  relis les explications":"  ·  refais un tour des chapitres";sc.textContent=t;}
+  function render(){box.innerHTML="";score=0;done=0;
+    Q.forEach((it,n)=>{const d=document.createElement("div");d.className="qz";
+      d.innerHTML='<p class="qz-q"><b>'+(n+1)+".</b> "+it.q+'</p><div class="qz-o"></div><div class="qz-e" hidden></div>';
+      const o=d.querySelector(".qz-o"),ex=d.querySelector(".qz-e");let answered=false;
+      it.o.forEach((txt,i)=>{const b=document.createElement("button");b.type="button";b.className="qz-b";b.innerHTML=String.fromCharCode(65+i)+". "+txt;
+        b.addEventListener("click",()=>{if(answered)return;answered=true;done++;const ok=i===it.c;if(ok)score++;b.classList.add(ok?"ok":"ko");o.children[it.c].classList.add("ok");ex.hidden=false;ex.innerHTML=(ok?"✅ <b>Bien joué.</b> ":"❌ <b>Pas tout à fait.</b> ")+it.e;upd();});
+        o.appendChild(b);});
+      box.appendChild(d);});
+    upd();}
+  $("#qzReset").addEventListener("click",render);render();
+})();
+(function(){
+  const boxes=$$("#checklist input[type=checkbox]"),msg=$("#checkMsg"),KEY="electrode-enrobee-cours2-check";
+  if(!boxes.length)return;
+  let saved=[];try{saved=JSON.parse(localStorage.getItem(KEY)||"[]")||[];}catch(e){saved=[];}
+  boxes.forEach(b=>{b.checked=saved.indexOf(b.dataset.c)>=0;});
+  function upd(){const on=boxes.filter(b=>b.checked).map(b=>b.dataset.c);try{localStorage.setItem(KEY,JSON.stringify(on));}catch(e){}
+    msg.innerHTML=on.length===boxes.length?"🎉 <b>Tout est coché : tu es prêt pour le cours 3 !</b>":on.length+" / "+boxes.length+" : reviens sur les points non cochés (les manipulations sont faites pour ça).";}
+  boxes.forEach(b=>b.addEventListener("change",upd));upd();
+})();
+(function(){
+  const links=$$(".toc a"),tin=$(".toc-in");
+  if(!links.length||!("IntersectionObserver" in window))return;
+  const map={};links.forEach(a=>{map[a.getAttribute("href").slice(1)]=a;});
+  const obs=new IntersectionObserver(ents=>{ents.forEach(en=>{if(!en.isIntersecting)return;const a=map[en.target.id];if(!a)return;
+    links.forEach(l=>l.classList.toggle("on",l===a));
+    if(tin){const tgt=a.offsetLeft-tin.clientWidth/2+a.offsetWidth/2;try{tin.scrollTo({left:tgt,behavior:RM?"auto":"smooth"});}catch(e){tin.scrollLeft=tgt;}}});},{rootMargin:"-45% 0px -50% 0px"});
+  Object.keys(map).forEach(id=>{const s=document.getElementById(id);if(s)obs.observe(s);});
+})();
+(function(){
+  const b=$("#themeBtn");if(!b)return;const KEY="electrode-enrobee-theme",root=document.documentElement;
+  const lab={auto:"◐ Thème : automatique",light:"☀️ Thème : clair",dark:"🌙 Thème : sombre"};
+  let t="auto";try{t=localStorage.getItem(KEY)||"auto";}catch(e){}
+  function apply(){if(t==="auto")root.removeAttribute("data-theme");else root.setAttribute("data-theme",t);b.textContent=lab[t];}
+  b.addEventListener("click",()=>{t=t==="auto"?"light":t==="light"?"dark":"auto";try{localStorage.setItem(KEY,t);}catch(e){}apply();});
+  apply();
+})();
+})();
+</script>
+</body>
+</html>

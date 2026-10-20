@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Électrode enrobée, cours 5 : qualité, défauts, cas particuliers et sécurité</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@500;600;700&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F3F6F9; --paper-2:#E6ECF2; --card:#FFFFFF; --ink:#17212B; --muted:#56626F; --line:#C5CFD9;
+  --grid:rgba(40,90,160,.075);
+  --sig:#CF2438; --tau:#8A34B6; --eps:#1B5ED3; --gam:#06849A; --frc:#D46A00; --mat:#26844A; --weld:#9A5B12;
+  --ok:#26844A; --warn:#B86E00; --bad:#C62828;
+  --lv2:#E4EBF2; --hl:#FFF3B0;
+  --font-body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-head:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --font-math:"STIX Two Text","Cambria Math","Cambria","Times New Roman",serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+    --grid:rgba(120,160,220,.07);
+    --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+    --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+  --grid:rgba(120,160,220,.07);
+  --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+  --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+  color-scheme: dark;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0;color:var(--ink);font-family:var(--font-body);font-size:17.5px;line-height:1.62;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;overflow-x:hidden;
+}
+img,svg{max-width:100%}
+.wrap{max-width:800px;margin:0 auto;padding:0 20px}
+.wide{max-width:980px}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.1;margin:0}
+h3{font-size:1.65rem;font-weight:600;margin:2rem 0 .6rem}
+h4{font-size:1.3rem;font-weight:600;margin:1.4rem 0 .4rem}
+p{margin:.7em 0}
+a{color:var(--eps)}
+b,strong{font-weight:700}
+small{font-size:.8em}
+sub{font-size:.72em}
+.m{font-family:var(--font-math);font-size:1.08em;white-space:nowrap}
+.sig{color:var(--sig)} .tau{color:var(--tau)} .eps{color:var(--eps)} .gam{color:var(--gam)} .frc{color:var(--frc)} .mat{color:var(--mat)} .mut{color:var(--muted)} .wcol{color:var(--weld)}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .12em;line-height:1.1}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 .2em .08em}
+.frac>span:last-child{padding:.08em .2em 0}
+ul,ol{padding-left:1.4em}
+li{margin:.25em 0}
+
+/* ---------- en-tête ---------- */
+.hero{padding:34px 0 10px}
+.title-block{border:2.5px solid var(--ink);background:var(--card);display:grid;grid-template-columns:1fr 300px}
+.tb-main{padding:22px 24px;border-right:2.5px solid var(--ink);display:flex;flex-direction:column;justify-content:space-between;gap:14px}
+.tb-series{margin:0 0 .5rem;color:var(--muted);font-size:.95rem}
+.hero h1{font-size:clamp(2.3rem,6vw,4rem);font-weight:700;letter-spacing:-.01em}
+.tb-cells{display:grid;grid-template-rows:repeat(4,auto)}
+.tb-cells>div{padding:9px 16px;border-bottom:1.5px solid var(--ink);display:flex;flex-direction:column;justify-content:center}
+.tb-cells>div:last-child{border-bottom:0}
+.tb-cells small{color:var(--muted);font-size:.78rem}
+.tb-cells b{font-family:var(--font-head);font-size:1.25rem;font-weight:600;line-height:1.15}
+.lede{font-size:1.13rem;max-width:760px;margin:1.2rem 0}
+.theme-btn{align-self:flex-start;font-family:var(--font-body);font-size:.85rem;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
+@media (max-width:760px){.title-block{grid-template-columns:1fr}.tb-main{border-right:0;border-bottom:2.5px solid var(--ink)}.tb-cells{grid-template-rows:none;grid-template-columns:1fr 1fr}.tb-cells>div:nth-child(odd){border-right:1.5px solid var(--ink)}.tb-cells>div:nth-child(3){border-bottom:0}}
+@media (max-width:420px){.tb-cells{grid-template-columns:1fr}.tb-cells>div:nth-child(odd){border-right:0}.tb-cells>div:nth-child(3){border-bottom:1.5px solid var(--ink)}}
+
+/* code couleur */
+.cc{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:stretch;margin:1rem 0 .4rem}
+.cc-box{background:var(--card);border:2px solid var(--line);padding:12px 14px;border-radius:4px}
+.cc-cause{border-color:var(--sig)} .cc-link{border-color:var(--mat)} .cc-eff{border-color:var(--eps)}
+.cc-box small{display:block;color:var(--muted);font-size:.82rem;line-height:1.3}
+.cc-syms{font-family:var(--font-math);font-size:1.7rem;line-height:1.25;display:flex;flex-wrap:wrap;gap:.1em .45em;margin:.2rem 0}
+.cc-box p{margin:0;font-size:.9rem;line-height:1.35}
+.cc-arrow{align-self:center;font-size:1.8rem;color:var(--muted)}
+@media (max-width:700px){.cc{grid-template-columns:1fr}.cc-arrow{transform:rotate(90deg);justify-self:center;line-height:1}}
+.cc-more{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:.5rem 0}
+.cc-more>div{border:2px solid var(--line);background:var(--card);border-radius:4px;padding:6px 10px;font-size:.9rem}
+@media (max-width:640px){.cc-more{grid-template-columns:1fr}}
+
+/* ---------- sommaire ---------- */
+.toc{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-bottom:1.5px solid var(--line);padding-top:env(safe-area-inset-top,0px);margin-top:18px}
+.toc-in{display:flex;gap:6px;overflow-x:auto;padding:9px 20px;max-width:980px;margin:0 auto;scrollbar-width:thin}
+.toc a{flex:none;text-decoration:none;color:var(--ink);font-size:.88rem;padding:4px 11px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);white-space:nowrap}
+.toc a.on{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.toc a:focus-visible,.btn:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--eps);outline-offset:2px}
+
+/* ---------- sections ---------- */
+section.chap{padding:46px 0 10px}
+.cartouche{display:grid;grid-template-columns:86px 1fr 250px;border:2.5px solid var(--ink);background:var(--card);margin-bottom:1.4rem}
+.c-num{font-family:var(--font-head);font-size:3.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;border-right:2.5px solid var(--ink)}
+.c-title{padding:14px 18px;border-right:2.5px solid var(--ink)}
+.c-title h2{font-size:2.1rem;font-weight:700}
+.c-title p{margin:.25rem 0 0;color:var(--muted)}
+.c-img{padding:12px 14px;display:flex;gap:12px;align-items:center;background:var(--paper-2)}
+.c-img .ico{font-size:2.3rem;line-height:1}
+.c-img small{display:block;color:var(--muted);font-size:.78rem}
+.c-img span{font-size:.95rem;line-height:1.3}
+@media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
+
+/* niveaux */
+.lv{margin:1.2rem 0;padding:6px 22px 14px;border-radius:4px}
+.lv1{background:var(--card);border:2px solid var(--ink)}
+.lv2{background:var(--lv2);border-left:6px solid var(--ink)}
+.lv-h{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;font-family:var(--font-head);font-size:1.35rem;font-weight:600;margin:10px 0 4px}
+.lv-h .tag{font-size:.95rem;font-family:var(--font-body);font-weight:400;color:var(--muted)}
+@media (max-width:520px){.lv{padding:6px 14px 12px}}
+
+/* formules et encadrés */
+.fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:600px;text-align:center;border-radius:3px;overflow-x:auto}
+.fx .big{font-family:var(--font-math);font-size:1.9rem;line-height:1.4}
+.fx .cap{font-size:.85rem;color:var(--muted);margin:.3rem 0 0}
+.fx .row{display:flex;flex-wrap:wrap;justify-content:center;gap:.2em 1.4em}
+.syms{margin:.6rem 0;display:grid;grid-template-columns:auto 1fr;gap:.35rem 1rem;align-items:baseline}
+.syms dt{font-family:var(--font-math);font-size:1.25rem;text-align:right;white-space:nowrap}
+.syms dd{margin:0}
+.def{margin:.9rem 0;padding:.5rem .9rem;border-left:3px dotted var(--muted);font-size:.96rem;background:color-mix(in srgb,var(--card) 60%,transparent)}
+.def>b:first-child{font-family:var(--font-head);font-size:1.08rem;font-weight:600}
+.tip{margin:1rem 0;padding:.7rem 1rem;border:1.5px dashed var(--mat);border-radius:4px;font-size:.97rem}
+.warn{margin:1rem 0;padding:.7rem 1rem;border:2px solid var(--bad);border-radius:4px;font-size:.97rem;background:color-mix(in srgb,var(--bad) 7%,transparent)}
+.mnemo{margin:1rem 0;padding:.7rem 1rem;background:var(--hl);border-radius:4px;font-size:.98rem}
+.fun{margin:1.2rem 0;padding:.8rem 1rem;border:2px dashed var(--muted);border-radius:10px;background:var(--card);font-size:.98rem}
+.fun-h{display:block;margin-bottom:.35rem;font-family:var(--font-head);font-size:1.15rem;font-weight:600;letter-spacing:.02em}
+.meta{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--frc);border-radius:4px;background:color-mix(in srgb,var(--frc) 6%,transparent)}
+.weld{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--weld);border-radius:4px;background:color-mix(in srgb,var(--weld) 7%,transparent)}
+.weld>b:first-child{font-family:var(--font-head);font-size:1.15rem;font-weight:600;color:var(--weld)}
+.hp{display:inline-block;font-size:.72rem;font-weight:700;padding:1px 7px;border-radius:9px;background:var(--weld);color:var(--card);vertical-align:middle;margin-left:4px;white-space:nowrap}
+.recall{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:1rem 0}
+.recall>div{background:var(--card);border:1.5px solid var(--line);border-radius:4px;padding:8px 12px;font-size:.92rem}
+.recall .f{font-family:var(--font-math);font-size:1.2rem;margin-bottom:.2rem}
+@media (max-width:640px){.recall{grid-template-columns:1fr}}
+.hist{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:1rem 0}
+.hist>div{background:var(--card);border:1.5px solid var(--weld);border-radius:4px;padding:8px 12px;font-size:.93rem}
+.hist .yr{font-family:var(--font-head);font-size:1.6rem;font-weight:700;color:var(--weld);line-height:1}
+@media (max-width:720px){.hist{grid-template-columns:1fr}}
+
+/* manipulations */
+.lab{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:14px 16px 12px;margin:1.4rem 0}
+.lab-h{font-family:var(--font-head);font-size:1.3rem;font-weight:600;margin:0 0 .2rem}
+.lab-sub{margin:0 0 .6rem;color:var(--muted);font-size:.92rem}
+.lab svg{display:block;width:100%;height:auto;color:var(--ink);font-family:var(--font-body);touch-action:pan-y}
+.ctrl{display:grid;grid-template-columns:minmax(110px,auto) 1fr minmax(92px,auto);gap:4px 12px;align-items:center;margin:.5rem 0}
+.ctrl label{font-size:.95rem}
+.ctrl output{font-family:var(--font-math);font-size:1.08rem;text-align:right;white-space:nowrap}
+@media (max-width:520px){.ctrl{grid-template-columns:1fr auto}.ctrl input[type=range]{grid-column:1/-1;grid-row:2}}
+input[type=range]{width:100%;accent-color:var(--ink);height:28px;margin:0}
+input.r-sig{accent-color:var(--sig)} input.r-tau{accent-color:var(--tau)} input.r-frc{accent-color:var(--frc)} input.r-mat{accent-color:var(--mat)} input.r-eps{accent-color:var(--eps)}
+.btns{display:flex;flex-wrap:wrap;gap:6px;margin:.5rem 0}
+.btn{font-family:var(--font-body);font-size:.9rem;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 13px;cursor:pointer;line-height:1.3}
+.btn:hover{background:var(--paper-2)}
+.btn.on{background:var(--ink);color:var(--paper)}
+.btn.play{border-color:var(--eps);color:var(--eps);font-weight:700}
+.btn:disabled{opacity:.45;cursor:default}
+.readout{font-family:var(--font-math);font-size:1.08rem;background:var(--paper-2);border-radius:4px;padding:.5rem .8rem;margin:.5rem 0;overflow-x:auto;display:flex;flex-wrap:wrap;gap:.2em 1.3em}
+.readout>span{white-space:nowrap}
+.status{font-size:.97rem;margin:.5rem 0;padding:.5rem .8rem;border-left:4px solid var(--eps);background:color-mix(in srgb,var(--eps) 6%,transparent);border-radius:0 4px 4px 0;min-height:2.6em}
+.radios{display:flex;flex-wrap:wrap;gap:6px 14px;margin:.4rem 0;font-size:.95rem}
+.radios label{display:inline-block;cursor:pointer}
+.radios input{margin:0 6px 0 0;vertical-align:middle}
+
+/* svg */
+svg text{fill:currentColor;font-size:13px}
+svg .lbl{font-size:12.5px;fill:var(--muted)}
+svg .mth{font-family:var(--font-math);font-size:16px}
+svg .ttl{font-family:var(--font-head);font-size:15px;font-weight:600}
+svg .axis{stroke:var(--ink);stroke-width:1.4;fill:none}
+svg .tick{stroke:var(--muted);stroke-width:1}
+svg .gridbg{stroke:var(--line);stroke-width:1}
+svg .ref{stroke:var(--muted);stroke-width:1.3;stroke-dasharray:4 3;fill:none}
+.arr line{stroke:currentColor}
+.arr polygon{fill:currentColor}
+
+/* tableaux */
+.tbl-wrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch}
+table.data{border-collapse:collapse;width:100%;font-size:.94rem;background:var(--card)}
+table.data th,table.data td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:middle}
+table.data th{font-family:var(--font-head);font-weight:600;font-size:1.05rem;background:var(--paper-2)}
+table.data td.n{font-family:var(--font-math);white-space:nowrap}
+table.data tr.now td{background:var(--hl)}
+
+/* parcours */
+.route{list-style:none;padding:0;margin:1rem 0;position:relative}
+.route::before{content:"";position:absolute;left:17px;top:10px;bottom:10px;width:4px;background:var(--line);border-radius:2px}
+.route li{position:relative;padding:0 0 14px 52px;margin:0}
+.route li .dot{position:absolute;left:4px;top:0;width:30px;height:30px;border-radius:50%;border:3px solid var(--ink);background:var(--card);font-family:var(--font-head);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+.route li b{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.route li p{margin:.1rem 0 0;font-size:.95rem}
+.series{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:.8rem 0}
+.series>div{background:var(--card);border:1.5px solid var(--line);padding:8px 10px;border-radius:4px;font-size:.88rem}
+.series>div.here{border:2.5px solid var(--ink)}
+.series b{display:block;font-family:var(--font-head);font-size:1.05rem}
+@media (max-width:700px){.series{grid-template-columns:1fr 1fr}}
+
+/* exercices et quiz */
+.exo{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--ink);padding:6px 20px 12px;margin:1.2rem 0;border-radius:4px}
+.exo.defi{border-left-color:var(--weld)}
+.exo h4{margin-top:.8rem}
+.exo .lvtag{font-family:var(--font-body);font-size:.85rem;font-weight:400;color:var(--muted);margin-left:.4rem}
+.exo .q{margin:.25rem 0}
+details{margin:.6rem 0}
+summary{cursor:pointer;font-weight:700;padding:4px 0}
+details .sol{padding:.4rem .9rem;border-left:3px solid var(--mat);margin:.4rem 0}
+details .sol p{margin:.45em 0}
+.qz{background:var(--card);border:1.5px solid var(--line);border-radius:6px;padding:10px 16px;margin:.8rem 0}
+.qz-q{margin:.3rem 0 .6rem}
+.qz-o{display:flex;flex-direction:column;gap:6px}
+.qz-b{text-align:left;font-family:var(--font-body);font-size:.97rem;padding:8px 12px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:5px;cursor:pointer}
+.qz-b:hover{border-color:var(--ink)}
+.qz-b.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--card))}
+.qz-b.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--card))}
+.qz-e{font-size:.94rem;margin:.6rem 0 .2rem}
+.score{position:sticky;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);display:inline-block;background:var(--ink);color:var(--paper);padding:6px 14px;border-radius:999px;font-size:.95rem;margin:.6rem 0}
+
+/* fiche mémoire */
+.fiche{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:2.5px solid var(--ink);background:var(--card);margin:1rem 0}
+.fiche>div{padding:12px 14px;border-right:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}
+.fiche>div:nth-child(3n){border-right:0}
+.fiche>div:nth-last-child(-n+3){border-bottom:0}
+.fiche .ic{font-size:1.9rem;line-height:1}
+.fiche h4{margin:.3rem 0 .2rem;font-size:1.15rem}
+.fiche .f{font-family:var(--font-math);font-size:1.1rem;margin:.2rem 0}
+.fiche p{margin:.2rem 0 0;font-size:.88rem;color:var(--muted)}
+@media (max-width:720px){.fiche{grid-template-columns:1fr 1fr}.fiche>div{border-right:1.5px solid var(--ink)!important;border-bottom:1.5px solid var(--ink)!important}.fiche>div:nth-child(2n){border-right:0!important}.fiche>div:last-child{border-bottom:0!important}}
+@media (max-width:440px){.fiche{grid-template-columns:1fr}.fiche>div{border-right:0!important}}
+.gloss{display:grid;grid-template-columns:minmax(150px,230px) 1fr;gap:0;border-top:1.5px solid var(--line);margin:1rem 0}
+.gloss dt,.gloss dd{border-bottom:1.5px solid var(--line);padding:7px 8px;margin:0}
+.gloss dt{font-weight:700}
+.gloss dd{font-size:.95rem}
+@media (max-width:600px){.gloss{grid-template-columns:1fr}.gloss dt{border-bottom:0;padding-bottom:0}}
+.check label{display:flex;gap:10px;align-items:flex-start;padding:5px 0;cursor:pointer}
+.check input{margin-top:.35em;width:18px;height:18px;accent-color:var(--mat);flex:none}
+footer{padding:40px 0 60px;color:var(--muted);font-size:.9rem}
+hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
+@media (max-width:700px){.m{white-space:normal}.fx{padding:12px 10px}.fx .big{font-size:1.4rem}}
+@media (max-width:400px){body{font-size:16.5px}.wrap{padding:0 14px}.lab{padding:12px 10px}}
+
+/* compléments de la série Rupture */
+.btn.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,var(--card))}
+.btn.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--card))}
+.ctrl[hidden]{display:none}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="wrap wide">
+  <div class="title-block">
+    <div class="tb-main">
+      <div>
+        <p class="tb-series">Soudage à l'électrode enrobée, série 1.9 : du poste de soudage au cordon contrôlé</p>
+        <h1>Qualité, défauts, cas particuliers et sécurité : le cordon contrôlé et le soudeur protégé</h1>
+      </div>
+      <button class="theme-btn" id="themeBtn" type="button" aria-label="Changer de thème">◐ Thème : automatique</button>
+    </div>
+    <div class="tb-cells">
+      <div><small>Cours</small><b>5 sur 5, dernier de la série : juger, réparer, se protéger</b></div>
+      <div><small>Durée conseillée</small><b>≈ 2 h 30 à 3 h avec les exercices</b></div>
+      <div><small>Prérequis</small><b>cours 1 à 4 : le poste et la tension à vide, l'arc et ses réglages, l'électrode et l'hydrogène, la préparation, les positions et le geste</b></div>
+      <div><small>À la fin tu sais</small><b>situer la qualité en soudage et ses documents, nommer un défaut avec l'ISO 6520-1 et le juger avec l'ISO 5817, remonter à sa cause, souder une fonte et un aluminium à l'électrode, régler un gougeage arc-air, et préparer un poste de soudage sûr</b></div>
+    </div>
+  </div>
+  <p class="lede">Le joint est soudé. Est-il bon ? Pour répondre, il faut un vocabulaire commun, celui de l'ISO 6520-1, qui donne un nom et un numéro à chaque défaut, et une règle commune, celle de l'ISO 5817, qui dit jusqu'où un défaut est tolérable. Il faut aussi savoir remonter du défaut à sa cause, car c'est le mode opératoire qu'on corrige, pas seulement la soudure. Ce dernier cours referme la série en quatre temps : <b>la qualité</b> et ses documents, <b>les défauts</b> visibles et internes, <b>les cas particuliers</b> de l'électrode enrobée (aluminium, fontes, soudage sous l'eau) avec le <b>gougeage arc-air</b> qui prépare les réparations, et enfin <b>la sécurité</b> du soudeur.</p>
+
+  <h4>Le code couleur de la série</h4>
+  <div class="cc" role="img" aria-label="Code couleur : les causes en rouge et violet, les paramètres en vert, les effets en bleu et bleu-vert">
+    <div class="cc-box cc-cause"><small>Les causes</small><div class="cc-syms"><span class="sig">T</span><span class="sig">I</span><span class="tau">h</span><span class="tau">fumées</span></div><p><span class="sig">rouge</span> : la chaleur (température entre passes T, intensité du gougeage) ; <span class="tau">violet</span> : les ennemis (défauts et leur taille h, fumées, chocs électriques, rayonnement)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-link"><small>Les paramètres</small><div class="cc-syms"><span class="mat">t</span><span class="mat">b</span><span class="mat">d</span><span class="mat">v</span><span class="mat">B C D</span></div><p>en <span class="mat">vert</span> : ce que l'on choisit et les données (épaisseur t, largeur du cordon b, diamètre d, vitesse v, niveau de qualité B, C ou D)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-eff"><small>Les effets</small><div class="cc-syms"><span class="eps">limite</span><span class="eps">p</span><span class="eps">w</span><span class="gam">Ni</span><span class="gam">C</span></div><p><span class="eps">bleu</span> : ce que l'on obtient (limite admise, verdict, profondeur p et largeur w d'une gorge) ; <span class="gam">bleu-vert</span> : la métallurgie (carbone de la fonte, nickel, métal carburé)</p></div>
+  </div>
+  <div class="cc-more">
+    <div><b class="frc">Orange</b> : les actions et les forces (jet d'air du gougeage, martelage, gestes de contrôle).</div>
+    <div><b>Noir</b> : la géométrie dessinée (cordons, coupes, radiographies, poste de soudage).</div>
+    <div><b class="wcol">Bronze</b> : les encadrés « métier » 🔥, tournés vers l'atelier et le contrôle.</div>
+  </div>
+</div>
+</header>
+
+<nav class="toc" aria-label="Sommaire">
+  <div class="toc-in">
+    <a href="#avant">Avant de commencer</a>
+    <a href="#c1">1 Qualité</a>
+    <a href="#c2">2 Défauts visibles</a>
+    <a href="#c3">3 Défauts internes</a>
+    <a href="#c4">4 Aluminium, fontes, sous l'eau</a>
+    <a href="#c5">5 Gougeage arc-air</a>
+    <a href="#c6">6 Sécurité</a>
+    <a href="#exos">Exercices</a>
+    <a href="#quiz-s">Quiz</a>
+    <a href="#fiche">Fiche mémoire</a>
+    <a href="#gloss">Glossaire</a>
+    <a href="#check">Check-list</a>
+  </div>
+</nav>
+
+<main>
+<section class="chap" id="avant">
+<div class="wrap">
+  <h3 style="margin-top:0">Avant de commencer</h3>
+  <h4>Le cours 4 en trois cases</h4>
+  <div class="recall">
+    <div><div class="f">Propre · Ouvert · Pointé</div>Un joint propre et sec, chanfreiné jusqu'à sa racine, pointé à intervalles réguliers. Les défauts de ce cours naissent souvent là : talon trop épais, écartement fermé, pointe fissurée.</div>
+    <div><div class="f">Pique · Brosse · Devant · Retour · Repars</div>Le geste d'amorçage, de reprise et de fin de cordon. Coup d'arc, inclusion de laitier, manque de fusion à la reprise, fissure de cratère : ce cours leur donne leur nom normalisé.</div>
+    <div><div class="f">T<sub>p</sub> = 697·CET + … − 328</div>Le préchauffage ralentit le refroidissement et chasse l'hydrogène. Il revient au chapitre 4, pour les fontes, et au chapitre 5 : on préchauffe pour gouger comme pour souder.</div>
+  </div>
+
+  <div class="def"><b>📘 Correspondance avec le planning et le référentiel</b>. Ce cours termine le sujet <b>1.9 « Soudage à l'électrode enrobée »</b> du planning de la formation. Il porte sur la qualité, les défauts, les cas particuliers et la sécurité :
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Chapitre du cours</th><th>Ce qu'il apporte à l'IWE</th></tr>
+      <tr><td>1 La qualité et les problèmes du procédé</td><td>situer la qualité et ses documents, anticiper les défauts du procédé</td></tr>
+      <tr><td>2 Les défauts visibles</td><td>nommer et juger un défaut de surface</td></tr>
+      <tr><td>3 Les défauts internes</td><td>diagnostiquer un défaut interne, choisir le contrôle</td></tr>
+      <tr><td>4 Aluminium, fontes et soudage sous l'eau</td><td>adapter électrode et technique à un matériau difficile</td></tr>
+      <tr><td>5 Le gougeage arc-air</td><td>principe, paramètres, applications et risques du gougeage</td></tr>
+      <tr><td>6 Hygiène et sécurité du soudeur</td><td>prévenir les risques électriques, de rayonnement, d'incendie et de fumées</td></tr>
+    </table></div>
+    Dans le référentiel de l'IIW (<i>International Institute of Welding</i>, l'Institut international de la soudure) pour la formation IWE (<i>International Welding Engineer</i>, ingénieur international en soudage), ce cours couvre le gougeage arc-air (principe, domaine d'emploi, influence des paramètres sur la surface, risques) et prépare les sujets voisins du planning : <b>4.1 « Qualité »</b> (chapitre 1), <b>« Contrôles non destructifs »</b> et <b>4.2 « Contrôle fabrication »</b> (chapitres 2 et 3), <b>2.20 « Aluminium »</b> et <b>2.17 « Fontes »</b> (chapitre 4), <b>1.13 « Coupage »</b> (chapitre 5) et <b>4.5 « Hygiène &amp; sécurité »</b> (chapitre 6), qui les traitent à part.
+  </div>
+
+  <div class="def"><b>📖 Les normes et les sigles de ce cours</b>. ISO : Organisation internationale de normalisation ; EN : norme européenne ; AWS : <i>American Welding Society</i>.
+    <ul>
+      <li><b>ISO 6520-1</b> : classification des défauts géométriques des soudures par fusion, en six groupes numérotés (1 fissures, 2 cavités, 3 inclusions solides, 4 manques de fusion et de pénétration, 5 défauts de forme, 6 défauts divers).</li>
+      <li><b>ISO 5817</b> (édition 2023) : niveaux de qualité B, C et D des défauts dans les soudures par fusion des aciers, du nickel et du titane ; B est le plus exigeant.</li>
+      <li><b>ISO 3834</b> : exigences de qualité en soudage ; <b>ISO 14731</b> : coordination en soudage ; <b>ISO 15609-1</b> et <b>ISO 15614-1</b> : descriptif et qualification d'un mode opératoire (DMOS, QMOS) ; <b>ISO 9606-1</b> : qualification des soudeurs.</li>
+      <li><b>ISO 17637</b> : contrôle visuel des soudures ; <b>ISO 17635</b> : règles générales des contrôles non destructifs (CND) des soudures.</li>
+      <li><b>ISO 1071</b> : produits d'apport pour le soudage des fontes ; <b>AWS A5.3</b> : électrodes enrobées pour l'aluminium.</li>
+      <li><b>ISO 4063</b> : numéros des procédés ; 111 pour l'électrode enrobée, <b>871</b> pour le gougeage arc-air.</li>
+      <li><b>EN ISO 16321-2</b> : protecteurs des yeux et du visage pour le soudage (les anciens filtres portent encore le marquage de l'EN 169) ; <b>FDS</b> : fiche de données de sécurité ; <b>VLEP</b> : valeur limite d'exposition professionnelle.</li>
+    </ul>
+    Les limites des défauts viennent du tableau 1 de l'ISO 5817:2023. Les paramètres du gougeage viennent d'un guide de fabricant, les règles de soudage des fontes et de l'aluminium d'un manuel de fabricant, les données sur les fumées de l'INRS (Institut national de recherche et de sécurité). Les modèles des manipulations (chaîne de la qualité, profils de défauts, échauffement d'une fonte, gorge de gougeage, ronde de sécurité) sont pédagogiques.
+  </div>
+
+  <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage</b>
+    <p>Le coordinateur en soudage signe des rapports de contrôle, accepte ou refuse des soudures, décide d'une réparation et en écrit le mode opératoire. Il répond aussi de la santé des soudeurs : poste vérifié, fumées captées, écrans posés, EPI (équipements de protection individuelle) adaptés. Un défaut mal nommé, une limite mal lue ou une fumée non captée coûtent cher, en argent comme en santé.</p>
+  </div>
+
+  <h4>La série en cinq cours</h4>
+  <div class="series" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">
+    <div><b>1 Le procédé et son poste</b>Principe, usages, générateur, tension à vide, facteur de marche, câbles.</div>
+    <div><b>2 L'arc et ses réglages</b>Courant, polarité, intensité, tension, vitesse, énergie, soufflage magnétique.</div>
+    <div><b>3 L'électrode</b>Fabrication, enrobages, hydrogène, étuvage, efficacité, désignation.</div>
+    <div><b>4 Préparer et souder</b>Préparation des bords, préchauffage, geste, positions, bout à bout et angle.</div>
+    <div class="here"><b>5 Qualité et sécurité</b>Défauts, cas particuliers, gougeage arc-air, hygiène et sécurité.</div>
+  </div>
+
+  <h4>Le plan du cours</h4>
+  <ol class="route">
+    <li><span class="dot">1</span><b>La qualité et les problèmes du procédé</b><p>Une chaîne de documents et de gestes : il suffit d'un maillon manquant.</p></li>
+    <li><span class="dot">2</span><b>Les défauts visibles</b><p>Caniveaux, surépaisseurs, coups d'arc, projections : les nommer et les juger.</p></li>
+    <li><span class="dot">3</span><b>Les défauts internes</b><p>Soufflures, inclusions, manques de fusion et de pénétration, fissures.</p></li>
+    <li><span class="dot">4</span><b>Aluminium, fontes et soudage sous l'eau</b><p>Trois cas où l'électrode enrobée change de recette.</p></li>
+    <li><span class="dot">5</span><b>Le gougeage arc-air</b><p>Un arc de carbone et un jet d'air pour creuser au lieu de remplir.</p></li>
+    <li><span class="dot">6</span><b>Hygiène et sécurité du soudeur</b><p>Courant, lumière, fumées, feu : la ronde avant d'amorcer.</p></li>
+  </ol>
+</div>
+</section>
+<section class="chap" id="c1">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">1</div>
+    <div class="c-title"><h2>La qualité et les problèmes du procédé</h2><p>Une chaîne de documents et de gestes : il suffit d'un maillon manquant</p></div>
+    <div class="c-img"><span class="ico">🔗</span><span><small>Image à retenir</small>La chaîne : sa solidité est celle de son maillon le plus faible</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la chaîne et son maillon faible</span></div>
+    <p>Une soudure ne se contrôle pas entièrement après coup : on ne peut pas scier chaque pièce pour regarder dedans. La qualité se construit donc <b>avant</b> et <b>pendant</b> le soudage, puis se vérifie <b>après</b>. C'est une chaîne :</p>
+    <ol class="route">
+      <li><span class="dot">1</span><b>Les exigences</b><p>Le client et la norme d'application fixent le niveau de qualité (B, C ou D de l'ISO 5817) et les contrôles demandés.</p></li>
+      <li><span class="dot">2</span><b>Le mode opératoire</b><p>Un DMOS (descriptif de mode opératoire de soudage) écrit la recette ; une QMOS (qualification du mode opératoire) prouve, par une éprouvette soudée puis contrôlée et essayée, qu'elle donne une soudure conforme.</p></li>
+      <li><span class="dot">3</span><b>Le soudeur</b><p>Il est qualifié par une épreuve (ISO 9606-1) pour le procédé, le type de soudure, le matériau, les épaisseurs et les positions.</p></li>
+      <li><span class="dot">4</span><b>Les produits et la préparation</b><p>Électrodes conformes et étuvées (cours 3), joint préparé, accosté et pointé (cours 4), préchauffage et paramètres respectés.</p></li>
+      <li><span class="dot">5</span><b>Le contrôle et la traçabilité</b><p>Contrôle visuel, puis contrôles non destructifs ; chaque soudure se rattache à son soudeur, à son lot d'électrodes et à son mode opératoire. Un coordinateur en soudage tient l'ensemble.</p></li>
+    </ol>
+    <p>À ces maillons généraux s'ajoutent les <b>problèmes propres à l'électrode enrobée</b> : électrode qui colle (intensité trop faible, électrode humide), électrode qui rougit (intensité trop forte, électrode trop longue pour son diamètre), arc instable (masse mal serrée, électrode humide), soufflage magnétique (cours 2), reprises nombreuses (une par électrode), laitier à enlever entre les passes, hydrogène des électrodes mal conservées, fumées abondantes, et une forte dépendance au geste du soudeur.</p>
+  </div>
+
+  <div class="lab" id="m1">
+    <p class="lab-h">Manipulation 1 : la chaîne de la qualité</p>
+    <p class="lab-sub">Chaque bouton est un maillon de la chaîne : clique pour l'« oublier » ou le rétablir. Le bouton ▶ fait passer une soudure le long de la chaîne : à chaque maillon manquant, elle prend un défaut, et l'on voit quand on le découvrira. Le coût relatif suit la règle empirique du « 1-10-100 » : une erreur coûte 1 si on l'évite avant de souder, 10 si on la trouve au contrôle, 100 si elle se révèle en service.</p>
+    <div class="btns" id="m1k">
+      <button class="btn on" data-k="exig" type="button" aria-pressed="true">Exigences connues</button>
+      <button class="btn on" data-k="dmos" type="button" aria-pressed="true">DMOS qualifié</button>
+      <button class="btn on" data-k="soud" type="button" aria-pressed="true">Soudeur qualifié</button>
+      <button class="btn on" data-k="elec" type="button" aria-pressed="true">Électrodes étuvées</button>
+      <button class="btn on" data-k="prep" type="button" aria-pressed="true">Accostage vérifié</button>
+      <button class="btn on" data-k="para" type="button" aria-pressed="true">Préchauffage et paramètres</button>
+      <button class="btn on" data-k="ctrl" type="button" aria-pressed="true">Contrôles faits</button>
+      <button class="btn on" data-k="trac" type="button" aria-pressed="true">Traçabilité</button>
+    </div>
+    <div class="btns"><button class="btn play" id="m1play" type="button">▶ Faire passer une soudure</button><button class="btn" id="m1all" type="button">Tout rétablir</button></div>
+    <svg id="m1svg" role="img" aria-label="Chaîne de la qualité en soudage, du cahier des charges à la traçabilité, avec les conséquences des maillons oubliés"></svg>
+    <div class="readout" id="m1r"></div>
+    <p class="status" id="m1msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">ISO 3834, DMOS, QMOS, contrôles</span></div>
+    <h4>Le soudage, procédé spécial</h4>
+    <p>On parle de <b>procédé spécial</b> quand le résultat ne peut pas être entièrement vérifié par un contrôle ultérieur. C'est le cas du soudage : d'où une qualité organisée en amont. L'<b>ISO 3834</b> en fixe les exigences, à trois niveaux selon l'importance des assemblages : complètes (partie 2), normales (partie 3) et élémentaires (partie 4). Elle demande notamment des modes opératoires qualifiés, des soudeurs qualifiés, une coordination en soudage (ISO 14731), la maîtrise des produits d'apport, des contrôles et une traçabilité.</p>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Document</th><th>Norme</th><th>Ce qu'il fixe</th></tr>
+      <tr><td>DMOS</td><td>ISO 15609-1</td><td>procédé, matériaux, préparation, électrodes, préchauffage, position, paramètres, séquence</td></tr>
+      <tr><td>QMOS</td><td>ISO 15614-1</td><td>éprouvette soudée, contrôles et essais (traction, pliage, résilience, dureté, macrographie) et domaine de validité</td></tr>
+      <tr><td>Qualification du soudeur</td><td>ISO 9606-1</td><td>épreuve, domaine de validité ; validité confirmée tous les six mois</td></tr>
+      <tr><td>Contrôle visuel</td><td>ISO 17637</td><td>avant, pendant et après soudage, jugé selon l'ISO 5817</td></tr>
+      <tr><td>Contrôles non destructifs</td><td>ISO 17635</td><td>choix des méthodes : ressuage (PT), magnétoscopie (MT), radiographie (RT), ultrasons (UT)</td></tr>
+    </table></div>
+    <div class="def"><b>📖 Coordinateur en soudage</b> (ISO 14731) : personne responsable des activités de soudage et de leur qualité. Elle valide les DMOS, organise les qualifications, choisit les produits d'apport, surveille la fabrication et décide des réparations. C'est le métier auquel prépare la formation IWE.</div>
+    <div class="tip">💡 <b>Le contrôle visuel commence avant l'arc</b> : l'ISO 17637 prévoit de regarder la préparation, l'accostage et la propreté avant soudage, puis chaque passe pendant le soudage. Un défaut d'accostage vu à ce moment coûte quelques minutes.</div>
+    <div class="warn"><b>⚠️ Piège : croire que le contrôle final fait la qualité.</b> Le contrôle trie les soudures ; il ne les améliore pas. Une fissure à froid due à des électrodes humides peut apparaître après le contrôle, en service.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « Prévoir, Souder, Prouver »</b> : prévoir (exigences, DMOS, QMOS, soudeurs), souder (produits, préparation, paramètres), prouver (contrôles, traçabilité).</div>
+    <div class="weld"><b>🔥 La réparation a aussi son mode opératoire</b>
+      <p>Une soudure refusée ne se « rebouche » pas à la hâte : on localise le défaut, on l'élimine par meulage ou gougeage (chapitre 5), on contrôle que le défaut a disparu, puis on ressoude selon un DMOS de réparation, et l'on recontrôle. Une réparation mal conduite crée souvent plus de défauts qu'elle n'en supprime.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c2">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">2</div>
+    <div class="c-title"><h2>Les défauts visibles</h2><p>Nommer, mesurer, juger : ISO 6520-1 et ISO 5817</p></div>
+    <div class="c-img"><span class="ico">🔍</span><span><small>Image à retenir</small>La loupe du contrôleur : chaque défaut a un nom, un numéro et une limite</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la loupe du contrôleur</span></div>
+    <p>Le contrôleur regarde d'abord la surface. Chaque défaut porte un nom et un numéro de l'ISO 6520-1, qui permettent à tous de parler de la même chose. Les plus fréquents en soudage à l'électrode enrobée :</p>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>N°</th><th>Défaut</th><th>Ce qu'on voit</th><th>Causes fréquentes en 111</th></tr>
+      <tr><td>5011</td><td>caniveau</td><td>sillon creusé dans le métal de base le long du cordon</td><td>intensité trop forte, arc long, mauvais angle, balayage sans arrêt sur les bords</td></tr>
+      <tr><td>502, 503</td><td>surépaisseur excessive, convexité excessive</td><td>cordon trop bombé</td><td>vitesse trop lente, trop de métal par passe</td></tr>
+      <tr><td>506</td><td>débordement</td><td>métal posé sur la tôle sans s'y lier</td><td>intensité trop faible, vitesse trop lente, bain qui coule en position</td></tr>
+      <tr><td>507</td><td>défaut d'alignement</td><td>tôles décalées en hauteur</td><td>accostage (cours 4)</td></tr>
+      <tr><td>509, 511</td><td>effondrement, manque d'épaisseur</td><td>cordon creux sous la surface de la tôle</td><td>remplissage insuffisant, bain trop chaud</td></tr>
+      <tr><td>2017</td><td>piqûre</td><td>soufflure qui débouche en surface</td><td>électrode humide, arc long, pièce sale</td></tr>
+      <tr><td>104</td><td>fissure de cratère</td><td>petite fissure en étoile en fin de cordon</td><td>arc coupé net (cours 4)</td></tr>
+      <tr><td>601</td><td>coup d'arc</td><td>trace d'amorçage hors du joint</td><td>amorçage sur la tôle</td></tr>
+      <tr><td>602</td><td>projections</td><td>gouttelettes collées autour du cordon</td><td>arc long, intensité trop forte, soufflage, électrode humide</td></tr>
+    </table></div>
+    <p>Un défaut n'est pas forcément inacceptable : il faut le <b>mesurer</b> et le comparer à la limite du niveau de qualité demandé. C'est le rôle de l'ISO 5817.</p>
+  </div>
+
+  <div class="lab" id="m2">
+    <p class="lab-h">Manipulation 2 : la loupe du contrôleur</p>
+    <p class="lab-sub">Choisis un défaut, règle l'épaisseur <span class="mat">t</span> de la tôle, la largeur <span class="mat">b</span> du cordon et la taille <span class="tau">h</span> du défaut (sa profondeur, sa hauteur ou son diamètre selon le cas). Le dessin montre le cordon vu de dessus et sa coupe ; la lecture donne les limites des niveaux D, C et B et le verdict. Le bouton ▶ promène la loupe le long du cordon. Limites : tableau 1 de l'ISO 5817:2023, pour t &gt; 3 mm et des imperfections courtes.</p>
+    <div class="btns" id="m2d">
+      <button class="btn on" data-k="5011" type="button">5011 caniveau</button>
+      <button class="btn" data-k="502" type="button">502 surépaisseur</button>
+      <button class="btn" data-k="506" type="button">506 débordement</button>
+      <button class="btn" data-k="507" type="button">507 alignement</button>
+      <button class="btn" data-k="511" type="button">511 manque d'épaisseur</button>
+      <button class="btn" data-k="2017" type="button">2017 piqûre</button>
+      <button class="btn" data-k="601" type="button">601 coup d'arc</button>
+      <button class="btn" data-k="602" type="button">602 projections</button>
+      <button class="btn" data-k="104" type="button">104 fissure de cratère</button>
+    </div>
+    <div class="ctrl"><label for="m2t">Épaisseur <span class="mat">t</span></label><input type="range" id="m2t" class="r-mat" min="4" max="30" step="1" value="12"><output id="m2to"></output></div>
+    <div class="ctrl"><label for="m2b">Largeur du cordon <span class="mat">b</span></label><input type="range" id="m2b" class="r-mat" min="6" max="30" step="1" value="14"><output id="m2bo"></output></div>
+    <div class="ctrl"><label for="m2h">Taille du défaut <span class="tau">h</span></label><input type="range" id="m2h" class="r-tau" min="0.1" max="6" step="0.1" value="0.8"><output id="m2ho"></output></div>
+    <div class="btns"><button class="btn play" id="m2play" type="button">▶ Promener la loupe</button></div>
+    <svg id="m2svg" role="img" aria-label="Cordon vu de dessus et en coupe avec un défaut de surface, sa taille et les limites des niveaux de qualité de l'ISO 5817"></svg>
+    <div class="readout" id="m2r"></div>
+    <p class="status" id="m2msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">ISO 6520-1, ISO 5817, niveaux B, C, D</span></div>
+    <div class="def"><b>📖 Défaut et défaut inacceptable</b> : dans l'ISO 6520-1, un défaut est tout écart par rapport à la soudure idéale (en anglais, <i>imperfection</i>) ; un défaut inacceptable (<i>defect</i>) est un défaut jugé inadmissible. Les numéros à trois chiffres désignent les défauts principaux, à quatre chiffres leurs subdivisions ; le premier chiffre donne le groupe : 1 fissures, 2 cavités, 3 inclusions solides, 4 manques de fusion et de pénétration, 5 défauts de forme et défauts dimensionnels, 6 défauts divers.</div>
+    <p>L'ISO 5817 donne, pour chaque défaut, une limite à trois niveaux : <b>D</b> (modéré), <b>C</b> (intermédiaire) et <b>B</b> (élevé, le plus exigeant). Les limites s'écrivent avec quelques lettres : t, épaisseur de la tôle ; s, épaisseur nominale de la soudure bout à bout ; a, gorge d'une soudure d'angle ; b, largeur de la surépaisseur ; h, taille du défaut ; l, sa longueur. Une <b>imperfection courte</b> totalise au plus 25 mm sur les 100 mm de soudure qui en contiennent le plus.</p>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Défaut (t &gt; 3 mm)</th><th>D</th><th>C</th><th>B</th></tr>
+      <tr><td>5011 caniveau</td><td>h ≤ 0,2·t, max. 1 mm</td><td>h ≤ 0,1·t, max. 0,5 mm</td><td>h ≤ 0,05·t, max. 0,5 mm</td></tr>
+      <tr><td>502 surépaisseur excessive</td><td>h ≤ 0,25·b + 1 mm, max. 10 mm</td><td>h ≤ 0,15·b + 1 mm, max. 7 mm</td><td>h ≤ 0,1·b + 1 mm, max. 5 mm</td></tr>
+      <tr><td>506 débordement</td><td>h ≤ 0,2·b</td><td>non admis</td><td>non admis</td></tr>
+      <tr><td>507 défaut d'alignement (tôles)</td><td>h ≤ 0,25·t, max. 5 mm</td><td>h ≤ 0,15·t, max. 4 mm</td><td>h ≤ 0,1·t, max. 3 mm</td></tr>
+      <tr><td>509, 511 effondrement, manque d'épaisseur</td><td>h ≤ 0,25·t, max. 2 mm</td><td>h ≤ 0,1·t, max. 1 mm</td><td>h ≤ 0,05·t, max. 0,5 mm</td></tr>
+      <tr><td>2017 piqûre (bout à bout)</td><td>d ≤ 0,3·s, max. 3 mm</td><td>d ≤ 0,2·s, max. 2 mm</td><td>non admise</td></tr>
+      <tr><td>601 coup d'arc</td><td>admis si le métal de base n'est pas affecté</td><td>non admis</td><td>non admis</td></tr>
+      <tr><td>602 projections</td><td colspan="3">acceptation selon l'application (matériau, protection contre la corrosion)</td></tr>
+      <tr><td>100, 104 fissures, fissure de cratère</td><td colspan="3">non admises</td></tr>
+    </table></div>
+    <p><b>Exemple</b> : tôle de 12 mm, caniveau de 0,8 mm. Niveau C : <span class="m">h ≤ 0,1 × 12 = 1,2 mm, mais au plus 0,5 mm</span> : refusé. Niveau D : <span class="m">h ≤ 0,2 × 12 = 2,4 mm, mais au plus 1 mm</span> : admis. La manipulation 2 donne le même verdict.</p>
+    <p>L'ISO 5817:2023 ajoute une annexe pour les soudures sollicitées en fatigue, avec des niveaux comme C63, B90 ou B125 qui renvoient aux classes de fatigue (la série Fatigue du wiki en donne le sens). Les défauts de surface y sont jugés plus sévèrement, car chacun est une entaille.</p>
+    <div class="tip">💡 <b>Mesure avant de juger</b> : une jauge de soudure mesure la profondeur d'un caniveau, la surépaisseur et le défaut d'alignement. Un défaut « qui a l'air gros » est parfois admis, et inversement.</div>
+    <div class="warn"><b>⚠️ Piège : lire la limite sans son plafond.</b> « h ≤ 0,1·t, max. 0,5 mm » : sur une tôle de 30 mm, 0,1·t vaut 3 mm, mais la limite reste 0,5 mm.</div>
+    <div class="warn"><b>⚠️ Piège : ne voir qu'une fois un défaut systématique.</b> Un défaut répété tout le long du cordon n'est admis qu'au niveau D (ISO 5817). Il signale un réglage à corriger dans le mode opératoire.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « B comme Bijou, C comme Courant, D comme Dépannage »</b> : B le plus exigeant, C l'usage courant, D le moins exigeant.</div>
+    <div class="weld"><b>🔥 Le rapport de contrôle visuel</b>
+      <p>Le contrôleur note pour chaque défaut son numéro ISO 6520-1, sa position, sa taille et le verdict au niveau demandé. « 5011, 0,8 mm, refusé en C » se comprend partout ; « petit défaut sur le bord » ne se comprend nulle part.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c3">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">3</div>
+    <div class="c-title"><h2>Les défauts internes</h2><p>Soufflures, inclusions, manques de fusion et de pénétration, fissures</p></div>
+    <div class="c-img"><span class="ico">🦴</span><span><small>Image à retenir</small>La radiographie du médecin : on voit à travers la soudure, et les vides apparaissent en sombre</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la radiographie</span></div>
+    <p>Comme le médecin voit l'os à travers la peau, le contrôleur voit l'intérieur de la soudure par radiographie : les rayons traversent mieux un vide que l'acier, et chaque cavité ou inclusion apparaît en <b>sombre</b> sur le film. Les ultrasons, eux, renvoient un écho sur les défauts plans. Les défauts internes de l'électrode enrobée :</p>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>N°</th><th>Défaut</th><th>Ce que c'est</th><th>Causes fréquentes en 111</th></tr>
+      <tr><td>2011, 2013, 2014</td><td>soufflures (isolée, en nid, alignées)</td><td>bulles de gaz piégées</td><td>électrode humide, arc long, pièce sale, amorçage sur place d'une basique</td></tr>
+      <tr><td>301</td><td>inclusion de laitier</td><td>laitier emprisonné entre passes ou contre un bord</td><td>décrassage insuffisant, racine bombée non meulée, intensité trop faible</td></tr>
+      <tr><td>401 (4011, 4012, 4013)</td><td>manque de fusion, ou collage</td><td>le métal déposé ne s'est pas lié au bord, à la passe précédente ou à la racine</td><td>intensité trop faible, vitesse trop rapide, angle, chanfrein trop fermé</td></tr>
+      <tr><td>402</td><td>manque de pénétration</td><td>la racine n'est pas soudée sur toute l'épaisseur</td><td>talon trop épais, écartement trop faible, diamètre trop gros en racine</td></tr>
+      <tr><td>402</td><td>manque d'interpénétration</td><td>soudure faite des deux côtés dont les passes ne se rejoignent pas</td><td>reprise envers insuffisante ou pas assez gougée</td></tr>
+      <tr><td>100</td><td>fissures</td><td>ruptures du métal, longitudinales ou transversales</td><td>hydrogène, trempe, bridage (cours 3 et 4)</td></tr>
+    </table></div>
+    <p>On parle aussi de « manque d'interpénétration » : la classification française le range sous le numéro 402, avec le manque de pénétration, pour une soudure faite des deux faces.</p>
+  </div>
+
+  <div class="lab" id="m3">
+    <p class="lab-h">Manipulation 3 : le négatoscope</p>
+    <p class="lab-sub">Choisis un défaut interne, l'épaisseur <span class="mat">s</span> de la soudure bout à bout, la taille <span class="tau">h</span> du défaut (hauteur ou diamètre) et sa longueur <span class="tau">l</span>. En haut, le film de radiographie tel qu'on le lit sur le négatoscope ; en bas, la coupe du joint. La lecture donne les limites des niveaux D, C et B et la méthode de contrôle la plus adaptée. Le bouton ▶ développe le film. Limites : tableau 1 de l'ISO 5817:2023 ; images pédagogiques.</p>
+    <div class="btns" id="m3d">
+      <button class="btn on" data-k="2011" type="button">2011 soufflure</button>
+      <button class="btn" data-k="301" type="button">301 inclusion de laitier</button>
+      <button class="btn" data-k="401" type="button">401 manque de fusion</button>
+      <button class="btn" data-k="402" type="button">402 manque de pénétration</button>
+      <button class="btn" data-k="100" type="button">100 fissure</button>
+    </div>
+    <div class="ctrl"><label for="m3s">Épaisseur <span class="mat">s</span></label><input type="range" id="m3s" class="r-mat" min="6" max="30" step="1" value="12"><output id="m3so"></output></div>
+    <div class="ctrl"><label for="m3h">Taille <span class="tau">h</span></label><input type="range" id="m3h" class="r-tau" min="0.5" max="6" step="0.1" value="3"><output id="m3ho"></output></div>
+    <div class="ctrl"><label for="m3l">Longueur <span class="tau">l</span></label><input type="range" id="m3l" class="r-tau" min="2" max="60" step="1" value="20"><output id="m3lo"></output></div>
+    <div class="btns"><button class="btn play" id="m3play" type="button">▶ Développer le film</button></div>
+    <svg id="m3svg" role="img" aria-label="Film de radiographie et coupe d'une soudure avec un défaut interne, et limites de l'ISO 5817"></svg>
+    <div class="readout" id="m3r"></div>
+    <p class="status" id="m3msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">limites internes, choix du contrôle</span></div>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Défaut interne</th><th>D</th><th>C</th><th>B</th></tr>
+      <tr><td>2011 soufflure isolée (bout à bout)</td><td>d ≤ 0,4·s, max. 5 mm</td><td>d ≤ 0,3·s, max. 4 mm</td><td>d ≤ 0,2·s, max. 3 mm</td></tr>
+      <tr><td>2012 soufflures réparties, plusieurs couches (aire projetée)</td><td>≤ 5 %</td><td>≤ 3 %</td><td>≤ 2 %</td></tr>
+      <tr><td>301 inclusion de laitier (bout à bout)</td><td>h ≤ 0,4·s, max. 4 mm ; l ≤ s, max. 75 mm</td><td>h ≤ 0,3·s, max. 3 mm ; l ≤ s, max. 50 mm</td><td>h ≤ 0,2·s, max. 2 mm ; l ≤ s, max. 25 mm</td></tr>
+      <tr><td>401 manque de fusion</td><td>imperfections courtes : h ≤ 0,4·s, max. 4 mm</td><td>non admis</td><td>non admis</td></tr>
+      <tr><td>402 manque de pénétration (bout à bout à pleine pénétration)</td><td>imperfections courtes : h ≤ 0,2·t, max. 2 mm</td><td>non admis</td><td>non admis</td></tr>
+      <tr><td>100 fissures</td><td colspan="3">non admises</td></tr>
+    </table></div>
+    <p><b>Exemple</b> : soudure bout à bout de 12 mm, soufflure isolée de 3 mm. Niveau C : <span class="m">d ≤ 0,3 × 12 = 3,6 mm</span>, admise. Niveau B : <span class="m">d ≤ 0,2 × 12 = 2,4 mm</span>, refusée. Une inclusion de laitier de 2 mm de haut mais de 20 mm de long est refusée en C comme en D, car sa longueur dépasse s = 12 mm.</p>
+    <h4>Quel contrôle pour quel défaut ?</h4>
+    <ul>
+      <li><b>radiographie (RT)</b> : excellente pour les défauts en volume (soufflures, inclusions) ; elle voit un défaut plan (manque de fusion, fissure) seulement s'il est à peu près parallèle aux rayons ;</li>
+      <li><b>ultrasons (UT)</b> : excellents pour les défauts plans, qui renvoient bien l'écho, et utilisables sur les fortes épaisseurs ;</li>
+      <li><b>ressuage (PT) et magnétoscopie (MT)</b> : défauts qui débouchent ou affleurent en surface, comme les fissures et les piqûres ; la magnétoscopie demande un acier ferromagnétique.</li>
+    </ul>
+    <div class="tip">💡 <b>Remonte du défaut à la passe</b> : sur la radiographie, la position du défaut dans la largeur du cordon dit souvent quelle passe le porte. Un trait sombre au milieu de la racine : manque de pénétration. Des taches allongées le long des bords : inclusions de laitier coincées dans les sillons d'une racine non meulée (cours 4).</div>
+    <div class="warn"><b>⚠️ Piège : un film « propre » ne prouve pas l'absence de manque de fusion.</b> Un collage le long d'un bord incliné peut échapper à la radiographie. Pour les défauts plans, les ultrasons sont le bon outil.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « les ronds en RT, les plats en UT »</b> : les défauts en volume se voient bien en radiographie, les défauts plans en ultrasons.</div>
+    <div class="weld"><b>🔥 Les trois défauts de l'électrode humide</b>
+      <p>Une série de radiographies criblées de soufflures, puis quelques jours plus tard des fissures sous cordon : le contrôleur pense aussitôt aux électrodes. Il vérifie le registre d'étuvage et la durée hors étuve (cours 3) avant de mettre en cause le soudeur.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c4">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">4</div>
+    <div class="c-title"><h2>Aluminium, fontes et soudage sous l'eau</h2><p>Trois cas où l'électrode enrobée change de recette</p></div>
+    <div class="c-img"><span class="ico">🍪</span><span><small>Image à retenir</small>Le biscuit sec : il casse si on le chauffe d'un coup ; on le répare par petites touches</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le biscuit sec</span></div>
+    <p><b>Les fontes</b> sont des alliages de fer à 2 à 5 % de carbone et 1 à 3 % de silicium. Leur carbone, souvent sous forme de graphite, les rend fragiles comme un biscuit sec : chauffées localement puis refroidies vite, elles forment une zone très dure et se fissurent sous les contraintes de retrait. On les répare donc par <b>petites touches</b> : électrodes au <b>nickel</b>, petit diamètre, faible intensité, cordons courts de 20 à 30 mm, que l'on <b>martèle</b> aussitôt pour détendre le métal, en laissant la pièce redescendre sous 100 °C entre deux cordons. Les fontes grises, à graphite sphéroïdal (dites GS ou nodulaires) et malléables se soudent ainsi ; la fonte blanche, extrêmement fragile, ne se soude pas.</p>
+    <p><b>L'aluminium</b> pose d'autres problèmes : une couche d'oxyde réfractaire, l'alumine, qui fond vers 2 050 °C quand le métal fond à 660 °C ; une grande conductivité thermique ; une forte sensibilité aux soufflures. Il existe des électrodes enrobées pour l'aluminium : leur enrobage dissout l'oxyde. Elles se soudent en courant continu, électrode au pôle +, fondent très vite et craignent l'humidité ; leur laitier, corrosif, s'enlève soigneusement. On les réserve surtout aux réparations : le TIG et le MIG font mieux en fabrication.</p>
+    <p><b>Le soudage sous l'eau</b> existe en deux versions : <b>mouillé</b>, où le plongeur soude directement dans l'eau avec une électrode enrobée rendue étanche, et <b>sec</b>, dans une chambre étanche remplie de gaz (soudage hyperbare). En soudage mouillé, l'eau refroidit brutalement le joint et apporte beaucoup d'hydrogène : on le réserve aux aciers de faible carbone équivalent et aux réparations.</p>
+  </div>
+
+  <div class="lab" id="m4">
+    <p class="lab-h">Manipulation 4 : réparer une fonte par petits cordons</p>
+    <p class="lab-sub">Une fissure de longueur <span class="mat">L<sub>f</sub></span> est préparée dans une pièce en fonte grise. Choisis l'électrode, la longueur <span class="mat">L<sub>c</sub></span> de chaque cordon, la température <span class="sig">T<sub>i</sub></span> sous laquelle tu attends avant le cordon suivant, et décide de marteler ou non. En haut, la fissure et ses cordons ; en bas, la température de la zone soudée au fil du temps. Le bouton ▶ soude la réparation. Modèle pédagogique : chaque cordon échauffe la zone de 1,2 °C par millimètre déposé, soudé à 2 mm/s ; refroidissement exponentiel de constante 5 min ; indice de risque de fissuration qui reprend les règles d'un manuel de fabricant.</p>
+    <div class="btns" id="m4e">
+      <button class="btn on" data-k="Ni" type="button">Nickel pur</button>
+      <button class="btn" data-k="NiFe" type="button">Nickel-fer</button>
+      <button class="btn" data-k="acier" type="button">Acier non allié</button>
+    </div>
+    <div class="btns"><button class="btn on" id="m4p" type="button" aria-pressed="true">Marteler chaque cordon</button></div>
+    <div class="ctrl"><label for="m4f">Longueur de fissure <span class="mat">L<sub>f</sub></span></label><input type="range" id="m4f" class="r-mat" min="50" max="300" step="10" value="150"><output id="m4fo"></output></div>
+    <div class="ctrl"><label for="m4c">Longueur d'un cordon <span class="mat">L<sub>c</sub></span></label><input type="range" id="m4c" class="r-mat" min="10" max="150" step="5" value="25"><output id="m4co"></output></div>
+    <div class="ctrl"><label for="m4i">Température entre cordons <span class="sig">T<sub>i</sub></span></label><input type="range" id="m4i" class="r-sig" min="60" max="300" step="10" value="100"><output id="m4io"></output></div>
+    <div class="btns"><button class="btn play" id="m4play" type="button">▶ Souder une fonte par petits cordons</button></div>
+    <svg id="m4svg" role="img" aria-label="Fissure dans une fonte réparée par petits cordons et température de la zone soudée au fil du temps"></svg>
+    <div class="readout" id="m4r"></div>
+    <p class="status" id="m4msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">électrodes, techniques, limites</span></div>
+    <h4>Les fontes</h4>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Électrode</th><th>Exemple de classe (AWS A5.15)</th><th>Emploi</th></tr>
+      <tr><td>nickel pur</td><td>ENi-CI</td><td>cas général : le nickel absorbe le carbone sans fragiliser le métal déposé, se dilate comme la fonte et reste usinable (≈ 150 HB)</td></tr>
+      <tr><td>nickel-fer</td><td>ENiFe-CI</td><td>plus résistant ; fonte sur fonte ou fonte sur acier ; plus tolérant au soufre et au phosphore</td></tr>
+      <tr><td>nickel-cuivre</td><td>—</td><td>quand la couleur du dépôt doit ressembler à celle de la fonte</td></tr>
+      <tr><td>acier non allié</td><td>—</td><td>travaux sans exigence, sans usinage : le dépôt et sa zone de liaison durcissent</td></tr>
+    </table></div>
+    <p>L'ISO 1071 classe les produits d'apport pour les fontes ; la classification américaine AWS A5.15 est très répandue sur les boîtes. La <b>préparation</b> compte autant que l'électrode : on ouvre la fissure en U aux bords arrondis, on perce un petit trou à chaque extrémité pour l'empêcher de progresser, et l'on élimine l'huile et le graphite qui imprègnent la fonte, par chauffage ou avec une électrode de gougeage. Le <b>beurrage</b> consiste à revêtir d'abord chaque bord d'une couche ductile, sur laquelle on soude ensuite.</p>
+    <p>À côté de ce <b>soudage à froid</b>, le plus courant en réparation, existe un <b>soudage à chaud</b> : toute la pièce est préchauffée lentement, soudée, puis refroidie très lentement, ce qui suppose un four et une pièce démontable.</p>
+    <p><b>Exemple</b> : fissure de 150 mm, cordons de 25 mm, 100 °C entre cordons : <span class="m">150/25 = 6 cordons</span>. Chaque cordon échauffe la zone d'environ 30 °C dans le modèle : la température culmine à ≈ 130 °C, et il faut ≈ 5 min en tout, dont près de 4 d'attente. Avec un seul cordon de 150 mm, la zone monte à ≈ 200 °C d'un coup : c'est ce qui fissure la fonte.</p>
+    <h4>L'aluminium</h4>
+    <p>Un manuel de fabricant propose quatre électrodes, toutes en courant continu électrode au + : aluminium non allié Al99,5 (AWS E1100), AlMn1, AlSi5 et AlSi12, cette dernière pour réparer les pièces moulées en aluminium-silicium (culasses, carters). Ses règles : électrodes bien sèches, préchauffage de 100 à 150 °C des pièces épaisses ou complexes, cordons tirés, une seule passe si possible, et tout le laitier enlevé entre les passes.</p>
+    <h4>Le soudage sous l'eau</h4>
+    <p>En soudage mouillé, le plongeur utilise un courant continu de l'ordre de 300 à 400 A, avec un interrupteur de sécurité sur le câble, en surface, qui coupe le courant hors soudage. Le refroidissement brutal et l'hydrogène limitent le procédé aux aciers de faible carbone équivalent. Le soudage hyperbare, à sec dans une chambre, donne une bien meilleure qualité, au prix d'un équipement lourd.</p>
+    <div class="tip">💡 <b>Le trou en bout de fissure</b> : une fissure progresse par sa pointe aiguë. Un trou de quelques millimètres percé juste au-delà de chaque extrémité arrondit la pointe et l'arrête (la série Rupture explique pourquoi).</div>
+    <div class="warn"><b>⚠️ Piège : réparer une fonte avec de longs cordons « pour aller plus vite ».</b> La zone chauffe, durcit en refroidissant et se fissure à côté du cordon. Cordons courts, attente, martelage.</div>
+    <div class="warn"><b>⚠️ Piège : laisser le laitier sur l'aluminium.</b> Le laitier des électrodes pour aluminium attaque le métal : on l'enlève entre les passes et l'on nettoie après soudage.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique de la fonte : « Court, Froid, Frappé »</b> : cordons courts, pièce gardée froide, chaque cordon martelé.</div>
+    <div class="weld"><b>🔥 Le bloc moteur fissuré</b>
+      <p>Une réparation de fonte typique : on repère la fissure au ressuage, on perce ses extrémités, on l'ouvre en U, on brûle l'huile, puis on soude au nickel par cordons de 20 à 30 mm, martelés, en surveillant au crayon thermosensible que la pièce reste tiède. Un contrôle par ressuage final vérifie qu'aucune fissure n'est repartie.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c5">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">5</div>
+    <div class="c-title"><h2>Le gougeage arc-air</h2><p>Un arc de carbone et un jet d'air pour creuser au lieu de remplir</p></div>
+    <div class="c-img"><span class="ico">🌬️</span><span><small>Image à retenir</small>Souffler sur une bougie fondue : l'arc fait fondre, le jet d'air chasse, et une rigole se creuse</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">l'arc qui fond, l'air qui chasse</span></div>
+    <p>Le <b>gougeage arc-air</b> (procédé 871 de l'ISO 4063) creuse une rigole dans le métal. Une électrode de carbone et de graphite, cuivrée, est tenue dans une pince spéciale qui souffle de l'air comprimé le long de l'électrode. L'arc entre l'électrode et la pièce fond le métal ; le jet d'air le chasse aussitôt hors de la rigole. L'électrode ne fond pas : elle s'use lentement.</p>
+    <p>Il sert à <b>creuser l'envers d'une racine</b> avant la reprise envers (cours 4), à <b>éliminer un défaut</b> avant réparation, à retirer une soudure ou des pointes, à chanfreiner, et même à couper en tenant l'électrode presque droite. Il marche sur les aciers, les inox, les fontes et de nombreux alliages, dans toutes les positions, avec un poste de soudage ordinaire de forte intensité et de l'air comprimé.</p>
+    <p>Ses <b>risques</b> sont à la mesure de son efficacité : un bruit très fort (protection auditive obligatoire), des fumées et des poussières abondantes, des projections de métal en fusion qui portent loin, le rayonnement de l'arc, et une rigole qui peut garder du <b>métal carburé</b>, enrichi en carbone, dur et fragile, qu'il faut meuler avant de souder.</p>
+  </div>
+
+  <div class="lab" id="m5">
+    <p class="lab-h">Manipulation 5 : gouger une rigole</p>
+    <p class="lab-sub">Choisis le diamètre <span class="mat">d</span> de l'électrode de carbone et le courant, puis règle l'intensité <span class="sig">I</span>, la vitesse d'avance <span class="mat">v</span>, l'angle <span class="frc">θ</span> de l'électrode sur la pièce et la pression d'air <span class="frc">P</span>. Le dessin montre la pièce, l'électrode, le jet d'air et la coupe de la rigole ; la lecture donne sa largeur <span class="eps">w</span>, sa profondeur <span class="eps">p</span> et le débit de métal enlevé. Le bouton ▶ gouge 200 mm. Modèle pédagogique calé sur les tableaux d'un fabricant : w ≈ d + 3,2 mm ; p = 150·I/(w·v) (mm, A, mm/min) à 35°, un peu plus profond quand l'électrode se redresse ; la moitié en courant alternatif.</p>
+    <div class="btns" id="m5d">
+      <button class="btn" data-k="4" type="button">⌀ 4,0</button>
+      <button class="btn" data-k="4.8" type="button">⌀ 4,8</button>
+      <button class="btn" data-k="6.4" type="button">⌀ 6,4</button>
+      <button class="btn" data-k="7.9" type="button">⌀ 7,9</button>
+      <button class="btn on" data-k="9.5" type="button">⌀ 9,5</button>
+      <button class="btn" data-k="12.7" type="button">⌀ 12,7</button>
+    </div>
+    <div class="btns" id="m5c">
+      <button class="btn on" data-k="CC+" type="button">Courant continu, électrode au +</button>
+      <button class="btn" data-k="CA" type="button">Courant alternatif</button>
+    </div>
+    <div class="ctrl"><label for="m5I">Intensité <span class="sig">I</span></label><input type="range" id="m5I" class="r-sig" min="80" max="1000" step="10" value="500"><output id="m5Io"></output></div>
+    <div class="ctrl"><label for="m5v">Vitesse <span class="mat">v</span></label><input type="range" id="m5v" class="r-mat" min="200" max="2000" step="10" value="890"><output id="m5vo"></output></div>
+    <div class="ctrl"><label for="m5a">Angle <span class="frc">θ</span></label><input type="range" id="m5a" class="r-frc" min="20" max="80" step="5" value="35"><output id="m5ao"></output></div>
+    <div class="ctrl"><label for="m5P">Pression d'air <span class="frc">P</span></label><input type="range" id="m5P" class="r-frc" min="3" max="9" step="0.5" value="6"><output id="m5Po"></output></div>
+    <div class="btns"><button class="btn play" id="m5play" type="button">▶ Gouger</button></div>
+    <svg id="m5svg" role="img" aria-label="Gougeage arc-air : électrode de carbone, jet d'air, rigole creusée dans la pièce et sa coupe"></svg>
+    <div class="readout" id="m5r"></div>
+    <p class="status" id="m5msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">paramètres et surface obtenue</span></div>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Électrode ⌀ (mm)</th><th>4,0</th><th>4,8</th><th>6,4</th><th>7,9</th><th>9,5</th><th>12,7</th></tr>
+      <tr><td>intensité en CC+ (A)</td><td>90 à 150</td><td>200 à 250</td><td>300 à 400</td><td>350 à 450</td><td>450 à 600</td><td>800 à 1 000</td></tr>
+    </table></div>
+    <p>Repères d'un guide de fabricant : courant continu électrode au + pour les aciers (le courant alternatif, avec des électrodes spéciales, est deux fois moins efficace) ; air de 5,5 à 6,9 bar à la pince, une pression plus forte n'enlevant pas plus de métal ; électrode sortie de 50 à 178 mm de la pince ; tension d'arc de 35 à 56 V, donc une tension à vide d'au moins 60 V ; angle d'environ 35° pour gouger, de 70 à 80° pour couper.</p>
+    <div class="fx"><div class="row big" style="font-size:1.35rem"><span><span class="eps">w</span> ≈ <span class="mat">d</span> + 3,2 mm</span><span><span class="eps">p</span> ≈ <span class="frac"><span>150·<span class="sig">I</span></span><span><span class="eps">w</span>·<span class="mat">v</span></span></span></span></div><p class="cap">w : largeur de la rigole (mm) ; d : diamètre de l'électrode (mm) ; p : profondeur (mm) ; I : intensité (A) ; v : vitesse (mm/min) ; 150 mm³ par ampère et par minute : débit enlevé, calé sur le tableau de gougeage mécanisé d'un fabricant. À la main, on avance plutôt deux fois moins vite pour la même rigole.</p></div>
+    <p><b>Exemple</b> : électrode de 9,5 mm à 500 A, avance de 889 mm/min : <span class="m">w ≈ 12,7 mm</span> et <span class="m">p ≈ 150 × 500/(12,7 × 889) ≈ 6,6 mm</span>, à comparer aux 6,4 mm du tableau du fabricant. Le débit enlevé vaut <span class="m">150 × 500 = 75 000 mm³/min</span>, soit ≈ 35 kg/h. Au-delà d'une profondeur de 1,5 fois le diamètre de l'électrode, on gouge en plusieurs passes.</p>
+    <h4>La surface obtenue</h4>
+    <p>Une rigole bien faite est lisse et d'un bleu brillant. Une rigole gris-noir mat, avec de petites flaques ou perles sur les bords, garde du métal carburé : intensité trop faible, air insuffisant, avance irrégulière ou mauvais angle. Ce métal, qui peut contenir de l'ordre de 1 % de carbone, ne doit pas rester sous une soudure : on le meule. Et si l'acier demande un préchauffage pour être soudé, on le préchauffe aussi pour être gougé.</p>
+    <div class="tip">💡 <b>Écoute le gougeage</b> : à la bonne vitesse, il produit un sifflement régulier. Des claquements et des à-coups signalent une avance irrégulière ou un arc trop long.</div>
+    <div class="warn"><b>⚠️ Piège : gouger avec l'air coupé ou trop faible.</b> Le métal fondu reste dans la rigole et se colle aux bords, carburé. On ouvre l'air avant d'amorcer.</div>
+    <div class="warn"><b>⚠️ Piège : oublier où partent les projections.</b> Le jet d'air envoie le métal fondu à plusieurs mètres, dans la direction de l'avance : on dégage la zone, on protège les voisins et l'on prévoit l'extincteur.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « 35 pour creuser, 75 pour couper »</b> : l'angle de l'électrode dit ce que tu fais.</div>
+    <div class="weld"><b>🔥 Le gougeage de reprise envers</b>
+      <p>Sur un bout à bout soudé des deux côtés, on gouge l'envers de la racine jusqu'au métal sain, on meule la rigole, on la contrôle parfois par ressuage ou magnétoscopie, puis on soude la passe envers. C'est la méthode la plus sûre pour éviter le manque d'interpénétration du chapitre 3.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="c6">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">6</div>
+    <div class="c-title"><h2>Hygiène et sécurité du soudeur</h2><p>Courant, lumière, fumées, feu : la ronde avant d'amorcer</p></div>
+    <div class="c-img"><span class="ico">🛡️</span><span><small>Image à retenir</small>Le chevalier et son armure : chaque pièce protège d'un danger précis</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">l'armure du chevalier</span></div>
+    <p>Le soudeur à l'électrode enrobée affronte cinq dangers, et chaque pièce de son équipement en arrête un :</p>
+    <ul>
+      <li><b>le courant électrique</b> : la tension à vide du poste (cours 1) devient dangereuse dans un milieu humide, exigu ou conducteur, et quand la pince ou les câbles sont abîmés ;</li>
+      <li><b>le rayonnement de l'arc</b> : ultraviolets, infrarouges et lumière intense brûlent la peau et les yeux ; le « coup d'arc » aux yeux, une inflammation douloureuse de la cornée, frappe aussi les voisins non protégés ;</li>
+      <li><b>les fumées</b> : depuis 2017, le Centre international de recherche sur le cancer classe les fumées de soudage comme cancérogènes pour l'homme (groupe 1). Elles viennent à 95 % du produit d'apport : manganèse, chrome hexavalent des électrodes inox, nickel, fluorures des basiques ;</li>
+      <li><b>le feu</b> : projections, laitier et bouts d'électrodes brûlants enflamment ce qui traîne ; un récipient ayant contenu un produit inflammable peut exploser ;</li>
+      <li><b>le bruit et les brûlures</b> : le gougeage est très bruyant, le laitier saute aux yeux au piquage, les pièces restent brûlantes longtemps.</li>
+    </ul>
+    <p>D'où l'armure : masque à filtre adapté à l'intensité, gants et veste en cuir ou ignifugés, guêtres, chaussures de sécurité, lunettes pour piquer et meuler, protection auditive pour le gougeage, et appareil de protection respiratoire quand le captage ne suffit pas. Mais l'armure vient en dernier : d'abord on supprime ou l'on capte le danger à la source.</p>
+  </div>
+
+  <div class="lab" id="m6">
+    <p class="lab-h">Manipulation 6 : la ronde de sécurité</p>
+    <p class="lab-sub">Coche les vérifications faites avant d'amorcer : chaque risque encore ouvert s'allume en violet sur le poste. Choisis le milieu de travail et l'intensité : la lecture rappelle la tension à vide admise (cours 1) et l'échelon de filtre, à titre d'exemple selon la réglementation américaine (OSHA). Le bouton ▶ fait la ronde : chaque vérification se coche à son tour.</p>
+    <div class="btns" id="m6k">
+      <button class="btn" data-k="cab" type="button" aria-pressed="false">Câbles et pince intacts</button>
+      <button class="btn" data-k="mas" type="button" aria-pressed="false">Masse sur la pièce, près du joint</button>
+      <button class="btn" data-k="pos" type="button" aria-pressed="false">Poste adapté au milieu</button>
+      <button class="btn" data-k="fum" type="button" aria-pressed="false">Captage des fumées</button>
+      <button class="btn" data-k="ecr" type="button" aria-pressed="false">Écrans pour les voisins</button>
+      <button class="btn" data-k="epi" type="button" aria-pressed="false">Masque, gants, veste</button>
+      <button class="btn" data-k="feu" type="button" aria-pressed="false">Zone dégagée, extincteur</button>
+      <button class="btn" data-k="fds" type="button" aria-pressed="false">FDS des électrodes lue</button>
+    </div>
+    <div class="btns" id="m6m">
+      <button class="btn on" data-k="sec" type="button">Atelier sec</button>
+      <button class="btn" data-k="ris" type="button">Milieu humide, exigu ou conducteur</button>
+    </div>
+    <div class="ctrl"><label for="m6I">Intensité <span class="sig">I</span></label><input type="range" id="m6I" class="r-sig" min="60" max="550" step="10" value="110"><output id="m6Io"></output></div>
+    <div class="btns"><button class="btn play" id="m6play" type="button">▶ Ronde de sécurité</button><button class="btn" id="m6raz" type="button">Tout décocher</button></div>
+    <svg id="m6svg" role="img" aria-label="Poste de soudage à l'électrode enrobée avec ses risques ouverts ou maîtrisés"></svg>
+    <div class="readout" id="m6r"></div>
+    <p class="status" id="m6msg" aria-live="polite"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">valeurs limites, filtres, FDS</span></div>
+    <h4>Les fumées et leurs valeurs limites</h4>
+    <p>La prévention suit un ordre : choisir un procédé et des produits moins émissifs, <b>capter les fumées à la source</b> (bras ou torche aspirante, table aspirante), ventiler l'atelier, et seulement ensuite protéger le soudeur par un appareil respiratoire (filtres P3). L'INRS rappelle les valeurs limites d'exposition professionnelle (VLEP, sur 8 h) des poussières sans effet spécifique : 4 mg/m³ pour la fraction inhalable et 0,9 mg/m³ pour la fraction alvéolaire depuis le 1<sup>er</sup> juillet 2023. Certains constituants ont leurs propres limites, bien plus basses : 1 µg/m³ pour le chrome hexavalent en France, valeur contraignante depuis 2014 ; pour le manganèse, l'Union européenne retient 0,2 mg/m³ (fraction inhalable) et 0,05 mg/m³ (fraction alvéolaire).</p>
+    <div class="def"><b>📖 FDS, fiche de données de sécurité</b> : document de 16 rubriques fourni avec chaque produit dangereux (règlement européen REACH). Pour une électrode, elle donne la composition des fumées, les valeurs limites, les mesures de protection et les premiers secours. Le coordinateur s'en sert pour évaluer le risque et choisir le captage.</div>
+    <h4>Le courant et la lumière</h4>
+    <p>Rappel du cours 1 : la tension à vide admise est de 113 V crête en courant continu ; en courant alternatif, 80 V efficaces en milieu normal, mais 48 V efficaces seulement dans un milieu à risque accru de choc électrique (humide, exigu, conducteur), où l'on préfère un poste à courant continu ou un réducteur de tension à vide. Pour les yeux, l'échelon du filtre croît avec l'intensité. À titre d'exemple, la réglementation américaine (OSHA) impose pour l'électrode enrobée au moins l'échelon 8 de 60 à 160 A, 10 de 160 à 250 A et 11 de 250 à 550 A, et en recommande 10, 12 et 14. En Europe, les filtres de soudage relèvent de l'EN ISO 16321-2 ; les anciens filtres portent encore le marquage de l'EN 169.</p>
+    <div class="tip">💡 <b>Le masque à filtre automatique</b> s'assombrit à l'amorçage. Il évite de soulever le masque, donc les coups d'arc et les amorçages hasardeux sur la tôle : un gain de sécurité et de qualité à la fois.</div>
+    <div class="warn"><b>⚠️ Piège : souder près d'un collègue sans écran.</b> Le coup d'arc ne fait pas mal sur le moment : la douleur arrive quelques heures plus tard, souvent la nuit. Écrans ou rideaux de soudage autour du poste.</div>
+    <div class="warn"><b>⚠️ Piège : poser la pince sous tension sur la pièce ou la tenir sous le bras.</b> La pince garde la tension à vide : on la pose sur un support isolant et l'on coupe le poste dès qu'on s'arrête.</div>
+    <div class="mnemo">🧠 <b>Mnémotechnique : « CRAFE »</b> : Courant, Rayonnement, Air (fumées), Feu, Éclats (projections, laitier, bruit). Cinq dangers, cinq pièces d'armure.</div>
+    <div class="weld"><b>🔥 Le permis de feu</b>
+      <p>Hors de l'atelier, sur un chantier ou dans un bâtiment existant, tout travail par point chaud demande un permis de feu : zone inspectée et dégagée, combustibles retirés ou protégés, extincteur à portée, surveillance pendant et après le travail, car un feu couve parfois pendant des heures.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="exos">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✎</div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Six exercices et un défi, du DMOS à la ronde de sécurité</p></div>
+    <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de musculation : on ne progresse qu'en soulevant soi-même</span></div>
+  </div>
+  <div class="lv lv1"><div class="lv-h">👁 Mode d'emploi <span class="tag">tailles de défauts en mm, limites de l'ISO 5817:2023</span></div>
+    <p>Cherche chaque question sur papier avant d'ouvrir la correction. Écris la limite littérale, puis sa valeur avec son plafond. Les manipulations 1 à 6 permettent de vérifier tes résultats ; le défi se rejoue dans les manipulations 2 et 3.</p>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 1 : la chaîne de la qualité <span class="lvtag">N1 · chapitre 1</span></h4>
+    <p class="q"><b>a)</b> Remets dans l'ordre : soudage de la pièce, rédaction du DMOS, contrôle de la pièce, soudage et essais de l'éprouvette de QMOS, qualification du soudeur, réception des électrodes.</p>
+    <p class="q"><b>b)</b> Pourquoi dit-on que le soudage est un « procédé spécial » ?</p>
+    <p class="q"><b>c)</b> Une électrode rougit avant la fin ; une autre colle sans cesse. Donne une cause probable pour chacune.</p>
+    <p class="q"><b>d)</b> Quel maillon oublié se révèle le plus tard, et pourquoi coûte-t-il le plus cher ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> Rédaction du DMOS → soudage et essais de l'éprouvette de QMOS → qualification du soudeur → réception des électrodes → soudage de la pièce → contrôle de la pièce. La qualification du soudeur et la réception des électrodes peuvent se faire en parallèle, mais toujours avant le soudage de la pièce.</p>
+      <p><b>b)</b> Parce que la qualité d'une soudure ne peut pas être entièrement vérifiée après coup sans la détruire : on la garantit en qualifiant d'avance le mode opératoire et le soudeur, puis en maîtrisant la fabrication.</p>
+      <p><b>c)</b> Électrode qui rougit : intensité trop forte pour son diamètre, ou électrode trop longue. Électrode qui colle : intensité trop faible, ou électrode humide (cours 3).</p>
+      <p><b>d)</b> L'oubli de l'étuvage des électrodes basiques (ou du préchauffage) : l'hydrogène peut provoquer une fissuration à froid différée, découverte après le contrôle, voire en service. Selon la règle empirique du 1-10-100, l'erreur coûte cent fois plus qu'à la préparation. Manipulation 1 : maillon « Électrodes étuvées ».</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 2 : juger des défauts visibles <span class="lvtag">N2 · chapitre 2</span></h4>
+    <p>Soudure bout à bout, tôles de 10 mm, cordon de 12 mm de large.</p>
+    <p class="q"><b>a)</b> Un caniveau de 0,6 mm est-il admis aux niveaux B, C et D ?</p>
+    <p class="q"><b>b)</b> La surépaisseur mesure 3 mm. Verdict aux trois niveaux ?</p>
+    <p class="q"><b>c)</b> Le défaut d'alignement des tôles mesure 1,2 mm. Verdict ?</p>
+    <p class="q"><b>d)</b> Pour chacun, donne une cause probable en soudage à l'électrode enrobée.</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> D : <span class="m">h ≤ 0,2 × 10 = 2 mm, max. 1 mm</span> : admis. C : <span class="m">h ≤ 0,1 × 10 = 1 mm, max. 0,5 mm</span> : refusé. B : <span class="m">h ≤ 0,05 × 10 = 0,5 mm</span> : refusé.</p>
+      <p><b>b)</b> D : <span class="m">h ≤ 0,25 × 12 + 1 = 4 mm</span> : admis. C : <span class="m">h ≤ 0,15 × 12 + 1 = 2,8 mm</span> : refusé. B : <span class="m">h ≤ 0,1 × 12 + 1 = 2,2 mm</span> : refusé.</p>
+      <p><b>c)</b> D : <span class="m">h ≤ 0,25 × 10 = 2,5 mm</span> : admis. C : <span class="m">h ≤ 0,15 × 10 = 1,5 mm</span> : admis. B : <span class="m">h ≤ 0,1 × 10 = 1 mm</span> : refusé.</p>
+      <p><b>d)</b> Caniveau : intensité trop forte, arc long ou balayage sans arrêt sur les bords. Surépaisseur : vitesse trop lente ou trop de métal par passe. Défaut d'alignement : accostage mal contrôlé (cours 4). Manipulation 2 : t = 10, b = 12, défaut et taille.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 3 : lire une radiographie <span class="lvtag">N2 · chapitre 3</span></h4>
+    <p>Soudure bout à bout de 20 mm, niveau C demandé.</p>
+    <p class="q"><b>a)</b> Une soufflure isolée de 3,5 mm est-elle admise ? Et au niveau B ?</p>
+    <p class="q"><b>b)</b> Une inclusion de laitier de 2,5 mm de haut et 15 mm de long ?</p>
+    <p class="q"><b>c)</b> Un manque de fusion court de 1 mm ? Un manque de pénétration ?</p>
+    <p class="q"><b>d)</b> Quel contrôle choisir pour chercher des manques de fusion ? Pourquoi ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> C : <span class="m">d ≤ 0,3 × 20 = 6 mm, max. 4 mm</span> : admise. B : <span class="m">d ≤ 0,2 × 20 = 4 mm, max. 3 mm</span> : refusée.</p>
+      <p><b>b)</b> C : <span class="m">h ≤ 0,3 × 20 = 6 mm, max. 3 mm</span> et <span class="m">l ≤ s = 20 mm</span> : 2,5 ≤ 3 et 15 ≤ 20, <b>admise</b>.</p>
+      <p><b>c)</b> Manque de fusion : non admis en C (il ne l'est, en imperfection courte, qu'au niveau D). Manque de pénétration d'un bout à bout à pleine pénétration : non admis en C.</p>
+      <p><b>d)</b> Les ultrasons : un manque de fusion est un défaut plan, qui renvoie bien l'écho ; la radiographie ne le voit que s'il est à peu près parallèle aux rayons. Manipulation 3 : s = 20 mm.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 4 : fonte, aluminium, sous l'eau <span class="lvtag">N1 et N2 · chapitre 4</span></h4>
+    <p class="q"><b>a)</b> Une fissure de 150 mm dans un carter en fonte grise : quelle électrode, quelle longueur de cordon, quelle règle de température ? Combien de cordons ?</p>
+    <p class="q"><b>b)</b> Pourquoi perce-t-on un trou à chaque extrémité de la fissure ? Pourquoi martèle-t-on ?</p>
+    <p class="q"><b>c)</b> Quel courant et quelles précautions pour une électrode enrobée pour aluminium ?</p>
+    <p class="q"><b>d)</b> Quelles sont les deux façons de souder sous l'eau, et le principal problème du soudage mouillé ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> Électrode au nickel pur (type ENi-CI), petit diamètre, faible intensité ; cordons de 20 à 30 mm ; pièce gardée sous 100 °C entre deux cordons. Avec des cordons de 25 mm : <span class="m">150/25 = 6 cordons</span>. Manipulation 4 : réglages par défaut.</p>
+      <p><b>b)</b> Le trou arrondit la pointe de la fissure et l'empêche de progresser. Le martelage, juste après chaque cordon, détend le métal déposé qui se rétracte en refroidissant, et soulage la fonte fragile.</p>
+      <p><b>c)</b> Courant continu, électrode au + ; électrodes bien sèches ; préchauffage de 100 à 150 °C des pièces épaisses ; cordons tirés ; laitier, corrosif, enlevé entre les passes et après soudage.</p>
+      <p><b>d)</b> Le soudage mouillé, électrode étanche dans l'eau, et le soudage sec hyperbare, dans une chambre remplie de gaz. Le soudage mouillé refroidit brutalement le joint et apporte beaucoup d'hydrogène : risque de fissuration, d'où sa limitation aux aciers de faible carbone équivalent.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 5 : régler un gougeage <span class="lvtag">N2 · chapitre 5</span></h4>
+    <p class="q"><b>a)</b> Électrode de 9,5 mm, 500 A, avance de 889 mm/min : estime la largeur et la profondeur de la rigole.</p>
+    <p class="q"><b>b)</b> Quelle vitesse donnerait une rigole de 12 mm de profondeur ? Peut-on la faire en une passe ?</p>
+    <p class="q"><b>c)</b> Quels courant et pression d'air choisir pour un acier ?</p>
+    <p class="q"><b>d)</b> La rigole est gris-noir avec des perles sur les bords. Que faut-il faire avant de souder ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">w ≈ 9,5 + 3,2 = 12,7 mm</span> ; <span class="m">p ≈ 150 × 500/(12,7 × 889) ≈ 6,6 mm</span>.</p>
+      <p><b>b)</b> <span class="m">v = 150 × 500/(12,7 × 12) ≈ 492 mm/min</span>. La limite d'une passe est <span class="m">1,5 × 9,5 ≈ 14,3 mm</span> : 12 mm se gougent en une passe. Manipulation 5 : ⌀ 9,5, 500 A, v ≈ 490 mm/min.</p>
+      <p><b>c)</b> Courant continu, électrode au + ; air de 5,5 à 6,9 bar à la pince.</p>
+      <p><b>d)</b> La rigole garde du métal carburé (intensité trop faible, air insuffisant ou avance irrégulière) : on la meule jusqu'au métal sain, et l'on corrige les réglages.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 6 : la ronde de sécurité <span class="lvtag">N1 · chapitre 6</span></h4>
+    <p class="q"><b>a)</b> Quel échelon de filtre au minimum et conseillé pour une électrode de 3,2 mm à 110 A, selon l'exemple américain du cours ? Et pour un gougeage à 500 A ?</p>
+    <p class="q"><b>b)</b> Quelle tension à vide est admise en courant alternatif au fond d'une cuve métallique ?</p>
+    <p class="q"><b>c)</b> Pourquoi les fumées des électrodes inox demandent-elles une attention particulière ?</p>
+    <p class="q"><b>d)</b> Dans quel ordre organise-t-on la protection contre les fumées ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> 110 A : échelon 8 au minimum, 10 conseillé. 500 A : 11 au minimum, 14 conseillé. Manipulation 6 : intensité 110 puis 500 A.</p>
+      <p><b>b)</b> Un milieu exigu et conducteur est à risque accru : 48 V efficaces au plus en courant alternatif (68 V crête) ; on préfère un poste à courant continu ou un réducteur de tension à vide.</p>
+      <p><b>c)</b> Elles contiennent du chrome hexavalent, cancérogène, dont la VLEP française est de 1 µg/m³ ; les fumées de soudage sont d'ailleurs toutes classées cancérogènes (groupe 1) depuis 2017.</p>
+      <p><b>d)</b> Procédé et produits moins émissifs, captage à la source, ventilation générale, puis appareil de protection respiratoire si cela ne suffit pas ; la FDS des électrodes guide l'évaluation.</p>
+    </div></details>
+  </div>
+
+  <div class="exo defi">
+    <h4>🏆 Défi : un lot de soudures refusées <span class="lvtag">N2 · chapitres 2 et 3, à rejouer dans les manipulations 2 et 3</span></h4>
+    <p>Une soudure bout à bout de 12 mm d'épaisseur, cordon de 14 mm de large, doit satisfaire au niveau C de l'ISO 5817. Le contrôle relève quatre défauts : un caniveau de 0,8 mm ; des projections autour du cordon ; une inclusion de laitier de 2 mm de haut et 20 mm de long ; une soufflure isolée de 3 mm.</p>
+    <p class="q"><b>a)</b> Donne le numéro ISO 6520-1 de chaque défaut.</p>
+    <p class="q"><b>b)</b> Juge chacun au niveau C. Lesquels seraient admis au niveau D ?</p>
+    <p class="q"><b>c)</b> Pour chaque défaut refusé, donne une cause probable et la correction du mode opératoire.</p>
+    <p class="q"><b>d)</b> Comment répare-t-on la soudure ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> Caniveau <b>5011</b> ; projections <b>602</b> ; inclusion de laitier <b>301</b> ; soufflure isolée <b>2011</b>.</p>
+      <p><b>b)</b> Caniveau : C <span class="m">h ≤ 0,1 × 12 = 1,2 mm, max. 0,5 mm</span> : <b>refusé</b> ; D <span class="m">max. 1 mm</span> : admis. Projections : acceptation selon l'application ; on les élimine si la pièce est peinte ou exposée à la corrosion. Inclusion : C <span class="m">h ≤ 3 mm</span> mais <span class="m">l ≤ s = 12 mm</span> : 20 mm, <b>refusée</b>, et refusée aussi en D. Soufflure : C <span class="m">d ≤ 0,3 × 12 = 3,6 mm</span> : <b>admise</b> (elle serait refusée en B, limite 2,4 mm). Manipulations 2 et 3 : t = s = 12 mm, b = 14 mm.</p>
+      <p><b>c)</b> Caniveau : intensité trop forte, arc long ou balayage sans arrêt sur les bords → baisser l'intensité, garder l'arc court, marquer un temps sur les bords. Inclusion : décrassage insuffisant ou racine non meulée → décrasser chaque passe, meuler la racine (cours 4). Projections : arc long, intensité trop forte, électrode humide ou soufflage → corriger l'arc, étuver les électrodes.</p>
+      <p><b>d)</b> On repère l'inclusion, on l'élimine par meulage ou gougeage arc-air jusqu'au métal sain (rigole meulée, sans métal carburé), on ressoude selon un DMOS de réparation, on reprend le caniveau par une passe de finition, puis l'on recontrôle (visuel et radiographie).</p>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="quiz-s">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">?</div>
+    <div class="c-title"><h2>Quiz : 12 questions éclair</h2><p>Chaque réponse est expliquée, même quand tu as juste</p></div>
+    <div class="c-img"><span class="ico">🎯</span><span><small>Image à retenir</small>La cible : vise 10 sur 12 pour boucler la série</span></div>
+  </div>
+  <div id="quiz"></div>
+  <div class="score" id="qzScore" aria-live="polite">Score : 0 / 12</div>
+  <div class="btns"><button class="btn" id="qzReset" type="button">↺ Recommencer le quiz</button></div>
+</div>
+</section>
+
+<section class="chap" id="fiche">
+<div class="wrap wide">
+  <div class="cartouche">
+    <div class="c-num">★</div>
+    <div class="c-title"><h2>Fiche mémoire du cours 5</h2><p>Neuf cases, neuf images : à photographier, puis à redessiner de tête</p></div>
+    <div class="c-img"><span class="ico">🌉</span><span><small>Image à retenir</small>L'Iron Bridge, une fonte assemblée comme du bois</span></div>
+  </div>
+  <div class="fiche">
+    <div><div class="ic">🔗</div><h4>La chaîne</h4><div class="f">Prévoir · Souder · Prouver</div><p>Exigences, DMOS et QMOS, soudeurs qualifiés, électrodes, préparation, paramètres, contrôles, traçabilité (ISO 3834).</p></div>
+    <div><div class="ic">🔍</div><h4>La loupe</h4><div class="f">1 fissures · 2 cavités · 3 inclusions · 4 manques · 5 forme · 6 divers</div><p>ISO 6520-1 : un nom, un numéro. Défaut = écart ; défaut inacceptable = hors limite.</p></div>
+    <div><div class="ic">💎</div><h4>Le bijou</h4><div class="f">B · C · D</div><p>ISO 5817 : B le plus exigeant. Caniveau : 0,05·t, 0,1·t, 0,2·t, avec leurs plafonds.</p></div>
+    <div><div class="ic">🦴</div><h4>La radiographie</h4><div class="f">ronds en RT, plats en UT</div><p>Soufflures et inclusions en volume ; manques de fusion et fissures plans. Fissures jamais admises.</p></div>
+    <div><div class="ic">🍪</div><h4>Le biscuit sec</h4><div class="f">Court · Froid · Frappé</div><p>Fonte : électrode nickel, cordons de 20 à 30 mm, sous 100 °C, martelés ; trou en bout de fissure.</p></div>
+    <div><div class="ic">🥫</div><h4>La canette d'aluminium</h4><div class="f">CC+ · électrodes sèches · laitier enlevé</div><p>Électrodes Al99,5, AlMn1, AlSi5, AlSi12 ; surtout pour réparer. Sous l'eau : mouillé ou hyperbare.</p></div>
+    <div><div class="ic">🌬️</div><h4>La bougie soufflée</h4><div class="f"><span class="eps">p</span> ≈ 150·<span class="sig">I</span>/(<span class="eps">w</span>·<span class="mat">v</span>)</div><p>Gougeage arc-air (871) : CC+, 5,5 à 6,9 bar, 35° pour creuser ; meuler le métal carburé.</p></div>
+    <div><div class="ic">🛡️</div><h4>L'armure</h4><div class="f">Courant · Rayonnement · Air · Feu · Éclats</div><p>Tension à vide, filtre adapté, captage des fumées (cancérogènes), permis de feu, EPI en dernier recours.</p></div>
+    <div><div class="ic">🏁</div><h4>Le drapeau à damier</h4><div class="f">111 : du poste au cordon contrôlé</div><p>Poste, arc, électrode, préparation et geste, qualité et sécurité : la série est bouclée.</p></div>
+  </div>
+  <div class="fun"><span class="fun-h">🌉 Fun fact : Le premier pont en fonte, assemblé comme un meuble</span>En 1779, au-dessus de la Severn, en Angleterre, Abraham Darby III et ses associés montent l'Iron Bridge, le premier grand pont en fonte du monde, ouvert à la circulation le 1<sup>er</sup> janvier 1781. Le soudage à l'arc n'existait pas encore, et la fonte, dure et fragile, ne se forge pas : ses pièces moulées ont donc été assemblées avec les techniques des charpentiers, tenons et mortaises, queues d'aronde, coins et cales, comme des pièces de bois. Le pont tient toujours, et sa vallée figure au patrimoine mondial de l'UNESCO. Souder une fonte reste aujourd'hui un cas particulier : électrodes au nickel et recette « Court, Froid, Frappé » du <a href="#c4">chapitre 4</a>.</div>
+</div>
+</section>
+
+<section class="chap" id="gloss">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">A–Z</div>
+    <div class="c-title"><h2>Glossaire</h2><p>Les mots, symboles et sigles de ce cours</p></div>
+    <div class="c-img"><span class="ico">📖</span><span><small>Image à retenir</small>Le dictionnaire : un mot flou, un clic</span></div>
+  </div>
+  <dl class="gloss">
+    <dt>a, b, h, l, s, t</dt><dd>Symboles de l'ISO 5817 : gorge d'une soudure d'angle ; largeur de la surépaisseur ; taille (hauteur, profondeur ou diamètre) d'un défaut ; sa longueur ; épaisseur nominale d'une soudure bout à bout ; épaisseur de la tôle (mm).</dd>
+    <dt>AWS A5.3, AWS A5.15</dt><dd>Classifications américaines des électrodes pour l'aluminium et pour les fontes (ENi-CI, ENiFe-CI).</dd>
+    <dt>Beurrage</dt><dd>Couche déposée d'abord sur un bord, pour souder ensuite sur un métal plus favorable.</dd>
+    <dt>Caniveau (5011)</dt><dd>Sillon creusé dans le métal de base le long du bord du cordon.</dd>
+    <dt>CIRC</dt><dd>Centre international de recherche sur le cancer, qui classe les fumées de soudage comme cancérogènes pour l'homme (groupe 1) depuis 2017.</dd>
+    <dt>CND : PT, MT, RT, UT</dt><dd>Contrôles non destructifs : ressuage, magnétoscopie, radiographie, ultrasons (ISO 17635).</dd>
+    <dt>Coordinateur en soudage</dt><dd>Responsable des activités de soudage et de leur qualité (ISO 14731).</dd>
+    <dt>Coup d'arc (601)</dt><dd>Trace d'un amorçage hors du joint ; aussi, inflammation de l'œil due au rayonnement de l'arc.</dd>
+    <dt>Défaut, défaut inacceptable</dt><dd>Tout écart par rapport à la soudure idéale (<i>imperfection</i>) ; défaut jugé inadmissible (<i>defect</i>), selon l'ISO 6520-1.</dd>
+    <dt>DMOS, QMOS</dt><dd>Descriptif de mode opératoire de soudage (ISO 15609-1) ; qualification du mode opératoire par des essais (ISO 15614-1).</dd>
+    <dt>Débordement (506)</dt><dd>Métal déposé posé sur la tôle sans s'y lier.</dd>
+    <dt>Défaut d'alignement (507)</dt><dd>Décalage en hauteur entre les pièces soudées bout à bout.</dd>
+    <dt>EN ISO 16321-2, EN 169</dt><dd>Protecteurs des yeux et du visage pour le soudage ; ancienne norme des filtres de soudage.</dd>
+    <dt>EPI</dt><dd>Équipement de protection individuelle (masque, gants, veste, guêtres, protection auditive ou respiratoire).</dd>
+    <dt>Échelon de teinte</dt><dd>Numéro d'un filtre de soudage : plus il est élevé, plus le filtre est sombre.</dd>
+    <dt>FDS</dt><dd>Fiche de données de sécurité, en 16 rubriques (règlement REACH).</dd>
+    <dt>Fissure (100), fissure de cratère (104)</dt><dd>Rupture du métal ; petite fissure en étoile en fin de cordon. Jamais admises par l'ISO 5817.</dd>
+    <dt>Fonte grise, GS, malléable, blanche</dt><dd>Fontes à graphite lamellaire, sphéroïdal (dite nodulaire), malléabilisée ; fonte blanche, sans graphite, non soudable.</dd>
+    <dt>Gougeage arc-air (871)</dt><dd>Procédé qui fond le métal par un arc de carbone et le chasse par un jet d'air comprimé.</dd>
+    <dt>Imperfection courte</dt><dd>Défaut dont la longueur totale ne dépasse pas 25 mm sur les 100 mm de soudure qui en contiennent le plus (ISO 5817).</dd>
+    <dt>Inclusion de laitier (301)</dt><dd>Laitier emprisonné dans la soudure.</dd>
+    <dt>ISO 3834, ISO 14731</dt><dd>Exigences de qualité en soudage (parties 2 complète, 3 normale, 4 élémentaire) ; coordination en soudage.</dd>
+    <dt>ISO 5817, niveaux B, C, D</dt><dd>Niveaux de qualité des défauts des soudures par fusion ; B le plus exigeant, D le moins.</dd>
+    <dt>ISO 6520-1</dt><dd>Classification des défauts géométriques des soudures par fusion, en six groupes numérotés.</dd>
+    <dt>ISO 9606-1, ISO 17637, ISO 17635, ISO 1071</dt><dd>Qualification des soudeurs ; contrôle visuel ; règles générales des CND ; produits d'apport pour les fontes.</dd>
+    <dt>Manque de fusion, collage (401)</dt><dd>Absence de liaison entre le métal déposé et le bord, la passe précédente ou la racine.</dd>
+    <dt>Manque de pénétration, manque d'interpénétration (402)</dt><dd>Racine non soudée sur toute l'épaisseur ; dans une soudure faite des deux côtés, passes qui ne se rejoignent pas.</dd>
+    <dt>Martelage</dt><dd>Coups de marteau à tête ronde sur un cordon encore chaud, pour le détendre.</dd>
+    <dt>Métal carburé</dt><dd>Métal enrichi en carbone laissé par un gougeage mal réglé ; dur et fragile, il se meule.</dd>
+    <dt>p, w, d, I, v, θ, P</dt><dd>Gougeage : profondeur et largeur de la rigole (mm) ; diamètre de l'électrode (mm) ; intensité (A) ; vitesse (mm/min) ; angle de l'électrode (°) ; pression d'air (bar).</dd>
+    <dt>Permis de feu</dt><dd>Autorisation écrite et mesures de prévention pour un travail par point chaud hors atelier.</dd>
+    <dt>Piqûre (2017)</dt><dd>Soufflure qui débouche en surface.</dd>
+    <dt>Procédé spécial</dt><dd>Procédé dont le résultat ne peut pas être entièrement vérifié après coup ; il se qualifie d'avance.</dd>
+    <dt>Projections (602)</dt><dd>Gouttelettes de métal collées autour du cordon.</dd>
+    <dt>Soudage mouillé, soudage hyperbare</dt><dd>Soudage sous l'eau directement dans l'eau ; ou à sec, dans une chambre étanche remplie de gaz.</dd>
+    <dt>Soufflure (2011), nid de soufflures (2013)</dt><dd>Bulle de gaz piégée dans le métal ; groupe de soufflures.</dd>
+    <dt>Surépaisseur excessive (502), convexité excessive (503)</dt><dd>Cordon bout à bout trop bombé ; soudure d'angle trop bombée.</dd>
+    <dt>T<sub>i</sub>, L<sub>c</sub>, L<sub>f</sub></dt><dd>Fonte : température sous laquelle on attend avant un nouveau cordon ; longueur d'un cordon ; longueur de la fissure.</dd>
+    <dt>VLEP</dt><dd>Valeur limite d'exposition professionnelle, sur 8 h (poussières 4 mg/m³ inhalables et 0,9 mg/m³ alvéolaires ; chrome hexavalent 1 µg/m³ en France).</dd>
+  </dl>
+</div>
+</section>
+
+<section class="chap" id="check">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✓</div>
+    <div class="c-title"><h2>Ai-je bouclé la série ?</h2><p>Dix points à cocher de tête</p></div>
+    <div class="c-img"><span class="ico">🏁</span><span><small>Image à retenir</small>Le drapeau à damier : la série est terminée quand tout est coché</span></div>
+  </div>
+  <p>Coche seulement ce que tu sais faire <b>sans regarder</b>. Tes coches restent enregistrées dans ce navigateur.</p>
+  <div class="check" id="checklist">
+    <label><input type="checkbox" data-c="1"> <span>Je sais situer DMOS, QMOS, qualification des soudeurs, contrôles et traçabilité dans la chaîne de la qualité.</span></label>
+    <label><input type="checkbox" data-c="2"> <span>Je sais citer les problèmes propres au soudage à l'électrode enrobée et leurs causes.</span></label>
+    <label><input type="checkbox" data-c="3"> <span>Je sais nommer un défaut avec son numéro ISO 6520-1 et son groupe.</span></label>
+    <label><input type="checkbox" data-c="4"> <span>Je sais juger un défaut de surface aux niveaux B, C et D de l'ISO 5817.</span></label>
+    <label><input type="checkbox" data-c="5"> <span>Je sais juger un défaut interne et choisir le contrôle qui le révèle.</span></label>
+    <label><input type="checkbox" data-c="6"> <span>Je sais remonter d'un défaut à sa cause dans le geste ou le mode opératoire.</span></label>
+    <label><input type="checkbox" data-c="7"> <span>Je sais réparer une fonte à l'électrode et connais les règles de l'électrode pour aluminium et du soudage sous l'eau.</span></label>
+    <label><input type="checkbox" data-c="8"> <span>Je sais régler un gougeage arc-air et juger la rigole obtenue.</span></label>
+    <label><input type="checkbox" data-c="9"> <span>Je sais faire la ronde de sécurité d'un poste : courant, rayonnement, fumées, feu, EPI.</span></label>
+    <label><input type="checkbox" data-c="10"> <span>Je sais raconter la série : du poste et de l'arc à l'électrode, au joint soudé, puis au cordon contrôlé.</span></label>
+  </div>
+  <p class="status" id="checkMsg"></p>
+
+  <div class="weld"><b>🔥 Le bilan de la série : du poste de soudage au cordon contrôlé</b>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Question</th><th>L'outil</th><th>Cours</th><th>Le réflexe du soudeur</th></tr>
+      <tr><td>Avec quoi soude-t-on ?</td><td>procédé 111, générateur tombant, tension à vide, facteur de marche, câbles</td><td class="n">1</td><td>lire la plaque, serrer la masse près du joint, dimensionner les câbles</td></tr>
+      <tr><td>Comment régler l'arc ?</td><td>courant et polarité, intensité, hauteur d'arc, vitesse, énergie, soufflage</td><td class="n">2</td><td>un arc court, l'intensité de la plage du diamètre, la masse contre le soufflage</td></tr>
+      <tr><td>Quelle électrode, et dans quel état ?</td><td>enrobages, hydrogène, étuvage, efficacité, désignation ISO 2560</td><td class="n">3</td><td>lire la boîte, étuver les basiques, compter les électrodes</td></tr>
+      <tr><td>Comment préparer et souder ?</td><td>chanfreins ISO 9692-1, pointage, préchauffage EN 1011-2, geste, positions ISO 6947, passes, gorge</td><td class="n">4</td><td>propre, ouvert, pointé ; préchauffer si besoin ; reprendre en revenant au cratère</td></tr>
+      <tr><td>Le cordon est-il bon, et le soudeur protégé ?</td><td>ISO 3834, ISO 6520-1, ISO 5817, CND, fontes et aluminium, gougeage, sécurité</td><td class="n">5</td><td>nommer, mesurer, juger, remonter à la cause ; faire la ronde avant d'amorcer</td></tr>
+    </table></div>
+  </div>
+
+  <div class="meta">🏁 <b>Fin de la série « Soudage à l'électrode enrobée ».</b> Tu sais maintenant choisir et régler un poste, maîtriser l'arc, choisir et conserver une électrode, préparer, préchauffer et souder dans toutes les positions, puis juger le cordon, réparer et travailler en sécurité. Les sujets voisins du planning prolongent ce travail : la qualité (4.1), les contrôles non destructifs et le contrôle de fabrication (4.2), l'aluminium (2.20), les fontes (2.17), le coupage (1.13), et l'hygiène et la sécurité (4.5).</div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="wrap">
+  <p>Cours 5 sur 5, dernier de la série « Soudage à l'électrode enrobée : du poste de soudage au cordon contrôlé » (sujet 1.9 du planning). Vocabulaire aligné sur l'ISO 6520-1, l'ISO 5817:2023, l'ISO 3834, l'ISO 4063 et l'ISO 17635 ; pour les notations et les conventions, l'enseignement de ta formation fait foi.</p>
+</div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+const NS="http://www.w3.org/2000/svg";
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const RM=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function el(tag,attrs,parent){
+  const e=document.createElementNS(NS,tag);
+  if(attrs){for(const k in attrs){const v=attrs[k];if(v===undefined||v===null)continue;
+    if(typeof v==="string"&&v.indexOf("var(")>=0&&k!=="style")e.style.setProperty(k,v);else e.setAttribute(k,v);}}
+  if(parent)parent.appendChild(e);
+  return e;
+}
+function tx(p,x,y,str,attrs){const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);t.textContent=str;return t;}
+function txs(p,x,y,parts,attrs){/* parts: [["σ",""],["max","sub"],[" = 3",""]] */
+  const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);
+  parts.forEach(pt=>{const s=el("tspan",pt[1]==="sub"?{"font-size":"0.72em",dy:"3"}:(pt[2]?{dy:pt[2]}:{}),t);s.textContent=pt[0];
+    if(pt[1]==="sub"){const r=el("tspan",{dy:"-3"},t);r.textContent="\u200b";}});
+  return t;
+}
+function clear(svg){while(svg.firstChild)svg.removeChild(svg.firstChild);}
+function fitText(t,x0,x1,gap){/* garde un texte SVG entre x0 et x1 : il passe de l'autre côté de son repère (écart gap), sinon il glisse */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const a=t.getAttribute("text-anchor")||"start",x=+t.getAttribute("x");
+  if(gap&&a!=="middle"&&(b.x<x0||b.x+b.width>x1)){t.setAttribute("text-anchor",a==="end"?"start":"end");t.setAttribute("x",a==="end"?x+2*gap:x-2*gap);b=t.getBBox();}
+  const nx=+t.getAttribute("x");
+  if(b.x+b.width>x1)t.setAttribute("x",nx-(b.x+b.width-x1));else if(b.x<x0)t.setAttribute("x",nx+(x0-b.x));
+  return t;}
+function arrow(p,x1,y1,x2,y2,color,w,h){
+  w=w||2.4;h=h||10;
+  const g=el("g",{class:"arr"},p);g.style.color=color||"var(--ink)";
+  const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy);
+  if(L<1)return g;
+  const ux=dx/L,uy=dy/L,hh=Math.min(h,L*0.6),bx=x2-ux*hh,by=y2-uy*hh,hw=hh*0.45+w*0.3;
+  el("line",{x1:x1,y1:y1,x2:bx,y2:by,"stroke-width":w,"stroke-linecap":"round"},g);
+  el("polygon",{points:x2+","+y2+" "+(bx-uy*hw)+","+(by+ux*hw)+" "+(bx+uy*hw)+","+(by-ux*hw)},g);
+  return g;
+}
+function darrow(p,x,y1,y2,color,w){/* double flèche verticale */
+  const g=el("g",{},p);const m=(y1+y2)/2;
+  if(Math.abs(y2-y1)<4){el("line",{x1:x-5,y1:y1,x2:x+5,y2:y1,stroke:color,"stroke-width":2},g);return g;}
+  arrow(g,x,m,x,y1,color,w||2,8);arrow(g,x,m,x,y2,color,w||2,8);return g;
+}
+function nf(v,d){
+  if(d===undefined)d=1;
+  if(Math.abs(v)<0.5*Math.pow(10,-d))v=0;
+  return v.toLocaleString("fr-FR",{minimumFractionDigits:d,maximumFractionDigits:d}).replace("-","−").replace(/[\u202f\u2009]/g,"\u00a0");
+}
+const SUP={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function sci(v,d){
+  if(v===0)return "0";
+  if(!isFinite(v))return "∞";
+  let e=Math.floor(Math.log10(Math.abs(v)));
+  let m=v/Math.pow(10,e);
+  const dd=d===undefined?1:d;
+  if(Math.abs(Number(m.toFixed(dd)))>=10){m/=10;e+=1;}
+  return nf(m,dd)+" × 10"+String(e).split("").map(c=>SUP[c]).join("");
+}
+function bigN(v){/* nombre de cycles lisible */
+  if(!isFinite(v))return "∞";
+  if(v===0)return "0";
+  if(v<10)return nf(v,v<1?2:0);
+  if(v<1e5)return nf(Math.round(v),0);
+  return sci(v,1);
+}
+function dur(s){
+  if(!isFinite(s))return "∞";
+  if(s<60)return nf(s,s<10?1:0)+" s";
+  if(s<3600)return nf(s/60,0)+" min";
+  if(s<86400)return nf(s/3600,1)+" h";
+  if(s<86400*365)return nf(s/86400,1)+" jours";
+  return nf(s/(86400*365),1)+" ans";
+}
+function svgW(svg){const r=svg.getBoundingClientRect();return Math.max(290,Math.round(r.width||(svg.parentNode&&svg.parentNode.clientWidth)||600));}
+function setVB(svg,W,H){svg.setAttribute("viewBox","0 0 "+W+" "+H);}
+const redraws=[];
+let rzT=null,lastWW=window.innerWidth;
+window.addEventListener("resize",()=>{if(window.innerWidth===lastWW)return;lastWW=window.innerWidth;clearTimeout(rzT);rzT=setTimeout(()=>redraws.forEach(f=>{try{f();}catch(e){console.error(e);}}),120);});
+
+function niceStep(range,n){const raw=range/(n||5),p=Math.pow(10,Math.floor(Math.log10(raw))),m=raw/p;return (m<1.5?1:m<3?2:m<7?5:10)*p;}
+function setOn(sel,btn){$$(sel+" .btn").forEach(b=>b.classList.toggle("on",b===btn));}
+function fmtmm(mm){return mm<0.1?nf(mm*1000,0)+" µm":mm<10?nf(mm,mm<1?2:1)+" mm":nf(mm,0)+" mm";}
+function axes(svg,x0,x1,y0,y1,xmin,xmax,ymin,ymax,xlab,ylab,xstep,ystep,xfmt,yfmt){
+  const X=v=>x0+(x1-x0)*(v-xmin)/(xmax-xmin),Y=v=>y1-(y1-y0)*(v-ymin)/(ymax-ymin);
+  for(let v=Math.ceil(ymin/ystep-1e-9)*ystep;v<=ymax+1e-9;v+=ystep){el("line",{x1:x0,y1:Y(v),x2:x1,y2:Y(v),class:"gridbg"},svg);tx(svg,x0-5,Y(v)+4,yfmt?yfmt(v):nf(v,ystep<1?1:0),{class:"lbl","text-anchor":"end"});}
+  for(let v=Math.ceil(xmin/xstep-1e-9)*xstep;v<=xmax+1e-9;v+=xstep){el("line",{x1:X(v),y1:y1,x2:X(v),y2:y1+4,class:"tick"},svg);tx(svg,X(v),y1+17,xfmt?xfmt(v):nf(v,xstep<1?1:0),{class:"lbl","text-anchor":"middle"});}
+  el("line",{x1:x0,y1:y1,x2:x1,y2:y1,class:"axis"},svg);el("line",{x1:x0,y1:y0-4,x2:x0,y2:y1,class:"axis"},svg);
+  tx(svg,x0+4,y0-10,ylab,{class:"lbl"});tx(svg,x1,y1+32,xlab,{class:"lbl","text-anchor":"end"});
+  return {X:X,Y:Y};
+}
+function animate(btn,label,dur,onStep,onEnd){
+  let raf=null,run=false;
+  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;btn.textContent=label;}
+  function start(){if(run){stop();return;}if(RM){onStep(1);stop();if(onEnd)onEnd();return;}
+    run=true;btn.textContent="⏸ Pause";const t0=performance.now();
+    const step=now=>{const p=Math.min(1,(now-t0)/dur);onStep(p);if(p>=1){stop();if(onEnd)onEnd();return;}raf=requestAnimationFrame(step);};raf=requestAnimationFrame(step);}
+  btn.addEventListener("click",start);return {stop:stop,running:()=>run};
+}
+
+
+function sig2(v){/* arrondi à deux chiffres significatifs */
+  if(v<=0)return 0;const p=Math.pow(10,Math.floor(Math.log10(v))-1);return Math.round(v/p)*p;}
+function halo(t,svg){/* liseré de fond, puis passage au premier plan */
+  t.setAttribute("paint-order","stroke");t.style.setProperty("stroke","var(--card)");t.setAttribute("stroke-width","4");t.setAttribute("stroke-linejoin","round");if(svg)svg.appendChild(t);return t;}
+function plate(t,svg){/* fond plein derrière une étiquette */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const r=el("rect",{x:b.x-3,y:b.y-1,width:b.width+6,height:b.height+2,fill:"var(--card)",opacity:.92,rx:2});svg.appendChild(r);svg.appendChild(t);return t;}
+function le(n,f){return /^[aeiouyhéèâî]/i.test(n)?"l'"+n:(f?"la ":"le ")+n;}
+function du(n,f){return /^[aeiouyhéèâî]/i.test(n)?"de l'"+n:(f?"de la ":"du ")+n;}
+function fmtG(v){return nf(v,v<0.1?3:2)+" N/m";}
+function fmtPa(p){return p<1000?nf(p,0)+" Pa":p<1e5?nf(p/1000,1)+" kPa":nf(p/1e5,2)+" bar";}
+function fmtLen(m){/* m en mètres */
+  const mm=m*1000;if(mm<1)return nf(mm*1000,0)+" µm";if(mm<10)return nf(mm,1)+" mm";if(mm<1000)return nf(mm,0)+" mm";return nf(m,1)+" m";}
+function fmtT(s){if(!isFinite(s))return "∞";if(s<0.01)return nf(s*1000,1)+" ms";if(s<1)return nf(s,3)+" s";if(s<60)return nf(s,s<10?1:0)+" s";return nf(s/60,s<600?1:0)+" min";}
+
+function spread(items,gap,ymin,ymax){/* écarte verticalement des étiquettes {y} triées */
+  items.sort((a,b)=>a.y-b.y);
+  for(let i=1;i<items.length;i++)if(items[i].y-items[i-1].y<gap)items[i].y=items[i-1].y+gap;
+  if(items.length&&items[items.length-1].y>ymax){items[items.length-1].y=ymax;for(let i=items.length-2;i>=0;i--)if(items[i+1].y-items[i].y<gap)items[i].y=items[i+1].y-gap;}
+  if(items.length&&items[0].y<ymin){items[0].y=ymin;for(let i=1;i<items.length;i++)if(items[i].y-items[i-1].y<gap)items[i].y=items[i-1].y+gap;}
+  return items;}
+function declutter(ts,ymin,ymax){/* décale verticalement les textes qui se chevauchent */
+  const box=t=>{try{return t.getBBox();}catch(e){return null;}};
+  for(let i=1;i<ts.length;i++){const ti=ts[i];if(!ti)continue;
+    for(let pass=0;pass<6;pass++){const bi=box(ti);if(!bi)break;let moved=false;
+      for(let j=0;j<i;j++){const bj=ts[j]&&box(ts[j]);if(!bj)continue;
+        const ix=Math.min(bi.x+bi.width,bj.x+bj.width)-Math.max(bi.x,bj.x),iy=Math.min(bi.y+bi.height,bj.y+bj.height)-Math.max(bi.y,bj.y);
+        if(ix>1&&iy>1){let dy=(bi.y+bi.height/2>=bj.y+bj.height/2)?(bj.y+bj.height-bi.y+1):-(bi.y+bi.height-bj.y+1);
+          if(bi.y+dy<ymin||bi.y+bi.height+dy>ymax)dy=dy>0?-(bi.y+bi.height-bj.y+1):(bj.y+bj.height-bi.y+1);
+          ti.setAttribute("y",+ti.getAttribute("y")+dy);moved=true;break;}}
+      if(!moved)break;}}
+  return ts;}
+const SUPD={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function p10(e){return "10"+String(e).split("").map(c=>SUPD[c]||c).join("");}
+function fmtP(p){/* pression en Pa, lisible */
+  if(p>=1e5)return nf(p/1e5,1)+" bar";if(p>=1000)return nf(p/1000,p<1e4?1:0)+" kPa";if(p>=1)return nf(p,p<10?1:0)+" Pa";return sci(p,1)+" Pa";}
+
+
+
+function rng(seed){/* générateur pseudo-aléatoire reproductible */
+  let a=seed>>>0;return ()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296;};}
+
+/* =========================================================
+   Utilitaires communs du cours
+   ========================================================= */
+const RHO=7.85e-3;/* masse volumique de l'acier (g/mm³) */
+const nbsp=s=>s.replace(/(\d) (°C|°|mm²|mm\/min|mm|min|kJ\/mm|kg\/h|g\/m|bar|s|A|V|%|m)(?=[\s.,;:)<]|$)/g,"$1 $2");/* espace insécable entre nombre et unité */
+function fitSize(t,maxW,min){/* réduit la police d'un texte SVG trop large (style en ligne, prioritaire sur la feuille de style) */
+  let b;try{b=t.getBBox();}catch(e){return t;}let fs=parseFloat(getComputedStyle(t).fontSize)||13;
+  while(b.width>maxW&&fs>(min||9)){fs-=0.5;t.style.fontSize=fs+"px";b=t.getBBox();}return t;}
+function fmtDur(s){if(!isFinite(s))return "∞";s=Math.round(s);if(s<60)return s+" s";if(s<3600){const m=Math.floor(s/60),r=s%60;return m+" min"+(r?" "+String(r).padStart(2,"0")+" s":"");}
+  const h=Math.floor(s/3600),m=Math.round((s%3600)/60);return m===60?(h+1)+" h 00":h+" h "+String(m).padStart(2,"0");}
+const LV=["D","C","B"];
+const fmtLim=v=>v===null?"non admis":typeof v==="string"?v:"≤ "+nf(v,1)+" mm";
+function verdict(L,h,l){/* L : {D,C,B} → nombre (limite de h), [h,l] (limites), null (non admis) ou texte */
+  const out={};LV.forEach(k=>{const v=L[k];out[k]=v===null?false:typeof v==="string"?null:Array.isArray(v)?(h<=v[0]+1e-9&&l<=v[1]+1e-9):h<=v+1e-9;});return out;}
+const vmark=v=>v===true?"✅":v===false?"❌":"⚖️";
+
+/* =========================================================
+   M1 : la chaîne de la qualité
+   ========================================================= */
+(function(){
+  const svg=$("#m1svg");if(!svg)return;
+  const ro=$("#m1r"),msg=$("#m1msg");
+  const K=[{k:"exig",n:"Exigences",d:"critères inconnus",w:"à la réception",c:10,t:"on soude sans connaître le niveau de qualité ni les contrôles : litige à la réception."},
+    {k:"dmos",n:"DMOS qualifié",d:"paramètres improvisés",w:"au contrôle",c:10,t:"le mode opératoire n'a jamais été prouvé : manques de fusion, fissures."},
+    {k:"soud",n:"Soudeur qualifié",d:"racine, reprises",w:"au contrôle",c:10,t:"défauts de racine et de reprise d'un soudeur non qualifié dans la position."},
+    {k:"elec",n:"Électrodes étuvées",d:"fissure à froid",w:"en service",c:100,t:"hydrogène des basiques humides : fissure à froid différée, parfois après le contrôle."},
+    {k:"prep",n:"Accostage vérifié",d:"manque de pénétration",w:"au contrôle",c:10,t:"talon, écartement ou alignement hors tolérance : manque de pénétration, défaut d'alignement."},
+    {k:"para",n:"Préchauffage, paramètres",d:"zone dure, caniveaux",w:"en service",c:100,t:"pas de préchauffage ou intensité hors plage : zone affectée dure, fissure, caniveaux."},
+    {k:"ctrl",n:"Contrôles faits",d:"défauts non vus",w:"en service",c:100,t:"les défauts passent sans être vus et se révèlent en service."},
+    {k:"trac",n:"Traçabilité",d:"causes introuvables",w:"lors d'une avarie",c:100,t:"impossible de retrouver le soudeur, le lot d'électrodes ou le mode opératoire."}];
+  const on={};K.forEach(q=>on[q.k]=true);let prog=null;
+  function draw(){
+    const W=svgW(svg),n=W<520,cols=n?2:4,rows=Math.ceil(K.length/cols),cw=(W-24)/cols,rh=n?92:96,H=40+rows*rh+30;setVB(svg,W,H);clear(svg);
+    const L=[],pos=K.map((q,i)=>{const r=Math.floor(i/cols),c0=i%cols,c=r%2?cols-1-c0:c0;return [12+c*cw+cw/2,40+r*rh+28];});
+    tx(svg,8,18,"De la commande à la traçabilité",{class:"ttl"});
+    for(let i=0;i<K.length-1;i++){const a=pos[i],b=pos[i+1],br=!on[K[i].k]||!on[K[i+1].k];
+      el("line",{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:br?"var(--tau)":"var(--line)","stroke-width":br?2:5,"stroke-dasharray":br?"6 5":null},svg);}
+    const tok=prog===null?-1:Math.min(K.length-1,Math.floor(Math.max(0,prog)*K.length));
+    K.forEach((q,i)=>{const p=pos[i],ok=on[q.k],w=Math.min(cw-14,150),passed=tok>=i;
+      el("rect",{x:p[0]-w/2,y:p[1]-19,width:w,height:38,rx:19,fill:ok?"var(--card)":"var(--hl)",stroke:ok?"var(--eps)":"var(--tau)","stroke-width":ok?2.2:2.6,"stroke-dasharray":ok?null:"5 4"},svg);
+      const t=tx(svg,p[0],p[1]+5,(i+1)+". "+q.n,{"text-anchor":"middle","font-weight":"700",fill:ok?"var(--ink)":"var(--tau)"});fitSize(t,w-10,9);
+      if(!ok&&(prog===null||passed)){const t2=tx(svg,p[0],p[1]+34,"⚠ "+q.d,{"text-anchor":"middle",fill:"var(--tau)",class:"lbl"});fitSize(t2,cw-6,8.5);L.push(t2);}});
+    if(tok>=0){const p=pos[tok],bad=K.slice(0,tok+1).filter(q=>!on[q.k]).length;
+      el("circle",{cx:p[0]+Math.min(cw-14,150)/2-4,cy:p[1]-19,r:9,fill:bad?"var(--tau)":"var(--gam)",stroke:"var(--card)","stroke-width":2},svg);}
+    L.forEach(t=>{fitText(t,4,W-4);});
+    const miss=K.filter(q=>!on[q.k]),cost=miss.length?miss.reduce((s,q)=>s+q.c,0):1,first=miss.length?miss.reduce((a,q)=>q.c>a.c?q:a):null;
+    ro.innerHTML="<span>maillons tenus : <b class='eps'>"+(K.length-miss.length)+" / "+K.length+"</b></span><span>coût relatif : <b class='"+(miss.length?"tau":"eps")+"'>"+cost+"</b></span>"+(first?"<span>pire découverte : "+first.w+"</span>":"<span>découverte : aucune</span>");
+    let m;
+    if(prog!==null&&prog<1)m="La soudure passe le maillon "+(tok+1)+" : "+K[tok].n.toLowerCase()+(on[K[tok].k]?" ✅.":" ❌ oublié.");
+    else if(!miss.length)m="✅ Chaîne complète : la qualité est prévue, maîtrisée, puis prouvée. Coût relatif 1 : celui de la prévention.";
+    else m=miss.map(q=>"❌ <b>"+q.n+"</b> : "+q.t+" Découvert "+q.w+".").join(" ")+" Coût relatif "+cost+" (règle empirique du 1-10-100).";
+    msg.innerHTML=nbsp(m);
+  }
+  const A=animate($("#m1play"),"▶ Faire passer une soudure",6000,p=>{prog=p;draw();},()=>{prog=null;draw();});
+  $$("#m1k .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;const k=b.dataset.k;on[k]=!on[k];b.classList.toggle("on",on[k]);b.setAttribute("aria-pressed",on[k]?"true":"false");draw();}));
+  $("#m1all").addEventListener("click",()=>{A.stop();prog=null;K.forEach(q=>on[q.k]=true);$$("#m1k .btn").forEach(b=>{b.classList.add("on");b.setAttribute("aria-pressed","true");});draw();});
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M2 : la loupe du contrôleur (défauts visibles, ISO 5817)
+   ========================================================= */
+(function(){
+  const svg=$("#m2svg");if(!svg)return;
+  const st=$("#m2t"),sb=$("#m2b"),sh=$("#m2h"),ro=$("#m2r"),msg=$("#m2msg");
+  let dk="5011",prog=null;
+  const D={"5011":{n:"caniveau",L:(t,b)=>({D:Math.min(0.2*t,1),C:Math.min(0.1*t,0.5),B:Math.min(0.05*t,0.5)}),c:"intensité trop forte, arc long, mauvais angle ou balayage sans arrêt sur les bords",r:"baisser l'intensité, arc court, marquer un temps sur chaque bord ; reprendre par une passe de finition"},
+    "502":{n:"surépaisseur excessive",L:(t,b)=>({D:Math.min(0.25*b+1,10),C:Math.min(0.15*b+1,7),B:Math.min(0.1*b+1,5)}),c:"vitesse trop lente, trop de métal dans la dernière passe",r:"avancer plus vite, répartir les passes de finition ; meuler l'excès en raccordant en douceur"},
+    "506":{n:"débordement",L:(t,b)=>({D:0.2*b,C:null,B:null}),c:"intensité trop faible, vitesse trop lente, bain qui coule en position",r:"augmenter l'intensité, avancer plus vite, petits bains en position ; meuler le débordement"},
+    "507":{n:"défaut d'alignement",L:(t,b)=>({D:Math.min(0.25*t,5),C:Math.min(0.15*t,4),B:Math.min(0.1*t,3)}),c:"accostage non contrôlé, pointage insuffisant",r:"contrôler l'accostage avant soudage, pointer plus serré, utiliser des gabarits"},
+    "511":{n:"manque d'épaisseur",L:(t,b)=>({D:Math.min(0.25*t,2),C:Math.min(0.1*t,1),B:Math.min(0.05*t,0.5)}),c:"remplissage insuffisant, bain trop chaud qui s'affaisse",r:"ajouter une passe de finition, réduire l'énergie par passe"},
+    "2017":{n:"piqûre",L:(t,b)=>({D:Math.min(0.3*t,3),C:Math.min(0.2*t,2),B:null}),c:"électrode humide, arc long, pièce rouillée, grasse ou peinte",r:"étuver les électrodes, arc court, nettoyer le joint ; meuler et ressouder"},
+    "601":{n:"coup d'arc",L:()=>({D:"admis si métal de base non affecté",C:null,B:null}),c:"amorçage sur la tôle, hors du joint",r:"amorcer dans le joint ou sur une tôle d'amorçage ; meuler la trace et vérifier par ressuage ou magnétoscopie"},
+    "602":{n:"projections",L:()=>({D:"selon l'application",C:"selon l'application",B:"selon l'application"}),c:"arc long, intensité trop forte, soufflage, électrode humide",r:"arc court, intensité dans la plage, étuver ; brosser ou meuler si la pièce est peinte"},
+    "104":{n:"fissure de cratère",L:()=>({D:null,C:null,B:null}),c:"arc coupé net en fin de cordon",r:"remplir le cratère avant d'écarter l'électrode ; meuler la fissure et ressouder"}};
+  const noH={"601":1,"602":1,"104":1};
+  function draw(){
+    const t=+st.value,b=+sb.value,h=+sh.value,Q=D[dk],Lm=Q.L(t,b),V=verdict(Lm,h,0),W=svgW(svg),n=W<520,H=n?330:300;setVB(svg,W,H);clear(svg);
+    $("#m2to").textContent=t+" mm";$("#m2bo").textContent=b+" mm";$("#m2ho").textContent=nf(h,1)+" mm";
+    sh.disabled=!!noH[dk];
+    const L=[];
+    /* vue de dessus */
+    const x0=16,x1=W-16,py=34,ph=n?92:84,mid=py+ph/2,bw=Math.min(ph-28,10+b*1.4),def=x0+(x1-x0)*0.6;
+    L.push(tx(svg,8,18,"Vue de dessus",{class:"ttl"}));
+    el("rect",{x:x0,y:py,width:x1-x0,height:ph,fill:"var(--paper-2)",stroke:"var(--ink)","stroke-width":1.1},svg);
+    if(dk==="507")el("rect",{x:x0,y:mid,width:x1-x0,height:ph/2,fill:"var(--line)",opacity:.45},svg);
+    el("rect",{x:x0+10,y:mid-bw/2,width:x1-x0-20,height:bw,rx:bw/2,fill:dk==="511"?"var(--muted)":"var(--line)",stroke:"var(--ink)","stroke-width":.8},svg);
+    for(let x=x0+18;x<x1-14;x+=Math.max(7,bw*0.45))el("path",{d:"M"+(x-4)+" "+(mid-bw/2+2)+" Q"+x+" "+mid+" "+(x-4)+" "+(mid+bw/2-2),fill:"none",stroke:"var(--muted)","stroke-width":.9},svg);
+    const tcol="var(--tau)";
+    if(dk==="5011")el("line",{x1:def-60,y1:mid+bw/2+1.5,x2:def+60,y2:mid+bw/2+1.5,stroke:tcol,"stroke-width":Math.min(6,1.5+h*2)},svg);
+    if(dk==="502")el("rect",{x:def-60,y:mid-bw/2+2,width:120,height:bw-4,rx:(bw-4)/2,fill:tcol,opacity:.25},svg);
+    if(dk==="506")el("path",{d:"M"+(def-50)+" "+(mid+bw/2)+" Q"+def+" "+(mid+bw/2+6+h*3)+" "+(def+50)+" "+(mid+bw/2)+" Z",fill:"var(--line)",stroke:tcol,"stroke-width":1.6},svg);
+    if(dk==="2017")el("circle",{cx:def,cy:mid,r:Math.max(2,h*2.2),fill:"var(--card)",stroke:tcol,"stroke-width":1.8},svg);
+    if(dk==="601"){const cx=def,cy=py+12;el("path",{d:"M"+(cx-6)+" "+(cy-6)+"L"+(cx+6)+" "+(cy+6)+"M"+(cx+6)+" "+(cy-6)+"L"+(cx-6)+" "+(cy+6),stroke:tcol,"stroke-width":2.2},svg);}
+    if(dk==="602"){const r=rng(7);for(let i=0;i<26;i++){const x=x0+20+r()*(x1-x0-40),side=r()<.5?-1:1,y=mid+side*(bw/2+4+r()*(ph/2-bw/2-8));el("circle",{cx:x,cy:y,r:1.4+r()*1.3,fill:tcol},svg);}}
+    if(dk==="104"){const cx=x1-22;el("circle",{cx:cx,cy:mid,r:bw*0.3,fill:"var(--muted)"},svg);[0,60,120].forEach(a=>{const r=bw*0.45,u=Math.cos(a*Math.PI/180),v=Math.sin(a*Math.PI/180);el("line",{x1:cx-u*r,y1:mid-v*r,x2:cx+u*r,y2:mid+v*r,stroke:tcol,"stroke-width":1.6},svg);});}
+    if(prog!==null){const lx=x0+20+prog*(x1-x0-40),near=Math.abs(lx-(dk==="104"?x1-22:def))<46;
+      el("circle",{cx:lx,cy:mid,r:Math.min(30,ph/2-4),fill:"var(--hl)",opacity:.35,stroke:near?"var(--tau)":"var(--frc)","stroke-width":2.6},svg);
+      el("line",{x1:lx+20,y1:mid+20,x2:lx+34,y2:mid+34,stroke:"var(--frc)","stroke-width":4,"stroke-linecap":"round"},svg);}
+    /* coupe */
+    const cy0=py+ph+34,ch=H-cy0-14,k=Math.min((W-60)/(b+40),(ch-20)/(t+6),12),cx=W/2,top=cy0+3*k+14,Y=z=>top+(t-z)*k,half=b/2,ext=Math.min(22,(W/2-20)/k-half);
+    L.push(tx(svg,8,cy0-10,"Coupe",{class:"ttl"}));
+    const shift=dk==="507"?Math.min(h,t*0.6)*k:0;
+    el("rect",{x:cx-(half+ext)*k,y:Y(t),width:(half+ext)*k-1,height:t*k,fill:"var(--paper-2)",stroke:"var(--ink)","stroke-width":1.2},svg);
+    el("rect",{x:cx+1,y:Y(t)+shift,width:(half+ext)*k-1,height:t*k,fill:"var(--paper-2)",stroke:"var(--ink)","stroke-width":1.2},svg);
+    const capH=dk==="502"?h:dk==="511"?-Math.min(h,t*0.5):Math.min(1.5,0.1*b+0.5);
+    el("path",{d:"M"+(cx-half*k)+" "+Y(t)+" L"+(cx-1.5*k)+" "+Y(0)+" L"+(cx+1.5*k)+" "+(Y(0)+shift)+" L"+(cx+half*k)+" "+(Y(t)+shift)+" Q"+cx+" "+(Y(t)-2*capH*k)+" "+(cx-half*k)+" "+Y(t)+" Z",fill:"var(--line)",stroke:"var(--ink)","stroke-width":1},svg);
+    if(dk==="5011"){const hx=cx+half*k;el("path",{d:"M"+(hx-1)+" "+Y(t)+" Q"+(hx+5)+" "+(Y(t)+h*k*2)+" "+(hx+12)+" "+Y(t)+" Z",fill:"var(--card)",stroke:tcol,"stroke-width":1.6},svg);}
+    if(dk==="506"){const hx=cx+half*k;el("path",{d:"M"+hx+" "+Y(t)+" Q"+(hx+h*k*0.6)+" "+(Y(t)-1.2*k)+" "+(hx+h*k)+" "+Y(t)+" Z",fill:"var(--line)",stroke:tcol,"stroke-width":1.6},svg);}
+    if(dk==="2017")el("circle",{cx:cx,cy:Y(t)-capH*k+h*k/2,r:Math.max(2,h*k/2),fill:"var(--card)",stroke:tcol,"stroke-width":1.6},svg);
+    if(dk==="104")el("path",{d:"M"+(cx-4)+" "+(Y(t)-capH*k)+" l3 "+(t*k*0.25)+" l-2 "+(t*k*0.15),fill:"none",stroke:tcol,"stroke-width":1.8},svg);
+    if(!noH[dk]){/* cote h */
+      const C2={"5011":[cx+half*k+18,Y(t),Y(t)+h*k],"502":[cx,Y(t),Y(t)-h*k],"511":[cx,Y(t),Y(t)+Math.min(h,t*0.5)*k],"507":[cx+(half+ext)*k-12,Y(t),Y(t)+shift]}[dk];
+      if(C2)darrow(svg,C2[0],C2[1],C2[2],"var(--tau)",1.8);
+      const lx=C2?C2[0]+10:cx+half*k+(dk==="506"?h*k+8:10),ly=C2?Math.max(C2[1],C2[2])+4:Y(t)-6;
+      L.push(tx(svg,Math.min(W-8,lx),Math.min(H-6,ly),"h = "+nf(h,1)+" mm",{fill:"var(--tau)","font-weight":"700"}));}
+    L.push(tx(svg,cx-(half+ext)*k+4,Y(t)-6,"t = "+t+" mm",{fill:"var(--mat)"}));
+    L.push(tx(svg,W-8,18,dk+" · "+Q.n,{"text-anchor":"end",fill:"var(--tau)","font-weight":"700"}));
+    L.forEach(q=>{fitText(q,4,W-4);halo(q,svg);});declutter(L,4,H-4);
+    ro.innerHTML=(noH[dk]?"":"<span>h = <b class='tau'>"+nf(h,1)+" mm</b></span>")+LV.map(k2=>"<span>"+k2+" : "+fmtLim(Lm[k2])+" "+vmark(V[k2])+"</span>").join("");
+    let m;
+    if(prog!==null&&prog<1)m="La loupe parcourt le cordon…";
+    else{const ok=LV.filter(k2=>V[k2]===true),ko=LV.filter(k2=>V[k2]===false);
+      m="<b>"+dk+" "+Q.n+"</b> : "+(ko.length===3?"❌ refusé aux trois niveaux. ":ok.length===3?"✅ admis aux trois niveaux. ":LV.map(k2=>k2+" "+vmark(V[k2])).join(", ")+". ");
+      if(dk==="602")m+="Acceptation selon l'application : on les élimine si la pièce est peinte ou exposée à la corrosion. ";
+      if(dk==="601")m+="Au niveau D, admis seulement si le métal de base n'est pas affecté. ";
+      m+="Cause probable : "+Q.c+". Remède : "+Q.r+".";}
+    msg.innerHTML=nbsp(m);
+  }
+  const A=animate($("#m2play"),"▶ Promener la loupe",5000,p=>{prog=p;draw();},()=>{prog=null;draw();});
+  [st,sb,sh].forEach(e=>e.addEventListener("input",()=>{A.stop();prog=null;draw();}));
+  $$("#m2d .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;dk=b.dataset.k;setOn("#m2d",b);draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M3 : le négatoscope (défauts internes)
+   ========================================================= */
+(function(){
+  const svg=$("#m3svg");if(!svg)return;
+  const ss=$("#m3s"),sh=$("#m3h"),sl=$("#m3l"),ro=$("#m3r"),msg=$("#m3msg");
+  let dk="2011",prog=null;
+  const D={"2011":{n:"soufflure isolée",L:s=>({D:Math.min(0.4*s,5),C:Math.min(0.3*s,4),B:Math.min(0.2*s,3)}),ctrl:"radiographie (défaut en volume, tache ronde sombre)",c:"électrode humide, arc long, pièce sale"},
+    "301":{n:"inclusion de laitier",L:s=>({D:[Math.min(0.4*s,4),Math.min(s,75)],C:[Math.min(0.3*s,3),Math.min(s,50)],B:[Math.min(0.2*s,2),Math.min(s,25)]}),ctrl:"radiographie (tache sombre irrégulière, allongée)",c:"décrassage insuffisant, racine bombée non meulée"},
+    "401":{n:"manque de fusion",L:s=>({D:[Math.min(0.4*s,4),25],C:null,B:null}),ctrl:"ultrasons (défaut plan) ; la radiographie ne le voit que s'il est dans l'axe des rayons",c:"intensité trop faible, vitesse trop rapide, angle, chanfrein fermé"},
+    "402":{n:"manque de pénétration",L:s=>({D:[Math.min(0.2*s,2),25],C:null,B:null}),ctrl:"radiographie (trait sombre rectiligne au milieu) et ultrasons",c:"talon épais, écartement fermé, diamètre trop gros en racine, reprise envers insuffisante"},
+    "100":{n:"fissure",L:()=>({D:null,C:null,B:null}),ctrl:"ultrasons ; magnétoscopie ou ressuage si elle débouche",c:"hydrogène, zone affectée dure, bridage"}};
+  function draw(){
+    const s=+ss.value,h=+sh.value,l=+sl.value,Q=D[dk],Lm=Q.L(s),V=verdict(Lm,h,dk==="2011"?0:l),W=svgW(svg),n=W<520,H=n?330:300;setVB(svg,W,H);clear(svg);
+    $("#m3so").textContent=s+" mm";$("#m3ho").textContent=nf(h,1)+" mm";$("#m3lo").textContent=l+" mm";
+    sl.disabled=dk==="2011";
+    const L=[],FILM="#1b2230",WELD="#3c4757",DEF="#0a0d12",TXT="#dfe7f1";
+    /* film */
+    const fx0=12,fx1=W-12,fy=30,fh=n?96:88,fm=fy+fh/2,span=140,sx=(fx1-fx0)/span,cx=(fx0+fx1)/2,op=prog===null?1:Math.max(0.05,prog);
+    L.push(tx(svg,8,18,"Film de radiographie",{class:"ttl"}));
+    const g=el("g",{opacity:op},svg);
+    el("rect",{x:fx0,y:fy,width:fx1-fx0,height:fh,rx:4,fill:FILM},g);
+    const ww=Math.min(fh-20,16+s*1.6);el("rect",{x:fx0,y:fm-ww/2,width:fx1-fx0,height:ww,fill:WELD},g);
+    const dl=Math.min(span-10,dk==="2011"?h:l)*sx,dh=Math.max(2,Math.min(ww-4,h*2.2));
+    if(dk==="2011")el("circle",{cx:cx,cy:fm,r:Math.max(2.5,h*sx/2),fill:DEF},g);
+    if(dk==="301")el("path",{d:"M"+(cx-dl/2)+" "+(fm+ww*0.28)+" q"+(dl*0.25)+" "+(-dh/2)+" "+(dl*0.5)+" 0 t"+(dl*0.5)+" 0 q"+(-dl*0.25)+" "+(dh*0.6)+" "+(-dl*0.5)+" 0 t"+(-dl*0.5)+" 0 Z",fill:DEF},g);
+    if(dk==="401")el("line",{x1:cx-dl/2,y1:fm-ww*0.32,x2:cx+dl/2,y2:fm-ww*0.32,stroke:DEF,"stroke-width":Math.max(1.5,h*0.6)},g);
+    if(dk==="402")el("line",{x1:cx-dl/2,y1:fm,x2:cx+dl/2,y2:fm,stroke:DEF,"stroke-width":Math.max(2,h*1.1)},g);
+    if(dk==="100"){let d="M"+(cx-dl/2)+" "+fm;const r=rng(11);for(let i=1;i<=14;i++)d+=" L"+(cx-dl/2+dl*i/14)+" "+(fm+(r()-.5)*ww*0.35);el("path",{d:d,fill:"none",stroke:DEF,"stroke-width":1.6},g);}
+    tx(svg,fx0+8,fy+14,"s = "+s+" mm",{fill:TXT,style:"font-size:11px"});
+    if(prog!==null&&prog<1)L.push(tx(svg,fx1-6,fy+fh+16,"développement…",{"text-anchor":"end",class:"lbl"}));
+    /* coupe */
+    const cy0=fy+fh+30,ch=H-cy0-12,k=Math.min((ch-18)/(s+3),(W-40)/(2*s+30),11),cxx=W/2,base=cy0+ch-6,Y=z=>base-z*k,ta=Math.tan(Math.PI/6),hw=z=>1+Math.max(0,z-1.5)*ta,ext=12;
+    L.push(tx(svg,8,cy0-6,"Coupe",{class:"ttl"}));
+    [-1,1].forEach(sg=>{const pts=[];for(let i=0;i<=20;i++){const z=s*i/20;pts.push([cxx+sg*hw(z)*k,Y(z)]);}const xo=cxx+sg*(hw(s)+ext)*k;pts.push([xo,Y(s)],[xo,Y(0)]);
+      el("polygon",{points:pts.map(p=>p.map(v=>v.toFixed(1)).join(",")).join(" "),fill:"var(--paper-2)",stroke:"var(--ink)","stroke-width":1.2},svg);});
+    const wp=[];for(let i=0;i<=20;i++){const z=s*i/20;wp.push([cxx-hw(z)*k,Y(z)]);}for(let i=20;i>=0;i--){const z=s*i/20;wp.push([cxx+hw(z)*k,Y(z)]);}
+    el("polygon",{points:wp.map(p=>p.map(v=>v.toFixed(1)).join(",")).join(" "),fill:"var(--line)",stroke:"var(--ink)","stroke-width":1},svg);
+    const tc="var(--tau)";
+    if(dk==="2011")el("circle",{cx:cxx,cy:Y(s*0.55),r:Math.max(2,h*k/2),fill:"var(--card)",stroke:tc,"stroke-width":1.8},svg);
+    if(dk==="301")el("ellipse",{cx:cxx-hw(s*0.45)*k+Math.max(3,h*k*0.4),cy:Y(s*0.45),rx:Math.max(2,h*k*0.45),ry:Math.max(1.5,h*k*0.3),fill:"var(--ink)",opacity:.75},svg);
+    if(dk==="401"){const z0=s*0.35,z1=Math.min(s,z0+h);el("line",{x1:cxx+hw(z0)*k,y1:Y(z0),x2:cxx+hw(z1)*k,y2:Y(z1),stroke:tc,"stroke-width":3},svg);}
+    if(dk==="402")el("rect",{x:cxx-1.2*k,y:Y(Math.min(h,s*0.5)),width:2.4*k,height:Math.min(h,s*0.5)*k,fill:"var(--card)",stroke:tc,"stroke-width":1.6},svg);
+    if(dk==="100"){let d="M"+cxx+" "+Y(s*0.2);for(let i=1;i<=6;i++)d+=" L"+(cxx+(i%2?3:-3))+" "+Y(s*(0.2+0.1*i));el("path",{d:d,fill:"none",stroke:tc,"stroke-width":1.8},svg);}
+    L.push(tx(svg,W-8,18,dk+" · "+Q.n,{"text-anchor":"end",fill:"var(--tau)","font-weight":"700"}));
+    L.forEach(q=>{fitText(q,4,W-4);halo(q,svg);});declutter(L,4,H-4);
+    const lim=k2=>{const v=Lm[k2];if(v===null)return "non admis";if(Array.isArray(v))return "h ≤ "+nf(v[0],1)+", l ≤ "+nf(v[1],0)+(dk==="401"||dk==="402"?" (court)":"");return "≤ "+nf(v,1)+" mm";};
+    ro.innerHTML="<span>"+(dk==="2011"?"d":"h")+" = <b class='tau'>"+nf(h,1)+" mm</b>"+(dk==="2011"?"":", l = "+l+" mm")+"</span>"+LV.map(k2=>"<span>"+k2+" : "+lim(k2)+" "+vmark(V[k2])+"</span>").join("");
+    let m;
+    if(prog!==null&&prog<1)m="Le film se développe : les vides apparaissent en sombre.";
+    else{const ko=LV.filter(k2=>V[k2]===false);
+      m="<b>"+dk+" "+Q.n+"</b> : "+(ko.length===3?"❌ refusé aux trois niveaux.":ko.length===0?"✅ admis aux trois niveaux.":LV.map(k2=>k2+" "+vmark(V[k2])).join(", ")+".")+" Contrôle le plus adapté : "+Q.ctrl+". Cause probable : "+Q.c+".";
+      if(dk==="301"&&l>s)m+=" ⚠️ Longueur supérieure à l'épaisseur s : refusée même au niveau D.";
+      if((dk==="401"||dk==="402")&&l>25)m+=" ⚠️ Plus de 25 mm : ce n'est plus une imperfection courte.";}
+    msg.innerHTML=nbsp(m);
+  }
+  const A=animate($("#m3play"),"▶ Développer le film",4000,p=>{prog=p;draw();},()=>{prog=null;draw();});
+  [ss,sh,sl].forEach(e=>e.addEventListener("input",()=>{A.stop();prog=null;draw();}));
+  $$("#m3d .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;dk=b.dataset.k;setOn("#m3d",b);draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M4 : réparer une fonte par petits cordons
+   ========================================================= */
+(function(){
+  const svg=$("#m4svg");if(!svg)return;
+  const sf=$("#m4f"),sc=$("#m4c"),si=$("#m4i"),bp=$("#m4p"),ro=$("#m4r"),msg=$("#m4msg");
+  let ek="Ni",peen=true,prog=null;
+  const E={Ni:{n:"nickel pur",f:1},NiFe:{n:"nickel-fer",f:1},acier:{n:"acier non allié",f:2.5}};
+  const K=1.2,V=2,TAU=300,T0=20;
+  function sim(){const Lf=+sf.value,Lc=+sc.value,Ti=+si.value,nC=Math.ceil(Lf/Lc-1e-9),ev=[];let T=T0,t=0,Tmax=T0,wait=0;
+    for(let i=0;i<nC;i++){if(T>Ti){const dt=TAU*Math.log((T-T0)/(Ti-T0));ev.push({k:"w",t0:t,t1:t+dt,T0:T});t+=dt;wait+=dt;T=Ti;}
+      const lb=Math.min(Lc,Lf-i*Lc),d=lb/V;ev.push({k:"b",i:i,t0:t,t1:t+d,T0:T,T1:T+K*lb,x0:i*Lc,x1:i*Lc+lb});t+=d;T+=K*lb;Tmax=Math.max(Tmax,T);}
+    const tEnd=t;ev.push({k:"c",t0:t,t1:t+Math.max(120,0.4*t),T0:T});
+    const R=E[ek].f*Math.sqrt(Lc/25)*Math.sqrt(Ti/100)*(peen?0.8:1);
+    return {Lf:Lf,Lc:Lc,Ti:Ti,nC:nC,ev:ev,Tmax:Tmax,tEnd:tEnd,wait:wait,R:R};}
+  const Tat=(S,t)=>{for(const e of S.ev){if(t<=e.t1+1e-9){if(e.k==="b")return e.T0+(e.T1-e.T0)*(t-e.t0)/(e.t1-e.t0);return T0+(e.T0-T0)*Math.exp(-(t-e.t0)/TAU);}}const e=S.ev[S.ev.length-1];return T0+(e.T0-T0)*Math.exp(-(e.t1-e.t0)/TAU);};
+  function draw(){
+    const S=sim(),W=svgW(svg),n=W<520,H=n?380:320;setVB(svg,W,H);clear(svg);
+    $("#m4fo").textContent=S.Lf+" mm";$("#m4co").textContent=S.Lc+" mm";$("#m4io").textContent=S.Ti+" °C";bp.classList.toggle("on",peen);bp.setAttribute("aria-pressed",peen?"true":"false");
+    const tTot=S.ev[S.ev.length-1].t1,tc=prog===null?S.tEnd:Math.max(0,prog)*S.tEnd,L=[];
+    /* pièce et fissure */
+    const px0=16,px1=W-16,py=30,ph=n?78:72,mid=py+ph/2,sx=(px1-px0-30)/S.Lf,cx0=px0+15;
+    L.push(tx(svg,8,18,"Fissure et cordons",{class:"ttl"}));
+    el("rect",{x:px0,y:py,width:px1-px0,height:ph,rx:6,fill:"var(--paper-2)",stroke:"var(--ink)","stroke-width":1.2},svg);
+    let d="M"+cx0+" "+mid;const r=rng(5);for(let i=1;i<=24;i++)d+=" L"+(cx0+S.Lf*sx*i/24)+" "+(mid+(r()-.5)*8);el("path",{d:d,fill:"none",stroke:"var(--tau)","stroke-width":1.6},svg);
+    [cx0-6,cx0+S.Lf*sx+6].forEach(x=>el("circle",{cx:x,cy:mid,r:3.2,fill:"var(--card)",stroke:"var(--ink)","stroke-width":1.2},svg));
+    S.ev.filter(e=>e.k==="b").forEach(e=>{if(e.t0>tc)return;const f=Math.min(1,(tc-e.t0)/(e.t1-e.t0)),xa=cx0+e.x0*sx,xb=cx0+(e.x0+(e.x1-e.x0)*f)*sx;
+      el("rect",{x:xa,y:mid-7,width:Math.max(1,xb-xa-1),height:14,rx:6,fill:e.i%2?"var(--gam)":"var(--eps)",opacity:.7,stroke:"var(--ink)","stroke-width":.7},svg);
+      if(peen&&f>=1&&S.nC<=30)for(let q=1;q<4;q++){const xm=xa+(xb-xa)*q/4;el("circle",{cx:xm,cy:mid,r:1.4,fill:"var(--frc)"},svg);}});
+    L.push(tx(svg,px0+8,py+ph-7,"L = "+S.Lf+" mm · "+S.nC+" cordon"+(S.nC>1?"s":"")+" de "+Math.min(S.Lc,S.Lf)+" mm",{class:"lbl"}));
+    /* température */
+    const gx0=n?44:52,gx1=W-16,gy0=py+ph+52,gy1=H-40,Tm=Math.max(150,Math.ceil((S.Tmax+30)/50)*50),tmax=tTot,xs=niceStep(tmax,n?4:6);
+    L.push(tx(svg,8,gy0-30,"Température de la zone soudée",{class:"ttl"}));
+    const ax=axes(svg,gx0,gx1,gy0,gy1,0,tmax,0,Tm,"temps (s)","T (°C)",xs,Tm>200?100:50,v=>nf(v,0),v=>nf(v,0));
+    el("line",{x1:gx0,y1:ax.Y(S.Ti),x2:gx1,y2:ax.Y(S.Ti),stroke:"var(--sig)","stroke-width":1.6,"stroke-dasharray":"6 4"},svg);
+    L.push(tx(svg,gx1-4,ax.Y(S.Ti)-6,"Tᵢ = "+S.Ti+" °C",{"text-anchor":"end",fill:"var(--sig)"}));
+    S.ev.filter(e=>e.k==="b").forEach(e=>el("rect",{x:ax.X(e.t0),y:gy0,width:Math.max(1,ax.X(e.t1)-ax.X(e.t0)),height:gy1-gy0,fill:"var(--eps)",opacity:.1},svg));
+    let p="";const N=240,tEndDraw=prog===null?tmax:tc;for(let i=0;i<=N;i++){const t=tEndDraw*i/N;p+=(i?"L":"M")+ax.X(t).toFixed(1)+" "+ax.Y(Tat(S,t)).toFixed(1)+" ";}
+    el("path",{d:p,fill:"none",stroke:"var(--sig)","stroke-width":2.2},svg);
+    const tm=S.ev.filter(e=>e.k==="b").reduce((a,e)=>e.T1>a.T?{T:e.T1,t:e.t1}:a,{T:0,t:0});
+    if(prog===null){el("circle",{cx:ax.X(tm.t),cy:ax.Y(tm.T),r:4,fill:"var(--sig)"},svg);L.push(tx(svg,ax.X(tm.t)+6,ax.Y(tm.T)-6,"max. "+nf(S.Tmax,0)+" °C",{fill:"var(--sig)","font-weight":"700"}));}
+    L.forEach(q=>{fitText(q,4,W-4);halo(q,svg);});declutter(L,4,H-4);
+    const lvl=S.R<=1.1?"faible":S.R<=1.8?"modéré":"élevé";
+    ro.innerHTML="<span><b class='eps'>"+S.nC+"</b> cordon"+(S.nC>1?"s":"")+"</span><span>T max ≈ <b class='sig'>"+nf(S.Tmax,0)+" °C</b></span><span>durée ≈ "+fmtDur(S.tEnd)+"</span><span>attente ≈ "+fmtDur(S.wait)+"</span><span>indice : <b class='"+(S.R<=1.1?"eps":"tau")+"'>"+nf(S.R,2)+" ("+lvl+")</b></span>";
+    let m;
+    if(prog!==null&&prog<1)m="Cordon après cordon : on attend que la zone redescende sous "+S.Ti+" °C avant d'enchaîner.";
+    else{m=lvl==="faible"?"✅ Réparation conforme aux règles du soudage à froid : ":lvl==="modéré"?"⚠️ Risque modéré de fissuration : ":"❌ Risque élevé de fissuration : ";
+      const tips=[];if(S.Lc>30)tips.push("cordons trop longs (20 à 30 mm conseillés)");if(S.Ti>100)tips.push("zone trop chaude entre deux cordons (sous 100 °C)");if(!peen)tips.push("pas de martelage");if(ek==="acier")tips.push("électrode en acier : dépôt et zone de liaison durs, non usinables");
+      m+=tips.length?tips.join(", ")+".":"électrode "+E[ek].n+", cordons de "+S.Lc+" mm, martelés, zone gardée sous "+S.Ti+" °C.";
+      m+=" Température maximale ≈ "+nf(S.Tmax,0)+" °C en "+fmtDur(S.tEnd)+".";}
+    msg.innerHTML=nbsp(m);
+  }
+  const A=animate($("#m4play"),"▶ Souder une fonte par petits cordons",7000,p=>{prog=p;draw();},()=>{prog=null;draw();});
+  [sf,sc,si].forEach(e=>e.addEventListener("input",()=>{A.stop();prog=null;draw();}));
+  $$("#m4e .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;ek=b.dataset.k;setOn("#m4e",b);draw();}));
+  bp.addEventListener("click",()=>{A.stop();prog=null;peen=!peen;draw();});
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M5 : gouger une rigole
+   ========================================================= */
+(function(){
+  const svg=$("#m5svg");if(!svg)return;
+  const sI=$("#m5I"),sv=$("#m5v"),sa=$("#m5a"),sP=$("#m5P"),ro=$("#m5r"),msg=$("#m5msg");
+  let d="9.5",cur="CC+",prog=null;
+  const RANGE={"4":[90,150],"4.8":[200,250],"6.4":[300,400],"7.9":[350,450],"9.5":[450,600],"12.7":[800,1000]};
+  function calc(){const dd=+d,I=+sI.value,v=+sv.value,th=+sa.value,P=+sP.value,f=Math.pow(Math.sin(th*Math.PI/180)/Math.sin(35*Math.PI/180),0.3),eff=cur==="CA"?0.5:1;
+    const w=dd+3.2,p=150*I*f*eff/(w*v),Vr=150*I*f*eff;return {dd:dd,I:I,v:v,th:th,P:P,w:w,p:p,Vr:Vr,kgh:Vr*60*RHO/1000,lim:1.5*dd,rg:RANGE[d]};}
+  function draw(){
+    const C=calc(),W=svgW(svg),n=W<520,H=n?360:260;setVB(svg,W,H);clear(svg);
+    $("#m5Io").textContent=C.I+" A";$("#m5vo").textContent=C.v+" mm/min";$("#m5ao").textContent=C.th+"°";$("#m5Po").textContent=nf(C.P,1)+" bar";
+    const L=[],done=prog===null?1:Math.max(0,prog);
+    /* vue de côté */
+    const sx0=14,sx1=n?W-14:Math.round(W*0.56),sy=n?96:120,sth=40,len=sx1-sx0-20,xf=sx0+10+len*done,dpx=Math.min(sth-6,C.p*2.2);
+    L.push(tx(svg,8,18,"Vue de côté",{class:"ttl"}));
+    el("rect",{x:sx0,y:sy,width:sx1-sx0,height:sth,fill:"var(--paper-2)",stroke:"var(--ink)","stroke-width":1.2},svg);
+    if(done>0)el("path",{d:"M"+(sx0+10)+" "+sy+" L"+(sx0+16)+" "+(sy+dpx)+" L"+(xf-6)+" "+(sy+dpx)+" Q"+xf+" "+(sy+dpx)+" "+(xf+4)+" "+sy+" Z",fill:"var(--card)",stroke:"var(--ink)","stroke-width":1},svg);
+    const a=C.th*Math.PI/180,eL=n?70:84,ex=xf+4+Math.cos(a)*eL*-1,ey=sy-Math.sin(a)*eL;
+    el("line",{x1:xf+4,y1:sy-2,x2:xf+4-Math.cos(a)*eL,y2:ey,stroke:"var(--muted)","stroke-width":7,"stroke-linecap":"round"},svg);
+    el("line",{x1:xf+4-Math.cos(a)*eL*0.55,y1:sy-Math.sin(a)*eL*0.55,x2:xf+4-Math.cos(a)*eL,y2:ey,stroke:"var(--weld)","stroke-width":8,"stroke-linecap":"round"},svg);
+    el("circle",{cx:xf+4,cy:sy-1,r:6,fill:"var(--sig)",opacity:.55},svg);
+    arrow(svg,xf+4-Math.cos(a)*eL*0.9+Math.sin(a)*8,ey+Math.sin(a)*eL*0.1+Math.cos(a)*8,xf+2+Math.sin(a)*6,sy-4+Math.cos(a)*4,"var(--frc)",2,8);
+    if(prog!==null&&prog<1){const r=rng(Math.floor(prog*60)+1);for(let i=0;i<10;i++)el("circle",{cx:xf+10+r()*40,cy:sy-4-r()*26,r:1.4,fill:"var(--sig)"},svg);}
+    const tE=tx(svg,xf+4-Math.cos(a)*eL-6,ey-6,"électrode de carbone",{"text-anchor":"end",fill:"var(--muted)"});fitText(tE,4,sx1);L.push(tE);
+    L.push(tx(svg,xf-2,sy+sth+16,"jet d'air → métal chassé",{"text-anchor":"end",fill:"var(--frc)"}));
+    L.push(tx(svg,sx1-4,sy-8,"θ = "+C.th+"°",{"text-anchor":"end",fill:"var(--frc)","font-weight":"700"}));
+    /* coupe de la rigole */
+    const qx0=n?W/2:Math.round((sx1+W)/2+10),qy=n?sy+sth+64:64,k=Math.min(n?7:8,(n?W-60:W-sx1-60)/(C.w+18),(n?H-qy-50:H-qy-40)/(Math.max(C.p,10)+6)),T=Math.max(C.p+6,14);
+    L.push(tx(svg,n?8:qx0-40,qy-26,"Coupe de la rigole",{class:"ttl"}));
+    const half=(C.w+18)/2*k,top=qy;
+    el("rect",{x:qx0-half,y:top,width:2*half,height:T*k,fill:"var(--paper-2)",stroke:"var(--ink)","stroke-width":1.2},svg);
+    const gw=C.w/2*k,gp=C.p*k*done;
+    el("path",{d:"M"+(qx0-gw)+" "+top+" C"+(qx0-gw)+" "+(top+gp*1.25)+" "+(qx0+gw)+" "+(top+gp*1.25)+" "+(qx0+gw)+" "+top+" Z",fill:"var(--card)",stroke:(C.I<C.rg[0]||C.P<5.5)?"var(--tau)":"var(--eps)","stroke-width":2},svg);
+    darrow(svg,qx0+gw+10,top,top+C.p*k*done*0.94,"var(--eps)",1.6);
+    L.push(tx(svg,qx0+gw+16,top+C.p*k*0.5+4,"p ≈ "+nf(C.p,1)+" mm",{fill:"var(--eps)","font-weight":"700"}));
+    L.push(tx(svg,qx0,top-8,"w ≈ "+nf(C.w,1)+" mm",{"text-anchor":"middle",fill:"var(--eps)","font-weight":"700"}));
+    L.forEach(q=>{fitText(q,4,W-4);halo(q,svg);});declutter(L,4,H-4);
+    ro.innerHTML="<span>w ≈ <b class='eps'>"+nf(C.w,1)+" mm</b></span><span>p ≈ <b class='eps'>"+nf(C.p,1)+" mm</b></span><span>1,5 d = "+nf(C.lim,1)+" mm</span><span>enlevé ≈ "+nf(C.kgh,0)+" kg/h</span><span>plage CC+ : "+C.rg[0]+" à "+C.rg[1]+" A</span>";
+    const tips=[];
+    if(prog!==null&&prog<1)tips.push("L'arc fond le métal, le jet d'air le chasse : la rigole se creuse à "+C.v+" mm/min.");
+    else{
+      tips.push("Rigole de "+nf(C.w,1)+" mm de large et ≈ "+nf(C.p,1)+" mm de profondeur.");
+      if(C.p>C.lim)tips.push("⚠️ Plus de 1,5 fois le diamètre de l'électrode : gouge en plusieurs passes.");
+      if(cur==="CC+"&&C.I<C.rg[0])tips.push("❌ Intensité trop faible pour ce diamètre : le métal fond mal et le carbone se dépose ; rigole carburée à meuler.");
+      if(cur==="CC+"&&C.I>C.rg[1])tips.push("⚠️ Intensité au-dessus de la plage : l'électrode s'use très vite.");
+      if(cur==="CA")tips.push("Courant alternatif : électrodes spéciales, et deux fois moins efficace qu'en continu sur l'acier.");
+      if(C.P<5.5)tips.push("❌ Air trop faible : le métal fondu reste et colle aux bords, carburé.");
+      else if(C.P>6.9)tips.push("Air au-dessus de 6,9 bar : pas plus de métal enlevé, selon le fabricant.");
+      if(C.th>=70)tips.push("Angle de 70 à 80° : c'est la position de coupage.");else if(C.th<25)tips.push("Angle rasant : rigole plus douce et moins profonde, pour une finition.");
+      if(tips.length===1)tips.push("✅ Réglage dans les plages du fabricant : rigole lisse et bleutée attendue.");}
+    msg.innerHTML=nbsp(tips.join(" "));
+  }
+  const A=animate($("#m5play"),"▶ Gouger",5000,p=>{prog=p;draw();},()=>{prog=null;draw();});
+  [sI,sv,sa,sP].forEach(e=>e.addEventListener("input",()=>{A.stop();prog=null;draw();}));
+  $$("#m5d .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;d=b.dataset.k;setOn("#m5d",b);const r=RANGE[d];sI.value=Math.round((r[0]+r[1])/20)*10;draw();}));
+  $$("#m5c .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;cur=b.dataset.k;setOn("#m5c",b);draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M6 : la ronde de sécurité
+   ========================================================= */
+(function(){
+  const svg=$("#m6svg");if(!svg)return;
+  const sI=$("#m6I"),ro=$("#m6r"),msg=$("#m6msg");
+  const KS=["cab","mas","pos","fum","ecr","epi","feu","fds"],ok={};KS.forEach(k=>ok[k]=false);let mil="sec",prog=null;
+  const NAMES={cab:"câbles et pince",mas:"prise de masse",pos:"poste adapté au milieu",fum:"captage des fumées",ecr:"écrans",epi:"masque, gants, veste",feu:"zone dégagée, extincteur",fds:"FDS lue"};
+  const RISK=[{n:"choc électrique",ic:"⚡",need:["cab","mas","pos"]},{n:"coup d'arc des voisins",ic:"👁",need:["ecr"]},{n:"brûlures, rayonnement",ic:"🔥",need:["epi"]},{n:"fumées cancérogènes",ic:"☁",need:["fum","fds"]},{n:"incendie",ic:"🧯",need:["feu"]}];
+  function setBtn(k){const b=$("#m6k .btn[data-k='"+k+"']");b.classList.toggle("on",ok[k]);b.setAttribute("aria-pressed",ok[k]?"true":"false");}
+  function draw(){
+    const W=svgW(svg),n=W<520,H=n?360:300,I=+sI.value;setVB(svg,W,H);clear(svg);
+    $("#m6Io").textContent=I+" A";
+    const L=[],u=n?W/360:Math.min(W/700,1.25),gx=16,gy=n?60:70;
+    L.push(tx(svg,8,18,"Le poste de soudage",{class:"ttl"}));
+    /* sol, poste, pièce */
+    el("line",{x1:8,y1:H-34,x2:W-8,y2:H-34,stroke:"var(--ink)","stroke-width":1.2},svg);
+    const gw=70*u,gh=60*u,genX=gx,genY=H-34-gh;el("rect",{x:genX,y:genY,width:gw,height:gh,rx:5,fill:"var(--paper-2)",stroke:"var(--ink)","stroke-width":1.3},svg);
+    L.push(tx(svg,genX+gw/2,genY-8,"poste",{"text-anchor":"middle",class:"lbl"}));
+    const tbX=W*0.45,tbW=W*0.26,tbY=H-34-50*u;el("rect",{x:tbX,y:tbY,width:tbW,height:10,fill:"var(--muted)"},svg);
+    el("line",{x1:tbX+8,y1:tbY+10,x2:tbX+8,y2:H-34,stroke:"var(--ink)","stroke-width":2},svg);el("line",{x1:tbX+tbW-8,y1:tbY+10,x2:tbX+tbW-8,y2:H-34,stroke:"var(--ink)","stroke-width":2},svg);
+    el("rect",{x:tbX+tbW*0.2,y:tbY-8,width:tbW*0.6,height:8,fill:"var(--line)",stroke:"var(--ink)","stroke-width":1},svg);
+    const arcX=tbX+tbW*0.5,arcY=tbY-9;
+    /* câbles */
+    el("path",{d:"M"+(genX+gw)+" "+(genY+gh*0.35)+" C"+(genX+gw+60)+" "+(genY-40)+" "+(arcX-40)+" "+(arcY-60)+" "+(arcX-6)+" "+(arcY-22),fill:"none",stroke:ok.cab?"var(--ink)":"var(--tau)","stroke-width":3,"stroke-dasharray":ok.cab?null:"7 4"},svg);
+    const mX=ok.mas?tbX+tbW*0.75:tbX+tbW+30;el("path",{d:"M"+(genX+gw)+" "+(genY+gh*0.7)+" C"+(genX+gw+60)+" "+(H-20)+" "+(mX-40)+" "+(H-20)+" "+mX+" "+(ok.mas?tbY-4:H-38),fill:"none",stroke:ok.mas?"var(--ink)":"var(--tau)","stroke-width":2.6},svg);
+    el("circle",{cx:mX,cy:ok.mas?tbY-4:H-38,r:5,fill:ok.mas?"var(--ink)":"var(--tau)"},svg);
+    /* électrode et arc */
+    el("line",{x1:arcX-6,y1:arcY-22,x2:arcX,y2:arcY-2,stroke:"var(--muted)","stroke-width":4},svg);el("circle",{cx:arcX,cy:arcY,r:5,fill:"var(--sig)",opacity:.7},svg);
+    /* fumées et captage */
+    const fumes=el("path",{d:"M"+arcX+" "+(arcY-6)+" C"+(arcX-14)+" "+(arcY-40)+" "+(arcX+20)+" "+(arcY-60)+" "+(arcX+(ok.fum?40:4))+" "+(arcY-(ok.fum?54:96)),fill:"none",stroke:ok.fum?"var(--muted)":"var(--tau)","stroke-width":7,"stroke-linecap":"round",opacity:.45},svg);
+    if(ok.fum){el("path",{d:"M"+(arcX+30)+" "+(arcY-64)+" l26 -6 l40 -40",fill:"none",stroke:"var(--ink)","stroke-width":6,"stroke-linecap":"round"},svg);L.push(tx(svg,arcX+64,arcY-112,"bras aspirant",{class:"lbl"}));}
+    /* écran et voisin */
+    const nbX=W-30*u;el("circle",{cx:nbX,cy:H-34-58*u,r:7*u,fill:"var(--card)",stroke:"var(--ink)","stroke-width":1.2},svg);el("line",{x1:nbX,y1:H-34-51*u,x2:nbX,y2:H-34-20*u,stroke:"var(--ink)","stroke-width":2},svg);
+    L.push(tx(svg,nbX,H-34-72*u,"voisin",{"text-anchor":"middle",class:"lbl"}));
+    if(ok.ecr)el("rect",{x:nbX-26*u,y:H-34-80*u,width:6,height:80*u,fill:"var(--weld)",opacity:.8},svg);
+    else el("line",{x1:arcX+6,y1:arcY,x2:nbX-8,y2:H-34-58*u,stroke:"var(--tau)","stroke-width":1.6,"stroke-dasharray":"4 4"},svg);
+    /* feu */
+    if(!ok.feu){el("rect",{x:tbX+tbW+6,y:H-34-26*u,width:16*u,height:26*u,rx:3,fill:"var(--tau)",opacity:.55},svg);L.push(tx(svg,tbX+tbW+14*u,H-34-30*u,"solvant",{"text-anchor":"middle",fill:"var(--tau)"}));}
+    else{el("rect",{x:genX+gw+12,y:H-34-30*u,width:12*u,height:30*u,rx:4,fill:"var(--bad)",opacity:.8},svg);L.push(tx(svg,genX+gw+18*u,H-34-34*u,"extincteur",{"text-anchor":"middle",class:"lbl"}));}
+    /* risques ouverts */
+    const open=RISK.filter(r=>r.need.some(k=>!ok[k]));
+    open.forEach((r,i)=>{const t=tx(svg,W-8,gy-24+i*18,r.ic+" "+r.n,{"text-anchor":"end",fill:"var(--tau)","font-weight":"700"});L.push(t);});
+    if(!open.length)L.push(tx(svg,W-8,gy-24,"✅ aucun risque ouvert",{"text-anchor":"end",fill:"var(--ok)","font-weight":"700"}));
+    L.forEach(q=>{fitText(q,4,W-4);halo(q,svg);});declutter(L,4,H-4);
+    const mn=I<160?8:I<250?10:11,rc=I<160?10:I<250?12:14,nok=KS.filter(k=>ok[k]).length;
+    ro.innerHTML="<span>vérifié : <b class='"+(nok===8?"eps":"tau")+"'>"+nok+" / 8</b></span><span>risques ouverts : <b>"+open.length+"</b></span><span>filtre : ≥ "+mn+", conseillé "+rc+"</span><span>tension à vide CA : ≤ "+(mil==="sec"?"80":"48")+" V eff.</span>";
+    let m;
+    if(prog!==null&&prog<1)m="La ronde avance : "+nok+" vérification"+(nok>1?"s":"")+" sur 8.";
+    else if(!open.length)m="✅ Poste prêt : courant, rayonnement, fumées et feu sont maîtrisés. ";
+    else m="Risques encore ouverts : "+open.map(r=>r.n+" ("+r.need.filter(k=>!ok[k]).map(k=>NAMES[k]).join(", ")+")").join(" ; ")+". ";
+    if(prog===null){m+=" Pour "+I+" A, filtre d'échelon "+mn+" au minimum, "+rc+" conseillé (exemple OSHA).";
+      m+=mil==="sec"?" Atelier sec : tension à vide jusqu'à 80 V efficaces en alternatif, 113 V crête en continu.":" Milieu à risque accru : 48 V efficaces au plus en alternatif ; préfère un poste à courant continu ou un réducteur de tension à vide.";}
+    msg.innerHTML=nbsp(m);
+  }
+  const A=animate($("#m6play"),"▶ Ronde de sécurité",6000,p=>{prog=p;const kk=Math.floor(Math.max(0,p)*KS.length+1e-9);KS.forEach((k,i)=>{ok[k]=i<kk;setBtn(k);});draw();},()=>{prog=null;KS.forEach(k=>{ok[k]=true;setBtn(k);});draw();});
+  $$("#m6k .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;const k=b.dataset.k;ok[k]=!ok[k];setBtn(k);draw();}));
+  $$("#m6m .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;mil=b.dataset.k;setOn("#m6m",b);draw();}));
+  sI.addEventListener("input",()=>{A.stop();prog=null;draw();});
+  $("#m6raz").addEventListener("click",()=>{A.stop();prog=null;KS.forEach(k=>{ok[k]=false;setBtn(k);});draw();});
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   Quiz, check-list, sommaire, thème
+   ========================================================= */
+(function(){
+  const box=$("#quiz");if(!box)return;
+  const Q=[
+    {q:"On dit que le soudage est un « procédé spécial » parce que :",o:["il demande un poste spécial","sa qualité ne peut pas être entièrement vérifiée après coup","il est réservé aux aciers spéciaux","il n'a pas de norme"],c:1,e:"On ne peut pas tout contrôler sans détruire : la qualité se garantit d'avance, par des <b>modes opératoires et des soudeurs qualifiés</b>, puis se vérifie."},
+    {q:"La QMOS (ISO 15614-1) sert à :",o:["qualifier le soudeur","prouver par des essais que le mode opératoire donne une soudure conforme","mesurer l'hydrogène des électrodes","classer les défauts"],c:1,e:"La <b>qualification du mode opératoire</b> soude une éprouvette, la contrôle et l'essaie (traction, pliage, résilience, dureté, macrographie)."},
+    {q:"Dans l'ISO 6520-1, le groupe 4 rassemble :",o:["les fissures","les cavités","les manques de fusion et de pénétration","les défauts de forme"],c:2,e:"1 fissures, 2 cavités, 3 inclusions solides, <b>4 manques de fusion et de pénétration</b>, 5 défauts de forme, 6 défauts divers."},
+    {q:"Le niveau de qualité le plus exigeant de l'ISO 5817 est :",o:["B","C","D","A"],c:0,e:"<b>B</b> est le plus exigeant, D le moins. Il n'y a pas de niveau A."},
+    {q:"Tôle de 20 mm : la limite d'un caniveau au niveau C vaut :",o:["2 mm","1 mm","0,5 mm","aucune limite"],c:2,e:"h ≤ 0,1·t = 2 mm, <b>mais au plus 0,5 mm</b> : le plafond l'emporte."},
+    {q:"Une fissure de cratère est admise :",o:["au niveau D seulement","aux niveaux C et D","si elle mesure moins de 1 mm","à aucun niveau"],c:3,e:"Les fissures, y compris la <b>fissure de cratère (104)</b>, ne sont admises à aucun niveau de l'ISO 5817."},
+    {q:"Pour chercher des manques de fusion, le contrôle le plus adapté est :",o:["le contrôle visuel","la radiographie","les ultrasons","le ressuage"],c:2,e:"Un manque de fusion est <b>plan</b> : il renvoie bien l'écho des <b>ultrasons</b>, alors que la radiographie le voit mal s'il n'est pas dans l'axe des rayons."},
+    {q:"Le « manque d'interpénétration » désigne :",o:["des soufflures alignées","une soudure faite des deux côtés dont les passes ne se rejoignent pas","un caniveau à la racine","un défaut d'alignement"],c:1,e:"Il relève du numéro <b>402</b> (manque de pénétration) : les passes des deux faces ne se rejoignent pas au milieu."},
+    {q:"Pour réparer une fonte grise à l'électrode, on choisit :",o:["de longs cordons à forte intensité","une électrode au nickel, des cordons courts martelés, la pièce gardée sous 100 °C","une électrode cellulosique en descendant","un préchauffage à 50 °C et des cordons continus"],c:1,e:"<b>Court, froid, frappé</b> : nickel, cordons de 20 à 30 mm, martelage, moins de 100 °C entre deux cordons."},
+    {q:"En gougeage arc-air sur acier, on utilise :",o:["une électrode enrobée basique","une électrode de carbone en courant continu, électrode au +, avec de l'air à 5,5 à 6,9 bar","une électrode de tungstène et de l'argon","une électrode de carbone sans air"],c:1,e:"Arc de <b>carbone</b> en <b>CC+</b>, jet d'<b>air comprimé</b> de 5,5 à 6,9 bar qui chasse le métal fondu (procédé 871)."},
+    {q:"Depuis 2017, le CIRC classe les fumées de soudage :",o:["non classables","peut-être cancérogènes (2B)","cancérogènes pour l'homme (groupe 1)","sans danger si l'on soude de l'acier"],c:2,e:"Les fumées de soudage sont <b>cancérogènes pour l'homme (groupe 1)</b> : captage à la source d'abord, protection respiratoire ensuite."},
+    {q:"Dans un milieu humide et exigu, la tension à vide admise en courant alternatif est au plus :",o:["113 V crête","80 V efficaces","48 V efficaces","220 V"],c:2,e:"<b>48 V efficaces</b> en milieu à risque accru (cours 1) ; on préfère un poste à courant continu ou un réducteur de tension à vide."}
+  ];
+  let score=0,done=0;const sc=$("#qzScore");
+  function upd(){let t="Score : "+score+" / "+Q.length;if(done===Q.length)t+=score>=10?"  ·  🎉 série bouclée":score>=7?"  ·  relis les explications":"  ·  refais un tour des chapitres";sc.textContent=t;}
+  function render(){box.innerHTML="";score=0;done=0;
+    Q.forEach((it,n)=>{const d=document.createElement("div");d.className="qz";
+      d.innerHTML='<p class="qz-q"><b>'+(n+1)+".</b> "+it.q+'</p><div class="qz-o"></div><div class="qz-e" hidden></div>';
+      const o=d.querySelector(".qz-o"),ex=d.querySelector(".qz-e");let answered=false;
+      it.o.forEach((txt,i)=>{const b=document.createElement("button");b.type="button";b.className="qz-b";b.innerHTML=String.fromCharCode(65+i)+". "+txt;
+        b.addEventListener("click",()=>{if(answered)return;answered=true;done++;const ok=i===it.c;if(ok)score++;b.classList.add(ok?"ok":"ko");o.children[it.c].classList.add("ok");ex.hidden=false;ex.innerHTML=(ok?"✅ <b>Bien joué.</b> ":"❌ <b>Pas tout à fait.</b> ")+it.e;upd();});
+        o.appendChild(b);});
+      box.appendChild(d);});
+    upd();}
+  $("#qzReset").addEventListener("click",render);render();
+})();
+(function(){
+  const boxes=$$("#checklist input[type=checkbox]"),msg=$("#checkMsg"),KEY="electrode-enrobee-cours5-check";
+  if(!boxes.length)return;
+  let saved=[];try{saved=JSON.parse(localStorage.getItem(KEY)||"[]")||[];}catch(e){saved=[];}
+  boxes.forEach(b=>{b.checked=saved.indexOf(b.dataset.c)>=0;});
+  function upd(){const on=boxes.filter(b=>b.checked).map(b=>b.dataset.c);try{localStorage.setItem(KEY,JSON.stringify(on));}catch(e){}
+    msg.innerHTML=on.length===boxes.length?"🎉 <b>Tout est coché : la série « Soudage à l'électrode enrobée » est bouclée !</b>":on.length+" / "+boxes.length+" : reviens sur les points non cochés (les manipulations sont faites pour ça).";}
+  boxes.forEach(b=>b.addEventListener("change",upd));upd();
+})();
+(function(){
+  const links=$$(".toc a"),tin=$(".toc-in");
+  if(!links.length||!("IntersectionObserver" in window))return;
+  const map={};links.forEach(a=>{map[a.getAttribute("href").slice(1)]=a;});
+  const obs=new IntersectionObserver(ents=>{ents.forEach(en=>{if(!en.isIntersecting)return;const a=map[en.target.id];if(!a)return;
+    links.forEach(l=>l.classList.toggle("on",l===a));
+    if(tin){const tgt=a.offsetLeft-tin.clientWidth/2+a.offsetWidth/2;try{tin.scrollTo({left:tgt,behavior:RM?"auto":"smooth"});}catch(e){tin.scrollLeft=tgt;}}});},{rootMargin:"-45% 0px -50% 0px"});
+  Object.keys(map).forEach(id=>{const s=document.getElementById(id);if(s)obs.observe(s);});
+})();
+(function(){
+  const b=$("#themeBtn");if(!b)return;const KEY="electrode-enrobee-theme",root=document.documentElement;
+  const lab={auto:"◐ Thème : automatique",light:"☀️ Thème : clair",dark:"🌙 Thème : sombre"};
+  let t="auto";try{t=localStorage.getItem(KEY)||"auto";}catch(e){}
+  function apply(){if(t==="auto")root.removeAttribute("data-theme");else root.setAttribute("data-theme",t);b.textContent=lab[t];}
+  b.addEventListener("click",()=>{t=t==="auto"?"light":t==="light"?"dark":"auto";try{localStorage.setItem(KEY,t);}catch(e){}apply();});
+  apply();
+})();
+})();
+</script>
+</body>
+</html>

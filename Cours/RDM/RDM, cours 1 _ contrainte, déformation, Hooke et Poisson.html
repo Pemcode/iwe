@@ -1,0 +1,1853 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RDM, cours 1 : contrainte, déformation, Hooke et Poisson</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@500;600;700&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F3F6F9; --paper-2:#E6ECF2; --card:#FFFFFF; --ink:#17212B; --muted:#56626F; --line:#C5CFD9;
+  --grid:rgba(40,90,160,.075);
+  --sig:#CF2438; --tau:#8A34B6; --eps:#1B5ED3; --gam:#06849A; --frc:#D46A00; --mat:#26844A;
+  --ok:#26844A; --warn:#B86E00; --bad:#C62828;
+  --lv2:#E4EBF2; --hl:#FFF3B0;
+  --font-body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-head:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --font-math:"STIX Two Text","Cambria Math","Cambria","Times New Roman",serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+    --grid:rgba(120,160,220,.07);
+    --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A;
+    --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+  --grid:rgba(120,160,220,.07);
+  --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A;
+  --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+  color-scheme: dark;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0;color:var(--ink);font-family:var(--font-body);font-size:17.5px;line-height:1.62;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;
+}
+img,svg{max-width:100%}
+.wrap{max-width:800px;margin:0 auto;padding:0 20px}
+.wide{max-width:980px}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.1;margin:0}
+h3{font-size:1.65rem;font-weight:600;margin:2rem 0 .6rem}
+h4{font-size:1.3rem;font-weight:600;margin:1.4rem 0 .4rem}
+p{margin:.7em 0}
+a{color:var(--eps)}
+b,strong{font-weight:700}
+small{font-size:.8em}
+sub{font-size:.72em}
+.m{font-family:var(--font-math);font-size:1.08em;white-space:nowrap}
+.sig{color:var(--sig)} .tau{color:var(--tau)} .eps{color:var(--eps)} .gam{color:var(--gam)} .frc{color:var(--frc)} .mat{color:var(--mat)} .mut{color:var(--muted)}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .12em;line-height:1.1}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 .2em .08em}
+.frac>span:last-child{padding:.08em .2em 0}
+.vec{position:relative;display:inline-block}
+.vec::after{content:"→";position:absolute;left:0;right:0;top:-.72em;font-size:.62em;text-align:center;font-family:var(--font-body)}
+
+/* ---------- hero ---------- */
+.hero{padding:34px 0 10px}
+.title-block{border:2.5px solid var(--ink);background:var(--card);display:grid;grid-template-columns:1fr 290px}
+.tb-main{padding:22px 24px;border-right:2.5px solid var(--ink)}
+.tb-series{margin:0 0 .5rem;color:var(--muted);font-size:.95rem}
+.hero h1{font-size:clamp(2.4rem,6vw,4.1rem);font-weight:700;letter-spacing:-.01em}
+.tb-cells{display:grid;grid-template-rows:repeat(4,1fr)}
+.tb-cells>div{padding:9px 16px;border-bottom:1.5px solid var(--ink);display:flex;flex-direction:column;justify-content:center}
+.tb-cells>div:last-child{border-bottom:0}
+.tb-cells small{color:var(--muted);font-size:.78rem}
+.tb-cells b{font-family:var(--font-head);font-size:1.3rem;font-weight:600;line-height:1.15}
+.lede{font-size:1.13rem;max-width:760px;margin:1.2rem 0}
+@media (max-width:760px){.title-block{grid-template-columns:1fr}.tb-main{border-right:0;border-bottom:2.5px solid var(--ink)}.tb-cells{grid-template-rows:none;grid-template-columns:1fr 1fr}.tb-cells>div:nth-child(odd){border-right:1.5px solid var(--ink)}.tb-cells>div:nth-child(3){border-bottom:0}}
+
+/* code couleur */
+.cc{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:stretch;margin:1rem 0 .4rem}
+.cc-box{background:var(--card);border:2px solid var(--line);padding:12px 14px;border-radius:4px}
+.cc-cause{border-color:var(--sig)} .cc-link{border-color:var(--mat)} .cc-eff{border-color:var(--eps)}
+.cc-box small{display:block;color:var(--muted);font-size:.82rem;line-height:1.3}
+.cc-syms{font-family:var(--font-math);font-size:2.3rem;line-height:1.2;display:flex;gap:.5em;margin:.2rem 0}
+.cc-box p{margin:0;font-size:.9rem;line-height:1.35}
+.cc-arrow{align-self:center;font-size:1.8rem;color:var(--muted)}
+@media (max-width:700px){.cc{grid-template-columns:1fr}.cc-arrow{transform:rotate(90deg);justify-self:center;line-height:1}}
+.cc-note{font-size:.95rem;color:var(--muted)}
+
+/* ---------- nav ---------- */
+.toc{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-bottom:1.5px solid var(--line);padding-top:env(safe-area-inset-top,0px);margin-top:18px}
+.toc-in{display:flex;gap:6px;overflow-x:auto;padding:9px 20px;max-width:980px;margin:0 auto;scrollbar-width:thin}
+.toc a{flex:none;text-decoration:none;color:var(--ink);font-size:.88rem;padding:4px 11px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);white-space:nowrap}
+.toc a.on{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.toc a:focus-visible,.btn:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--eps);outline-offset:2px}
+
+/* ---------- sections ---------- */
+section.chap{padding:46px 0 10px}
+.cartouche{display:grid;grid-template-columns:86px 1fr 240px;border:2.5px solid var(--ink);background:var(--card);margin-bottom:1.4rem}
+.c-num{font-family:var(--font-head);font-size:3.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;border-right:2.5px solid var(--ink)}
+.c-title{padding:14px 18px;border-right:2.5px solid var(--ink)}
+.c-title h2{font-size:2.1rem;font-weight:700}
+.c-title p{margin:.25rem 0 0;color:var(--muted)}
+.c-img{padding:12px 14px;display:flex;gap:12px;align-items:center;background:var(--paper-2)}
+.c-img .ico{font-size:2.3rem;line-height:1}
+.c-img small{display:block;color:var(--muted);font-size:.78rem}
+.c-img span{font-size:.95rem;line-height:1.3}
+@media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
+
+/* niveaux */
+.lv{margin:1.2rem 0;padding:6px 22px 14px;border-radius:4px}
+.lv1{background:var(--card);border:2px solid var(--ink)}
+.lv2{background:var(--lv2);border-left:6px solid var(--ink)}
+.lv-h{display:flex;align-items:center;gap:10px;font-family:var(--font-head);font-size:1.35rem;font-weight:600;margin:10px 0 4px}
+.lv-h .tag{font-size:.95rem;font-family:var(--font-body);font-weight:400;color:var(--muted)}
+
+/* formule */
+.fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:560px;text-align:center;border-radius:3px}
+.fx .big{font-family:var(--font-math);font-size:2.2rem;line-height:1.35}
+.fx .cap{font-size:.85rem;color:var(--muted);margin:.2rem 0 0}
+.syms{margin:.6rem 0;display:grid;grid-template-columns:auto 1fr;gap:.35rem 1rem;align-items:baseline}
+.syms dt{font-family:var(--font-math);font-size:1.3rem;text-align:right;white-space:nowrap}
+.syms dd{margin:0}
+.def{margin:.9rem 0;padding:.5rem .9rem;border-left:3px dotted var(--muted);font-size:.96rem;background:color-mix(in srgb,var(--card) 60%,transparent)}
+.def b:first-child{font-family:var(--font-head);font-size:1.08rem;font-weight:600}
+.tip{margin:1rem 0;padding:.7rem 1rem;border:1.5px dashed var(--mat);border-radius:4px;font-size:.97rem}
+.warn{margin:1rem 0;padding:.7rem 1rem;border:2px solid var(--bad);border-radius:4px;font-size:.97rem;background:color-mix(in srgb,var(--bad) 7%,transparent)}
+.meta{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--frc);border-radius:4px;background:color-mix(in srgb,var(--frc) 6%,transparent)}
+.mnemo{margin:1rem 0;padding:.7rem 1rem;background:var(--hl);border-radius:4px;font-size:.98rem}
+.fun{margin:1.2rem 0;padding:.8rem 1rem;border:2px dashed var(--muted);border-radius:10px;background:var(--card);font-size:.98rem}
+.fun-h{display:block;margin-bottom:.35rem;font-family:var(--font-head);font-size:1.15rem;font-weight:600;letter-spacing:.02em}
+
+/* labos (animations) */
+.lab{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:14px 16px 12px;margin:1.4rem 0}
+.lab-h{font-family:var(--font-head);font-size:1.3rem;font-weight:600;margin:0 0 .2rem}
+.lab-sub{margin:0 0 .6rem;color:var(--muted);font-size:.92rem}
+.lab svg{display:block;width:100%;height:auto;color:var(--ink);font-family:var(--font-body)}
+.ctrl{display:grid;grid-template-columns:minmax(120px,auto) 1fr minmax(90px,auto);gap:6px 12px;align-items:center;margin:.6rem 0}
+.ctrl label{font-size:.95rem}
+.ctrl output{font-family:var(--font-math);font-size:1.1rem;text-align:right}
+input[type=range]{width:100%;accent-color:var(--ink);height:28px}
+input.r-frc{accent-color:var(--frc)} input.r-eps{accent-color:var(--eps)} input.r-mat{accent-color:var(--mat)} input.r-geo{accent-color:var(--muted)} input.r-th{accent-color:var(--tau)}
+.btns{display:flex;flex-wrap:wrap;gap:6px;margin:.5rem 0}
+.btn{font-family:var(--font-body);font-size:.9rem;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 13px;cursor:pointer}
+.btn:hover{background:var(--paper-2)}
+.btn.on{background:var(--ink);color:var(--paper)}
+.readout{font-family:var(--font-math);font-size:1.12rem;background:var(--paper-2);border-radius:4px;padding:.5rem .8rem;margin:.5rem 0;overflow-x:auto}
+.status{font-size:.97rem;margin:.4rem 0}
+.gauge{position:relative;height:16px;background:var(--paper-2);border-radius:8px;margin:1.4rem 0 1.6rem;overflow:visible}
+.gauge .fill{position:absolute;left:0;top:0;bottom:0;border-radius:8px;transition:width .15s}
+.gauge .mk{position:absolute;top:-6px;bottom:-6px;width:2px;background:var(--ink)}
+.gauge .mk span{position:absolute;top:22px;left:50%;transform:translateX(-50%);font-size:.78rem;white-space:nowrap}
+.radios{display:flex;flex-wrap:wrap;gap:6px 14px;margin:.4rem 0;font-size:.95rem}
+.radios label{display:flex;gap:6px;align-items:center;cursor:pointer}
+
+/* svg classes */
+svg text{fill:currentColor;font-size:13px}
+svg .lbl{font-size:12.5px;fill:var(--muted)}
+svg .big{font-size:18px;font-family:var(--font-math);font-weight:600}
+svg .mth{font-family:var(--font-math);font-size:17px}
+.arr line{stroke:currentColor}
+.arr polygon{fill:currentColor}
+.arr.ink{color:var(--ink)}
+.arr.dim{opacity:.16}
+.arr.hl line{stroke-width:5}
+.arr[data-k]{cursor:pointer}
+svg .bar{fill:var(--paper-2);stroke:var(--ink);stroke-width:1.6}
+svg .ghost{opacity:.3}
+svg .cut{stroke:var(--ink);stroke-width:1.5;stroke-dasharray:6 4}
+svg .cutline{stroke:var(--ink);stroke-width:2.5}
+svg .thin-dash{fill:none;stroke:var(--muted);stroke-width:1.2;stroke-dasharray:4 4}
+svg .ref{stroke:var(--muted);stroke-width:1.3;stroke-dasharray:4 3}
+svg .ref-rect{fill:none;stroke:var(--muted);stroke-width:1.4;stroke-dasharray:6 4}
+svg .gridl{stroke:var(--eps);stroke-width:1.2;opacity:.75}
+svg .wall{fill:var(--muted);opacity:.55}
+svg .axis{stroke:var(--ink);stroke-width:1.4}
+svg .tick{stroke:var(--muted);stroke-width:1}
+svg .gridbg{stroke:var(--line);stroke-width:1}
+svg .curve-ghost{fill:none;stroke:var(--muted);stroke-width:2;opacity:.45}
+svg .curve{fill:none;stroke:var(--ink);stroke-width:3.2;stroke-linejoin:round}
+svg .unload{stroke:var(--mat);stroke-width:2.4;stroke-dasharray:7 4}
+svg .z-el{fill:var(--eps);opacity:.08} svg .z-pl{fill:var(--frc);opacity:.08} svg .z-str{fill:var(--sig);opacity:.09}
+svg .spec{fill:var(--paper-2);stroke:var(--ink);stroke-width:1.8}
+svg .grip{fill:var(--muted);opacity:.7}
+svg .card-a{fill:color-mix(in srgb,var(--gam) 22%,var(--card));stroke:var(--ink);stroke-width:1}
+svg .card-b{fill:color-mix(in srgb,var(--gam) 10%,var(--card));stroke:var(--ink);stroke-width:1}
+svg .plate{fill:var(--ink);opacity:.8}
+svg .arc{fill:none;stroke-width:2}
+svg .face{stroke:var(--ink);stroke-width:1.6}
+svg .face-front{fill:color-mix(in srgb,var(--eps) 7%,var(--card))}
+svg .face-right{fill:color-mix(in srgb,var(--eps) 14%,var(--card))}
+svg .face-top{fill:color-mix(in srgb,var(--eps) 20%,var(--card))}
+svg .hidden-e{stroke:var(--muted);stroke-width:1.2;stroke-dasharray:4 4}
+svg .trace{fill:none;stroke:var(--tau);stroke-width:2.6;stroke-linejoin:round;stroke-linecap:round}
+svg .mohr{fill:none;stroke:var(--ink);stroke-width:1.4;stroke-dasharray:6 5}
+svg .pt{stroke:var(--card);stroke-width:2}
+#spinner{transform-box:fill-box;transform-origin:center}
+#spinner.spinning{animation:spin 3.2s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){#spinner.spinning{animation:none;transform:rotate(22deg)}}
+
+/* matrice */
+.matrow{display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:center}
+.cubebox{flex:1 1 300px;max-width:400px}
+.matbox{flex:1 1 280px}
+.mtx{border-collapse:collapse;font-family:var(--font-math);font-size:1.25rem;margin:0 auto}
+.mtx th{font-family:var(--font-body);font-weight:400;font-size:.75rem;color:var(--muted);padding:2px 6px}
+.mtx td.c{padding:6px 12px;text-align:center;cursor:pointer;border-radius:4px;min-width:62px}
+.mtx td.c:hover{background:var(--paper-2)}
+.mtx td.c.act{background:var(--hl);outline:2px solid var(--ink)}
+.mtx td.c.zero{color:var(--muted)}
+.mtx td.bl{border-left:2.5px solid var(--ink);border-top:2.5px solid var(--ink);border-bottom:2.5px solid var(--ink);width:8px;padding:0}
+.mtx td.br{border-right:2.5px solid var(--ink);border-top:2.5px solid var(--ink);border-bottom:2.5px solid var(--ink);width:8px;padding:0}
+.mtx td.c.blk{box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--eps) 50%,transparent)}
+.mtx-txt{font-size:.95rem;min-height:4.6em;background:var(--paper-2);border-radius:4px;padding:.6rem .8rem;margin-top:.6rem}
+.emtx{font-family:var(--font-math);font-size:1.1rem;overflow-x:auto;background:var(--lv2);padding:.6rem .8rem;border-radius:4px;margin-top:.7rem}
+.inlinemat{display:inline-grid;grid-template-columns:repeat(3,auto);gap:2px 16px;padding:4px 10px;border-left:2px solid currentColor;border-right:2px solid currentColor;border-radius:6px;vertical-align:middle;text-align:center}
+
+/* tableaux */
+.tbl-wrap{overflow-x:auto;margin:1rem 0}
+table.data{border-collapse:collapse;width:100%;font-size:.95rem;background:var(--card)}
+table.data th,table.data td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:middle}
+table.data th{font-family:var(--font-head);font-weight:600;font-size:1.05rem;background:var(--paper-2)}
+.ebar{height:10px;background:var(--mat);border-radius:5px;min-width:2px}
+
+/* parcours */
+.route{list-style:none;padding:0;margin:1rem 0;position:relative}
+.route::before{content:"";position:absolute;left:17px;top:10px;bottom:10px;width:4px;background:var(--line);border-radius:2px}
+.route li{position:relative;padding:0 0 14px 52px}
+.route li .dot{position:absolute;left:4px;top:0;width:30px;height:30px;border-radius:50%;border:3px solid var(--ink);background:var(--card);font-family:var(--font-head);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+.route li.here .dot{background:var(--ink);color:var(--paper)}
+.route li b{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.route li p{margin:.1rem 0 0;font-size:.95rem}
+.route li .dur{color:var(--muted);font-size:.85rem}
+.plan48{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:.8rem 0}
+.plan48>div{background:var(--card);border:1.5px solid var(--line);padding:8px 10px;border-radius:4px;font-size:.9rem}
+.plan48 b{display:block;font-family:var(--font-head);font-size:1.05rem}
+@media (max-width:640px){.plan48{grid-template-columns:1fr 1fr}}
+
+/* mise au point */
+.fix{border:2.5px solid var(--ink);background:var(--card);padding:6px 22px 16px;margin:1.2rem 0}
+.fix-diag{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;margin:1rem 0;font-family:var(--font-math)}
+.fix-diag .bx{border:2.5px solid;padding:8px 14px;text-align:center;border-radius:4px;min-width:150px}
+.fix-diag .bx small{display:block;font-family:var(--font-body);font-size:.78rem;color:var(--muted)}
+.fix-diag .bx .s{font-size:1.9rem;line-height:1.2}
+.fix-diag .ar{font-size:1.4rem;color:var(--mat);text-align:center;font-family:var(--font-body)}
+.fix-diag .ar small{display:block;font-size:.78rem}
+
+/* exercices / quiz */
+.exo{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--ink);padding:6px 20px 12px;margin:1.2rem 0;border-radius:4px}
+.exo h4{margin-top:.8rem}
+.exo .lvtag{font-family:var(--font-body);font-size:.85rem;font-weight:400;color:var(--muted);margin-left:.4rem}
+details{margin:.6rem 0}
+summary{cursor:pointer;font-weight:700;padding:4px 0}
+details .sol{padding:.4rem .9rem;border-left:3px solid var(--mat);margin:.4rem 0}
+.qz{background:var(--card);border:1.5px solid var(--line);border-radius:6px;padding:10px 16px;margin:.8rem 0}
+.qz-q{margin:.3rem 0 .6rem}
+.qz-o{display:flex;flex-direction:column;gap:6px}
+.qz-b{text-align:left;font-family:var(--font-body);font-size:.97rem;padding:8px 12px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:5px;cursor:pointer}
+.qz-b:hover{border-color:var(--ink)}
+.qz-b.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--card))}
+.qz-b.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--card))}
+.qz-e{font-size:.94rem;margin:.6rem 0 .2rem}
+.score{position:sticky;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);display:inline-block;background:var(--ink);color:var(--paper);padding:6px 14px;border-radius:999px;font-size:.95rem;margin:.6rem 0}
+
+/* fiche mémoire */
+.fiche{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:2.5px solid var(--ink);background:var(--card);margin:1rem 0}
+.fiche>div{padding:12px 14px;border-right:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}
+.fiche>div:nth-child(3n){border-right:0}
+.fiche>div:nth-last-child(-n+3){border-bottom:0}
+.fiche .ic{font-size:1.9rem;line-height:1}
+.fiche h4{margin:.3rem 0 .2rem;font-size:1.15rem}
+.fiche .f{font-family:var(--font-math);font-size:1.15rem;margin:.2rem 0}
+.fiche p{margin:.2rem 0 0;font-size:.88rem;color:var(--muted)}
+@media (max-width:720px){.fiche{grid-template-columns:1fr 1fr}.fiche>div{border-right:1.5px solid var(--ink)!important;border-bottom:1.5px solid var(--ink)!important}.fiche>div:nth-child(2n){border-right:0!important}}
+.gloss{display:grid;grid-template-columns:minmax(150px,220px) 1fr;gap:0;border-top:1.5px solid var(--line);margin:1rem 0}
+.gloss dt,.gloss dd{border-bottom:1.5px solid var(--line);padding:7px 8px;margin:0}
+.gloss dt{font-weight:700}
+.gloss dd{font-size:.95rem}
+@media (max-width:600px){.gloss{grid-template-columns:1fr}.gloss dt{border-bottom:0;padding-bottom:0}}
+.check label{display:flex;gap:10px;align-items:flex-start;padding:5px 0;cursor:pointer}
+.check input{margin-top:.35em;width:18px;height:18px;accent-color:var(--mat)}
+footer{padding:40px 0 60px;color:var(--muted);font-size:.9rem}
+hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
+@media (max-width:700px){.m{white-space:normal}.fx{padding:12px 10px}.fx .big{font-size:1.45rem!important}}
+.fx{overflow-x:auto}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="wrap wide">
+  <div class="title-block">
+    <div class="tb-main">
+      <p class="tb-series">Résistance des matériaux, série de 5 cours</p>
+      <h1>Contrainte, déformation, et les nombres qui les relient</h1>
+    </div>
+    <div class="tb-cells">
+      <div><small>Cours</small><b>1 sur 5 : les fondations</b></div>
+      <div><small>Durée conseillée</small><b>≈ 2 h 30 avec les exercices</b></div>
+      <div><small>Prérequis</small><b>aucun</b></div>
+      <div><small>À la fin tu sais</small><b>écrire tes deux premières matrices</b></div>
+    </div>
+  </div>
+  <p class="lede">Avant de manipuler des matrices, il faut savoir ce que contient chacune de leurs cases. Ce premier cours construit toutes les briques une par une : la contrainte, la déformation, la loi de Hooke, le coefficient de Poisson, le cisaillement… puis il te montre pourquoi tout cela finit forcément rangé dans un tableau 3 × 3.</p>
+
+  <div class="cc" role="img" aria-label="Code couleur : la cause (contraintes sigma et tau, couleurs chaudes) passe par le matériau (E, nu, G, en vert) et produit l'effet (déformations epsilon et gamma, couleurs froides)">
+    <div class="cc-box cc-cause"><small>La cause : ce que la matière subit</small><div class="cc-syms"><span class="sig">σ</span><span class="tau">τ</span></div><p>les contraintes, en MPa<br>couleurs chaudes</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-link"><small>Le lien : le matériau</small><div class="cc-syms"><span class="mat">E</span><span class="mat">ν</span><span class="mat">G</span></div><p>les constantes du matériau<br>vert</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-eff"><small>L'effet : comment elle change de forme</small><div class="cc-syms"><span class="eps">ε</span><span class="gam">γ</span></div><p>les déformations, sans unité<br>couleurs froides</p></div>
+  </div>
+  <p class="cc-note">Les forces extérieures <b class="frc">F</b> sont toujours en orange. Ce code couleur ne changera jamais dans toute la série : ton œil apprendra à lire les couleurs avant même les lettres. Prends 10 secondes pour photographier ce bandeau, il résume déjà la moitié de la RDM.</p>
+</div>
+</header>
+
+<nav class="toc" aria-label="Sommaire">
+  <div class="toc-in">
+    <a href="#avant">Avant de commencer</a>
+    <a href="#c0">0 Pourquoi la RDM</a>
+    <a href="#c1">1 Contrainte σ</a>
+    <a href="#c2">2 Déformation ε</a>
+    <a href="#c3">3 Hooke et E</a>
+    <a href="#c4">4 Poisson ν</a>
+    <a href="#c5">5 Cisaillement τ γ G</a>
+    <a href="#c6">6 Vers les matrices</a>
+    <a href="#exos">Exercices</a>
+    <a href="#quiz-s">Quiz</a>
+    <a href="#fiche">Fiche mémoire</a>
+    <a href="#gloss">Glossaire</a>
+  </div>
+</nav>
+
+<main>
+<section class="chap" id="avant">
+<div class="wrap">
+  <h3 style="margin-top:0">Avant de commencer</h3>
+
+  <div class="def"><b>📘 Trois variantes de notation</b> que tu croiseras ailleurs. <b>1.</b> La déformation est parfois notée <b>ϵ</b> et appelée « déformation longitudinale » ; c'est le <span class="eps">ε</span> de ce cours. <b>2.</b> Pour Poisson, on écrit aussi <span class="m"><span class="mat">ν</span> = −ε′/ε</span> avec <span class="m">ε′ = −Δd/d</span>, où <b>Δd est la diminution du diamètre</b> (un nombre positif, le diamètre passe de d à d − Δd). Ici, Δd désigne la variation algébrique (négative quand le diamètre diminue) : les deux écritures donnent le même ν. <b>3.</b> τ est aussi appelée « scission » et γ « déformation angulaire ».</div>
+
+  <div class="fix">
+    <h4>Une confusion fréquente, à lever dès le départ</h4>
+    <p>On entend souvent « matrice des déformations » et « tenseur des contraintes » comme s'il s'agissait d'une seule et même chose. C'est la confusion numéro 1, et elle est parfaitement normale quand on débute : <b>ce ne sont pas deux noms pour la même chose</b>. Il existe <b>deux matrices différentes</b>, qui décrivent deux réalités différentes, et l'essentiel du travail en RDM consiste à passer de l'une à l'autre.</p>
+    <div class="fix-diag">
+      <div class="bx" style="border-color:var(--sig)"><small>tenseur des contraintes</small><div class="s sig">[σ]</div><small>les efforts internes (la cause)<br>unité : MPa</small></div>
+      <div class="ar">⇄<small>loi de Hooke<br>avec <span class="mat">E</span> et <span class="mat">ν</span></small></div>
+      <div class="bx" style="border-color:var(--eps)"><small>tenseur des déformations</small><div class="s eps">[ε]</div><small>le changement de forme (l'effet)<br>sans unité</small></div>
+    </div>
+    <p>La loi de Hooke joue le rôle d'un <b>dictionnaire</b> qui traduit l'une dans l'autre, grâce aux constantes du matériau. Tout le cours 1 sert à comprendre chaque morceau de ce schéma en version simple (une seule direction), avant de passer aux matrices complètes.</p>
+    <p>Au passage, le célèbre <b>cercle de Mohr</b> doit son nom à l'ingénieur allemand Christian Otto Mohr (1882). Retiens bien l'orthographe : elle est utile pour chercher des exercices corrigés.</p>
+    <div class="def"><b>📖 Tenseur :</b> mot savant pour un objet mathématique qui décrit une grandeur physique dans toutes les directions à la fois. En RDM, tu peux le voir comme une <b>matrice 3 × 3</b> (un tableau de 3 lignes et 3 colonnes) livrée avec un mode d'emploi : ses cases changent si on tourne les axes, mais l'état physique qu'elle décrit reste le même. Dans ta tête, pour l'instant : tenseur ≈ matrice.</div>
+  </div>
+
+  <h4>Le parcours complet</h4>
+  <p>La série avance en 5 cours, chacun s'appuyant sur le précédent, pour environ 13 h 30 de travail au total, exercices compris. Ne saute pas celui-ci, même s'il paraît « facile » : chaque case des matrices des cours suivants est une des notions d'aujourd'hui.</p>
+  <ol class="route">
+    <li class="here"><span class="dot">1</span><b>Les fondations</b> <span class="dur">≈ 2 h 30, tu es ici</span><p>σ, ε, E, ν, τ, γ, G, et la facette qui tourne. On termine en écrivant les deux premières matrices.</p></li>
+    <li><span class="dot">2</span><b>Le tenseur des contraintes</b> <span class="dur">≈ 2 h 30</span><p>Lire et écrire [σ], calculer la contrainte sur n'importe quelle facette avec T⃗ = [σ]·n⃗.</p></li>
+    <li><span class="dot">3</span><b>Le tenseur des déformations</b> <span class="dur">≈ 2 h 30</span><p>Construire [ε], le piège du « ½ », mesurer les déformations avec des jauges et des rosettes.</p></li>
+    <li><span class="dot">4</span><b>Directions principales et cercle de Mohr</b> <span class="dur">≈ 3 h</span><p>Tourner les axes, trouver les contraintes maximales, tracer et exploiter le cercle.</p></li>
+    <li><span class="dot">5</span><b>Hooke généralisée et critères de résistance</b> <span class="dur">≈ 3 h</span><p>Passer de [σ] à [ε] et inversement, critères de Tresca et de von Mises, sujets types d'examen.</p></li>
+  </ol>
+
+  <h4>Comment lire ce cours</h4>
+  <p>Chaque chapitre est construit de la même façon, pour que ton cerveau sache où regarder :</p>
+  <div class="lv lv1" style="margin-top:.6rem"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">l'intuition</span></div><p>Des images, des analogies, presque pas de formules. Si tu ne lis que les niveaux 1, tu <b>comprends</b> la RDM.</p></div>
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">le calcul</span></div><p>Les définitions précises, les démonstrations et les réflexes attendus à l'examen. Avec les niveaux 2, tu <b>sais faire</b>.</p></div>
+  <p>Entre les deux, une <b>manipulation</b> : une animation que tu pilotes avec des curseurs. Ne la survole pas, joue avec pendant une minute ou deux : c'est là que l'image se grave. Et chaque chapitre a une <b>image à retenir</b> (en haut à droite de son cartouche) : ferme les yeux cinq secondes et « photographie-la ». Tu les retrouveras toutes alignées dans la fiche mémoire finale, prêtes à être revisitées de tête le jour de l'examen.</p>
+</div>
+</section>
+<!-- ================= CHAPITRE 0 ================= -->
+<section class="chap" id="c0">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">0</div>
+    <div class="c-title"><h2>À quoi sert la RDM ?</h2><p>Deux questions à se poser devant n'importe quelle pièce</p></div>
+    <div class="c-img"><span class="ico">📚</span><span><small>Image à retenir</small>L'étagère qui plie sans casser, le verre qui casse sans plier</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">l'intuition</span></div>
+    <p><b>RDM</b> signifie <b>Résistance Des Matériaux</b>. C'est la discipline qui permet de répondre, <i>avant</i> de fabriquer une pièce, à deux questions :</p>
+    <p>1. <b>Est-ce que ça va casser ?</b> Pour y répondre, on calcule la <b class="sig">contrainte</b> : la « souffrance » de la matière.<br>
+       2. <b>Est-ce que ça va trop se déformer ?</b> Pour y répondre, on calcule la <b class="eps">déformation</b>.</p>
+    <p>Ces deux questions sont vraiment différentes. Pense à une étagère chargée de livres : elle peut très bien ne pas casser, mais plier au point que les livres glissent. Elle <i>résiste</i>, mais elle n'est pas assez <i>rigide</i>. À l'inverse, un verre ne se déforme presque pas… puis casse d'un coup. Un bon ingénieur vérifie toujours les deux.</p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">le cadre de travail</span></div>
+    <p>La RDM « classique » (celle des cours d'initiation) repose sur cinq hypothèses. À l'examen, quand l'énoncé dit « matériau homogène et isotrope, élastique linéaire, sous HPP », il te dit exactement que ce cadre s'applique.</p>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Hypothèse</th><th>Ce que ça veut dire</th><th>Contre-exemple</th></tr>
+      <tr><td><b>Continu</b></td><td>La matière n'a pas de trous : on peut zoomer indéfiniment sur un point (on oublie les atomes).</td><td>Une mousse, un tas de sable.</td></tr>
+      <tr><td><b>Homogène</b></td><td>Mêmes propriétés en tout point de la pièce.</td><td>Une soudure, un béton armé.</td></tr>
+      <tr><td><b>Isotrope</b></td><td>Mêmes propriétés dans toutes les directions.</td><td>Le bois, bien plus solide dans le sens des fibres ; les composites.</td></tr>
+      <tr><td><b>Élastique linéaire</b></td><td>La déformation est proportionnelle à l'effort, et tout revient à zéro quand on relâche (chapitre 3).</td><td>Un métal au-delà de sa limite élastique.</td></tr>
+      <tr><td><b>HPP</b></td><td>Hypothèse des Petites Perturbations : déformations et déplacements minuscules, donc on calcule sur la forme initiale de la pièce.</td><td>Un élastique très étiré, une tôle emboutie.</td></tr>
+    </table></div>
+    <p>Pour les métaux dans le domaine élastique, les déformations sont de l'ordre de 0,1 % : un fil d'acier d'un mètre s'allonge d'environ un millimètre avant de risquer quoi que ce soit. C'est pour ça que toutes les animations de ce cours <b>exagèrent</b> les déformations : sinon tu ne verrais rien bouger.</p>
+  </div>
+</div>
+</section>
+
+<!-- ================= CHAPITRE 1 ================= -->
+<section class="chap" id="c1">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">1</div>
+    <div class="c-title"><h2>La contrainte <span class="sig">σ</span></h2><p>La force ressentie par chaque millimètre carré de matière</p></div>
+    <div class="c-img"><span class="ico">🧘</span><span><small>Image à retenir</small>Le fakir sur son lit de clous</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">l'intuition</span></div>
+    <p>Un fakir s'allonge sur un lit de 1 000 clous : il est parfaitement tranquille. Sur un seul clou, il serait transpercé. Pourtant son poids, la <b class="frc">force</b>, est exactement le même dans les deux cas ! Ce qui change, c'est la <b>surface</b> sur laquelle cette force se répartit : sur 1 000 clous, chaque clou ne porte qu'un millième du poids.</p>
+    <p>La matière, c'est pareil. Ce qui la fait « souffrir », ce n'est pas la force totale : c'est la force que doit porter <b>chaque petit morceau de surface</b>. Cette force par unité de surface s'appelle la <b class="sig">contrainte</b>.</p>
+    <div class="fx"><div class="big"><span class="sig">σ</span> = <span class="frac"><span class="frc">F</span><span>S</span></span></div><p class="cap">la contrainte normale = la force divisée par l'aire qui la supporte</p></div>
+    <dl class="syms">
+      <dt class="sig">σ</dt><dd><b>« sigma »</b>, la lettre grecque qui correspond à notre « s ». C'est la <b>contrainte normale</b>. Unité : le mégapascal (MPa).</dd>
+      <dt class="frc">F</dt><dd>La <b>force</b>, en newtons (N). Pour te faire une idée : un objet de 1 kg pèse environ 10 N, et 1 kN (kilonewton) = 1 000 N, soit à peu près le poids de 100 kg.</dd>
+      <dt>S</dt><dd>L'<b>aire de la section droite</b>, en mm². Pour une barre ronde de diamètre d : <span class="m">S = π·d²/4</span>, avec π (« pi ») ≈ 3,14.</dd>
+    </dl>
+    <div class="def"><b>📖 Section droite :</b> la surface que tu obtiens en coupant la barre perpendiculairement à sa longueur, comme une tranche de saucisson.</div>
+    <div class="def"><b>📖 Normale :</b> en géométrie, « normal » veut dire <b>perpendiculaire</b>. Une contrainte normale agit perpendiculairement à la surface : soit elle tire dessus (<b>traction</b>), soit elle appuie dessus (<b>compression</b>).</div>
+    <div class="tip">💡 <b>Le réflexe des unités.</b> Travaille toujours en <b>N</b> et en <b>mm²</b> : le résultat tombe directement en <b>MPa</b>, car <span class="m">1 MPa = 1 N/mm²</span>. Le pascal (Pa) vaut 1 N/m², c'est minuscule ; « méga » (M) veut dire million, et comme 1 m² = 1 000 000 mm², les deux millions se compensent.</div>
+    <p><b>Quelques ordres de grandeur</b> pour étalonner ton intuition : la pression de l'air qui t'entoure ≈ 0,1 MPa ; un talon aiguille qui porte 60 kg sur 1 cm² ≈ 6 MPa ; un acier de construction courant (S235) commence à se déformer définitivement vers 235 MPa ; un câble d'acier haute résistance supporte plus de 1 500 MPa.</p>
+  </div>
+
+  <div class="lab" id="w1">
+    <p class="lab-h">Manipulation 1 : le lit de clous de la matière</p>
+    <p class="lab-sub">Une tige ronde en acier S235 est tirée par une force F. À droite, la section vue de face : chaque point représente un petit carré de matière, et sa taille montre la force qu'il porte.</p>
+    <svg id="w1svg" viewBox="0 0 640 290" role="img" aria-label="Barre en traction et sa section, dont la couleur dépend de la contrainte"></svg>
+    <div class="ctrl"><label for="w1F">Force <b class="frc">F</b></label><input id="w1F" class="r-frc" type="range" min="0" max="120" step="1" value="50"><output id="w1Fv"></output></div>
+    <div class="ctrl"><label for="w1d">Diamètre d</label><input id="w1d" class="r-geo" type="range" min="6" max="40" step="1" value="20"><output id="w1dv"></output></div>
+    <div class="readout" id="w1calc"></div>
+    <div class="gauge" aria-hidden="true"><div class="fill" id="w1g"></div>
+      <div class="mk" style="left:52.2%"><span>Rₑ 235</span></div><div class="mk" style="left:80%"><span>Rₘ 360</span></div></div>
+    <p class="status" id="w1st"></p>
+    <p class="lab-sub">À essayer : garde F fixe et double le diamètre (de 20 à 40 mm). La contrainte est divisée par <b>4</b>, pas par 2, parce que l'aire varie comme le <b>carré</b> du diamètre.</p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">la définition précise</span></div>
+    <h4>La méthode des coupures</h4>
+    <p>La contrainte est à l'intérieur de la matière : on ne peut pas la voir. Pour la faire apparaître, on <b>coupe la pièce par la pensée</b>. La partie qu'on enlève exerçait des efforts sur celle qu'on garde : on les remplace par des forces réparties sur la surface de coupe. Ces efforts cachés s'appellent les <b>efforts intérieurs</b> (ou efforts de cohésion : ce qui fait que la matière « tient ensemble »).</p>
+    <p>La contrainte est la <b>densité</b> de ces efforts : la force élémentaire <span class="m">d<span class="frc">F</span></span> qui agit sur un tout petit morceau de surface <span class="m">dS</span> :</p>
+    <div class="fx"><div class="big"><span class="sig">σ</span> = <span class="frac"><span>d<span class="frc">F</span></span><span>dS</span></span></div><p class="cap">le « d » se lit « un tout petit morceau de »</p></div>
+    <p>La formule <span class="m"><span class="sig">σ</span> = <span class="frc">F</span>/S</span> suppose que la force est répartie <b>uniformément</b> sur la section. C'est vrai loin des endroits où l'on applique l'effort : c'est le <b>principe de Saint-Venant</b>. Il dit qu'à une distance de l'ordre de la largeur de la pièce, la façon exacte dont on tire (crochet, mors, soudure…) n'a plus d'importance, seule compte la force totale.</p>
+    <div class="warn">⚠️ Près d'un trou, d'une entaille ou d'un brusque changement de diamètre, la contrainte grimpe localement bien au-dessus de F/S. C'est la <b>concentration de contraintes</b>, et c'est là que les pièces cassent en vrai. On la corrige avec un coefficient donné dans des abaques (des tableaux ou graphiques de référence).</div>
+    <h4>Convention de signe</h4>
+    <p><span class="m"><span class="sig">σ</span> &gt; 0</span> en <b>traction</b> (la matière est tirée), <span class="m"><span class="sig">σ</span> &lt; 0</span> en <b>compression</b> (elle est écrasée). Cette convention sera la même dans les matrices.</p>
+    <h4>Le vecteur contrainte : ce qu'il faut garder en tête pour la suite</h4>
+    <p>En réalité, sur une surface, la force par unité de surface est une <b>flèche</b> qui peut être inclinée. On l'appelle le <b>vecteur contrainte</b>, noté <span class="m"><span class="vec">T</span></span>. La petite flèche au-dessus de la lettre indique un <b>vecteur</b> : une grandeur qui a une valeur <i>et</i> une direction. Ici, la force est perpendiculaire à la coupe, donc <span class="m"><span class="vec">T</span></span> est « tout normal » : il se réduit à <span class="sig">σ</span>. Au chapitre 6, on coupera en biais : <span class="m"><span class="vec">T</span></span> se penchera et se décomposera en deux morceaux, <span class="sig">σ</span> (normal) et <span class="tau">τ</span> (parallèle à la surface). C'est la porte d'entrée vers les matrices.</p>
+    <div class="mnemo">🇬🇧 <b>Vocabulaire anglais</b> (utile pour les vidéos) : <i>stress</i> = contrainte, <i>strain</i> = déformation. Astuce : le <i>stress</i>, c'est ce que tu <b>subis</b> (la cause) ; le <i>strain</i>, c'est comment tu t'<b>étires</b> (l'effet).</div>
+  </div>
+</div>
+</section>
+
+<!-- ================= CHAPITRE 2 ================= -->
+<section class="chap" id="c2">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">2</div>
+    <div class="c-title"><h2>La déformation <span class="eps">ε</span></h2><p>De combien, en pourcentage, la matière s'étire</p></div>
+    <div class="c-img"><span class="ico">📏</span><span><small>Image à retenir</small>Deux élastiques, un court et un long, étirés du même centimètre</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">l'intuition</span></div>
+    <p>Prends deux élastiques : un de 10 cm et un de 1 m. Étire chacun de <b>1 cm</b>. Lequel est le plus tendu ? Le petit, évidemment : il a gagné 10 % de sa longueur, le grand seulement 1 %. L'allongement en centimètres ne suffit donc pas à décrire l'état de la matière : il faut un allongement <b>relatif</b>, rapporté à la longueur de départ.</p>
+    <div class="fx"><div class="big"><span class="eps">ε</span> = <span class="frac"><span>ΔL</span><span>L₀</span></span></div><p class="cap">la déformation = l'allongement divisé par la longueur initiale</p></div>
+    <dl class="syms">
+      <dt class="eps">ε</dt><dd><b>« epsilon »</b>, le « e » grec : pense <b>É</b>tirement. C'est la <b>déformation</b> (on dit aussi allongement relatif ou allongement unitaire).</dd>
+      <dt>L₀</dt><dd>La <b>longueur initiale</b> (le petit 0 veut dire « au départ »).</dd>
+      <dt>ΔL</dt><dd>« delta L », l'<b>allongement</b> : <span class="m">ΔL = L − L₀</span>. La lettre Δ (delta majuscule) signifie toujours « variation de » : valeur finale moins valeur initiale.</dd>
+    </dl>
+    <p><b class="eps">ε</b> <b>n'a pas d'unité</b> (des mm divisés par des mm). On l'exprime en %, ou en <b>microdéformations</b> notées <b>µε</b> (« micro-epsilon ») : 1 µε = 10⁻⁶, un millionième, soit 1 µm d'allongement par mètre. Exemple : <span class="m"><span class="eps">ε</span> = 0,001 = 0,1 % = 1 000 µε</span>, c'est 1 mm d'allongement par mètre de barre.</p>
+    <p>La propriété qui rend <span class="eps">ε</span> si utile : dans une barre uniforme, <b>chaque petit tronçon s'allonge du même pourcentage</b>. La déformation est donc une propriété <b>locale</b>, valable en chaque point de la matière. C'est exactement ce qui permettra, au cours 3, de la ranger dans une matrice « en un point ».</p>
+  </div>
+
+  <div class="lab" id="w2">
+    <p class="lab-h">Manipulation 2 : les deux élastiques</p>
+    <p class="lab-sub">Barre A (100 mm) et barre B (200 mm), avec un quadrillage tous les 10 mm. Regarde les carreaux : ce sont eux qui « ressentent » la déformation.</p>
+    <div class="radios" role="radiogroup" aria-label="Mode">
+      <label><input type="radio" name="w2m" value="dl" checked> Même allongement ΔL</label>
+      <label><input type="radio" name="w2m" value="eps"> Même déformation ε</label>
+      <label><input type="radio" name="w2m" value="tr"> Simple déplacement (on fait glisser)</label>
+    </div>
+    <svg id="w2svg" viewBox="0 0 640 220" role="img" aria-label="Deux barres de longueurs différentes étirées"></svg>
+    <div class="ctrl"><label for="w2v">Réglage</label><input id="w2v" class="r-eps" type="range" min="0" max="100" step="1" value="50"><output id="w2vl"></output></div>
+    <div class="readout" id="w2out"></div>
+    <p class="status" id="w2note"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">la définition locale</span></div>
+    <h4>Déplacement et déformation : deux choses différentes</h4>
+    <p>On note <span class="m">u(x)</span> le <b>déplacement</b> du point qui se trouvait à l'abscisse x (sa position le long de la barre) : de combien il a bougé. Si toute la barre glisse de 5 mm sans s'étirer, tous ses points ont <span class="m">u = 5 mm</span> : gros déplacement, <b>zéro déformation</b> (c'est le troisième mode de la manipulation). Ce qui déforme la matière, c'est quand deux points voisins <b>ne bougent pas de la même quantité</b>.</p>
+    <div class="fx"><div class="big"><span class="eps">ε</span> = <span class="frac"><span>du</span><span>dx</span></span></div><p class="cap">la dérivée du déplacement : de combien le déplacement change quand on avance d'un tout petit pas dx le long de la barre</p></div>
+    <p>Vérification sur la barre uniforme fixée à gauche : le point à l'abscisse x bouge de <span class="m">u(x) = <span class="eps">ε</span>·x</span> (proportionnellement à sa distance au bout fixe). L'extrémité, à <span class="m">x = L₀</span>, bouge de <span class="m">u = ΔL</span>. Donc <span class="m"><span class="eps">ε</span> = du/dx = ΔL/L₀</span> : les deux définitions coïncident.</p>
+    <div class="tip">💡 Retiens bien cette définition par la dérivée : au cours 3, <b>chaque case de la matrice des déformations sera la dérivée d'un déplacement</b>. La matrice [ε], c'est « du/dx » généralisé à toutes les directions.</div>
+    <h4>Signe et ordre de grandeur</h4>
+    <p><span class="m"><span class="eps">ε</span> &gt; 0</span> : allongement ; <span class="m"><span class="eps">ε</span> &lt; 0</span> : raccourcissement. Dans le domaine élastique des métaux, <span class="eps">ε</span> reste de l'ordre de 0,1 % (1 000 µε), totalement invisible à l'œil. C'est l'hypothèse HPP du chapitre 0, et c'est pourquoi on mesure les déformations avec des <b>jauges</b> (de petits fils collés sur la pièce dont la résistance électrique change quand ils s'étirent ; on les verra au cours 3).</p>
+  </div>
+</div>
+</section>
+<!-- ================= CHAPITRE 3 ================= -->
+<section class="chap" id="c3">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">3</div>
+    <div class="c-title"><h2>La loi de Hooke et le module d'Young <span class="mat">E</span></h2><p>La matière est un ressort… tant qu'on ne force pas trop</p></div>
+    <div class="c-img"><span class="ico">📈</span><span><small>Image à retenir</small>La courbe de traction : une rampe, un virage, une colline, une chute</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">l'intuition</span></div>
+    <p>Accroche un poids à un ressort : il s'allonge. Accroches-en deux : il s'allonge deux fois plus. C'est la <b>loi de Hooke</b>, énoncée par Robert Hooke en 1678 sous la forme d'une devinette latine : <i>ut tensio, sic vis</i>, « telle extension, telle force ».</p>
+    <p>La surprise, c'est qu'une barre d'acier se comporte <b>exactement comme un ressort</b> très raide, tant que l'effort reste raisonnable. Pourquoi ? Zoome jusqu'aux atomes : ils sont reliés par des liaisons qui se comportent comme de minuscules ressorts. Tirer sur la barre, c'est étirer des milliards de ces ressorts en même temps.</p>
+    <div class="fx"><div class="big"><span class="sig">σ</span> = <span class="mat">E</span> · <span class="eps">ε</span></div><p class="cap">la contrainte est proportionnelle à la déformation (loi de Hooke)</p></div>
+    <dl class="syms">
+      <dt class="mat">E</dt><dd>Le <b>module d'Young</b> (Thomas Young, 1807), aussi appelé module d'élasticité longitudinale. Comme <span class="eps">ε</span> n'a pas d'unité, E a la même unité que <span class="sig">σ</span> : on le donne en <b>GPa</b> (gigapascals ; 1 GPa = 1 000 MPa).</dd>
+    </dl>
+    <p><b class="mat">E</b> mesure la <b>rigidité</b> du matériau : plus E est grand, plus il faut forcer pour obtenir la même déformation. Attention, rigide ne veut pas dire résistant : le verre est aussi rigide que l'aluminium (même E), mais il casse bien plus facilement.</p>
+    <div class="mnemo">🧠 <b>E comme Entêté</b> : plus il est grand, plus le matériau refuse de s'allonger. Et les deux « e » vont ensemble : <span class="mat">E</span> fois <span class="eps">ε</span>psilon.</div>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Matériau</th><th>E (GPa)</th><th style="width:45%">Rigidité comparée</th></tr>
+      <tr><td>Acier</td><td>210</td><td><div class="ebar" style="width:100%"></div></td></tr>
+      <tr><td>Cuivre</td><td>120</td><td><div class="ebar" style="width:57%"></div></td></tr>
+      <tr><td>Titane</td><td>110</td><td><div class="ebar" style="width:52%"></div></td></tr>
+      <tr><td>Fonte grise</td><td>≈ 100</td><td><div class="ebar" style="width:48%"></div></td></tr>
+      <tr><td>Aluminium</td><td>70</td><td><div class="ebar" style="width:33%"></div></td></tr>
+      <tr><td>Verre</td><td>70</td><td><div class="ebar" style="width:33%"></div></td></tr>
+      <tr><td>Béton</td><td>≈ 30</td><td><div class="ebar" style="width:14%"></div></td></tr>
+      <tr><td>Os</td><td>≈ 17</td><td><div class="ebar" style="width:8%"></div></td></tr>
+      <tr><td>Bois (dans le sens des fibres)</td><td>≈ 10</td><td><div class="ebar" style="width:5%"></div></td></tr>
+      <tr><td>Caoutchouc</td><td>0,001 à 0,01</td><td><div class="ebar" style="width:0"></div> <small class="mut">invisible à cette échelle !</small></td></tr>
+    </table></div>
+    <p><b>L'essai de traction</b> est l'expérience fondatrice de la RDM. On tire lentement sur une <b>éprouvette</b> (un barreau aux dimensions normalisées) jusqu'à ce qu'elle casse, en enregistrant <span class="sig">σ</span> et <span class="eps">ε</span> à chaque instant. La courbe obtenue est la <b>carte d'identité mécanique</b> du matériau. Lance l'essai ci-dessous, puis teste le bouton « Relâcher » à différents moments : c'est le geste le plus instructif de tout le chapitre.</p>
+  </div>
+
+  <div class="lab" id="w3">
+    <p class="lab-h">Manipulation 3 : l'essai de traction</p>
+    <p class="lab-sub">Courbe schématique : l'échelle des ε est dilatée au début pour qu'on voie la zone élastique (en vrai, elle ne représente que 0,1 à 0,3 % de déformation).</p>
+    <div class="btns" id="w3mat">
+      <button class="btn on" data-m="acier" type="button">Acier doux S235</button>
+      <button class="btn" data-m="alu" type="button">Alliage d'aluminium</button>
+      <button class="btn" data-m="fonte" type="button">Fonte grise (fragile)</button>
+    </div>
+    <svg id="w3svg" viewBox="0 0 640 370" role="img" aria-label="Courbe contrainte-déformation et éprouvette qui s'allonge"></svg>
+    <div class="ctrl"><label for="w3p">Tirer</label><input id="w3p" class="r-frc" type="range" min="0" max="1000" step="1" value="0"><output id="w3pv"></output></div>
+    <div class="btns">
+      <button class="btn" id="w3play" type="button">▶ Lancer l'essai</button>
+      <button class="btn" id="w3rel" type="button">🖐 Relâcher ici</button>
+      <button class="btn" id="w3reset" type="button">↺ Recommencer</button>
+    </div>
+    <div class="readout" id="w3out"></div>
+    <p class="status" id="w3zone"></p>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : lire la courbe <span class="tag">les six étapes, dans l'ordre</span></div>
+    <p><b>1. La rampe : zone élastique.</b> <span class="m"><span class="sig">σ</span> = <span class="mat">E</span>·<span class="eps">ε</span></span>, droite parfaite. Si on relâche, tout revient à zéro. <b>La pente de cette droite, c'est E.</b></p>
+    <p><b>2. Le virage : la limite d'élasticité R<sub>e</sub></b> (R pour résistance, e pour élastique). C'est la fin de la rampe. Au-delà, les dégâts sont permanents.</p>
+    <p><b>3. La montée de la colline : zone plastique.</b> La matière se déforme durablement. Si on relâche, on redescend <b>parallèlement à la rampe</b> : on récupère la partie élastique, pas le reste. En même temps, le métal durcit : c'est l'<b>écrouissage</b>.</p>
+    <p><b>4. Le sommet : la résistance maximale à la traction R<sub>m</sub></b> (m pour maximale). C'est la plus grande contrainte que l'éprouvette supporte.</p>
+    <p><b>5. La chute : la striction.</b> Un « cou » se forme à un endroit de l'éprouvette et s'amincit très vite ; l'effort nécessaire diminue.</p>
+    <p><b>6. La rupture.</b> L'allongement final, en %, s'appelle <b>A %</b> (allongement à la rupture) : il mesure la capacité du matériau à se déformer avant de casser.</p>
+    <div class="def"><b>📖 Écrouissage :</b> durcissement d'un métal quand on le déforme plastiquement. C'est pour ça qu'un trombone plié et déplié plusieurs fois devient raide à l'endroit du pli… avant de casser.</div>
+    <div class="def"><b>📖 Ductile / fragile :</b> un matériau <b>ductile</b> se déforme beaucoup avant de casser (acier doux, cuivre, aluminium) : il « prévient ». Un matériau <b>fragile</b> casse sans déformation plastique notable (fonte grise, verre, céramique, craie) : il ne prévient pas. Compare la courbe de l'acier et celle de la fonte dans la manipulation.</div>
+    <div class="meta">⚙️ <b>Côté métallurgie : pourquoi un métal devient-il plastique ?</b> Dans un cristal métallique, les plans d'atomes peuvent glisser les uns sur les autres grâce à des défauts appelés <b>dislocations</b> (une ligne de désordre dans l'empilement régulier des atomes). Image : pour déplacer un grand tapis lourd, tu ne le tires pas d'un bloc, tu y fais une ride que tu pousses d'un bout à l'autre. La dislocation, c'est la ride : elle permet de faire glisser le tapis atome par atome, avec un effort bien plus faible. Retiens surtout que ce glissement est provoqué par du <b class="tau">cisaillement</b> (chapitre 5). On découvrira au chapitre 6 que, dans une barre qu'on tire, le cisaillement est maximal sur des plans inclinés à 45°… et c'est justement là que glissent les dislocations.</div>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">les formules de dimensionnement</span></div>
+    <h4>De Hooke à la raideur d'une barre</h4>
+    <p>Pars de <span class="m"><span class="sig">σ</span> = <span class="mat">E</span>·<span class="eps">ε</span></span> et remplace chaque terme par sa définition :</p>
+    <div class="fx"><div class="big" style="font-size:1.7rem"><span class="frac"><span class="frc">F</span><span>S</span></span> = <span class="mat">E</span> · <span class="frac"><span>ΔL</span><span>L₀</span></span> &nbsp;⟺&nbsp; <span class="frc">F</span> = <span class="frac"><span><span class="mat">E</span>·S</span><span>L₀</span></span> · ΔL</div><p class="cap">une barre en traction est un ressort de raideur k = E·S / L₀</p></div>
+    <p>C'est la loi du ressort <span class="m"><span class="frc">F</span> = k·ΔL</span>, avec une <b>raideur</b> <span class="m">k = <span class="mat">E</span>·S/L₀</span> en N/mm. La raideur d'une barre dépend donc du <b>matériau</b> (E) <i>et</i> de la <b>géométrie</b> (S et L₀) : une barre deux fois plus longue est deux fois plus souple, une barre de section double est deux fois plus raide. On en tire la formule la plus utilisée en traction :</p>
+    <div class="fx"><div class="big">ΔL = <span class="frac"><span><span class="frc">F</span>·L₀</span><span><span class="mat">E</span>·S</span></span></div></div>
+    <h4>Mesurer E sur la courbe</h4>
+    <p>E est la pente de la partie droite : <span class="m"><span class="mat">E</span> = Δ<span class="sig">σ</span> / Δ<span class="eps">ε</span></span>. Prends deux points de la rampe, fais « différence des σ divisée par différence des ε ».</p>
+    <h4>La limite conventionnelle R<sub>p0,2</sub></h4>
+    <p>Certains matériaux, comme l'aluminium ou les aciers inoxydables, n'ont pas de « virage » net (compare l'acier et l'alu dans la manipulation). On définit alors une limite conventionnelle <b>R<sub>p0,2</sub></b> : la contrainte qui laisse <b>0,2 % de déformation permanente</b> après relâchement. Graphiquement, on trace une parallèle à la rampe élastique décalée de 0,2 % vers la droite, et on lit où elle coupe la courbe.</p>
+    <h4>Condition de résistance et coefficient de sécurité</h4>
+    <p>On ne dimensionne jamais une pièce pile à R<sub>e</sub> : on garde une marge, le <b>coefficient de sécurité</b> <span class="m">s</span> (souvent entre 1,5 et 3, imposé par le cahier des charges ou les normes). On définit la <b>résistance pratique à l'extension</b> :</p>
+    <div class="fx"><div class="big" style="font-size:1.8rem"><span class="sig">σ</span><sub>max</sub> ≤ R<sub>pe</sub> = <span class="frac"><span>R<sub>e</sub></span><span>s</span></span></div></div>
+    <p>Exemple : acier S235 avec <span class="m">s = 2</span> donne <span class="m">R<sub>pe</sub> = 117,5 MPa</span>. On vérifie aussi, si besoin, une <b>condition de rigidité</b> : <span class="m">ΔL ≤ ΔL<sub>admissible</sub></span> (la pièce ne doit pas trop s'allonger pour fonctionner).</p>
+  </div>
+</div>
+</section>
+
+<!-- ================= CHAPITRE 4 ================= -->
+<section class="chap" id="c4">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">4</div>
+    <div class="c-title"><h2>Le coefficient de Poisson <span class="mat">ν</span></h2><p>Quand on tire dessus, la matière maigrit</p></div>
+    <div class="c-img"><span class="ico">🐟</span><span><small>Image à retenir</small>Le poisson qu'on étire par la queue devient une anguille</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">l'intuition</span></div>
+    <p>Étire un élastique large ou un chewing-gum : il s'allonge… et devient plus fin. Ce n'est pas un détail : <b>toute matière fait ça</b>. Une déformation dans le sens de la traction s'accompagne d'une contraction dans les directions perpendiculaires.</p>
+    <p>Le nom vient de Siméon Denis Poisson, mathématicien français (1781-1840). Aucun rapport avec les poissons, mais l'image aide : tire un poisson par la queue, il devient une anguille 🐟 → 🐍.</p>
+    <div class="fx"><div class="big"><span class="eps">ε</span><sub>t</sub> = − <span class="mat">ν</span> · <span class="eps">ε</span><sub>ℓ</sub></div><p class="cap">la déformation transversale est proportionnelle à la déformation longitudinale, avec le signe opposé</p></div>
+    <dl class="syms">
+      <dt><span class="eps">ε</span><sub>ℓ</sub></dt><dd>La déformation <b>longitudinale</b> (ℓ), dans le sens de l'effort.</dd>
+      <dt><span class="eps">ε</span><sub>t</sub></dt><dd>La déformation <b>transversale</b> (t), perpendiculaire à l'effort. Pour une barre ronde : <span class="m"><span class="eps">ε</span><sub>t</sub> = Δd/d</span> (variation de diamètre divisée par le diamètre).</dd>
+      <dt class="mat">ν</dt><dd><b>« nu »</b>, le « n » grec : le <b>coefficient de Poisson</b>. Sans unité.</dd>
+      <dt>−</dt><dd>Le signe moins traduit le fait que l'un grandit quand l'autre diminue. Comme ν est positif pour presque tous les matériaux, <span class="eps">ε</span><sub>t</sub> est de signe opposé à <span class="eps">ε</span><sub>ℓ</sub>.</dd>
+    </dl>
+    <div class="mnemo">🧠 <b>ν comme nouille</b> : tire sur une nouille, elle s'affine. Et ν est toujours ≤ 0,5 : en pourcentage, une nouille maigrit au plus moitié moins qu'elle ne s'allonge.</div>
+    <div class="tbl-wrap"><table class="data">
+      <tr><th>Matériau</th><th>ν</th><th>À retenir</th></tr>
+      <tr><td>Acier</td><td>0,30</td><td>La valeur à connaître par cœur.</td></tr>
+      <tr><td>Aluminium, cuivre</td><td>0,33 à 0,34</td><td>Proche de l'acier.</td></tr>
+      <tr><td>Fonte, verre</td><td>0,22 à 0,26</td><td></td></tr>
+      <tr><td>Béton</td><td>≈ 0,2</td><td></td></tr>
+      <tr><td>Caoutchouc</td><td>≈ 0,5</td><td>Le volume ne change pas : on dit qu'il est incompressible.</td></tr>
+      <tr><td>Liège</td><td>≈ 0</td><td>Il ne gonfle pas sur les côtés quand on l'écrase.</td></tr>
+      <tr><td>Matériaux auxétiques</td><td>&lt; 0</td><td>Ils s'épaississent quand on les tire !</td></tr>
+    </table></div>
+    <p><b>Pourquoi les bouchons sont en liège :</b> avec ν ≈ 0, quand tu enfonces le bouchon, il se raccourcit sans gonfler sur les côtés, donc il rentre dans le goulot. Un bouchon en caoutchouc (ν ≈ 0,5) gonflerait latéralement en l'enfonçant et se coincerait.</p>
+    <div class="def"><b>📖 Auxétique</b> (du grec <i>auxetos</i>, « qui grossit ») : matériau à structure particulière (mousses ou nids d'abeille aux cellules rentrantes) qui s'élargit quand on le tire. On en trouve dans des protections anti-chocs et des stents (petits tubes médicaux qui maintiennent une artère ouverte).</div>
+  </div>
+
+  <div class="lab" id="w4">
+    <p class="lab-h">Manipulation 4 : le poisson qui devient anguille</p>
+    <p class="lab-sub">Un bloc tiré dans le sens de sa longueur (déformation très exagérée). En pointillés : la forme de départ.</p>
+    <svg id="w4svg" viewBox="0 0 640 300" role="img" aria-label="Bloc étiré qui s'amincit selon le coefficient de Poisson"></svg>
+    <div class="ctrl"><label for="w4e">Étirement <b class="eps">ε</b><sub>ℓ</sub></label><input id="w4e" class="r-eps" type="range" min="0" max="40" step="1" value="25"><output id="w4ev"></output></div>
+    <div class="ctrl"><label for="w4n">Poisson <b class="mat">ν</b></label><input id="w4n" class="r-mat" type="range" min="-50" max="50" step="1" value="30"><output id="w4nv"></output></div>
+    <div class="btns" id="w4pre">
+      <button class="btn" type="button" data-nu="30">Acier 0,30</button>
+      <button class="btn" type="button" data-nu="50">Caoutchouc 0,50</button>
+      <button class="btn" type="button" data-nu="0">Liège 0</button>
+      <button class="btn" type="button" data-nu="-30">Auxétique −0,30</button>
+    </div>
+    <div class="readout" id="w4out"></div>
+    <p class="status" id="w4note"></p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">la version 3D et le volume</span></div>
+    <h4>En trois dimensions</h4>
+    <p>Pour une traction <span class="sig">σ</span> selon l'axe x, la barre s'allonge selon x et se contracte <b>dans les deux autres directions</b>, y et z :</p>
+    <div class="fx"><div class="big" style="font-size:1.6rem"><span class="eps">ε</span><sub>x</sub> = <span class="frac"><span class="sig">σ</span><span class="mat">E</span></span> &nbsp;&nbsp; <span class="eps">ε</span><sub>y</sub> = <span class="eps">ε</span><sub>z</sub> = − <span class="mat">ν</span>·<span class="frac"><span class="sig">σ</span><span class="mat">E</span></span></div><p class="cap">retiens ce trio : c'est déjà la diagonale d'une matrice des déformations</p></div>
+    <h4>La variation de volume</h4>
+    <p>Un bloc de dimensions L × b × h a un volume <span class="m">V = L·b·h</span>. Après déformation, chaque dimension est multipliée par (1 + sa déformation) :</p>
+    <p class="m" style="text-align:center;white-space:normal">V′ = L(1 + <span class="eps">ε</span><sub>x</sub>) · b(1 + <span class="eps">ε</span><sub>y</sub>) · h(1 + <span class="eps">ε</span><sub>z</sub>)</p>
+    <p>En développant, on obtient des termes comme <span class="m"><span class="eps">ε</span><sub>x</sub>·<span class="eps">ε</span><sub>y</sub></span>. Sous HPP, ces produits sont négligeables (0,001 × 0,001 = 0,000 001, mille fois plus petit). Il reste :</p>
+    <div class="fx"><div class="big" style="font-size:1.7rem"><span class="frac"><span>ΔV</span><span>V</span></span> ≈ <span class="eps">ε</span><sub>x</sub> + <span class="eps">ε</span><sub>y</sub> + <span class="eps">ε</span><sub>z</sub> = <span class="eps">ε</span><sub>x</sub>(1 − 2<span class="mat">ν</span>)</div><p class="cap">la variation relative de volume = la somme des trois déformations</p></div>
+    <div class="tip">💡 Cette somme des trois termes diagonaux porte un nom en algèbre : la <b>trace</b> de la matrice (somme des termes de sa diagonale). Tu viens de démontrer que <b>la trace de la matrice des déformations est la variation relative de volume</b>. C'est un résultat très souvent utilisé.</div>
+    <h4>Pourquoi ν ne dépasse jamais 0,5</h4>
+    <p>On définit le <b>module de compressibilité</b> <span class="m"><span class="mat">K</span> = <span class="mat">E</span> / [3(1 − 2<span class="mat">ν</span>)]</span> : il mesure la résistance d'un matériau à un changement de volume quand on l'écrase de tous les côtés (comme au fond de la mer). La physique impose K &gt; 0 : sinon, comprimer la matière de partout la ferait gonfler, ce qui est absurde. Il faut donc <span class="m">1 − 2<span class="mat">ν</span> &gt; 0</span>, soit <b>ν &lt; 0,5</b>. À ν = 0,5 pile, le volume ne change plus du tout : c'est la limite <b>incompressible</b> (caoutchouc, et aussi les métaux pendant leur déformation plastique).</p>
+    <h4>Exemple express</h4>
+    <p>Barre d'acier de diamètre 20 mm avec <span class="m"><span class="eps">ε</span><sub>ℓ</sub> = 0,001</span> et <span class="m"><span class="mat">ν</span> = 0,3</span> : <span class="m"><span class="eps">ε</span><sub>t</sub> = −0,3 × 0,001 = −0,0003</span>, donc <span class="m">Δd = −0,0003 × 20 = −0,006 mm</span>, soit −6 µm. Invisible, mais parfaitement mesurable avec une jauge.</p>
+  </div>
+</div>
+</section>
+<!-- ================= CHAPITRE 5 ================= -->
+<section class="chap" id="c5">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">5</div>
+    <div class="c-title"><h2>Le cisaillement : <span class="tau">τ</span>, <span class="gam">γ</span> et <span class="mat">G</span></h2><p>Faire glisser la matière au lieu de la tirer</p></div>
+    <div class="c-img"><span class="ico">🃏</span><span><small>Image à retenir</small>Le jeu de cartes qu'on pousse du plat de la main</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">l'intuition</span></div>
+    <p>Jusqu'ici, on tirait perpendiculairement à la surface. Maintenant, pose un jeu de cartes sur la table, pose ta main à plat dessus et pousse <b>horizontalement</b> : les cartes glissent un peu les unes sur les autres et le paquet se penche. La force est <b>parallèle</b> à la surface : c'est du <b class="tau">cisaillement</b>. Même racine que « ciseaux » : les deux lames font glisser les deux moitiés de la feuille l'une contre l'autre.</p>
+    <p>Deux nouveautés par rapport à la traction. La contrainte n'est plus normale mais <b>tangentielle</b> : on la note <span class="tau">τ</span>. Et la déformation n'est plus un allongement mais un <b>changement d'angle</b> : l'angle droit du paquet se referme un peu. Cette perte d'angle s'appelle la <b class="gam">distorsion</b>, notée <span class="gam">γ</span>.</p>
+    <div class="fx"><div class="big"><span class="tau">τ</span> = <span class="frac"><span class="frc">F</span><span>S</span></span> &nbsp;&nbsp;&nbsp; <span class="tau">τ</span> = <span class="mat">G</span> · <span class="gam">γ</span></div><p class="cap">F parallèle à la surface S ; la loi de Hooke version glissement</p></div>
+    <dl class="syms">
+      <dt class="tau">τ</dt><dd><b>« tau »</b>, le « t » grec : pense <b>T</b>angentiel. C'est la <b>contrainte de cisaillement</b> (ou contrainte tangentielle), en MPa comme σ.</dd>
+      <dt class="gam">γ</dt><dd><b>« gamma »</b>, le « g » grec : pense <b>G</b>lissement. C'est la <b>distorsion</b> (ou glissement), en <b>radians</b>.</dd>
+      <dt class="mat">G</dt><dd>Le <b>module de cisaillement</b> (ou module de Coulomb), en GPa : la rigidité du matériau vis-à-vis du glissement. Acier ≈ 81 GPa, aluminium ≈ 26 GPa, caoutchouc ≈ 0,3 à 3 MPa.</dd>
+    </dl>
+    <div class="def"><b>📖 Tangentiel :</b> dans le plan de la surface, qui « rase » la surface au lieu de la percer.</div>
+    <div class="def"><b>📖 Radian (rad) :</b> une autre unité d'angle. 180° = π rad ≈ 3,14 rad, donc 1 rad ≈ 57,3°. Son grand avantage : pour les petits angles, <span class="m">tan <span class="gam">γ</span> ≈ <span class="gam">γ</span></span> quand γ est en radians. C'est pour ça qu'on l'utilise en RDM.</div>
+    <div class="mnemo">🧠 <b>Deux phrases jumelles</b> : <span class="m"><span class="sig">σ</span> = <span class="mat">E</span>·<span class="eps">ε</span></span> pour tirer, <span class="m"><span class="tau">τ</span> = <span class="mat">G</span>·<span class="gam">γ</span></span> pour faire glisser. Dans la seconde, tout parle de <b>G</b>lissement : <span class="mat">G</span> et <span class="gam">γ</span> (le « g » grec).</div>
+    <p><b>Où rencontre-t-on du cisaillement ?</b> Dans les boulons, rivets et goupilles qui assemblent deux plaques ; dans les clavettes (petites pièces qui lient un arbre à une roue pour transmettre la rotation) ; quand on poinçonne une tôle ; dans les ciseaux ; dans les plots antivibratoires en caoutchouc ; dans les joints collés.</p>
+  </div>
+
+  <div class="lab" id="w5">
+    <p class="lab-h">Manipulation 5 : le jeu de cartes</p>
+    <p class="lab-sub">Un bloc de 100 × 100 mm (vu de côté), de hauteur h = 20 mm, collé sur la table. On pousse la plaque du dessus avec une force F horizontale.</p>
+    <div class="btns" id="w5mat">
+      <button class="btn on" type="button" data-g="1">Caoutchouc souple (G = 1 MPa)</button>
+      <button class="btn" type="button" data-g="3">Caoutchouc ferme (G = 3 MPa)</button>
+      <button class="btn" type="button" data-g="81000">Acier (G = 81 000 MPa)</button>
+    </div>
+    <svg id="w5svg" viewBox="0 0 640 290" role="img" aria-label="Bloc cisaillé dont les couches glissent"></svg>
+    <div class="ctrl"><label for="w5F">Force <b class="frc">F</b></label><input id="w5F" class="r-frc" type="range" min="0" max="3000" step="50" value="1500"><output id="w5Fv"></output></div>
+    <div class="readout" id="w5out"></div>
+    <p class="status" id="w5note"></p>
+  </div>
+
+  <div class="lab" id="w5b">
+    <p class="lab-h">Manipulation 6 : le petit carré qui ne doit pas tourner</p>
+    <p class="lab-sub">Un minuscule carré de matière, avec du cisaillement sur ses faces. Retire le cisaillement des faces verticales pour voir ce qui se passerait.</p>
+    <svg id="w5bsvg" viewBox="0 0 320 250" role="img" aria-label="Petit carré soumis à du cisaillement sur ses quatre faces" style="max-width:380px;margin:0 auto">
+      <g id="spinner">
+        <rect x="105" y="70" width="110" height="110" class="bar"/>
+        <g class="arr tau"><line x1="118" y1="56" x2="190" y2="56" stroke-width="3.5" stroke-linecap="round"/><polygon points="202,56 190,50 190,62"/></g>
+        <g class="arr tau"><line x1="202" y1="194" x2="130" y2="194" stroke-width="3.5" stroke-linecap="round"/><polygon points="118,194 130,188 130,200"/></g>
+        <g id="vertArrows">
+          <g class="arr tau"><line x1="229" y1="167" x2="229" y2="95" stroke-width="3.5" stroke-linecap="round"/><polygon points="229,83 223,95 235,95"/></g>
+          <g class="arr tau"><line x1="91" y1="83" x2="91" y2="155" stroke-width="3.5" stroke-linecap="round"/><polygon points="91,167 85,155 97,155"/></g>
+          <text x="244" y="130" class="mth tau">τ<tspan font-size="12" dy="4">xy</tspan></text>
+          <text x="52" y="130" class="mth tau">τ<tspan font-size="12" dy="4">xy</tspan></text>
+        </g>
+        <text x="148" y="44" class="mth tau">τ<tspan font-size="12" dy="4">yx</tspan></text>
+        <text x="148" y="222" class="mth tau">τ<tspan font-size="12" dy="4">yx</tspan></text>
+      </g>
+    </svg>
+    <div class="btns" style="justify-content:center"><button class="btn" id="w5bt" type="button">Retirer le cisaillement des faces verticales</button></div>
+    <p class="status" id="w5bnote" style="text-align:center">Équilibre : les deux couples se compensent, le carré reste immobile.</p>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : ce que montre le petit carré <span class="tag">une image capitale</span></div>
+    <p>Le cisaillement du haut (→) et celui du bas (←) forment un <b>couple</b> : deux forces opposées décalées, comme tes deux mains sur un volant. À eux seuls, ils feraient tourner le carré comme une toupie. Or une pièce immobile ne tourne pas ! Il faut donc forcément du cisaillement sur les faces verticales aussi (↑ à droite, ↓ à gauche), <b>de même valeur</b>, pour bloquer la rotation.</p>
+    <p>Conclusion : <b>le cisaillement va toujours par paires sur des faces perpendiculaires</b>, et les deux valeurs sont égales : <span class="m"><span class="tau">τ</span><sub>xy</sub> = <span class="tau">τ</span><sub>yx</sub></span>. C'est la <b>réciprocité des contraintes tangentielles</b>. Garde cette image de toupie bloquée : c'est elle qui rendra les matrices <b>symétriques</b>.</p>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">définitions et relations</span></div>
+    <h4>Définition précise de la distorsion</h4>
+    <p><span class="gam">γ</span> est la <b>variation de l'angle</b>, initialement droit, entre deux directions de la matière (par exemple x et y), exprimée en radians. Si le haut du bloc se décale de δ (« delta » minuscule, un petit déplacement) sur une hauteur h : <span class="m">tan <span class="gam">γ</span> = δ/h</span>, et sous HPP <span class="m"><span class="gam">γ</span> ≈ δ/h</span>.</p>
+    <h4>Seulement deux constantes indépendantes</h4>
+    <p>Pour un matériau isotrope, G n'est pas une nouvelle constante libre : il se déduit de E et ν.</p>
+    <div class="fx"><div class="big"><span class="mat">G</span> = <span class="frac"><span class="mat">E</span><span>2(1 + <span class="mat">ν</span>)</span></span></div><p class="cap">vérification pour l'acier : 210 / (2 × 1,3) = 80,8 GPa ✓</p></div>
+    <p>On le démontrera au cours 4 avec le cercle de Mohr : c'est une des plus jolies démonstrations de la RDM. Pour l'instant, retiens qu'un matériau isotrope est <b>entièrement décrit par deux nombres</b>, E et ν.</p>
+    <h4>Démonstration de la réciprocité</h4>
+    <p>Prends le petit carré de côté a et d'épaisseur e. Sur la face du haut, la force vaut <span class="m"><span class="tau">τ</span><sub>yx</sub>·a·e</span> (contrainte × aire) ; avec celle du bas, elle forme un couple de bras de levier a, donc un moment <span class="m"><span class="tau">τ</span><sub>yx</sub>·a²·e</span>. De même, les faces verticales donnent un moment <span class="m"><span class="tau">τ</span><sub>xy</sub>·a²·e</span> en sens inverse. L'équilibre des moments impose <span class="m"><span class="tau">τ</span><sub>xy</sub> = <span class="tau">τ</span><sub>yx</sub></span>.</p>
+    <h4>Assemblages : le piège du double cisaillement</h4>
+    <p>Pour un boulon ou un axe, la contrainte de cisaillement moyenne vaut <span class="m"><span class="tau">τ</span> = <span class="frc">F</span>/S</span>, où S est l'aire de la section cisaillée. Mais si l'axe traverse une chape (une pièce en U) et une patte au milieu, il est coupé en <b>deux sections</b> à la fois : <span class="m"><span class="tau">τ</span> = <span class="frc">F</span>/(2S)</span>. C'est le <b>double cisaillement</b>, un classique des examens.</p>
+    <p>Condition de résistance : <span class="m"><span class="tau">τ</span> ≤ R<sub>pg</sub> = R<sub>eg</sub>/s</span>, où R<sub>eg</sub> est la limite élastique en cisaillement (glissement). Pour les aciers, on prend souvent <span class="m">R<sub>eg</sub> ≈ 0,5 à 0,6 × R<sub>e</sub></span> : on comprendra pourquoi au cours 5 avec les critères de Tresca et de von Mises.</p>
+  </div>
+</div>
+</section>
+
+<!-- ================= CHAPITRE 6 ================= -->
+<section class="chap" id="c6">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">6</div>
+    <div class="c-title"><h2>La facette qui tourne : pourquoi il faut une matrice</h2><p>Le pont entre ce cours et les suivants</p></div>
+    <div class="c-img"><span class="ico">⭕</span><span><small>Image à retenir</small>Le point qui dessine un cercle quand la coupe tourne</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la grande découverte</span></div>
+    <p>Voici l'idée qui justifie tout le reste. Reprends la barre en traction simple du chapitre 1. On l'avait coupée <b>perpendiculairement</b> : sur cette coupe, il n'y a que de la traction <span class="sig">σ</span>.</p>
+    <p>Mais rien ne t'oblige à couper droit ! Coupe <b>en biais</b> : la force est maintenant inclinée par rapport à la surface de coupe. Elle se décompose en une partie qui tire perpendiculairement (<span class="sig">σ<sub>n</sub></span>, contrainte normale) et une partie qui fait glisser (<span class="tau">τ</span>, cisaillement). Autrement dit : <b>même dans la traction la plus simple, il y a du cisaillement caché</b>. Il suffit de regarder sous le bon angle.</p>
+    <p>Conclusion capitale : en un point de la matière, « la contrainte » n'est pas <b>un</b> nombre. Sa valeur dépend de l'orientation de la surface qu'on regarde. Il faut donc un objet capable de donner la réponse pour <b>toutes les orientations d'un coup</b> : c'est le tenseur des contraintes, la fameuse matrice.</p>
+    <div class="def"><b>📖 Facette :</b> petite surface imaginaire passant par le point étudié. On la repère par sa <b>normale</b> <span class="m"><span class="vec">n</span></span> : la flèche perpendiculaire à la facette, de longueur 1 (on dit « unitaire »).</div>
+    <p>Une image pour ranger ça dans ta tête : un diamant. Selon l'angle, tu vois des reflets différents, mais c'est toujours le même diamant. <b>La matrice, c'est le diamant ; <span class="sig">σ<sub>n</sub></span> et <span class="tau">τ</span> sur une facette, ce sont les reflets.</b></p>
+  </div>
+
+  <div class="lab" id="w6">
+    <p class="lab-h">Manipulation 7 : la facette qui tourne</p>
+    <p class="lab-sub">Barre tirée avec σ = 100 MPa. On garde la partie gauche ; la partie droite (en transparence) tire sur la coupe avec le vecteur contrainte T⃗. θ (« thêta ») est l'angle entre la normale n⃗ de la coupe et l'axe de la barre. À droite, chaque orientation donne un point (σₙ ; τ).</p>
+    <svg id="w6svg" viewBox="0 0 680 340" role="img" aria-label="Coupe inclinée d'une barre en traction et tracé des points sigma n, tau"></svg>
+    <div class="ctrl"><label for="w6t">Angle <b>θ</b> de la coupe</label><input id="w6t" class="r-th" type="range" min="-90" max="90" step="1" value="30"><output id="w6tv"></output></div>
+    <div class="btns">
+      <button class="btn" id="w6play" type="button">▶ Faire tourner la coupe de −90° à +90°</button>
+      <button class="btn" id="w6clr" type="button">Effacer la trace</button>
+      <label class="btn" style="display:inline-flex;gap:6px;align-items:center"><input type="checkbox" id="w6circ"> Montrer le cercle</label>
+    </div>
+    <div class="readout" id="w6out"></div>
+    <p class="status" id="w6note"></p>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : ce qu'il faut observer <span class="tag">quatre constats</span></div>
+    <p><b>À θ = 0°</b> (coupe droite) : <span class="m"><span class="sig">σ<sub>n</sub></span> = <span class="sig">σ</span></span> et <span class="m"><span class="tau">τ</span> = 0</span>. On retrouve le chapitre 1.</p>
+    <p><b>À θ = 45°</b> : le cisaillement est <b>maximal</b> et vaut <span class="m"><span class="tau">τ</span><sub>max</sub> = <span class="sig">σ</span>/2</span>. C'est pour ça que les métaux ductiles, qui cèdent par glissement de dislocations, montrent des bandes de glissement inclinées à 45° et une rupture en « cône-coupelle » : le bord de la cassure forme une collerette inclinée à 45°.</p>
+    <p><b>À θ = 90°</b> (coupe parallèle à l'axe) : plus rien. Deux « fibres » voisines de la barre ne se tirent pas l'une l'autre.</p>
+    <p><b>Les points dessinent un cercle.</b> C'est le <b>cercle de Mohr</b>, en avant-première ! Et regarde bien : quand la coupe tourne de θ dans la réalité, le point tourne de <b>2θ</b> sur le cercle. Retiens dès maintenant la règle d'or du cours 4 : <b>angle réel θ → angle double 2θ sur le cercle</b>.</p>
+    <div class="meta">🧪 <b>Expérience à faire chez toi :</b> prends une craie, tiens-la par les deux bouts et tords-la. Elle casse selon une hélice inclinée à 45°. La craie est fragile : elle casse là où la traction est maximale, et en torsion, cette traction maximale se trouve sur des facettes à 45°. Tu comprendras exactement pourquoi au cours 4, avec le cercle de Mohr.</div>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">le calcul sur la facette inclinée</span></div>
+    <p><b>Étape 1, l'aire.</b> La coupe inclinée est plus grande que la section droite (une tranche de saucisson coupée en biais est ovale et plus grande) : <span class="m">S<sub>θ</sub> = S / cos θ</span>.</p>
+    <p><b>Étape 2, la force.</b> On décompose <span class="frc">F</span> selon la normale à la facette et selon la facette : partie normale <span class="m"><span class="frc">F</span> cos θ</span>, partie tangentielle <span class="m"><span class="frc">F</span> sin θ</span>.</p>
+    <p><b>Étape 3, on divise.</b></p>
+    <div class="fx"><div class="big" style="font-size:1.55rem"><span class="sig">σ<sub>n</sub></span> = <span class="frac"><span><span class="frc">F</span> cos θ</span><span>S / cos θ</span></span> = <span class="sig">σ</span> cos²θ &nbsp;&nbsp;&nbsp; <span class="tau">τ</span> = <span class="frac"><span><span class="frc">F</span> sin θ</span><span>S / cos θ</span></span> = <span class="sig">σ</span> sin θ cos θ</div></div>
+    <p><b>Étape 4, l'angle double.</b> Avec les formules de trigonométrie <span class="m">cos²θ = (1 + cos 2θ)/2</span> et <span class="m">sin θ cos θ = (sin 2θ)/2</span> :</p>
+    <div class="fx"><div class="big" style="font-size:1.55rem"><span class="sig">σ<sub>n</sub></span> = <span class="frac"><span class="sig">σ</span><span>2</span></span> + <span class="frac"><span class="sig">σ</span><span>2</span></span> cos 2θ &nbsp;&nbsp;&nbsp; <span class="tau">τ</span> = <span class="frac"><span class="sig">σ</span><span>2</span></span> sin 2θ</div></div>
+    <p><b>Étape 5, le cercle.</b> Isole cos 2θ et sin 2θ, élève au carré et additionne (en utilisant <span class="m">cos² + sin² = 1</span>) :</p>
+    <div class="fx"><div class="big" style="font-size:1.6rem">(<span class="sig">σ<sub>n</sub></span> − <span class="sig">σ</span>/2)² + <span class="tau">τ</span>² = (<span class="sig">σ</span>/2)²</div><p class="cap">l'équation d'un cercle (X − a)² + Y² = R² : centre (σ/2 ; 0), rayon σ/2</p></div>
+    <p>Le maximum de <span class="tau">τ</span> est atteint quand <span class="m">sin 2θ = 1</span>, donc <span class="m">2θ = 90°</span>, c'est-à-dire <span class="m">θ = 45°</span>, et il vaut le rayon : <span class="m"><span class="tau">τ</span><sub>max</sub> = <span class="sig">σ</span>/2</span>.</p>
+    <div class="warn">⚠️ <b>Signe de τ : une question de convention.</b> Ici, τ est compté positif selon la tangente obtenue en tournant n⃗ de 90° dans le sens des aiguilles d'une montre, d'où <span class="m"><span class="tau">τ</span> = +<span class="sig">σ</span> sin θ cos θ</span>. Beaucoup de cours tournent n⃗ dans l'autre sens (sens trigonométrique) : on obtient alors <span class="m"><span class="tau">τ</span> = −<span class="sig">σ</span> sin θ cos θ</span>, et sur le cercle de Mohr le point tourne de 2θ en sens inverse de la facette. C'est la convention adoptée à partir du cours 2. Seul le signe change : la valeur |τ|, et donc τ<sub>max</sub> = σ/2 à 45°, sont identiques.</div>
+  </div>
+
+  <h3>La matrice : la carte d'identité complète d'un point</h3>
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">9 nombres, un cube</span></div>
+    <p>Isole par la pensée un cube minuscule autour du point étudié. Sur chacune de ses faces, la matière voisine exerce une contrainte, qui se décompose en <b>3 morceaux</b> : <b>1 normal</b> (qui tire ou pousse la face) et <b>2 tangentiels</b> (qui la font glisser dans les deux directions possibles du plan de la face). Trois faces × trois composantes = <b>9 nombres</b>. On les range dans un tableau 3 × 3 : c'est la <b>matrice des contraintes</b> <span class="sig">[σ]</span>. Les trois faces cachées portent les mêmes valeurs en sens opposé (équilibre), elles n'apportent donc rien de nouveau.</p>
+    <p>Clique sur une case de la matrice (ou sur une flèche du cube) pour voir à quoi elle correspond, puis essaie les différents cas.</p>
+  </div>
+
+  <div class="lab" id="w7">
+    <p class="lab-h">Manipulation 8 : du cube à la matrice</p>
+    <div class="btns" id="w7modes">
+      <button class="btn on" type="button" data-mode="gen">Cas général (9 cases)</button>
+      <button class="btn" type="button" data-mode="trac">Traction simple</button>
+      <button class="btn" type="button" data-mode="cis">Cisaillement pur</button>
+      <button class="btn" type="button" data-mode="plan">État plan (2D)</button>
+    </div>
+    <div class="matrow">
+      <div class="cubebox"><svg id="w7svg" viewBox="0 0 360 320" role="img" aria-label="Cube élémentaire avec ses neuf composantes de contrainte"></svg></div>
+      <div class="matbox">
+        <table class="mtx" id="w7mtx" aria-label="Matrice des contraintes">
+          <tr><th></th><th></th><th>selon x</th><th>selon y</th><th>selon z</th><th></th></tr>
+          <tr><th>face x</th><td class="bl" rowspan="3"></td><td class="c" data-k="xx"></td><td class="c" data-k="xy"></td><td class="c" data-k="xz"></td><td class="br" rowspan="3"></td></tr>
+          <tr><th>face y</th><td class="c" data-k="yx"></td><td class="c" data-k="yy"></td><td class="c" data-k="yz"></td></tr>
+          <tr><th>face z</th><td class="c" data-k="zx"></td><td class="c" data-k="zy"></td><td class="c" data-k="zz"></td></tr>
+        </table>
+        <div class="mtx-txt" id="w7ex">Clique sur une case ou une flèche.</div>
+      </div>
+    </div>
+    <div class="emtx" id="w7eps"></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : les quatre règles à photographier <span class="tag">lecture d'une matrice</span></div>
+    <p><b>Ligne = la face.</b> La ligne i correspond à la face de normale i (la face perpendiculaire à l'axe i). <b>Colonne = la direction</b> de la composante.</p>
+    <p><b>Diagonale = contraintes normales</b> <span class="sig">σ</span> (en rouge) : elles tirent ou poussent. <b>Hors diagonale = cisaillements</b> <span class="tau">τ</span> (en violet) : ils font glisser.</p>
+    <p><b>La matrice est symétrique</b> par rapport à sa diagonale : <span class="m"><span class="tau">τ</span><sub>xy</sub> = <span class="tau">τ</span><sub>yx</sub></span>, <span class="m"><span class="tau">τ</span><sub>xz</sub> = <span class="tau">τ</span><sub>zx</sub></span>, <span class="m"><span class="tau">τ</span><sub>yz</sub> = <span class="tau">τ</span><sub>zy</sub></span>. C'est le petit carré qui ne tourne pas ! Il n'y a donc que <b>6 valeurs indépendantes</b> sur 9.</p>
+    <p><b>En 2D (état plan)</b>, on ne garde que le coin 2 × 2 en haut à gauche : <span class="m"><span class="sig">σ</span><sub>xx</sub>, <span class="tau">τ</span><sub>xy</sub>, <span class="sig">σ</span><sub>yy</sub></span>. Beaucoup d'exercices se font dans ce cadre.</p>
+    <div class="def"><b>📖 Notation des indices :</b> dans <span class="m"><span class="tau">τ</span><sub>xy</sub></span>, le premier indice (x) désigne la face (sa normale), le second (y) la direction de la composante. Certains livres inversent l'ordre ; comme la matrice est symétrique, les valeurs sont les mêmes, pas de panique. On écrit aussi souvent <span class="m"><span class="sig">σ</span><sub>x</sub></span> au lieu de <span class="m"><span class="sig">σ</span><sub>xx</sub></span>.</div>
+  </div>
+
+  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">tes deux premières matrices</span></div>
+    <p>En traction simple de valeur <span class="sig">σ</span> selon x, tu sais déjà tout écrire, grâce aux chapitres 3 et 4 :</p>
+    <div class="fx" style="max-width:680px"><div class="big" style="font-size:1.35rem;line-height:1.6">
+      <span class="sig">[σ]</span> = <span class="inlinemat"><span class="sig">σ</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span></span>
+      &nbsp;&nbsp;
+      <span class="eps">[ε]</span> = <span class="inlinemat"><span><span class="sig">σ</span>/<span class="mat">E</span></span><span>0</span><span>0</span><span>0</span><span>−<span class="mat">ν</span><span class="sig">σ</span>/<span class="mat">E</span></span><span>0</span><span>0</span><span>0</span><span>−<span class="mat">ν</span><span class="sig">σ</span>/<span class="mat">E</span></span></span>
+    </div><p class="cap">tu viens d'écrire ton premier tenseur des contraintes et ton premier tenseur des déformations</p></div>
+    <p><b>Remarque cruciale :</b> <span class="sig">[σ]</span> n'a qu'une case non nulle, mais <span class="eps">[ε]</span> en a <b>trois</b> ! La traction selon x ne crée des contraintes que selon x, mais des déformations dans les trois directions, à cause de Poisson. C'est exactement pour ça qu'on a besoin d'une loi de Hooke « matricielle » (dite généralisée, cours 5) pour passer d'une matrice à l'autre.</p>
+    <p>En cisaillement pur <span class="tau">τ</span> dans le plan xy :</p>
+    <div class="fx" style="max-width:680px"><div class="big" style="font-size:1.35rem;line-height:1.6">
+      <span class="sig">[σ]</span> = <span class="inlinemat"><span>0</span><span class="tau">τ</span><span>0</span><span class="tau">τ</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span></span>
+      &nbsp;&nbsp;
+      <span class="eps">[ε]</span> = <span class="inlinemat"><span>0</span><span><span class="gam">γ</span>/2</span><span>0</span><span><span class="gam">γ</span>/2</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span></span>
+    </div><p class="cap">avec γ = τ / G</p></div>
+    <div class="warn">⚠️ <b>Piège numéro 1 des examens :</b> dans la matrice des déformations, la case hors diagonale vaut <b><span class="gam">γ</span>/2</b>, pas <span class="gam">γ</span> ! On note <span class="m"><span class="eps">ε</span><sub>xy</sub> = <span class="gam">γ</span><sub>xy</sub>/2</span>. On expliquera d'où vient ce ½ au cours 3 ; note-le dès aujourd'hui en rouge dans ta tête.</div>
+    <h4>Le lien avec la facette qui tourne</h4>
+    <p>Au cours 2, tu apprendras que le vecteur contrainte sur n'importe quelle facette s'obtient par un simple produit « matrice × vecteur » : <span class="m"><span class="vec">T</span> = <span class="sig">[σ]</span>·<span class="vec">n</span></span>. Vérifie-le déjà sur la traction simple : avec <span class="m"><span class="vec">n</span> = (cos θ ; sin θ ; 0)</span>, le produit donne <span class="m"><span class="vec">T</span> = (<span class="sig">σ</span> cos θ ; 0 ; 0)</span>. C'est exactement la flèche T⃗ de la manipulation 7 : horizontale, de longueur <span class="m"><span class="sig">σ</span> cos θ</span>. Tout est cohérent.</p>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="exos">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✎</div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Du plus simple au plus complet, avec la correction pas à pas</p></div>
+    <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de muscu : on ne progresse qu'en soulevant soi-même</span></div>
+  </div>
+
+  <div class="lv lv1"><div class="lv-h">👁 Mode d'emploi <span class="tag">la méthode en 4 temps</span></div>
+    <p>Pour chaque exercice : <b>1.</b> écris les données avec leurs unités, <b>2.</b> convertis tout en <b>N</b> et en <b>mm</b> (les MPa tombent tout seuls), <b>3.</b> écris la formule littérale <i>avant</i> de mettre les chiffres, <b>4.</b> vérifie l'ordre de grandeur (une contrainte de 10 000 MPa dans de l'acier, c'est une erreur d'unité, pas un exploit). Ouvre la correction seulement après avoir vraiment essayé : c'est l'effort de rappel qui grave les formules.</p>
+    <p class="mut">Les exercices « N1 » n'utilisent que le niveau 1 ; les « N2 » demandent les encadrés du niveau 2.</p>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 1 : la tige de suspension <span class="lvtag">N1 · chapitres 1 et 3</span></h4>
+    <p>Une tige ronde en acier S235 (limite d'élasticité <span class="m">R<sub>e</sub> = 235 MPa</span>), de diamètre <span class="m">d = 12 mm</span>, supporte une charge <span class="m"><span class="frc">F</span> = 20 kN</span> (kilonewtons : 1 kN = 1 000 N).</p>
+    <p><b>a)</b> Calcule l'aire S de la section et la contrainte <span class="sig">σ</span>.<br><b>b)</b> Calcule le coefficient de sécurité <span class="m">s = R<sub>e</sub>/<span class="sig">σ</span></span>.<br><b>c)</b> Le bureau d'études impose <span class="m">s = 2</span>. Quel diamètre minimal faut-il ? On choisira dans la liste des diamètres du commerce : 12, 14, 16, 20 mm.</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">S = π d²/4 = π × 12²/4 = 113,1 mm²</span>. Puis <span class="m"><span class="sig">σ</span> = <span class="frc">F</span>/S = 20 000 / 113,1 = <b>176,8 MPa</b></span>.</p>
+      <p><b>b)</b> <span class="m">s = 235 / 176,8 = <b>1,33</b></span>. La tige tient (s &gt; 1), mais la marge est faible.</p>
+      <p><b>c)</b> Avec s = 2, la contrainte admissible est <span class="m">R<sub>pe</sub> = R<sub>e</sub>/s = 117,5 MPa</span>. Il faut <span class="m"><span class="frc">F</span>/S ≤ 117,5</span>, donc <span class="m">S ≥ 20 000/117,5 = 170,2 mm²</span>. Puis <span class="m">d ≥ √(4S/π) = √(4 × 170,2/π) = 14,7 mm</span>. Le 14 est trop petit : on prend <b>d = 16 mm</b>.</p>
+      <p class="mut">Piège classique : on arrondit toujours <b>au-dessus</b> en dimensionnement.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 2 : identifier le matériau <span class="lvtag">N1 · chapitres 1 à 3</span></h4>
+    <p>Une éprouvette de section <span class="m">S<sub>0</sub> = 50 mm²</span> et de longueur utile <span class="m">L<sub>0</sub> = 100 mm</span> est tirée par <span class="m"><span class="frc">F</span> = 10 kN</span>. On mesure un allongement <span class="m">ΔL = 0,095 mm</span>, et tout revient à zéro quand on relâche.</p>
+    <p><b>a)</b> Calcule <span class="sig">σ</span> et <span class="eps">ε</span> (en µε, microdéformations).<br><b>b)</b> Déduis-en le module d'Young <span class="mat">E</span>. De quel métal s'agit-il probablement ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m"><span class="sig">σ</span> = 10 000/50 = <b>200 MPa</b></span> et <span class="m"><span class="eps">ε</span> = 0,095/100 = 0,000 95 = <b>950 µε</b></span>.</p>
+      <p><b>b)</b> Tout revient à zéro : on est en élastique, donc Hooke s'applique. <span class="m"><span class="mat">E</span> = <span class="sig">σ</span>/<span class="eps">ε</span> = 200 / 0,000 95 = 210 500 MPa ≈ <b>210 GPa</b></span> : c'est de l'<b>acier</b>.</p>
+      <p class="mut">Réflexe : pour diviser par un petit nombre, écris-le en puissance de 10 : 200 / (9,5 × 10⁻⁴) = 2,1 × 10⁵ MPa.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 3 : le tirant complet et ses deux matrices <span class="lvtag">N2 · chapitres 1 à 4 et 6</span></h4>
+    <p>Un tirant (une barre qui travaille en traction) en acier, de diamètre <span class="m">d = 20 mm</span> et de longueur <span class="m">L<sub>0</sub> = 2 m</span>, est tiré par <span class="m"><span class="frc">F</span> = 50 kN</span>. Données : <span class="m"><span class="mat">E</span> = 210 GPa</span>, <span class="m"><span class="mat">ν</span> = 0,3</span>. L'axe x est l'axe de la barre.</p>
+    <p><b>a)</b> Calcule <span class="sig">σ</span>, <span class="eps">ε</span><sub>ℓ</sub> (longitudinale) et l'allongement ΔL.<br><b>b)</b> Calcule la déformation transversale <span class="eps">ε</span><sub>t</sub> et la variation du diamètre Δd.<br><b>c)</b> Calcule la variation relative de volume ΔV/V.<br><b>d)</b> Écris les matrices <span class="sig">[σ]</span> et <span class="eps">[ε]</span>, puis vérifie que la somme de la diagonale de <span class="eps">[ε]</span> (sa « trace ») redonne ΔV/V.</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">S = π × 20²/4 = 314,16 mm²</span> ; <span class="m"><span class="sig">σ</span> = 50 000/314,16 = <b>159,2 MPa</b></span>. Avec E = 210 000 MPa : <span class="m"><span class="eps">ε</span><sub>ℓ</sub> = 159,2/210 000 = 7,58 × 10⁻⁴ = <b>758 µε</b></span>. Et <span class="m">ΔL = <span class="eps">ε</span><sub>ℓ</sub> L<sub>0</sub> = 7,58 × 10⁻⁴ × 2 000 = <b>1,52 mm</b></span>.</p>
+      <p><b>b)</b> <span class="m"><span class="eps">ε</span><sub>t</sub> = −<span class="mat">ν</span><span class="eps">ε</span><sub>ℓ</sub> = −0,3 × 758 = <b>−227 µε</b></span>. Donc <span class="m">Δd = <span class="eps">ε</span><sub>t</sub> × d = −227 × 10⁻⁶ × 20 = −0,0045 mm = <b>−4,5 µm</b></span> (micromètres). Le diamètre diminue d'un vingtième de cheveu : invisible, mais mesurable.</p>
+      <p><b>c)</b> <span class="m">ΔV/V = <span class="eps">ε</span><sub>ℓ</sub>(1 − 2<span class="mat">ν</span>) = 758 × 10⁻⁶ × 0,4 = <b>3,03 × 10⁻⁴</b></span> : le volume augmente très légèrement.</p>
+      <p><b>d)</b></p>
+      <div class="fx" style="max-width:640px"><div class="big" style="font-size:1.2rem;line-height:1.6">
+        <span class="sig">[σ]</span> = <span class="inlinemat"><span class="sig">159,2</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span></span> MPa
+        &nbsp;&nbsp;
+        <span class="eps">[ε]</span> = <span class="inlinemat"><span class="eps">758</span><span>0</span><span>0</span><span>0</span><span class="eps">−227</span><span>0</span><span>0</span><span>0</span><span class="eps">−227</span></span> µε
+      </div></div>
+      <p>Trace de <span class="eps">[ε]</span> : <span class="m">758 − 227 − 227 = 304 µε = 3,04 × 10⁻⁴</span>. C'est bien ΔV/V (l'écart de 0,01 vient des arrondis). Retiens ce résultat, il resservira : <b>la trace du tenseur des déformations, c'est la variation relative de volume.</b></p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 4 : le plot antivibratoire <span class="lvtag">N2 · chapitres 4 et 5</span></h4>
+    <p>Un plot en caoutchouc (comme sous une machine à laver) a une face carrée de <span class="m">100 × 100 mm</span> et une hauteur <span class="m">h = 20 mm</span>. Il est collé en bas sur le sol et en haut sur la machine. La machine le pousse horizontalement avec <span class="m"><span class="frc">F</span> = 2 000 N</span>. Module de cisaillement : <span class="m"><span class="mat">G</span> = 1 MPa</span>.</p>
+    <p><b>a)</b> Calcule <span class="tau">τ</span>, puis la distorsion <span class="gam">γ</span> (en radians et en degrés).<br><b>b)</b> De combien le dessus du plot se décale-t-il (δ, « delta ») ?<br><b>c)</b> Le caoutchouc a <span class="m"><span class="mat">ν</span> ≈ 0,5</span> : que vaut son module d'Young <span class="mat">E</span> ?<br><b>d)</b> Même question a) si le plot était en acier (<span class="m"><span class="mat">G</span> = 81 000 MPa</span>).</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> La surface cisaillée est la face collée : <span class="m">S = 100 × 100 = 10 000 mm²</span>. <span class="m"><span class="tau">τ</span> = 2 000/10 000 = <b>0,2 MPa</b></span>. Puis <span class="m"><span class="gam">γ</span> = <span class="tau">τ</span>/<span class="mat">G</span> = 0,2/1 = <b>0,2 rad</b></span>, soit <span class="m">0,2 × 180/π = <b>11,5°</b></span>.</p>
+      <p><b>b)</b> <span class="m">δ = h · tan <span class="gam">γ</span> = 20 × tan(0,2) = <b>4,05 mm</b></span>. (Pour un petit angle, tan γ ≈ γ donne 4,0 mm : quasiment pareil.)</p>
+      <p><b>c)</b> <span class="m"><span class="mat">E</span> = 2<span class="mat">G</span>(1 + <span class="mat">ν</span>) = 2 × 1 × 1,5 = <b>3 MPa</b></span>. Soixante-dix mille fois moins que l'acier !</p>
+      <p><b>d)</b> <span class="m"><span class="gam">γ</span> = 0,2/81 000 = <b>2,5 × 10⁻⁶ rad</b></span>, soit un décalage de 0,05 µm : totalement invisible. C'est pour ça qu'on fait les plots en caoutchouc : ils <i>doivent</i> se déformer pour absorber les vibrations.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 5 : l'axe de chape <span class="lvtag">N1 · chapitre 5</span></h4>
+    <p>Un axe (une goupille cylindrique) de diamètre <span class="m">d = 10 mm</span> relie une patte à une chape (pièce en U). Il transmet <span class="m"><span class="frc">F</span> = 12 kN</span>. Il est en acier S235, dont on prend la résistance au glissement <span class="m">R<sub>eg</sub> ≈ 0,5 R<sub>e</sub></span>.</p>
+    <p><b>a)</b> Combien de sections de l'axe sont cisaillées ? Calcule <span class="tau">τ</span>.<br><b>b)</b> Tient-il ?<br><b>c)</b> Et si, par erreur de montage, l'axe ne travaillait que sur une seule section (montage « en simple cisaillement ») ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> Avec une chape, l'axe est coupé en <b>deux</b> endroits (de chaque côté de la patte) : double cisaillement. <span class="m">S = π × 10²/4 = 78,5 mm²</span>, donc <span class="m"><span class="tau">τ</span> = <span class="frc">F</span>/(2S) = 12 000/157 = <b>76,4 MPa</b></span>.</p>
+      <p><b>b)</b> <span class="m">R<sub>eg</sub> ≈ 0,5 × 235 = 117,5 MPa</span> &gt; 76,4 MPa : <b>ça tient</b>, avec <span class="m">s = 117,5/76,4 ≈ 1,5</span>.</p>
+      <p><b>c)</b> <span class="m"><span class="tau">τ</span> = 12 000/78,5 = <b>152,8 MPa</b></span> &gt; 117,5 MPa : l'axe <b>se cisaille</b>. Oublier le facteur 2 (ou l'ajouter à tort) est une des erreurs les plus fréquentes en examen.</p>
+    </div></details>
+  </div>
+
+  <div class="exo">
+    <h4>Exercice 6 : le joint collé en biseau <span class="lvtag">N2 · chapitre 6</span></h4>
+    <p>Deux morceaux de barre de section droite <span class="m">S = 100 mm²</span> sont collés bout à bout selon une coupe inclinée (un « biseau » : c'est l'assemblage utilisé en menuiserie et dans les composites). La normale au plan de colle fait un angle <span class="m">θ</span> avec l'axe de la barre. L'ensemble est tiré par <span class="m"><span class="frc">F</span> = 1 000 N</span>.</p>
+    <p>La colle résiste à <span class="m"><span class="sig">σ<sub>n</sub></span> ≤ 3 MPa</span> en arrachement et à <span class="m"><span class="tau">τ</span> ≤ 5 MPa</span> en glissement.</p>
+    <p><b>a)</b> Calcule <span class="sig">σ</span> dans la barre.<br><b>b)</b> Pour <span class="m">θ = 60°</span>, calcule <span class="sig">σ<sub>n</sub></span> et <span class="tau">τ</span> sur le joint : tient-il ?<br><b>c)</b> Et pour θ = 45° ? pour θ = 0° (collage bout à bout droit) ?<br><b>d)</b> Quel est l'angle minimal pour que le joint tienne ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m"><span class="sig">σ</span> = 1 000/100 = <b>10 MPa</b></span>.</p>
+      <p><b>b)</b> <span class="m"><span class="sig">σ<sub>n</sub></span> = <span class="sig">σ</span> cos²60° = 10 × 0,25 = <b>2,5 MPa</b> ≤ 3</span> ✅ ; <span class="m"><span class="tau">τ</span> = <span class="sig">σ</span> sin 60° cos 60° = 10 × 0,866 × 0,5 = <b>4,33 MPa</b> ≤ 5</span> ✅. <b>Le joint tient.</b></p>
+      <p><b>c)</b> À 45° : <span class="m"><span class="sig">σ<sub>n</sub></span> = 10 × 0,5 = 5 MPa &gt; 3</span> ❌, le joint s'ouvre. À 0° : <span class="m"><span class="sig">σ<sub>n</sub></span> = 10 MPa</span> ❌❌, c'est le pire cas.</p>
+      <p><b>d)</b> Le cisaillement ne dépasse jamais <span class="m"><span class="tau">τ</span><sub>max</sub> = <span class="sig">σ</span>/2 = 5 MPa</span> : il est toujours acceptable (juste à la limite à 45°). La condition qui décide est donc <span class="m">10 cos²θ ≤ 3</span>, soit <span class="m">cos θ ≤ √0,3 = 0,548</span>, donc <b>θ ≥ 56,8°</b>. Plus le biseau est allongé, mieux c'est : la colle travaille surtout en glissement, sur une grande surface <span class="m">S/cos θ</span>.</p>
+      <p class="mut">Tu viens de faire, sans le savoir, ton premier calcul de « critère de résistance » sur une facette : c'est l'esprit exact du cours 4.</p>
+    </div></details>
+  </div>
+
+  <div class="exo" style="border-left-color:var(--tau)">
+    <h4>Défi : les matrices du plot <span class="lvtag">N2 · chapitre 6, pour préparer le cours 2</span></h4>
+    <p>Reprends le plot de l'exercice 4. Prends x horizontal (dans le sens de <span class="frc">F</span>), y vertical (la hauteur du plot) et z perpendiculaire à la feuille. En supposant que le plot est en cisaillement pur, écris <span class="sig">[σ]</span> (en MPa) et <span class="eps">[ε]</span>.</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p>La face du dessus a pour normale y et reçoit une force selon x : c'est <span class="m"><span class="tau">τ</span><sub>yx</sub> = 0,2 MPa</span>. Par réciprocité, <span class="m"><span class="tau">τ</span><sub>xy</sub> = 0,2 MPa</span> aussi. Pour les déformations, <b>attention au piège n° 1</b> : la case vaut <span class="m"><span class="gam">γ</span>/2 = 0,1</span>, pas 0,2.</p>
+      <div class="fx" style="max-width:600px"><div class="big" style="font-size:1.2rem;line-height:1.6">
+        <span class="sig">[σ]</span> = <span class="inlinemat"><span>0</span><span class="tau">0,2</span><span>0</span><span class="tau">0,2</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span></span> MPa
+        &nbsp;&nbsp;
+        <span class="eps">[ε]</span> = <span class="inlinemat"><span>0</span><span class="gam">0,1</span><span>0</span><span class="gam">0,1</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span></span>
+      </div></div>
+      <p class="mut">Remarque : la diagonale de <span class="eps">[ε]</span> est nulle, donc la trace aussi : le cisaillement pur ne change pas le volume, il ne fait que déformer les angles.</p>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="quiz-s">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">?</div>
+    <div class="c-title"><h2>Quiz : 12 questions éclair</h2><p>Chaque réponse est expliquée, même quand tu as juste</p></div>
+    <div class="c-img"><span class="ico">🎯</span><span><small>Image à retenir</small>La cible : vise 10/12 avant de passer au cours 2</span></div>
+  </div>
+  <p>Réponds sans regarder le cours. Se tromper ici n'a aucune conséquence et fixe très bien le souvenir : ton cerveau retient mieux ce qu'il a d'abord raté puis compris.</p>
+  <div id="quiz"></div>
+  <div class="score" id="qzScore" aria-live="polite">Score : 0 / 12</div>
+  <div class="btns"><button class="btn" id="qzReset" type="button">↺ Recommencer le quiz</button></div>
+</div>
+</section>
+
+<section class="chap" id="fiche">
+<div class="wrap wide">
+  <div class="cartouche">
+    <div class="c-num">★</div>
+    <div class="c-title"><h2>Fiche mémoire du cours 1</h2><p>Neuf cases, neuf images : à photographier, puis à redessiner de tête</p></div>
+    <div class="c-img"><span class="ico">🪨</span><span><small>Image à retenir</small>Thomas Young, du ressort à la pierre de Rosette</span></div>
+  </div>
+  <div class="fiche">
+    <div><div class="ic">🧘</div><h4>Contrainte</h4><div class="f"><span class="sig">σ</span> = <span class="frc">F</span> / S</div><p>Le fakir : la force répartie sur la surface. MPa = N/mm². Positive en traction.</p></div>
+    <div><div class="ic">📏</div><h4>Déformation</h4><div class="f"><span class="eps">ε</span> = ΔL / L<sub>0</sub></div><p>Les élastiques : allongement relatif, sans unité. 1 µε = 10⁻⁶.</p></div>
+    <div><div class="ic">📈</div><h4>Hooke</h4><div class="f"><span class="sig">σ</span> = <span class="mat">E</span> · <span class="eps">ε</span></div><p>La rampe, puis R<sub>e</sub>, R<sub>m</sub>, A %. On relâche parallèlement à la rampe. ΔL = <span class="frc">F</span>L<sub>0</sub>/(<span class="mat">E</span>S).</p></div>
+    <div><div class="ic">🐟</div><h4>Poisson</h4><div class="f"><span class="eps">ε</span><sub>t</sub> = −<span class="mat">ν</span> · <span class="eps">ε</span><sub>ℓ</sub></div><p>Le poisson qui devient anguille. ν ≈ 0,3 (métaux), ≤ 0,5. ΔV/V = <span class="eps">ε</span>(1 − 2<span class="mat">ν</span>).</p></div>
+    <div><div class="ic">🃏</div><h4>Cisaillement</h4><div class="f"><span class="tau">τ</span> = <span class="mat">G</span> · <span class="gam">γ</span></div><p>Le jeu de cartes. γ en radians. <span class="mat">G</span> = <span class="mat">E</span> / 2(1 + <span class="mat">ν</span>) ≈ 81 GPa (acier).</p></div>
+    <div><div class="ic">🌀</div><h4>Réciprocité</h4><div class="f"><span class="tau">τ</span><sub>xy</sub> = <span class="tau">τ</span><sub>yx</sub></div><p>Le petit carré qui ne tourne pas. Donc matrice symétrique : 6 valeurs indépendantes sur 9.</p></div>
+    <div><div class="ic">⭕</div><h4>Facette inclinée</h4><div class="f"><span class="sig">σ<sub>n</sub></span> = <span class="sig">σ</span>cos²θ &nbsp; <span class="tau">τ</span> = <span class="sig">σ</span>sinθcosθ</div><p>Le point décrit un cercle, angle double 2θ. <span class="tau">τ</span><sub>max</sub> = <span class="sig">σ</span>/2 à 45°.</p></div>
+    <div><div class="ic">🧊</div><h4>Les deux matrices</h4><div class="f"><span class="sig">[σ]</span> ≠ <span class="eps">[ε]</span></div><p>Ligne = face, colonne = direction. Diagonale = normales. Dans <span class="eps">[ε]</span>, hors diagonale : <span class="gam">γ</span>/2 (piège n° 1).</p></div>
+    <div><div class="ic">🧮</div><h4>Les nombres à connaître</h4><div class="f"><span class="mat">E</span><sub>acier</sub> = 210 GPa</div><p><span class="mat">E</span><sub>alu</sub> ≈ 70 GPa, R<sub>e</sub>(S235) = 235 MPa, 1 GPa = 1 000 MPa, 1 MPa = 1 N/mm².</p></div>
+  </div>
+  <div class="fun"><span class="fun-h">🪨 Fun fact : Thomas Young, du ressort à la pierre de Rosette</span>Le E de ce cours porte le nom de Thomas Young, médecin et physicien anglais, qui l'a présenté dans ses leçons de 1807. Young ne s'est pas arrêté aux ressorts. Avec deux fentes fines éclairées par une même source, il montre que la lumière se comporte comme une onde : ce sont les célèbres « fentes d'Young ». Il s'attaque aussi aux hiéroglyphes de la pierre de Rosette et fait les premiers pas de leur déchiffrement, avant que le Français Jean-François Champollion n'en perce le système en 1822. Le même nom désigne donc la raideur de l'acier (<a href="#c3">chapitre 3</a>), une expérience d'optique et un chapitre de l'égyptologie.</div>
+</div>
+</section>
+
+<section class="chap" id="gloss">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">A–Z</div>
+    <div class="c-title"><h2>Glossaire</h2><p>Tous les mots, symboles et abréviations du cours, au même endroit</p></div>
+    <div class="c-img"><span class="ico">📖</span><span><small>Image à retenir</small>Le dictionnaire : un mot flou, un clic</span></div>
+  </div>
+  <dl class="gloss">
+    <dt>A %</dt><dd>Allongement à la rupture : allongement permanent de l'éprouvette cassée, en % de sa longueur initiale. Mesure la ductilité.</dd>
+    <dt>Auxétique</dt><dd>Matériau (souvent une structure en nid d'abeille rentrant) dont le coefficient de Poisson est négatif : il s'élargit quand on le tire.</dd>
+    <dt>Cisaillement</dt><dd>Sollicitation qui fait glisser des couches de matière les unes sur les autres, parallèlement à la surface considérée.</dd>
+    <dt>Coefficient de Poisson <span class="mat">ν</span></dt><dd>« nu » : rapport (changé de signe) entre la déformation transversale et la déformation longitudinale. Sans unité, entre −1 et 0,5 ; ≈ 0,3 pour les métaux.</dd>
+    <dt>Coefficient de sécurité s</dt><dd>Marge prise en conception : on divise la résistance du matériau par s pour obtenir la contrainte à ne pas dépasser.</dd>
+    <dt>Compression</dt><dd>Sollicitation qui raccourcit la matière. Contrainte normale négative par convention.</dd>
+    <dt>Contrainte</dt><dd>Force intérieure rapportée à la surface sur laquelle elle s'exerce. En MPa. Normale <span class="sig">σ</span> (sigma) ou tangentielle <span class="tau">τ</span> (tau).</dd>
+    <dt>Déformation <span class="eps">ε</span></dt><dd>« epsilon » : allongement relatif, ΔL/L<sub>0</sub>. Sans unité.</dd>
+    <dt>Distorsion <span class="gam">γ</span></dt><dd>« gamma » : variation d'un angle initialement droit, en radians. Déformation de cisaillement.</dd>
+    <dt>Dislocation</dt><dd>Défaut linéaire dans un cristal métallique, dont le déplacement permet la déformation plastique (la « ride dans le tapis »).</dd>
+    <dt>Ductile</dt><dd>Qui se déforme beaucoup plastiquement avant de rompre (acier doux, cuivre, aluminium).</dd>
+    <dt>Écrouissage</dt><dd>Durcissement d'un métal causé par sa déformation plastique.</dd>
+    <dt>Élastique</dt><dd>Se dit d'une déformation qui disparaît entièrement quand on supprime la charge.</dd>
+    <dt>Facette</dt><dd>Petite surface imaginaire passant par un point, repérée par sa normale unitaire <span class="vec">n</span>.</dd>
+    <dt>Fragile</dt><dd>Qui rompt sans déformation plastique notable (fonte grise, verre, céramique, craie).</dd>
+    <dt>Pa, MPa, GPa</dt><dd>Pascal (1 N/m²), mégapascal (10⁶ Pa = 1 N/mm²), gigapascal (10⁹ Pa = 1 000 MPa).</dd>
+    <dt>HPP</dt><dd>Hypothèse des Petites Perturbations : déformations et déplacements petits, on calcule sur la géométrie initiale.</dd>
+    <dt>Homogène</dt><dd>Mêmes propriétés en tout point de la pièce.</dd>
+    <dt>Isotrope</dt><dd>Mêmes propriétés dans toutes les directions (faux pour le bois ou les composites fibrés).</dd>
+    <dt>Matrice</dt><dd>Tableau de nombres rangés en lignes et en colonnes. Ici 3 × 3, pour représenter un tenseur dans un repère.</dd>
+    <dt>Module de cisaillement <span class="mat">G</span></dt><dd>Raideur du matériau vis-à-vis du glissement : <span class="tau">τ</span> = <span class="mat">G</span><span class="gam">γ</span>. En MPa ou GPa. Aussi appelé module de Coulomb.</dd>
+    <dt>Module d'Young <span class="mat">E</span></dt><dd>Raideur du matériau en traction : <span class="sig">σ</span> = <span class="mat">E</span><span class="eps">ε</span>. Pente de la zone élastique. En GPa.</dd>
+    <dt>Normale</dt><dd>Direction perpendiculaire à une surface. Une contrainte normale est dirigée selon cette direction.</dd>
+    <dt>Plastique</dt><dd>Se dit d'une déformation qui reste après suppression de la charge (permanente).</dd>
+    <dt>R<sub>e</sub></dt><dd>Limite d'élasticité : contrainte au-delà de laquelle la déformation devient permanente.</dd>
+    <dt>R<sub>m</sub></dt><dd>Résistance à la traction : contrainte maximale supportée lors de l'essai (le sommet de la courbe).</dd>
+    <dt>R<sub>p0,2</sub></dt><dd>Limite conventionnelle d'élasticité : contrainte qui laisse 0,2 % de déformation permanente. Utilisée quand il n'y a pas de palier net (aluminium).</dd>
+    <dt>R<sub>pe</sub></dt><dd>Résistance pratique à l'extension : R<sub>e</sub>/s, la contrainte à ne pas dépasser en conception.</dd>
+    <dt>R<sub>eg</sub></dt><dd>Résistance élastique au glissement (au cisaillement), ≈ 0,5 à 0,6 R<sub>e</sub> pour les aciers.</dd>
+    <dt>Radian (rad)</dt><dd>Unité d'angle : 180° = π rad, donc 1 rad ≈ 57,3°.</dd>
+    <dt>Saint-Venant (principe de)</dt><dd>Loin des points d'application des efforts, la répartition des contraintes ne dépend plus de la façon exacte dont on applique la force.</dd>
+    <dt>Section droite</dt><dd>Coupe perpendiculaire à l'axe de la pièce.</dd>
+    <dt>Striction</dt><dd>Amincissement localisé (le « cou ») qui précède la rupture d'une éprouvette ductile.</dd>
+    <dt>Symétrique (matrice)</dt><dd>Matrice égale à sa transposée : la case (i, j) vaut la case (j, i).</dd>
+    <dt>Tangentiel(le)</dt><dd>Parallèle à la surface considérée. Synonyme ici de « de cisaillement ».</dd>
+    <dt>Tenseur</dt><dd>Objet mathématique qui décrit une grandeur dépendant de l'orientation ; dans un repère donné, il s'écrit comme une matrice.</dd>
+    <dt>Trace</dt><dd>Somme des termes de la diagonale d'une matrice. Trace de <span class="eps">[ε]</span> = ΔV/V.</dd>
+    <dt>Traction</dt><dd>Sollicitation qui allonge la matière. Contrainte normale positive.</dd>
+    <dt>Vecteur contrainte <span class="vec">T</span></dt><dd>Force par unité de surface agissant sur une facette ; se décompose en <span class="sig">σ<sub>n</sub></span> (normale) et <span class="tau">τ</span> (tangentielle).</dd>
+    <dt>µε</dt><dd>Microdéformation : 10⁻⁶, soit 1 µm d'allongement par mètre.</dd>
+  </dl>
+
+  <hr class="sep">
+  <h3>Check-list : suis-je prêt pour le cours 2 ?</h3>
+  <p>Coche seulement ce que tu sais faire <b>de tête</b>. Tes coches restent enregistrées dans ce navigateur.</p>
+  <div class="check" id="checklist">
+    <label><input type="checkbox" data-c="1"> Je sais calculer une contrainte et donner le résultat en MPa sans me tromper d'unité.</label>
+    <label><input type="checkbox" data-c="2"> Je sais expliquer pourquoi on utilise ε et pas ΔL pour comparer deux pièces.</label>
+    <label><input type="checkbox" data-c="3"> Je sais dessiner de mémoire la courbe de traction de l'acier avec ses six étapes, R<sub>e</sub>, R<sub>m</sub> et A %.</label>
+    <label><input type="checkbox" data-c="4"> Je sais calculer un allongement avec ΔL = FL<sub>0</sub>/(ES).</label>
+    <label><input type="checkbox" data-c="5"> Je sais calculer une déformation transversale avec ν, et dire pourquoi ν ≤ 0,5.</label>
+    <label><input type="checkbox" data-c="6"> Je sais calculer τ, γ et G, et je sais repérer un double cisaillement.</label>
+    <label><input type="checkbox" data-c="7"> Je sais démontrer (avec le petit carré) que τ<sub>xy</sub> = τ<sub>yx</sub>.</label>
+    <label><input type="checkbox" data-c="8"> Je sais calculer σ<sub>n</sub> et τ sur une coupe inclinée et dire où τ est maximal.</label>
+    <label><input type="checkbox" data-c="9"> Je sais lire une case de [σ] (ligne = face, colonne = direction) et écrire [σ] et [ε] en traction simple.</label>
+    <label><input type="checkbox" data-c="10"> Je sais que la case hors diagonale de [ε] vaut γ/2.</label>
+  </div>
+  <p class="status" id="checkMsg"></p>
+
+  <div class="meta">🔭 <b>Au prochain épisode, cours 2 : le tenseur des contraintes.</b> On généralise la manipulation 7 à n'importe quel état de contrainte : tu donneras une matrice <span class="sig">[σ]</span> et une direction <span class="vec">n</span>, et tu sauras calculer en trois lignes la contrainte normale et le cisaillement sur la facette correspondante, grâce à <span class="m"><span class="vec">T</span> = <span class="sig">[σ]</span>·<span class="vec">n</span></span>. On y apprendra aussi le produit matrice × vecteur à partir de zéro, avec une animation.</div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="wrap">
+  <p>Cours 1 sur 5 de la série « Résistance des matériaux, de zéro aux matrices ». Les valeurs numériques des matériaux sont des ordres de grandeur usuels ; pour les notations et les valeurs à utiliser en examen, l'enseignement de ta formation fait foi.</p>
+</div>
+</footer>
+<script>
+(function(){
+"use strict";
+const NS="http://www.w3.org/2000/svg";
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const RM=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function el(tag,attrs,parent){
+  const e=document.createElementNS(NS,tag);
+  if(attrs){for(const k in attrs){const v=attrs[k];if(v===undefined||v===null)continue;
+    if(typeof v==="string"&&v.indexOf("var(")>=0&&k!=="style")e.style.setProperty(k,v);else e.setAttribute(k,v);}}
+  if(parent)parent.appendChild(e);
+  return e;
+}
+function tx(p,x,y,str,cls,extra){
+  const t=el("text",Object.assign({x:x,y:y},cls?{class:cls}:{},extra||{}),p);
+  t.textContent=str;return t;
+}
+function txSub(p,x,y,main,sub,cls,extra){
+  const t=el("text",Object.assign({x:x,y:y},cls?{class:cls}:{},extra||{}),p);
+  t.appendChild(document.createTextNode(main));
+  const s=el("tspan",{dy:"4",style:"font-size:.7em"},t);s.textContent=sub;
+  return t;
+}
+function clear(svg){while(svg.firstChild)svg.removeChild(svg.firstChild);}
+function arrow(p,x1,y1,x2,y2,cls,w,h){
+  w=w||3;h=h||11;
+  const g=el("g",{class:"arr "+(cls||"ink")},p);
+  const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy);
+  if(L<1)return g;
+  const ux=dx/L,uy=dy/L,hh=Math.min(h,L*0.65),bx=x2-ux*hh,by=y2-uy*hh,hw=hh*0.48+w*0.35;
+  el("line",{x1:x1,y1:y1,x2:bx,y2:by,"stroke-width":w,"stroke-linecap":"round"},g);
+  el("polygon",{points:x2+","+y2+" "+(bx-uy*hw)+","+(by+ux*hw)+" "+(bx+uy*hw)+","+(by-ux*hw)},g);
+  return g;
+}
+function nf(v,d){
+  if(d===undefined)d=1;
+  if(Math.abs(v)<0.5*Math.pow(10,-d))v=0;
+  return v.toLocaleString("fr-FR",{minimumFractionDigits:d,maximumFractionDigits:d}).replace("-","−");
+}
+const SUP={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function sci(v,d){
+  if(v===0)return "0";
+  const e=Math.floor(Math.log10(Math.abs(v)));
+  let m=v/Math.pow(10,e);
+  if(Math.abs(m)>=9.995){m/=10;return sci(v,d);}
+  return nf(m,d===undefined?2:d)+" × 10"+String(e).split("").map(c=>SUP[c]).join("");
+}
+function smart(v,d){return Math.abs(v)>0&&Math.abs(v)<1e-3?sci(v,2):nf(v,d);}
+const S=(c,t)=>'<span class="'+c+'">'+t+'</span>';
+
+/* =========================================================
+   W1 : le lit de clous (contrainte σ = F/S)
+   ========================================================= */
+(function(){
+  const svg=$("#w1svg");if(!svg)return;
+  const iF=$("#w1F"),iD=$("#w1d");
+  function draw(){
+    const F=+iF.value,d=+iD.value,Fn=F*1000,Sa=Math.PI*d*d/4,sig=Fn/Sa,q=sig/235;
+    const hue=130*(1-Math.min(q,1.55)/1.55),col="hsl("+hue.toFixed(0)+",70%,48%)";
+    $("#w1Fv").textContent=F+" kN";$("#w1dv").textContent=d+" mm";
+    clear(svg);
+    const y=150,t=d*2.6,x1=70,x2=330;
+    el("rect",{x:x1,y:y-t/2,width:x2-x1,height:t,class:"bar"},svg);
+    el("rect",{x:x1,y:y-t/2,width:x2-x1,height:t,fill:col,opacity:Fn>0?0.35:0},svg);
+    // cote d
+    el("line",{x1:x1-2,y1:y-t/2,x2:x1-2,y2:y+t/2,class:"tick"},svg);
+    tx(svg,x1+8,y+t/2+18,"d = "+d+" mm","lbl");
+    // coupe
+    el("line",{x1:200,y1:y-t/2-10,x2:200,y2:y+t/2+10,class:"cut"},svg);
+    tx(svg,200,y-t/2-16,"coupe fictive","lbl",{"text-anchor":"middle"});
+    // forces
+    if(F>0){
+      const L=8+F*0.55,w=2.5+F/40;
+      arrow(svg,x1-3,y,x1-3-L,y,"frc",w,12);
+      arrow(svg,x2+3,y,x2+3+L,y,"frc",w,12);
+      tx(svg,x1-3-L/2,y-14,"F","mth frc",{"text-anchor":"middle"});
+      tx(svg,x2+3+L/2,y-14,"F","mth frc",{"text-anchor":"middle"});
+    }
+    // section vue de face
+    const cx=500,r=d*2.1;
+    tx(svg,cx,y-r-14,"la coupe vue de face","lbl",{"text-anchor":"middle"});
+    el("circle",{cx:cx,cy:y,r:r,fill:Fn>0?col:"var(--paper-2)",stroke:"var(--ink)","stroke-width":1.6,"fill-opacity":Fn>0?0.55:1},svg);
+    if(Fn>0){
+      const pr=Math.min(4.2,0.4+sig*0.011),step=9,g=el("g",{fill:"var(--ink)",opacity:0.72},svg);
+      for(let gx=-r;gx<=r;gx+=step){for(let gy=-r;gy<=r;gy+=step){
+        if(gx*gx+gy*gy<=(r-pr-1)*(r-pr-1))el("circle",{cx:cx+gx,cy:y+gy,r:pr},g);
+      }}
+    }
+    tx(svg,cx,y+r+22,"S = πd²/4 = "+nf(Sa,1)+" mm²","lbl",{"text-anchor":"middle"});
+    // calcul
+    $("#w1calc").innerHTML=S("sig","σ")+" = "+S("frc","F")+" / S = "+S("frc",nf(Fn,0)+" N")+" / "+nf(Sa,1)+" mm² = <b>"+S("sig",nf(sig,1)+" MPa")+"</b>";
+    const g=$("#w1g");g.style.width=Math.min(sig/450,1)*100+"%";g.style.background=Fn>0?col:"transparent";
+    let st;
+    if(Fn===0)st="Aucune force, aucune contrainte : les clous ne portent rien.";
+    else if(sig<235)st="✅ <b>Domaine élastique</b> (σ &lt; Rₑ = 235 MPa) : si on relâche, la tige reprend exactement sa forme. Coefficient de sécurité s = Rₑ/σ = <b>"+nf(235/sig,2)+"</b>.";
+    else if(sig<360)st="⚠️ <b>Au-delà de Rₑ</b> : déformation permanente. La tige ne casse pas encore, mais elle restera allongée pour toujours : en conception, c'est déjà un échec.";
+    else st="💥 <b>Au-delà de Rₘ = 360 MPa</b> : rupture. Augmente le diamètre ou baisse la force.";
+    $("#w1st").innerHTML=st;
+  }
+  iF.addEventListener("input",draw);iD.addEventListener("input",draw);draw();
+})();
+
+/* =========================================================
+   W2 : les deux élastiques (ε = ΔL/L0)
+   ========================================================= */
+(function(){
+  const svg=$("#w2svg");if(!svg)return;
+  const iv=$("#w2v");
+  const mode=()=>{const r=document.querySelector('input[name="w2m"]:checked');return r?r.value:"dl";};
+  const K=2;
+  function bar(y,L0,dl,u,name,mo){
+    const x0=40+u*K,len=(L0+dl)*K;
+    if(mo==="tr")el("rect",{x:40,y:y-17,width:L0*K,height:34,class:"ref-rect"},svg);
+    el("rect",{x:x0,y:y-17,width:len,height:34,class:"bar"},svg);
+    for(let k=1;k<L0/10;k++){
+      const x=x0+k*10*K*(1+dl/L0);
+      el("line",{x1:x,y1:y-17,x2:x,y2:y+17,class:"gridl"},svg);
+    }
+    if(mo!=="tr"&&dl>0){
+      const xo=40+L0*K;
+      el("line",{x1:xo,y1:y-27,x2:xo,y2:y+27,class:"ref"},svg);
+      el("line",{x1:xo,y1:y+24,x2:x0+len,y2:y+24,stroke:"var(--eps)","stroke-width":2.5},svg);
+      tx(svg,(xo+x0+len)/2,y+38,"ΔL","mth eps",{"text-anchor":"middle"});
+      arrow(svg,x0+len+4,y,x0+len+4+18+dl*1.5,y,"frc",3,10);
+    }
+    tx(svg,x0+4,y-24,name+" · L₀ = "+L0+" mm","lbl");
+  }
+  function draw(){
+    const mo=mode(),v=+iv.value/100;
+    let dlA=0,dlB=0,u=0;
+    if(mo==="dl"){dlA=dlB=20*v;}
+    else if(mo==="eps"){dlA=100*0.2*v;dlB=200*0.2*v;}
+    else u=20*v;
+    clear(svg);
+    if(mo!=="tr")el("rect",{x:24,y:34,width:16,height:172,class:"wall"},svg);
+    bar(70,100,dlA,u,"A",mo);bar(170,200,dlB,u,"B",mo);
+    if(mo==="tr"&&u>0){
+      arrow(svg,40,120,40+u*K,120,"mut",2.5,10);
+      tx(svg,40+u*K+8,124,"u = "+nf(u,1)+" mm","lbl");
+    }
+    const eA=dlA/100,eB=dlB/200;
+    const vl=mo==="dl"?"ΔL = "+nf(dlA,1)+" mm":mo==="eps"?"ε = "+nf(0.2*v*100,1)+" %":"u = "+nf(u,1)+" mm";
+    $("#w2vl").textContent=vl;
+    const row=(n,L0,dl,e)=>"<b>"+n+"</b> : ΔL = "+nf(dl,1)+" mm → "+S("eps","ε")+" = "+nf(dl,1)+"/"+L0+" = <b>"+S("eps",nf(e*100,1)+" %")+"</b> · un carreau de 10 mm mesure "+nf(10*(1+e),2)+" mm";
+    $("#w2out").innerHTML=mo==="tr"?"Les deux barres glissent de u = "+nf(u,1)+" mm. ΔL = 0, donc "+S("eps","ε")+" = 0 : aucun carreau ne change de taille.":row("A",100,dlA,eA)+"<br>"+row("B",200,dlB,eB);
+    const notes={
+      dl:"👀 <b>Même ΔL, déformations différentes.</b> Les carreaux de A sont deux fois plus étirés que ceux de B : la barre courte « souffre » deux fois plus. ΔL seul ne dit donc pas si la matière est en danger.",
+      eps:"👀 <b>Même ε, carreaux identiques.</b> Dans les deux barres, chaque carreau est étiré pareil : la matière souffre autant (même contrainte). B s'allonge simplement deux fois plus, parce qu'elle a deux fois plus de carreaux.",
+      tr:"👀 <b>Déplacement sans déformation.</b> Les barres changent de place, mais aucun carreau ne change de taille : aucune contrainte. Déformer, c'est changer de forme, pas changer de place."
+    };
+    $("#w2note").innerHTML=notes[mo];
+  }
+  iv.addEventListener("input",draw);
+  $$('input[name="w2m"]').forEach(r=>r.addEventListener("change",draw));
+  draw();
+})();
+
+/* =========================================================
+   W3 : l'essai de traction
+   ========================================================= */
+(function(){
+  const svg=$("#w3svg");if(!svg)return;
+  const ip=$("#w3p"),bPlay=$("#w3play"),bRel=$("#w3rel"),bReset=$("#w3reset");
+  const EU=0.00187,X0=60,Y0=320;
+  const pxX=x=>x<=3.2?X0+40*x:X0+128+114.8*Math.log(1+(x-3.2)/2.87);
+  const pyS=s=>Y0-0.7*s;
+  const M={
+    acier:{xe:0.6,xm:12,xr:20,A:0.25,re:235,
+      f:x=>x<=0.6?235*x/0.6:x<=2.2?235:x<=12?235+125*(1-Math.pow(1-(x-2.2)/9.8,2)):360-60*Math.pow((x-12)/8,2),
+      zones:[[0,0.6,"z-el","élastique"],[0.6,12,"z-pl","plastique"],[12,20,"z-str","striction"]]},
+    alu:{xe:1.6,xm:8,xr:11,A:0.12,
+      f:x=>x<=1.6?130.9*x:x<=8?209.44+54.8*(1-Math.exp(-(x-1.6)/0.4315))+4*(x-1.6):290-30*Math.pow((x-8)/3,2),
+      zones:[[0,1.6,"z-el","élastique"],[1.6,8,"z-pl","plastique"],[8,11,"z-str","striction"]]},
+    fonte:{xe:1.0695,xm:1.0695,xr:1.0695,A:0.0020,f:x=>187*x,
+      zones:[[0,1.0695,"z-el","élastique"]]}
+  };
+  for(const k in M){
+    const m=M[k];m.Eu=m.f(m.xe)/m.xe;
+    const N=800,xs=[],px=[],cum=[0];
+    for(let i=0;i<=N;i++){const x=m.xr*i/N;xs.push(x);px.push([pxX(x),pyS(m.f(x))]);}
+    for(let i=1;i<=N;i++)cum.push(cum[i-1]+Math.hypot(px[i][0]-px[i-1][0],px[i][1]-px[i-1][1]));
+    m.xs=xs;m.px=px;m.cum=cum;m.total=cum[N];
+    if(k==="alu"){ // Rp0,2 par bissection
+      const off=0.002/EU,g=x=>m.f(x)-m.Eu*(x-off);let a=1.6,b=8;
+      for(let i=0;i<60;i++){const c=(a+b)/2;if(g(c)>0)a=c;else b=c;}
+      m.xp=(a+b)/2;m.rp=m.f(m.xp);m.off=off;
+    }
+  }
+  const eReal=(m,x)=>x<=m.xe?x*EU:m.xe*EU+(x-m.xe)/(m.xr-m.xe)*(m.A-m.xe*EU);
+  function xFromP(m,p){
+    const L=p/1000*m.total,c=m.cum;
+    if(L<=0)return 0;if(L>=m.total)return m.xr;
+    let lo=0,hi=c.length-1;
+    while(hi-lo>1){const mid=(lo+hi)>>1;if(c[mid]<L)lo=mid;else hi=mid;}
+    const t=(L-c[lo])/(c[hi]-c[lo]||1);
+    return m.xs[lo]+t*(m.xs[hi]-m.xs[lo]);
+  }
+  let mat="acier",rel=null,anim=null;
+  function stop(){if(anim){cancelAnimationFrame(anim);anim=null;}bPlay.textContent="▶ Lancer l'essai";}
+
+  function spec(eps,neck,broken,ductile,lueders,sig){
+    const cx=545,T=46,L=170*(1+1.8*eps),w=34/Math.sqrt(1+eps),ym=T+L/2,wid=0.09*L+6;
+    const hw=y=>w/2*(1-neck*Math.exp(-Math.pow((y-ym)/wid,2)));
+    el("rect",{x:cx-40,y:10,width:80,height:5,fill:"var(--ink)"},svg);
+    el("rect",{x:cx-30,y:15,width:60,height:31,class:"grip"},svg);
+    el("rect",{x:cx-30,y:T+L,width:60,height:28,class:"grip"},svg);
+    const side=(y0,y1,sgn)=>{const pts=[],n=36;for(let i=0;i<=n;i++){const y=y0+(y1-y0)*i/n;pts.push((cx+sgn*hw(y)).toFixed(1)+","+y.toFixed(1));}return pts;};
+    if(!broken){
+      const pts=side(T,T+L,-1).concat(side(T+L,T,1));
+      el("polygon",{points:pts.join(" "),class:"spec"},svg);
+    }else{
+      const gp=6,hm=hw(ym),e=ductile?hm*0.55:0;
+      const top=side(T,ym-gp-e,-1).concat([(cx-hm*0.35)+","+(ym-gp),(cx+hm*0.35)+","+(ym-gp)]).concat(side(ym-gp-e,T,1));
+      const bot=[(cx-hm*0.35)+","+(ym+gp),(cx+hm*0.35)+","+(ym+gp)].concat(side(ym+gp-e,T+L,1)).concat(side(T+L,ym+gp-e,-1));
+      el("polygon",{points:top.join(" "),class:"spec"},svg);
+      el("polygon",{points:bot.join(" "),class:"spec"},svg);
+    }
+    // repères de longueur utile
+    [T+0.1*L,T+0.9*L].forEach(y=>el("line",{x1:cx-w/2-10,y1:y,x2:cx-w/2-3,y2:y,class:"tick"},svg));
+    if(lueders&&!broken){
+      [-0.28,0,0.28].forEach(f=>{const y=ym+f*L;el("line",{x1:cx-w/2+1,y1:y+w/2-1,x2:cx+w/2-1,y2:y-w/2+1,style:"stroke:var(--tau);stroke-width:2.2;opacity:.7"},svg);});
+    }
+    if(!broken&&sig>0.5){
+      const len=8+sig/360*18,y0=T+L+30;
+      arrow(svg,cx,y0,cx,y0+len,"frc",3,9);
+      tx(svg,cx+10,y0+len-2,"F","mth frc");
+    }
+    tx(svg,636,366,"éprouvette (allongement ×1,8)","lbl",{"text-anchor":"end"});
+  }
+
+  function draw(){
+    const m=M[mat],p=+ip.value;
+    let x=xFromP(m,p);const broken=p>=1000;if(broken)x=m.xr;
+    const sig=m.f(x);
+    clear(svg);
+    // bandes de zones
+    m.zones.forEach(z=>{
+      const a=pxX(z[0]),b=pxX(z[1]);
+      el("rect",{x:a,y:56,width:b-a,height:Y0-56,class:z[2]},svg);
+      tx(svg,z[3]==="élastique"?a+2:(a+b)/2,50,z[3],"lbl",{"text-anchor":z[3]==="élastique"?"start":"middle"});
+    });
+    // axes
+    el("line",{x1:X0,y1:Y0,x2:440,y2:Y0,class:"axis"},svg);
+    el("line",{x1:X0,y1:Y0,x2:X0,y2:36,class:"axis"},svg);
+    tx(svg,X0+6,34,"σ (MPa)","mth sig");tx(svg,446,Y0+5,"ε","mth eps");
+    [100,200,300].forEach(s=>{const y=pyS(s);el("line",{x1:X0-5,y1:y,x2:X0,y2:y,class:"tick"},svg);tx(svg,X0-8,y+4,String(s),"lbl",{"text-anchor":"end"});});
+    // coupure d'échelle
+    tx(svg,pxX(0.002/EU),Y0+16,"0,2 %","lbl",{"text-anchor":"middle"});
+    let lastX=1e9;
+    [0.25,0.2,0.15,0.1,0.05].forEach(e=>{
+      if(e>m.A+1e-9||mat==="fonte")return;
+      const xx=m.xe+(e-m.xe*EU)/(m.A-m.xe*EU)*(m.xr-m.xe),X=pxX(xx);
+      if(X<pxX(3.2)+10||lastX-X<30)return;lastX=X;
+      el("line",{x1:X,y1:Y0,x2:X,y2:Y0+5,class:"tick"},svg);
+      tx(svg,X,Y0+17,nf(e*100,0)+" %","lbl",{"text-anchor":"middle"});
+    });
+    tx(svg,pxX(3.2)-20,Y0+32,"échelle de plus en plus comprimée →","lbl");
+    // Re / Rp0,2
+    if(mat==="acier"){
+      const y=pyS(235);el("line",{x1:X0,y1:y,x2:430,y2:y,class:"ref"},svg);
+      tx(svg,430,y-6,"Rₑ = 235 MPa","lbl",{"text-anchor":"end"});
+    }else if(mat==="alu"){
+      const y=pyS(m.rp);el("line",{x1:X0,y1:y,x2:430,y2:y,class:"ref"},svg);
+      tx(svg,430,y-6,"R\u209a\u2080,\u2082 ≈ "+nf(m.rp,0)+" MPa","lbl",{"text-anchor":"end"});
+      el("line",{x1:pxX(m.off),y1:Y0,x2:pxX(m.xp),y2:y,class:"thin-dash"},svg);
+    }
+    // Rm
+    const sm=m.f(m.xm);
+    el("circle",{cx:pxX(m.xm),cy:pyS(sm),r:4,fill:"var(--ink)"},svg);
+    if(mat==="fonte")tx(svg,pxX(m.xm)+8,pyS(sm)-10,"Rₘ = 200 MPa : rupture","lbl");
+    else tx(svg,pxX(m.xm)-8,pyS(sm)-4,"Rₘ = "+nf(sm,0)+" MPa","lbl",{"text-anchor":"end"});
+    // courbes
+    el("polyline",{points:m.px.map(q=>q[0].toFixed(1)+","+q[1].toFixed(1)).join(" "),class:"curve-ghost"},svg);
+    const run=[];for(let i=0;i<m.xs.length&&m.xs[i]<=x;i++)run.push(m.px[i]);run.push([pxX(x),pyS(sig)]);
+    if(run.length>1)el("polyline",{points:run.map(q=>q[0].toFixed(1)+","+q[1].toFixed(1)).join(" "),class:"curve"},svg);
+    // état courant / décharge
+    let cx=pxX(x),cy=pyS(sig),epsNow=eReal(m,x),sNow=sig;
+    if(rel){
+      const dx=rel.s/m.Eu*40,x1=pxX(rel.x),y1=pyS(rel.s);
+      el("line",{x1:x1,y1:y1,x2:x1-dx,y2:Y0,class:"unload"},svg);
+      cx=x1-rel.t*dx;cy=y1+rel.t*(Y0-y1);
+      sNow=rel.s*(1-rel.t);
+      epsNow=eReal(m,rel.x)-rel.t*rel.s*EU/m.Eu;
+    }
+    if(!broken||rel){
+      el("line",{x1:X0,y1:cy,x2:cx,y2:cy,class:"thin-dash"},svg);
+      el("circle",{cx:cx,cy:cy,r:6.5,class:"pt",fill:"var(--sig)"},svg);
+    }else{
+      tx(svg,pxX(m.xr)+4,pyS(sig)+4,"💥","",{style:"font-size:20px"});
+    }
+    const neck=x>m.xm&&m.xr>m.xm?0.6*(x-m.xm)/(m.xr-m.xm):0;
+    spec(Math.max(epsNow,0),neck,broken&&!rel,mat!=="fonte",mat==="acier"&&x>0.6&&x<=2.2&&!rel,sNow);
+    // textes
+    const pct=v=>nf(v*100,v<0.01?3:1)+" %";
+    $("#w3pv").textContent="ε = "+pct(epsNow);
+    let out=S("sig","σ")+" = <b>"+nf(sNow,0)+" MPa</b> &nbsp;·&nbsp; "+S("eps","ε")+" = <b>"+pct(epsNow)+"</b>";
+    if(!rel&&x<=m.xe+1e-9&&x>0)out+=" &nbsp;·&nbsp; pente "+S("mat","E")+" = σ/ε = <b>"+nf(m.Eu/EU/1000,0)+" GPa</b>";
+    if(rel&&rel.t>=1)out+=" &nbsp;·&nbsp; "+S("eps","ε")+" permanente = <b>"+pct(Math.max(epsNow,0))+"</b>";
+    $("#w3out").innerHTML=out;
+    let z;
+    if(rel){
+      z=rel.x<=m.xe+1e-9?"🖐 <b>Relâché en zone élastique</b> : on redescend sur la rampe jusqu'à zéro. Aucune trace, la pièce est intacte.":
+        "🖐 <b>Relâché en zone plastique</b> : on redescend <b>parallèlement à la rampe</b> (ligne verte), pas par le même chemin. On récupère la partie élastique ("+pct(rel.s*EU/m.Eu)+"), le reste est définitivement acquis : la pièce reste plus longue.";
+    }else if(p===0)z="Prêt. Tire avec le curseur, ou lance l'essai complet.";
+    else if(broken)z=mat==="fonte"?"💥 <b>⑥ Rupture fragile</b> : la fonte casse au bout de la rampe, sans zone plastique et sans prévenir (A ≈ 0,2 %). Cassure plate, perpendiculaire à l'effort : c'est la traction qui l'a arrachée.":
+      "💥 <b>⑥ Rupture</b> dans le cou. Allongement à la rupture <b>A ≈ "+nf(m.A*100,0)+" %</b>. Regarde la cassure en « cône-coupelle » : ses bords inclinés trahissent le glissement à 45°.";
+    else if(x<=m.xe+1e-9)z="<b>① Zone élastique</b> : droite parfaite, "+S("sig","σ")+" = "+S("mat","E")+"·"+S("eps","ε")+". Essaie « Relâcher ici » : tout revient à zéro.";
+    else if(mat==="acier"&&x<=2.2)z="<b>② Palier</b> (juste après Rₑ) : l'éprouvette s'allonge sans qu'il faille tirer plus fort. Des bandes inclinées à 45° la traversent (bandes de Lüders) : les dislocations se mettent à glisser. Propre aux aciers doux.";
+    else if(Math.abs(x-m.xm)<(mat==="acier"?0.35:0.2))z="<b>④ Sommet : Rₘ</b>, la contrainte maximale que le matériau supporte.";
+    else if(x<m.xm)z=mat==="alu"?"<b>③ Zone plastique</b> : pas de palier pour l'aluminium, la courbe s'infléchit doucement. D'où la limite conventionnelle R\u209a\u2080,\u2082 (en pointillés, voir niveau 2). Le métal s'écrouit : il faut tirer plus fort pour continuer.":
+      "<b>③ Écrouissage</b> : il faut tirer de plus en plus fort pour continuer, le métal durcit. Essaie « Relâcher ici » : la déformation ne disparaît plus entièrement.";
+    else z="<b>⑤ Striction</b> : un cou se forme au milieu et s'amincit très vite ; la force nécessaire diminue.";
+    $("#w3zone").innerHTML=z;
+  }
+  function relAnim(){
+    const step=()=>{rel.t=Math.min(1,rel.t+(RM?1:0.025));draw();if(rel.t<1)anim=requestAnimationFrame(step);else anim=null;};
+    anim=requestAnimationFrame(step);
+  }
+  ip.addEventListener("input",()=>{stop();rel=null;draw();});
+  bPlay.addEventListener("click",()=>{
+    if(anim&&!rel){stop();return;}
+    stop();
+    if(rel||+ip.value>=1000){rel=null;ip.value=0;}
+    bPlay.textContent="⏸ Pause";
+    const step=()=>{ip.value=Math.min(1000,+ip.value+(RM?20:3));draw();if(+ip.value<1000)anim=requestAnimationFrame(step);else stop();};
+    anim=requestAnimationFrame(step);
+  });
+  bRel.addEventListener("click",()=>{
+    const m=M[mat],p=+ip.value;
+    if(rel||p===0)return;
+    if(p>=1000){$("#w3zone").innerHTML="Trop tard : l'éprouvette est déjà cassée ! Recommence et relâche avant la rupture.";return;}
+    stop();const x=xFromP(m,p);rel={x:x,s:m.f(x),t:0};relAnim();
+  });
+  bReset.addEventListener("click",()=>{stop();rel=null;ip.value=0;draw();});
+  $$("#w3mat .btn").forEach(b=>b.addEventListener("click",()=>{
+    $$("#w3mat .btn").forEach(o=>o.classList.toggle("on",o===b));
+    mat=b.dataset.m;stop();rel=null;ip.value=0;draw();
+  }));
+  draw();
+})();
+
+/* =========================================================
+   W4 : Poisson
+   ========================================================= */
+(function(){
+  const svg=$("#w4svg");if(!svg)return;
+  const ie=$("#w4e"),inu=$("#w4n");
+  function draw(){
+    const e=+ie.value/100,nu=+inu.value/100,et=-nu*e;
+    const W=240*(1+e),H=120*(1+et),cx=320,cy=150,x0=cx-W/2,y0=cy-H/2;
+    $("#w4ev").textContent=nf(e*100,0)+" %";$("#w4nv").textContent=nf(nu,2);
+    $$("#w4pre .btn").forEach(b=>b.classList.toggle("on",+b.dataset.nu===+inu.value));
+    clear(svg);
+    el("rect",{x:x0,y:y0,width:W,height:H,class:"bar"},svg);
+    for(let i=1;i<6;i++){const x=x0+W*i/6;el("line",{x1:x,y1:y0,x2:x,y2:y0+H,class:"gridl"},svg);}
+    for(let j=1;j<3;j++){const y=y0+H*j/3;el("line",{x1:x0,y1:y,x2:x0+W,y2:y,class:"gridl"},svg);}
+    el("rect",{x:cx-120,y:cy-60,width:240,height:120,class:"ref-rect"},svg);
+    if(e>0){
+      const L=20+e*100;
+      arrow(svg,x0-4,cy,x0-4-L,cy,"frc",3.5,12);
+      arrow(svg,x0+W+4,cy,x0+W+4+L,cy,"frc",3.5,12);
+      tx(svg,x0-4-L/2,cy-12,"F","mth frc",{"text-anchor":"middle"});
+      tx(svg,x0+W+4+L/2,cy-12,"F","mth frc",{"text-anchor":"middle"});
+    }
+    if(Math.abs(et)>1e-4){
+      const L=12+Math.abs(nu)*e*150;
+      [cx-W/4,cx+W/4].forEach(x=>{
+        if(nu>0){
+          arrow(svg,x,y0-6-L,x,y0-6,"eps",3,10);
+          arrow(svg,x,y0+H+6+L,x,y0+H+6,"eps",3,10);
+        }else{
+          arrow(svg,x,y0-4,x,y0-4-L,"eps",3,10);
+          arrow(svg,x,y0+H+4,x,y0+H+4+L,"eps",3,10);
+        }
+      });
+      txSub(svg,cx,y0-14,"ε","t","mth eps",{"text-anchor":"middle"});
+    }
+    tx(svg,cx,292,"longueur × "+nf(1+e,2)+"   ·   hauteur × "+nf(1+et,3),"lbl",{"text-anchor":"middle"});
+    const dvApprox=e*(1-2*nu),dvExact=(1+e)*(1+et)*(1+et)-1;
+    $("#w4out").innerHTML=S("eps","ε<sub>ℓ</sub>")+" = <b>"+nf(e*100,1)+" %</b> &nbsp;·&nbsp; "+S("eps","ε<sub>t</sub>")+" = −"+S("mat","ν")+"·"+S("eps","ε<sub>ℓ</sub>")+" = <b>"+nf(et*100,2)+" %</b><br>ΔV/V ≈ "+S("eps","ε<sub>ℓ</sub>")+"(1 − 2"+S("mat","ν")+") = <b>"+nf(dvApprox*100,1)+" %</b> <span class=\"mut\">(valeur exacte ici : "+nf(dvExact*100,1)+" % ; la formule est faite pour les petites déformations, où l'écart disparaît)</span>";
+    let n;
+    if(nu<0)n="🧽 <b>Auxétique</b> ("+S("mat","ν")+" &lt; 0) : il s'<b>élargit</b> quand on le tire ! Structures en nid d'abeille « rentrant », certaines mousses, protections anti-choc.";
+    else if(nu===0)n="🍾 <b>Liège</b> ("+S("mat","ν")+" ≈ 0) : pas d'effet transversal. C'est pour ça qu'un bouchon comprimé ne gonfle pas sur les côtés et entre dans le goulot.";
+    else if(nu>=0.5)n="🎈 "+S("mat","ν")+" = 0,5 : matériau <b>incompressible</b> (caoutchouc, et presque l'eau) : ΔV/V ≈ 0, le volume ne change pas. C'est la limite physique.";
+    else if(nu>=0.25&&nu<=0.35)n="⚙️ Valeur typique des <b>métaux</b> ("+S("mat","ν")+" ≈ 0,3) : le bloc s'amincit, et son volume augmente un peu.";
+    else n="Le bloc s'amincit de "+nf(-et*100,2)+" % pendant qu'il s'allonge de "+nf(e*100,1)+" %. Plus "+S("mat","ν")+" est grand, plus il s'amincit.";
+    $("#w4note").innerHTML=n;
+  }
+  ie.addEventListener("input",draw);inu.addEventListener("input",draw);
+  $$("#w4pre .btn").forEach(b=>b.addEventListener("click",()=>{inu.value=b.dataset.nu;draw();}));
+  draw();
+})();
+
+/* =========================================================
+   W5 : le jeu de cartes (τ = Gγ)
+   ========================================================= */
+(function(){
+  const svg=$("#w5svg");if(!svg)return;
+  const iF=$("#w5F");let G=1;
+  svg.setAttribute("viewBox","0 92 640 198");
+  function draw(){
+    const F=+iF.value,tau=F/10000,gam=tau/G,tg=Math.tan(gam),delta=20*tg;
+    $("#w5Fv").textContent=nf(F,0)+" N";
+    clear(svg);
+    const x0=210,yb=250,H=120,W=200,off=y=>(yb-y)*tg;
+    el("rect",{x:60,y:yb,width:520,height:10,class:"wall"},svg);
+    for(let x=70;x<580;x+=16)el("line",{x1:x,y1:yb+10,x2:x-10,y2:yb+22,class:"tick"},svg);
+    tx(svg,580,yb+34,"table (bas du bloc collé)","lbl",{"text-anchor":"end"});
+    el("rect",{x:x0,y:yb-H,width:W,height:H,class:"ref-rect"},svg);
+    for(let i=0;i<10;i++){
+      const y1=yb-12*i,y2=yb-12*(i+1);
+      const pts=[[x0+off(y1),y1],[x0+W+off(y1),y1],[x0+W+off(y2),y2],[x0+off(y2),y2]];
+      el("polygon",{points:pts.map(q=>q[0].toFixed(2)+","+q[1]).join(" "),class:i%2?"card-b":"card-a"},svg);
+    }
+    const ot=off(yb-H);
+    el("rect",{x:x0+ot,y:yb-H-12,width:W,height:12,class:"plate"},svg);
+    if(F>0){
+      const L=20+F*0.025;
+      arrow(svg,x0+ot-L-6,yb-H-6,x0+ot-6,yb-H-6,"frc",3.5,12);
+      tx(svg,x0+ot-L/2-6,yb-H-16,"F","mth frc",{"text-anchor":"middle"});
+    }
+    // cote h
+    el("line",{x1:x0-22,y1:yb,x2:x0-22,y2:yb-H,class:"tick"},svg);
+    el("line",{x1:x0-28,y1:yb-H,x2:x0-16,y2:yb-H,class:"tick"},svg);
+    el("line",{x1:x0-28,y1:yb,x2:x0-16,y2:yb,class:"tick"},svg);
+    tx(svg,x0-30,yb-H/2+4,"h = 20 mm","lbl",{"text-anchor":"end"});
+    // angle γ
+    if(ot>2){
+      const r=60;
+      el("line",{x1:x0,y1:yb,x2:x0,y2:yb-r-12,class:"ref"},svg);
+      el("path",{d:"M"+x0+","+(yb-r)+" A"+r+","+r+" 0 0 1 "+(x0+r*Math.sin(gam)).toFixed(2)+","+(yb-r*Math.cos(gam)).toFixed(2),class:"arc",stroke:"var(--gam)"},svg);
+      tx(svg,x0+r*Math.sin(gam/2)+5,yb-r*Math.cos(gam/2)-6,"γ","mth gam");
+      el("line",{x1:x0+W,y1:yb-H-22,x2:x0+W+ot,y2:yb-H-22,stroke:"var(--gam)","stroke-width":2.2},svg);
+      tx(svg,x0+W+ot+6,yb-H-18,"δ","mth gam");
+    }
+    const gdeg=gam*180/Math.PI;
+    $("#w5out").innerHTML=S("tau","τ")+" = "+S("frc","F")+"/S = "+nf(F,0)+" / 10 000 = <b>"+S("tau",smart(tau,3)+" MPa")+"</b> &nbsp;·&nbsp; "+S("gam","γ")+" = "+S("tau","τ")+"/"+S("mat","G")+" = <b>"+S("gam",smart(gam,3)+" rad")+"</b> ("+smart(gdeg,2)+"°)<br>décalage du dessus : δ = h·tan "+S("gam","γ")+" = <b>"+smart(delta,2)+" mm</b>";
+    let n;
+    if(F===0)n="Aucune force : les couches restent bien empilées.";
+    else if(G>=1000)n="🔩 <b>Acier</b> : le glissement existe mais il est "+nf(G,0)+" fois plus petit qu'avec le caoutchouc souple. Le dessus bouge d'environ <b>"+nf(delta*1e6,0)+" nanomètres</b> : totalement invisible à l'œil.";
+    else if(G===3)n="Caoutchouc 3 fois plus raide : pour la même force, 3 fois moins de glissement. "+S("mat","G")+" mesure la résistance au glissement, comme "+S("mat","E")+" mesure la résistance à l'allongement.";
+    else n="🃏 Chaque couche glisse un peu par rapport à celle du dessous, comme les cartes d'un jeu. Tous les angles droits penchent du même angle "+S("gam","γ")+" : c'est la <b>distorsion</b>.";
+    $("#w5note").innerHTML=n;
+  }
+  iF.addEventListener("input",draw);
+  $$("#w5mat .btn").forEach(b=>b.addEventListener("click",()=>{
+    $$("#w5mat .btn").forEach(o=>o.classList.toggle("on",o===b));G=+b.dataset.g;draw();
+  }));
+  draw();
+})();
+
+/* =========================================================
+   W5b : le petit carré qui ne doit pas tourner
+   ========================================================= */
+(function(){
+  const bt=$("#w5bt"),sp=$("#spinner"),va=$("#vertArrows"),note=$("#w5bnote");
+  if(!bt||!sp||!va)return;
+  let off=false;
+  bt.addEventListener("click",()=>{
+    off=!off;
+    va.style.display=off?"none":"";
+    sp.classList.toggle("spinning",off);
+    bt.textContent=off?"Remettre le cisaillement des faces verticales":"Retirer le cisaillement des faces verticales";
+    note.innerHTML=off?"🌀 <b>Déséquilibre !</b> Les deux flèches horizontales forment un couple que plus rien ne compense : le carré se mettrait à tourner sans fin. Impossible pour un morceau de matière au repos. Conclusion : "+S("tau","τ<sub>xy</sub> = τ<sub>yx</sub>")+", toujours.":"Équilibre : les deux couples se compensent, le carré reste immobile.";
+  });
+})();
+
+/* =========================================================
+   W6 : la facette qui tourne (avant-première du cercle de Mohr)
+   ========================================================= */
+(function(){
+  const svg=$("#w6svg");if(!svg)return;
+  const it=$("#w6t"),bPlay=$("#w6play"),bClr=$("#w6clr"),cb=$("#w6circ");
+  const SIG=100,k=1.15,C=[180,170],O=[400,170],kk=2.4;
+  const bar=[[40,130],[320,130],[320,210],[40,210]];
+  let visited=new Set([30]),last=30,anim=null;
+  function clip(poly,n,sgn){
+    const out=[],d=p=>sgn*((p[0]-C[0])*n[0]+(p[1]-C[1])*n[1]);
+    for(let i=0;i<poly.length;i++){
+      const a=poly[i],b=poly[(i+1)%poly.length],da=d(a),db=d(b);
+      if(da<=0)out.push(a);
+      if((da<0&&db>0)||(da>0&&db<0)){const t=da/(da-db);out.push([a[0]+t*(b[0]-a[0]),a[1]+t*(b[1]-a[1])]);}
+    }
+    return out;
+  }
+  const P=pts=>pts.map(q=>q[0].toFixed(1)+","+q[1].toFixed(1)).join(" ");
+  function draw(){
+    const th=+it.value,r=th*Math.PI/180,c=Math.cos(r),s=Math.sin(r);
+    const sn=SIG*c*c,tau=SIG*s*c;
+    const n=[c,-s],t=[s,c];
+    $("#w6tv").textContent=nf(th,0)+"°";
+    clear(svg);
+    // ---- barre coupée
+    const L=clip(bar,n,1),R=clip(bar,n,-1);
+    if(R.length>2)el("polygon",{points:P(R),class:"bar ghost"},svg);
+    if(L.length>2)el("polygon",{points:P(L),class:"bar"},svg);
+    const hl=Math.min(40/Math.max(Math.abs(c),1e-6),140);
+    el("line",{x1:C[0]-hl*t[0],y1:C[1]-hl*t[1],x2:C[0]+hl*t[0],y2:C[1]+hl*t[1],class:"cutline"},svg);
+    arrow(svg,38,170,4,170,"frc",3.5,11);
+    const gr=arrow(svg,322,170,356,170,"frc",3.5,11);gr.setAttribute("opacity",0.3);
+    tx(svg,20,160,"F","mth frc",{"text-anchor":"middle"});
+    // normale et angle θ
+    const sg=tau>0.01?1:tau<-0.01?-1:1;
+    const Q=[C[0]-sg*0.62*hl*t[0],C[1]-sg*0.62*hl*t[1]];
+    if(Math.abs(th)<90){
+      el("line",{x1:Q[0],y1:Q[1],x2:Q[0]+40,y2:Q[1],class:"ref"},svg);
+      arrow(svg,Q[0],Q[1],Q[0]+34*n[0],Q[1]+34*n[1],"ink",2,8);
+      tx(svg,Q[0]+44*n[0]-4,Q[1]+44*n[1]+(n[1]<0?-2:10),"n⃗","mth");
+      if(Math.abs(th)>=4){
+        const ar=24,ex=Q[0]+ar*c,ey=Q[1]-ar*s;
+        el("path",{d:"M"+(Q[0]+ar)+","+Q[1]+" A"+ar+","+ar+" 0 0 "+(th>0?0:1)+" "+ex.toFixed(2)+","+ey.toFixed(2),class:"arc",stroke:"var(--tau)"},svg);
+        const hr=Math.PI/360*th;
+        tx(svg,Q[0]+36*Math.cos(hr)+2,Q[1]-36*Math.sin(hr)+5,"θ","mth tau");
+      }
+    }
+    // vecteurs
+    const T=[SIG*c*k,0],Vn=[sn*k*n[0],sn*k*n[1]],Vt=[tau*k*t[0],tau*k*t[1]];
+    if(Math.hypot(Vn[0],Vn[1])>3&&Math.hypot(Vt[0],Vt[1])>3){
+      el("line",{x1:C[0]+Vn[0],y1:C[1]+Vn[1],x2:C[0]+T[0],y2:C[1]+T[1],class:"thin-dash"},svg);
+      el("line",{x1:C[0]+Vt[0],y1:C[1]+Vt[1],x2:C[0]+T[0],y2:C[1]+T[1],class:"thin-dash"},svg);
+    }
+    if(Math.hypot(Vt[0],Vt[1])>3){arrow(svg,C[0],C[1],C[0]+Vt[0],C[1]+Vt[1],"tau",3.5,11);tx(svg,C[0]+Vt[0]*1.1+(Vt[0]>=0?6:-16),C[1]+Vt[1]*1.1+6,"τ","mth tau");}
+    if(Math.hypot(Vn[0],Vn[1])>3){arrow(svg,C[0],C[1],C[0]+Vn[0],C[1]+Vn[1],"sig",3.5,11);txSub(svg,C[0]+Vn[0]+6,C[1]+Vn[1]+(Vn[1]<0?-6:16),"σ","n","mth sig");}
+    if(T[0]>3){arrow(svg,C[0],C[1],C[0]+T[0],C[1],"ink",2.6,11);tx(svg,C[0]+T[0]+6,C[1]+5,"T⃗","mth");}
+    el("circle",{cx:C[0],cy:C[1],r:3,fill:"var(--ink)"},svg);
+    // ---- plan de Mohr
+    el("line",{x1:O[0]-6,y1:O[1],x2:664,y2:O[1],class:"axis"},svg);
+    el("line",{x1:O[0],y1:O[1]+140,x2:O[0],y2:O[1]-140,class:"axis"},svg);
+    txSub(svg,662,O[1]-8,"σ","n","mth sig",{"text-anchor":"end"});
+    tx(svg,O[0]+8,O[1]-128,"τ","mth tau");
+    [[50,"50"],[100,"100"]].forEach(a=>{const x=O[0]+a[0]*kk;el("line",{x1:x,y1:O[1]-4,x2:x,y2:O[1]+4,class:"tick"},svg);tx(svg,x,O[1]+18,a[1],"lbl",{"text-anchor":"middle"});});
+    [[50,"50"],[-50,"−50"]].forEach(a=>{const y=O[1]-a[0]*kk;el("line",{x1:O[0]-4,y1:y,x2:O[0]+4,y2:y,class:"tick"},svg);tx(svg,O[0]-7,y+4,a[1],"lbl",{"text-anchor":"end"});});
+    tx(svg,O[0]+4,O[1]+34,"MPa","lbl");
+    const Cm=[O[0]+SIG/2*kk,O[1]],Rr=SIG/2*kk;
+    const showC=cb.checked;
+    if(showC)el("circle",{cx:Cm[0],cy:Cm[1],r:Rr,class:"mohr"},svg);
+    // trace
+    const arr=Array.from(visited).sort((a,b)=>a-b);let seg=[];
+    const flush=()=>{if(seg.length>1)el("polyline",{points:P(seg),class:"trace"},svg);seg=[];};
+    arr.forEach((a,i)=>{
+      if(i>0&&a-arr[i-1]>1)flush();
+      const rr=a*Math.PI/180,cc=Math.cos(rr),ss=Math.sin(rr);
+      seg.push([O[0]+SIG*cc*cc*kk,O[1]-SIG*ss*cc*kk]);
+    });flush();
+    const Px=O[0]+sn*kk,Py=O[1]-tau*kk;
+    el("line",{x1:O[0],y1:O[1],x2:Px,y2:O[1],stroke:"var(--sig)","stroke-width":5,"stroke-linecap":"round",opacity:0.85},svg);
+    el("line",{x1:O[0],y1:O[1],x2:O[0],y2:Py,stroke:"var(--tau)","stroke-width":5,"stroke-linecap":"round",opacity:0.85},svg);
+    el("line",{x1:Px,y1:Py,x2:Px,y2:O[1],class:"thin-dash"},svg);
+    el("line",{x1:Px,y1:Py,x2:O[0],y2:Py,class:"thin-dash"},svg);
+    if(showC){
+      el("circle",{cx:Cm[0],cy:Cm[1],r:3.5,fill:"var(--ink)"},svg);
+      tx(svg,Cm[0]-6,Cm[1]-8,"centre σ/2","lbl",{"text-anchor":"end"});
+      el("line",{x1:Cm[0],y1:Cm[1],x2:Px,y2:Py,stroke:"var(--ink)","stroke-width":1.4},svg);
+      const a2=2*r;
+      if(Math.abs(th)>=3&&Math.abs(th)<=88){
+        const ar=30,ex=Cm[0]+ar*Math.cos(a2),ey=Cm[1]-ar*Math.sin(a2);
+        el("path",{d:"M"+(Cm[0]+ar)+","+Cm[1]+" A"+ar+","+ar+" 0 0 "+(th>0?0:1)+" "+ex.toFixed(2)+","+ey.toFixed(2),class:"arc",stroke:"var(--tau)"},svg);
+        tx(svg,Cm[0]+46*Math.cos(r)-6,Cm[1]-46*Math.sin(r)+5,"2θ","mth tau");
+      }
+    }
+    el("circle",{cx:Px,cy:Py,r:7,class:"pt",fill:"var(--tau)"},svg);
+    // textes
+    const sc=Math.abs(th)===90?"∞ (coupe parallèle à l'axe)":nf(1/c,3)+" S";
+    $("#w6out").innerHTML="θ = "+nf(th,0)+"° &nbsp;·&nbsp; S<sub>θ</sub> = S / cos θ = "+sc+"<br>"+S("sig","σ<sub>n</sub>")+" = "+S("sig","σ")+" cos²θ = <b>"+S("sig",nf(sn,1)+" MPa")+"</b> &nbsp;·&nbsp; "+S("tau","τ")+" = "+S("sig","σ")+" sin θ cos θ = <b>"+S("tau",nf(tau,1)+" MPa")+"</b>";
+    let no;
+    if(th===0)no="Coupe droite : "+S("sig","σ<sub>n</sub>")+" = "+S("sig","σ")+" = 100 MPa et "+S("tau","τ")+" = 0. C'est exactement le chapitre 1. Point le plus à droite du cercle.";
+    else if(Math.abs(th)===45)no="🎯 <b>45° : cisaillement maximal</b>, "+S("tau","τ")+"<sub>max</sub> = "+S("sig","σ")+"/2 = 50 MPa (et "+S("sig","σ<sub>n</sub>")+" = 50 MPa aussi). Le point est tout en "+(th>0?"haut":"bas")+" du cercle : c'est là que glissent les dislocations.";
+    else if(Math.abs(th)===90)no="Coupe parallèle à l'axe : ni traction ni cisaillement. Deux fibres voisines ne se tirent pas l'une l'autre. Le point est à l'origine.";
+    else no="La coupe a tourné de θ = "+nf(th,0)+"°, le point a tourné de <b>2θ = "+nf(2*th,0)+"°</b> autour du centre du cercle. Angle réel θ → angle double sur le cercle.";
+    $("#w6note").innerHTML=no;
+  }
+  function addRange(a,b){const lo=Math.min(a,b),hi=Math.max(a,b);for(let v=lo;v<=hi;v++)visited.add(v);}
+  function stop(){if(anim){cancelAnimationFrame(anim);anim=null;}bPlay.textContent="▶ Faire tourner la coupe de −90° à +90°";}
+  it.addEventListener("input",()=>{stop();const v=+it.value;addRange(last,v);last=v;draw();});
+  bClr.addEventListener("click",()=>{visited=new Set([+it.value]);last=+it.value;draw();});
+  cb.addEventListener("change",draw);
+  bPlay.addEventListener("click",()=>{
+    if(anim){stop();return;}
+    it.value=-90;last=-90;visited=new Set([-90]);
+    bPlay.textContent="⏸ Pause";
+    const step=()=>{
+      const v=Math.min(90,+it.value+(RM?6:1));it.value=v;addRange(last,v);last=v;
+      if(v>=90){cb.checked=true;draw();stop();return;}
+      draw();anim=requestAnimationFrame(step);
+    };
+    anim=requestAnimationFrame(step);
+  });
+  draw();
+})();
+
+/* =========================================================
+   W7 : du cube à la matrice
+   ========================================================= */
+(function(){
+  const svg=$("#w7svg");if(!svg)return;
+  const cx=175,cy=185,a=72;
+  const pr=(x,y,z)=>[cx+x-0.45*z,cy-y+0.32*z];
+  const zl=Math.hypot(0.45,0.32);
+  const DIR={x:[1,0],y:[0,-1],z:[-0.45/zl,0.32/zl]};
+  const CEN={x:pr(a,0,0),y:pr(0,a,0),z:pr(0,0,a)};
+  const FACE={x:"la face de droite",y:"la face du dessus",z:"la face avant"};
+  const ALL=["xx","xy","xz","yx","yy","yz","zx","zy","zz"];
+  const NZ={gen:ALL,trac:["xx"],cis:["xy","yx"],plan:["xx","xy","yx","yy"]};
+  let mode="gen",act=null;
+  const isN=k=>k[0]===k[1];
+  function cell(k){
+    if(NZ[mode].indexOf(k)<0)return "0";
+    if(mode==="trac")return S("sig","σ");
+    if(mode==="cis")return S("tau","τ");
+    return isN(k)?S("sig","σ<sub>"+k+"</sub>"):S("tau","τ<sub>"+k+"</sub>");
+  }
+  function lab(k){
+    if(mode==="trac")return ["σ",""];
+    if(mode==="cis")return ["τ",""];
+    return [isN(k)?"σ":"τ",k];
+  }
+  function mat3(v){return '<span class="inlinemat">'+v.map(x=>"<span>"+x+"</span>").join("")+"</span>";}
+  function epsBox(){
+    const E=s=>S("eps",s),Gm=s=>S("gam",s);
+    let h;
+    if(mode==="gen")h=S("eps","[ε]")+" = "+mat3([E("ε<sub>xx</sub>"),Gm("ε<sub>xy</sub>"),Gm("ε<sub>xz</sub>"),Gm("ε<sub>xy</sub>"),E("ε<sub>yy</sub>"),Gm("ε<sub>yz</sub>"),Gm("ε<sub>xz</sub>"),Gm("ε<sub>yz</sub>"),E("ε<sub>zz</sub>")])+'<p style="font-family:var(--font-body);font-size:.93rem;margin:.5rem 0 0">La matrice des déformations a <b>exactement la même forme</b> (9 cases, symétrique), mais c\'est une <b>autre</b> matrice : allongements relatifs sur la diagonale, et <b>demi</b>-distorsions '+Gm("ε<sub>xy</sub> = γ<sub>xy</sub>/2")+' hors diagonale. On passe de '+S("sig","[σ]")+' à '+S("eps","[ε]")+' par la loi de Hooke généralisée (cours 5).</p>';
+    else if(mode==="trac")h=S("eps","[ε]")+" = "+mat3([E("σ/E"),"0","0","0",E("−νσ/E"),"0","0","0",E("−νσ/E")])+'<p style="font-family:var(--font-body);font-size:.93rem;margin:.5rem 0 0">Une seule contrainte, mais <b>trois</b> déformations : Poisson contracte la barre selon y et z.</p>';
+    else if(mode==="cis")h=S("eps","[ε]")+" = "+mat3(["0",Gm("γ/2"),"0",Gm("γ/2"),"0","0","0","0","0"])+'<p style="font-family:var(--font-body);font-size:.93rem;margin:.5rem 0 0">Avec '+Gm("γ")+" = "+S("tau","τ")+"/"+S("mat","G")+'. <b>Piège n° 1 :</b> la case vaut '+Gm("γ/2")+', pas '+Gm("γ")+'.</p>';
+    else h=S("eps","[ε]")+" = "+mat3([E("ε<sub>xx</sub>"),Gm("ε<sub>xy</sub>"),"0",Gm("ε<sub>xy</sub>"),E("ε<sub>yy</sub>"),"0","0","0",'<b>'+E("ε<sub>zz</sub>")+'</b>'])+'<p style="font-family:var(--font-body);font-size:.93rem;margin:.5rem 0 0">Surprise : '+S("sig","σ<sub>zz</sub>")+' = 0 mais '+E("ε<sub>zz</sub>")+' ≠ 0 ! Une tôle tirée dans son plan s\'amincit (Poisson) : '+E("ε<sub>zz</sub>")+' = −'+S("mat","ν")+'('+S("sig","σ<sub>xx</sub>")+' + '+S("sig","σ<sub>yy</sub>")+')/'+S("mat","E")+'. On le démontrera au cours 5.</p>';
+    $("#w7eps").innerHTML=h;
+  }
+  const INTRO={
+    gen:"<b>Cas général :</b> 9 composantes, dont 6 indépendantes (symétrie). Clique sur une case ou une flèche pour savoir ce qu'elle représente.",
+    trac:"<b>Traction simple selon x :</b> une seule case non nulle, "+S("sig","σ<sub>xx</sub> = σ")+". C'est la barre du chapitre 1.",
+    cis:"<b>Cisaillement pur dans le plan xy :</b> "+S("tau","τ<sub>xy</sub> = τ<sub>yx</sub> = τ")+", tout le reste est nul. C'est le jeu de cartes du chapitre 5.",
+    plan:"<b>État plan (2D) :</b> rien ne se passe sur la face avant (normale z), comme sur une tôle mince. Seul le bloc 2 × 2 en haut à gauche est rempli."
+  };
+  function explain(k){
+    const i=k[0],j=k[1],tw=j+i;
+    const sym=isN(k)?"σ<sub>"+k+"</sub>":"τ<sub>"+k+"</sub>",cls=isN(k)?"sig":"tau";
+    let h="<b>"+S(cls,sym)+"</b> : ligne "+i+" → on regarde la <b>face de normale "+i+"</b> ("+FACE[i]+"). Colonne "+j+" → composante <b>selon "+j+"</b>";
+    if(isN(k))h+=", perpendiculaire à la face : c'est une contrainte <b>normale</b>. Positive, elle tire (traction) ; négative, elle pousse (compression).";
+    else h+=", parallèle à la face : c'est un <b>cisaillement</b>, il fait glisser la face. Sa jumelle symétrique est "+S("tau","τ<sub>"+tw+"</sub>")+" (face "+j+", selon "+i+") : même valeur, grâce au petit carré qui ne tourne pas.";
+    if(NZ[mode].indexOf(k)<0)h+=" <b>Dans ce cas, elle vaut 0.</b>";
+    return h;
+  }
+  function draw(){
+    clear(svg);
+    const V=(x,y,z)=>pr(x*a,y*a,z*a);
+    const poly=(pts,cls)=>el("polygon",{points:pts.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join(" "),class:"face "+cls},svg);
+    poly([V(-1,-1,1),V(1,-1,1),V(1,1,1),V(-1,1,1)],"face-front");
+    poly([V(1,-1,1),V(1,-1,-1),V(1,1,-1),V(1,1,1)],"face-right");
+    poly([V(-1,1,1),V(1,1,1),V(1,1,-1),V(-1,1,-1)],"face-top");
+    const h0=V(-1,-1,-1);
+    [V(1,-1,-1),V(-1,1,-1),V(-1,-1,1)].forEach(p=>el("line",{x1:h0[0],y1:h0[1],x2:p[0],y2:p[1],class:"hidden-e"},svg));
+    tx(svg,V(-1,-1,1)[0]+6,V(-1,-1,1)[1]-8,"face z","lbl");
+    tx(svg,V(1,-1,1)[0]+6,V(1,-1,1)[1]-14,"face x","lbl");
+    tx(svg,V(1,1,-1)[0]-50,V(1,1,-1)[1]+12,"face y","lbl",{"text-anchor":"end"});
+    // flèches
+    NZ[mode].forEach(k=>{
+      const i=k[0],j=k[1],c1=CEN[i],d=DIR[j],L=isN(k)?58:40;
+      const c0=isN(k)?c1:[c1[0]-0.5*L*d[0],c1[1]-0.5*L*d[1]];
+      const x2=c0[0]+L*d[0],y2=c0[1]+L*d[1];
+      const g=arrow(svg,c0[0],c0[1],x2,y2,isN(k)?"sig":"tau",3.5,11);
+      g.setAttribute("data-k",k);
+      if(act){if(act===k)g.classList.add("hl");else g.classList.add("dim");}
+      el("line",{x1:c0[0],y1:c0[1],x2:x2,y2:y2,style:"stroke:transparent;stroke-width:16"},g);
+      const l=lab(k),tx0=x2+d[0]*14,ty0=y2+d[1]*14+5;
+      const t=l[1]?txSub(svg,tx0,ty0,l[0],l[1],"mth "+(isN(k)?"sig":"tau"),{"text-anchor":"middle"}):tx(svg,tx0,ty0,l[0],"mth "+(isN(k)?"sig":"tau"),{"text-anchor":"middle"});
+      t.setAttribute("data-k",k);t.style.cursor="pointer";
+      if(act&&act!==k)t.setAttribute("opacity",0.2);
+    });
+    ["x","y","z"].forEach(i=>el("circle",{cx:CEN[i][0],cy:CEN[i][1],r:3,fill:"var(--ink)"},svg));
+    // trièdre
+    const o=[312,282];
+    arrow(svg,o[0],o[1],o[0]+30,o[1],"ink",1.6,7);tx(svg,o[0]+34,o[1]+4,"x","lbl");
+    arrow(svg,o[0],o[1],o[0],o[1]-30,"ink",1.6,7);tx(svg,o[0]-3,o[1]-34,"y","lbl");
+    arrow(svg,o[0],o[1],o[0]-24,o[1]+17,"ink",1.6,7);tx(svg,o[0]-36,o[1]+26,"z","lbl");
+    // matrice
+    $$("#w7mtx td.c").forEach(td=>{
+      const k=td.dataset.k;td.innerHTML=cell(k);
+      td.classList.toggle("zero",NZ[mode].indexOf(k)<0);
+      td.classList.toggle("act",act===k);
+      td.classList.toggle("blk",mode==="plan"&&["xx","xy","yx","yy"].indexOf(k)>=0);
+    });
+    $("#w7ex").innerHTML=act?explain(act):INTRO[mode];
+    epsBox();
+  }
+  function pick(k){act=(act===k)?null:k;draw();}
+  svg.addEventListener("click",e=>{const g=e.target.closest("[data-k]");if(g)pick(g.getAttribute("data-k"));});
+  $$("#w7mtx td.c").forEach(td=>{
+    td.setAttribute("tabindex","0");td.setAttribute("role","button");
+    td.addEventListener("click",()=>pick(td.dataset.k));
+    td.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();pick(td.dataset.k);}});
+  });
+  $$("#w7modes .btn").forEach(b=>b.addEventListener("click",()=>{
+    $$("#w7modes .btn").forEach(o=>o.classList.toggle("on",o===b));
+    mode=b.dataset.mode;act=null;draw();
+  }));
+  draw();
+})();
+
+/* =========================================================
+   Quiz
+   ========================================================= */
+(function(){
+  const box=$("#quiz");if(!box)return;
+  const Q=[
+    {q:"Une force de 5 000 N s'exerce sur une section de 100 mm². La contrainte vaut :",o:["50 MPa","500 MPa","0,05 MPa","50 GPa"],c:0,e:"σ = F/S = 5 000 N / 100 mm² = 50 N/mm² = <b>50 MPa</b>. Travailler en N et en mm² donne directement des MPa."},
+    {q:"Quelle est l'unité de la déformation ε ?",o:["le millimètre","le mégapascal","aucune : c'est un rapport de deux longueurs","le newton par millimètre"],c:2,e:"ε = ΔL/L₀ : des mm divisés par des mm. <b>Sans unité</b>. On l'exprime en %, ou en µε (10⁻⁶) pour les métaux."},
+    {q:"Deux barres identiques subissent la même contrainte, mais la seconde est deux fois plus longue. Son allongement ΔL :",o:["est le même","est doublé","est divisé par deux","est quadruplé"],c:1,e:"Même σ, même matériau → même ε (Hooke). Et ΔL = ε·L₀ : longueur doublée, <b>allongement doublé</b>. C'est la manipulation des deux élastiques."},
+    {q:"Le module d'Young de l'acier vaut environ :",o:["210 MPa","21 GPa","210 GPa","2 100 GPa"],c:2,e:"<b>E ≈ 210 GPa</b> = 210 000 MPa. À connaître par cœur, comme l'aluminium (≈ 70 GPa). Ne pas confondre avec Rₑ = 235 MPa, qui est une limite, pas une raideur."},
+    {q:"On charge une pièce sans dépasser sa limite d'élasticité, puis on relâche. Elle :",o:["reste légèrement allongée","revient exactement à sa longueur initiale","devient plus courte qu'au départ","casse"],c:1,e:"Zone élastique = déformation <b>réversible</b> : on redescend sur la rampe jusqu'à zéro. Une déformation permanente n'apparaît qu'au-delà de Rₑ."},
+    {q:"Une barre en acier (ν = 0,3) subit une déformation longitudinale εℓ = 0,001. Sa déformation transversale vaut :",o:["+0,0003","−0,0003","−0,003","−0,3"],c:1,e:"εt = −ν·εℓ = −0,3 × 0,001 = <b>−0,0003</b>. Le signe moins : la barre s'amincit quand elle s'allonge."},
+    {q:"Pour un matériau isotrope, pourquoi ν ne peut-il pas dépasser 0,5 ?",o:["sinon E serait négatif","sinon une traction ferait diminuer le volume (ΔV/V = ε(1 − 2ν) &lt; 0)","sinon G serait nul","c'est une simple convention"],c:1,e:"Avec ν &gt; 0,5, on aurait 1 − 2ν &lt; 0 : tirer ferait <b>rétrécir le volume</b>, et appuyer tout autour le ferait gonfler. Le module de compressibilité K = E/[3(1 − 2ν)] serait négatif : physiquement impossible."},
+    {q:"Acier : E = 210 GPa et ν = 0,3. Le module de cisaillement G vaut :",o:["80,8 GPa","161,5 GPa","105 GPa","63 GPa"],c:0,e:"G = E / [2(1 + ν)] = 210 / 2,6 = <b>80,8 GPa</b>. Retiens : G ≈ 0,4 E pour les métaux."},
+    {q:"Une barre est tirée avec σ = 100 MPa. Où le cisaillement est-il maximal, et combien vaut-il ?",o:["coupe droite (θ = 0°), 100 MPa","coupe à 45°, 50 MPa","coupe à 45°, 100 MPa","coupe parallèle à l'axe (90°), 50 MPa"],c:1,e:"τ = σ sin θ cos θ = (σ/2) sin 2θ, maximal pour 2θ = 90°, donc <b>θ = 45°</b>, et il vaut le rayon du cercle : <b>σ/2 = 50 MPa</b>."},
+    {q:"Dans la notation τxy, que désignent les deux indices ?",o:["x : la direction ; y : la face","x : la face (par sa normale) ; y : la direction de la composante","les deux faces qui glissent l'une sur l'autre","rien de précis, on peut les écrire dans n'importe quel ordre"],c:1,e:"<b>Premier indice = la face</b> (sa normale), <b>second = la direction</b>. C'est « ligne = face, colonne = direction » dans la matrice. Certains livres inversent, sans conséquence puisque la matrice est symétrique."},
+    {q:"Pourquoi a-t-on toujours τxy = τyx ?",o:["c'est une coïncidence propre aux matériaux isotropes","sinon le petit carré de matière se mettrait à tourner (équilibre des moments)","à cause du coefficient de Poisson","parce que x et y ont la même unité"],c:1,e:"C'est l'<b>équilibre des moments</b> du petit carré : les deux couples de cisaillement doivent se compenser. D'où la symétrie de la matrice et ses 6 composantes indépendantes."},
+    {q:"Le tenseur des contraintes [σ] et le tenseur des déformations [ε] :",o:["sont deux noms pour la même matrice","sont deux matrices différentes, reliées par le matériau (E, ν) via la loi de Hooke","ont toujours les mêmes cases non nulles","s'expriment tous les deux en MPa"],c:1,e:"Deux matrices <b>différentes</b> : [σ] (la cause, en MPa) et [ε] (l'effet, sans unité). En traction simple, [σ] a une seule case non nulle et [ε] en a trois. Et n'oublie pas le γ/2 hors diagonale de [ε]."}
+  ];
+  let score=0,done=0;
+  const sc=$("#qzScore");
+  function upd(){
+    let t="Score : "+score+" / "+Q.length;
+    if(done===Q.length)t+=score>=10?"  ·  🎉 prêt pour le cours 2":score>=7?"  ·  relis les explications rouges":"  ·  refais un tour des chapitres";
+    sc.textContent=t;
+  }
+  function render(){
+    box.innerHTML="";score=0;done=0;
+    Q.forEach((it,n)=>{
+      const d=document.createElement("div");d.className="qz";
+      d.innerHTML='<p class="qz-q"><b>'+(n+1)+".</b> "+it.q+'</p><div class="qz-o"></div><div class="qz-e" hidden></div>';
+      const o=d.querySelector(".qz-o"),ex=d.querySelector(".qz-e");let answered=false;
+      it.o.forEach((txt,i)=>{
+        const b=document.createElement("button");b.type="button";b.className="qz-b";b.innerHTML=String.fromCharCode(65+i)+". "+txt;
+        b.addEventListener("click",()=>{
+          if(answered)return;answered=true;done++;
+          const ok=i===it.c;if(ok)score++;
+          b.classList.add(ok?"ok":"ko");
+          o.children[it.c].classList.add("ok");
+          ex.hidden=false;ex.innerHTML=(ok?"✅ <b>Bien joué.</b> ":"❌ <b>Pas tout à fait.</b> ")+it.e;
+          upd();
+        });
+        o.appendChild(b);
+      });
+      box.appendChild(d);
+    });
+    upd();
+  }
+  $("#qzReset").addEventListener("click",render);
+  render();
+})();
+
+/* =========================================================
+   Check-list (mémorisée dans le navigateur si possible)
+   ========================================================= */
+(function(){
+  const boxes=$$("#checklist input[type=checkbox]"),msg=$("#checkMsg"),KEY="rdm-cours1-check";
+  if(!boxes.length)return;
+  let saved=[];
+  try{saved=JSON.parse(localStorage.getItem(KEY)||"[]")||[];}catch(e){saved=[];}
+  boxes.forEach(b=>{b.checked=saved.indexOf(b.dataset.c)>=0;});
+  function upd(){
+    const on=boxes.filter(b=>b.checked).map(b=>b.dataset.c);
+    try{localStorage.setItem(KEY,JSON.stringify(on));}catch(e){}
+    msg.innerHTML=on.length===boxes.length?"🎉 <b>Tout est coché : tu es prêt pour le cours 2 !</b>":on.length+" / "+boxes.length+" : reviens sur les points non cochés (les manipulations sont faites pour ça).";
+  }
+  boxes.forEach(b=>b.addEventListener("change",upd));upd();
+})();
+
+/* =========================================================
+   Sommaire : surligne la section en cours
+   ========================================================= */
+(function(){
+  const links=$$(".toc a"),tin=$(".toc-in");
+  if(!links.length||!("IntersectionObserver" in window))return;
+  const map={};links.forEach(a=>{map[a.getAttribute("href").slice(1)]=a;});
+  const obs=new IntersectionObserver(ents=>{
+    ents.forEach(en=>{
+      if(!en.isIntersecting)return;
+      const a=map[en.target.id];if(!a)return;
+      links.forEach(l=>l.classList.toggle("on",l===a));
+      if(tin){const tgt=a.offsetLeft-tin.clientWidth/2+a.offsetWidth/2;try{tin.scrollTo({left:tgt,behavior:RM?"auto":"smooth"});}catch(e){tin.scrollLeft=tgt;}}
+    });
+  },{rootMargin:"-45% 0px -50% 0px"});
+  Object.keys(map).forEach(id=>{const s=document.getElementById(id);if(s)obs.observe(s);});
+})();
+
+})();
+</script>
+</body>
+</html>
