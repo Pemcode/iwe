@@ -92,7 +92,7 @@ Validation du 30 septembre 2026.
 - Inspection visuelle des captures du hub, des épisodes 1, 5, 6, 8, 9 et 12 sur ordinateur et de l’épisode 1 sur téléphone. Corrigés après inspection : collision de la classe `.mission` avec les cartes d’atelier (briefing illisible), commandes déplacées au-dessus du banc d’essai, étiquettes et poignée qui se chevauchaient, unité µε mise en capitales grecques.
 - Commandes finales : `node --test tests/*.test.cjs` (25 réussis), `uv run --group browser pytest -q` (35 réussis), `uv run python scripts/build.py` (11 fichiers déclarés), `uv run --group browser python scripts/visual_check.py` (84 vues, aucun débordement ni erreur JS/HTTP). Ouverture directe `file://` du laboratoire et d’un épisode vérifiée sans erreur.
 
-## J06 — Jouer depuis le wiki PolyWE
+## J06 — Jouer depuis le wiki Révisions IWE
 
 Le jeu est intégré au dépôt et à GitHub Pages ; critères et preuves dans la story S12 du wiki (`docs/STORIES.md` à la racine). Le build autonome (`scripts/build.py`, `dist/`) et sa CI sont remplacés par le générateur et la CI du wiki. Les tests du jeu se lancent depuis la racine du dépôt.
 

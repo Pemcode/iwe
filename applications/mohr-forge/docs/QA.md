@@ -29,7 +29,7 @@ Ces vérifications ciblées ne constituent pas un audit exhaustif WCAG ni un ess
 
 ## Reproduire
 
-Depuis la racine du dépôt PolyWE, où le jeu est intégré depuis le 30 septembre 2026 :
+Depuis la racine du dépôt Pemcode/iwe :
 
 ```powershell
 node --test applications/mohr-forge/tests/*.test.cjs

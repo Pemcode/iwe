@@ -97,7 +97,7 @@ def preview(root, port=8000):
 
 def menu(root):
     while True:
-        print("\nPolyWE — Mettre à jour les supports\n1. Ajouter un cours ou document\n2. Vérifier la mise à jour\n3. Ouvrir l’aperçu local\n4. Publier sur GitHub Pages\n0. Quitter")
+        print("\nRévisions IWE — Mettre à jour les supports\n1. Ajouter un cours ou document\n2. Vérifier la mise à jour\n3. Ouvrir l’aperçu local\n4. Publier sur GitHub Pages\n0. Quitter")
         choice = ask("Choix", "0")
         if choice == "0":
             return

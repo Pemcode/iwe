@@ -68,9 +68,11 @@ Références publiques consultées le 30 septembre 2026 :
 - [JRC, évolution de l’Eurocode 3, 2025](https://eurocodes.jrc.ec.europa.eu/sites/default/files/2025-08/20250603_2G_Eurocode3_JRC%2BWorkshop_final_website_0.pdf) : EN 1993-1-8:2024 publiée au niveau européen, transition nationale à prendre en compte. Les règles de 2005 et 2024 ne sont pas mélangées dans le jeu.
 - [MIT OpenCourseWare, Materials / Structures](https://ocw.mit.edu/courses/16-01-unified-engineering-i-ii-iii-iv-fall-2005-spring-2006/pages/materials-structures/), mécanique des tenseurs et de Mohr, cours M12/M15.
 
-Les textes complets des normes ne sont pas reproduits. La fatigue, les géométries de soudure, la plasticité, les singularités de pied de cordon et le cycle thermométallurgique ne font pas l’objet d’une v## Développement et vérification
+Les textes complets des normes ne sont pas reproduits. La fatigue, les géométries de soudure, la plasticité, les singularités de pied de cordon et le cycle thermométallurgique ne font pas l’objet d’une validation générale dans ce jeu.
 
-Le jeu fait partie du dépôt [PolyWE](https://github.com/Pemcode/iwe) : ses sources vivent dans `applications/mohr-forge/`. Le catalogue du wiki le déclare dans sa liste `applications` et le générateur publie uniquement les onze fichiers listés, à `RDM/mohr-forge/`, en ajoutant la barre du wiki à la copie de `index.html`. Tests, documentation et scripts du jeu ne sont pas publiés. Un nouveau fichier nécessaire au jeu doit être ajouté à la liste `fichiers` du catalogue.
+## Développement et vérification
+
+Le jeu fait partie du dépôt [Pemcode/iwe](https://github.com/Pemcode/iwe) : ses sources vivent dans `applications/mohr-forge/`. Le catalogue du wiki le déclare dans sa liste `applications` et le générateur publie uniquement les fichiers listés, à `RDM/mohr-forge/`, en ajoutant la barre du wiki à la copie de `index.html`. Tests, documentation et scripts du jeu ne sont pas publiés. Un nouveau fichier nécessaire au jeu doit être ajouté à la liste `fichiers` du catalogue.
 
 HTML/CSS/JavaScript natifs, sans dépendance frontend ni npm. Node 24 sert uniquement aux tests du moteur ; les parcours Chromium utilisent l’environnement uv du wiki. Commandes à lancer depuis la racine du dépôt :
 

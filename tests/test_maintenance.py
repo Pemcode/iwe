@@ -113,7 +113,7 @@ def repository(project, tmp_path):
     remote = tmp_path.parent / (tmp_path.name + "-remote.git")
     git(root, "init", "--bare", str(remote))
     git(root, "init", "-b", "main")
-    git(root, "config", "user.name", "Test PolyWE")
+    git(root, "config", "user.name", "Test IWE")
     git(root, "config", "user.email", "test@example.invalid")
     (root / ".gitignore").write_text("_site/\nPlanning/\n", encoding="utf-8")
     git(root, "add", ".")
@@ -135,7 +135,6 @@ def test_publish_includes_only_declared_content_and_runs_checks(repository, monk
     message = capsys.readouterr().out
     assert "https://github.com/Pemcode/iwe/actions" in message
     assert "https://pemcode.github.io/iwe/" in message
-    assert "/PolyWE/" not in message
     files = git(remote, "ls-tree", "-r", "--name-only", "main").splitlines()
     assert source in files
     assert "notes-personnelles.txt" not in files

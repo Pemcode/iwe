@@ -383,7 +383,7 @@ def test_custom_system_prompt_applies_only_in_this_browser(connected):
     menu(page, "Consignes")
     editor = panel(page).get_by_label("Consignes de l’assistant")
     expect(editor).to_be_focused()
-    expect(editor).to_have_value(re.compile(r"^Tu es l'assistant de révision IWE de PolyWE"))
+    expect(editor).to_have_value(re.compile(r"^Tu es l'assistant de Révisions IWE"))
     expect(panel(page).get_by_text("ne change rien pour les autres visiteurs", exact=False)).to_be_visible()
     editor.fill(custom)
     panel(page).get_by_role("button", name="Enregistrer", exact=True).click()
@@ -404,7 +404,7 @@ def test_custom_system_prompt_applies_only_in_this_browser(connected):
     expect(panel(visitor).get_by_text("Consignes personnalisées", exact=True)).to_be_hidden()
     ask(visitor, "Préchauffage ?")
     answered(visitor)
-    assert elsewhere.requests[0]["body"]["messages"][0]["content"].startswith("Tu es l'assistant de révision IWE de PolyWE")
+    assert elsewhere.requests[0]["body"]["messages"][0]["content"].startswith("Tu es l'assistant de Révisions IWE")
     other.close()
 
     page.reload()
@@ -416,7 +416,7 @@ def test_custom_system_prompt_applies_only_in_this_browser(connected):
     assert page.evaluate("localStorage.getItem('polywe_chat_system')") is None
     ask(page, "Préchauffage ?")
     answered(page, 2)
-    assert api.requests[-1]["body"]["messages"][0]["content"].startswith("Tu es l'assistant de révision IWE de PolyWE")
+    assert api.requests[-1]["body"]["messages"][0]["content"].startswith("Tu es l'assistant de Révisions IWE")
 
 
 def test_taskbar_holds_every_command_on_one_line_and_tucks_rare_actions_away(connected):

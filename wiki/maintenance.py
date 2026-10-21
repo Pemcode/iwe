@@ -81,7 +81,7 @@ def build_inputs(data, plan):
 
 def validate_candidate(root, data, plan, new_files):
     # Le build candidat ne touche ni les sources ni l’aperçu courant.
-    with TemporaryDirectory(prefix="polywe-validation-") as directory:
+    with TemporaryDirectory(prefix="iwe-validation-") as directory:
         candidate = Path(directory)
         metadata = {CATALOGUE: json_text(data)}
         if plan is not None:

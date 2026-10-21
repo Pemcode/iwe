@@ -1,4 +1,4 @@
-/* Assistant de révision PolyWE (S25) : chat IA payé par le compte OpenRouter de chaque visiteur.
+/* Assistant de Révisions IWE (S25) : chat IA payé par le compte OpenRouter de chaque visiteur.
    JavaScript natif, sans dépendance ni étape de build ; le générateur l’inclut sur toutes les pages.
    Sécurité : la clé du visiteur vit dans localStorage. Aucune réponse du modèle n’est donc insérée comme HTML :
    elle est analysée en un petit arbre (gras, italique, listes, code, liens http(s)), puis construite nœud par nœud. */
@@ -21,7 +21,7 @@
   ];
   const DEFAULT_MODEL = "openai/gpt-6.1-sol";
 
-  const SYSTEM_PROMPT = `Tu es l'assistant de révision IWE de PolyWE (Polytech Nantes, DU Ingénierie du soudage).
+  const SYSTEM_PROMPT = `Tu es l'assistant de Révisions IWE (Polytech Nantes, DU Ingénierie du soudage).
 1. Réponds à partir des EXTRAITS fournis. Cite chaque affirmation avec l'identifiant entre crochets, ex. [RDM-04].
 2. Si les EXTRAITS ne couvrent pas la question :
    - notion générale et stable : réponds avec tes connaissances, en commençant par « Hors cours : » ;

@@ -4,7 +4,7 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const chat = require("../../assets/chat-widget.js");
 
-const SYSTEM = `Tu es l'assistant de révision IWE de PolyWE (Polytech Nantes, DU Ingénierie du soudage).
+const SYSTEM = `Tu es l'assistant de Révisions IWE (Polytech Nantes, DU Ingénierie du soudage).
 1. Réponds à partir des EXTRAITS fournis. Cite chaque affirmation avec l'identifiant entre crochets, ex. [RDM-04].
 2. Si les EXTRAITS ne couvrent pas la question :
    - notion générale et stable : réponds avec tes connaissances, en commençant par « Hors cours : » ;
