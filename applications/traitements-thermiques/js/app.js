@@ -845,7 +845,7 @@
     const lien = (txt, href) => { const a = document.createElement('a'); a.href = href; a.textContent = txt; a.target = '_blank'; a.rel = 'noopener'; return a; };
     sp.append(document.createTextNode('Photo : '), lien(vg.auteur, vg.source), document.createTextNode(', '));
     sp.append(vg.licenceUrl ? lien(vg.licence, vg.licenceUrl) : document.createTextNode(vg.licence));
-    sp.append(document.createTextNode(court ? ', Wikimedia Commons' : ', via Wikimedia Commons ; image réduite et convertie en WebP.'));
+    sp.append(document.createTextNode(court ? ', Wikimedia Commons' : ', via Wikimedia Commons.'));
     return sp;
   }
   let retourFocus = null;

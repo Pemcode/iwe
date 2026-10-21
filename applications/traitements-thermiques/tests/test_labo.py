@@ -254,7 +254,7 @@ def test_chaque_traitement_a_une_photographie_creditee_et_declaree():
         assert re.search(r"source: 'https://commons\.wikimedia\.org/wiki/File:[^']+'", credit), tid
     assert len(re.findall(r"source: 'https://commons\.wikimedia\.org/wiki/File:", source)) == len(TRAITEMENTS)
     licences = re.findall(r"licence: '([^']+)'", source)
-    assert set(licences) <= {"CC BY 4.0", "CC BY-SA 2.0", "CC BY-SA 3.0", "CC BY-SA 4.0", "domaine public"}
+    assert set(licences) <= {"CC BY 2.0", "CC BY 3.0", "CC BY 4.0", "CC BY-SA 2.0", "CC BY-SA 3.0", "CC BY-SA 4.0", "domaine public"}
 
 
 def test_les_cartes_et_le_titre_montrent_des_photos_creditees_sans_emoji(navigateur, adresse):
@@ -284,7 +284,7 @@ def test_les_cartes_et_le_titre_montrent_des_photos_creditees_sans_emoji(navigat
     figure = page.locator("#volet-savoir figure.vignette")
     expect(figure).to_be_visible()
     assert len(figure.locator("img").get_attribute("alt")) > 30
-    expect(figure.locator("figcaption")).to_contain_text("CC BY-SA 2.0")
+    expect(figure.locator("figcaption")).to_contain_text("CC BY 4.0")
     image = page.locator("#volet-savoir .encadre.image").inner_text()
     assert not re.search("[\U0001F300-\U0001FAFF\u2600-\u27BF]", image), "emoji dans l’image à retenir"
     assert erreurs == []

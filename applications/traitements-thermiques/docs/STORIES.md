@@ -9,6 +9,7 @@
 | TT4 | Compléter la banque : aciers (recuits, normalisation, trempes étagées, Cr-Mo…) | Livré le 20 octobre 2026 |
 | TT4b | Illustrer chaque carte de la banque par une photographie créditée | Livré le 20 octobre 2026 |
 | TT4c | Passe de vérification du lot des aciers : légendes lisibles, fond | Livrée le 20 octobre 2026 |
+| TT4d | Des vignettes qui montrent le traitement, pas seulement l’usage de l’alliage | Livré le 21 octobre 2026 |
 | TT5 | Compléter la banque : inox et fontes | Plus tard |
 | TT6 | Compléter la banque : alliages non ferreux | Plus tard |
 | TT7 | Compléter la banque : traitements de surface | Plus tard |
@@ -119,4 +120,8 @@ Preuves :
 - **RED** : le nouveau test `test_les_pastilles_de_legende_se_distinguent` échoue d'abord. Il parcourt toute la banque, tous les exemples, six instants, cinq échelles et deux rendus, et relève 19 couples indistinguables, de même motif et ΔE < 15 en Lab : bainite et martensite revenue (4,6), ferrite et martensite fraîche (2,7), carbures entre eux (3,2), etc.
 - **GREEN** : il passe après correction.
 - **Résultat** : 20 tests Node et 24 parcours Chromium verts.
+
+## TT4d — Vignettes en lien direct avec le traitement
+
+Neuf vignettes sont remplacées par une image du traitement en cours ou de la structure obtenue : laiton recristallisé à macles, précipités d’un Al-Cu au microscope électronique en transmission, groupe de chauffe de TTAS sur site, pièces au rouge dans un four, dendrite d’acier au microscope électronique à balayage, four sous vide, pose de thermocouples, recuit d’une conduite en P91, pupitre de pilotage d’un TTAS. Les quatre micrographies déjà pertinentes sont conservées. Détails, licences et empreintes : section du laboratoire dans `docs/ILLUSTRATIONS.md` du dépôt.
 
