@@ -344,7 +344,7 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
   <h4>La série en deux cours</h4>
   <div class="series duo">
     <div class="here"><b>1 La courbe et les mécanismes</b>Quand et comment un métal flue : trois stades, loi de Norton, dislocations, diffusion, carte des mécanismes.</div>
-    <div><b>2 Endommagement et durée de vie</b>Cavités et rupture intergranulaire, évolution de la microstructure, Monkman-Grant, Larson-Miller, et le fluage des joints soudés.</div>
+    <div><b>2 Endommagement et durée de vie</b>Cavités et rupture intergranulaire, microstructure qui vieillit, Monkman-Grant, Larson-Miller, Rabotnov-Kachanov, Wilshire, et le pari de l'extrapolation.</div>
   </div>
 
   <h4>Le plan du cours</h4>
@@ -1070,7 +1070,7 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
   </div>
   <p class="status" id="checkMsg"></p>
 
-  <div class="meta">🔭 <b>Au prochain épisode, cours 2 : endommagement et durée de vie en fluage.</b> Le stade tertiaire y passe au microscope : des cavités rondes ou en coin naissent aux joints de grains, grossissent et se rejoignent jusqu'à la rupture intergranulaire, tandis que la microstructure évolue (coalescence des précipités, « rafting » des superalliages). On y apprendra surtout à <b>prévoir la durée de vie</b> à partir d'essais courts : la relation de Monkman-Grant (le produit <span class="ed">ε̇</span><sub>min</sub>·t<sub>r</sub> de l'exercice 2), le <b>paramètre de Larson-Miller</b>, cousin du paramètre de Hollomon-Jaffe du revenu, puis les modèles de projection θ, de Rabotnov-Kachanov et de Wilshire. Un dernier chapitre sera consacré au <b>fluage des joints soudés</b> : fissuration de type IV, coefficients de réduction des soudures et traitements thermiques.</div>
+  <div class="meta">🔭 <b>Au prochain épisode, cours 2 : endommagement et durée de vie en fluage.</b> Le stade tertiaire y passe au microscope : des cavités rondes ou en coin naissent aux joints de grains, grossissent et se rejoignent jusqu'à la rupture intergranulaire, tandis que la microstructure évolue (coalescence des précipités, « rafting » des superalliages). On y apprendra surtout à <b>prévoir la durée de vie</b> à partir d'essais courts : la relation de Monkman-Grant (le produit <span class="ed">ε̇</span><sub>min</sub>·t<sub>r</sub> de l'exercice 2), le <b>paramètre de Larson-Miller</b>, cousin du paramètre de Hollomon-Jaffe du revenu, puis les modèles de projection θ, de Rabotnov-Kachanov et de Wilshire. Un dernier chapitre te fera <b>parier</b> sur ces extrapolations face à la réalité, puis compter la vie restante d'une tuyauterie soudée.</div>
 </div>
 </section>
 </main>
@@ -1427,7 +1427,7 @@ function pow10lbl(v){return "10"+String(Math.round(v)).split("").map(c=>SUP[c]).
     /* lectures */
     $("#m2so").textContent=nf(c.s,0)+" MPa";$("#m2to").textContent=nf(c.T,0)+" °C";
     let r="<span>ε̇<sub>min</sub> = <b class='eps'>"+sci(c.em,2)+" s⁻¹</b> ("+pctYr(c.em)+")</span><span>t<sub>r</sub> = <b class='eps'>"+hrs(c.tr)+"</b></span><span>ε<sub>r</sub> ≈ "+nf(A.er*100,0)+" %</span>";
-    r+="<span>stade I : "+hrs(A.uA*c.tr)+" ; II : "+hrs((A.uB-A.uA)*c.tr)+" ; III : "+hrs((1-A.uB)*c.tr)+"</span>";
+    r+="<span>stade I : "+hrs(A.uA*c.tr)+"</span><span>II : "+hrs((A.uB-A.uA)*c.tr)+"</span><span>III : "+hrs((1-A.uB)*c.tr)+"</span>";
     if(uc!==null)r+="<span>t = "+hrs(Math.min(1,uc)*c.tr)+", ε = "+nf(A.shape(Math.min(1,uc))*100,2)+" %, stade "+stageOf(uc)+"</span>";
     ro.innerHTML=r;
     let t;
@@ -1584,7 +1584,7 @@ function pow10lbl(v){return "10"+String(Math.round(v)).split("").map(c=>SUP[c]).
     /* lectures */
     const th=theta(),g=gam();
     $("#m4to").textContent=nf(th,2);$("#m4so").textContent=["très faible","faible","faible","modérée","modérée","moyenne","assez forte","forte","forte","très forte"][(+sts.value)-1];
-    ro.innerHTML="<span>T/T<sub>f</sub> = <b class='tau'>"+nf(th,2)+"</b></span><span>sauts de lacunes : ×"+(g>=0.01&&g<1000?nf(g,g<1?3:g<10?2:0):sci(g,1))+" par rapport à 0,5 T<sub>f</sub></span><span>lacunes absorbées : "+S.absorbed+"</span><span>obstacles franchis : <b class='eps'>"+S.passed+"</b></span>";
+    ro.innerHTML="<span>T/T<sub>f</sub> = <b class='tau'>"+nf(th,2)+"</b></span><span>sauts de lacunes : ×"+(g>=0.01&&g<1000?nf(g,g<1?3:g<10?2:0):sci(g,1))+"</span><span>(par rapport à 0,5 T<sub>f</sub>)</span><span>lacunes absorbées : "+S.absorbed+"</span><span>obstacles franchis : <b class='eps'>"+S.passed+"</b></span>";
     let t;
     if(S.state==="glide"&&S.j<J0)t="Après "+(J0-S.j)+" lacunes absorbées, la dislocation est montée de "+(J0-S.j)+" rangs : son nouveau plan de glissement passe au-dessus du précipité, et elle repart."+(S.passed?" Obstacles déjà franchis : "+S.passed+".":"");
     else if(S.state==="glide")t=S.passed?"Obstacle franchi "+S.passed+" fois : à chaque passage, le haut du cristal a glissé d'un vecteur de Burgers par rapport au bas. Ce sont ces glissements répétés qui font la déformation de fluage.":"La dislocation glisse librement dans son plan, poussée par la contrainte : c'est la plasticité ordinaire, rapide.";
@@ -1660,7 +1660,7 @@ function pow10lbl(v){return "10"+String(Math.round(v)).split("").map(c=>SUP[c]).
     if(tcur!==null){[g1,g2].forEach((g,i)=>el("line",{x1:g.X(tn/3600),y1:i?342:140,x2:g.X(tn/3600),y2:i?H-40:290,stroke:"var(--muted)","stroke-width":1,"stroke-dasharray":"3 3"},svg));}
     /* lectures */
     $("#m5so").textContent=nf(c.s,0)+" MPa";$("#m5to").textContent=nf(c.Tc,0)+" °C";bp.classList.toggle("on",prec);
-    ro.innerHTML="<span>t = "+hrs(tn)+"</span><span>σ<sub>i</sub> = <b class='gam'>"+nf(p.si,1)+" MPa</b></span><span>σ<sub>e</sub> = σ − σ<sub>i</sub> = "+nf(c.s-p.si,1)+" MPa</span><span>ε̇ = "+sci(ed,2)+" s⁻¹</span><span>h·ε̇ = "+sci(hard,2)+" ; |r| = "+sci(rec,2)+" MPa/s</span><span>stationnaire : ε̇ = −r/h = <b class='eps'>"+sci(c.ess,2)+" s⁻¹</b> ("+pctYr(c.ess)+")</span>";
+    ro.innerHTML="<span>t = "+hrs(tn)+"</span><span>σ<sub>i</sub> = <b class='gam'>"+nf(p.si,1)+" MPa</b></span><span>σ<sub>e</sub> = σ − σ<sub>i</sub> = "+nf(c.s-p.si,1)+" MPa</span><span>ε̇ = "+sci(ed,2)+" s⁻¹</span><span>h·ε̇ = "+sci(hard,2)+" MPa/s</span><span>|r| = "+sci(rec,2)+" MPa/s</span><span>stationnaire (ε̇ = −r/h) :</span><span><b class='eps'>"+sci(c.ess,2)+" s⁻¹</b> ("+pctYr(c.ess)+")</span>";
     let t;
     if((c.t95===null||c.t95>c.tmax)&&p.si>0.85*c.s)t="❄ À "+nf(c.Tc,0)+" °C, la restauration est trop lente : σ<sub>i</sub> rattrape presque σ, la contrainte efficace s'effondre et la déformation s'arrête après un petit stade primaire. Le fluage s'épuise : il n'y a pas de vrai stade secondaire à l'échelle de "+hrs(c.tmax)+".";
     else if(tcur!==null&&!bal&&hard>rec)t="Stade primaire : le métal neuf se déforme vite, les dislocations se multiplient et s'enchevêtrent, σ<sub>i</sub> monte, et la vitesse chute.";
