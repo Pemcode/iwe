@@ -113,13 +113,6 @@ section.chap{padding:46px 0 10px}
 .c-img span{font-size:.95rem;line-height:1.3}
 @media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
 
-/* niveaux */
-.lv{margin:1.2rem 0;padding:6px 22px 14px;border-radius:4px}
-.lv1{background:var(--card);border:2px solid var(--ink)}
-.lv2{background:var(--lv2);border-left:6px solid var(--ink)}
-.lv-h{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;font-family:var(--font-head);font-size:1.35rem;font-weight:600;margin:10px 0 4px}
-.lv-h .tag{font-size:.95rem;font-family:var(--font-body);font-weight:400;color:var(--muted)}
-@media (max-width:520px){.lv{padding:6px 14px 12px}}
 
 /* formules et encadrés */
 .fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:600px;text-align:center;border-radius:3px;overflow-x:auto}
@@ -253,6 +246,28 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
 .btn.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,var(--card))}
 .btn.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--card))}
 .ctrl[hidden]{display:none}
+
+/* gabarit court : approfondissement replié, à retenir, prédiction */
+details.deep{margin:1.2rem 0;padding:0 18px;background:var(--lv2);border-left:6px solid var(--ink);border-radius:4px}
+details.deep>summary{font-family:var(--font-head);font-size:1.2rem;font-weight:600;padding:9px 0}
+details.deep[open]{padding-bottom:10px}
+.retenir{margin:1.4rem 0 .4rem;padding:8px 18px 6px;background:var(--card);border:2px solid var(--ink);border-radius:4px}
+.retenir>b:first-child{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.retenir ul{margin:.3rem 0 .3rem}
+.predict{display:block;margin-top:.35rem;color:var(--ink);font-weight:700}
+@media (max-width:520px){details.deep{padding:0 12px}.retenir{padding:8px 12px 6px}}
+
+/* impression : le cours sur papier clair, ou la fiche mémoire seule sur une page */
+@media print{
+  :root,:root[data-theme]{--paper:#fff!important;--paper-2:#EEF2F6!important;--card:#fff!important;--ink:#111!important;--muted:#444!important;--line:#999!important;--grid:transparent!important;--lv2:#F2F5F8!important;--hl:#FFF3B0!important;color-scheme:light}
+  body{background:#fff;font-size:11pt}
+  .toc,.theme-btn,.btns,.ctrl,#qzReset,.score{display:none!important}
+  section.chap{padding:14px 0 4px}
+  .lab,.fx,.retenir,details.deep,.fiche>div,.exo{break-inside:avoid}
+  body.print-fiche header,body.print-fiche main>section:not(#fiche),body.print-fiche footer{display:none!important}
+  body.print-fiche #fiche .cartouche{margin-bottom:.6rem}
+  body.print-fiche .fiche>div{padding:8px 10px}
+}
 </style>
 </head>
 <body>
@@ -268,7 +283,7 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     </div>
     <div class="tb-cells">
       <div><small>Cours</small><b>2 sur 4 : ferritiques, martensitiques, durcis par précipitation, austénitiques, duplex, et comment choisir</b></div>
-      <div><small>Durée conseillée</small><b>≈ 3 h avec les exercices</b></div>
+      <div><small>Durée conseillée</small><b>≈ 1 h 15 à 1 h 30 avec les exercices</b></div>
       <div><small>Prérequis</small><b>boucle γ, éléments d'alliage, équivalents et désignations (Inox, cours 1) ; martensite et revenu (Métallurgie, cours 3) ; transition ductile-fragile (Rupture, cours 2)</b></div>
       <div><small>À la fin tu sais</small><b>reconnaître chaque famille, ses propriétés et ses nuances courantes ; prévoir M<sub>s</sub> et la ferrite d'un martensitique ; régler le vieillissement d'un 17-4PH ; expliquer l'effet TRIP ; doser un duplex ; choisir une famille pour une application</b></div>
     </div>
@@ -314,65 +329,42 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
   <h3 style="margin-top:0">Avant de commencer</h3>
   <h4>Ce que tu sais déjà, en trois cases</h4>
   <div class="recall">
-    <div><div class="f">γ ≤ 12 % Cr</div>Le chrome referme la boucle γ ; le nickel, le carbone et l'azote la font gonfler. Dans l'île : trempe possible ; hors de l'île : ferrite à toute température (Inox, cours 1).</div>
-    <div><div class="f"><span class="mat">Cr<sub>eq</sub></span> · <span class="mat">Ni<sub>eq</sub></span></div>Deux sommes pondérées placent un acier sur la carte de Schaeffler ; les familles s'y rangent en zones (Inox, cours 1).</div>
-    <div><div class="f"><span class="eps">PREN</span> = Cr + 3,3Mo + 16N</div>L'indice de piqûre compare les nuances face aux chlorures ; plus de 40 environ pour l'eau de mer (Inox, cours 1).</div>
+    <div><div class="f">γ ≤ 12 % Cr</div>Le chrome referme la boucle γ ; nickel, carbone et azote la font gonfler. Dans l'île : trempe possible ; hors de l'île : ferrite à toute température.</div>
+    <div><div class="f">Cr<sub>eq</sub> · Ni<sub>eq</sub></div>Deux sommes pondérées placent un acier sur la carte de Schaeffler ; les familles s'y rangent en zones.</div>
+    <div><div class="f">PREN = Cr + 3,3Mo + 16N</div>L'indice de piqûre compare les nuances face aux chlorures ; plus de 40 environ pour l'eau de mer.</div>
   </div>
 
-  <div class="def"><b>📘 Correspondance avec le planning et le référentiel</b>. Ce cours poursuit le sujet <b>2.15 « Aciers inoxydables »</b> du planning de la formation. Il sert aussi au sujet <b>2.13 « Acier cryogénique »</b> (chapitre 4) et au sujet <b>2.8 « Traitements thermiques des matériaux »</b> (chapitres 2 et 3).
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>Chapitre du cours</th><th>Ce qu'il apporte à l'IWE</th></tr>
-      <tr><td>1 Les ferritiques</td><td>structure, austénitisation partielle, stabilisation, propriétés, nuances, applications</td></tr>
-      <tr><td>2 Les martensitiques</td><td>trempe, M<sub>s</sub>, ferrite δ, austénite résiduelle, revenu, nuances</td></tr>
-      <tr><td>3 Les durcis par précipitation</td><td>mise en solution et vieillissement, classes, nuances, aciers ODS</td></tr>
-      <tr><td>4 Les austénitiques</td><td>propriétés, écrouissage et effet TRIP, ténacité à froid, nuances</td></tr>
-      <tr><td>5 Les austéno-ferritiques</td><td>équilibre des phases, résistance aux piqûres, nuances duplex et super duplex</td></tr>
-      <tr><td>6 Choisir sa famille</td><td>comparaison des propriétés, critères de choix, conséquences pour le soudage</td></tr>
-    </table></div>
-    Dans le référentiel de l'IIW (<i>International Institute of Welding</i>) pour la formation IWE (<i>International Welding Engineer</i>), ce cours répond aux attendus sur les aciers inoxydables : décrire les familles, leurs propriétés et leurs applications, et relier chaque famille à ses précautions de soudage.
-  </div>
-
-  <div class="def"><b>📖 Les sigles et notations de ce cours</b>.
-    <ul>
-      <li><b>α</b>, <b>δ</b> : ferrite ; <b>γ</b> : austénite ; <b>α'</b> : martensite de trempe ou de déformation (cubique centrée ou quadratique) ; <b>ε</b> : martensite hexagonale ; <b>PH</b> (<i>precipitation hardening</i>) : durci par précipitation ; <b>ODS</b> (<i>oxide dispersion strengthened</i>) : renforcé par dispersion d'oxydes.</li>
-      <li><b>R<sub>p0,2</sub></b> : limite d'élasticité conventionnelle à 0,2 % de déformation plastique ; <b>R<sub>m</sub></b> : résistance à la traction ; <b>A</b> : allongement à rupture ; <b>KV</b> : énergie Charpy, en joules ; <b>HV</b> : dureté Vickers ; <b>TTDF</b> : température de transition ductile-fragile.</li>
-      <li><b>M<sub>s</sub></b>, <b>M<sub>f</sub></b> : températures de début et de fin de transformation martensitique ; <b>M<sub>d30</sub></b> : température où 30 % de déformation vraie transforment la moitié de l'austénite en martensite ; <b>TRIP</b> (<i>transformation induced plasticity</i>) : plasticité induite par transformation.</li>
-      <li><b>λ</b> : conductivité thermique, en W·m⁻¹·K⁻¹ ; <b>α<sub>th</sub></b> : coefficient de dilatation thermique, en °C⁻¹ (10⁻⁶ °C⁻¹ = 1 µm par mètre et par degré).</li>
-    </ul>
-    Teneurs en % massique ; les propriétés citées sont des ordres de grandeur, la norme de produit (EN 10088) fait foi. Les modèles des manipulations sont pédagogiques.
-  </div>
+  <div class="def"><b>📘 Le sujet du planning</b> : <b>2.15 « Aciers inoxydables »</b> ; ce cours sert aussi les sujets <b>2.13 « Acier cryogénique »</b> (chapitre 4) et <b>2.8 « Traitements thermiques des matériaux »</b> (chapitres 2 et 3). Attendus de l'IWE (<i>International Welding Engineer</i>) selon le référentiel de l'IIW : décrire les familles d'inox, leurs propriétés et applications, et relier chaque famille à ses précautions de soudage. <b>Sigles</b> : PH, durci par précipitation ; M<sub>s</sub>, M<sub>d30</sub>, températures de transformation martensitique ; TRIP, plasticité induite par transformation ; λ, conductivité thermique ; α<sub>th</sub>, dilatation. Propriétés en ordres de grandeur : la norme de produit (EN 10088) fait foi.</div>
 
   <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage</b>
-    <p>Chaque famille se soude à sa façon. Le ferritique craint les gros grains et la martensite aux joints ; le martensitique, la fissuration à froid ; le durci par précipitation, la perte de ses précipités ; l'austénitique, la fissuration à chaud et la déformation ; le duplex, le déséquilibre des phases. Avant de rédiger un mode opératoire, le coordinateur identifie la famille, ses propriétés d'emploi et ce que la soudure doit préserver. Les cours 3 et 4 détaillent ensuite chaque danger.</p>
+    <p>Chaque famille se soude à sa façon : le ferritique craint les gros grains et la martensite aux joints ; le martensitique, la fissuration à froid ; le durci par précipitation, la perte de ses précipités ; l'austénitique, la fissuration à chaud et les déformations ; le duplex, le déséquilibre des phases. Avant de rédiger un mode opératoire, on identifie la famille et ce que la soudure doit préserver.</p>
   </div>
 
-  <h4>Les cinq familles en un coup d'œil</h4>
   <div class="tbl-wrap"><table class="data">
-    <tr><th>Famille</th><th>Structure</th><th>Nuances types (AISI)</th><th>ISO/TR 15608</th><th>En une phrase</th></tr>
-    <tr><td>Ferritiques</td><td>α de la fusion à l'ambiante</td><td>409, 430, 439, 444, 446</td><td class="n">7.1</td><td>sans nickel, bon marché, magnétiques, faible dilatation</td></tr>
-    <tr><td>Martensitiques</td><td>martensite après trempe</td><td>403, 410, 420, 431, 440C</td><td class="n">7.2</td><td>durs et résistants, tenue à la corrosion modérée</td></tr>
-    <tr><td>Durcis par précipitation</td><td>martensite ou austénite + précipités</td><td>17-4PH, 15-5PH, 17-7PH, A286</td><td class="n">7.3</td><td>très haute résistance, pièces de précision</td></tr>
-    <tr><td>Austénitiques</td><td>γ (+ un peu de δ)</td><td>304L, 316L, 321, 347, 310S</td><td class="n">8.1 ou 8.2</td><td>ductiles, tenaces à froid, amagnétiques, très écrouissables</td></tr>
-    <tr><td>Austéno-ferritiques</td><td>γ + δ, environ moitié-moitié</td><td>2304, 2205, 2507</td><td class="n">10.1 ou 10.2</td><td>deux fois plus résistants que les austénitiques, très bons face aux chlorures</td></tr>
+    <tr><th>Famille</th><th>Structure</th><th>Nuances types</th><th>ISO/TR 15608</th><th>En une phrase</th></tr>
+    <tr><td>Ferritiques</td><td>α de la fusion à l'ambiante</td><td>409, 430, 439, 444</td><td>7.1</td><td>sans nickel, bon marché, magnétiques</td></tr>
+    <tr><td>Martensitiques</td><td>martensite après trempe</td><td>410, 420, 431, 440C</td><td>7.2</td><td>durs, tenue à la corrosion modérée</td></tr>
+    <tr><td>Durcis par précipitation</td><td>martensite ou austénite + précipités</td><td>17-4PH, 15-5PH, A286</td><td>7.3</td><td>très haute résistance</td></tr>
+    <tr><td>Austénitiques</td><td>γ (+ un peu de δ)</td><td>304L, 316L, 321, 310S</td><td>8.1, 8.2</td><td>ductiles, tenaces à froid, amagnétiques</td></tr>
+    <tr><td>Duplex</td><td>γ + δ, moitié-moitié</td><td>2304, 2205, 2507</td><td>10.1, 10.2</td><td>deux fois plus résistants, très bons face aux chlorures</td></tr>
   </table></div>
 
   <h4>La série en quatre cours</h4>
   <div class="series">
     <div><b>1 Ce qui fait un inox</b>Passivité, réseaux du fer, boucle γ, éléments d'alliage, équivalents, désignations.</div>
-    <div class="here"><b>2 Les familles d'inox</b>Ferritiques, martensitiques, durcis par précipitation, austénitiques, duplex : propriétés et applications.</div>
-    <div><b>3 La carte des dangers et les fissurations</b>Schaeffler et Bystram, modes de solidification, fissuration à chaud, liquation, fissuration à froid, gros grains.</div>
-    <div><b>4 Ce qui précipite quand l'inox s'attarde au chaud</b>Diagramme fer-chrome, phase σ, courbes TTP, fragilisation à 475 °C, sensibilisation, rochage.</div>
+    <div class="here"><b>2 Les familles d'inox</b>Ferritiques, martensitiques, durcis par précipitation, austénitiques, duplex.</div>
+    <div><b>3 La carte des dangers et les fissurations</b>Schaeffler et Bystram, solidification, fissuration à chaud et à froid, gros grains.</div>
+    <div><b>4 Ce qui précipite au chaud</b>Phase σ, fragilisation à 475 °C, sensibilisation, rochage.</div>
   </div>
-  <p class="mut" style="font-size:.92rem">Déjà vu : martensite, trempe et revenu (Métallurgie, cours 3) ; essai Charpy et transition ductile-fragile (Rupture, cours 2). Voir aussi : l'essai de traction (Essais, cours 1).</p>
 
   <h4>Le plan du cours</h4>
   <ol class="route">
-    <li><span class="dot">1</span><b>Les ferritiques</b><p>Ferrite du liquide à l'ambiante : pas de régénération possible.</p></li>
-    <li><span class="dot">2</span><b>Les martensitiques</b><p>Des aciers qui trempent à l'air, et un dosage au dixième de % de carbone.</p></li>
-    <li><span class="dot">3</span><b>Les durcis par précipitation</b><p>Des milliards de précipités nanométriques, et la bonne taille au bon moment.</p></li>
-    <li><span class="dot">4</span><b>Les austénitiques</b><p>Ductiles, tenaces à froid, et une austénite qui peut se transformer sous la déformation.</p></li>
-    <li><span class="dot">5</span><b>Les austéno-ferritiques</b><p>Moitié ferrite, moitié austénite : le meilleur des deux.</p></li>
-    <li><span class="dot">6</span><b>Choisir sa famille</b><p>Un cahier des charges, cinq familles : comment trancher.</p></li>
+    <li><span class="dot">1</span><b>Les ferritiques</b><p>Le bloc de glace qui ne fond jamais.</p></li>
+    <li><span class="dot">2</span><b>Les martensitiques</b><p>La lame de couteau.</p></li>
+    <li><span class="dot">3</span><b>Les durcis par précipitation</b><p>Le champ de bornes.</p></li>
+    <li><span class="dot">4</span><b>Les austénitiques</b><p>L'évier qui devient magnétique.</p></li>
+    <li><span class="dot">5</span><b>Les austéno-ferritiques</b><p>Le béton armé.</p></li>
+    <li><span class="dot">6</span><b>Choisir sa famille</b><p>La boîte à outils.</p></li>
   </ol>
 </div>
 </section>
@@ -385,65 +377,44 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="c-img"><span class="ico">🧊</span><span><small>Image à retenir</small>Le bloc de glace qui ne fond jamais : sa structure ne change pas, ses grains ne peuvent que grossir</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">une ferrite qui ne se transforme pas</span></div>
-    <p>Un ferritique, c'est un acier à 11 à 30 % de chrome, presque sans nickel et avec très peu de carbone. Sa verticale passe à côté de l'île d'austénite (cours 1) : il reste <b>ferritique de la solidification à l'ambiante</b>. Conséquences :</p>
-    <ul>
-      <li><b>pas de normalisation</b> : impossible d'affiner un grain grossi par une surchauffe, en zone affectée notamment (cours 3, chapitre 7) ;</li>
-      <li><b>pas de trempe</b> : on ne le durcit pas par traitement thermique ;</li>
-      <li>il est <b>ferromagnétique</b>, conduit assez bien la chaleur et se <b>dilate peu</b>, comme un acier ordinaire.</li>
-    </ul>
-    <p>Un piège, pourtant : avec un peu de carbone et d'azote, la bande α + γ s'élargit, et un 430 forme <b>de l'austénite aux joints de grains</b> quand on le chauffe vers 1 000 à 1 200 °C. Au refroidissement, ces îlots, riches en carbone, deviennent :</p>
-    <ul>
-      <li>de la <b>martensite</b> si le refroidissement est rapide, comme en soudage : dure et fragile ;</li>
-      <li>de la <b>ferrite et des carbures</b> si le refroidissement est plus lent : les carbures de chrome appauvrissent les joints.</li>
-    </ul>
-    <p>Dans les deux cas, un traitement thermique (recuit vers 750 à 850 °C) est nécessaire pour retrouver la ductilité et la tenue à la corrosion. La parade moderne : <b>stabiliser</b> au titane ou au niobium (439, 441, 444). Ces éléments, alphagènes, fixent le carbone et l'azote : plus d'austénite, moins de carbures de chrome, et des particules qui freinent la croissance des grains.</p>
-  </div>
+  <p>Un ferritique, c'est 11 à 30 % de chrome, presque pas de nickel et très peu de carbone : sa verticale passe à côté de l'île d'austénite, il reste <b>ferritique de la solidification à l'ambiante</b>, comme un bloc de glace qui ne fond jamais. Donc <b>pas de normalisation</b> pour affiner un grain grossi en ZAT, <b>pas de trempe</b> ; il est ferromagnétique, conduit assez bien la chaleur et se dilate peu, comme un acier ordinaire.</p>
+  <p>Un piège : avec un peu de carbone et d'azote, un 430 forme <b>de l'austénite aux joints de grains</b> vers 1 000 à 1 200 °C. Au refroidissement, elle devient de la <b>martensite</b> dure et fragile si le refroidissement est rapide (soudage), ou de la ferrite et des carbures de chrome qui appauvrissent les joints s'il est lent. Un recuit vers 750 à 850 °C rétablit ductilité et tenue à la corrosion. La parade moderne : <b>stabiliser</b> au titane ou au niobium (439, 441, 444), qui fixent le carbone et l'azote et freinent la croissance des grains.</p>
 
-  <div class="lab" id="m1">
+  <div class="def"><b>📖 Austénitisation partielle</b> : formation d'austénite dans une partie seulement du métal, quand sa verticale traverse la bande α + γ. <b>t<sub>8/5</sub></b> : temps passé entre 800 et 500 °C au refroidissement. Propriétés typiques : R<sub>m</sub> de 400 à 800 MPa ; λ ≈ 20 à 30 W·m⁻¹·K⁻¹ ; α<sub>th</sub> ≈ 10 à 13 × 10⁻⁶ °C⁻¹ ; une transition ductile-fragile, qui remonte avec la taille de grain et le chrome.</div>
+
+<div class="lab" id="m1">
     <p class="lab-h">Manipulation 1 : le ferritique qui ne se régénère pas</p>
-    <p class="lab-sub">La zone affectée d'une soudure sur un ferritique, vue au microscope. Choisis la nuance, la température de pic et le temps de refroidissement t<sub>8/5</sub> (entre 800 et 500 °C) : en traversant la bande α + γ, de l'austénite apparaît aux joints d'un 430 et les grains grossissent ; au refroidissement, elle devient martensite ou ferrite et carbures. Modèle pédagogique (boucle γ du cours 1, croissance de grain thermiquement activée).</p>
+    <p class="lab-sub">La ZAT d'un ferritique au microscope : choisis la nuance, la température de pic et le t<sub>8/5</sub>, puis chauffe et refroidis.<span class="predict">🔮 Prédis d'abord : le 439 forme-t-il de la martensite aux joints comme le 430 ?</span></p>
     <div class="btns" id="m1g">
       <button class="btn on" data-k="430" type="button">430 (non stabilisé)</button>
       <button class="btn" data-k="439" type="button">439 (stabilisé Ti)</button>
     </div>
     <div class="ctrl"><label for="m1t">Température de pic <span class="sig">T<sub>p</sub></span></label><input type="range" id="m1t" class="r-sig" min="900" max="1350" step="10" value="1150"><output id="m1to"></output></div>
     <div class="ctrl"><label for="m1v">Refroidissement <span class="sig">t<sub>8/5</sub></span></label><input type="range" id="m1v" class="r-sig" min="0.3" max="2.5" step="0.05" value="0.8"><output id="m1vo"></output></div>
-    <div class="btns"><button class="btn play" id="m1play" type="button">▶ Chauffer puis refroidir</button></div>
+    <div class="btns"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" id="m1play" type="button">▶ Chauffer puis refroidir</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button></div>
     <svg id="m1svg" role="img" aria-label="Microstructure de la zone affectée d'un acier ferritique, avec austénite puis martensite aux joints de grains"></svg>
     <div class="readout" id="m1r"></div>
     <p class="status" id="m1msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">propriétés, nuances, applications</span></div>
-    <h4>Propriétés</h4>
+  <p><b>Nuances</b> : 409 (X2CrTi12, 1.4512), 11 à 12 % Cr stabilisé, lignes d'échappement ; 430 (X6Cr17, 1.4016), le classique non stabilisé ; 439 (1.4510), stabilisé, soudable sans martensite aux joints ; 444 (X2CrMoTi18-2, 1.4521), 2 % Mo, alternative au 316L en eau chaude. Applications : électroménager, décoration, transport ; les super-ferritiques à 25 % Cr et Mo pour la chimie. Les ferritiques résistent bien à la corrosion sous tension, contrairement aux austénitiques au nickel.</p>
+
+  <div class="warn"><b>⚠️ Piège : préchauffer un ferritique « pour éviter les fissures ».</b> Le préchauffage allonge le séjour à chaud et fait grossir les grains, sans bénéfice : on ne préchauffe un ferritique que pour sécher la pièce, ou s'il est épais et chargé en carbone.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « Ferritique : Fixe le grain, ou Fragile »</b>.</div>
+  <div class="weld"><b>🔥 À l'atelier</b>
+    <p>Un 430 soudé présente souvent une ZAT dure et fragile : martensite aux joints et gros grains. On limite l'énergie, on évite le préchauffage, on soude parfois avec un apport austénitique (19 9 L ou 23 12 L) pour un métal fondu ductile, et l'on peut recuire vers 750 à 850 °C. Avec un 439 ou un 441, la plupart de ces précautions tombent.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : autres nuances ferritiques</summary>
+    <p>X2CrTi17 (1.4520) et X3CrTi17 (1.4510) pour le 439 ; X6CrMoNb17-1 (1.4526, 436), molybdène et niobium pour une meilleure tenue à la corrosion ; X10CrAlSi25 (1.4762, 446), réfractaire à 25 % Cr avec aluminium et silicium. Vers 11 à 12,5 % de chrome : milieux peu agressifs, coût bas, remplacement d'aciers de construction ; vers 17 % : moins chers que les austénitiques, bonnes propriétés en traction. La conductivité baisse quand le chrome augmente.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
     <ul>
-      <li>Mécaniques : R<sub>m</sub> de 400 à 800 MPa environ, allongement de 10 à 30 %, bonne ductilité et bonne résilience à l'ambiante… tant que le grain reste fin. Comme tout cubique centré, un ferritique a une transition ductile-fragile, qui remonte avec la taille de grain et la teneur en chrome.</li>
-      <li>Physiques : ferromagnétiques sous leur température de Curie ; conductivité thermique de 20 à 30 W·m⁻¹·K⁻¹ (elle baisse quand le chrome augmente) ; dilatation faible, 10 à 13 × 10⁻⁶ °C⁻¹ entre 20 et 300 °C, proche de celle d'un acier au carbone.</li>
+      <li>Ferritique : jamais d'austénite, donc ni trempe ni régénération du grain.</li>
+      <li>Un 430 forme de la martensite aux joints en ZAT ; stabilisé (439, 441, 444), il l'évite.</li>
+      <li>Soudage : énergie faible, pas de préchauffage inutile.</li>
     </ul>
-    <h4>Nuances courantes</h4>
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>EN symbolique</th><th>Numéro</th><th>AISI</th><th>Particularité</th></tr>
-      <tr><td>X2CrTi12</td><td class="n">1.4512</td><td>409</td><td>11 à 12 % Cr, stabilisé Ti : lignes d'échappement</td></tr>
-      <tr><td>X6Cr17</td><td class="n">1.4016</td><td>430</td><td>le ferritique classique, non stabilisé</td></tr>
-      <tr><td>X2CrTi17 / X3CrTi17</td><td class="n">1.4520 / 1.4510</td><td>439</td><td>stabilisé Ti : soudable sans martensite aux joints</td></tr>
-      <tr><td>X6CrMoNb17-1</td><td class="n">1.4526</td><td>436</td><td>molybdène et niobium : meilleure tenue à la corrosion</td></tr>
-      <tr><td>X2CrMoTi18-2</td><td class="n">1.4521</td><td>444</td><td>2 % Mo, stabilisé : alternative au 316L en eau chaude</td></tr>
-      <tr><td>X10CrAlSi25</td><td class="n">1.4762</td><td>446</td><td>réfractaire, 25 % Cr, aluminium et silicium</td></tr>
-    </table></div>
-    <h4>Applications</h4>
-    <ul>
-      <li>Vers 11 à 12,5 % de chrome : milieux peu agressifs, coût bas ; remplacement d'aciers de construction, transport (lignes d'échappement), électroménager.</li>
-      <li>Vers 17 % : moins chers que les austénitiques, bonnes propriétés en traction ; électroménager, décoration, cuisine.</li>
-      <li>Super-ferritiques (environ 25 % de chrome avec du molybdène) : chimie, papeterie, échangeurs en eau chlorée. Les ferritiques résistent bien à la corrosion sous tension, contrairement aux austénitiques au nickel.</li>
-    </ul>
-    <div class="def"><b>📖 Austénitisation partielle</b> : formation d'austénite dans une partie seulement du métal, quand sa verticale traverse la bande α + γ. <b>t<sub>8/5</sub></b> : temps passé entre 800 et 500 °C au refroidissement ; plus il est court, plus le refroidissement est rapide. <b>Recuit</b> : maintien à température modérée qui adoucit et restaure la structure.</div>
-    <div class="tip">💡 <b>Le bon réflexe</b> : pour une pièce soudée en ferritique, choisis une nuance stabilisée (439, 441, 444) et une énergie de soudage faible ; le cours 3 (chapitre 7) donne les chiffres de la croissance de grain.</div>
-    <div class="warn"><b>⚠️ Piège : préchauffer un ferritique « pour éviter les fissures ».</b> Le préchauffage allonge le séjour à chaud et fait grossir les grains, sans aucun bénéfice : on ne préchauffe un ferritique que pour sécher la pièce, ou s'il est épais et contient beaucoup de carbone.</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique : « Ferritique : Fixe le grain, ou Fragile »</b> : sans stabilisant ni énergie faible, ses grains grossissent et il devient fragile.</div>
-    <div class="weld"><b>🔥 À l'atelier</b>
-      <p>Un 430 soudé présente souvent une zone affectée dure et fragile : martensite aux joints et gros grains. On limite l'énergie, on évite le préchauffage, on soude parfois avec un apport austénitique (19 9 L ou 23 12 L) pour obtenir un métal fondu ductile, et l'on peut recuire l'assemblage vers 750 à 850 °C. Avec un 439 ou un 441, la plupart de ces précautions tombent.</p>
-    </div>
   </div>
 </div>
 </section>
@@ -456,20 +427,19 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="c-img"><span class="ico">🔪</span><span><small>Image à retenir</small>La lame de couteau : le carbone fait sa dureté, le chrome sa tenue à la rouille, et un gramme de trop la rend cassante</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">l'île, la trempe et le dosage</span></div>
-    <p>Un martensitique contient environ 12 à 18 % de chrome et assez de carbone (ou de nickel) pour passer dans l'île d'austénite vers 950 à 1 050 °C. Trempé, il devient <b>martensite</b> : dur et résistant. Son chrome élevé lui donne une <b>trempabilité</b> énorme : il prend la trempe même refroidi à l'air. On dit qu'il est <b>autotrempant</b>. Le soudeur s'en souvient : sa zone affectée devient martensite à tous les coups (cours 3, chapitre 6).</p>
-    <p>Tout est affaire de dosage :</p>
-    <ul>
-      <li>le <b>carbone</b> fait la dureté de la martensite (de 0,05 % pour un 403 à plus de 1 % pour un 440C) ; il distord la maille cubique centrée, qui devient quadratique au-delà d'environ 0,2 % (cours 1, chapitre 2) ;</li>
-      <li>tous les éléments d'alliage (sauf le cobalt) <b>abaissent M<sub>s</sub></b> : trop d'alliage, et une partie de l'austénite ne se transforme pas à l'ambiante. C'est l'<b>austénite résiduelle</b>, plus molle et instable ;</li>
-      <li>trop d'alphagènes pour l'île, et de la <b>ferrite δ</b> subsiste à la température de trempe : elle reste dans la structure et dégrade les propriétés.</li>
-    </ul>
-    <p>Après la trempe vient le <b>revenu</b>, qui adoucit la martensite et lui rend de la ténacité. Les martensitiques sont ferromagnétiques, se dilatent peu, résistent bien à l'oxydation à chaud, même en présence de soufre, et coûtent peu (peu ou pas de nickel). Leur soudabilité dépend surtout de leur carbone.</p>
-  </div>
+  <p>Un martensitique contient 12 à 18 % de chrome et assez de carbone (ou de nickel) pour passer dans l'île d'austénite vers 950 à 1 050 °C ; trempé, il devient martensite, dure et résistante. Son chrome lui donne une trempabilité énorme : il prend la trempe à l'air, il est <b>autotrempant</b>, et sa ZAT devient martensite à tous les coups. Tout est affaire de dosage, comme pour une lame de couteau :</p>
+  <ul>
+    <li>le <b>carbone</b> fait la dureté (de 0,05 % pour un 403 à plus de 1 % pour un 440C) ;</li>
+    <li>tous les éléments d'alliage (sauf le cobalt) <b>abaissent M<sub>s</sub></b> : trop d'alliage, et une partie de l'austénite ne se transforme pas, l'<b>austénite résiduelle</b>, molle et instable ;</li>
+    <li>trop d'alphagènes, et de la <b>ferrite δ</b> subsiste à la température de trempe et dégrade les propriétés.</li>
+  </ul>
+  <p>Après la trempe, le <b>revenu</b> adoucit la martensite et lui rend de la ténacité. Les martensitiques sont ferromagnétiques, coûtent peu, et leur soudabilité dépend surtout de leur carbone.</p>
 
-  <div class="lab" id="m2">
+  <div class="fx"><div class="big">M<sub>s</sub> (°C) ≈ 539 − 423·C − 30,4·Mn − 17,7·Ni − 12,1·Cr − 7,5·Mo</div><p class="cap">Formule d'Andrews, teneurs de l'austénite au moment de la trempe (le carbone et le chrome piégés dans des carbures non dissous ne comptent pas). Pour un acier à 12 % Cr, 0,1 % de carbone abaisse M<sub>s</sub> d'environ 47 °C.</p></div>
+
+<div class="lab" id="m2">
     <p class="lab-h">Manipulation 2 : le dosage d'un 13 % Cr</p>
-    <p class="lab-sub">Choisis une nuance ou règle sa composition et sa température d'austénitisation, puis trempe-la : la microstructure montre la martensite, la ferrite δ, les carbures non dissous et l'austénite résiduelle ; le thermomètre place M<sub>s</sub> par rapport à l'ambiante. M<sub>s</sub> par la formule d'Andrews, ferrite δ avec les coefficients d'Irvine, carbone en solution limité par la température. Modèle pédagogique. « ▶ Chauffer plus haut » monte la température d'austénitisation de 950 à 1 100 °C : essaie-le sur le 440C.</p>
+    <p class="lab-sub">Choisis une nuance ou règle sa composition et son austénitisation, puis trempe : martensite, ferrite δ, carbures et austénite résiduelle.<span class="predict">🔮 Prédis d'abord : en austénitisant un 440C plus chaud, obtient-on plus ou moins d'austénite résiduelle ?</span></p>
     <div class="btns" id="m2g">
       <button class="btn" data-k="403" type="button">403</button>
       <button class="btn on" data-k="410" type="button">410</button>
@@ -482,46 +452,30 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="ctrl"><label for="m2cr">Chrome <span class="mat">Cr</span></label><input type="range" id="m2cr" class="r-mat" min="11" max="18" step="0.1" value="12.5"><output id="m2cro"></output></div>
     <div class="ctrl"><label for="m2ni">Nickel <span class="mat">Ni</span></label><input type="range" id="m2ni" class="r-mat" min="0" max="6" step="0.1" value="0.3"><output id="m2nio"></output></div>
     <div class="ctrl"><label for="m2ta">Austénitisation <span class="sig">T<sub>a</sub></span></label><input type="range" id="m2ta" class="r-sig" min="950" max="1100" step="5" value="1000"><output id="m2tao"></output></div>
-    <div class="btns"><button class="btn play" id="m2play" type="button">▶ Chauffer plus haut</button></div>
+    <div class="btns"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" id="m2play" type="button">▶ Chauffer plus haut</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button></div>
     <svg id="m2svg" role="img" aria-label="Microstructure d'un acier martensitique trempé et position de Ms par rapport à l'ambiante"></svg>
     <div class="readout" id="m2r"></div>
     <p class="status" id="m2msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">M<sub>s</sub>, ferrite δ, nuances</span></div>
-    <h4>La transformation martensitique</h4>
-    <p>Elle est <b>displacive</b> : un cisaillement coordonné des atomes, sans diffusion. Elle ne dépend donc pas du temps, seulement de la température atteinte : elle commence à M<sub>s</sub> et progresse en refroidissant (loi de Koistinen et Marburger, cours 3). Pour les aciers à 12 % de chrome, des mesures publiées (Irvine, Crowe et Pickering, 1960) donnent l'abaissement de M<sub>s</sub> par % d'élément :</p>
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>Élément</th><th>C</th><th>Mn</th><th>Ni</th><th>Cr</th><th>Mo</th><th>W</th><th>Si</th></tr>
-      <tr><td>ΔM<sub>s</sub> (°C par %)</td><td class="n">≈ −475</td><td class="n">≈ −33</td><td class="n">≈ −17</td><td class="n">≈ −17</td><td class="n">≈ −21</td><td class="n">≈ −11</td><td class="n">≈ −11</td></tr>
-    </table></div>
-    <p>0,1 % de carbone abaisse donc M<sub>s</sub> d'environ 47 °C. La manipulation utilise la formule d'Andrews, la même que pour le calcul du préchauffage (cours 3) :</p>
-    <div class="fx"><div class="big">M<sub>s</sub> (°C) ≈ 539 − 423·C − 30,4·Mn − 17,7·Ni − 12,1·Cr − 7,5·Mo</div><p class="cap">Teneurs en % de l'austénite au moment de la trempe : le carbone et le chrome piégés dans des carbures non dissous ne comptent pas</p></div>
-    <p>Pour les nuances très chargées en carbone (440C), la température d'austénitisation ne dissout qu'une partie des carbures : l'austénite ne contient qu'environ 0,5 % de carbone, et son M<sub>s</sub> reste vers 150 °C. Une partie de l'austénite résiste à la trempe (plus de 20 %) : on la transforme par un traitement par le froid, puis on revient.</p>
-    <h4>La ferrite δ résiduelle</h4>
-    <p>Les mêmes travaux donnent l'effet de chaque élément sur la ferrite δ d'un acier à 12 % de chrome, en % de ferrite par % d'élément :</p>
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>Élément</th><th>N</th><th>C</th><th>Ni</th><th>Co</th><th>Cu</th><th>Mn</th><th>Si</th><th>Mo</th><th>Cr</th><th>V</th><th>Al</th></tr>
-      <tr><td>Δδ (% par %)</td><td class="n">−220</td><td class="n">−210</td><td class="n">−20</td><td class="n">−7</td><td class="n">−7</td><td class="n">−6</td><td class="n">+6</td><td class="n">+5</td><td class="n">+14</td><td class="n">+18</td><td class="n">+54</td></tr>
-    </table></div>
-    <p>Le titane et le niobium sont alphagènes, mais leur effet est complexe : ils consomment le carbone et l'azote, deux gammagènes puissants. La manipulation additionne ces contributions, avec une constante choisie pour qu'un 410 standard, austénitisé à 1 000 °C, n'ait pas de ferrite. Pour les nuances moulées ou très alliées, on utilise aussi le diagramme de Schneider (cours 1, chapitre 5).</p>
-    <h4>Nuances et applications</h4>
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>EN symbolique</th><th>Numéro</th><th>AISI</th><th>Ordre de grandeur, trempé et revenu</th><th>Emplois</th></tr>
-      <tr><td>X6Cr13</td><td class="n">1.4000</td><td>403</td><td>peu de carbone : martensite peu dure, souvent un peu de ferrite</td><td>pièces peu sollicitées, aubes</td></tr>
-      <tr><td>X12Cr13</td><td class="n">1.4006</td><td>410</td><td>R<sub>m</sub> ≈ 650-950 MPa</td><td>boulonnerie, turbines, soupapes</td></tr>
-      <tr><td>X30Cr13</td><td class="n">1.4028</td><td>420</td><td>dureté élevée</td><td>coutellerie, outils</td></tr>
-      <tr><td>X17CrNi16-2</td><td class="n">1.4057</td><td>431</td><td>R<sub>m</sub> ≈ 800-1 050 MPa</td><td>arbres, pièces de pompes</td></tr>
-      <tr><td>X105CrMo17</td><td class="n">1.4125</td><td>440C</td><td>très dur (58 à 60 HRC)</td><td>roulements, couteaux haut de gamme</td></tr>
-      <tr><td>X3CrNiMo13-4</td><td class="n">1.4313</td><td>(13-4)</td><td>R<sub>m</sub> ≈ 780-980 MPa, très tenace</td><td>turbines hydrauliques ; « super-martensitiques » des pipelines offshore</td></tr>
-    </table></div>
-    <div class="def"><b>📖 Autotrempant</b> : qui prend la trempe par simple refroidissement à l'air. <b>Austénite résiduelle</b> : austénite non transformée à l'ambiante, parce que M<sub>f</sub> est plus bas. <b>Traitement par le froid</b> : refroidissement sous l'ambiante (−70 à −196 °C) qui transforme l'austénite résiduelle. <b>Revenu</b> : réchauffage de la martensite sous la température de transformation, qui l'adoucit et la rend plus tenace.</div>
-    <div class="tip">💡 <b>Le bon réflexe</b> : face à un martensitique, regarde d'abord son carbone. Moins de 0,1 % : soudable avec préchauffage ; 0,2 à 0,3 % : soudage délicat ; au-delà, on évite le soudage par fusion ou on prend des précautions lourdes.</div>
-    <div class="warn"><b>⚠️ Piège : croire qu'un martensitique « trempé à l'eau » est plus dur.</b> Il trempe déjà à l'air ; une trempe brutale n'ajoute rien à la dureté, mais augmente les contraintes et le risque de tapure.</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique : « Carbone = Coupe, Chrome = Couverture, Cobalt = Contre-courant »</b> : le carbone fait la dureté, le chrome la protection, et le cobalt est le seul à remonter M<sub>s</sub>.</div>
-    <div class="weld"><b>🔥 Soudage</b>
-      <p>Préchauffage vers 200 à 300 °C, maintien en température, refroidissement sous 100 °C puis revenu : c'est le cycle du cours 3, chapitre 6. Les nuances 13-4 et super-martensitiques, à très bas carbone, se soudent bien plus facilement : leur martensite est peu dure et tenace.</p>
-    </div>
+  <p><b>Exemple</b> : un 410 (C 0,11 ; Mn 0,6 ; Ni 0,3 ; Cr 12,5) a <span class="m">M<sub>s</sub> ≈ 318 °C</span> et environ 4 % d'austénite résiduelle ; un 431 (C 0,17 ; Ni 2,0 ; Cr 16,0), M<sub>s</sub> ≈ 220 °C et environ 11 %. Un 440C n'a que 0,5 % de carbone en solution à l'austénitisation : M<sub>s</sub> ≈ 150 °C, plus de 20 % d'austénite résiduelle, transformée par un traitement par le froid avant le revenu. Nuances : 410 (X12Cr13, 1.4006), boulonnerie et turbines ; 420 (X30Cr13, 1.4028), coutellerie ; 431 (X17CrNi16-2, 1.4057), arbres ; 440C (X105CrMo17), roulements ; 13-4 (X3CrNiMo13-4, 1.4313), turbines hydrauliques et super-martensitiques des pipelines.</p>
+
+  <div class="warn"><b>⚠️ Piège : croire qu'un martensitique « trempé à l'eau » est plus dur.</b> Il trempe déjà à l'air ; une trempe brutale n'ajoute rien à la dureté, mais augmente les contraintes et le risque de tapure.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « Carbone = Coupe, Chrome = Couverture, Cobalt = Contre-courant »</b> : le cobalt est le seul à remonter M<sub>s</sub>.</div>
+  <div class="weld"><b>🔥 Soudage</b>
+    <p>Le carbone décide : moins de 0,1 %, soudable avec préchauffage ; 0,2 à 0,3 %, soudage délicat ; au-delà, on évite le soudage par fusion ou on prend des précautions lourdes. Cycle type : préchauffage vers 200 à 300 °C, maintien, refroidissement sous 100 °C puis revenu (cours 3). Les 13-4 et super-martensitiques, à très bas carbone, se soudent bien plus facilement.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : coefficients d'Irvine, ferrite δ</summary>
+    <p>La transformation est displacive, sans diffusion : elle ne dépend que de la température atteinte (loi de Koistinen et Marburger). Abaissement de M<sub>s</sub> par % d'élément pour un 12 % Cr (Irvine, Crowe et Pickering, 1960) : C −475, Mn −33, Ni −17, Cr −17, Mo −21, W −11, Si −11 °C. Ferrite δ par % d'élément : N −220, C −210, Ni −20, Co et Cu −7, Mn −6, Si +6, Mo +5, Cr +14, V +18, Al +54. Un 403, moins carboné, garde ainsi environ 13 % de ferrite δ, un 410 presque pas. La maille devient quadratique au-delà d'environ 0,2 % de carbone.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Martensitiques : autotrempants, leur ZAT devient martensite.</li>
+      <li>Le carbone fait la dureté et la difficulté de soudage ; l'alliage abaisse M<sub>s</sub>.</li>
+      <li>Soudage : préchauffage, refroidissement contrôlé, revenu.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -534,21 +488,14 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="c-img"><span class="ico">🎯</span><span><small>Image à retenir</small>Le champ de bornes : trop petites, on les enjambe ; trop grosses et espacées, on les contourne ; à la bonne taille, elles bloquent tout</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">bloquer les dislocations</span></div>
-    <p>Un métal se déforme par le glissement de défauts linéaires, les <b>dislocations</b>. Pour le rendre très résistant, on sème sur leur chemin des milliards de petits obstacles : des <b>précipités</b> de quelques nanomètres, riches en cuivre, en nickel et aluminium, en nickel et titane, ou des carbures. Ce sont les inox <b>durcis par précipitation</b> (PH).</p>
-    <p>Leur traitement se fait en trois temps :</p>
-    <ol>
-      <li><b>mise en solution</b> vers 1 040 °C : les éléments se dissolvent ;</li>
-      <li><b>trempe</b> : on les piège en solution sursaturée (et la matrice devient martensite pour les nuances martensitiques) ;</li>
-      <li><b>vieillissement</b> vers 480 à 620 °C : les précipités naissent et grossissent. Pour les nuances martensitiques, ce chauffage revient aussi la martensite et réduit les contraintes internes.</li>
-    </ol>
-    <p>Tout se joue sur la <b>taille</b> des précipités. Trop petits, les dislocations les cisaillent sans grand effort ; trop gros et trop espacés, elles les contournent. Entre les deux, au <b>pic de durcissement</b>, ils gênent le plus. Un vieillissement plus chaud ou plus long fait grossir les précipités : on perd de la résistance, mais on gagne de la ténacité. On parle de <b>survieillissement</b>.</p>
-    <p>Trois classes : les <b>martensitiques à transformation directe</b> (17-4PH, 15-5PH, PH13-8Mo), martensite dès la trempe ; les <b>martensitiques à transformation indirecte</b> ou semi-austénitiques (17-7PH, PH15-7Mo, AM355), encore austénitiques après la trempe et transformées par un traitement complémentaire ; et les <b>austénitiques</b> (A286), qui restent tenaces à très basse température.</p>
-  </div>
+  <p>Pour rendre un inox très résistant, on sème sur le chemin des dislocations des milliards de <b>précipités</b> de quelques nanomètres (riches en cuivre, en nickel et aluminium, en nickel et titane) : ce sont les inox <b>durcis par précipitation</b> (PH). Traitement en trois temps : <b>mise en solution</b> vers 1 040 °C, <b>trempe</b> qui piège les éléments (et donne la martensite des nuances martensitiques), <b>vieillissement</b> vers 480 à 620 °C où les précipités naissent et grossissent.</p>
+  <p>Tout se joue sur leur taille, comme un champ de bornes : trop petits, les dislocations les cisaillent ; trop gros et espacés, elles les contournent ; entre les deux, au <b>pic de durcissement</b>, ils gênent le plus. Un vieillissement plus chaud ou plus long, le <b>survieillissement</b>, fait perdre de la résistance mais gagner de la ténacité. Trois classes : martensitiques directs (17-4PH, 15-5PH, PH13-8Mo), semi-austénitiques transformés par un traitement complémentaire (17-7PH), austénitiques (A286), tenaces à très basse température.</p>
 
-  <div class="lab" id="m3">
+  <div class="fx"><div class="big">P = T·(20 + log t)/1 000</div><p class="cap">Paramètre de Hollomon et Jaffe, T en kelvins, t en heures : un vieillissement court et chaud équivaut à un long et tiède. H900 (482 °C, 1 h) : P ≈ 15,1 ; H1025 (552 °C, 4 h) : 17,0 ; H1150 (621 °C, 4 h) : 18,4.</p></div>
+
+<div class="lab" id="m3">
     <p class="lab-h">Manipulation 3 : le vieillissement du 17-4PH</p>
-    <p class="lab-sub">Après mise en solution et trempe, on vieillit un 17-4PH. Règle la température et la durée, ou choisis un état normalisé (H900 = 482 °C, 1 h ; H1025 = 552 °C, 4 h…) : premier schéma, les précipités de cuivre vus au microscope électronique, avec une dislocation qui les cisaille ou les contourne ; second schéma, la limite d'élasticité en fonction d'un paramètre qui combine température et temps. Modèle pédagogique calé sur des valeurs publiées.</p>
+    <p class="lab-sub">Vieillis un 17-4PH : choisis un état normalisé ou règle température et durée. En haut les précipités et une dislocation, en bas R<sub>p0,2</sub> selon P.<span class="predict">🔮 Prédis d'abord : H1150 est-il plus ou moins résistant que H900 ?</span></p>
     <div class="btns" id="m3g">
       <button class="btn" data-k="A" type="button">État A (non vieilli)</button>
       <button class="btn on" data-k="H900" type="button">H900</button>
@@ -558,43 +505,30 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     </div>
     <div class="ctrl"><label for="m3t">Température <span class="sig">T</span></label><input type="range" id="m3t" class="r-sig" min="420" max="650" step="1" value="482"><output id="m3to"></output></div>
     <div class="ctrl"><label for="m3h">Durée <span class="sig">t</span></label><input type="range" id="m3h" class="r-sig" min="-1" max="2" step="0.05" value="0"><output id="m3ho"></output></div>
-    <div class="btns"><button class="btn play" id="m3play" type="button">▶ Vieillir</button></div>
+    <div class="btns"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" id="m3play" type="button">▶ Vieillir</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button></div>
     <svg id="m3svg" role="img" aria-label="Précipités de cuivre dans un acier 17-4PH et limite d'élasticité en fonction du vieillissement"></svg>
     <div class="readout" id="m3r"></div>
     <p class="status" id="m3msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">paramètre de revenu, classes, nuances</span></div>
-    <h4>Combiner température et temps</h4>
-    <p>Un vieillissement court et chaud peut produire le même effet qu'un vieillissement long et tiède. Le <b>paramètre de Hollomon et Jaffe</b> les combine :</p>
-    <div class="fx"><div class="big"><span class="sig">P</span> = <span class="sig">T</span>·(20 + log<sub>10</sub> <span class="sig">t</span>)/1 000</div><p class="cap">T en kelvins, t en heures. H900 : 755 × 20/1 000 ≈ 15,1 ; H1025 : 825 × 20,6/1 000 ≈ 17,0 ; H1150 : 894 × 20,6/1 000 ≈ 18,4</p></div>
-    <p>Dans la manipulation, R<sub>p0,2</sub> est une fonction de P : un pic vers P ≈ 15,4, puis une décroissance (survieillissement, revenu de la martensite et, au-delà de P ≈ 17,5, retour d'un peu d'austénite).</p>
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>État du 17-4PH</th><th>Vieillissement</th><th>R<sub>p0,2</sub> minimal (ASTM A564)</th><th>Usage</th></tr>
-      <tr><td>H900</td><td class="n">482 °C, 1 h</td><td class="n">≈ 1 170 MPa</td><td>résistance maximale, ténacité faible</td></tr>
-      <tr><td>H1025</td><td class="n">552 °C, 4 h</td><td class="n">≈ 1 000 MPa</td><td>compromis</td></tr>
-      <tr><td>H1075</td><td class="n">579 °C, 4 h</td><td class="n">≈ 860 MPa</td><td>meilleure ténacité</td></tr>
-      <tr><td>H1150</td><td class="n">621 °C, 4 h</td><td class="n">≈ 725 MPa</td><td>ténacité maximale, meilleure tenue à la corrosion sous tension</td></tr>
-    </table></div>
-    <h4>Les familles de nuances</h4>
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>Structure</th><th>EN symbolique</th><th>Nom courant</th><th>Précipités</th></tr>
-      <tr><td>martensite directe</td><td>X5CrNiCuNb16-4 (1.4542)</td><td>17-4PH</td><td>riches en cuivre</td></tr>
-      <tr><td>martensite directe</td><td>X5CrNiCu15-5 (1.4545)</td><td>15-5PH</td><td>riches en cuivre</td></tr>
-      <tr><td>martensite directe</td><td>X3CrNiMoAl13-8-2 (1.4534)</td><td>PH13-8Mo</td><td>NiAl</td></tr>
-      <tr><td>martensite indirecte</td><td>X7CrNiAl17-7 (1.4568)</td><td>17-7PH</td><td>NiAl, M₂₃C₆</td></tr>
-      <tr><td>austénite</td><td>X6NiCrTiMoVB25-15-2 (1.4980)</td><td>A286</td><td>Ni₃Ti</td></tr>
-    </table></div>
-    <p>Atouts : R<sub>p0,2</sub> de l'ordre de 1 à 1,5 GPa pour les martensitiques, tenue à la corrosion souvent meilleure que celle des martensitiques classiques (plus de chrome, souvent du molybdène), bonne usinabilité avant vieillissement et très faibles variations dimensionnelles au vieillissement : on usine la pièce à l'état A, puis on la vieillit. Applications : nucléaire, aéronautique, chimie et pétrochimie, défense, ressorts, lames d'escrime, turbines, appareils sous pression, et pour les austénitiques, cryogénie et hautes températures.</p>
-    <h4>Mention spéciale : les ferritiques ODS</h4>
-    <p>Les aciers ODS (chrome, titane, tungstène ou molybdène, sans nickel) sont renforcés par une dispersion très fine d'oxydes d'yttrium et de titane, introduits par cobroyage de poudres puis consolidés par métallurgie des poudres. Très résistants, y compris en fluage, et peu sensibles au gonflement sous irradiation, ils visent surtout les gaines de combustible nucléaire. Mais le soudage par fusion fait remonter et grossir les oxydes : il n'existe pas encore de solution satisfaisante pour les souder.</p>
-    <div class="def"><b>📖 Dislocation</b> : défaut linéaire dont le glissement permet la déformation plastique. <b>Précipité cohérent</b> : précipité dont le réseau prolonge celui de la matrice ; très petit, il est cisaillé. <b>Mécanisme d'Orowan</b> : contournement des précipités trop gros par les dislocations. <b>Survieillissement</b> : vieillissement au-delà du pic, qui fait grossir les précipités et baisser la résistance.</div>
-    <div class="tip">💡 <b>Le bon réflexe</b> : choisis l'état de vieillissement d'après la ténacité et la tenue à la corrosion sous tension demandées, pas seulement d'après la résistance : H1150 est souvent préféré pour les pièces critiques en milieu humide.</div>
-    <div class="warn"><b>⚠️ Piège : souder un PH à l'état vieilli.</b> Le cycle thermique dissout ou fait grossir les précipités de la zone affectée : sa résistance chute. On soude de préférence à l'état mis en solution (ou survieilli), avec un apport adapté, puis on refait le traitement complet (mise en solution et vieillissement) ou au moins le vieillissement.</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique : « Solution, Saisie, Semis »</b> : mise en solution, trempe qui saisit les éléments, vieillissement qui sème les précipités.</div>
-    <div class="weld"><b>🔥 En pratique</b>
-      <p>Les 17-4PH et 15-5PH se soudent avec un apport de composition voisine (ou austénitique si l'on accepte un métal fondu moins résistant), sans préchauffage important car leur martensite est à bas carbone, puis on revieillit l'assemblage. Le mode opératoire précise l'état avant soudage et le traitement après soudage.</p>
-    </div>
+  <p><b>Exemple</b> (17-4PH, minimums de l'ASTM A564) : H900, R<sub>p0,2</sub> ≥ 1 170 MPa, résistance maximale mais ténacité faible ; H1025, ≥ 1 000 MPa, compromis ; H1150, ≥ 725 MPa, ténacité maximale et meilleure tenue à la corrosion sous tension. Atouts : R<sub>p0,2</sub> de 1 à 1,5 GPa pour les martensitiques, bonne tenue à la corrosion, usinage à l'état mis en solution puis vieillissement presque sans variation dimensionnelle. Emplois : aéronautique, nucléaire, chimie, turbines, ressorts.</p>
+
+  <div class="warn"><b>⚠️ Piège : souder un PH à l'état vieilli.</b> Le cycle thermique dissout ou fait grossir les précipités de la ZAT : sa résistance chute. On soude de préférence à l'état mis en solution (ou survieilli), avec un apport adapté, puis on refait le traitement complet ou au moins le vieillissement.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « Solution, Saisie, Semis »</b> : mise en solution, trempe qui saisit, vieillissement qui sème.</div>
+  <div class="weld"><b>🔥 En pratique</b>
+    <p>Les 17-4PH et 15-5PH se soudent avec un apport de composition voisine (ou austénitique si l'on accepte un métal fondu moins résistant), sans préchauffage important car leur martensite est à bas carbone, puis on revieillit l'assemblage. Le mode opératoire précise l'état avant soudage et le traitement après. Pour les pièces critiques en milieu humide, on choisit souvent H1150 plutôt que H900.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : nuances, aciers ODS</summary>
+    <p>17-4PH = X5CrNiCu16-4 ou X5CrNiCuNb16-4 (1.4542), précipités riches en cuivre ; 15-5PH (1.4545) ; PH13-8Mo (1.4534), précipités NiAl ; 17-7PH (1.4568), NiAl et M<sub>23</sub>C<sub>6</sub> ; A286 (1.4980), Ni<sub>3</sub>Ti. Précipité cohérent : son réseau prolonge celui de la matrice ; très petit, il est cisaillé ; trop gros, il est contourné (mécanisme d'Orowan). Les aciers <b>ODS</b> (renforcés par une dispersion d'oxydes d'yttrium et de titane, élaborés par métallurgie des poudres) visent les gaines de combustible nucléaire ; le soudage par fusion fait remonter et grossir leurs oxydes, et n'a pas encore de solution satisfaisante.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>PH : mise en solution, trempe, vieillissement ; le pic de durcissement dépend de la taille des précipités.</li>
+      <li>Survieilli (H1150) : moins résistant, plus tenace, meilleur en corrosion sous tension.</li>
+      <li>Souder à l'état mis en solution, puis revieillir.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -607,21 +541,14 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="c-img"><span class="ico">🧲</span><span><small>Image à retenir</small>L'évier qui devient magnétique : là où le 304 a été embouti, l'aimant colle, parce que l'austénite s'est changée en martensite</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">l'austénite métastable</span></div>
-    <p>Les austénitiques (304L, 316L, 321, 347, 310S…) contiennent 16 à 25 % de chrome et 8 à 20 % de nickel : l'île d'austénite a tellement gonflé qu'ils restent <b>cubiques à faces centrées</b> jusqu'à l'ambiante. C'est la famille la plus utilisée. Leurs atouts :</p>
-    <ul>
-      <li><b>ductiles</b> et faciles à mettre en forme (emboutissage profond) ;</li>
-      <li><b>fortement écrouissables</b> : leur limite d'élasticité, faible à l'état hypertrempé (environ 200 à 250 MPa), grimpe jusqu'à 1,5 à 2 GPa après un fort écrouissage, au prix d'une ductilité réduite et d'une usinabilité plus difficile ;</li>
-      <li><b>pas de transition ductile-fragile</b> : le cfc reste tenace jusqu'aux températures de l'azote ou de l'hélium liquides ;</li>
-      <li><b>amagnétiques</b>, très résistants à la corrosion, faciles à nettoyer.</li>
-    </ul>
-    <p>Mais leur austénite est souvent <b>métastable</b>. Refroidie très bas, ou fortement déformée, elle peut se transformer en martensite α', dure et magnétique. Sous la déformation, la martensite qui apparaît là où le métal se déforme le plus durcit précisément ces zones : la déformation se reporte ailleurs, ce qui retarde la striction. C'est l'<b>effet TRIP</b> : le 301 ou le 304 peuvent ainsi atteindre de très hautes résistances par écrouissage. Plus on déforme froid, plus la transformation est forte ; au-dessus d'une température notée M<sub>d</sub>, la déformation ne transforme plus rien.</p>
-    <p>Côté physique, ils se distinguent par une <b>faible conductivité thermique</b> (12 à 15 W·m⁻¹·K⁻¹) et une <b>forte dilatation</b> (16 à 18 × 10⁻⁶ °C⁻¹ entre 20 et 300 °C) : la chaleur du soudage reste concentrée et le métal se dilate beaucoup, d'où des <b>déformations</b> de soudage nettement plus fortes que sur un acier au carbone.</p>
-  </div>
+  <p>Les austénitiques (304L, 316L, 321, 347, 310S) contiennent 16 à 25 % de chrome et 8 à 20 % de nickel : ils restent <b>cubiques à faces centrées</b> jusqu'à l'ambiante. C'est la famille la plus utilisée : <b>ductiles</b> et faciles à emboutir ; <b>très écrouissables</b> (R<sub>p0,2</sub> d'environ 200 à 250 MPa à l'état hypertrempé, jusqu'à 1,5 à 2 GPa après un fort écrouissage) ; <b>sans transition ductile-fragile</b>, tenaces jusqu'à l'azote liquide ; <b>amagnétiques</b> et très résistants à la corrosion.</p>
+  <p>Mais leur austénite est souvent <b>métastable</b> : refroidie très bas ou fortement déformée, elle se transforme en martensite α′, dure et magnétique, comme l'évier embouti qui attire l'aimant. Cette martensite durcit les zones les plus déformées, la déformation se reporte ailleurs et la striction est retardée : c'est l'<b>effet TRIP</b>. Au-dessus d'une température notée M<sub>d</sub>, la déformation ne transforme plus rien. Côté physique, <b>faible conductivité</b> (12 à 15 W·m⁻¹·K⁻¹) et <b>forte dilatation</b> (16 à 18 × 10⁻⁶ °C⁻¹) : la chaleur du soudage reste concentrée et le métal se dilate beaucoup.</p>
 
-  <div class="lab" id="m4">
+  <div class="fx"><div class="big">M<sub>d30</sub> (°C) ≈ 551 − 462(C + N) − 9,2Si − 8,1Mn − 13,7Cr − 29(Ni + Cu) − 18,5Mo</div><p class="cap">Formule de Nohara : à M<sub>d30</sub>, une déformation vraie de 0,30 transforme la moitié de l'austénite en martensite. Plus M<sub>d30</sub> est haut, plus l'austénite se transforme à l'ambiante. Toujours M<sub>d</sub> &gt; M<sub>s</sub> : la déformation fournit l'énergie qui manque à la transformation.</p></div>
+
+<div class="lab" id="m4">
     <p class="lab-h">Manipulation 4 : le 304 qui devient magnétique</p>
-    <p class="lab-sub">On étire une éprouvette d'austénitique à une température donnée. Premier schéma : les grains, où la martensite α' apparaît (bleu nuit), et l'aimant. Second schéma : la courbe de traction (en pointillé, la même austénite si elle était stable) et la fraction de martensite. M<sub>d30</sub> par la formule de Nohara, M<sub>s</sub> par celle de Pickering, écrouissage par la loi de Ludwik. Modèle pédagogique.</p>
+    <p class="lab-sub">Étire une éprouvette d'austénitique à une température donnée : la martensite apparaît dans les grains, l'aimant réagit.<span class="predict">🔮 Prédis d'abord : à 20 °C et ε = 0,30, le 316L forme-t-il de la martensite ?</span></p>
     <div class="btns" id="m4g">
       <button class="btn" data-k="301" type="button">301</button>
       <button class="btn on" data-k="304" type="button">304</button>
@@ -631,39 +558,30 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     </div>
     <div class="ctrl"><label for="m4t">Température d'essai <span class="sig">T</span></label><input type="range" id="m4t" class="r-sig" min="-196" max="100" step="1" value="20"><output id="m4to"></output></div>
     <div class="ctrl"><label for="m4e">Déformation vraie <span class="sig">ε</span></label><input type="range" id="m4e" class="r-sig" min="0" max="0.6" step="0.01" value="0.3"><output id="m4eo"></output></div>
-    <div class="btns"><button class="btn play" id="m4play" type="button">▶ Étirer</button></div>
+    <div class="btns"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" id="m4play" type="button">▶ Étirer</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button></div>
     <svg id="m4svg" role="img" aria-label="Grains d'austénite qui se transforment en martensite sous la déformation, courbe de traction et fraction de martensite"></svg>
     <div class="readout" id="m4r"></div>
     <p class="status" id="m4msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">M<sub>s</sub>, M<sub>d30</sub>, écrouissage, nuances</span></div>
-    <h4>Deux températures pour une austénite métastable</h4>
-    <div class="fx"><div class="big">M<sub>s</sub> (°C) ≈ 502 − 810·C − 1 230·N − 13·Mn − 30·Ni − 12·Cr − 54·Cu − 46·Mo</div><p class="cap">Formule de Pickering : début de transformation au simple refroidissement ; pour un 304, M<sub>s</sub> est très en dessous de l'ambiante</p></div>
-    <div class="fx"><div class="big">M<sub>d30</sub> (°C) ≈ 551 − 462·(C + N) − 9,2·Si − 8,1·Mn − 13,7·Cr − 29·(Ni + Cu) − 18,5·Mo − 68·Nb</div><p class="cap">Formule de Nohara (grain ASTM 8) : à M<sub>d30</sub>, une déformation vraie de 0,30 transforme la moitié de l'austénite en martensite. D'autres versions existent (Angel, 1954, constante 413)</p></div>
-    <p>Toujours M<sub>d</sub> &gt; M<sub>s</sub> : la déformation fournit l'énergie qui manque à la transformation. La quantité de martensite dépend de la température, du mode (traction, laminage, pliage), du taux et de la vitesse de déformation, et de la composition. Ordres de grandeur (Nohara) : 301 vers +24 °C, 304 vers 0 °C, 304L vers −25 °C, 316L vers −70 °C, 310S très en dessous : le 310S reste austénitique même déformé dans l'azote liquide.</p>
-    <h4>L'écrouissage</h4>
-    <div class="fx"><div class="big"><span class="eps">σ</span> = σ<sub>e</sub> + K·<span class="sig">ε</span><sup>n</sup></div><p class="cap">Loi de Ludwik : σ<sub>e</sub> limite d'élasticité, K coefficient de résistance, n coefficient d'écrouissage ; n ≈ 0,4 à 0,5 pour une austénite stable, contre 0,15 à 0,25 pour un inox ferritique</p></div>
-    <p>L'effet TRIP s'ajoute à cet écrouissage : avec une austénite peu stable (17 % Cr, 7 % Ni), la contrainte dépasse 1 200 MPa vers 25 % de déformation ; avec une austénite stable (17 % Cr, 13 % Ni et plus), elle reste sous 900 MPa à 50 %.</p>
-    <h4>Nuances courantes</h4>
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>EN symbolique</th><th>Numéro</th><th>AISI</th><th>Particularité</th></tr>
-      <tr><td>X5CrNi18-10</td><td class="n">1.4301</td><td>304</td><td>la nuance de base, 18 % Cr, 8 à 10 % Ni</td></tr>
-      <tr><td>X2CrNi18-9</td><td class="n">1.4307</td><td>304L</td><td>bas carbone, pour le soudage</td></tr>
-      <tr><td>X2CrNiMo17-12-2</td><td class="n">1.4404</td><td>316L</td><td>2 % Mo : tenue aux chlorures</td></tr>
-      <tr><td>X6CrNiTi18-10</td><td class="n">1.4541</td><td>321</td><td>stabilisé au titane</td></tr>
-      <tr><td>X6CrNiNb18-10</td><td class="n">1.4550</td><td>347</td><td>stabilisé au niobium</td></tr>
-      <tr><td>X8CrNi25-21</td><td class="n">1.4845</td><td>310S</td><td>réfractaire, austénite très stable</td></tr>
-    </table></div>
-    <p>À l'état hypertrempé, la norme de produit garantit typiquement R<sub>p0,2</sub> ≥ 200 à 240 MPa et R<sub>m</sub> ≥ 500 à 650 MPa, avec un allongement de 40 % et plus. Ils peuvent contenir un peu de ferrite δ, sauf les super-austénitiques (6 % Mo, 20 à 25 % Ni), entièrement austénitiques.</p>
-    <p>Applications : partout où l'on ne veut pas de magnétisme ; agroalimentaire (bon état de surface, nettoyage facile) ; chimie et pétrochimie ; cryogénie (réservoirs de gaz liquéfiés).</p>
-    <div class="def"><b>📖 Hypertrempé</b> : état d'un austénitique après remise en solution vers 1 050 °C et refroidissement rapide, le plus doux et le plus résistant à la corrosion. <b>Écrouissage</b> : durcissement par déformation plastique. <b>Effet TRIP</b> : surcroît d'écrouissage et de ductilité dû à la transformation martensitique sous la déformation. <b>Déformation vraie</b> : ε = ln(ℓ/ℓ<sub>0</sub>), où ℓ<sub>0</sub> et ℓ sont les longueurs initiale et finale.</div>
-    <div class="tip">💡 <b>Le bon réflexe</b> : pour une pièce emboutie qui doit rester amagnétique, ou pour un formage à froid très poussé, choisis une austénite stable (316L, 310S, nuances riches en nickel) plutôt qu'un 301 ou un 304.</div>
-    <div class="warn"><b>⚠️ Piège : « austénitique » ne veut pas dire « aucune ferrite ».</b> Les tôles et surtout le métal fondu en contiennent souvent quelques %, volontairement : elle protège de la fissuration à chaud (cours 3). Pour une application amagnétique stricte, on spécifie une ferrite maximale.</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique : « Md au-dessus, Ms en dessous »</b> : la déformation transforme l'austénite entre M<sub>s</sub> et M<sub>d</sub> ; au-dessus de M<sub>d</sub>, plus rien ; en dessous de M<sub>s</sub>, le froid seul suffit.</div>
-    <div class="weld"><b>🔥 Déformations de soudage</b>
-      <p>Faible conductivité et forte dilatation : à énergie égale, un austénitique se déforme environ une fois et demie à deux fois plus qu'un acier au carbone. On pointe serré, on soude symétriquement, on limite l'énergie et l'on prévoit des gabarits. Le cours 3 traite la fissuration à chaud, son autre point faible.</p>
-    </div>
+  <p><b>Exemple</b> : M<sub>d30</sub> ≈ +24 °C pour un 301, ≈ 2 °C pour un 304, ≈ −73 °C pour un 316L ; le 310S reste austénitique même déformé dans l'azote liquide. Dans la manipulation, à 20 °C et ε = 0,30, le 301 forme environ 63 % de martensite, le 304 11 %, le 316L rien ; le 304 à −196 °C se transforme presque entièrement. Nuances : 304 (X5CrNi18-10, 1.4301) ; 304L (X2CrNi18-9, 1.4307), bas carbone pour le soudage ; 316L (X2CrNiMo17-12-2, 1.4404), 2 % Mo pour les chlorures ; 321 et 347, stabilisés ; 310S (1.4845), réfractaire. À l'état hypertrempé : R<sub>p0,2</sub> ≥ 200 à 240 MPa, R<sub>m</sub> ≥ 500 à 650 MPa, A ≥ 40 %.</p>
+
+  <div class="warn"><b>⚠️ Piège : « austénitique » ne veut pas dire « aucune ferrite ».</b> Les tôles et surtout le métal fondu en contiennent souvent quelques %, volontairement : elle protège de la fissuration à chaud (cours 3). Pour une application amagnétique stricte, on spécifie une ferrite maximale ; pour une pièce emboutie qui doit rester amagnétique, une austénite stable (316L, 310S).</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « Md au-dessus, Ms en dessous »</b> : la déformation transforme l'austénite entre M<sub>s</sub> et M<sub>d</sub>.</div>
+  <div class="weld"><b>🔥 Déformations de soudage</b>
+    <p>Faible conductivité et forte dilatation : à énergie égale, un austénitique se déforme environ une fois et demie à deux fois plus qu'un acier au carbone. On pointe serré, on soude symétriquement, on limite l'énergie et l'on prévoit des gabarits. Le cours 3 traite son autre point faible, la fissuration à chaud.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : M<sub>s</sub>, écrouissage, applications</summary>
+    <p>M<sub>s</sub> (Pickering) : 502 − 810 C − 1 230 N − 13 Mn − 30 Ni − 12 Cr − 54 Cu − 46 Mo ; pour un 304, très en dessous de l'ambiante. La formule de M<sub>d30</sub> d'Angel (1954) a une constante de 413. La quantité de martensite dépend aussi du mode, du taux et de la vitesse de déformation. Écrouissage de Ludwik : σ = σ<sub>e</sub> + K·ε<sup>n</sup>, avec n ≈ 0,4 à 0,5 pour une austénite stable (0,15 à 0,25 pour un ferritique) ; avec une austénite peu stable (17 % Cr, 7 % Ni), la contrainte dépasse 1 200 MPa vers 25 % de déformation. Les super-austénitiques (6 % Mo, 20 à 25 % Ni) sont entièrement austénitiques. Applications : agroalimentaire, chimie, cryogénie (réservoirs de gaz liquéfiés), partout où l'on ne veut pas de magnétisme.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Austénitiques : ductiles, tenaces à froid, amagnétiques, très écrouissables.</li>
+      <li>Austénite métastable : la déformation à froid la transforme en martensite (effet TRIP), selon M<sub>d30</sub>.</li>
+      <li>Soudage : déformations fortes (dilatation élevée, conductivité faible), fissuration à chaud.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -676,21 +594,20 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="c-img"><span class="ico">🧱</span><span><small>Image à retenir</small>Le béton armé : la ferrite apporte la résistance et la tenue aux chlorures, l'austénite la ténacité</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">une structure en deux phases</span></div>
-    <p>Un <b>duplex</b> (nom anglais devenu générique), ou austéno-ferritique, contient environ 22 à 25 % de chrome, 4 à 7 % de nickel, souvent du molybdène et de l'azote. Sa verticale tombe dans la bande α + γ du cours 1 : sa structure mélange <b>ferrite δ</b> et <b>austénite</b>, entre 30 et 60 % de ferrite, avec un objectif de moitié-moitié. Au microscope, des îlots d'austénite allongés par le laminage dans une matrice de ferrite.</p>
-    <p>Ce mélange réunit plusieurs qualités :</p>
-    <ul>
-      <li>une limite d'élasticité environ <b>deux fois</b> celle d'un 304L, avec une bonne ductilité ;</li>
-      <li>une excellente tenue aux <b>piqûres</b> et aux milieux chlorés (beaucoup de chrome, de molybdène et d'azote) et à la corrosion sous tension ;</li>
-      <li>moins de nickel, donc un <b>coût</b> souvent plus bas qu'un austénitique de tenue équivalente ;</li>
-      <li>une dilatation (13 à 14 × 10⁻⁶ °C⁻¹) proche de celle d'un acier au carbone, et une conductivité d'environ 15 W·m⁻¹·K⁻¹.</li>
-    </ul>
-    <p>Leurs limites : ils sont <b>ferromagnétiques</b> (la ferrite), leur tenue au fluage est faible, et on les emploie en dessous d'environ <b>300 °C</b>, à cause de la fragilisation de leur ferrite vers 475 °C et de la phase σ (cours 4).</p>
-  </div>
+  <p>Un <b>duplex</b>, ou austéno-ferritique, contient 22 à 25 % de chrome, 4 à 7 % de nickel, souvent du molybdène et de l'azote : sa verticale tombe dans la bande α + γ, et sa structure mélange <b>ferrite</b> et <b>austénite</b>, 30 à 60 % de ferrite avec un objectif de moitié-moitié, comme le béton armé : la ferrite apporte la résistance et la tenue aux chlorures, l'austénite la ténacité. Ses qualités :</p>
+  <ul>
+    <li>une limite d'élasticité environ <b>deux fois</b> celle d'un 304L, avec une bonne ductilité ;</li>
+    <li>une excellente tenue aux <b>piqûres</b> et à la <b>corrosion sous tension</b> en milieu chloré ;</li>
+    <li>moins de nickel, donc un <b>coût</b> souvent plus bas qu'un austénitique de tenue équivalente ;</li>
+    <li>une dilatation (13 à 14 × 10⁻⁶ °C⁻¹) proche de celle d'un acier au carbone.</li>
+  </ul>
+  <p>Ses limites : il est <b>ferromagnétique</b>, flue mal, et s'emploie en dessous d'environ <b>300 °C</b>, à cause de la fragilisation de sa ferrite vers 475 °C et de la phase σ (cours 4).</p>
 
-  <div class="lab" id="m5">
+  <div class="def"><b>📖 Équilibre des phases</b> : un duplex se solidifie en ferrite, puis l'austénite se forme au refroidissement ; plus le recuit est chaud ou le refroidissement rapide, plus il reste de ferrite. L'azote, très gammagène et qui diffuse vite, aide l'austénite à se reformer. <b>Lean duplex</b> : peu allié en nickel et molybdène (2304) ; <b>super duplex</b> : 25 % Cr, 3,5 à 4 % Mo, ≈ 0,25 % N, PREN &gt; 40 (2507).</div>
+
+<div class="lab" id="m5">
     <p class="lab-h">Manipulation 5 : doser un duplex</p>
-    <p class="lab-sub">Choisis une nuance ou règle sa composition, et la température de recuit (mise en solution). Premier schéma : la boucle γ du cours 1, déformée par le nickel, l'azote et le molybdène, avec le point de l'alliage. Second schéma : la microstructure laminée qui en résulte (ferrite bleue, austénite bleu-vert) et les jauges de PREN et de coût. Modèle pédagogique ; l'indice de coût pondère les éléments d'alliage par des prix relatifs indicatifs. « ▶ Recuire plus chaud » monte la température de recuit de 1 000 à 1 250 °C.</p>
+    <p class="lab-sub">Choisis une nuance ou règle sa composition et son recuit : la boucle γ, la microstructure laminée, et les jauges de PREN et de coût.<span class="predict">🔮 Prédis d'abord : un 2205 recuit à 1 200 °C a-t-il plus ou moins de ferrite qu'à 1 050 °C ?</span></p>
     <div class="btns" id="m5g">
       <button class="btn" data-k="2304" type="button">2304</button>
       <button class="btn on" data-k="2205" type="button">2205</button>
@@ -702,34 +619,30 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="ctrl"><label for="m5mo">Molybdène <span class="mat">Mo</span></label><input type="range" id="m5mo" class="r-mat" min="0" max="4.5" step="0.1" value="3.1"><output id="m5moo"></output></div>
     <div class="ctrl"><label for="m5n">Azote <span class="mat">N</span></label><input type="range" id="m5n" class="r-mat" min="0.02" max="0.35" step="0.01" value="0.17"><output id="m5no"></output></div>
     <div class="ctrl"><label for="m5t">Recuit <span class="sig">T</span></label><input type="range" id="m5t" class="r-sig" min="1000" max="1250" step="5" value="1050"><output id="m5to"></output></div>
-    <div class="btns"><button class="btn play" id="m5play" type="button">▶ Recuire plus chaud</button></div>
+    <div class="btns"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" id="m5play" type="button">▶ Recuire plus chaud</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button></div>
     <svg id="m5svg" role="img" aria-label="Boucle gamma avec le point d'un duplex, microstructure ferrite et austénite, indice de piqûre et indice de coût"></svg>
     <div class="readout" id="m5r"></div>
     <p class="status" id="m5msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">équilibre des phases, nuances, piqûres</span></div>
-    <h4>Pourquoi la température compte</h4>
-    <p>Les coupes du diagramme fer-chrome-nickel (par exemple à 8 % de nickel, ou à 18 % de chrome) montrent qu'à haute température la ferrite domine : un duplex se solidifie en ferrite, puis l'austénite se forme en refroidissant. La proportion finale dépend de la température de recuit et de la vitesse de refroidissement : plus le recuit est chaud, plus il reste de ferrite. En soudage, un refroidissement trop rapide laisse une zone affectée trop ferritique (cours 4). L'azote, très gammagène et qui diffuse vite, aide l'austénite à se reformer.</p>
-    <h4>Nuances courantes</h4>
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>EN symbolique</th><th>Numéro</th><th>Nom courant</th><th>PREN (ordre de grandeur)</th><th>Famille</th></tr>
-      <tr><td>X2CrNiN23-4</td><td class="n">1.4362</td><td>2304</td><td class="n">≈ 25</td><td>duplex « lean », peu allié</td></tr>
-      <tr><td>X2CrNiMoN22-5-3</td><td class="n">1.4462</td><td>2205</td><td class="n">≈ 35</td><td>duplex standard</td></tr>
-      <tr><td>X3CrNiMoN27-5-2</td><td class="n">1.4460</td><td>329</td><td class="n">≈ 33</td><td>duplex à 27 % Cr</td></tr>
-      <tr><td>X2CrNiMoN25-7-4</td><td class="n">1.4410</td><td>2507</td><td class="n">≈ 42</td><td>super duplex</td></tr>
-      <tr><td>X2CrNiMoCuN25-6-3</td><td class="n">1.4507</td><td>(S32520)</td><td class="n">≈ 40</td><td>super duplex au cuivre</td></tr>
-    </table></div>
-    <p>Limite d'élasticité typique : environ 400 MPa pour un 2304, 450 à 500 MPa pour un 2205, 530 MPa et plus pour un super duplex, avec R<sub>m</sub> de 600 à 800 MPa. Applications : chimie et pétrochimie, papeterie, pompage d'eau de mer, stations de dessalement, hélices de bateaux, installations de désulfuration des fumées, ponts et structures (pour les nuances « lean »).</p>
-    <h4>Le PREN des duplex</h4>
-    <p>Rappel (cours 1) : <span class="m">PREN = %Cr + 3,3·%Mo + 16·%N</span>. Au-dessous d'environ 35, une nuance ne convient pas à l'eau de mer ; au-dessus de 40 (super duplex, super austénitiques), elle devient une candidate. Attention : le PREN se calcule sur l'analyse globale, mais chaque phase a le sien ; un duplex mal équilibré (trop de ferrite, ou une austénite pauvre en azote) perd de sa tenue. D'autres critères complètent le PREN : le potentiel de piqûration E<sub>pit</sub> et la température critique de piqûration (CPT, essai ASTM G48).</p>
-    <div class="def"><b>📖 Duplex</b> : acier à deux phases, ici ferrite et austénite. <b>Lean duplex</b> : duplex peu allié en nickel et molybdène, moins cher. <b>Super duplex</b> : duplex à 25 % de chrome, 3,5 à 4 % de molybdène et 0,25 % d'azote environ, PREN supérieur à 40. <b>Corrosion sous tension</b> : fissuration sous l'action combinée d'une contrainte et d'un milieu corrosif, typique des austénitiques en milieu chloruré chaud.</div>
-    <div class="tip">💡 <b>Le bon réflexe</b> : pour une application en milieu chloré tiède avec des contraintes, compare un 316L et un 2205 : le duplex est plus résistant mécaniquement, résiste mieux aux piqûres et à la corrosion sous tension, et coûte souvent moins cher à poids égal, avec des épaisseurs plus faibles.</div>
-    <div class="warn"><b>⚠️ Piège : traiter un duplex comme un austénitique.</b> Pas de détente, pas de service au-dessus de 300 °C environ, et un mode opératoire qui tient l'équilibre des phases (ni trop vite, ni trop chaud) : voir le cours 4 pour σ et 475 °C.</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique : « 22-5-3 et 25-7-4 »</b> : chrome, nickel, molybdène des deux duplex les plus courants, le standard et le super.</div>
-    <div class="weld"><b>🔥 Soudage</b>
-      <p>On soude les duplex avec un apport surallié en nickel (22 9 3 N L pour un 2205) pour retrouver l'équilibre ferrite-austénite dans le métal fondu, une énergie dans une fenêtre (ni trop faible, ni trop forte), une température entre passes limitée et une protection gazeuse soignée, parfois avec un peu d'azote. On contrôle la ferrite du métal fondu et de la zone affectée.</p>
-    </div>
+  <p><b>Exemple</b> : PREN ≈ 26 pour un 2304, 35,5 pour un 2205, 42 pour un 2507, contre 25 pour un 316L. Indice de coût (Cr + 6 Ni + 12 Mo, 100 pour le 304L) : 2304 ≈ 72, 2205 ≈ 126, 2507 ≈ 151, 316L ≈ 139. Dans la manipulation, le 2205 compte environ 50 % de ferrite recuit à 1 050 °C, 73 % à 1 200 °C. Pour une pompe d'eau de mer : le 2507 ; pour une structure en atmosphère urbaine : le 2304, aussi bon qu'un 316L, deux fois plus résistant et nettement moins cher. R<sub>p0,2</sub> typique : ≈ 400 MPa (2304), 450 à 500 MPa (2205), 530 MPa et plus (super duplex).</p>
+
+  <div class="warn"><b>⚠️ Piège : traiter un duplex comme un austénitique.</b> Pas de service au-dessus de 300 °C environ, et un mode opératoire qui tient l'équilibre des phases, ni trop vite ni trop chaud. Le PREN se calcule sur l'analyse globale, mais chaque phase a le sien : un duplex mal équilibré (trop de ferrite, austénite pauvre en azote) perd de sa tenue.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « 22-5-3 et 25-7-4 »</b> : chrome, nickel, molybdène du duplex standard et du super duplex.</div>
+  <div class="weld"><b>🔥 Soudage</b>
+    <p>Apport surallié en nickel (22 9 3 N L pour un 2205) pour retrouver l'équilibre ferrite-austénite dans le métal fondu, énergie dans une fenêtre (ni trop faible, ni trop forte), température entre passes limitée, protection gazeuse soignée parfois avec un peu d'azote, et contrôle de la ferrite du métal fondu et de la ZAT.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : nuances, autres critères de piqûre</summary>
+    <p>X2CrNiN23-4 (1.4362, 2304) ; X2CrNiMoN22-5-3 (1.4462, 2205) ; X3CrNiMoN27-5-2 (1.4460, 329) ; X2CrNiMoN25-7-4 (1.4410, 2507) ; X2CrNiMoCuN25-6-3 (1.4507), super duplex au cuivre. Applications : chimie et pétrochimie, papeterie, eau de mer, dessalement, hélices, désulfuration des fumées, ponts. D'autres critères complètent le PREN : potentiel de piqûration E<sub>pit</sub>, température critique de piqûration (CPT, ASTM G48). Conductivité ≈ 15 W·m⁻¹·K⁻¹.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Duplex : ferrite + austénite, moitié-moitié ; deux fois plus résistant qu'un 304L.</li>
+      <li>Très bon face aux piqûres et à la corrosion sous tension ; pas au-dessus de 300 °C.</li>
+      <li>Soudage : apport surallié en nickel, énergie dans une fenêtre, ferrite contrôlée.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -742,22 +655,29 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="c-img"><span class="ico">🧰</span><span><small>Image à retenir</small>La boîte à outils : chaque famille est un outil, on prend celui qui fait le travail, pas le plus cher</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">les familles côte à côte</span></div>
-    <p>Choisir un inox, c'est d'abord écarter les familles qui ne conviennent pas : un critère éliminatoire (amagnétique, eau de mer, cryogénie) suffit souvent à trancher. Ensuite, on compare résistance, ténacité, mise en œuvre et coût. Quelques réflexes :</p>
-    <ul>
-      <li><b>amagnétique</b> ou <b>cryogénie</b> : austénitiques ;</li>
-      <li><b>eau de mer</b>, milieux très chlorés : super duplex ou super austénitiques ;</li>
-      <li><b>corrosion sous tension</b> en milieu chloré chaud : duplex ou ferritiques, pas les austénitiques ordinaires ;</li>
-      <li><b>haute résistance</b> : martensitiques ou durcis par précipitation, puis duplex ;</li>
-      <li><b>prix bas</b> en milieu peu agressif : ferritiques ;</li>
-      <li><b>facile à souder</b> sans traitement thermique : austénitiques, puis duplex et ferritiques stabilisés.</li>
-    </ul>
-    <p>La ténacité à froid fait souvent la différence : l'austénite (cfc) ne connaît pas de transition ductile-fragile ; la ferrite (cc) en a une, d'autant plus haute que le grain est gros ; un mélange austénite-ferrite se situe entre les deux.</p>
-  </div>
+  <p>Choisir un inox, c'est d'abord écarter les familles qui ne conviennent pas : un critère éliminatoire suffit souvent à trancher. Ensuite, on compare résistance, ténacité, mise en œuvre et coût total (matière, épaisseur, soudage, contrôle, maintenance), pas seulement le prix au kilo. Quelques réflexes :</p>
+  <ul>
+    <li><b>amagnétique</b> ou <b>cryogénie</b> : austénitiques ;</li>
+    <li><b>eau de mer</b>, milieux très chlorés : super duplex ou super austénitiques ;</li>
+    <li><b>corrosion sous tension</b> en milieu chloré chaud : duplex ou ferritiques, pas les austénitiques ordinaires ;</li>
+    <li><b>haute résistance</b> : martensitiques ou durcis par précipitation, puis duplex ;</li>
+    <li><b>prix bas</b> en milieu peu agressif : ferritiques ;</li>
+    <li><b>soudage sans traitement thermique</b> : austénitiques, puis duplex et ferritiques stabilisés.</li>
+  </ul>
+  <p>La ténacité à froid fait souvent la différence : l'austénite n'a pas de transition ductile-fragile ; la ferrite en a une, d'autant plus haute que le grain est gros ; un duplex se situe entre les deux (bon jusqu'à −50 °C environ).</p>
 
-  <div class="lab" id="m6">
+  <div class="tbl-wrap"><table class="data">
+    <tr><th>Famille</th><th>R<sub>p0,2</sub> typique</th><th>Ténacité à froid</th><th>Danger principal au soudage</th></tr>
+    <tr><td>Ferritiques</td><td class="n">250-400 MPa</td><td>transition vers 0 °C et au-dessus</td><td>gros grains, martensite aux joints</td></tr>
+    <tr><td>Martensitiques</td><td class="n">450-1 500 MPa</td><td>selon le revenu</td><td>fissuration à froid</td></tr>
+    <tr><td>Durcis par précipitation</td><td class="n">700-1 500 MPa</td><td>moyenne à faible</td><td>perte du durcissement</td></tr>
+    <tr><td>Austénitiques</td><td class="n">200-300 MPa</td><td>excellente jusqu'à −196 °C</td><td>fissuration à chaud, déformations</td></tr>
+    <tr><td>Duplex</td><td class="n">400-550 MPa</td><td>bonne jusqu'à −50 °C environ</td><td>équilibre des phases, σ</td></tr>
+  </table></div>
+
+<div class="lab" id="m6">
     <p class="lab-h">Manipulation 6 : le sélecteur de famille</p>
-    <p class="lab-sub">Coche les exigences du cahier des charges : chaque famille reçoit une note, et une famille qui ne peut pas satisfaire une exigence est écartée. Le second schéma montre l'allure de la résilience en fonction de la température pour chaque famille ; règle la température de service. Notes et courbes : ordres de grandeur pédagogiques. « ▶ Refroidir » descend la température de service de 100 à −196 °C.</p>
+    <p class="lab-sub">Coche les exigences du cahier des charges : chaque famille reçoit une note ou est écartée. En bas, la résilience selon la température.<span class="predict">🔮 Prédis d'abord : pour un échangeur en eau chlorée tiède sous contrainte, quelle famille reste en tête ?</span></p>
     <div class="btns" id="m6q">
       <button class="btn" data-k="sea" type="button">Eau de mer</button>
       <button class="btn" data-k="cl" type="button">Chlorures modérés</button>
@@ -772,32 +692,30 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     </div>
     <div class="ctrl"><label for="m6t">Température de service <span class="sig">T</span></label><input type="range" id="m6t" class="r-sig" min="-196" max="100" step="1" value="20"><output id="m6to"></output></div>
     <div class="btns"><button class="btn" id="m6z" type="button">↺ Tout décocher</button></div>
-    <div class="btns"><button class="btn play" id="m6play" type="button">▶ Refroidir</button></div>
+    <div class="btns"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" id="m6play" type="button">▶ Refroidir</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button></div>
     <svg id="m6svg" role="img" aria-label="Notes des cinq familles d'inox selon les exigences, et résilience en fonction de la température"></svg>
     <div class="readout" id="m6r"></div>
     <p class="status" id="m6msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">le tableau comparatif</span></div>
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>Propriété</th><th>Ferritiques</th><th>Martensitiques</th><th>Durcis par précipitation</th><th>Austénitiques</th><th>Duplex</th></tr>
-      <tr><td>Structure</td><td>α</td><td>α' revenue</td><td>α' ou γ + précipités</td><td>γ (+ δ)</td><td>γ + δ</td></tr>
-      <tr><td>R<sub>p0,2</sub> typique</td><td class="n">250-400 MPa</td><td class="n">450-1 500 MPa</td><td class="n">700-1 500 MPa</td><td class="n">200-300 MPa</td><td class="n">400-550 MPa</td></tr>
-      <tr><td>Ténacité à froid</td><td>transition vers 0 °C et au-dessus selon le grain</td><td>transition selon revenu</td><td>moyenne à faible (martensitiques)</td><td>excellente jusqu'à −196 °C</td><td>bonne jusqu'à −50 °C environ</td></tr>
-      <tr><td>Magnétisme</td><td>oui</td><td>oui</td><td>oui (martensitiques)</td><td>non</td><td>oui</td></tr>
-      <tr><td>λ (W·m⁻¹·K⁻¹)</td><td class="n">20-30</td><td class="n">20-30</td><td class="n">≈ 18</td><td class="n">12-15</td><td class="n">≈ 15</td></tr>
-      <tr><td>α<sub>th</sub> (10⁻⁶ °C⁻¹)</td><td class="n">10-13</td><td class="n">10-13</td><td class="n">≈ 11</td><td class="n">16-18</td><td class="n">13-14</td></tr>
-      <tr><td>Danger principal au soudage</td><td>gros grains, martensite aux joints</td><td>fissuration à froid</td><td>perte du durcissement</td><td>fissuration à chaud, déformations</td><td>équilibre des phases, σ</td></tr>
-      <tr><td>ISO/TR 15608</td><td class="n">7.1</td><td class="n">7.2</td><td class="n">7.3</td><td class="n">8.1, 8.2, 8.3</td><td class="n">10.1, 10.2</td></tr>
-    </table></div>
-    <p>Un indicateur simple de la tendance aux déformations de soudage est le rapport α<sub>th</sub>/λ : la dilatation pousse à se déformer, la conductivité étale la chaleur. Il vaut environ 0,4 × 10⁻⁶ m·W⁻¹ pour un ferritique, 1,1 × 10⁻⁶ pour un austénitique : à énergie égale, l'austénitique se déforme nettement plus.</p>
-    <div class="def"><b>📖 Critère éliminatoire</b> : exigence qu'une famille ne peut pas satisfaire, quelles que soient ses autres qualités. <b>Résilience</b> : énergie absorbée par une éprouvette entaillée qui se rompt sous un choc (essai Charpy).</div>
-    <div class="tip">💡 <b>Le bon réflexe</b> : commence par les critères éliminatoires, puis regarde le coût total (matière, épaisseur, soudage, contrôle, maintenance), pas seulement le prix au kilo.</div>
-    <div class="warn"><b>⚠️ Piège : choisir l'austénitique « par défaut ».</b> Un 304L en eau de mer pique, un 316L sous contrainte en eau chlorée chaude fissure par corrosion sous tension. Le bon choix part du milieu et des sollicitations réelles.</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique : « F comme Frugal, M comme Mordant, PH comme Puissant, A comme Accommodant, D comme Double »</b>.</div>
-    <div class="weld"><b>🔥 Le choix pèse sur le mode opératoire</b>
-      <p>Le choix de la famille entraîne le groupe ISO/TR 15608, donc les qualifications nécessaires, l'apport, le préchauffage éventuel, l'énergie, la température entre passes et les contrôles. Un changement de famille en cours de projet oblige à requalifier : mieux vaut trancher tôt, avec le coordinateur en soudage autour de la table.</p>
-    </div>
+  <p><b>Repère</b> : la tendance aux déformations de soudage suit le rapport α<sub>th</sub>/λ, la dilatation qui pousse à se déformer sur la conductivité qui étale la chaleur : environ 0,4 × 10⁻⁶ m·W⁻¹ pour un ferritique, 1,1 × 10⁻⁶ pour un austénitique.</p>
+
+  <div class="warn"><b>⚠️ Piège : choisir l'austénitique « par défaut ».</b> Un 304L en eau de mer pique, un 316L sous contrainte en eau chlorée chaude fissure par corrosion sous tension. Le bon choix part du milieu et des sollicitations réelles.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « F comme Frugal, M comme Mordant, PH comme Puissant, A comme Accommodant, D comme Double »</b>.</div>
+  <div class="weld"><b>🔥 Le choix pèse sur le mode opératoire</b>
+    <p>La famille entraîne le groupe ISO/TR 15608, donc les qualifications, l'apport, le préchauffage éventuel, l'énergie, la température entre passes et les contrôles. Un changement de famille en cours de projet oblige à requalifier : mieux vaut trancher tôt, avec le coordinateur en soudage autour de la table.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : propriétés physiques et magnétisme</summary>
+    <p>Ferritiques et martensitiques : magnétiques, λ ≈ 20 à 30 W·m⁻¹·K⁻¹, α<sub>th</sub> ≈ 10 à 13 × 10⁻⁶ °C⁻¹. Durcis par précipitation (martensitiques) : magnétiques, λ ≈ 18, α<sub>th</sub> ≈ 11. Austénitiques : amagnétiques, λ ≈ 12 à 15, α<sub>th</sub> ≈ 16 à 18. Duplex : magnétiques, λ ≈ 15, α<sub>th</sub> ≈ 13 à 14. Groupes ISO/TR 15608 : 7.1, 7.2, 7.3, 8.1 à 8.3, 10.1 et 10.2.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>D'abord les critères éliminatoires (amagnétique, eau de mer, cryogénie, corrosion sous tension), ensuite le coût total.</li>
+      <li>Chaque famille a son danger au soudage.</li>
+      <li>La famille fixe le groupe ISO/TR 15608 et donc les qualifications.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -806,109 +724,39 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
 <div class="wrap">
   <div class="cartouche">
     <div class="c-num">✎</div>
-    <div class="c-title"><h2>Exercices corrigés</h2><p>Six exercices et un défi, une famille à la fois, puis le choix</p></div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Deux exercices, de la ZAT d'un ferritique au choix de la famille</p></div>
     <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de musculation : on ne progresse qu'en soulevant soi-même</span></div>
   </div>
-  <div class="lv lv1"><div class="lv-h">👁 Mode d'emploi <span class="tag">formule littérale, puis valeurs, puis unités</span></div>
-    <p>Cherche chaque question sur papier avant d'ouvrir la correction. Les teneurs sont en % massique. Chaque exercice se vérifie dans la manipulation du même numéro, et le défi se rejoue dans la manipulation 6.</p>
-  </div>
+
+  <p>Cherche chaque question sur papier avant d'ouvrir la correction. Le premier exercice se rejoue dans la manipulation 1, le second dans la manipulation 6.</p>
 
   <div class="exo">
-    <h4>Exercice 1 : la zone affectée d'un 430 <span class="lvtag">N1 · chapitre 1</span></h4>
+    <h4>Exercice 1 : la zone affectée d'un 430 <span class="lvtag">★ application · chapitre 1, à rejouer dans la manipulation 1</span></h4>
     <p>On soude un 430 (C 0,05 ; N 0,04 ; Cr 16,5). Un point de la zone affectée monte à 1 150 °C.</p>
-    <p class="q"><b>a)</b> Dans la manipulation 1, quelle part d'austénite se forme pendant le cycle ?</p>
+    <p class="q"><b>a)</b> Dans la manipulation 1, quelle part d'austénite se forme pendant le cycle ? Pourquoi ?</p>
     <p class="q"><b>b)</b> Avec t<sub>8/5</sub> = 6 s, que devient-elle ? Relève la dureté.</p>
     <p class="q"><b>c)</b> Même question avec t<sub>8/5</sub> = 200 s.</p>
-    <p class="q"><b>d)</b> Passe au 439. Explique la différence.</p>
+    <p class="q"><b>d)</b> Passe au 439. Explique la différence, et propose des précautions de soudage pour le 430.</p>
     <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> Environ <b>26 %</b> d'austénite aux joints de grains : en chauffant puis en refroidissant, la verticale du 430 traverse la bande α + γ.</p>
-      <p><b>b)</b> Refroidissement rapide : les îlots, riches en carbone (environ 0,34 %), deviennent <b>martensite</b> ; dureté moyenne ≈ <b>272 HV</b>, avec des joints très durs et fragiles.</p>
-      <p><b>c)</b> Refroidissement lent : ferrite et carbures de chrome aux joints (dureté ≈ 176 HV) ; les joints sont appauvris en chrome. Dans les deux cas, un recuit vers 750-850 °C rétablit ductilité et tenue à la corrosion.</p>
-      <p><b>d)</b> Le titane fixe le carbone et l'azote : sans ces gammagènes, la verticale du 439 n'atteint plus la bande α + γ. Il ne se forme pas d'austénite, donc pas de martensite (≈ 160 HV). Ses nitrures de titane ancrent aussi les joints : avec t<sub>8/5</sub> = 200 s, le grain plafonne vers 67 µm, contre 155 µm pour le 430. La zone affectée reste ferritique et ductile.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 2 : doser un martensitique <span class="lvtag">N2 · chapitre 2</span></h4>
-    <p>Formule d'Andrews : M<sub>s</sub> ≈ 539 − 423·C − 30,4·Mn − 17,7·Ni − 12,1·Cr − 7,5·Mo. Austénite non transformée à 20 °C : exp[−0,011·(M<sub>s</sub> − 20)].</p>
-    <p class="q"><b>a)</b> Calcule M<sub>s</sub> du 410 (C 0,11 ; Mn 0,6 ; Ni 0,3 ; Cr 12,5) et la part d'austénite résiduelle à 20 °C.</p>
-    <p class="q"><b>b)</b> Même calcul pour le 431 (C 0,17 ; Mn 0,6 ; Ni 2,0 ; Cr 16,0).</p>
-    <p class="q"><b>c)</b> Avec les coefficients d'Irvine, de combien baisse M<sub>s</sub> d'un 12 % Cr si l'on ajoute 0,1 % de carbone ?</p>
-    <p class="q"><b>d)</b> Dans la manipulation 2, compare la ferrite δ du 403 et du 410. Pourquoi cette différence ?</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <span class="m">M<sub>s</sub> ≈ 539 − 46,5 − 18,2 − 5,3 − 151,3 ≈ 318 °C</span> ; austénite résiduelle ≈ exp(−0,011 × 298) ≈ <b>4 %</b>.</p>
-      <p><b>b)</b> <span class="m">M<sub>s</sub> ≈ 539 − 71,9 − 18,2 − 35,4 − 193,6 ≈ 220 °C</span> ; austénite résiduelle ≈ exp(−0,011 × 200) ≈ <b>11 %</b>. Le nickel et le chrome du 431 abaissent M<sub>s</sub>.</p>
-      <p><b>c)</b> Environ <b>47 °C</b> (−475 °C par % de carbone).</p>
-      <p><b>d)</b> 403 : environ <b>13 %</b> de ferrite δ ; 410 : environ <b>0 %</b>. Avec moins de carbone, puissant gammagène (−210 % de ferrite par %), le 403 sort en partie de l'île : de la ferrite subsiste à la température de trempe.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 3 : le 440C trop chauffé <span class="lvtag">N2 · chapitre 2</span></h4>
-    <p>440C : C 1,05 ; Cr 17 ; Mo 0,5 ; Mn 0,5 ; Ni 0,3. Modèle : carbone en solution C<sub>s</sub> ≈ 0,45·exp[(T<sub>a</sub> − 1 000)/280] ; chaque % de carbone non dissous retient environ 10 % de chrome dans les carbures.</p>
-    <p class="q"><b>a)</b> Calcule C<sub>s</sub> et le chrome de l'austénite à 1 050 °C, puis M<sub>s</sub>.</p>
-    <p class="q"><b>b)</b> Même calcul à 1 100 °C.</p>
-    <p class="q"><b>c)</b> Relève l'austénite résiduelle dans la manipulation 2 dans les deux cas. Que conseilles-tu ?</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <span class="m">C<sub>s</sub> ≈ 0,45 × exp(50/280) ≈ 0,54 %</span> ; carbone non dissous 0,51 % → chrome en solution ≈ 17 − 5,1 ≈ 11,9 % ; <span class="m">M<sub>s</sub> ≈ 539 − 227,6 − 15,2 − 5,3 − 143,7 − 3,8 ≈ 143 °C</span>.</p>
-      <p><b>b)</b> <span class="m">C<sub>s</sub> ≈ 0,45 × exp(100/280) ≈ 0,64 %</span> ; chrome ≈ 17 − 4,1 ≈ 12,9 % ; <span class="m">M<sub>s</sub> ≈ 539 − 272,0 − 15,2 − 5,3 − 156,5 − 3,8 ≈ 86 °C</span>.</p>
-      <p><b>c)</b> Environ <b>24 %</b> d'austénite résiduelle à 1 050 °C, <b>46 %</b> à 1 100 °C. Une austénitisation trop chaude dissout plus de carbures et abaisse M<sub>s</sub> : l'acier trempé est moins dur. On austénitise à la température prescrite, puis on fait un traitement par le froid avant le revenu.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 4 : choisir l'état d'un 17-4PH <span class="lvtag">N1 · chapitre 3</span></h4>
-    <p>Paramètre de revenu : P = T·(20 + log<sub>10</sub> t)/1 000, T en K, t en h.</p>
-    <p class="q"><b>a)</b> Calcule P pour H900 (482 °C, 1 h), H1025 (552 °C, 4 h) et H1150 (621 °C, 4 h).</p>
-    <p class="q"><b>b)</b> Relève R<sub>p0,2</sub> dans la manipulation 3 et compare aux minimums de l'ASTM A564 (1 170, 1 000 et 725 MPa).</p>
-    <p class="q"><b>c)</b> Quel état choisir pour une tige filetée en milieu humide, soumise à des chocs ?</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> H900 : 755,15 × 20/1 000 ≈ <b>15,10</b> ; H1025 : 825,15 × 20,60/1 000 ≈ <b>17,00</b> ; H1150 : 894,15 × 20,60/1 000 ≈ <b>18,42</b>.</p>
-      <p><b>b)</b> Environ <b>1 277</b>, <b>1 138</b> et <b>862 MPa</b> : les trois dépassent leur minimum. Plus P est grand, plus les précipités ont grossi : la résistance baisse.</p>
-      <p><b>c)</b> Un état survieilli, H1150 (ou H1075) : moins résistant, mais beaucoup plus tenace et moins sensible à la corrosion sous tension que H900.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 5 : l'austénite qui se transforme <span class="lvtag">N2 · chapitre 4</span></h4>
-    <p>Formule de Nohara : M<sub>d30</sub> ≈ 551 − 462·(C + N) − 9,2·Si − 8,1·Mn − 13,7·Cr − 29·(Ni + Cu) − 18,5·Mo.</p>
-    <p class="q"><b>a)</b> Calcule M<sub>d30</sub> du 301 (C 0,10 ; N 0,05 ; Si 0,5 ; Mn 1,2 ; Cr 17 ; Ni 7 ; Cu 0,2 ; Mo 0,1), du 304 (C 0,04 ; N 0,05 ; Si 0,4 ; Mn 1,5 ; Cr 18,2 ; Ni 8,1 ; Cu 0,2 ; Mo 0,1) et du 316L (C 0,02 ; N 0,05 ; Si 0,4 ; Mn 1,5 ; Cr 17,2 ; Ni 10,2 ; Cu 0,2 ; Mo 2,1).</p>
-    <p class="q"><b>b)</b> Dans la manipulation 4, à 20 °C et ε = 0,30, relève la martensite formée dans chacun.</p>
-    <p class="q"><b>c)</b> Même question pour le 304 à −196 °C. Conclusion pour un réservoir cryogénique embouti ?</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> 301 : 551 − 69,3 − 4,6 − 9,7 − 232,9 − 208,8 − 1,9 ≈ <b>24 °C</b> ; 304 : 551 − 41,6 − 3,7 − 12,2 − 249,3 − 240,7 − 1,9 ≈ <b>2 °C</b> ; 316L : 551 − 32,3 − 3,7 − 12,2 − 235,6 − 301,6 − 38,9 ≈ <b>−73 °C</b>.</p>
-      <p><b>b)</b> Environ <b>63 %</b> (301), <b>11 %</b> (304) et <b>0 %</b> (316L) : plus M<sub>d30</sub> est haut, plus l'austénite se transforme à l'ambiante.</p>
-      <p><b>c)</b> Le 304 à −196 °C se transforme presque entièrement (≈ <b>92 %</b>) : il devient magnétique et plus dur. Pour une pièce fortement formée qui doit rester stable, on préfère une nuance plus riche en nickel (316L, 304LN, 310S) ; et l'on conçoit en tenant compte de cette transformation.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 6 : quel duplex ? <span class="lvtag">N1 · chapitre 5</span></h4>
-    <p>Analyses : 2304 (Cr 23 ; Ni 4,5 ; Mo 0,3 ; N 0,12), 2205 (Cr 22,5 ; Ni 5,7 ; Mo 3,1 ; N 0,17), 2507 (Cr 25 ; Ni 7 ; Mo 3,8 ; N 0,27), 316L (Cr 17,2 ; Ni 10,2 ; Mo 2,1 ; N 0,05).</p>
-    <p class="q"><b>a)</b> Calcule le PREN de chacun.</p>
-    <p class="q"><b>b)</b> Calcule l'indice de coût (Cr + 6·Ni + 12·Mo), ramené à 100 pour le 304L (Cr 18,2 ; Ni 9,2 ; Mo 0,1).</p>
-    <p class="q"><b>c)</b> Dans la manipulation 5, relève la ferrite du 2205 recuit à 1 050 °C puis à 1 200 °C.</p>
-    <p class="q"><b>d)</b> Lequel pour une pompe d'eau de mer ? Pour une structure en atmosphère urbaine ?</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> 2304 : 23 + 0,99 + 1,92 ≈ <b>25,9</b> ; 2205 ≈ <b>35,5</b> ; 2507 ≈ <b>41,9</b> ; 316L ≈ <b>24,9</b>.</p>
-      <p><b>b)</b> Référence 304L : 18,2 + 55,2 + 1,2 = 74,6. 2304 : (23 + 27 + 3,6)/74,6 ≈ <b>72</b> ; 2205 : (22,5 + 34,2 + 37,2)/74,6 ≈ <b>126</b> ; 2507 : (25 + 42 + 45,6)/74,6 ≈ <b>151</b> ; 316L : (17,2 + 61,2 + 25,2)/74,6 ≈ <b>139</b>.</p>
-      <p><b>c)</b> Environ <b>50 %</b> de ferrite à 1 050 °C et <b>73 %</b> à 1 200 °C : plus le recuit est chaud, plus la ferrite domine.</p>
-      <p><b>d)</b> Eau de mer : le 2507 (PREN &gt; 40). Atmosphère urbaine : le 2304, aussi résistant à la corrosion qu'un 316L en atmosphère, deux fois plus résistant mécaniquement et nettement moins cher.</p>
+      <p><b>a)</b> Environ <b>26 %</b> d'austénite aux joints de grains : avec son carbone et son azote, la verticale du 430 traverse la bande α + γ.</p>
+      <p><b>b)</b> Refroidissement rapide : les îlots, riches en carbone (≈ 0,34 %), deviennent <b>martensite</b> ; dureté moyenne ≈ <b>272 HV</b>, avec des joints très durs et fragiles.</p>
+      <p><b>c)</b> Refroidissement lent : ferrite et carbures de chrome aux joints (≈ 176 HV), joints appauvris en chrome. Dans les deux cas, un recuit vers 750 à 850 °C rétablit ductilité et tenue à la corrosion.</p>
+      <p><b>d)</b> Le titane fixe le carbone et l'azote : la verticale du 439 n'atteint plus la bande α + γ, pas d'austénite, pas de martensite (≈ 160 HV) ; ses nitrures ancrent aussi les joints (grain ≈ 67 µm contre 155 µm à t<sub>8/5</sub> = 200 s). Pour le 430 : énergie faible, pas de préchauffage inutile, apport austénitique (19 9 L ou 23 12 L) si l'on veut un métal fondu ductile, recuit éventuel.</p>
     </div></details>
   </div>
 
   <div class="exo defi">
-    <h4>🏆 Défi : quatre cahiers des charges <span class="lvtag">N2 · chapitre 6, à rejouer dans la manipulation 6</span></h4>
+    <h4>Exercice 2 : quatre cahiers des charges <span class="lvtag">★★ synthèse · chapitres 1 à 6, à rejouer dans la manipulation 6</span></h4>
     <p>Pour chaque cas, coche les exigences dans la manipulation 6, relève la famille recommandée, propose une nuance et son groupe ISO/TR 15608.</p>
     <p class="q"><b>a)</b> Un réservoir de gaz naturel liquéfié (−163 °C), soudé, sans traitement thermique.</p>
     <p class="q"><b>b)</b> Un échangeur en eau chlorée tiède, sous contrainte (corrosion sous tension à craindre).</p>
     <p class="q"><b>c)</b> Une lame de couteau de cuisine, bon marché.</p>
     <p class="q"><b>d)</b> Un arbre de pompe d'eau de mer, très sollicité.</p>
     <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> Cryogénie + soudage sans traitement : <b>austénitiques</b> (ferritiques et martensitiques écartés) ; par exemple un 304L, groupe 8.1. KV reste élevé à −163 °C.</p>
-      <p><b>b)</b> Chlorures modérés + corrosion sous tension : <b>duplex</b> (les austénitiques sont écartés par la corrosion sous tension, les martensitiques par les chlorures) ; un 2205, groupe 10.1.</p>
-      <p><b>c)</b> Haute résistance + prix bas : <b>martensitiques</b> ; un 420 (X30Cr13), groupe 7.2.</p>
-      <p><b>d)</b> Eau de mer + haute résistance : <b>duplex</b>, en fait un super duplex 2507 (PREN ≈ 42), groupe 10.2.</p>
+      <p><b>a)</b> Cryogénie + soudage sans traitement : <b>austénitiques</b> ; un 304L, groupe <b>8.1</b>, tenace à −163 °C.</p>
+      <p><b>b)</b> Chlorures + corrosion sous tension : <b>duplex</b> (les austénitiques ordinaires fissurent, les martensitiques piquent) ; un 2205, groupe <b>10.1</b>.</p>
+      <p><b>c)</b> Haute résistance + prix bas : <b>martensitiques</b> ; un 420 (X30Cr13), groupe <b>7.2</b>.</p>
+      <p><b>d)</b> Eau de mer + haute résistance : <b>super duplex</b> 2507 (PREN ≈ 42), groupe <b>10.2</b>.</p>
     </div></details>
   </div>
 </div>
@@ -937,7 +785,7 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
   <div class="fiche">
     <div><div class="ic">🧊</div><h4>Ferritiques</h4><div class="f">α de la fusion à l'ambiante · 7.1</div><p>Pas de normalisation ; 430 : martensite aux joints ; 439 stabilisé Ti : non.</p></div>
     <div><div class="ic">🔪</div><h4>Martensitiques</h4><div class="f">M<sub>s</sub> ≈ 539 − 423C − 30Mn − 18Ni − 12Cr</div><p>Autotrempants ; C fait la dureté ; trop d'alliage : austénite résiduelle. 7.2.</p></div>
-    <div><div class="ic">🌫️</div><h4>Ferrite δ</h4><div class="f">+14 par % Cr · −210 par % C</div><p>Trop d'alphagènes pour l'île : de la ferrite subsiste après trempe.</p></div>
+    <div><div class="ic">🌫️</div><h4>Ferrite δ</h4><div class="f">trop d'alphagènes ⇒ ferrite δ</div><p>Trop d'alphagènes pour l'île : de la ferrite subsiste après trempe.</p></div>
     <div><div class="ic">🎯</div><h4>Durcis par précipitation</h4><div class="f">solution → trempe → vieillissement</div><p>H900 = pic ; H1150 = survieilli, tenace. 7.3.</p></div>
     <div><div class="ic">⏱️</div><h4>Le revenu</h4><div class="f"><span class="sig">P</span> = T·(20 + log t)/1 000</div><p>T et t se compensent : un vieillissement court et chaud vaut un long et tiède.</p></div>
     <div><div class="ic">🧲</div><h4>Austénitiques</h4><div class="f">M<sub>d30</sub> ≈ 551 − 462(C+N) − 13,7Cr − 29(Ni+Cu)…</div><p>Tenaces à −196 °C ; TRIP sous M<sub>d</sub> ; 8.1, 8.2.</p></div>
@@ -945,7 +793,8 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div><div class="ic">🧱</div><h4>Duplex</h4><div class="f">≈ 50 % δ + 50 % γ · 10.1, 10.2</div><p>Deux fois plus résistants que les austénitiques, PREN élevé, &lt; 300 °C.</p></div>
     <div><div class="ic">🧰</div><h4>Choisir</h4><div class="f">éliminatoires d'abord, coût total ensuite</div><p>Amagnétique, cryo : γ ; eau de mer : super duplex ; dureté : M ou PH.</p></div>
   </div>
-  <div class="fun"><span class="fun-h">🏙️ Fun fact : la flèche qui brille depuis 1930</span>À New York, en 1929, la course au plus haut gratte-ciel fait rage. Les bâtisseurs du Chrysler Building assemblent en secret, à l'intérieur de la tour, une flèche d'acier inoxydable longue d'environ 38 mètres, puis la hissent le 23 octobre 1929, en une heure et demie environ : le bâtiment devient, pour quelques mois, le plus haut du monde. Le métal de la couronne et de la flèche est le « Nirosta » de l'aciériste allemand Krupp (de <i>nichtrostender Stahl</i>, acier qui ne rouille pas), un austénitique à 18 % de chrome et 8 % de nickel : c'est l'un des premiers grands emplois architecturaux du 18-8, l'ancêtre de notre 304. Le comité de l'ASTM consacré aux aciers inoxydables a même choisi le bâtiment pour suivre la durabilité du matériau en conditions réelles : ses tôles ont été inspectées tous les cinq ans jusqu'en 1960, date à laquelle on a cessé, faute de dégradation notable. Près d'un siècle plus tard, la couronne brille toujours au-dessus de Manhattan. L'austénitique est au <a href="#c4">chapitre 4</a>.</div>
+  <div class="btns"><button class="btn" id="printFiche" type="button">🖨 Imprimer la fiche mémoire</button></div>
+  <div class="fun"><span class="fun-h">🏙️ Fun fact : la flèche qui brille depuis 1930</span>À New York, en 1929, la course au plus haut gratte-ciel fait rage. Les bâtisseurs du Chrysler Building assemblent en secret, à l'intérieur de la tour, une flèche d'acier inoxydable longue d'environ 38 mètres, puis la hissent le 23 octobre 1929, en une heure et demie environ : le bâtiment devient, pour quelques mois, le plus haut du monde. Le métal de la couronne et de la flèche est le « Nirosta » de l'aciériste allemand Krupp (de <i>nichtrostender Stahl</i>, acier qui ne rouille pas), un austénitique à 18 % de chrome et 8 % de nickel : c'est l'un des premiers grands emplois architecturaux du 18-8, l'ancêtre de notre 304. Ses tôles, inspectées tous les cinq ans jusqu'en 1960, n'ont montré aucune dégradation notable. Près d'un siècle plus tard, la couronne brille toujours au-dessus de Manhattan. L'austénitique est au <a href="#c4">chapitre 4</a>.</div>
 </div>
 </section>
 
@@ -1115,13 +964,24 @@ function axes(svg,x0,x1,y0,y1,xmin,xmax,ymin,ymax,xlab,ylab,xstep,ystep,xfmt,yfm
   tx(svg,x0+4,y0-10,ylab,{class:"lbl"});tx(svg,x1,y1+32,xlab,{class:"lbl","text-anchor":"end"});
   return {X:X,Y:Y};
 }
-function animate(btn,label,dur,onStep,onEnd){
-  let raf=null,run=false;
+function animate(btn,label,dur,onStep,onEnd){/* lecteur pilotable : ▶ lecture ou ⏸ pause, qui reprend où elle s'est arrêtée ; les boutons voisins ⏮ début, ◀ pas et pas ▶ (data-a) la mènent à la main ; un pas avance jusqu'à la prochaine image différente (20 pas au plus) */
+  const box=btn.parentNode,lab=btn.closest(".lab")||box,N=20;let raf=null,run=false,t=0;
+  const go=v=>{t=Math.max(0,Math.min(1,v));onStep(t);};
+  const snap=()=>{let s="";lab.querySelectorAll("svg,.readout,.status").forEach(e=>{s+=e.innerHTML;});return s;};
   function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;btn.textContent=label;}
-  function start(){if(run){stop();return;}if(RM){onStep(1);stop();if(onEnd)onEnd();return;}
-    run=true;btn.textContent="⏸ Pause";const t0=performance.now();
-    const step=now=>{const p=Math.min(1,(now-t0)/dur);onStep(p);if(p>=1){stop();if(onEnd)onEnd();return;}raf=requestAnimationFrame(step);};raf=requestAnimationFrame(step);}
-  btn.addEventListener("click",start);return {stop:stop,running:()=>run};
+  function step(d){stop();const s0=snap();let k=Math.round(t*N);for(let i=0;i<N;i++){k+=d;if(k<0||k>N)break;go(k/N);if(snap()!==s0)break;}}
+  btn.addEventListener("click",()=>{if(run){stop();return;}if(t>=0.999)t=0;
+    if(RM){step(1);if(t>=1&&onEnd)onEnd();return;}
+    run=true;btn.textContent="⏸ Pause";const s0=performance.now()-t*dur;
+    const f=now=>{if(!run)return;go((now-s0)/dur);if(t>=1){stop();if(onEnd)onEnd();return;}raf=requestAnimationFrame(f);};raf=requestAnimationFrame(f);});
+  const pb=a=>box.querySelector('[data-a="'+a+'"]');
+  if(pb("start"))pb("start").addEventListener("click",()=>{stop();go(0);});
+  if(pb("back"))pb("back").addEventListener("click",()=>step(-1));
+  if(pb("fwd"))pb("fwd").addEventListener("click",()=>step(1));
+  /* un réglage fait à la main : la prochaine lecture repart du début */
+  lab.addEventListener("input",()=>{if(!run)t=0;});
+  lab.addEventListener("click",e=>{const b=e.target.closest("button");if(b&&b!==btn&&!b.dataset.a&&!run)t=0;});
+  return {stop:stop,running:()=>run};
 }
 
 
@@ -1333,7 +1193,7 @@ function ferZat(k,Tp,t85){
     if(gk==="439")t="439 stabilisé : le titane fixe le carbone et l'azote, aucune austénite ne se forme ; les nitrures de titane épinglent les joints (grain limité vers 67 µm). Zone affectée ferritique et ductile.";
     else if(R.fg<0.01)t="À "+nf(Tp,0)+" °C, le 430 n'atteint pas la bande α + γ : seuls les grains grossissent.";
     else t="Pendant le cycle, en traversant la bande α + γ, environ "+nf(R.fg*100,0)+" % d'austénite se forme aux joints ; au refroidissement, "+(R.fM>0.5?"elle devient martensite ("+nf(R.cg,2)+" % de carbone dans les îlots) : joints durs et fragiles.":"elle se décompose en ferrite et carbures de chrome : joints appauvris en chrome.")+" Un recuit vers 750-850 °C rétablit ductilité et tenue à la corrosion.";
-    msg.innerHTML=nbsp(t);
+    msg.innerHTML=(nbsp(t))+"<br><b>À retenir :</b> un ferritique non stabilisé forme de la martensite aux joints en ZAT ; Ti ou Nb l'évitent.";
   }
   const A=animate($("#m1play"),"▶ Chauffer puis refroidir",8000,p=>{prog=Math.max(0,p);upd();},()=>{prog=null;upd();});
   $$("#m1g .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;gk=b.dataset.k;setOn("#m1g",b);upd();}));
@@ -1392,13 +1252,13 @@ function martModel(c,Ta){
     if(R.ms>20)el("rect",{x:xm-5,y:Y(ms),width:10,height:Y(20)-Y(ms),rx:4,fill:"var(--sig)",opacity:.5},svg);
     tx(svg,T.x0,T.y0-8,"T (°C)",{class:"lbl"});
     Object.keys(sl).forEach(k=>{$("#m2"+k.toLowerCase()+"o").textContent=k==="Ta"?nf(+sl.Ta.value,0)+" °C":nf(+sl[k].value,k==="C"?2:1)+" %";});
-    ro.innerHTML=nbsp("<span>C en solution <b class='mat'>"+nf(R.Cs,2)+" %</b></span><span>M<sub>s</sub> ≈ <b class='sig'>"+nf(R.ms,0)+" °C</b></span><span>martensite <b class='eps'>"+nf(R.fM*100,0)+" %</b></span><span>ferrite δ <b class='gam'>"+nf(R.d*100,0)+" %</b></span><span>austénite résiduelle "+nf(R.ra*100,0)+" %</span><span>carbures "+nf(R.fc*100,0)+" %</span><span>≈ "+nf(R.hv,0)+" HV</span>");
+    ro.innerHTML=nbsp("<span>austénitisation <b>"+nf(+sl.Ta.value,0)+" °C</b></span><span>C en solution <b class='mat'>"+nf(R.Cs,2)+" %</b></span><span>M<sub>s</sub> ≈ <b class='sig'>"+nf(R.ms,0)+" °C</b></span><span>martensite <b class='eps'>"+nf(R.fM*100,0)+" %</b></span><span>ferrite δ <b class='gam'>"+nf(R.d*100,0)+" %</b></span><span>austénite résiduelle "+nf(R.ra*100,0)+" %</span><span>carbures "+nf(R.fc*100,0)+" %</span><span>≈ "+nf(R.hv,0)+" HV</span>");
     let t=(gk?gk+" : ":"");
     if(R.d>0.05)t+="trop d'alphagènes pour l'île : "+nf(R.d*100,0)+" % de ferrite δ subsistent à "+nf(Ta,0)+" °C et restent après trempe. Plus de carbone ou de nickel la réduirait. ";
     if(R.Cx>0.02)t+="Une partie du carbone ("+nf(R.Cx,2)+" %) reste en carbures à "+nf(Ta,0)+" °C : l'austénite n'en contient que "+nf(R.Cs,2)+" % et M<sub>s</sub> remonte. ";
     if(R.ra>0.1)t+="M<sub>s</sub> est bas : "+nf(R.ra*100,0)+" % d'austénite résiduelle, à transformer par un traitement par le froid. ";
     if(R.d<=0.05&&R.ra<=0.1&&R.Cx<=0.02)t+="dosage équilibré : martensite presque complète, M<sub>s</sub> bien au-dessus de l'ambiante. Dureté de la martensite ≈ "+nf(R.hvM,0)+" HV avant revenu.";
-    msg.innerHTML=nbsp(t);
+    msg.innerHTML=(nbsp(t))+"<br><b>À retenir :</b> le carbone fait la dureté ; trop d'alliage laisse de l'austénite résiduelle, trop d'alphagènes de la ferrite δ.";
   }
   $$("#m2g .btn").forEach(b=>b.addEventListener("click",()=>{gk=b.dataset.k;setGrade(gk);setOn("#m2g",b);upd();}));
   Object.values(sl).forEach(s=>s.addEventListener("input",()=>{gk=null;setOn("#m2g",null);upd();}));
@@ -1460,7 +1320,7 @@ const phR=P=>P===null?0.5:3*Math.exp((P-15.4)/1.3);
     else if(P<15)t="Sous-vieilli : les précipités sont encore très fins et peu nombreux à bloquer les dislocations ; la résistance monte avec le temps.";
     else if(P<15.8)t="Autour du pic : précipités de quelques nanomètres, que les dislocations cisaillent avec peine. Résistance maximale, ténacité la plus faible (H900).";
     else t="Survieilli : les précipités grossissent et s'espacent, les dislocations les contournent ; la martensite se revient. Moins résistant, plus tenace"+(P>17.5?", avec un peu d'austénite de réversion (H1150).":".");
-    msg.innerHTML=nbsp(t);
+    msg.innerHTML=(nbsp(t))+"<br><b>À retenir :</b> H900 au pic de résistance, H1150 survieilli : moins résistant, plus tenace.";
   }
   const A=animate($("#m3play"),"▶ Vieillir",8000,p=>{if(cond==="A"){cond="";setOn("#m3g",null);}prog=Math.max(0,p);upd();},()=>{prog=null;sH.value=2;upd();});
   $$("#m3g .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;cond=b.dataset.k;const c=PHC[cond];if(c){sT.value=c[0];sH.value=Math.log10(c[1]).toFixed(2);}setOn("#m3g",b);upd();}));
@@ -1532,7 +1392,7 @@ function tripModel(c,T,e){
     if(T>R.md+60)t+="bien au-dessus de M<sub>d30</sub> : la déformation ne transforme presque rien, l'écrouissage suit la loi de Ludwik d'une austénite stable.";
     else if(R.f<0.05)t+="austénite assez stable à cette température : peu de martensite.";
     else t+="la déformation transforme l'austénite en martensite α' : la courbe monte au-dessus de celle d'une austénite stable (effet TRIP) et la pièce devient magnétique.";
-    msg.innerHTML=nbsp(t);
+    msg.innerHTML=(nbsp(t))+"<br><b>À retenir :</b> plus M<sub>d30</sub> est haut, plus la déformation transforme l'austénite en martensite.";
   }
   const A=animate($("#m4play"),"▶ Étirer",7000,p=>{prog=Math.max(0,p);upd();},()=>{prog=null;sE.value=0.6;upd();});
   $$("#m4g .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;gk=b.dataset.k;setOn("#m4g",b);upd();}));
@@ -1582,7 +1442,7 @@ const SEA_REQ=10+8*Math.log10(1900);
     else t+="équilibre ferrite-austénite dans la cible (30 à 60 % de ferrite). ";
     t+=pr>=40?"PREN supérieur à 40 : candidat pour l'eau de mer.":pr>=35?"PREN entre 35 et 40 : limite pour l'eau de mer.":"PREN inférieur à 35 : pas pour l'eau de mer.";
     if(T>1150)t+=" À cette température, la ferrite domine : un recuit trop chaud, ou une zone affectée chauffée trop haut, déséquilibre le duplex.";
-    msg.innerHTML=nbsp(t);
+    msg.innerHTML=(nbsp(t))+"<br><b>À retenir :</b> plus le recuit est chaud, plus il reste de ferrite : on vise moitié ferrite, moitié austénite.";
   }
   $$("#m5g .btn").forEach(b=>b.addEventListener("click",()=>{gk=b.dataset.k;setGrade(gk);setOn("#m5g",b);upd();}));
   Object.values(sl).forEach(s=>s.addEventListener("input",()=>{gk=null;setOn("#m5g",null);upd();}));
@@ -1641,7 +1501,7 @@ const kvOf=(k,T)=>{const p=KVF[k];return p[0]+(p[1]-p[0])*(1+Math.tanh((T-p[2])/
     if(!sel.size)t="Coche les exigences de ton cahier des charges. La courbe de résilience rappelle que seule l'austénite reste tenace jusqu'à −196 °C.";
     else if(!best)t="Aucune famille ne satisfait toutes ces exigences : relâche une contrainte, ou regarde d'autres matériaux (alliages de nickel, titane).";
     else t="Famille recommandée : les "+best.f[1]+" ("+best.f[2]+"). "+(R.filter(q=>q.veto).length?"Écartées : "+R.filter(q=>q.veto).map(q=>q.f[1]).join(", ")+". ":"")+(kvOf(best.f[0],T)<40?"Attention : à "+nf(T,0)+" °C, sa résilience est faible.":"");
-    msg.innerHTML=nbsp(t);
+    msg.innerHTML=(nbsp(t))+"<br><b>À retenir :</b> les critères éliminatoires d'abord, le coût total ensuite.";
   }
   $$("#m6q .btn").forEach(b=>b.addEventListener("click",()=>{const k=b.dataset.k;if(sel.has(k))sel.delete(k);else sel.add(k);b.classList.toggle("on",sel.has(k));upd();}));
   $("#m6z").addEventListener("click",()=>{sel.clear();$$("#m6q .btn").forEach(b=>b.classList.remove("on"));upd();});
@@ -1711,6 +1571,13 @@ const kvOf=(k,T)=>{const p=KVF[k];return p[0]+(p[1]-p[0])*(1+Math.tanh((T-p[2])/
   b.addEventListener("click",()=>{t=t==="auto"?"light":t==="light"?"dark":"auto";try{localStorage.setItem(KEY,t);}catch(e){}apply();});
   apply();
 })();
+})();
+</script>
+<script>
+(function(){/* impression de la fiche mémoire seule */
+  const b=document.getElementById("printFiche");if(!b)return;
+  b.addEventListener("click",()=>{document.body.classList.add("print-fiche");window.print();});
+  window.addEventListener("afterprint",()=>document.body.classList.remove("print-fiche"));
 })();
 </script>
 </body>

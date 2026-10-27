@@ -113,13 +113,6 @@ section.chap{padding:46px 0 10px}
 .c-img span{font-size:.95rem;line-height:1.3}
 @media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
 
-/* niveaux */
-.lv{margin:1.2rem 0;padding:6px 22px 14px;border-radius:4px}
-.lv1{background:var(--card);border:2px solid var(--ink)}
-.lv2{background:var(--lv2);border-left:6px solid var(--ink)}
-.lv-h{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;font-family:var(--font-head);font-size:1.35rem;font-weight:600;margin:10px 0 4px}
-.lv-h .tag{font-size:.95rem;font-family:var(--font-body);font-weight:400;color:var(--muted)}
-@media (max-width:520px){.lv{padding:6px 14px 12px}}
 
 /* formules et encadrés */
 .fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:600px;text-align:center;border-radius:3px;overflow-x:auto}
@@ -248,6 +241,30 @@ footer{padding:40px 0 60px;color:var(--muted);font-size:.9rem}
 hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
 @media (max-width:700px){.m{white-space:normal}.fx{padding:12px 10px}.fx .big{font-size:1.4rem}}
 @media (max-width:400px){body{font-size:16.5px}.wrap{padding:0 14px}.lab{padding:12px 10px}}
+
+/* gabarit court : approfondissement replié, à retenir, prédiction */
+details.deep{margin:1.2rem 0;padding:0 18px;background:var(--lv2);border-left:6px solid var(--ink);border-radius:4px}
+details.deep>summary{font-family:var(--font-head);font-size:1.2rem;font-weight:600;padding:9px 0}
+details.deep[open]{padding-bottom:10px}
+.retenir{margin:1.4rem 0 .4rem;padding:8px 18px 6px;background:var(--card);border:2px solid var(--ink);border-radius:4px}
+.retenir>b:first-child{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.retenir ul{margin:.3rem 0 .3rem}
+.predict{display:block;margin-top:.35rem;color:var(--ink);font-weight:700}
+@media (max-width:520px){details.deep{padding:0 12px}.retenir{padding:8px 12px 6px}}
+
+/* impression : le cours sur papier clair, ou la fiche mémoire seule sur une page */
+@media print{
+  :root,:root[data-theme]{--paper:#fff!important;--paper-2:#EEF2F6!important;--card:#fff!important;--ink:#111!important;--muted:#444!important;--line:#999!important;--grid:transparent!important;--lv2:#F2F5F8!important;--hl:#FFF3B0!important;color-scheme:light}
+  body{background:#fff;font-size:11pt}
+  .toc,.theme-btn,.btns,.ctrl,#qzReset,.score{display:none!important}
+  section.chap{padding:14px 0 4px}
+  .lab,.fx,.retenir,details.deep,.fiche>div,.exo{break-inside:avoid}
+  body.print-fiche header,body.print-fiche main>section:not(#fiche),body.print-fiche footer{display:none!important}
+  body.print-fiche #fiche .cartouche{margin-bottom:.6rem}
+  body.print-fiche .fiche>div{padding:8px 10px}
+}
+/* formules dans les replis et les corrections : retour à la ligne permis (sinon débordement vers 768 px) */
+details .m{white-space:normal}
 </style>
 </head>
 <body>
@@ -263,12 +280,12 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     </div>
     <div class="tb-cells">
       <div><small>Cours</small><b>3 sur 4 : l'amorçage des fissures de fatigue</b></div>
-      <div><small>Durée conseillée</small><b>≈ 2 h 30 à 3 h avec les exercices</b></div>
+      <div><small>Durée conseillée</small><b>≈ 1 h 15 à 1 h 30 avec les exercices</b></div>
       <div><small>Prérequis</small><b>cours 1 et 2 ; le cercle de Mohr, Tresca et von Mises (série RDM)</b></div>
       <div><small>À la fin tu sais</small><b>expliquer comment une fissure naît sous R<sub>e</sub>, et estimer si elle naîtra, puis si elle grandira</b></div>
     </div>
   </div>
-  <p class="lede">Comment une pièce qui ne dépasse jamais sa limite d'élasticité peut-elle se fissurer ? La réponse est cachée à l'échelle du <b>grain</b>, le petit cristal dont le métal est fait. Sous une contrainte moyenne modeste, quelques grains mal placés glissent quand même, un peu, à chaque cycle. Ces glissements ne reviennent pas tout à fait en arrière : ils sculptent la surface de creux et de saillies, puis l'un des creux s'ouvre en microfissure. Ce cours suit cette naissance pas à pas, puis montre comment on la prévoit par le calcul.</p>
+  <p class="lede">Comment une pièce qui ne dépasse jamais sa limite d'élasticité peut-elle se fissurer ? La réponse se cache à l'échelle du <b>grain</b> : quelques grains mal placés glissent un peu à chaque cycle, sans revenir tout à fait en arrière ; ils sculptent la surface de creux et de saillies, puis l'un des creux s'ouvre en microfissure. Ce cours suit cette naissance pas à pas, montre comment on la prévoit par le calcul, et pourquoi une soudure brute la saute presque entièrement.</p>
 
   <h4>Le code couleur de la série</h4>
   <div class="cc" role="img" aria-label="Code couleur : contraintes en rouge et aggravants en violet, paramètres en vert, fissures en bleu et glissements en bleu-vert">
@@ -314,15 +331,12 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div><div class="f"><span class="tau">K<sub>f</sub></span> = 1 + <span class="mat">q</span>(<span class="tau">K<sub>t</sub></span> − 1)</div>Une entaille divise la limite d'endurance par K<sub>f</sub>. Un détail soudé se vérifie avec sa <b>classe FAT</b> : γ<sub>Ff</sub>·Δσ ≤ Δσ<sub>R</sub>(N)/γ<sub>Mf</sub>.</div>
   </div>
 
-  <div class="def"><b>🔎 Quatre remarques de lecture</b>
-    <p><b>1. « À 45° de la contrainte ».</b> Le cisaillement est maximal à 45° de l'effort, mais chaque grain ne peut glisser que sur ses propres plans cristallins. Ce sont donc les grains dont les plans sont <b>proches</b> de 45° qui glissent les premiers (loi de Schmid, chapitre 2) : le 45° est une tendance statistique, pas un angle exact dans chaque grain.</p>
-    <p><b>2. Écrouissage, adoucissement, relaxation</b> : ces trois mots sont définis au chapitre 1. Ils décrivent la façon dont les propriétés de surface changent sous les cycles.</p>
-    <p><b>3. Les fissures « dormantes ».</b> Le chapitre 5 en donne les causes physiques, puis le diagramme de Kitagawa en donne une explication chiffrée, en s'appuyant sur le seuil de propagation ΔK<sub>S</sub> du cours 4.</p>
-    <p><b>4. Des critères « basés sur la déformation plastique ».</b> Tresca, von Mises, Dang Van et Crossland s'écrivent en <b>contraintes</b> (cisaillement, pression hydrostatique) ; c'est leur justification physique qui repose sur le glissement plastique. Ce cours n'en donne qu'un aperçu chiffré.</p>
-  </div>
+  <div class="def"><b>📘 Le sujet du planning</b> : ce cours poursuit les sujets <b>3.7</b> et <b>3.8</b> (structures soudées sous chargement cyclique). Attendus de l'IWE (<i>International Welding Engineer</i>) selon le référentiel de l'IIW : interpréter l'effet des entailles et des défauts de soudure sur la durée de vie, expliquer les méthodes d'amélioration de la tenue en fatigue des assemblages soudés. Ce cours en donne le mécanisme : la naissance d'une fissure.</div>
+
+  <div class="def"><b>📖 Sigles et notations</b> : <b>R<sub>e</sub></b> limite d'élasticité ; <b>τ</b> cisaillement ; <b>m<sub>S</sub></b> facteur de Schmid ; <b>τ<sub>c</sub></b> scission critique ; <b>K<sub>t</sub></b> coefficient de concentration de contrainte ; <b>ΔK</b>, <b>ΔK<sub>S</sub></b> étendue du facteur d'intensité de contrainte et seuil de propagation (cours 4) ; <b>a</b> longueur de fissure ; <b>a<sub>0</sub></b> longueur caractéristique de Kitagawa ; <b>σ<sub>Di</sub></b> limite d'endurance à l'amorçage ; <b>µm</b> micromètre (un millième de millimètre) ; <b>MEB</b> microscope électronique à balayage ; <b>TIG</b> soudage à l'électrode de tungstène sous gaz inerte ; <b>ISO 5817</b> niveaux de qualité des soudures.</div>
 
   <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage</b>
-    <p>(IWE : <i>International Welding Engineer</i>.) On a vu qu'une soudure brute ne passe presque pas de temps à « naître » : le pied de cordon contient déjà des défauts plus gros que la fissure qu'un métal lisse met des millions de cycles à fabriquer. Ce cours explique pourquoi, et il éclaire toutes les techniques d'amélioration des soudures (meulage, refusion TIG, martelage) : elles cherchent à <b>rendre au pied de cordon une vraie phase d'amorçage</b>, en supprimant les défauts ou en les mettant en compression.</p>
+    <p>Une soudure brute ne passe presque pas de temps à « naître » : son pied de cordon contient déjà des défauts plus gros que la fissure qu'un métal lisse met des millions de cycles à fabriquer. Toutes les techniques d'amélioration (meulage, refusion TIG, martelage) cherchent à <b>rendre au pied de cordon une vraie phase d'amorçage</b>.</p>
   </div>
 
   <h4>La série en quatre cours</h4>
@@ -335,12 +349,12 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
 
   <h4>Le plan du cours</h4>
   <ol class="route">
-    <li><span class="dot">1</span><b>Plastifier sous R<sub>e</sub></b><p>Les microglissements de quelques grains, surtout en surface.</p></li>
-    <li><span class="dot">2</span><b>Pourquoi 45°</b><p>Le cisaillement maximal, la loi de Schmid et les bandes de glissement.</p></li>
-    <li><span class="dot">3</span><b>Intrusions et extrusions</b><p>Quand le glissement ne revient pas : la surface se sculpte.</p></li>
-    <li><span class="dot">4</span><b>La fissure qui tourne</b><p>Du stade I à 45° au stade II perpendiculaire ; l'amorçage sur défauts.</p></li>
-    <li><span class="dot">5</span><b>Wöhler à l'amorçage et fissures dormantes</b><p>Les domaines 1 à 4, et le diagramme de Kitagawa.</p></li>
-    <li><span class="dot">6</span><b>Les critères d'amorçage</b><p>Trouver le point critique, puis vérifier avec von Mises ou Crossland.</p></li>
+    <li><span class="dot">1</span><b>Plastifier sous R<sub>e</sub></b><p>Le métro bondé.</p></li>
+    <li><span class="dot">2</span><b>Pourquoi 45°</b><p>L'équerre à 45°.</p></li>
+    <li><span class="dot">3</span><b>Intrusions et extrusions</b><p>Le jeu de cartes.</p></li>
+    <li><span class="dot">4</span><b>La fissure qui tourne</b><p>Le randonneur.</p></li>
+    <li><span class="dot">5</span><b>Wöhler à l'amorçage et fissures dormantes</b><p>La graine sur le rocher.</p></li>
+    <li><span class="dot">6</span><b>Les critères d'amorçage</b><p>La carte au trésor.</p></li>
   </ol>
 </div>
 </section>
@@ -352,21 +366,14 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="c-img"><span class="ico">🚇</span><span><small>Image à retenir</small>Le métro bondé : sous la même secousse, seuls quelques voyageurs mal placés trébuchent, surtout près des portes</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le métro bondé</span></div>
-    <p>Un métal n'est pas un bloc uniforme : c'est un assemblage de petits cristaux, les <b>grains</b>, de 10 à 100 µm environ (µm : micromètre, un millième de millimètre). Dans chaque grain, les atomes sont rangés en plans réguliers, et chaque grain a sa propre orientation, comme des voyageurs tournés dans tous les sens.</p>
-    <p>Pour déformer un grain de façon permanente, il faut faire <b>glisser</b> ses plans d'atomes les uns sur les autres, comme les cartes d'un jeu qu'on pousse. Ce glissement se fait grâce à des défauts mobiles du cristal, les <b>dislocations</b> : comme une ride qu'on fait courir dans un tapis pour le déplacer sans le soulever d'un coup.</p>
-    <p>La limite d'élasticité R<sub>e</sub> mesurée en traction est une <b>moyenne</b> : c'est la contrainte à laquelle la plupart des grains glissent. Mais dans la foule, certains grains sont tournés exactement comme il faut pour glisser facilement : ils commencent bien avant. Comme dans un métro bondé où, sous la même secousse, seuls quelques voyageurs mal placés trébuchent.</p>
-    <p>Où sont ces grains ? <b>Surtout près de la surface</b>, pour deux raisons :</p>
-    <ul>
-      <li>la surface est souvent le lieu des contraintes maximales (flexion, torsion, entailles : cours 1) ;</li>
-      <li>un grain de surface n'a de voisins que d'un côté : il est moins tenu, moins « confiné », et se déforme plus librement. Comme le voyageur près des portes, qui n'a personne pour le retenir.</li>
-    </ul>
-    <p>Ces <b>microglissements</b> se produisent à l'échelle de quelques grains. Vus de loin, ils sont réversibles et invisibles : la pièce ne change pas de forme. Mais ils modifient déjà les propriétés de la surface.</p>
-  </div>
+  <p>Un métal est un assemblage de petits cristaux, les <b>grains</b>, de 10 à 100 µm, chacun avec sa propre orientation. Pour déformer un grain de façon permanente, il faut faire <b>glisser</b> ses plans d'atomes les uns sur les autres, comme les cartes d'un jeu, grâce à des défauts mobiles du cristal, les <b>dislocations</b> (comme une ride qu'on fait courir dans un tapis pour le déplacer).</p>
+  <p>La limite d'élasticité R<sub>e</sub> est une <b>moyenne</b> : la contrainte à laquelle la plupart des grains glissent. Mais certains grains, bien orientés, commencent bien avant, comme dans un métro bondé où, sous la même secousse, seuls quelques voyageurs mal placés trébuchent. Ces grains sont <b>surtout près de la surface</b> : la contrainte y est souvent maximale (flexion, torsion, entailles), et un grain de surface, qui n'a de voisins que d'un côté, est moins tenu, comme le voyageur près des portes. Ces <b>microglissements</b> restent invisibles à l'échelle de la pièce, mais modifient déjà la surface.</p>
 
-  <div class="lab" id="m1">
+  <div class="def"><b>📖 Microglissements</b> : petite déformation plastique localisée dans certains grains, alors que la contrainte macroscopique, celle que calcule la RDM, reste inférieure à R<sub>e</sub>. Ils provoquent un <b>écrouissage cyclique</b> (la matière durcit, cas des métaux recuits), un <b>adoucissement cyclique</b> (elle s'affaiblit, cas des métaux écrouis ou trempés), et une <b>relaxation des contraintes résiduelles</b>, que la petite plastification « consomme ».</div>
+
+<div class="lab" id="m1">
     <p class="lab-h">Manipulation 1 : la carte des grains</p>
-    <p class="lab-sub">Une coupe de métal tirée horizontalement, la surface en haut. Les traits fins dans chaque grain montrent l'orientation de ses plans de glissement. Augmente l'amplitude : les grains qui glissent se colorent. Ici R<sub>e</sub> = 400 MPa et σ<sub>D</sub> = 270 MPa.</p>
+    <p class="lab-sub">Une coupe de métal tirée horizontalement, surface en haut : augmente l'amplitude, les grains qui glissent se colorent (R<sub>e</sub> = 400 MPa, σ<sub>D</sub> = 270 MPa).<span class="predict">🔮 Prédis d'abord : à σ<sub>D</sub> = 270 MPa, aucun grain ne glisse-t-il, ou quelques-uns, surtout en surface ?</span></p>
     <div class="ctrl"><label for="m1s">Amplitude <span class="sig">σ<sub>a</sub></span></label><input type="range" id="m1s" class="r-sig" min="100" max="450" step="5" value="270"><output id="m1so"></output></div>
     <div class="btns" id="m1ex"><button class="btn" data-v="150" type="button">150 MPa</button><button class="btn" data-v="270" type="button">σ<sub>D</sub> = 270 MPa</button><button class="btn" data-v="400" type="button">R<sub>e</sub> = 400 MPa</button><button class="btn" id="m1new" type="button">🎲 Autres grains</button></div>
     <svg id="m1svg" role="img" aria-label="Coupe d'un polycristal : les grains qui glissent sont colorés"></svg>
@@ -374,23 +381,24 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <p class="status" id="m1msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">le vocabulaire de la plasticité</span></div>
-    <div class="def"><b>📖 Polycristal, grain, joint de grains</b> : un métal courant est un <b>polycristal</b>, assemblage de cristaux appelés <b>grains</b>, chacun avec sa propre orientation ; la frontière entre deux grains est un <b>joint de grains</b>.</div>
-    <div class="def"><b>📖 Dislocation</b> : défaut linéaire du cristal, une rangée d'atomes « en trop » ou décalée, dont le déplacement fait glisser un plan d'atomes sur son voisin. La déformation plastique est le résultat du mouvement de milliards de dislocations.</div>
-    <div class="def"><b>📖 Système de glissement</b> : couple formé d'un <b>plan de glissement</b> (un plan dense d'atomes) et d'une <b>direction de glissement</b> dans ce plan. Un grain ne peut glisser que sur ses propres systèmes.</div>
-    <div class="def"><b>📖 Microglissements</b> : petite déformation plastique localisée dans certains grains, alors que la contrainte macroscopique (celle que calcule la RDM, résistance des matériaux) reste inférieure à R<sub>e</sub>.</div>
-    <p>Ces microglissements modifient les propriétés macroscopiques de la surface. Trois mots à connaître :</p>
+  <p><b>Ordres de grandeur</b> : grains de 10 à 50 µm dans un acier de construction, davantage dans une zone fondue de soudure ou un métal moulé ; un cheveu mesure environ 70 µm. Les microglissements de fatigue touchent donc une épaisseur comparable à celle d'un cheveu. La fatigue en endurance limitée est une affaire de plasticité <b>locale</b> sous une contrainte <b>globale</b> élastique.</p>
+
+  <div class="warn"><b>⚠️ Piège : « sous R<sub>e</sub>, donc élastique partout ».</b> C'est vrai pour la pièce dans son ensemble, faux pour chaque grain : quelques grains plastifient localement, et c'est là que naît la fatigue.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « R<sub>e</sub> est une moyenne, la fatigue est une exception »</b> : la moyenne décide de la forme de la pièce, l'exception de sa durée de vie.</div>
+  <div class="weld"><b>🔥 Relaxation et améliorations des soudures</b>
+    <p>Le martelage ou le grenaillage d'un pied de cordon y créent des contraintes résiduelles de <b>compression</b>, qui retardent l'amorçage. Mais sous de fortes charges, la plastification locale peut les relaxer, et le gain disparaît : c'est pourquoi les recommandations IIW n'accordent ces bonus que sous conditions, notamment de contrainte maximale.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : polycristal, dislocations, systèmes de glissement</summary>
+    <p>Un métal courant est un <b>polycristal</b> ; la frontière entre deux grains est un <b>joint de grains</b>. Une <b>dislocation</b> est un défaut linéaire du cristal, une rangée d'atomes en trop ou décalée, dont le déplacement fait glisser un plan sur son voisin ; la déformation plastique résulte du mouvement de milliards de dislocations. Un <b>système de glissement</b> est le couple d'un plan dense d'atomes et d'une direction de glissement dans ce plan ; un grain ne peut glisser que sur ses propres systèmes. Écrouissage cyclique : les dislocations s'enchevêtrent et se gênent ; adoucissement : les obstacles se réarrangent.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
     <ul>
-      <li><b>écrouissage cyclique</b> : la matière durcit au fil des cycles (les dislocations s'enchevêtrent et se gênent) ; c'est le cas des métaux recuits, initialement mous ;</li>
-      <li><b>adoucissement cyclique</b> : la matière s'affaiblit au fil des cycles (les obstacles aux dislocations se réarrangent) ; c'est le cas de métaux déjà durcis, écrouis à froid ou trempés ;</li>
-      <li><b>relaxation des contraintes résiduelles</b> : les <span class="tau">contraintes résiduelles</span> (celles qui existent sans charge extérieure) diminuent, parce que la petite plastification locale les « consomme ».</li>
+      <li>Sous R<sub>e</sub>, quelques grains bien orientés glissent quand même.</li>
+      <li>Surtout en surface : contrainte maximale, grains moins confinés.</li>
+      <li>La plastification locale relaxe les contraintes résiduelles.</li>
     </ul>
-    <div class="tip"><b>💡 Ordres de grandeur.</b> Taille de grain : 10 à 50 µm pour un acier de construction, plus dans une zone fondue de soudure ou un métal moulé. Un cheveu mesure environ 70 µm. Les microglissements de fatigue touchent donc une épaisseur comparable à celle d'un cheveu.</div>
-    <div class="warn"><b>⚠️ Piège : « sous R<sub>e</sub>, donc élastique partout ».</b> C'est vrai pour la pièce dans son ensemble, faux pour chaque grain. La fatigue en endurance limitée est justement une affaire de plasticité <b>locale</b> sous une contrainte <b>globale</b> élastique.</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique :</b> « <b>R<sub>e</sub> est une moyenne, la fatigue est une exception</b> ». La moyenne décide de la forme de la pièce ; l'exception, de sa durée de vie.</div>
-    <div class="weld"><b>🔥 Relaxation et améliorations des soudures</b>
-      <p>Le martelage ou le grenaillage d'un pied de cordon y créent des contraintes résiduelles de <b>compression</b>, qui retardent l'amorçage. Mais sous de fortes charges, la plastification locale peut les relaxer, et le gain disparaît. C'est pourquoi les recommandations IIW (<i>International Institute of Welding</i>) n'accordent ces bonus que sous conditions, notamment de niveau de contrainte maximale.</p>
-    </div>
   </div>
 </div>
 </section>
@@ -403,15 +411,14 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="c-img"><span class="ico">📐</span><span><small>Image à retenir</small>L'équerre à 45° : dans une barre tendue, c'est le plan en biais qui est le plus cisaillé</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la coupe en biais</span></div>
-    <p>Coupe en pensée une barre tendue par un plan perpendiculaire à l'effort : sur ce plan, la contrainte est purement normale, elle tend à écarter les deux morceaux. Incline maintenant le plan : une partie de l'effort tend à faire <b>glisser</b> un morceau sur l'autre. C'est le <b>cisaillement</b> τ (« tau »). Il est nul pour le plan droit, nul pour un plan parallèle à l'effort, et <b>maximal pour le plan à 45°</b>, où il vaut la moitié de la contrainte de traction.</p>
-    <p>Or un glissement plastique a besoin de cisaillement. En traction-compression, les grains glissent donc préférentiellement sur des plans <b>proches de 45°</b> de l'effort. Chaque grain a ses propres plans : ceux qui sont bien orientés glissent, les autres attendent.</p>
-    <p>Après quelques milliers de cycles, ces glissements laissent des traces sur la surface polie : de fines lignes parallèles, les <b>bandes de glissement</b>, qu'on observe au microscope à force atomique ou au microscope électronique à balayage.</p>
-  </div>
+  <p>Coupe en pensée une barre tendue par un plan perpendiculaire à l'effort : la contrainte y est purement normale. Incline le plan : une partie de l'effort tend à faire <b>glisser</b> un morceau sur l'autre, c'est le <b>cisaillement τ</b>. Il est nul pour le plan droit et pour un plan parallèle à l'effort, et <b>maximal pour le plan à 45°</b>, où il vaut la moitié de la traction. Or un glissement plastique a besoin de cisaillement : en traction-compression, les grains glissent préférentiellement sur des plans <b>proches de 45°</b>. Chaque grain ne glisse que sur ses propres plans : ceux qui sont bien orientés glissent, les autres attendent ; le 45° est une tendance statistique, pas un angle exact dans chaque grain.</p>
+  <p>Après quelques milliers de cycles, ces glissements laissent des traces sur la surface polie : de fines lignes parallèles, les <b>bandes de glissement</b>, visibles au microscope électronique à balayage ou à force atomique.</p>
 
-  <div class="lab" id="m2">
+  <div class="fx"><div class="row big" style="font-size:1.25rem"><span>σ<sub>n</sub> = σ·cos²θ</span><span><span class="tau">τ</span> = <span class="frac"><span><span class="sig">σ</span></span><span>2</span></span>·sin 2θ</span><span>τ<sub>r</sub> = m<sub>S</sub>·σ, m<sub>S</sub> = cos φ·cos λ ≤ 0,5</span></div><p class="cap">Plan dont la normale fait l'angle θ avec l'effort de traction σ : τ est maximal à θ = 45°, τ<sub>max</sub> = σ/2 (sommet du cercle de Mohr, RDM cours 4). Loi de Schmid : le cisaillement résolu τ<sub>r</sub> sur un système de glissement (φ angle effort-normale au plan, λ angle effort-direction de glissement) ; le grain glisse quand τ<sub>r</sub> atteint sa <b>scission critique</b> τ<sub>c</sub>.</p></div>
+
+<div class="lab" id="m2">
     <p class="lab-h">Manipulation 2 : le plan qui tourne</p>
-    <p class="lab-sub">Une barre tendue à σ = 240 MPa. Fais tourner le plan de coupe : la contrainte normale σ<sub>n</sub> et le cisaillement τ sur ce plan changent. Le cercle de Mohr montre les mêmes valeurs.</p>
+    <p class="lab-sub">Une barre tendue à 240 MPa : fais tourner le plan de coupe, la contrainte normale et le cisaillement changent ; le cercle de Mohr montre les mêmes valeurs.<span class="predict">🔮 Prédis d'abord : à 45°, le cisaillement vaut-il 240, 170 ou 120 MPa ?</span></p>
     <div class="ctrl"><label for="m2t">Angle <span class="mat">θ</span> de la normale</label><input type="range" id="m2t" class="r-mat" min="0" max="90" step="1" value="30"><output id="m2to"></output></div>
     <div class="btns" id="m2ex"><button class="btn" data-v="0" type="button">0° (plan droit)</button><button class="btn" data-v="45" type="button">45°</button><button class="btn" data-v="90" type="button">90°</button></div>
     <svg id="m2svg" role="img" aria-label="Barre tendue coupée par un plan incliné, contraintes sur le plan et cercle de Mohr"></svg>
@@ -419,25 +426,24 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <p class="status" id="m2msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">contraintes sur un plan et loi de Schmid</span></div>
-    <p>Barre en traction simple σ ; un plan dont la normale fait l'angle <span class="mat">θ</span> avec l'axe de l'effort porte :</p>
-    <div class="fx"><div class="row big" style="font-size:1.5rem"><span><span class="sig">σ<sub>n</sub></span> = <span class="sig">σ</span>·cos²<span class="mat">θ</span></span><span><span class="sig">τ</span> = <span class="sig">σ</span>·sin <span class="mat">θ</span>·cos <span class="mat">θ</span> = <span class="frac"><span><span class="sig">σ</span></span><span>2</span></span>·sin 2<span class="mat">θ</span></span></div>
-      <p class="cap">τ est maximal pour sin 2θ = 1, soit θ = 45° : τ<sub>max</sub> = σ/2</p></div>
-    <p>Ces valeurs se lisent sur le <b>cercle de Mohr</b> (série RDM, cours 4) : centre σ/2, rayon σ/2 ; le point du plan d'angle θ est vu sous l'angle 2θ depuis le centre. Le sommet du cercle donne τ<sub>max</sub> = σ/2.</p>
-    <h4>La loi de Schmid <span class="hp">complément</span></h4>
-    <p>Dans un grain, ce qui compte est le cisaillement <b>résolu</b> sur son système de glissement : la part de τ qui agit sur son plan, dans sa direction.</p>
-    <div class="fx"><div class="big" style="font-size:1.6rem"><span class="sig">τ<sub>r</sub></span> = <span class="sig">σ</span>·cos <span class="mat">φ</span>·cos <span class="mat">λ</span> = <span class="mat">m<sub>S</sub></span>·<span class="sig">σ</span></div>
-      <p class="cap">φ (« phi ») : angle entre l'effort et la normale au plan de glissement ; λ (« lambda ») : angle entre l'effort et la direction de glissement</p></div>
-    <p>Le <b>facteur de Schmid</b> m<sub>S</sub> = cos φ·cos λ vaut au plus <b>0,5</b>, atteint pour φ = λ = 45°. Le grain glisse dès que τ<sub>r</sub> atteint sa <b>scission critique</b> τ<sub>c</sub>, une propriété du cristal. Les grains de m<sub>S</sub> proche de 0,5 glissent donc les premiers.</p>
-    <p><b>Exemple.</b> σ = 200 MPa ; un grain à φ = λ = 45° (m<sub>S</sub> = 0,5) voit τ<sub>r</sub> = 100 MPa ; un grain dont le plan est presque parallèle à l'effort (φ = 80°, λ = 10°, m<sub>S</sub> = 0,171) ne voit que 34 MPa.</p>
-    <h4>Et en torsion ?</h4>
-    <p>En torsion pure, le cisaillement maximal agit sur les plans <b>transversaux et longitudinaux</b> de l'arbre, et la contrainte normale maximale sur les plans à 45°. Les premiers glissements (et les microfissures de stade I) suivent donc l'axe ou la section droite ; la fissure qui grandit ensuite s'oriente à 45°, en hélice (chapitre 4).</p>
-    <div class="warn"><b>⚠️ Piège : quel angle ?</b> Certains ouvrages repèrent le plan par sa normale (comme ici), d'autres par sa trace. Pour le cisaillement maximal, cela ne change rien (45° dans les deux cas) ; pour σ<sub>n</sub>, si : vérifie toujours la définition de l'angle.</div>
-    <div class="tip"><b>💡 Microscopes :</b> le <b>microscope à force atomique</b> (AFM) palpe la surface avec une pointe très fine et en donne le relief en 3D, à l'échelle du nanomètre ; le <b>microscope électronique à balayage</b> (MEB) balaie la surface avec un faisceau d'électrons et en donne une image très grossie, avec un grand relief apparent.</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique :</b> « <b>la moitié à mi-chemin</b> » : à mi-chemin entre 0° et 90°, le cisaillement vaut la moitié de la traction.</div>
-    <div class="weld"><b>🔥 Le pied de cordon, un état multiaxial</b>
-      <p>Au pied d'un cordon, l'effort nominal se combine à la géométrie et aux contraintes résiduelles : les contraintes y sont multiaxiales, et les plans les plus cisaillés ne sont pas forcément à 45° de la tôle. Les fissures de pied de cordon démarrent pourtant presque toujours le long du pied, puis plongent perpendiculairement à la contrainte principale de traction.</p>
-    </div>
+  <p><b>Exemple</b> : sous σ = 200 MPa, un grain à φ = λ = 45° (m<sub>S</sub> = 0,5) voit τ<sub>r</sub> = 100 MPa ; un grain dont le plan est presque parallèle à l'effort (φ = 80°, λ = 10°, m<sub>S</sub> ≈ 0,17) ne voit que 34 MPa. Avec τ<sub>c</sub> = 90 MPa, seul le premier glisse ; il faudrait 526 MPa, bien au-delà de R<sub>e</sub>, pour faire glisser le second.</p>
+
+  <div class="warn"><b>⚠️ Piège : quel angle ?</b> Certains ouvrages repèrent le plan par sa normale (comme ici), d'autres par sa trace. Pour le cisaillement maximal, rien ne change (45° dans les deux cas) ; pour σ<sub>n</sub>, si : vérifie toujours la définition de l'angle.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « la moitié à mi-chemin »</b> : à mi-chemin entre 0° et 90°, le cisaillement vaut la moitié de la traction.</div>
+  <div class="weld"><b>🔥 Le pied de cordon, un état multiaxial</b>
+    <p>Au pied d'un cordon, l'effort nominal se combine à la géométrie et aux contraintes résiduelles : les contraintes y sont multiaxiales, et les plans les plus cisaillés ne sont pas forcément à 45° de la tôle. Les fissures de pied de cordon démarrent pourtant presque toujours le long du pied, puis plongent perpendiculairement à la contrainte principale de traction.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : torsion, microscopes</summary>
+    <p>En torsion pure, le cisaillement maximal agit sur les plans <b>transversaux et longitudinaux</b> de l'arbre, et la contrainte normale maximale sur les plans à 45°. Les premiers glissements suivent donc l'axe ou la section droite ; la fissure qui grandit ensuite s'oriente à 45°, en hélice (chapitre 4). Le <b>microscope à force atomique</b> palpe la surface avec une pointe très fine et en donne le relief à l'échelle du nanomètre ; le <b>microscope électronique à balayage</b> la balaie avec un faisceau d'électrons et en donne une image très grossie.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>En traction σ, cisaillement maximal σ/2 sur les plans à 45°.</li>
+      <li>Loi de Schmid : τ<sub>r</sub> = m<sub>S</sub>·σ, m<sub>S</sub> ≤ 0,5.</li>
+      <li>Les grains bien orientés glissent les premiers : bandes de glissement.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -449,39 +455,42 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="c-img"><span class="ico">🃏</span><span><small>Image à retenir</small>Le jeu de cartes poussé d'avant en arrière : certaines cartes ne reviennent pas et dépassent, d'autres se creusent</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le jeu de cartes</span></div>
-    <p>Pose un jeu de cartes incliné sur la table et pousse-le d'avant en arrière. Si toutes les cartes reviennent exactement à leur place, le jeu redevient parfaitement net : c'est le <b>cas réversible</b>. En traction, des lamelles de métal glissent vers l'extérieur ; en compression, les mêmes lamelles reviennent par le même chemin, et la surface redevient plane.</p>
-    <p>Dans la réalité, le retour ne se fait pas tout à fait par le même chemin : une carte revient un peu moins loin, sa voisine un peu plus. Au fil des cycles, des lamelles <b>sortent</b> de la surface et d'autres s'y <b>enfoncent</b> : ce sont les <b>extrusions</b> et les <b>intrusions</b>. C'est le <b>cas irréversible</b>.</p>
-    <p>Une intrusion, c'est une entaille microscopique : un sillon étroit et profond de quelques micromètres. Et une entaille concentre la contrainte (cours 1). Au fond de l'intrusion, la contrainte locale devient assez forte pour ouvrir une <b>microfissure</b>.</p>
-  </div>
+  <p>Pose un jeu de cartes incliné et pousse-le d'avant en arrière. Si toutes les cartes reviennent exactement à leur place, le jeu redevient net : c'est le <b>cas réversible</b>. Dans la réalité, le retour ne se fait pas tout à fait par le même chemin : au fil des cycles, des lamelles de métal <b>sortent</b> de la surface et d'autres s'y <b>enfoncent</b> : ce sont les <b>extrusions</b> et les <b>intrusions</b>, le <b>cas irréversible</b>. Une intrusion est une entaille microscopique, un sillon étroit et profond de quelques micromètres ; et une entaille concentre la contrainte : à son fond, la contrainte locale devient assez forte pour ouvrir une <b>microfissure</b>.</p>
+  <p>Pourquoi le glissement ne revient-il pas ? Les dislocations s'accrochent entre elles et ne repartent pas toutes par le même plan, certaines changent de plan, et la marche fraîchement créée en surface s'oxyde aussitôt à l'air. Sous vide, les durées de vie en fatigue sont d'ailleurs souvent plus longues.</p>
 
-  <div class="lab" id="m3">
+  <div class="fx"><div class="row big" style="font-size:1.35rem"><span>K<sub>t</sub> = 1 + 2·<span class="frac"><span>√a</span><span>√ρ</span></span></span><span><span class="sig">σ<sub>loc</sub></span> = K<sub>t</sub>·σ</span></div><p class="cap">Formule d'Inglis (cours 1) réécrite pour une entaille de profondeur a et de rayon en fond ρ : plus l'entaille est profonde et aiguë, plus la concentration est forte.</p></div>
+
+<div class="lab" id="m3">
     <p class="lab-h">Manipulation 3 : les cartes qui glissent</p>
-    <p class="lab-sub">Une coupe près de la surface : les lamelles inclinées à 45° sont des plans de glissement actifs. Lance les cycles en mode réversible, puis irréversible, et regarde le profil de la surface.</p>
+    <p class="lab-sub">Une coupe près de la surface : les lamelles à 45° sont des plans de glissement actifs. Cycle en mode réversible, puis irréversible, et regarde le profil.<span class="predict">🔮 Prédis d'abord : en mode réversible, la surface finit-elle plate ou sculptée ?</span></p>
     <div class="radios" role="radiogroup" aria-label="Mode">
       <label><input type="radio" name="m3m" value="rev">réversible</label>
       <label><input type="radio" name="m3m" value="irr" checked>irréversible</label>
     </div>
-    <div class="btns"><button class="btn play" id="m3play" type="button">▶ Cycler</button><button class="btn" id="m3reset" type="button">↺ Surface neuve</button></div>
+    <div class="btns"><button class="btn" id="m3play" type="button">▶ Cycler</button><button class="btn" id="m3reset" type="button">↺ Surface neuve</button></div>
     <svg id="m3svg" role="img" aria-label="Lamelles de glissement à 45° sous la surface, formation d'intrusions et d'extrusions"></svg>
     <div class="readout" id="m3r"></div>
     <p class="status" id="m3msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">irréversibilité et concentration</span></div>
-    <div class="def"><b>📖 Extrusion, intrusion</b> : relief de surface créé par l'accumulation de glissements irréversibles ; une <b>extrusion</b> est une lamelle de métal qui dépasse de la surface, une <b>intrusion</b> un sillon qui s'y enfonce. Hauteurs typiques : de quelques dixièmes à quelques micromètres.</div>
-    <div class="def"><b>📖 Bande de glissement persistante</b> (en anglais <i>persistent slip band</i>, PSB) : bande étroite d'un grain où le glissement se concentre cycle après cycle. Si on polit la surface pour effacer les traces puis qu'on reprend les cycles, les bandes réapparaissent au même endroit : d'où le mot « persistante ». C'est le siège des intrusions et des extrusions.</div>
-    <p><b>Pourquoi le glissement ne revient-il pas ?</b> Plusieurs raisons s'ajoutent : les dislocations s'accrochent les unes aux autres et ne repartent pas toutes par le même plan ; certaines changent de plan (glissement dévié) ; et la marche fraîchement créée en surface s'oxyde aussitôt à l'air, ce qui l'empêche de se refermer exactement. Sous vide, les durées de vie en fatigue sont d'ailleurs souvent plus longues qu'à l'air.</p>
-    <h4>L'intrusion, une entaille</h4>
-    <p>Pour une entaille de profondeur <span class="mat">a</span> et de rayon à fond d'entaille <span class="mat">ρ</span>, la formule d'Inglis du cours 1 (K<sub>t</sub> = 1 + 2a/b, ellipse de demi-axes a et b) se réécrit avec ρ = b²/a :</p>
-    <div class="fx"><div class="big" style="font-size:1.6rem"><span class="tau">K<sub>t</sub></span> = 1 + 2<span class="frac"><span>√<span class="mat">a</span></span><span>√<span class="mat">ρ</span></span></span></div><p class="cap">plus l'entaille est profonde et aiguë, plus la concentration est forte</p></div>
-    <p><b>Exemple.</b> Intrusion de 3 µm de profondeur et de 0,5 µm de rayon : <span class="m">K<sub>t</sub> = 1 + 2√(3/0,5) = 1 + 2 × 2,45 ≈ 5,9</span>. Sous σ = 150 MPa, la contrainte locale atteint environ 885 MPa : bien au-delà de R<sub>e</sub>, une microfissure peut s'ouvrir.</p>
-    <div class="tip"><b>💡 Le poli miroir.</b> Polir une surface supprime les rayures d'usinage, qui jouent le même rôle que des intrusions toutes faites. C'est pourquoi les éprouvettes de laboratoire sont polies, et pourquoi le coefficient d'état de surface du cours 2 vaut 1 pour une surface polie et environ 0,8 pour une surface usinée.</div>
-    <div class="warn"><b>⚠️ Piège : « réversible à l'échelle de la pièce » ne veut pas dire « réversible à l'échelle du grain ».</b> La pièce reprend sa forme à chaque cycle, mais les marches de surface, elles, s'accumulent.</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique :</b> « <b>EXtrusion vers l'EXtérieur, INtrusion vers l'INtérieur</b> ».</div>
-    <div class="weld"><b>🔥 Le pied de cordon a déjà ses intrusions</b>
-      <p>Un pied de cordon brut présente des micro-entailles de laitier, des ondulations et parfois des <b>caniveaux</b> (sillons creusés le long du pied par la fusion), de 0,05 à quelques dixièmes de millimètre : bien plus profonds que les intrusions qu'un métal poli met des millions de cycles à creuser. Le <b>meulage</b> (fraise ou meule le long du pied) et la <b>refusion TIG</b> (<i>Tungsten Inert Gas</i> : on refond le pied avec une électrode de tungstène sous gaz inerte, sans métal d'apport) visent justement à effacer ces entailles et à adoucir le raccordement.</p>
-    </div>
+  <p><b>Exemple</b> : une intrusion de 3 µm de profondeur et 0,5 µm de rayon a <span class="m">K<sub>t</sub> = 1 + 2√(3/0,5) ≈ 5,9</span> : sous σ = 150 MPa, la contrainte locale atteint environ 885 MPa, bien au-delà de R<sub>e</sub>, et une microfissure peut s'ouvrir. Après polissage, une rayure de 0,5 µm et de rayon 1 µm ne donne que K<sub>t</sub> ≈ 2,4 : c'est pourquoi les éprouvettes sont polies, et pourquoi le coefficient d'état de surface vaut 1 pour une surface polie, environ 0,8 pour une surface usinée (cours 2).</p>
+
+  <div class="warn"><b>⚠️ Piège : « réversible à l'échelle de la pièce » ne veut pas dire « réversible à l'échelle du grain ».</b> La pièce reprend sa forme à chaque cycle, mais les marches de surface, elles, s'accumulent. Le polissage ne supprime pas la fatigue : il oblige les cycles à creuser leurs propres intrusions, ce qui allonge l'amorçage.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « EXtrusion vers l'EXtérieur, INtrusion vers l'INtérieur »</b>.</div>
+  <div class="weld"><b>🔥 Le pied de cordon a déjà ses intrusions</b>
+    <p>Un pied de cordon brut présente des micro-entailles de laitier, des ondulations et parfois des <b>caniveaux</b>, de 0,05 à quelques dixièmes de millimètre : bien plus profonds que les intrusions qu'un métal poli met des millions de cycles à creuser. Le <b>meulage</b> et la <b>refusion TIG</b> (on refond le pied sans métal d'apport) visent à effacer ces entailles et à adoucir le raccordement.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : bandes de glissement persistantes</summary>
+    <p>Une <b>bande de glissement persistante</b> (<i>persistent slip band</i>) est une bande étroite d'un grain où le glissement se concentre cycle après cycle : si l'on polit la surface puis qu'on reprend les cycles, les bandes réapparaissent au même endroit. C'est le siège des intrusions et des extrusions, dont la hauteur va de quelques dixièmes à quelques micromètres. La formule de l'entaille vient de K<sub>t</sub> = 1 + 2a/b (ellipse de demi-axes a et b) avec ρ = b²/a.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Le glissement irréversible sculpte intrusions et extrusions.</li>
+      <li>Une intrusion est une micro-entaille : K<sub>t</sub> = 1 + 2√(a/ρ).</li>
+      <li>Un pied de cordon brut a déjà des entailles bien plus profondes.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -494,37 +503,43 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="c-img"><span class="ico">↪️</span><span><small>Image à retenir</small>Le randonneur : il suit d'abord un sentier en biais, puis coupe tout droit dans la pente</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le sentier en biais, puis la ligne droite</span></div>
-    <p>La microfissure née au fond d'une intrusion suit d'abord le chemin le plus facile : le <b>plan de glissement</b>, incliné à environ 45° de l'effort. Elle reste à l'échelle d'un ou deux grains ; chaque joint de grains, où l'orientation change, la freine ou la dévie.</p>
-    <p>En traction-compression, la fissure finit par <b>tourner</b> et devenir perpendiculaire à la surface, c'est-à-dire perpendiculaire à la contrainte qui l'ouvre. Elle traverse alors les grains en ligne presque droite. C'est le passage de la <b>microfissure</b>, à l'échelle du grain, à la <b>macrofissure</b>, qui obéira à la mécanique de la rupture (cours 4).</p>
-    <p>Toutes les fissures ne partent pas de la surface. Elles peuvent aussi naître <b>dans le volume</b>, autour de défauts préexistants : <span class="tau">pores</span> (petites bulles de gaz), <span class="tau">inclusions</span> (particules étrangères : oxydes, sulfures, laitier), <span class="tau">interfaces</span> diverses (entre deux phases, sous un revêtement). Autour de ces défauts, une déformation plastique très localisée joue le même rôle que les bandes de glissement en surface.</p>
-  </div>
+  <p>La microfissure née au fond d'une intrusion suit d'abord le chemin le plus facile : le <b>plan de glissement</b>, incliné à environ 45° de l'effort, sur un ou deux grains ; chaque joint de grains la freine ou la dévie. Puis elle <b>tourne</b> et devient perpendiculaire à la contrainte qui l'ouvre, et traverse les grains en ligne presque droite, comme un randonneur qui suit d'abord un sentier en biais, puis coupe tout droit dans la pente. C'est le passage de la <b>microfissure</b> à la <b>macrofissure</b>, qui obéira à la mécanique de la rupture (cours 4).</p>
+  <p>Toutes les fissures ne partent pas de la surface : elles naissent aussi <b>dans le volume</b>, autour de défauts préexistants, pores, inclusions (oxydes, sulfures, laitier), interfaces. Autour de ces défauts, une plastification très localisée joue le même rôle que les bandes de glissement en surface.</p>
 
-  <div class="lab" id="m4">
+  <div class="def"><b>📖 Stade I et stade II</b> (Forsyth, 1961) : le stade I suit les plans de glissement, à environ 45° de l'effort, sur quelques grains ; le stade II progresse perpendiculairement à la contrainte principale de traction, à travers les grains. <b>Modes de fissuration</b> : <b>mode I</b>, ouverture des lèvres (traction perpendiculaire au plan de fissure) ; mode II, glissement plan ; mode III, glissement anti-plan, comme des ciseaux. Le stade I est dominé par le cisaillement (modes II et III), le stade II par le <b>mode I</b>.</div>
+
+<div class="lab" id="m4">
     <p class="lab-h">Manipulation 4 : le chemin de la fissure</p>
-    <p class="lab-sub">Choisis l'origine de la fissure puis fais-la grandir. L'effort est horizontal. Observe le changement de direction au premier joint de grains.</p>
+    <p class="lab-sub">Choisis l'origine de la fissure puis fais-la grandir ; l'effort est horizontal. Observe le changement de direction au premier joint de grains.<span class="predict">🔮 Prédis d'abord : une fois longue, la fissure reste-t-elle à 45° ou devient-elle perpendiculaire à l'effort ?</span></p>
     <div class="radios" role="radiogroup" aria-label="Origine">
       <label><input type="radio" name="m4o" value="surf" checked>surface polie</label>
       <label><input type="radio" name="m4o" value="incl">inclusion interne</label>
       <label><input type="radio" name="m4o" value="soud">pied de cordon</label>
     </div>
     <div class="ctrl"><label for="m4p">Croissance</label><input type="range" id="m4p" class="r-eps" min="0" max="100" step="1" value="45"><output id="m4po"></output></div>
-    <div class="btns"><button class="btn play" id="m4play" type="button">▶ Faire grandir</button></div>
+    <div class="btns" id="m4pl"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" data-a="play" type="button">▶ Faire grandir</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button></div>
     <svg id="m4svg" role="img" aria-label="Coupe d'un polycristal avec une fissure de stade I à 45° puis de stade II perpendiculaire à l'effort"></svg>
     <p class="status" id="m4msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">stades I et II, modes de fissuration</span></div>
-    <div class="def"><b>📖 Stade I et stade II</b> (vocabulaire introduit par P. J. E. Forsyth, 1961) : le <b>stade I</b> est la propagation de la microfissure le long des plans de glissement, à environ 45° de l'effort, sur un à quelques grains ; le <b>stade II</b> est la propagation perpendiculaire à la contrainte principale de traction, à travers les grains.</div>
-    <div class="def"><b>📖 Les trois modes de fissuration</b> : <b>mode I</b>, ouverture (les lèvres s'écartent, sous une traction perpendiculaire au plan de fissure) ; <b>mode II</b>, glissement plan (les lèvres glissent l'une sur l'autre dans la direction de propagation) ; <b>mode III</b>, glissement anti-plan (les lèvres glissent parallèlement au front, comme des ciseaux). Le stade I est dominé par le cisaillement (modes II et III), le stade II par le <b>mode I</b>.</div>
-    <div class="def"><b>📖 Transgranulaire, intergranulaire</b> : une fissure transgranulaire traverse les grains ; une fissure intergranulaire suit les joints de grains. En fatigue des métaux, la propagation est essentiellement transgranulaire.</div>
-    <p><b>Pourquoi la fissure tourne-t-elle ?</b> Tant qu'elle est plus petite qu'un grain, sa pointe « voit » la cristallographie : elle avance là où le glissement est facile. Quand elle devient longue, la concentration de contrainte à sa pointe domine : elle avance là où sa pointe est le plus ouverte, c'est-à-dire perpendiculairement à la contrainte principale maximale. Le stade I occupe souvent une grande part de la durée de vie d'une éprouvette lisse, même s'il ne couvre que quelques dizaines de micromètres.</p>
-    <p><b>Surface ou volume ?</b> En endurance classique, l'amorçage se fait presque toujours en surface. Il passe dans le volume quand la surface a été renforcée (grenaillage, cémentation, nitruration) ou aux très grands nombres de cycles : c'est l'« œil de poisson » autour d'une inclusion, vu au cours 2.</p>
-    <div class="warn"><b>⚠️ Piège : la direction d'une fissure renseigne sur l'effort.</b> Une macrofissure de fatigue est perpendiculaire à la contrainte principale de traction : une fissure transversale sur un arbre trahit de la flexion, une fissure en hélice à 45° de la torsion. C'est la base de l'expertise des ruptures.</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique :</b> « <b>I comme Incliné ; II comme deux piquets bien droits</b> » : le stade I suit la pente à 45°, le stade II plonge à angle droit de l'effort.</div>
-    <div class="weld"><b>🔥 Les défauts de soudage, des amorces toutes prêtes</b>
-      <p>Porosités, inclusions de laitier, manques de fusion, caniveaux, fissures à froid : chacun de ces défauts est un site d'amorçage interne ou de surface. Les fissures de fatigue des assemblages soudés partent surtout du <b>pied de cordon</b> et, pour les soudures à pénétration partielle, de la <b>racine</b>. La norme de qualité des soudures <b>ISO 5817</b> contient une annexe pour les assemblages sollicités en fatigue, qui relie les niveaux de qualité exigés aux classes FAT visées.</p>
-    </div>
+  <p><b>Lecture</b> : tant qu'elle est plus petite qu'un grain, la pointe de la fissure « voit » la cristallographie et avance là où le glissement est facile ; quand elle devient longue, la concentration de contrainte à sa pointe domine et elle avance là où sa pointe est le plus ouverte. Le stade I, même s'il ne couvre que quelques dizaines de micromètres, occupe souvent une grande part de la vie d'une éprouvette lisse. En fatigue des métaux, la propagation est essentiellement <b>transgranulaire</b> (à travers les grains).</p>
+
+  <div class="warn"><b>⚠️ Piège : la direction d'une fissure renseigne sur l'effort.</b> Une macrofissure de fatigue est perpendiculaire à la contrainte principale de traction : une fissure transversale sur un arbre trahit de la flexion, une fissure en hélice à 45° de la torsion. C'est la base de l'expertise des ruptures.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « I comme Incliné ; II comme deux piquets bien droits »</b> : le stade I suit la pente à 45°, le stade II plonge à angle droit de l'effort.</div>
+  <div class="weld"><b>🔥 Les défauts de soudage, des amorces toutes prêtes</b>
+    <p>Porosités, inclusions de laitier, manques de fusion, caniveaux, fissures à froid : chacun est un site d'amorçage. Les fissures de fatigue des assemblages soudés partent surtout du <b>pied de cordon</b> et, pour les soudures à pénétration partielle, de la <b>racine</b>. L'<b>ISO 5817</b> contient une annexe pour les assemblages sollicités en fatigue, qui relie les niveaux de qualité exigés aux classes FAT visées.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : surface ou volume ?</summary>
+    <p>En endurance classique, l'amorçage se fait presque toujours en surface. Il passe dans le volume quand la surface a été renforcée (grenaillage, cémentation, nitruration) ou aux très grands nombres de cycles : c'est l'« œil de poisson » autour d'une inclusion (cours 2). Une fissure <b>intergranulaire</b> suit les joints de grains, une fissure transgranulaire les traverse.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Stade I à 45° le long des plans de glissement, puis stade II perpendiculaire.</li>
+      <li>Le stade II est en mode I : l'ouverture des lèvres.</li>
+      <li>Les défauts de soudage sont des sites d'amorçage tout prêts.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -536,20 +551,14 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="c-img"><span class="ico">😴</span><span><small>Image à retenir</small>La graine sur un rocher : elle germe, pousse un peu, puis s'arrête faute de terre</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">deux courbes au lieu d'une</span></div>
-    <p>Il est possible, mais difficile, de repérer l'apparition des premières microfissures pendant un essai (microscope, répliques de la surface). On peut alors tracer une seconde courbe de Wöhler, la courbe <b>à l'amorçage</b>, à côté de la courbe à rupture. Elle est forcément <b>à gauche</b> : on se fissure toujours avant de casser. Elle partage le diagramme en trois domaines :</p>
-    <ul>
-      <li><b>domaine 1</b>, à gauche de la courbe d'amorçage : non fissuré ;</li>
-      <li><b>domaine 2</b>, entre les deux courbes : fissuré, pas encore rompu ;</li>
-      <li><b>domaine 3</b>, à droite de la courbe de rupture : rompu.</li>
-    </ul>
-    <p>Plus surprenant : on observe parfois que la courbe d'amorçage passe aussi <b>en dessous</b> de la courbe de rupture, avec une limite d'endurance à l'amorçage <span class="mat">σ<sub>Di</sub></span> plus basse que <span class="mat">σ<sub>D</sub></span>. Entre les deux apparaît un <b>domaine 4</b> : la pièce est microfissurée, parfois sur plusieurs centaines de micromètres, mais les fissures deviennent <b>dormantes</b> et ne conduiront <b>jamais</b> à la rupture. Comme une graine tombée sur un rocher : elle germe, pousse un peu, puis s'arrête faute de terre.</p>
-    <p>Ces fissures dormantes apparaissent dans trois situations : des <span class="tau">contraintes résiduelles</span> de surface (une compression qui « serre » la fissure), un matériau aux propriétés différentes en surface et à cœur (surface traitée), et des géométries complexes à fortes concentrations de contraintes (la fissure naît au fond d'une entaille aiguë, puis sort de la zone surchargée).</p>
-  </div>
+  <p>En repérant l'apparition des premières microfissures pendant un essai (microscope, répliques de la surface), on peut tracer une seconde courbe de Wöhler, <b>à l'amorçage</b>. Elle est forcément <b>à gauche</b> de la courbe à rupture : on se fissure avant de casser. Elle partage le diagramme en domaines : <b>1</b> non fissuré, <b>2</b> fissuré mais pas encore rompu, <b>3</b> rompu.</p>
+  <p>Plus surprenant : la courbe d'amorçage passe parfois <b>sous</b> la courbe de rupture, avec une limite d'endurance à l'amorçage σ<sub>Di</sub> &lt; σ<sub>D</sub>. Entre les deux apparaît un <b>domaine 4</b> : la pièce est microfissurée, parfois sur des centaines de micromètres, mais les fissures deviennent <b>dormantes</b> et ne mèneront jamais à la rupture, comme une graine tombée sur un rocher qui germe, pousse un peu, puis s'arrête faute de terre. On les observe avec des contraintes résiduelles de compression en surface, une surface traitée différente du cœur, ou au fond d'entailles aiguës que la fissure quitte vite.</p>
 
-  <div class="lab" id="m5">
+  <div class="fx"><div class="row big" style="font-size:1.25rem"><span>ΔK = <span class="sig">Δσ</span>·Y·√a ≥ ΔK<sub>S</sub></span><span>a<sub>0</sub> = (<span class="frac"><span>ΔK<sub>S</sub></span><span>Y·Δσ<sub>D</sub></span></span>)²</span></div><p class="cap">Une fissure longue se propage si l'étendue du facteur d'intensité de contrainte ΔK (MPa·√m) dépasse le seuil ΔK<sub>S</sub> (cours 4) ; une fissure très courte, si Δσ dépasse la limite d'endurance Δσ<sub>D</sub> = 2σ<sub>D</sub>. Kitagawa et Takahashi (1976) ont réuni les deux : la frontière change à la longueur caractéristique a<sub>0</sub>, souvent de l'ordre de la taille de grain. Y ≈ 2 pour une petite fissure de surface (√π compris).</p></div>
+
+<div class="lab" id="m5">
     <p class="lab-h">Manipulation 5 : les quatre domaines</p>
-    <p class="lab-sub">Place un point (σ<sub>a</sub>, N) avec les deux curseurs : le domaine où il tombe s'affiche. Bascule entre le cas σ<sub>Di</sub> = σ<sub>D</sub> et le cas des fissures dormantes, σ<sub>Di</sub> &lt; σ<sub>D</sub>.</p>
+    <p class="lab-sub">Place un point (σ<sub>a</sub>, N) : le domaine où il tombe s'affiche ; bascule entre σ<sub>Di</sub> = σ<sub>D</sub> et le cas des fissures dormantes.<span class="predict">🔮 Prédis d'abord : une pièce peut-elle être fissurée sans jamais casser ?</span></p>
     <div class="radios" role="radiogroup" aria-label="Figure">
       <label><input type="radio" name="m5f" value="9">sans fissures dormantes (σ<sub>Di</sub> = σ<sub>D</sub>)</label>
       <label><input type="radio" name="m5f" value="10" checked>avec fissures dormantes (σ<sub>Di</sub> &lt; σ<sub>D</sub>)</label>
@@ -561,20 +570,11 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <p class="status" id="m5msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">le diagramme de Kitagawa</span> <span class="hp">complément</span></div>
-    <p>Pourquoi une fissure s'endort-elle ? Une fissure longue se propage si son <b>étendue du facteur d'intensité de contrainte</b> dépasse un seuil (simple rappel ; le cours 4 détaille tout) :</p>
-    <div class="fx"><div class="big" style="font-size:1.6rem"><span class="sig">ΔK</span> = <span class="sig">Δσ</span>·<span class="mat">Y</span>·√<span class="eps">a</span> ≥ <span class="mat">ΔK<sub>S</sub></span></div>
-      <p class="cap">ΔK en MPa·√m ; a, longueur de fissure, en m ; Y, facteur géométrique sans unité (≈ 2 pour une petite fissure de surface, dans la convention de la série qui y inclut √π) ; ΔK<sub>S</sub> : seuil de fissuration</p></div>
-    <p>Une fissure très courte, elle, n'est arrêtée que si l'étendue de contrainte reste sous la limite d'endurance Δσ<sub>D</sub> = 2σ<sub>D</sub>. En 1976, Kitagawa et Takahashi ont réuni les deux conditions sur un même diagramme (log Δσ en fonction de log a) : la frontière est une horizontale à Δσ<sub>D</sub> pour les fissures courtes, puis la droite Δσ = ΔK<sub>S</sub>/(Y√a) pour les fissures longues. Les deux se croisent pour la longueur caractéristique :</p>
-    <div class="fx"><div class="big" style="font-size:1.6rem"><span class="eps">a<sub>0</sub></span> = <span style="font-size:1.25em">(</span><span class="frac"><span><span class="mat">ΔK<sub>S</sub></span></span><span><span class="mat">Y</span>·<span class="mat">Δσ<sub>D</sub></span></span></span><span style="font-size:1.25em">)</span>²</div>
-      <p class="cap">souvent de l'ordre de la taille de grain, quelques dizaines à quelques centaines de µm</p></div>
-    <p><b>Exemple.</b> Acier avec ΔK<sub>S</sub> = 7 MPa·√m et Δσ<sub>D</sub> = 380 MPa (à R = 0), Y = 2 : <span class="m">a<sub>0</sub> = (7/(2 × 380))² = (0,00921)² = 8,5 × 10⁻⁵ m ≈ 85 µm</span>. Une fissure de 0,5 mm ne se propage que si <span class="m">Δσ ≥ 7/(2 × √0,0005) ≈ 157 MPa</span>.</p>
-    <p><b>Lecture des fissures dormantes.</b> Au fond d'une entaille aiguë, la contrainte locale K<sub>t</sub>·Δσ dépasse Δσ<sub>D</sub> : une fissure s'amorce (on a quitté le domaine 1). Mais en grandissant, elle sort de la petite zone surchargée ; son ΔK, calculé avec la contrainte nominale, reste sous ΔK<sub>S</sub> : elle s'arrête. Le point de fonctionnement est sous la frontière de Kitagawa : c'est le domaine 4.</p>
-  </div>
+  <p><b>Exemple</b> : acier de ΔK<sub>S</sub> = 7 MPa·√m et Δσ<sub>D</sub> = 380 MPa (R = 0), Y = 2 : <span class="m">a<sub>0</sub> = (7/(2 × 380))² ≈ 85 µm</span>. Une fissure de 30 µm sous 350 MPa est courte et reste sous Δσ<sub>D</sub> : elle dort. Une fissure de 0,5 mm ne se propage que si Δσ ≥ 7/(2 × √0,0005) ≈ 157 MPa.</p>
 
-  <div class="lab" id="m5b">
+<div class="lab" id="m5b">
     <p class="lab-h">Manipulation 5 bis : le diagramme de Kitagawa</p>
-    <p class="lab-sub">Règle la longueur de la fissure et l'étendue de contrainte : sous la frontière, la fissure dort ; au-dessus, elle se propage. La courbe en tirets est la version lissée d'El Haddad, plus proche des essais près de a<sub>0</sub>.</p>
+    <p class="lab-sub">Le diagramme de Kitagawa : règle la longueur de la fissure, l'étendue de contrainte et le seuil ; sous la frontière, la fissure dort.<span class="predict">🔮 Prédis d'abord : avec un seuil de 2 MPa·√m, un caniveau de 0,3 mm dort-il sous 120 MPa ?</span></p>
     <div class="ctrl"><label for="m5ba">log <span class="eps">a</span> (a en m)</label><input type="range" id="m5ba" class="r-eps" min="-6" max="-2" step="0.02" value="-4.5"><output id="m5bao"></output></div>
     <div class="ctrl"><label for="m5bd">Étendue <span class="sig">Δσ</span></label><input type="range" id="m5bd" class="r-sig" min="20" max="800" step="5" value="300"><output id="m5bdo"></output></div>
     <div class="ctrl"><label for="m5bk">Seuil <span class="mat">ΔK<sub>S</sub></span></label><input type="range" id="m5bk" class="r-mat" min="2" max="12" step="0.5" value="7"><output id="m5bko"></output></div>
@@ -583,14 +583,22 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <p class="status" id="m5bmsg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2, suite <span class="tag">pièges et métier</span></div>
-    <div class="warn"><b>⚠️ Piège : « dormante » ne veut pas dire « inoffensive pour toujours ».</b> Une surcharge, une corrosion qui creuse la fissure, ou une relaxation des contraintes résiduelles peuvent la réveiller. On ne compte sur des fissures dormantes en conception qu'avec une justification solide.</div>
-    <div class="warn"><b>⚠️ Piège : la courbe d'amorçage dépend de ce qu'on appelle « fissure ».</b> Un amorçage détecté à 10 µm et un amorçage détecté à 0,5 mm ne donnent pas la même courbe. Toujours préciser la taille de détection.</div>
-    <div class="tip"><b>💡 Petites fissures.</b> Sous a<sub>0</sub>, les fissures « courtes » se propagent parfois plus vite que ne le prédit ΔK, puis ralentissent aux joints de grains : leur comportement est irrégulier, dominé par la microstructure. C'est une zone de recherche active.</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique :</b> « <b>courte, c'est σ qui décide ; longue, c'est K qui décide</b> ». La frontière passe à a<sub>0</sub>.</div>
-    <div class="weld"><b>🔥 Un défaut de soudure plus grand que a<sub>0</sub></b>
-      <p>Un caniveau ou une inclusion de laitier de 0,1 à 0,3 mm au pied d'un cordon dépasse largement a<sub>0</sub>. Le défaut se comporte d'emblée comme une fissure longue, régie par ΔK : pas de phase d'amorçage, et une durée de vie qui ne dépend presque pas de la limite d'endurance de l'acier. Pour qu'un défaut s'endorme, il faut réduire Δσ, réduire sa taille (meulage) ou le mettre en compression (martelage).</p>
-    </div>
+  <div class="warn"><b>⚠️ Piège : « dormante » ne veut pas dire « inoffensive pour toujours ».</b> Une surcharge, une corrosion qui creuse la fissure ou une relaxation des contraintes résiduelles peuvent la réveiller : on ne compte sur des fissures dormantes en conception qu'avec une justification solide. Et la courbe d'amorçage dépend de la taille de détection choisie (10 µm ou 0,5 mm ne donnent pas la même courbe).</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « courte, c'est σ qui décide ; longue, c'est K qui décide »</b>. La frontière passe à a<sub>0</sub>.</div>
+  <div class="weld"><b>🔥 Un défaut de soudure plus grand que a<sub>0</sub></b>
+    <p>Un caniveau ou une inclusion de laitier de 0,1 à 0,3 mm au pied d'un cordon dépasse largement a<sub>0</sub> : il se comporte d'emblée comme une fissure longue, régie par ΔK, sans phase d'amorçage, avec une durée de vie qui ne dépend presque pas de la limite d'endurance de l'acier. Pour qu'il s'endorme : réduire Δσ, réduire sa taille (meulage) ou le mettre en compression (martelage).</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : lecture des fissures dormantes, petites fissures</summary>
+    <p>Au fond d'une entaille aiguë, la contrainte locale K<sub>t</sub>·Δσ dépasse Δσ<sub>D</sub> : une fissure s'amorce. Mais en grandissant, elle sort de la petite zone surchargée ; son ΔK, calculé avec la contrainte nominale, reste sous ΔK<sub>S</sub> : elle s'arrête, et le point de fonctionnement est sous la frontière de Kitagawa. La version lissée d'El Haddad (en tirets dans la manipulation) colle mieux aux essais près de a<sub>0</sub>. Sous a<sub>0</sub>, les fissures « courtes » se propagent parfois plus vite que ne le prédit ΔK, puis ralentissent aux joints de grains : un comportement irrégulier, dominé par la microstructure.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Courbe d'amorçage à gauche de la courbe de rupture ; domaine 4 : fissures dormantes.</li>
+      <li>Kitagawa : fissure courte, Δσ<sub>D</sub> décide ; longue, ΔK<sub>S</sub> décide ; frontière à a<sub>0</sub>.</li>
+      <li>Les défauts de soudure dépassent a<sub>0</sub> : pas de phase d'amorçage.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -603,21 +611,14 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="c-img"><span class="ico">🗺️</span><span><small>Image à retenir</small>La carte au trésor : on calcule les contraintes partout, puis on cherche la croix où le critère est le plus près d'être atteint</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la carte au trésor</span></div>
-    <p>Quand on connaît les sollicitations subies par une pièce, on peut chercher <b>où</b> et <b>quand</b> elle va s'amorcer. La démarche est toujours la même :</p>
-    <ol>
-      <li>calculer les contraintes en tout point de la pièce : par la RDM (résistance des matériaux), la MMC (mécanique des milieux continus) ou les éléments finis (calcul numérique qui découpe la pièce en milliers de petits morceaux) ;</li>
-      <li>en chaque point, calculer la valeur d'un <b>critère d'amorçage</b> : un nombre qui résume l'état de contrainte cyclique ;</li>
-      <li>chercher les <b>points critiques</b>, là où ce critère est le plus grand ;</li>
-      <li>comparer à un seuil mesuré par l'expérience : en dessous, l'amorçage est impossible (c'est la limite d'endurance à l'amorçage) ; au-dessus, il se produira au bout d'un certain nombre de cycles (10⁴, 10⁵, 10⁶…).</li>
-    </ol>
-    <p>Puisque l'amorçage naît de glissements plastiques, les critères s'inspirent de la plasticité : <b>Tresca</b> et <b>von Mises</b> (que tu connais pour la limite d'élasticité), et deux critères conçus pour la fatigue, <b>Crossland</b> et <b>Dang Van</b>. Ces deux derniers ajoutent un ingrédient : la <b>pression hydrostatique</b>, la partie de la contrainte qui « gonfle » ou « comprime » la matière sans la cisailler. Une traction qui ouvre les microfissures aggrave la fatigue ; une compression la soulage.</p>
-    <p>Enfin, selon le matériau, les concentrations de contrainte, le chargement et l'état de surface, l'amorçage représente une part plus ou moins grande de la vie totale : <b>négligeable ou au contraire prépondérante</b>.</p>
-  </div>
+  <p>Quand on connaît les sollicitations d'une pièce, on cherche <b>où</b> et <b>quand</b> elle va s'amorcer, comme on cherche la croix sur une carte au trésor : calculer les contraintes en tout point (RDM, éléments finis) ; en chaque point, calculer un <b>critère d'amorçage</b>, un nombre qui résume l'état de contrainte cyclique ; chercher les <b>points critiques</b>, où il est le plus grand ; le comparer à un seuil mesuré par l'expérience.</p>
+  <p>L'amorçage naît de glissements plastiques : les critères s'inspirent de la plasticité, <b>Tresca</b> et <b>von Mises</b>, et deux critères conçus pour la fatigue, <b>Crossland</b> et <b>Dang Van</b>, qui ajoutent la <b>pression hydrostatique</b>, la partie de la contrainte qui gonfle ou comprime la matière sans la cisailler : une traction qui ouvre les microfissures aggrave la fatigue, une compression la soulage.</p>
 
-  <div class="lab" id="m6">
+  <div class="fx"><div class="row big" style="font-size:1.25rem"><span>σ<sub>eq,a</sub> = √(<span class="sig">σ<sub>a</sub></span>² + 3<span class="tau">τ<sub>a</sub></span>²) ≤ f<sub>−1</sub></span><span>√J<sub>2,a</sub> + α·P<sub>max</sub> ≤ β</span></div><p class="cap">Von Mises pour une flexion σ<sub>a</sub> et une torsion τ<sub>a</sub> alternées en phase, comparée à la limite d'endurance en flexion alternée f<sub>−1</sub> (Tresca, plus prudent : √(σ<sub>a</sub>² + 4τ<sub>a</sub>²)). Crossland : √J<sub>2,a</sub> amplitude du cisaillement « moyen » (√(σ<sub>a</sub>²/3 + τ<sub>a</sub>²) en phase), P<sub>max</sub> pression hydrostatique maximale (σ<sub>1</sub> + σ<sub>2</sub> + σ<sub>3</sub>)/3 ; α = 3t<sub>−1</sub>/f<sub>−1</sub> − √3 et β = t<sub>−1</sub>, avec t<sub>−1</sub> limite en torsion alternée.</p></div>
+
+<div class="lab" id="m6">
     <p class="lab-h">Manipulation 6 : von Mises et Crossland sur un arbre</p>
-    <p class="lab-sub">Un point de la surface d'un arbre subit une flexion alternée σ<sub>a</sub> (avec une moyenne σ<sub>m</sub>) et une torsion alternée τ<sub>a</sub>, en phase. Acier : limite en flexion alternée f<sub>−1</sub> = 270 MPa, en torsion alternée t<sub>−1</sub> = 170 MPa. À gauche, le plan de Crossland ; à droite, les amplitudes admissibles.</p>
+    <p class="lab-sub">Un point de la surface d'un arbre en flexion et torsion alternées, en phase (f<sub>−1</sub> = 270 MPa, t<sub>−1</sub> = 170 MPa) : le plan de Crossland et les amplitudes admissibles.<span class="predict">🔮 Prédis d'abord : ajouter une contrainte moyenne de traction rapproche-t-il le point de la limite de Crossland ?</span></p>
     <div class="ctrl"><label for="m6s">Flexion <span class="sig">σ<sub>a</sub></span></label><input type="range" id="m6s" class="r-sig" min="0" max="300" step="5" value="150"><output id="m6so"></output></div>
     <div class="ctrl"><label for="m6t">Torsion <span class="sig">τ<sub>a</sub></span></label><input type="range" id="m6t" class="r-sig" min="0" max="200" step="5" value="55"><output id="m6to"></output></div>
     <div class="ctrl"><label for="m6m">Moyenne <span class="tau">σ<sub>m</sub></span></label><input type="range" id="m6m" class="r-tau" min="0" max="250" step="5" value="0"><output id="m6mo"></output></div>
@@ -626,27 +627,24 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <p class="status" id="m6msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">deux critères en pratique</span> <span class="hp">complément</span></div>
-    <h4>L'amplitude équivalente de von Mises</h4>
-    <p>Pour une contrainte normale σ<sub>a</sub> et un cisaillement τ<sub>a</sub> alternés et en phase (moyennes nulles), on se ramène à une contrainte uniaxiale équivalente, comparée à la limite d'endurance en flexion f<sub>−1</sub> (l'indice −1 rappelle R = −1) :</p>
-    <div class="fx"><div class="big" style="font-size:1.6rem"><span class="sig">σ<sub>eq,a</sub></span> = √(<span class="sig">σ<sub>a</sub></span>² + 3<span class="sig">τ<sub>a</sub></span>²) ≤ <span class="mat">f<sub>−1</sub></span></div><p class="cap">Tresca donne √(σ<sub>a</sub>² + 4τ<sub>a</sub>²), plus prudent</p></div>
-    <h4>Le critère de Crossland</h4>
-    <p>Il combine l'amplitude de cisaillement « moyen » de l'état de contrainte, √J<sub>2,a</sub>, et la pression hydrostatique maximale du cycle, P<sub>max</sub> :</p>
-    <div class="fx"><div class="big" style="font-size:1.6rem">√<span class="sig">J<sub>2,a</sub></span> + <span class="mat">α</span>·<span class="tau">P<sub>max</sub></span> ≤ <span class="mat">β</span></div>
-      <p class="cap">α = 3t<sub>−1</sub>/f<sub>−1</sub> − √3 ; β = t<sub>−1</sub> (deux essais suffisent pour régler le critère)</p></div>
-    <dl class="syms">
-      <dt>√J<sub>2,a</sub></dt><dd>amplitude du second invariant du déviateur (J<sub>2</sub> mesure la part « cisaillante » de l'état de contrainte, celle qu'utilise von Mises). Pour σ et τ en phase : √J<sub>2,a</sub> = √(σ<sub>a</sub>²/3 + τ<sub>a</sub>²)</dd>
-      <dt>P<sub>max</sub></dt><dd>pression hydrostatique maximale : moyenne des trois contraintes normales, P = (σ<sub>1</sub> + σ<sub>2</sub> + σ<sub>3</sub>)/3 ; pour une flexion : P<sub>max</sub> = (σ<sub>m</sub> + σ<sub>a</sub>)/3</dd>
-    </dl>
-    <p><b>D'où viennent α et β ?</b> En torsion alternée pure à la limite (τ<sub>a</sub> = t<sub>−1</sub>, P = 0) : √J<sub>2,a</sub> = t<sub>−1</sub>, donc β = t<sub>−1</sub>. En flexion alternée pure à la limite (σ<sub>a</sub> = f<sub>−1</sub>) : √J<sub>2,a</sub> = f<sub>−1</sub>/√3 et P<sub>max</sub> = f<sub>−1</sub>/3 ; en écrivant f<sub>−1</sub>/√3 + α·f<sub>−1</sub>/3 = t<sub>−1</sub>, on trouve α.</p>
-    <p><b>Exemple</b> (réglage initial de la manipulation, proche de l'exercice 5) : f<sub>−1</sub> = 270, t<sub>−1</sub> = 170 MPa, donc <span class="m">α = 3 × 170/270 − 1,732 = 0,157</span> et β = 170 MPa. Avec σ<sub>a</sub> = 150 et τ<sub>a</sub> = 55 MPa : <span class="m">√J<sub>2,a</sub> = √(7 500 + 3 025) = 102,6 MPa</span>, <span class="m">P<sub>max</sub> = 50 MPa</span>, critère <span class="m">102,6 + 0,157 × 50 = 110,4 ≤ 170</span> ✅ : coefficient de sécurité 170/110,4 ≈ 1,54. Von Mises : √(150² + 3 × 55²) = 177,7 MPa ≤ 270 ✅ (1,52).</p>
-    <div class="tip"><b>💡 Dang Van</b>, en une phrase : il vérifie à chaque instant du cycle que le cisaillement à l'échelle des grains τ(t), ajouté à a·p(t) (p : pression hydrostatique instantanée, a : constante), reste sous une limite b. Il est très utilisé dans l'automobile et le ferroviaire, avec les éléments finis.</div>
-    <div class="warn"><b>⚠️ Piège : la phase.</b> Les formules simples ci-dessus supposent σ et τ en phase. Si la flexion et la torsion sont décalées dans le temps (chargement déphasé), les plans les plus sollicités tournent pendant le cycle : il faut les critères complets.</div>
-    <div class="warn"><b>⚠️ Piège : un critère d'amorçage ne dit rien de la propagation.</b> Il répond à « une fissure va-t-elle naître ? ». Pour une pièce soudée ou déjà fissurée, la question pertinente est « va-t-elle grandir, et à quelle vitesse ? » : c'est le cours 4.</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique :</b> « <b>Crossland, c'est von Mises plus la pression</b> » : le cisaillement fait glisser, la pression de traction aide à ouvrir.</div>
-    <div class="weld"><b>🔥 La méthode de la contrainte d'entaille effective (IIW)</b>
-      <p>Pour les soudures, on peut aussi calculer la contrainte locale au pied ou à la racine du cordon par éléments finis, en arrondissant fictivement le raccordement avec un rayon de 1 mm, puis la comparer à une courbe unique (FAT 225 pour l'acier, en contrainte principale). Cette méthode, décrite dans les recommandations IIW, transpose l'idée du « point critique » aux assemblages soudés de géométrie complexe.</p>
-    </div>
+  <p><b>Exemple</b> : f<sub>−1</sub> = 270 et t<sub>−1</sub> = 170 MPa donnent α = 3 × 170/270 − 1,732 ≈ 0,157 et β = 170 MPa. Avec σ<sub>a</sub> = 150 et τ<sub>a</sub> = 55 MPa : <span class="m">√J<sub>2,a</sub> = √(7 500 + 3 025) ≈ 102,6 MPa</span>, P<sub>max</sub> = 50 MPa, critère 102,6 + 0,157 × 50 ≈ 110,4 ≤ 170 : coefficient de sécurité 1,54. Von Mises : √(150² + 3 × 55²) ≈ 177,7 ≤ 270 MPa (1,52).</p>
+
+  <div class="warn"><b>⚠️ Piège : un critère d'amorçage ne dit rien de la propagation.</b> Il répond à « une fissure va-t-elle naître ? ». Pour une pièce soudée ou déjà fissurée, la question est « va-t-elle grandir, et à quelle vitesse ? » : c'est le cours 4. Et les formules simples supposent flexion et torsion en phase ; déphasées, il faut les critères complets.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « Crossland, c'est von Mises plus la pression »</b> : le cisaillement fait glisser, la pression de traction aide à ouvrir.</div>
+  <div class="weld"><b>🔥 La méthode de la contrainte d'entaille effective (IIW)</b>
+    <p>Pour une soudure de géométrie complexe, on calcule par éléments finis la contrainte locale au pied ou à la racine, en arrondissant fictivement le raccordement avec un rayon de 1 mm, puis on la compare à une courbe unique (FAT 225 pour l'acier, en contrainte principale). Cette méthode des recommandations IIW transpose l'idée du point critique aux assemblages soudés.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : d'où viennent α et β, Dang Van</summary>
+    <p>En torsion alternée pure à la limite (τ<sub>a</sub> = t<sub>−1</sub>, P = 0) : √J<sub>2,a</sub> = t<sub>−1</sub>, donc β = t<sub>−1</sub>. En flexion alternée pure à la limite (σ<sub>a</sub> = f<sub>−1</sub>) : √J<sub>2,a</sub> = f<sub>−1</sub>/√3 et P<sub>max</sub> = f<sub>−1</sub>/3 ; écrire f<sub>−1</sub>/√3 + α·f<sub>−1</sub>/3 = t<sub>−1</sub> donne α. J<sub>2</sub> est le second invariant du déviateur, la part « cisaillante » de l'état de contrainte, celle qu'utilise von Mises. Pour une flexion, P<sub>max</sub> = (σ<sub>m</sub> + σ<sub>a</sub>)/3. <b>Dang Van</b> vérifie à chaque instant du cycle que le cisaillement à l'échelle des grains τ(t), plus a·p(t) (p pression hydrostatique instantanée), reste sous une limite b ; il est très utilisé dans l'automobile et le ferroviaire avec les éléments finis.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Calculer partout, trouver le point critique, comparer au seuil.</li>
+      <li>Von Mises : √(σ<sub>a</sub>² + 3τ<sub>a</sub>²) ≤ f<sub>−1</sub> ; Crossland ajoute la pression hydrostatique.</li>
+      <li>Un critère d'amorçage ne dit rien de la propagation.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -654,119 +652,39 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
 <div class="wrap">
   <div class="cartouche">
     <div class="c-num">✎</div>
-    <div class="c-title"><h2>Exercices corrigés</h2><p>Six exercices et un défi, du grain au pied de cordon</p></div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Deux exercices, du grain au pied de cordon</p></div>
     <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de musculation : on ne progresse qu'en soulevant soi-même</span></div>
   </div>
-  <div class="lv lv1"><div class="lv-h">👁 Mode d'emploi <span class="tag">papier, crayon, calculatrice</span></div>
-    <p>Cherche chaque question avant d'ouvrir la correction. Écris la formule littérale, puis les valeurs avec leurs unités. Les manipulations 2, 5 bis et 6 permettent de vérifier tes résultats.</p>
-  </div>
+
+  <p>Cherche chaque question avant d'ouvrir la correction. Écris la formule littérale, puis les valeurs avec leurs unités. Le premier exercice se vérifie dans la manipulation 2, le second se rejoue dans la manipulation 5 bis.</p>
 
   <div class="exo">
-    <h4>Exercice 1 : quels grains glissent ? <span class="lvtag">N1 · chapitres 1 et 2</span></h4>
-    <p>Une éprouvette est tendue à σ = 200 MPa. Quatre grains ont leur plan de glissement orienté de sorte que l'angle φ entre l'effort et la normale au plan vaut 30°, 45°, 60° et 80° ; la direction de glissement est dans le plan de la figure, donc λ = 90° − φ. La scission critique vaut τ<sub>c</sub> = 90 MPa.</p>
-    <p class="q"><b>a)</b> Calcule le facteur de Schmid m<sub>S</sub> de chaque grain.</p>
-    <p class="q"><b>b)</b> Calcule le cisaillement résolu τ<sub>r</sub> dans chaque grain.</p>
-    <p class="q"><b>c)</b> Quels grains glissent ?</p>
-    <p class="q"><b>d)</b> Quelle contrainte faudrait-il pour faire glisser le grain à 80° ? Conclus.</p>
+    <h4>Exercice 1 : quels grains glissent ? <span class="lvtag">★ application · chapitre 2, à vérifier dans la manipulation 2</span></h4>
+    <p>Une éprouvette est tendue à σ = 200 MPa. Quatre grains ont leur plan de glissement orienté de sorte que l'angle φ entre l'effort et la normale au plan vaut 30°, 45°, 60° et 80° ; la direction de glissement est dans le plan de la figure, donc λ = 90° − φ. Scission critique : τ<sub>c</sub> = 90 MPa.</p>
+    <p class="q"><b>a)</b> Calcule le facteur de Schmid m<sub>S</sub> et le cisaillement résolu τ<sub>r</sub> de chaque grain.</p>
+    <p class="q"><b>b)</b> Quels grains glissent ?</p>
+    <p class="q"><b>c)</b> Quelle contrainte faudrait-il pour faire glisser le grain à 80° ? Conclus.</p>
+    <p class="q"><b>d)</b> Dans la manipulation 2 (σ = 240 MPa), lis σ<sub>n</sub> et τ à 30° et 45°.</p>
     <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> Avec λ = 90° − φ, cos λ = sin φ, donc <span class="m">m<sub>S</sub> = cos φ·sin φ = sin 2φ/2</span>. φ = 30° : <b>0,433</b> ; 45° : <b>0,500</b> ; 60° : <b>0,433</b> ; 80° : <b>0,171</b>.</p>
-      <p><b>b)</b> <span class="m">τ<sub>r</sub> = m<sub>S</sub>·σ</span> : <b>86,6</b> ; <b>100</b> ; <b>86,6</b> ; <b>34,2 MPa</b>.</p>
-      <p><b>c)</b> Seul le grain à <b>45°</b> atteint τ<sub>c</sub> = 90 MPa (100 ≥ 90). Les grains à 30° et 60° sont proches (86,6 MPa) : ils glisseraient à peine plus haut, à σ = 90/0,433 ≈ 208 MPa.</p>
-      <p><b>d)</b> <span class="m">σ = τ<sub>c</sub>/m<sub>S</sub> = 90/0,171 ≈ <b>526 MPa</b></span>, bien au-delà de R<sub>e</sub> = 400 MPa : en endurance, ce grain ne glissera jamais. La fatigue est l'affaire des grains <b>bien orientés</b>.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 2 : la barre coupée en biais <span class="lvtag">N1 · chapitre 2</span></h4>
-    <p>Une barre est tendue à σ = 240 MPa.</p>
-    <p class="q"><b>a)</b> Calcule σ<sub>n</sub> et τ sur les plans dont la normale fait θ = 0°, 30°, 45°, 60° et 90° avec l'effort.</p>
-    <p class="q"><b>b)</b> Où le cisaillement est-il maximal, et combien vaut-il ?</p>
-    <p class="q"><b>c)</b> Donne le centre et le rayon du cercle de Mohr.</p>
-    <p class="q"><b>d)</b> En torsion pure, où agissent le cisaillement maximal et la contrainte normale maximale ? Quelle orientation attendre pour une macrofissure ?</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <span class="m">σ<sub>n</sub> = σ cos²θ</span>, <span class="m">τ = σ sin θ cos θ</span> :</p>
-      <div class="tbl-wrap"><table class="data">
-        <tr><th>θ</th><td class="n">0°</td><td class="n">30°</td><td class="n">45°</td><td class="n">60°</td><td class="n">90°</td></tr>
-        <tr><th>σ<sub>n</sub> (MPa)</th><td class="n">240</td><td class="n">180</td><td class="n">120</td><td class="n">60</td><td class="n">0</td></tr>
-        <tr><th>τ (MPa)</th><td class="n">0</td><td class="n">103,9</td><td class="n">120</td><td class="n">103,9</td><td class="n">0</td></tr>
-      </table></div>
-      <p><b>b)</b> À θ = <b>45°</b> : <span class="m">τ<sub>max</sub> = σ/2 = <b>120 MPa</b></span>.</p>
-      <p><b>c)</b> Centre <span class="m">σ/2 = 120 MPa</span>, rayon <span class="m">σ/2 = 120 MPa</span> : le cercle passe par 0 et par 240 MPa.</p>
-      <p><b>d)</b> En torsion, le cisaillement maximal agit sur les plans transversaux et longitudinaux ; la contrainte normale maximale (égale à τ) sur les plans à 45°. Les premiers glissements suivent l'axe ou la section ; la macrofissure, perpendiculaire à la contrainte principale de traction, prend une <b>forme d'hélice à 45°</b>.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 3 : l'intrusion et la rayure <span class="lvtag">N1 · chapitre 3</span></h4>
-    <p class="q"><b>a)</b> Une intrusion a 3 µm de profondeur et un rayon de fond de 0,5 µm. Calcule son K<sub>t</sub>.</p>
-    <p class="q"><b>b)</b> Quelle contrainte locale atteint-on pour σ = 150 MPa ? Compare à R<sub>e</sub> = 400 MPa.</p>
-    <p class="q"><b>c)</b> Après polissage, il ne reste que des rayures de 0,5 µm de profondeur et de 1 µm de rayon. Reprends a) et b).</p>
-    <p class="q"><b>d)</b> Pourquoi le polissage n'empêche-t-il pas la fatigue, mais la retarde-t-il ?</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <span class="m">K<sub>t</sub> = 1 + 2√(a/ρ) = 1 + 2√(3/0,5) = 1 + 2 × 2,449 ≈ <b>5,9</b></span>.</p>
-      <p><b>b)</b> <span class="m">σ<sub>loc</sub> ≈ 5,9 × 150 ≈ <b>885 MPa</b></span>, plus de deux fois R<sub>e</sub> : la matière plastifie au fond de l'intrusion à chaque cycle, une microfissure peut s'y ouvrir.</p>
-      <p><b>c)</b> <span class="m">K<sub>t</sub> = 1 + 2√(0,5/1) = 1 + 1,414 ≈ <b>2,4</b></span> ; <span class="m">σ<sub>loc</sub> ≈ 2,4 × 150 ≈ <b>362 MPa</b></span>, sous R<sub>e</sub>.</p>
-      <p><b>d)</b> Le polissage supprime les entailles toutes faites, mais les cycles en recréent : les bandes de glissement creusent leurs propres intrusions. Il faut alors des milliers de cycles supplémentaires pour fabriquer ces entailles : la phase d'amorçage s'allonge.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 4 : dormir ou grandir <span class="lvtag">N2 · chapitre 5</span></h4>
-    <p>Un acier a un seuil de fissuration ΔK<sub>S</sub> = 7 MPa·√m et une limite d'endurance en étendue Δσ<sub>D</sub> = 380 MPa (à R = 0). On prend Y = 2 (petite fissure de surface, convention de la série).</p>
-    <p class="q"><b>a)</b> Calcule la longueur caractéristique a<sub>0</sub> de Kitagawa.</p>
-    <p class="q"><b>b)</b> Une fissure de 30 µm subit Δσ = 350 MPa. Se propage-t-elle ?</p>
-    <p class="q"><b>c)</b> Une fissure de 0,5 mm subit Δσ = 200 MPa. Se propage-t-elle ?</p>
-    <p class="q"><b>d)</b> Sous Δσ = 200 MPa, quelle est la plus grande fissure qui reste dormante ?</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <span class="m">a<sub>0</sub> = (ΔK<sub>S</sub>/(Y·Δσ<sub>D</sub>))² = (7/(2 × 380))² = (0,00921)² ≈ 8,5 × 10⁻⁵ m ≈ <b>85 µm</b></span>.</p>
-      <p><b>b)</b> a = 30 µm &lt; a<sub>0</sub> : c'est une fissure courte, la frontière est Δσ<sub>D</sub> = 380 MPa. Comme 350 &lt; 380, <b>elle ne se propage pas</b> : elle dort.</p>
-      <p><b>c)</b> a = 0,5 mm &gt; a<sub>0</sub> : fissure longue, la frontière vaut <span class="m">ΔK<sub>S</sub>/(Y√a) = 7/(2 × √0,0005) = 7/(2 × 0,02236) ≈ 157 MPa</span>. Comme 200 &gt; 157, <b>elle se propage</b>. Contrôle : <span class="m">ΔK = 200 × 2 × 0,02236 ≈ 8,9 MPa·√m &gt; 7</span> ✅.</p>
-      <p><b>d)</b> <span class="m">a = (ΔK<sub>S</sub>/(Y·Δσ))² = (7/(2 × 200))² = (0,0175)² ≈ 3,1 × 10⁻⁴ m ≈ <b>0,31 mm</b></span>.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 5 : flexion et torsion combinées <span class="lvtag">N2 · chapitre 6</span></h4>
-    <p>Sur un banc d'essai, un arbre rond plein de diamètre d = 30 mm, qui ne tourne pas, subit un moment de flexion alterné d'amplitude Mf<sub>a</sub> = 400 N·m et un couple de torsion alterné d'amplitude Mt<sub>a</sub> = 300 N·m, en phase. L'acier a f<sub>−1</sub> = 270 MPa et t<sub>−1</sub> = 170 MPa.</p>
-    <p class="q"><b>a)</b> Calcule σ<sub>a</sub> et τ<sub>a</sub> en surface (W = πd³/32, W<sub>p</sub> = πd³/16).</p>
-    <p class="q"><b>b)</b> Calcule l'amplitude équivalente de von Mises et le coefficient de sécurité.</p>
-    <p class="q"><b>c)</b> Applique le critère de Crossland et calcule le coefficient de sécurité.</p>
-    <p class="q"><b>d)</b> Que donne Tresca ? Classe les trois critères du plus prudent au moins prudent.</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <span class="m">W = π × 30³/32 = 2 651 mm³</span> ; <span class="m">σ<sub>a</sub> = 400 000/2 651 = <b>150,9 MPa</b></span>. <span class="m">W<sub>p</sub> = π × 30³/16 = 5 301 mm³</span> ; <span class="m">τ<sub>a</sub> = 300 000/5 301 = <b>56,6 MPa</b></span>.</p>
-      <p><b>b)</b> <span class="m">σ<sub>eq,a</sub> = √(150,9² + 3 × 56,6²) = √(22 771 + 9 611) = <b>179,9 MPa</b></span> ; coefficient <span class="m">270/179,9 = <b>1,50</b></span>.</p>
-      <p><b>c)</b> <span class="m">α = 3 × 170/270 − √3 = 1,889 − 1,732 = 0,157</span> ; β = 170 MPa. <span class="m">√J<sub>2,a</sub> = √(150,9²/3 + 56,6²) = √(7 590 + 3 204) = 103,9 MPa</span> ; <span class="m">P<sub>max</sub> = 150,9/3 = 50,3 MPa</span>. Critère : <span class="m">103,9 + 0,157 × 50,3 = 111,8 MPa ≤ 170</span> ✅ ; coefficient <span class="m">170/111,8 = <b>1,52</b></span>.</p>
-      <p><b>d)</b> Tresca : <span class="m">√(150,9² + 4 × 56,6²) = 188,6 MPa</span>, coefficient <span class="m">270/188,6 = <b>1,43</b></span>. Du plus prudent au moins prudent : <b>Tresca (1,43), von Mises (1,50), Crossland (1,52)</b>. Ici, avec une moyenne nulle, les trois sont proches ; Crossland se distingue quand il y a une contrainte moyenne.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 6 : le point critique d'une plaque percée <span class="lvtag">N2 · chapitre 6 et cours 2</span></h4>
-    <p>Une plaque usinée, percée d'un trou rond (K<sub>t</sub> = 3, sensibilité q = 0,9), est tirée en traction alternée. L'acier a σ<sub>D</sub> = 270 MPa sur éprouvette polie ; le coefficient d'état de surface usiné vaut 0,8.</p>
-    <p class="q"><b>a)</b> Où se trouve le point critique, et quelle sera l'orientation de la fissure ?</p>
-    <p class="q"><b>b)</b> Calcule K<sub>f</sub>, puis l'amplitude nominale maximale sans amorçage.</p>
-    <p class="q"><b>c)</b> La plaque subit σ<sub>a,nom</sub> = 90 MPa. Que prévoir ?</p>
-    <p class="q"><b>d)</b> Peut-on espérer que la fissure s'endorme ? Compare avec une entaille très aiguë.</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> Aux deux points du bord du trou situés sur le diamètre perpendiculaire à l'effort, là où les lignes de force se resserrent (cours 1). La fissure partira de là, <b>perpendiculairement à l'effort</b>.</p>
-      <p><b>b)</b> <span class="m">K<sub>f</sub> = 1 + 0,9 × (3 − 1) = <b>2,8</b></span> ; <span class="m">σ<sub>a,nom,max</sub> = σ<sub>D</sub> × 0,8/K<sub>f</sub> = 270 × 0,8/2,8 ≈ <b>77 MPa</b></span>.</p>
-      <p><b>c)</b> 90 &gt; 77 MPa : un <b>amorçage est attendu</b> au bord du trou, au bout d'un nombre de cycles fini.</p>
-      <p><b>d)</b> Peu probable : un trou rond a un grand rayon, la zone surchargée est étendue, et la fissure garde un ΔK élevé en grandissant. Les fissures dormantes s'observent plutôt au fond d'<b>entailles très aiguës</b> : la contrainte y est énorme mais sur une toute petite zone, que la fissure quitte vite.</p>
+      <p><b>a)</b> Avec λ = 90° − φ, m<sub>S</sub> = cos φ·sin φ = sin 2φ/2 : <b>0,433</b> ; <b>0,500</b> ; <b>0,433</b> ; <b>0,171</b>. τ<sub>r</sub> = m<sub>S</sub>·σ : <b>86,6</b> ; <b>100</b> ; <b>86,6</b> ; <b>34,2 MPa</b>.</p>
+      <p><b>b)</b> Seul le grain à <b>45°</b> atteint τ<sub>c</sub> (100 ≥ 90 MPa). Ceux à 30° et 60° glisseraient à σ = 90/0,433 ≈ 208 MPa.</p>
+      <p><b>c)</b> σ = τ<sub>c</sub>/m<sub>S</sub> = 90/0,171 ≈ <b>526 MPa</b>, bien au-delà de R<sub>e</sub> : ce grain ne glissera jamais en endurance. La fatigue est l'affaire des grains <b>bien orientés</b>.</p>
+      <p><b>d)</b> 30° : σ<sub>n</sub> = 240 cos²30° = <b>180 MPa</b>, τ = 120 sin 60° ≈ <b>103,9 MPa</b>. 45° : σ<sub>n</sub> = <b>120 MPa</b>, τ = τ<sub>max</sub> = <b>120 MPa</b>.</p>
     </div></details>
   </div>
 
   <div class="exo defi">
-    <h4>🏆 Défi : le caniveau qui ne dort pas <span class="lvtag">N2 · chapitres 3 à 6</span></h4>
-    <p>Un pied de cordon présente un caniveau assimilé à une fissure de surface de profondeur a = 0,3 mm (Y = 2). Les contraintes résiduelles y imposent un rapport R local élevé ; on retient le seuil prudent des recommandations IIW pour l'acier, ΔK<sub>S</sub> = 2 MPa·√m. L'étendue de contrainte au pied vaut Δσ = 120 MPa.</p>
+    <h4>Exercice 2 : le caniveau qui ne dort pas <span class="lvtag">★★ synthèse · chapitres 3 à 5, à rejouer dans la manipulation 5 bis</span></h4>
+    <p>Un pied de cordon présente un caniveau assimilé à une fissure de surface de profondeur a = 0,3 mm (Y = 2). Les contraintes résiduelles y imposent un rapport R local élevé ; on retient le seuil prudent des recommandations IIW pour l'acier, ΔK<sub>S</sub> = 2 MPa·√m. L'étendue de contrainte au pied vaut Δσ = 120 MPa. Dans la manipulation 5 bis : log a ≈ −3,52, Δσ = 120 MPa, ΔK<sub>S</sub> = 2.</p>
     <p class="q"><b>a)</b> Quelle étendue de contrainte ce caniveau peut-il supporter sans se propager ?</p>
-    <p class="q"><b>b)</b> Sous Δσ = 120 MPa, se propage-t-il ? Y a-t-il une phase d'amorçage ?</p>
+    <p class="q"><b>b)</b> Sous 120 MPa, se propage-t-il ? Y a-t-il une phase d'amorçage ?</p>
     <p class="q"><b>c)</b> Jusqu'à quelle profondeur faudrait-il réduire le défaut pour qu'il s'endorme sous 120 MPa ?</p>
-    <p class="q"><b>d)</b> Explique, avec ce résultat, pourquoi un acier à haute limite d'élasticité n'améliore pas la tenue en fatigue d'une soudure brute, et ce que changent le meulage et le martelage.</p>
+    <p class="q"><b>d)</b> Pourquoi un acier à haute limite d'élasticité n'améliore-t-il pas la tenue en fatigue d'une soudure brute, et que changent le meulage et le martelage ?</p>
     <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <span class="m">Δσ<sub>seuil</sub> = ΔK<sub>S</sub>/(Y√a) = 2/(2 × √0,0003) = 2/(2 × 0,01732) ≈ <b>58 MPa</b></span>.</p>
-      <p><b>b)</b> 120 &gt; 58 MPa : <b>le défaut se propage</b> dès les premiers cycles. Il n'y a pas de phase d'amorçage : le caniveau est déjà une fissure longue (0,3 mm, bien plus que a<sub>0</sub>).</p>
-      <p><b>c)</b> <span class="m">a = (ΔK<sub>S</sub>/(Y·Δσ))² = (2/(2 × 120))² = (0,00833)² ≈ 6,9 × 10⁻⁵ m ≈ <b>0,07 mm</b></span> : il faudrait des défauts de moins de 70 µm.</p>
-      <p><b>d)</b> La durée de vie se joue entre ΔK<sub>S</sub> et la vitesse de propagation, deux grandeurs qui varient peu d'un acier à l'autre : augmenter R<sub>e</sub> ou σ<sub>D</sub> ne change ni le défaut ni ΔK. Le <b>meulage</b> enlève le caniveau et adoucit le raccordement (a et K<sub>t</sub> diminuent) ; le <b>martelage</b> met le pied en compression, ce qui referme les petits défauts et abaisse l'étendue efficace qui les ouvre. Les deux recréent une vraie phase d'amorçage.</p>
+      <p><b>a)</b> Δσ<sub>seuil</sub> = ΔK<sub>S</sub>/(Y√a) = 2/(2 × √0,0003) = 2/(2 × 0,01732) ≈ <b>58 MPa</b>.</p>
+      <p><b>b)</b> 120 &gt; 58 MPa : <b>le défaut se propage</b> dès les premiers cycles, sans phase d'amorçage : le caniveau (0,3 mm, bien plus que a<sub>0</sub>) est déjà une fissure longue.</p>
+      <p><b>c)</b> a = (ΔK<sub>S</sub>/(Y·Δσ))² = (2/(2 × 120))² ≈ 6,9 × 10⁻⁵ m ≈ <b>0,07 mm</b> : il faudrait des défauts de moins de 70 µm.</p>
+      <p><b>d)</b> La durée de vie se joue entre ΔK<sub>S</sub> et la vitesse de propagation, qui varient peu d'un acier à l'autre : augmenter R<sub>e</sub> ou σ<sub>D</sub> ne change ni le défaut ni ΔK. Le <b>meulage</b> enlève le caniveau et adoucit le raccordement (a et K<sub>t</sub> diminuent) ; le <b>martelage</b> met le pied en compression, ce qui referme les petits défauts et abaisse l'étendue efficace qui les ouvre. Les deux recréent une vraie phase d'amorçage.</p>
     </div></details>
   </div>
 </div>
@@ -803,7 +721,8 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div><div class="ic">😴</div><h4>La graine sur le rocher</h4><div class="f"><span class="eps">a<sub>0</sub></span> = (<span class="mat">ΔK<sub>S</sub></span>/(<span class="mat">Y</span><span class="mat">Δσ<sub>D</sub></span>))²</div><p>Domaine 4 : fissuré mais dormant. Courte, σ décide ; longue, K décide.</p></div>
     <div><div class="ic">🗺️</div><h4>La carte au trésor</h4><div class="f">√<span class="sig">J<sub>2,a</sub></span> + <span class="mat">α</span><span class="tau">P<sub>max</sub></span> ≤ <span class="mat">β</span></div><p>Calculer partout, trouver le point critique, comparer au seuil. Crossland = von Mises + pression.</p></div>
   </div>
-  <div class="fun"><span class="fun-h">🔐 Fun fact : Ewing, des bandes de glissement aux codes secrets</span>En 1903, l'Écossais James Alfred Ewing et J. C. W. Humfrey observent au microscope la surface polie d'éprouvettes de fer soumises à des contraintes alternées : des bandes de glissement apparaissent, s'élargissent au fil des cycles, puis des fissures s'y forment. C'est la première description du mécanisme des chapitres <a href="#c1">1</a> à <a href="#c3">3</a>. Ewing avait déjà inventé le mot « hystérésis », pour le retard de l'aimantation d'un métal sur le champ magnétique ; le même mot désigne aujourd'hui la boucle que dessine la courbe contrainte-déformation au cours d'un cycle plastique. Et en 1914, devenu directeur de l'enseignement de la marine britannique, il crée la « Room 40 », le service qui a déchiffré des milliers de messages allemands pendant la Première Guerre mondiale.</div>
+  <div class="btns"><button class="btn" id="printFiche" type="button">🖨 Imprimer la fiche mémoire</button></div>
+  <div class="fun"><span class="fun-h">🔐 Fun fact : Ewing, des bandes de glissement aux codes secrets</span>En 1903, l'Écossais James Alfred Ewing et J. C. W. Humfrey observent au microscope des éprouvettes de fer soumises à des contraintes alternées : des bandes de glissement apparaissent, s'élargissent, puis des fissures s'y forment. C'est la première description du mécanisme des chapitres <a href="#c1">1</a> à <a href="#c3">3</a>. Ewing avait déjà inventé le mot « hystérésis » ; et en 1914, directeur de l'enseignement de la marine britannique, il crée la « Room 40 », qui déchiffrera des milliers de messages allemands pendant la Première Guerre mondiale.</div>
 </div>
 </section>
 
@@ -895,6 +814,20 @@ const NS="http://www.w3.org/2000/svg";
 const $=s=>document.querySelector(s);
 const $$=s=>Array.from(document.querySelectorAll(s));
 const RM=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+function player(id,o){/* lecteur pilotable : ⏮ début, ◀ pas, ▶ lecture ou ⏸ pause (reprend où elle s'est arrêtée), pas ▶ ; o.get() et o.set(t) avec t de 0 à 1, o.dur (ms), o.steps */
+  const box=$("#"+id),bp=box.querySelector('[data-a="play"]'),lab=bp.textContent,n=o.steps||20;let raf=null,run=false;
+  const cl=t=>Math.max(0,Math.min(1,t));
+  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;bp.textContent=lab;}
+  function step(d){stop();o.set(cl(Math.round(o.get()*n+d)/n));}
+  bp.addEventListener("click",()=>{if(run){stop();return;}let t0=o.get();if(t0>=0.999)t0=0;
+    if(RM){o.set(cl(Math.round(t0*n+1)/n));return;}
+    run=true;bp.textContent="⏸ Pause";const s0=performance.now()-t0*o.dur;
+    const f=now=>{if(!run)return;const t=cl((now-s0)/o.dur);o.set(t);if(t>=1){stop();return;}raf=requestAnimationFrame(f);};raf=requestAnimationFrame(f);});
+  box.querySelector('[data-a="start"]').addEventListener("click",()=>{stop();o.set(0);});
+  box.querySelector('[data-a="back"]').addEventListener("click",()=>step(-1));
+  box.querySelector('[data-a="fwd"]').addEventListener("click",()=>step(1));
+  return {stop:stop};
+}
 
 function el(tag,attrs,parent){
   const e=document.createElementNS(NS,tag);
@@ -1043,7 +976,7 @@ function NrOf(s){if(s>=ST.Rm)return 1;if(s>=ST.Re)return Math.pow(10,4*(ST.Rm-s)
     else if(s<ST.sD)m="Quelques grains de surface bien orientés commencent à glisser, alors que σ<sub>a</sub> n'est qu'à "+nf(s/ST.Re*100,0)+" % de R<sub>e</sub>. Ces microglissements restent trop faibles pour amorcer une fissure qui se propage.";
     else if(s<ST.Re)m="<b>Endurance limitée</b> : une part notable des grains de surface glisse à chaque cycle ("+nf(pS*100,0)+" %, contre "+nf(pI*100,0)+" % à cœur). La pièce est élastique dans son ensemble, mais la fatigue a commencé.";
     else m="À R<sub>e</sub> et au-delà, la plupart des grains bien orientés glissent, à cœur comme en surface : on entre dans le domaine oligocyclique.";
-    msg.innerHTML=m;
+    msg.innerHTML=(m)+"<br><b>À retenir :</b> sous R<sub>e</sub>, quelques grains bien orientés glissent quand même, surtout en surface.";
   }
   sl.addEventListener("input",draw);
   $$("#m1ex [data-v]").forEach(b=>b.addEventListener("click",()=>{sl.value=b.dataset.v;draw();}));
@@ -1099,7 +1032,7 @@ function NrOf(s){if(s>=ST.Rm)return 1;if(s>=ST.Re)return Math.pow(10,4*(ST.Rm-s)
     $("#m2to").textContent=sl.value+"°";
     ro.innerHTML="<span class='mat'>θ = "+sl.value+"°</span><span class='sig'>σ<sub>n</sub> = σ cos²θ = "+nf(sn,1)+" MPa</span><span class='sig'>τ = (σ/2) sin 2θ = "+nf(ta,1)+" MPa</span>";
     const d=+sl.value;
-    msg.innerHTML=d===0?"Plan droit : toute la contrainte est normale, aucun cisaillement. Rien n'y fait glisser la matière.":d===90?"Plan parallèle à l'effort : ni contrainte normale, ni cisaillement.":Math.abs(d-45)<=2?"<b>Plan à 45° :</b> le cisaillement est maximal, τ = σ/2 = 120 MPa, au sommet du cercle de Mohr. C'est sur les plans proches de cette orientation que les grains glissent.":"Le cisaillement vaut "+nf(ta/120*100,0)+" % de son maximum. Rapproche θ de 45° pour l'augmenter.";
+    msg.innerHTML=(d===0?"Plan droit : toute la contrainte est normale, aucun cisaillement. Rien n'y fait glisser la matière.":d===90?"Plan parallèle à l'effort : ni contrainte normale, ni cisaillement.":Math.abs(d-45)<=2?"<b>Plan à 45° :</b> le cisaillement est maximal, τ = σ/2 = 120 MPa, au sommet du cercle de Mohr. C'est sur les plans proches de cette orientation que les grains glissent.":"Le cisaillement vaut "+nf(ta/120*100,0)+" % de son maximum. Rapproche θ de 45° pour l'augmenter.")+"<br><b>À retenir :</b> le cisaillement est maximal à 45° de l'effort et vaut la moitié de la traction.";
   }
   sl.addEventListener("input",draw);
   $$("#m2ex .btn").forEach(b=>b.addEventListener("click",()=>{sl.value=b.dataset.v;draw();}));
@@ -1150,8 +1083,8 @@ function NrOf(s){if(s>=ST.Rm)return 1;if(s>=ST.Re)return Math.pow(10,4*(ST.Rm-s)
     tx(svg,W-10,20,s>0.05?"traction":s<-0.05?"compression":"σ ≈ 0",{class:"lbl","text-anchor":"end"});
     const k=0.1;
     ro.innerHTML="<span class='eps'>cycles : "+cyc+"</span><span class='eps'>extrusion max : "+nf(Math.max(0,res[iMax])*k,1)+" µm</span><span class='eps'>intrusion max : "+nf(Math.max(0,depth)*k,1)+" µm</span>";
-    if(mode==="rev")msg.innerHTML="<b>Cas réversible :</b> les lamelles sortent en traction et rentrent en compression par le même chemin. Après "+cyc+" cycles, la surface est toujours plane : aucun dommage.";
-    else msg.innerHTML=cyc===0?"Lance les cycles : à chaque aller-retour, les lamelles actives ne reviennent pas tout à fait à leur place.":depth>9?"<b>Microfissure !</b> Au fond de l'intrusion la plus profonde, la contrainte concentrée a ouvert une fissure, le long du plan de glissement à 45° (stade I).":"<b>Cas irréversible :</b> après "+cyc+" cycles, des lamelles dépassent (extrusions) et d'autres se creusent (intrusions). La surface se sculpte, cycle après cycle.";
+    if(mode==="rev")msg.innerHTML=("<b>Cas réversible :</b> les lamelles sortent en traction et rentrent en compression par le même chemin. Après "+cyc+" cycles, la surface est toujours plane : aucun dommage.")+"<br><b>À retenir :</b> un glissement irréversible sculpte intrusions et extrusions, qui deviennent des micro-entailles.";
+    else msg.innerHTML=(cyc===0?"Lance les cycles : à chaque aller-retour, les lamelles actives ne reviennent pas tout à fait à leur place.":depth>9?"<b>Microfissure !</b> Au fond de l'intrusion la plus profonde, la contrainte concentrée a ouvert une fissure, le long du plan de glissement à 45° (stade I).":"<b>Cas irréversible :</b> après "+cyc+" cycles, des lamelles dépassent (extrusions) et d'autres se creusent (intrusions). La surface se sculpte, cycle après cycle.")+"<br><b>À retenir :</b> un glissement irréversible sculpte intrusions et extrusions, qui deviennent des micro-entailles.";
   }
   function step(now){const dt=Math.min(50,now-last);last=now;const before=Math.floor(ph/(2*Math.PI));ph+=dt*0.009;const after=Math.floor(ph/(2*Math.PI));
     if(after>before){cyc++;if(mode==="irr")ACT.forEach(i=>{res[i]=Math.max(-26,Math.min(18,res[i]+sgn[i]*0.45*(0.6+0.4*((i*7)%3)/2)));});}
@@ -1221,14 +1154,12 @@ function NrOf(s){if(s>=ST.Rm)return 1;if(s>=ST.Re)return Math.pow(10,4*(ST.Rm-s)
     }
     const bx=W-96;el("line",{x1:bx,y1:H-8,x2:bx+2*R*1.2,y2:H-8,stroke:"var(--ink)","stroke-width":2.5},svg);tx(svg,bx+R*1.2,H-13,"≈ 50 µm",{"font-size":"11","text-anchor":"middle"});
     $("#m4po").textContent=sl.value+" %";
-    msg.innerHTML=m;
+    msg.innerHTML=(m)+"<br><b>À retenir :</b> la fissure suit d'abord les plans à 45°, puis devient perpendiculaire à l'effort.";
   }
   sl.addEventListener("input",()=>{draw();});
   $$("input[name=m4o]").forEach(r=>r.addEventListener("change",()=>{if(r.checked){sc=r.value;draw();}}));
-  bP.addEventListener("click",()=>{if(run){run=false;cancelAnimationFrame(raf);bP.textContent="▶ Faire grandir";return;}
-    if(RM){sl.value=100;draw();return;}
-    run=true;bP.textContent="⏸ Pause";if(+sl.value>=100)sl.value=0;const v0=+sl.value,t0=performance.now();
-    const st=now=>{const v=Math.min(100,v0+(now-t0)/40);sl.value=v;draw();if(v<100&&run)raf=requestAnimationFrame(st);else{run=false;bP.textContent="▶ Faire grandir";}};raf=requestAnimationFrame(st);});
+  function stop(){A.stop();}
+  const A=player("m4pl",{get:()=>+sl.value/100,set:t=>{sl.value=100*t;draw();},dur:4000,steps:20});
   redraws.push(draw);draw();
 })();
 
@@ -1283,7 +1214,7 @@ function NrOf(s){if(s>=ST.Rm)return 1;if(s>=ST.Re)return Math.pow(10,4*(ST.Rm-s)
     $("#m5so").textContent=s+" MPa";$("#m5no").textContent=bigN(N);
     ro.innerHTML="<span class='sig'>σ<sub>a</sub> = "+s+" MPa</span><span class='eps'>N = "+bigN(N)+"</span><span class='eps'>N<sub>amorçage</sub> = "+(isFinite(Na)?bigN(Na):"∞")+"</span><span class='mat'>N<sub>rupture</sub> = "+(isFinite(Nr)?bigN(Nr):"∞")+"</span><span><b>domaine "+dom+"</b></span>";
     const M={1:"<b>Domaine 1 : non fissuré.</b> Pas encore de microfissure détectable à ce nombre de cycles.",2:"<b>Domaine 2 : fissuré, pas encore rompu.</b> Des microfissures existent et grandissent ; la rupture viendra à N<sub>r</sub>.",3:"<b>Domaine 3 : rompu.</b> La fissure a traversé la pièce.",4:"<b>Domaine 4 : fissures dormantes.</b> σ<sub>Di</sub> &lt; σ<sub>a</sub> ≤ σ<sub>D</sub> : des microfissures sont nées (parfois sur plusieurs centaines de µm), mais elles se sont arrêtées et ne conduiront jamais à la rupture."};
-    msg.innerHTML=M[dom]+(fig===9&&s<=ST.sD?" Sous σ<sub>D</sub> (σ<sub>Di</sub> = σ<sub>D</sub>), ni amorçage ni rupture.":"");
+    msg.innerHTML=(M[dom]+(fig===9&&s<=ST.sD?" Sous σ<sub>D</sub> (σ<sub>Di</sub> = σ<sub>D</sub>), ni amorçage ni rupture.":""))+"<br><b>À retenir :</b> entre σ<sub>Di</sub> et σ<sub>D</sub>, la pièce se fissure mais les fissures s'endorment.";
   }
   [ss,sn].forEach(x=>x.addEventListener("input",draw));
   $$("input[name=m5f]").forEach(r=>r.addEventListener("change",()=>{if(r.checked){fig=+r.value;draw();}}));
@@ -1325,7 +1256,7 @@ function NrOf(s){if(s>=ST.Rm)return 1;if(s>=ST.Re)return Math.pow(10,4*(ST.Rm-s)
     $("#m5bao").textContent=aTxt(a);$("#m5bdo").textContent=ds+" MPa";$("#m5bko").textContent=nf(K,1)+" MPa·√m";
     const dK=ds*Y*Math.sqrt(a);
     ro.innerHTML="<span class='eps'>a = "+aTxt(a)+"</span><span class='eps'>a<sub>0</sub> = "+aTxt(a0)+"</span><span class='mat'>frontière : Δσ<sub>seuil</sub> = "+nf(thr,0)+" MPa</span><span class='sig'>ΔK = "+nf(dK,2)+" MPa·√m</span><span><b>"+(grow?"se propage":"dort")+"</b></span>";
-    msg.innerHTML=(a<a0?"Fissure <b>courte</b> (a &lt; a<sub>0</sub>) : c'est la limite d'endurance Δσ<sub>D</sub> qui décide. ":"Fissure <b>longue</b> (a &gt; a<sub>0</sub>) : c'est le seuil ΔK<sub>S</sub> qui décide. ")+(grow?"Δσ = "+ds+" MPa dépasse la frontière ("+nf(thr,0)+" MPa) : <b>la fissure se propage</b>.":"Δσ = "+ds+" MPa reste sous la frontière ("+nf(thr,0)+" MPa) : <b>la fissure dort</b> (domaine 4).")+" Près de a<sub>0</sub>, la courbe d'El Haddad (tirets) est plus prudente.";
+    msg.innerHTML=(a<a0?"Fissure <b>courte</b> (a &lt; a<sub>0</sub>) : c'est la limite d'endurance Δσ<sub>D</sub> qui décide. ":"Fissure <b>longue</b> (a &gt; a<sub>0</sub>) : c'est le seuil ΔK<sub>S</sub> qui décide. ")+(grow?"Δσ = "+ds+" MPa dépasse la frontière ("+nf(thr,0)+" MPa) : <b>la fissure se propage</b>.":"Δσ = "+ds+" MPa reste sous la frontière ("+nf(thr,0)+" MPa) : <b>la fissure dort</b> (domaine 4).")+" Près de a<sub>0</sub>, la courbe d'El Haddad (tirets) est plus prudente.<br><b>À retenir :</b> fissure courte, Δσ<sub>D</sub> décide ; fissure longue, ΔK<sub>S</sub> décide ; la frontière passe à a<sub>0</sub>.";
   }
   [sa,sd,sk].forEach(x=>x.addEventListener("input",draw));
   redraws.push(draw);draw();
@@ -1374,7 +1305,7 @@ function NrOf(s){if(s>=ST.Rm)return 1;if(s>=ST.Re)return Math.pow(10,4*(ST.Rm-s)
     let m=cr<=be?"✅ <b>Pas d'amorçage</b> selon Crossland (coefficient "+nf(be/cr,2)+").":"❌ <b>Amorçage prévu</b> selon Crossland : le point est au-dessus de la droite.";
     if(sm>0)m+=" La contrainte moyenne σ<sub>m</sub> = "+sm+" MPa augmente P<sub>max</sub> : Crossland en tient compte, von Mises et Tresca (en amplitude) l'ignorent.";
     else m+=" Avec σ<sub>m</sub> = 0, les trois critères sont proches ; Crossland, réglé sur t<sub>−1</sub> mesuré, est un peu moins prudent en torsion.";
-    msg.innerHTML=m;
+    msg.innerHTML=(m)+"<br><b>À retenir :</b> Crossland, c'est von Mises plus la pression hydrostatique.";
   }
   [s_,t_,m_].forEach(x=>x.addEventListener("input",draw));
   redraws.push(draw);draw();
@@ -1437,6 +1368,13 @@ function NrOf(s){if(s>=ST.Rm)return 1;if(s>=ST.Re)return Math.pow(10,4*(ST.Rm-s)
   b.addEventListener("click",()=>{t=t==="auto"?"light":t==="light"?"dark":"auto";try{localStorage.setItem(KEY,t);}catch(e){}apply();});
   apply();
 })();
+})();
+</script>
+<script>
+(function(){/* impression de la fiche mémoire seule */
+  const b=document.getElementById("printFiche");if(!b)return;
+  b.addEventListener("click",()=>{document.body.classList.add("print-fiche");window.print();});
+  window.addEventListener("afterprint",()=>document.body.classList.remove("print-fiche"));
 })();
 </script>
 </body>

@@ -191,29 +191,32 @@ html.wiki-tiroir .wiki-panel { transform:none; visibility:visible; box-shadow:va
   html.wiki-avec-panneau .lab svg { max-height:calc(100vh - 110px); }
   /* La série Métallurgie garde sa colonne d'origine : ses figures suivent la largeur et s'allongeraient. */
 }
-/* Manipulation à un seul schéma : schéma à gauche, au moins 600 px (seuil des dessins larges des cours), réglages à droite.
+/* Manipulation à un schéma ou un groupe de vues synchronisées : schéma à gauche, au moins 600 px (seuil des dessins larges des cours), réglages à droite.
    La largeur du schéma ne dépend que de la fenêtre : replier le panneau n'oblige pas les cours à redessiner.
    Avant le script du wiki, la grille seule donne cette largeur ; ensuite, lectures et commentaire passent sous le schéma. */
 @media (min-width:1280px) and (orientation:landscape) {
-  html.wiki-avec-panneau .lab:has(> svg):not(:has(> svg ~ svg)) { display:grid; grid-template-columns:min(clamp(600px,60vw - 460px,760px),calc(100% - 324px)) minmax(300px,1fr); grid-template-rows:auto auto repeat(28,auto) 1fr; grid-auto-flow:row dense; column-gap:24px; align-items:start; }
-  html.wiki-avec-panneau .lab:has(> svg):not(:has(> svg ~ svg)) > * { grid-column:2; min-width:0; }
-  html.wiki-avec-panneau .lab:has(> svg):not(:has(> svg ~ svg)) > .lab-h, html.wiki-avec-panneau .lab:has(> svg):not(:has(> svg ~ svg)) > .lab-sub:nth-child(2) { grid-column:1 / -1; }
-  html.wiki-avec-panneau .lab:has(> svg):not(:has(> svg ~ svg)) > svg { grid-column:1; grid-row:3 / -1; position:sticky; top:14px; margin-top:.5rem; }
+  html.wiki-avec-panneau .lab:has(> :is(svg, .lab-figs)):not(:has(> :is(svg, .lab-figs) ~ :is(svg, .lab-figs))) { display:grid; grid-template-columns:min(clamp(600px,60vw - 460px,760px),calc(100% - 324px)) minmax(300px,1fr); grid-template-rows:auto auto repeat(28,auto) 1fr; grid-auto-flow:row dense; column-gap:24px; align-items:start; }
+  html.wiki-avec-panneau .lab:has(> :is(svg, .lab-figs)):not(:has(> :is(svg, .lab-figs) ~ :is(svg, .lab-figs))) > * { grid-column:2; min-width:0; }
+  html.wiki-avec-panneau .lab:has(> :is(svg, .lab-figs)):not(:has(> :is(svg, .lab-figs) ~ :is(svg, .lab-figs))) > .lab-h, html.wiki-avec-panneau .lab:has(> :is(svg, .lab-figs)):not(:has(> :is(svg, .lab-figs) ~ :is(svg, .lab-figs))) > .lab-sub:nth-child(2) { grid-column:1 / -1; }
+  html.wiki-avec-panneau .lab:has(> :is(svg, .lab-figs)):not(:has(> :is(svg, .lab-figs) ~ :is(svg, .lab-figs))) > :is(svg, .lab-figs) { grid-column:1; grid-row:3 / -1; position:sticky; top:14px; margin-top:.5rem; }
   html.wiki-avec-panneau .lab.wiki-lab-split { display:grid; grid-template-columns:min(clamp(600px,60vw - 460px,760px),calc(100% - 324px)) minmax(300px,1fr); grid-template-rows:none; column-gap:24px; align-items:start; }
   html.wiki-avec-panneau .lab.wiki-lab-split > .lab-h, html.wiki-avec-panneau .lab.wiki-lab-split > .lab-sub { grid-column:1 / -1; }
   html.wiki-avec-panneau .lab.wiki-lab-split > .wiki-lab-fig { grid-column:1; grid-row:auto; position:sticky; top:14px; min-width:0; padding-top:.5rem; }
   html.wiki-avec-panneau .lab.wiki-lab-split > .wiki-lab-side { grid-column:2; grid-row:auto; min-width:0; }
+  /* Les vues restent côte à côte dans leur colonne, même sous le seuil flex du cours. */
+  html.wiki-avec-panneau .lab > .lab-figs, html.wiki-avec-panneau .wiki-lab-fig > .lab-figs { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
+  html.wiki-avec-panneau .lab > .lab-figs > svg, html.wiki-avec-panneau .wiki-lab-fig > .lab-figs > svg { width:100%; min-width:0; }
   html.wiki-avec-panneau #quiz:has(> .qz) { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); column-gap:16px; align-items:start; }
   html.wiki-avec-panneau #checklist.check { columns:2; column-gap:32px; }
   html.wiki-avec-panneau #checklist.check > label { break-inside:avoid; }
 }
 @media (min-width:1280px) and (orientation:landscape) {
-  html.wiki-avec-panneau.wiki-replie .lab:has(> svg):not(:has(> svg ~ svg)) > svg, html.wiki-avec-panneau.wiki-replie .lab.wiki-lab-split > .wiki-lab-fig { top:62px; }
+  html.wiki-avec-panneau.wiki-replie .lab:has(> :is(svg, .lab-figs)):not(:has(> :is(svg, .lab-figs) ~ :is(svg, .lab-figs))) > :is(svg, .lab-figs), html.wiki-avec-panneau.wiki-replie .lab.wiki-lab-split > .wiki-lab-fig { top:62px; }
 }
 /* Colonne de réglages étroite (panneau ouvert, fenêtre de 1 280 à 1 359 px) : curseur sous son libellé. */
 @media (min-width:1280px) and (max-width:1359.98px) and (orientation:landscape) {
-  html.wiki-avec-panneau:not(.wiki-replie) .lab:has(> svg):not(:has(> svg ~ svg)) .ctrl, html.wiki-avec-panneau:not(.wiki-replie) .wiki-lab-side .ctrl { grid-template-columns:minmax(0,1fr) auto; }
-  html.wiki-avec-panneau:not(.wiki-replie) .lab:has(> svg):not(:has(> svg ~ svg)) .ctrl input[type=range], html.wiki-avec-panneau:not(.wiki-replie) .wiki-lab-side .ctrl input[type=range] { grid-column:1 / -1; grid-row:2; }
+  html.wiki-avec-panneau:not(.wiki-replie) .lab:has(> :is(svg, .lab-figs)):not(:has(> :is(svg, .lab-figs) ~ :is(svg, .lab-figs))) .ctrl, html.wiki-avec-panneau:not(.wiki-replie) .wiki-lab-side .ctrl { grid-template-columns:minmax(0,1fr) auto; }
+  html.wiki-avec-panneau:not(.wiki-replie) .lab:has(> :is(svg, .lab-figs)):not(:has(> :is(svg, .lab-figs) ~ :is(svg, .lab-figs))) .ctrl input[type=range], html.wiki-avec-panneau:not(.wiki-replie) .wiki-lab-side .ctrl input[type=range] { grid-column:1 / -1; grid-row:2; }
 }
 
 @media (prefers-reduced-motion:reduce) { .wiki-panel, html.wiki-tiroir .wiki-panel { transition:none; } }

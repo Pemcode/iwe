@@ -113,13 +113,6 @@ section.chap{padding:46px 0 10px}
 .c-img span{font-size:.95rem;line-height:1.3}
 @media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
 
-/* niveaux */
-.lv{margin:1.2rem 0;padding:6px 22px 14px;border-radius:4px}
-.lv1{background:var(--card);border:2px solid var(--ink)}
-.lv2{background:var(--lv2);border-left:6px solid var(--ink)}
-.lv-h{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;font-family:var(--font-head);font-size:1.35rem;font-weight:600;margin:10px 0 4px}
-.lv-h .tag{font-size:.95rem;font-family:var(--font-body);font-weight:400;color:var(--muted)}
-@media (max-width:520px){.lv{padding:6px 14px 12px}}
 
 /* formules et encadrés */
 .fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:600px;text-align:center;border-radius:3px;overflow-x:auto}
@@ -253,6 +246,28 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
 .btn.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,var(--card))}
 .btn.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--card))}
 .ctrl[hidden]{display:none}
+
+/* gabarit court : approfondissement replié, à retenir, prédiction */
+details.deep{margin:1.2rem 0;padding:0 18px;background:var(--lv2);border-left:6px solid var(--ink);border-radius:4px}
+details.deep>summary{font-family:var(--font-head);font-size:1.2rem;font-weight:600;padding:9px 0}
+details.deep[open]{padding-bottom:10px}
+.retenir{margin:1.4rem 0 .4rem;padding:8px 18px 6px;background:var(--card);border:2px solid var(--ink);border-radius:4px}
+.retenir>b:first-child{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.retenir ul{margin:.3rem 0 .3rem}
+.predict{display:block;margin-top:.35rem;color:var(--ink);font-weight:700}
+@media (max-width:520px){details.deep{padding:0 12px}.retenir{padding:8px 12px 6px}}
+
+/* impression : le cours sur papier clair, ou la fiche mémoire seule sur une page */
+@media print{
+  :root,:root[data-theme]{--paper:#fff!important;--paper-2:#EEF2F6!important;--card:#fff!important;--ink:#111!important;--muted:#444!important;--line:#999!important;--grid:transparent!important;--lv2:#F2F5F8!important;--hl:#FFF3B0!important;color-scheme:light}
+  body{background:#fff;font-size:11pt}
+  .toc,.theme-btn,.btns,.ctrl,#qzReset,.score{display:none!important}
+  section.chap{padding:14px 0 4px}
+  .lab,.fx,.retenir,details.deep,.fiche>div,.exo{break-inside:avoid}
+  body.print-fiche header,body.print-fiche main>section:not(#fiche),body.print-fiche footer{display:none!important}
+  body.print-fiche #fiche .cartouche{margin-bottom:.6rem}
+  body.print-fiche .fiche>div{padding:8px 10px}
+}
 </style>
 <style id="course-photo-style">
 /* Photographies documentées : compléments aux manipulations, lisibles hors ligne. */
@@ -305,12 +320,12 @@ body.photo-modal-open{overflow:hidden}
     </div>
     <div class="tb-cells">
       <div><small>Cours</small><b>4 sur 4, le dernier de la série : du joint préparé au cordon contrôlé</b></div>
-      <div><small>Durée conseillée</small><b>≈ 2 h 30 à 3 h avec les exercices</b></div>
+      <div><small>Durée conseillée</small><b>≈ 1 h 15 à 1 h 30 avec les exercices</b></div>
       <div><small>Prérequis</small><b>cours 1 (procédé, installation), cours 2 (flux, fils, dilution) et cours 3 (paramètres, forme du cordon) ; notions de défauts de soudage et de mode opératoire</b></div>
       <div><small>À la fin tu sais</small><b>choisir un support envers et une préparation de bords selon l'épaisseur ; comparer fil seul, twin, tandem, multi-fil, fil froid et poudre ; régler un rechargement au feuillard ; remonter d'un défaut à sa cause ; lire un descriptif de mode opératoire et vérifier un poste avant d'amorcer, en sécurité</b></div>
     </div>
   </div>
-  <p class="lede">Les trois premiers cours ont réglé la machine et le cordon. Il reste à souder de vraies pièces : des tôles qu'on ne peut pas toujours retourner, des épaisseurs de quelques millimètres à plusieurs dizaines de centimètres, des cadences qui demandent deux, trois fils ou plus, des surfaces entières à recouvrir d'inox. Ce dernier cours prépare le joint, choisit la variante du procédé, diagnostique les défauts types, puis passe au cadre de la production : le mode opératoire, l'opérateur, le chantier et la sécurité.</p>
+  <p class="lede">Les trois premiers cours ont réglé la machine et le cordon. Il reste à souder de vraies pièces : des tôles qu'on ne peut pas retourner, des épaisseurs jusqu'à plusieurs dizaines de centimètres, des cadences à plusieurs fils, des surfaces à recouvrir d'inox. Ce dernier cours prépare le joint, choisit la variante, diagnostique les défauts, puis cadre la production : mode opératoire, opérateur, chantier et sécurité.</p>
 
   <h4>Le code couleur de la série</h4>
   <div class="cc" role="img" aria-label="Code couleur : les causes en rouge et violet, les paramètres en vert, les effets en bleu et bleu-vert">
@@ -351,36 +366,17 @@ body.photo-modal-open{overflow:hidden}
   <h3 style="margin-top:0">Avant de commencer</h3>
   <h4>Les cours 1 à 3 en trois cases</h4>
   <div class="recall">
-    <div><div class="f">MR ≈ 0,0104·I + 9,5·10⁻⁷·L·I²/d²</div>Le taux de fusion MR (kg/h) croît avec l'intensité I (A), le fil sorti L (mm) et la finesse du fil de diamètre d (mm) ; un seul fil dépose de 5 à 12 kg/h.</div>
-    <div><div class="f">X = (1 − D)·X<sub>fil</sub> + D·X<sub>tôle</sub></div>La dilution D, part de tôle fondue dans le cordon, fixe la teneur X de chaque élément. Elle est forte en soudage sous flux : la composition du cordon dépend beaucoup de la tôle.</div>
-    <div><div class="f">p ∝ I<sup>1,35</sup>  ·  W/d ≈ 3/2</div>La pénétration p est proportionnelle (∝) à I<sup>1,35</sup> : l'intensité creuse, la tension élargit, la vitesse règle la taille du cordon. Un cordon dont le rapport largeur/profondeur W/d tombe sous 1 risque de se fendre en son centre.</div>
+    <div><div class="f">un fil : 5 à 12 kg/h</div>Le taux de fusion croît avec l'intensité, le fil sorti et la finesse du fil ; un seul fil plafonne vite, car monter l'intensité creuse aussi la tôle.</div>
+    <div><div class="f">X = (1 − D)·X<sub>fil</sub> + D·X<sub>tôle</sub></div>La dilution D, part de tôle fondue dans le cordon, fixe la teneur X de chaque élément. Elle est forte en sous flux : la composition du cordon dépend beaucoup de la tôle.</div>
+    <div><div class="f">I creuse · U élargit · W/d ≈ 3/2</div>L'intensité règle la profondeur, la tension la largeur, la vitesse la taille. Un cordon plus profond que large risque de se fendre en son centre.</div>
   </div>
 
-  <div class="def"><b>📘 Correspondance avec le planning et le référentiel</b>. Ce cours termine le sujet <b>1.10 « Arc submergé »</b> du planning de la formation :
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>Chapitre du cours</th><th>Ce qu'il apporte à l'IWE</th></tr>
-      <tr><td>1 Les supports envers et les méthodes</td><td>méthodes de soutien envers pour souder d'un seul côté ; angles intérieurs, corniche</td></tr>
-      <tr><td>2 Les préparations de bords</td><td>domaine d'application, préparations, accostage, chanfrein étroit pour les fortes épaisseurs</td></tr>
-      <tr><td>3 Fil seul, twin, tandem, multi-fil</td><td>applications mono et multi-fil et leurs problèmes, fil froid, poudre métallique, mécanisation</td></tr>
-      <tr><td>4 Le rechargement au feuillard</td><td>variantes 122 (sous flux) et 72 (sous laitier), dilution, productivité</td></tr>
-      <tr><td>5 Les défauts types</td><td>analyser un cordon pour remonter aux problèmes du procédé</td></tr>
-      <tr><td>6 Mode opératoire, opérateurs, chantier, sécurité</td><td>choisir procédé, paramètres et produits ; qualification ; hygiène et sécurité</td></tr>
-    </table></div>
-    Dans le référentiel de l'IIW (<i>International Institute of Welding</i>) pour la formation IWE (<i>International Welding Engineer</i>), ce cours couvre les méthodes de soutien envers, les préparations et l'accostage, les applications mono et multi-fil, l'analyse des cordons et le chanfrein étroit. Il prépare les sujets voisins <b>3.3 « Conception des joints »</b> (chapitre 2), <b>1.14 « Rechargement »</b> et <b>2.15 « Aciers inoxydables »</b> (chapitre 4), <b>4.2 « QMOS et QS »</b> (chapitre 6), <b>4.5 « Hygiène &amp; sécurité »</b> (chapitre 6) et <b>4.9 « Aspect économique »</b> (chapitres 2 et 3), qui les traitent à part.
-  </div>
+  <div class="def"><b>📘 Le sujet du planning</b> : <b>1.10 « Arc submergé »</b>, dont ce cours est le dernier. Attendus de l'IWE (<i>International Welding Engineer</i>, ingénieur international en soudage) selon le référentiel de l'IIW (<i>International Institute of Welding</i>) : méthodes de soutien envers pour souder d'un seul côté, préparations et chanfrein étroit, applications mono et multi-fil, analyse des cordons pour remonter aux problèmes du procédé. Il prépare aussi les sujets <b>3.3 « Conception des joints »</b>, <b>1.14 « Rechargement »</b>, <b>4.2 « QMOS et QS »</b> et <b>4.5 « Hygiène &amp; sécurité »</b>.</div>
 
-  <div class="def"><b>📖 Les normes, sources et sigles de ce cours</b>.
-    <ul>
-      <li><b>ISO 4063</b> : numéros des procédés (12 sous flux ; 121 fil plein ; 122 feuillard ; 124 avec addition de poudre métallique ; 125 fil fourré ; 72 soudage sous laitier, dit électroslag) ; <b>ISO 9692-2</b> (édition 2024) : préparations de joints pour le soudage sous flux d'un fil sur acier, en positions PA et PB ; <b>ISO 6947</b> : positions de soudage (PA à plat, PB en angle à plat, PC en corniche).</li>
-      <li><b>ISO 6520-1</b> : classification et numéros des défauts (par exemple 2011 soufflure, 402 manque de pénétration) ; <b>ISO 5817</b> : niveaux de qualité B, C et D.</li>
-      <li><b>ISO 15609-1</b> : descriptif de mode opératoire de soudage à l'arc, le <b>DMOS</b> (en anglais WPS) ; <b>ISO 15614-1</b> : qualification d'un mode opératoire par un essai, la <b>QMOS</b>, consignée dans un procès-verbal, le <b>PV-QMOS</b> ; <b>ISO 14732</b> : qualification des opérateurs et des régleurs en soudage mécanisé et automatique.</li>
-      <li><b>FDS</b> : fiche de données de sécurité d'un produit (flux, fil), en seize rubriques ; <b>EPI</b> : équipements de protection individuelle ; <b>CND</b> : contrôles non destructifs.</li>
-    </ul>
-    Les données de procédé viennent de normes, de TWI (<i>The Welding Institute</i>) et de documents de fabricants. Les modèles des manipulations sont pédagogiques : ils reprennent le modèle de cordon du cours 3 et donnent des ordres de grandeur réalistes, pas des valeurs de mode opératoire.
-  </div>
+  <div class="def"><b>📖 Normes et sigles</b>. <b>ISO 4063</b> : numéros des procédés (121 fil plein ; 122 feuillard ; 124 avec poudre métallique ; 125 fil fourré ; 72 soudage sous laitier, dit électroslag). <b>ISO 9692-2</b> : préparations de joints pour le sous flux. <b>ISO 6947</b> : positions (PA à plat, PB en angle à plat, PC en corniche). <b>ISO 6520-1</b> : numéros des défauts (2011 soufflure, 402 manque de pénétration…) ; <b>ISO 5817</b> : niveaux de qualité B, C, D. <b>ISO 15609-1</b> : descriptif de mode opératoire, le <b>DMOS</b> (en anglais WPS) ; <b>ISO 15614-1</b> : qualification du mode opératoire, la <b>QMOS</b>, consignée dans un <b>PV-QMOS</b> ; <b>ISO 14732</b> : qualification des opérateurs. <b>FDS</b> : fiche de données de sécurité ; <b>CND</b> : contrôles non destructifs. Les modèles des manipulations reprennent le modèle de cordon du cours 3 : ordres de grandeur, pas valeurs de mode opératoire.</div>
 
   <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage</b>
-    <p>Le soudage sous flux sert là où l'on soude beaucoup et épais : coques et ponts, réservoirs, appareils à pression, tubes, éoliennes. C'est là qu'un mauvais chanfrein coûte des tonnes de métal, qu'un support mal plaqué fait tomber le bain, qu'un défaut se répète sur des dizaines de mètres, et qu'un écart au mode opératoire remet en cause la qualification. Le coordinateur en soudage choisit la préparation, la variante, et vérifie le chantier avant l'amorçage.</p>
+    <p>Le sous flux sert là où l'on soude beaucoup et épais : coques, réservoirs, appareils à pression, tubes, éoliennes. Un mauvais chanfrein y coûte des tonnes de métal, un support mal plaqué fait tomber le bain, un défaut se répète sur des dizaines de mètres. Le coordinateur choisit la préparation et la variante, et vérifie le chantier avant l'amorçage.</p>
   </div>
 
   <h4>La série en quatre cours</h4>
@@ -393,12 +389,12 @@ body.photo-modal-open{overflow:hidden}
 
   <h4>Le plan du cours</h4>
   <ol class="route">
-    <li><span class="dot">1</span><b>Les supports envers et les méthodes</b><p>Souder d'un seul côté sans faire tomber le bain, ou souder des deux côtés.</p></li>
-    <li><span class="dot">2</span><b>Les préparations de bords</b><p>Des bords droits au chanfrein étroit de 350 mm : le métal à déposer décide.</p></li>
-    <li><span class="dot">3</span><b>Fil seul, twin, tandem, multi-fil</b><p>Plus de fils, plus de kilogrammes, sans plus de chaleur par millimètre.</p></li>
-    <li><span class="dot">4</span><b>Le rechargement au feuillard</b><p>Une bande de 60 mm étale une couche d'inox, sous flux ou sous laitier.</p></li>
-    <li><span class="dot">5</span><b>Les défauts types</b><p>Porosités, empreintes, fissures, caniveaux, manques, laitier, effondrement.</p></li>
-    <li><span class="dot">6</span><b>Mode opératoire, opérateurs, chantier, sécurité</b><p>Le DMOS, la qualification, la ronde avant d'amorcer, les risques du poste.</p></li>
+    <li><span class="dot">1</span><b>Les supports envers et les méthodes</b><p>Le trapéziste et son filet.</p></li>
+    <li><span class="dot">2</span><b>Les préparations de bords</b><p>La part de gâteau et la fente de tirelire.</p></li>
+    <li><span class="dot">3</span><b>Fil seul, twin, tandem, multi-fil</b><p>Le train à plusieurs locomotives.</p></li>
+    <li><span class="dot">4</span><b>Le rechargement au feuillard</b><p>Le couteau à beurre.</p></li>
+    <li><span class="dot">5</span><b>Les défauts types</b><p>Le détective du cordon.</p></li>
+    <li><span class="dot">6</span><b>Mode opératoire, opérateurs, chantier, sécurité</b><p>La check-list du pilote.</p></li>
   </ol>
 </div>
 </section>
@@ -411,19 +407,23 @@ body.photo-modal-open{overflow:hidden}
     <div class="c-img"><span class="ico">🤸</span><span><small>Image à retenir</small>Le trapéziste et son filet : sans filet sous le joint, le bain tombe</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le trapéziste et son filet</span></div>
-    <p>Le bain de fusion sous flux est gros, très chaud et très fluide : plusieurs centimètres cubes de métal liquide. Tant qu'il reste assez de tôle solide en dessous, il est porté. Mais pour souder un joint bout à bout <b>sur toute son épaisseur</b> d'un seul côté, l'arc doit traverser la tôle : il n'y a plus rien sous le bain, qui tombe. C'est le trapéziste sans filet.</p>
-    <p>Deux familles de solutions :</p>
-    <ul>
-      <li><b>tendre un filet</b> sous le joint : un <b>support envers</b> (latte de cuivre, support céramique, lit de flux) qui porte le bain et moule la face envers du cordon ;</li>
-      <li><b>souder des deux côtés</b> : une passe de chaque côté, chacune pénétrant un peu plus que la moitié de l'épaisseur, pour que les deux zones fondues se <b>chevauchent</b> au cœur du joint.</li>
-    </ul>
-    <p>Dans les deux cas, la fenêtre de réglage est étroite : trop peu d'intensité, et la racine reste non soudée ; trop, et le bain perce ou s'effondre.</p>
-  </div>
+  <p>Le bain de fusion sous flux est gros, très chaud et très fluide. Tant qu'il reste assez de tôle solide en dessous, il est porté. Mais pour souder un joint bout à bout <b>sur toute son épaisseur</b> d'un seul côté, l'arc doit traverser la tôle : plus rien ne porte le bain, qui tombe. C'est le trapéziste sans filet. Deux familles de solutions :</p>
+  <ul>
+    <li><b>tendre un filet</b> : un <b>support envers</b> plaqué sous le joint porte le bain et moule la face envers du cordon ;</li>
+    <li><b>souder des deux côtés</b> : une passe par face, chacune pénétrant un peu plus que la moitié de l'épaisseur, pour que les deux zones fondues se <b>chevauchent</b> au cœur du joint.</li>
+  </ul>
+  <div class="tbl-wrap"><table class="data">
+    <tr><th>Méthode</th><th>Principe</th><th>Limites</th></tr>
+    <tr><td>Latte de cuivre</td><td>barre de cuivre plaquée sous le joint, avec une gorge qui moule l'envers ; réutilisable, le cuivre évacue la chaleur sans se souder</td><td>plaquage serré ; si l'arc touche le cuivre : inclusion de cuivre (3042) et fissures</td></tr>
+    <tr><td>Support céramique</td><td>blocs collés sur un ruban d'aluminium adhésif ; épouse les tôles, idéal sur chantier quand on ne peut pas retourner la pièce</td><td>usage unique ; à garder au sec (porosités)</td></tr>
+    <tr><td>Lit de flux</td><td>couche de flux pressée sous le joint par un tuyau gonflé, parfois sur une latte de cuivre ; lignes de panneaux navals</td><td>pression constante ; un bain trop lourd enfonce le lit</td></tr>
+    <tr><td>Reprise envers</td><td>une passe de chaque côté ; sur chanfrein, gougeage de la racine avant la seconde passe</td><td>retourner la pièce ; chevauchement à garantir</td></tr>
+  </table></div>
+  <p><b>Fenêtres de réglage</b> (repères du cours, p : pénétration, e : épaisseur) : sans support, <span class="m">p ≤ e − 2 mm</span> ; sur support, p entre e et e + 4 mm ; en reprise, chaque passe <span class="m">p ≤ e − 2</span> et un chevauchement <span class="m">c = 2·p − e ≥ 2 mm</span>. Tôle de 16 mm en reprise : 9 ≤ p ≤ 14 mm ; à 800 A (fil de 4 mm, 550 mm/min), p ≈ 10,8 mm et c ≈ 5,5 mm.</p>
 
-  <div class="lab" id="m1">
+<div class="lab" id="m1">
     <p class="lab-h">Manipulation 1 : le trapéziste et son filet</p>
-    <p class="lab-sub">Joint bout à bout à bords droits jointifs, fil de 4 mm, 550 mm/min, tension repère U = 20 + 0,02·I. Choisis la méthode, l'épaisseur <span class="mat">e</span> et l'intensité <span class="mat">I</span>. À gauche, la coupe (zone fondue en bleu-vert, métal déposé en bleu) ; à droite, la pénétration selon l'intensité et, en vert, la fenêtre où la méthode réussit. Repères du cours : sans support, garder p ≤ e − 2 mm ; sur support, p entre e et e + 4 mm ; en reprise, chaque passe p ≤ e − 2 mm et un chevauchement c = 2p − e d'au moins 2 mm. Modèle pédagogique.</p>
+    <p class="lab-sub">Choisis la méthode, l'épaisseur e et l'intensité I ; à droite, en vert, la fenêtre où la méthode réussit. Le bouton ▶ monte l'intensité.<span class="predict">🔮 Prédis d'abord : tôle de 16 mm sur latte de cuivre, le fil de 4 mm suffit-il ?</span></p>
     <div class="btns" id="m1s">
       <button class="btn" data-k="sans" type="button">Aucun support</button>
       <button class="btn on" data-k="cuivre" type="button">Latte de cuivre</button>
@@ -433,31 +433,26 @@ body.photo-modal-open{overflow:hidden}
     </div>
     <div class="ctrl"><label for="m1e">Épaisseur <span class="mat">e</span></label><input type="range" id="m1e" class="r-mat" min="6" max="30" step="1" value="12"><output id="m1eo"></output></div>
     <div class="ctrl"><label for="m1i">Intensité <span class="mat">I</span></label><input type="range" id="m1i" class="r-mat" min="400" max="1100" step="10" value="880"><output id="m1io"></output></div>
-    <div class="btns"><button class="btn play" id="m1play" type="button">▶ Monter l'intensité</button></div>
+    <div class="btns"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" id="m1play" type="button">▶ Monter l'intensité</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button></div>
     <svg id="m1svg" role="img" aria-label="Coupe d'un joint bout à bout avec ou sans support envers, et fenêtre de réglage de l'intensité"></svg>
     <div class="readout" id="m1r"></div>
     <p class="status" id="m1msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">supports, reprise, angles, corniche</span></div>
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>Méthode</th><th>Principe</th><th>Atouts</th><th>Limites</th></tr>
-      <tr><td>Latte de cuivre</td><td>barre de cuivre plaquée sous le joint, avec une gorge qui moule l'envers ; parfois refroidie à l'eau</td><td>réutilisable ; le cuivre, très conducteur, évacue la chaleur sans se souder</td><td>plaquage serré obligatoire ; si l'arc touche le cuivre, il en fond une partie dans le bain : inclusion de cuivre (3042) et fissures</td></tr>
-      <tr><td>Support céramique</td><td>petits blocs de céramique collés sur un ruban d'aluminium adhésif, ou réglettes posées dans un rail tenu par des aimants</td><td>épouse les tôles, pose rapide, envers lisse ; idéal sur chantier quand on ne peut pas retourner la pièce</td><td>usage unique ; à garder au sec (une céramique humide donne des porosités)</td></tr>
-      <tr><td>Lit de flux</td><td>couche de flux pressée sous le joint par un tuyau gonflé à l'air, parfois sur une latte de cuivre</td><td>s'adapte aux petites irrégularités ; utilisé sur les lignes de panneaux des chantiers navals</td><td>la pression doit être constante ; un bain trop lourd enfonce le lit</td></tr>
-      <tr><td>Reprise envers</td><td>une passe de chaque côté ; sur un chanfrein, gougeage de la racine avant la seconde passe</td><td>pas de support ; pénétration contrôlée de chaque côté</td><td>il faut retourner la pièce ou souder par en dessous ; chevauchement à garantir</td></tr>
-    </table></div>
-    <p>La reprise envers sur bords droits obéit à deux conditions : la première passe ne doit pas percer, et les deux pénétrations doivent se recouvrir. Avec les repères du cours :</p>
-    <div class="fx"><div class="big"><span class="eps">p</span> ≤ <span class="mat">e</span> − 2  et  <span class="eps">c</span> = 2·<span class="eps">p</span> − <span class="mat">e</span> ≥ 2 mm</div><p class="cap">p : pénétration d'une passe ; e : épaisseur ; c : chevauchement des deux zones fondues (mm). Soit (e + 2)/2 ≤ p ≤ e − 2</p></div>
-    <p><b>Exemple</b> : tôle de 16 mm. Il faut 9 ≤ p ≤ 14 mm, soit environ 700 à 980 A dans le modèle (fil de 4 mm, 550 mm/min) ; avec la plage du fil de 4 mm, 700 à 900 A. À 800 A, <span class="m">p ≈ 10,8 mm et c ≈ 5,5 mm</span>. Sur latte de cuivre, une tôle de 12 mm demande au contraire p ≥ 12 mm : environ 875 A, au bord de la plage du fil. On ralentit, ou l'on passe au fil de 5 mm ou à deux fils. Les lignes de panneaux des chantiers navals soudent ainsi d'un seul côté, sur lit de flux et cuivre, des tôles jusqu'à environ 25 mm en une passe, avec un, deux ou trois fils.</p>
-    <p><b>Les soudures d'angle</b> (angle intérieur d'un T ou d'un angle) se soudent sous flux de deux façons. En <b>angle à plat (PB)</b>, la pièce reste à plat : le bain coule vers la tôle horizontale, et l'on ne dépose guère plus qu'une soudure d'environ 8 mm de côté en une passe. <b>En gouttière (PA)</b>, on incline la pièce à 45° : le joint forme une gouttière qui retient le flux et le bain ; le cordon est symétrique, plus gros en une passe, et pénètre mieux. Le vireur et le positionneur servent à ça.</p>
-    <p><b>La corniche multipasse (PC)</b> : un joint horizontal sur une paroi verticale, typiquement entre deux viroles d'un réservoir de stockage. Une machine automotrice roule sur le bord de la virole ; une courroie retient le flux contre la paroi ; les cordons s'empilent l'un sur l'autre. C'est l'une des rares positions hors du plat où le soudage sous flux s'emploie.</p>
-    <div class="tip">💡 <b>Lis l'envers</b> : sur support, l'envers est la signature du réglage. Plat et régulier : la fenêtre est tenue. Absent : intensité trop faible ou fil décalé. Bombé, irrégulier ou brillant de cuivre : bain trop lourd.</div>
-    <div class="warn"><b>⚠️ Piège : croire que le support rattrape tout.</b> Un support ne fait que porter le bain : si l'arc n'atteint pas la racine, il reste un manque de pénétration au-dessus du support. Et un support mal plaqué laisse un jour où le bain s'écoule.</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique : les « 4 C » du filet</b> : <b>C</b>uivre, <b>C</b>éramique, <b>C</b>oussin de flux, ou <b>C</b>ontre-passe.</div>
-    <div class="weld"><b>🔥 Ne pas retourner un panneau de 30 tonnes</b>
-      <p>Sur un chantier naval, les tôles du bordé et des ponts sont assemblées en grands panneaux. Retourner un panneau pour souder l'envers demande des moyens de levage lourds, du temps et des risques. D'où la soudure d'un seul côté sur support (lit de flux et cuivre en atelier, céramique sur le chantier), qui livre un joint à pleine pénétration sans retournement.</p>
-    </div>
+  <p><b>Les soudures d'angle</b> : en <b>angle à plat (PB)</b>, le bain coule vers la tôle horizontale et l'on ne dépose guère plus de 8 mm de côté en une passe ; <b>en gouttière (PA)</b>, la pièce inclinée à 45° retient flux et bain : cordon symétrique, plus gros, mieux pénétré. <b>La corniche multipasse (PC)</b>, entre deux viroles d'un réservoir, est l'une des rares positions hors du plat : une machine roule sur le bord de la virole, une courroie retient le flux contre la paroi.</p>
+
+  <div class="warn"><b>⚠️ Piège : croire que le support rattrape tout.</b> Il ne fait que porter le bain : si l'arc n'atteint pas la racine, il reste un manque de pénétration au-dessus du support. Un support mal plaqué laisse un jour où le bain s'écoule. Lis l'envers : plat et régulier, la fenêtre est tenue ; absent, intensité trop faible ou fil décalé ; bombé ou brillant de cuivre, bain trop lourd.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : les « 4 C » du filet</b> : Cuivre, Céramique, Coussin de flux, ou Contre-passe.</div>
+  <div class="weld"><b>🔥 Ne pas retourner un panneau de 30 tonnes</b>
+    <p>Sur un chantier naval, retourner un grand panneau de tôles demande des moyens de levage lourds, du temps et des risques. D'où la soudure d'un seul côté sur support (lit de flux et cuivre en atelier, céramique sur le chantier), jusqu'à environ 25 mm en une passe avec un à trois fils.</p>
+  </div>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Un seul côté à pleine pénétration : latte de cuivre, céramique ou lit de flux.</li>
+      <li>Deux côtés : chaque passe p ≤ e − 2 et chevauchement c = 2p − e ≥ 2 mm.</li>
+      <li>Angle en gouttière (PA) plus gros et mieux pénétré qu'à plat (PB).</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -470,14 +465,22 @@ body.photo-modal-open{overflow:hidden}
     <div class="c-img"><span class="ico">🍰</span><span><small>Image à retenir</small>La part de gâteau et la fente de tirelire : plus c'est épais, plus le chanfrein se resserre</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la part de gâteau et la fente de tirelire</span></div>
-    <p>Le soudage sous flux pénètre profondément : jusqu'à une vingtaine de millimètres, on soude souvent sans chanfrein, sur <b>bords droits</b>, une passe de chaque côté (chapitre 1). Au-delà, il faut ouvrir le joint pour que l'arc atteigne le fond : c'est le <b>chanfrein</b>. Mais chaque millimètre carré de chanfrein est du métal à déposer, donc du temps et du fil.</p>
-    <p>Un chanfrein en <b>V</b> ressemble à une part de gâteau : quand l'épaisseur double, la part devient quatre fois plus grosse. Le <b>X</b> (deux V, un de chaque côté) divise ce volume par deux. Pour les très fortes épaisseurs, on arrondit le fond (<b>U</b>, double U), puis on resserre les bords jusqu'à les rendre presque parallèles : le <b>chanfrein étroit</b>, une fente de tirelire qu'on remplit couche après couche. Son volume ne croît presque plus que comme l'épaisseur.</p>
-  </div>
+  <p>Le sous flux pénètre profondément : jusqu'à une vingtaine de millimètres, on soude souvent sur <b>bords droits</b>, une passe de chaque côté (chapitre 1). Au-delà, il faut ouvrir le joint pour que l'arc atteigne le fond : c'est le <b>chanfrein</b>. Mais chaque millimètre carré de chanfrein est du métal à déposer, donc du temps et du fil. Un <b>V</b> ressemble à une part de gâteau : quand l'épaisseur double, la part devient quatre fois plus grosse. Le <b>X</b> (deux V opposés) divise ce volume par deux. Pour les très fortes épaisseurs, on arrondit le fond (<b>U</b>, double U), puis on resserre les bords jusqu'à les rendre presque parallèles : le <b>chanfrein étroit</b>, une fente de tirelire dont le volume ne croît plus que comme l'épaisseur.</p>
+  <div class="fx"><div class="row big" style="font-size:1.3rem"><span><span class="eps">A</span><sub>V</sub> = (<span class="mat">e</span> − c)²·tan(<span class="mat">α</span>/2)</span><span><span class="eps">A</span><sub>X</sub> = <span class="eps">A</span><sub>V</sub>/2</span><span><span class="eps">A</span><sub>étroit</sub> ≈ b·<span class="mat">e</span></span></div><p class="cap">A : aire du chanfrein (mm²) ; e : épaisseur ; c : talon, partie droite non chanfreinée ; α : angle d'ouverture ; tan : tangente ; b : largeur du chanfrein étroit (mm). Masse d'acier : A (mm²) × 0,00785 kg par mètre de joint</p></div>
+  <p><b>Exemple</b> (talon 5 mm, α = 60°) : à 40 mm, <span class="m">A<sub>V</sub> = 35² × tan 30° ≈ 707 mm²</span>, soit 5,55 kg/m (5,9 kg/m avec les surépaisseurs) ; le X en demande moitié moins. Ouvrir le V à 90° agrandit le chanfrein de 73 %. À 200 mm, le X demanderait environ 87 kg/m, le chanfrein étroit 34 kg/m : avec un fil à 7,5 kg/h, 11,5 h d'arc par mètre contre 4,5 h.</p>
+  <div class="tbl-wrap"><table class="data">
+    <tr><th>Préparation</th><th>Épaisseurs (repère)</th><th>Déformation angulaire</th></tr>
+    <tr><td>Bords droits, une passe par face</td><td class="n">jusqu'à ≈ 20 mm</td><td>faible</td></tr>
+    <tr><td>V avec talon</td><td class="n">≈ 10 à 30 mm</td><td>forte : tout le retrait d'un côté</td></tr>
+    <tr><td>X (double V)</td><td class="n">≈ 20 à 60 mm</td><td>faible si l'on alterne les faces</td></tr>
+    <tr><td>U, double U</td><td class="n">≈ 40 à 150 mm</td><td>faible si l'on alterne les faces</td></tr>
+    <tr><td>Chanfrein étroit</td><td class="n">≈ 50 à 350 mm</td><td>très faible</td></tr>
+  </table></div>
+  <p class="mut" style="font-size:.9rem;margin-top:-.4rem">Repères de cours ; les cotes normalisées (angle, talon, écartement) sont celles de l'ISO 9692-2 pour le sous flux d'un fil en PA et PB.</p>
 
-  <div class="lab" id="m2">
+<div class="lab" id="m2">
     <p class="lab-h">Manipulation 2 : la part de gâteau et la fente de tirelire</p>
-    <p class="lab-sub">Choisis la préparation, l'épaisseur <span class="mat">e</span> et, pour le V et le X, l'angle d'ouverture <span class="mat">α</span>. Talon de 5 mm ; double U à fond de rayon 6 mm et flancs à 8° ; chanfrein étroit de 18 mm de large au fond, flancs à 1°. La coupe est à l'échelle, avec les limites des passes (deux par couche dans le chanfrein étroit) ; les barres comparent le métal à déposer, surépaisseurs comprises. Domaines d'épaisseur : repères du cours. Le bouton ▶ fait passer l'épaisseur de 6 à 350 mm.</p>
+    <p class="lab-sub">Choisis la préparation, l'épaisseur e et, pour le V et le X, l'angle α : les barres comparent le métal à déposer. Le bouton ▶ épaissit la tôle de 6 à 350 mm.<span class="predict">🔮 Prédis d'abord : à 200 mm, combien de fois moins de métal pour le chanfrein étroit que pour le X ?</span></p>
     <div class="btns" id="m2t">
       <button class="btn" data-k="I" type="button">Bords droits</button>
       <button class="btn" data-k="V" type="button">V</button>
@@ -487,32 +490,26 @@ body.photo-modal-open{overflow:hidden}
     </div>
     <div class="ctrl"><label for="m2e">Épaisseur <span class="mat">e</span></label><input type="range" id="m2e" class="r-mat" min="6" max="350" step="1" value="40"><output id="m2eo"></output></div>
     <div class="ctrl"><label for="m2a">Angle <span class="mat">α</span> (V et X)</label><input type="range" id="m2a" class="r-mat" min="40" max="90" step="5" value="60"><output id="m2ao"></output></div>
-    <div class="btns"><button class="btn play" id="m2play" type="button">▶ Épaissir la tôle</button></div>
+    <div class="btns"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" id="m2play" type="button">▶ Épaissir la tôle</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button></div>
     <svg id="m2svg" role="img" aria-label="Coupe à l'échelle d'une préparation de bords et comparaison du métal à déposer pour cinq préparations"></svg>
     <div class="readout" id="m2r"></div>
     <p class="status" id="m2msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">ISO 9692-2, aires, accostage, chanfrein étroit</span></div>
-    <p>L'<b>ISO 9692-2</b> propose, pour le soudage sous flux d'un fil (121) sur acier en positions PA et PB, des types de préparation avec leurs plages d'épaisseur et leurs cotes (angle, talon, écartement), pour des soudures à pleine pénétration. Hors de ce cadre (pénétration partielle, autres positions, multi-fil), les cotes se fixent par la norme d'application ou par accord. Le tableau suivant donne des repères de cours, pas les valeurs de la norme.</p>
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>Préparation</th><th>Épaisseurs (repère)</th><th>Aire à remplir</th><th>Déformation angulaire</th></tr>
-      <tr><td>Bords droits, une passe par face</td><td class="n">jusqu'à ≈ 20 mm</td><td>presque rien : la tôle fondue remplit</td><td>faible</td></tr>
-      <tr><td>V (avec talon)</td><td class="n">≈ 10 à 30 mm</td><td><span class="m">(e − c)²·tan(α/2)</span></td><td>forte : tout le retrait d'un côté</td></tr>
-      <tr><td>X (double V)</td><td class="n">≈ 20 à 60 mm</td><td>moitié du V</td><td>faible si l'on alterne les faces</td></tr>
-      <tr><td>U, double U</td><td class="n">≈ 40 à 150 mm</td><td>fond arrondi, flancs peu ouverts</td><td>faible si l'on alterne les faces</td></tr>
-      <tr><td>Chanfrein étroit</td><td class="n">≈ 50 à 350 mm</td><td><span class="m">≈ b·e</span> : proportionnelle à e</td><td>très faible</td></tr>
-    </table></div>
-    <div class="fx"><div class="big"><span class="eps">A</span><sub>V</sub> = (<span class="mat">e</span> − c)²·tan(<span class="mat">α</span>/2)   ·   <span class="eps">A</span><sub>X</sub> = <span class="eps">A</span><sub>V</sub>/2   ·   <span class="eps">A</span><sub>étroit</sub> ≈ b·<span class="mat">e</span></div><p class="cap">A : aire du chanfrein (mm²) ; e : épaisseur ; c : talon (partie droite non chanfreinée) ; α : angle d'ouverture ; tan : tangente ; b : largeur du chanfrein étroit (mm). Masse par mètre : A (mm²) × 0,00785 kg/m</p></div>
-    <p><b>Exemples</b> (talon 5 mm, α = 60°, surépaisseurs comprises) : à 40 mm, le V demande 707 mm² de chanfrein, soit environ 5,9 kg/m et 22 passes ; le X 3,2 kg/m et 12 passes. À 200 mm, le X demanderait 87 kg/m, le double U 37 kg/m et le chanfrein étroit 34 kg/m. Avec un fil seul à 7,5 kg/h, cela fait 4,5 h d'arc par mètre de chanfrein étroit, contre 11,5 h pour le X. L'angle compte aussi : à 40 mm, ouvrir le V de 60 à 90° agrandit le chanfrein de 73 % (de 707 à 1 225 mm²).</p>
-    <p><b>L'accostage</b> (la mise en place des bords avant soudage) est plus exigeant qu'en soudage manuel : la tête automatique ne voit pas le joint et ne s'adapte pas comme un soudeur. Talon et écartement réguliers, bords alignés sans dénivellation, joint rectiligne pour le suivi : ce sont les conditions d'une pénétration régulière. Un chanfrein pour le soudage sous flux a d'ailleurs souvent un talon plus fort et un angle plus fermé qu'un chanfrein pour l'électrode enrobée, car l'arc pénètre davantage.</p>
-    <p><b>Le chanfrein étroit</b> (en anglais <i>narrow gap</i>) a des bords presque parallèles, un fond de 18 à 26 mm de large environ, et s'emploie en général au-delà de 50 mm, jusqu'à 350 mm environ. On y dépose de préférence deux passes par couche, une contre chaque flanc : c'est la variante la plus sûre contre les manques de fusion des flancs, les caniveaux et le laitier coincé. Il demande une torche plate isolée qui descend dans la fente, un suivi de joint précis et un flux dont le laitier se détache très facilement, car on ne peut pas aller le chercher au fond. Atouts : beaucoup moins de métal, de temps et de flux, peu de déformation. Limites : préparation usinée coûteuse, réparation difficile au fond d'une fente.</p>
-    <div class="tip">💡 <b>Calcule l'aire avant de choisir</b> : le coût d'un joint épais est presque proportionnel au métal déposé. Un tableur de trois lignes (aire, kg/m, heures d'arc) départage souvent deux préparations en cinq minutes.</div>
-    <div class="warn"><b>⚠️ Piège : un talon irrégulier.</b> Le réglage est calculé pour un talon donné : quelques millimètres de plus, et la passe de fond ne traverse plus (manque de pénétration, 402) ; quelques millimètres de moins, ou un écartement, et elle perce. La préparation se contrôle avant l'amorçage, pas après.</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique : « I, V, X, U, fente »</b> : plus la tôle est épaisse, plus on avance dans la liste, et plus le chanfrein se resserre.</div>
-    <div class="weld"><b>🔥 Gouger avant la reprise</b>
-      <p>Sur un X ou un double U, la première face soudée laisse à sa racine une zone douteuse (laitier, manque de fusion). Avant de souder la seconde face, on creuse la racine jusqu'au métal sain (gougeage à l'arc-air ou meulage), on contrôle la rigole (ressuage ou magnétoscopie), puis on soude. L'ordre des passes entre les deux faces s'écrit dans le mode opératoire pour équilibrer les retraits.</p>
-    </div>
+  <p><b>L'accostage</b> (la mise en place des bords) est plus exigeant qu'en soudage manuel : la tête ne voit pas le joint et ne s'adapte pas comme un soudeur. Talon et écartement réguliers, bords alignés, joint rectiligne pour le suivi. Comme l'arc pénètre davantage, un chanfrein pour le sous flux a souvent un talon plus fort et un angle plus fermé qu'en électrode enrobée. <b>Le chanfrein étroit</b> (en anglais <i>narrow gap</i>) a un fond de 18 à 26 mm environ ; on y dépose de préférence deux passes par couche, une contre chaque flanc. Il demande une torche plate isolée, un suivi de joint précis et un flux dont le laitier se détache très facilement.</p>
+
+  <div class="warn"><b>⚠️ Piège : un talon irrégulier.</b> Le réglage est calculé pour un talon donné : quelques millimètres de plus, et la passe de fond ne traverse plus (manque de pénétration, 402) ; quelques millimètres de moins, ou un écartement, et elle perce. La préparation se contrôle avant l'amorçage.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « I, V, X, U, fente »</b> : plus la tôle est épaisse, plus on avance dans la liste.</div>
+  <div class="weld"><b>🔥 Gouger avant la reprise</b>
+    <p>Sur un X ou un double U, la racine de la première face reste douteuse (laitier, manque de fusion). Avant la seconde face, on creuse la racine jusqu'au métal sain (gougeage à l'arc-air ou meulage), on contrôle la rigole (ressuage ou magnétoscopie), puis on soude. L'ordre des passes entre les faces s'écrit dans le mode opératoire, pour équilibrer les retraits.</p>
+  </div>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Bords droits jusqu'à ≈ 20 mm ; puis V, X, U, chanfrein étroit.</li>
+      <li>A<sub>V</sub> = (e − c)²·tan(α/2) ; le X divise par deux ; l'étroit croît comme e.</li>
+      <li>Accostage régulier : la tête ne voit pas le joint.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -525,17 +522,15 @@ body.photo-modal-open{overflow:hidden}
     <div class="c-img"><span class="ico">🚂</span><span><small>Image à retenir</small>Le train à plusieurs locomotives : la première creuse, les suivantes remplissent</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le train à plusieurs locomotives</span></div>
-    <p>Pour souder plus vite un fil seul, on ne peut pas monter l'intensité sans fin : la pénétration, la dilution et le risque de fissure montent avec elle (cours 3). L'idée est celle du train trop lourd pour une locomotive : on en ajoute.</p>
-    <ul>
-      <li><b>Twin</b> : deux fils fins (2 à 3 mm) passent dans le même tube contact, à environ 8 mm l'un de l'autre, alimentés par un seul générateur et un seul dévidoir. Gain de dépôt annoncé : 30 à 40 % sans grosse dépense.</li>
-      <li><b>Tandem</b> : deux têtes, deux générateurs, deux fils à quelques centimètres l'un derrière l'autre. Le <b>fil de tête</b>, en CC+ (courant continu, fil au pôle positif), creuse ; le <b>fil de queue</b>, en CA (courant alternatif), remplit et lisse le cordon.</li>
-      <li><b>Multi-fil</b> : trois à cinq fils en file, pour les tubes de gros diamètre et les panneaux.</li>
-      <li><b>Fil froid</b> et <b>poudre métallique</b> : du métal ajouté dans le bain sans arc supplémentaire ; la chaleur de l'arc, au lieu de surchauffer la tôle, fond cet apport.</li>
-    </ul>
-  </div>
+  <p>Pour souder plus vite avec un fil seul, on ne peut pas monter l'intensité sans fin : la pénétration, la dilution et le risque de fissure montent avec elle (cours 3). L'idée est celle du train trop lourd pour une locomotive : on en ajoute.</p>
+  <ul>
+    <li><b>Twin</b> : deux fils fins (2 à 3 mm) dans le même tube contact, à environ 8 mm l'un de l'autre, un seul générateur et un seul dévidoir ; gain de dépôt annoncé de 30 à 40 %.</li>
+    <li><b>Tandem</b> : deux têtes, deux générateurs, deux fils à quelques centimètres l'un derrière l'autre. Le <b>fil de tête</b>, en CC+ (fil au pôle positif), creuse ; le <b>fil de queue</b>, en CA (alternatif), remplit et lisse. Le CA en queue limite l'interaction magnétique des deux arcs, qui sinon se dévieraient l'un l'autre.</li>
+    <li><b>Multi-fil</b> : trois à cinq fils en file, une source par fil, pour les tubes de gros diamètre et les panneaux.</li>
+    <li><b>Fil froid</b> et <b>poudre métallique</b> (124) : du métal ajouté dans le bain sans arc supplémentaire ; la chaleur de l'arc fond cet apport au lieu de surchauffer la tôle.</li>
+  </ul>
 
-  <!-- Photographies pédagogiques : arc-submerge-04-c3 -->
+<!-- Photographies pédagogiques : arc-submerge-04-c3 -->
 <div class="photo-study" id="photos-arc-multifil">
 <h3>Voir les têtes d’un dispositif multi-fil</h3>
 <figure class="course-photo" id="photo-arc-multifil" aria-labelledby="photo-arc-multifil-title">
@@ -545,9 +540,13 @@ body.photo-modal-open{overflow:hidden}
 <div class="photo-question"><p><b>À toi d’observer.</b> Pourquoi ne faut-il pas compter le gros conduit de poudre comme un quatrième fil ?</p><details><summary>Voir les repères</summary><p>Il transporte le flux granulaire, pas une électrode. Distinguer les alimentations en métal, en poudre et le circuit d’aspiration permet de lire correctement l’installation.</p></details></div>
 </div>
 <!-- Fin des photographies : arc-submerge-04-c3 -->
+
+  <div class="fx"><div class="big" style="font-size:1.35rem"><span class="sig">Q</span> = Σ(<span class="mat">U</span><sub>i</sub>·<span class="mat">I</span><sub>i</sub>)/<span class="mat">v</span></div><p class="cap">Σ : somme sur tous les arcs i ; Q : apport de chaleur (kJ/mm, k = 1 en sous flux) ; v : vitesse de soudage, celle qui remplit la section voulue avec le dépôt total</p></div>
+  <p><b>Exemple</b> (modèle, section de 60 mm², arc de tête à 800 A) : un fil seul dépose 9,5 kg/h et avance à 335 mm/min, pour 5,2 kJ/mm. Le tandem dépose 17,8 kg/h et avance à 630 mm/min, presque deux fois plus vite, pour 4,9 kJ/mm. Un fil froid qui ajoute 35 % de métal ramène le fil seul à 3,8 kJ/mm (−26 %) : précieux pour les aciers dont la ténacité craint les forts apports de chaleur.</p>
+
 <div class="lab" id="m3">
     <p class="lab-h">Manipulation 3 : le train à plusieurs locomotives</p>
-    <p class="lab-sub">Choisis l'attelage, l'intensité de l'arc de tête <span class="mat">I₁</span> (fils de 4 mm, arcs suivants à 0,8 × I₁ en CA ; twin : deux fils de 2 mm qui se partagent I₁), la section de cordon à remplir <span class="mat">A</span> et, pour le fil froid et la poudre, l'apport sans arc en % du fil chaud. La lecture donne le dépôt, la vitesse qui remplit la section, l'apport de chaleur Q = Σ(U·I)/v et l'énergie électrique par kilogramme déposé. Modèle pédagogique (taux de fusion du cours 1).</p>
+    <p class="lab-sub">Choisis l'attelage, l'intensité de tête I₁, la section à remplir A et l'apport sans arc : la lecture donne dépôt, vitesse, Q et énergie par kilogramme. Le bouton ▶ pousse les locomotives.<span class="predict">🔮 Prédis d'abord : passer d'un fil au tandem, l'apport de chaleur double-t-il ?</span></p>
     <div class="btns" id="m3c">
       <button class="btn" data-k="mono" type="button">1 fil</button>
       <button class="btn" data-k="twin" type="button">Twin</button>
@@ -559,34 +558,37 @@ body.photo-modal-open{overflow:hidden}
     <div class="ctrl"><label for="m3i">Arc de tête <span class="mat">I₁</span></label><input type="range" id="m3i" class="r-mat" min="400" max="1100" step="10" value="800"><output id="m3io"></output></div>
     <div class="ctrl"><label for="m3s">Section <span class="mat">A</span></label><input type="range" id="m3s" class="r-mat" min="20" max="120" step="5" value="60"><output id="m3so"></output></div>
     <div class="ctrl"><label for="m3x">Apport sans arc</label><input type="range" id="m3x" class="r-mat" min="0" max="80" step="5" value="35"><output id="m3xo"></output></div>
-    <div class="btns"><button class="btn play" id="m3play" type="button">▶ Pousser les locomotives</button></div>
+    <div class="btns"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" id="m3play" type="button">▶ Pousser les locomotives</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button></div>
     <svg id="m3svg" role="img" aria-label="Vue de côté des fils et des arcs, et comparaison du dépôt des différents attelages"></svg>
     <div class="readout" id="m3r"></div>
     <p class="status" id="m3msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">variantes, polarités, apport de chaleur</span></div>
+  <div class="warn"><b>⚠️ Piège : mettre le fil froid ou la poudre en passe de racine.</b> Cet apport refroidit le bain et réduit la pénétration : il sert au remplissage, pas à la racine, où il laisserait un manque de pénétration. En tandem, un défaut de racine accuse d'abord le fil de tête ; un défaut d'aspect, le fil de queue.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « Plus de fils, plus de kilos, pas plus de kilojoules »</b>.</div>
+  <div class="weld"><b>🔥 Les tubes de pipeline</b>
+    <p>Les tubes soudés de gros diamètre sont formés à partir d'une tôle, puis soudés en long sous flux, une passe intérieure et une extérieure, avec trois à cinq fils. Un défaut se répète sur des centaines de mètres s'il n'est pas vu tout de suite : d'où un contrôle par ultrasons automatique en ligne.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : dépôts annoncés et problèmes propres</summary>
     <div class="tbl-wrap"><table class="data">
-      <tr><th>Variante (ISO 4063)</th><th>Montage</th><th>Dépôt annoncé par un fabricant</th><th>Problèmes propres</th></tr>
-      <tr><td>Fil seul (121)</td><td>un fil de 4 mm, une source</td><td class="n">≈ 6,5 kg/h en CC+, ≈ 8 kg/h en CA</td><td>dépôt limité par la pénétration admissible</td></tr>
-      <tr><td>Twin (121)</td><td>2 fils de 2 mm dans un tube, ≈ 8 mm d'écart, une source</td><td class="n">≈ 9,6 kg/h en CC+, ≈ 13,8 kg/h en CA</td><td>orientation des fils (en ligne : plus vite ; côte à côte : plus large, tolère l'écartement)</td></tr>
-      <tr><td>Tandem (121)</td><td>2 fils de 4 mm, ≈ 15 à 30 mm d'écart, deux sources, CC+ en tête, CA en queue</td><td class="n">≈ 18,7 kg/h (≈ 20,7 en CA/CA)</td><td>interaction magnétique des arcs, réglages doublés, cratères de fin</td></tr>
-      <tr><td>3 fils et plus (121)</td><td>3 à 5 fils en file, une source par fil</td><td class="n">≈ 32 kg/h à 3 fils</td><td>installation lourde, suivi de joint précis, beaucoup de flux</td></tr>
-      <tr><td>Poudre métallique (124)</td><td>poudre déposée dans le joint devant l'arc, ou accrochée au fil par magnétisme</td><td class="n">+ ≈ 5 kg/h (fil seul) à 9 kg/h</td><td>pénétration réduite : passes de remplissage seulement</td></tr>
-      <tr><td>Fil froid</td><td>fil sans courant poussé dans le bain derrière l'arc</td><td class="n">selon le réglage</td><td>bain refroidi : manque de fusion si l'on en met trop</td></tr>
-      <tr><td>Fil fourré (125)</td><td>fil tubulaire rempli de poudre</td><td class="n">plus que le fil plein à intensité égale</td><td>coût du fil ; sert aussi à allier le métal déposé</td></tr>
+      <tr><th>Variante (ISO 4063)</th><th>Dépôt annoncé par un fabricant</th><th>Problèmes propres</th></tr>
+      <tr><td>Fil seul de 4 mm (121)</td><td>≈ 6,5 kg/h en CC+, ≈ 8 en CA</td><td>dépôt limité par la pénétration admissible</td></tr>
+      <tr><td>Twin, 2 fils de 2 mm (121)</td><td>≈ 9,6 kg/h en CC+, ≈ 13,8 en CA</td><td>orientation des fils : en ligne, plus vite ; côte à côte, plus large</td></tr>
+      <tr><td>Tandem, 2 fils de 4 mm (121)</td><td>≈ 18,7 kg/h</td><td>interaction des arcs, réglages doublés</td></tr>
+      <tr><td>3 fils et plus (121)</td><td>≈ 32 kg/h à 3 fils</td><td>installation lourde, beaucoup de flux</td></tr>
+      <tr><td>Poudre métallique (124)</td><td>+ ≈ 5 à 9 kg/h</td><td>pénétration réduite : remplissage seulement</td></tr>
+      <tr><td>Fil fourré (125)</td><td>plus que le fil plein à intensité égale</td><td>coût du fil ; sert aussi à allier</td></tr>
     </table></div>
-    <p>Les dépôts du tableau sont ceux de tableaux de fabricants (à leurs intensités, fil sorti courant) ; avec un fil sorti long, ils montent encore. Selon TWI, la poudre métallique réduit typiquement de 30 à 50 % le nombre de passes pour remplir un joint, et diminue la consommation de flux.</p>
-    <p><b>Pourquoi CC+ en tête et CA en queue ?</b> Deux arcs voisins parcourus par des courants continus créent chacun un champ magnétique qui dévie l'autre : c'est le soufflage du cours 3, en pire. Le fil de tête garde le CC+ pour pénétrer ; le fil de queue passe en CA, dont le champ s'inverse sans cesse, ce qui limite l'interaction. En CA/CA, on décale les phases des deux courants. La position des fils (écartement, angles) fait partie des réglages du mode opératoire : en général, le fil de tête presque vertical creuse, le fil de queue incliné étale et lisse.</p>
-    <p>L'apport de chaleur d'un multi-fil additionne les puissances de tous les arcs :</p>
-    <div class="fx"><div class="big"><span class="sig">Q</span> = Σ(<span class="mat">U</span><sub>i</sub>·<span class="mat">I</span><sub>i</sub>)/<span class="mat">v</span>   ·   <span class="mat">v</span> = <span class="eps">MR</span>/(ρ·A)</div><p class="cap">Σ : somme sur tous les arcs i ; Q en kJ/mm, avec un rendement thermique k = 1 en soudage sous flux ; v : vitesse qui remplit une section A (mm²) avec un dépôt total MR ; ρ : masse volumique de l'acier, 7,85 g/cm³. Pour une section donnée, Q ne baisse que si l'on dépose plus de métal par joule d'arc</p></div>
-    <p><b>Exemple</b> (modèle, section de 60 mm², arc de tête à 800 A) : un fil seul dépose 9,5 kg/h, avance à 335 mm/min et apporte 5,2 kJ/mm. Le tandem (800 A en CC+, 640 A en CA) dépose 17,8 kg/h et avance à 630 mm/min, presque deux fois plus vite, pour 4,9 kJ/mm. Un fil froid qui ajoute 35 % de métal ramène Q à 3,8 kJ/mm (−26 %) : l'énergie de l'arc fond du métal d'apport au lieu de surchauffer la tôle. C'est l'intérêt du fil froid et de la poudre pour les aciers dont la ténacité craint les forts apports de chaleur.</p>
-    <div class="tip">💡 <b>« La tête creuse, la queue lisse »</b> : pour un défaut de racine, regarde d'abord le fil de tête (intensité, position sur le joint) ; pour un défaut d'aspect ou de raccordement, le fil de queue (tension, angle).</div>
-    <div class="warn"><b>⚠️ Piège : mettre le fil froid ou la poudre en passe de racine.</b> Cet apport refroidit le bain et réduit la pénétration : il sert au remplissage, pas à la racine, où il laisserait un manque de pénétration.</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique : « plus de fils, plus de kilos, pas plus de kilojoules »</b> : ajouter des fils augmente le dépôt horaire et la vitesse ; l'apport de chaleur par millimètre reste du même ordre, et baisse avec un apport sans arc.</div>
-    <div class="weld"><b>🔥 Les tubes de pipeline</b>
-      <p>Les tubes soudés de gros diamètre sont formés à partir d'une tôle, puis soudés en long sous flux, une passe intérieure et une passe extérieure, avec trois à cinq fils. Chaque fil a sa source, son intensité et son angle ; un défaut se répète sur des centaines de mètres s'il n'est pas vu tout de suite, d'où un contrôle par ultrasons automatique en ligne.</p>
-    </div>
+    <p>Selon TWI, la poudre métallique réduit typiquement de 30 à 50 % le nombre de passes pour remplir un joint, et la consommation de flux. En CA/CA, on décale les phases des deux courants. La vitesse qui remplit une section A vaut v = MR/(ρ·A), avec MR le dépôt total et ρ = 7,85 g/cm³.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Twin : deux fils, un tube, une source ; tandem : deux sources, CC+ en tête, CA en queue.</li>
+      <li>Q = Σ(U·I)/v : plus de fils, plus de vitesse, apport du même ordre.</li>
+      <li>Fil froid et poudre : plus de dépôt, moins de kJ/mm, jamais en racine.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -599,14 +601,24 @@ body.photo-modal-open{overflow:hidden}
     <div class="c-img"><span class="ico">🧈</span><span><small>Image à retenir</small>Le couteau à beurre : une couche large et mince, sans creuser la tartine</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le couteau à beurre</span></div>
-    <p>Recharger, c'est déposer une couche sur une surface, sans assembler deux pièces : de l'inox (un acier riche en chrome Cr et en nickel Ni) contre la corrosion à l'intérieur d'un réacteur en acier au carbone-manganèse (C-Mn), un alliage dur contre l'usure sur un rouleau. Un fil donne un cordon étroit et profond, qui mélange beaucoup de tôle : mauvais pour une couche qui doit garder sa composition. Le <b>feuillard</b> est une bande de métal de 60 × 0,5 mm (ou 90 × 0,5 mm) qui remplace le fil : l'arc court le long de sa largeur et étale un cordon d'environ 65 mm de large et 4 à 5 mm d'épaisseur, qui creuse peu. C'est le couteau à beurre qui étale sans trouer la tartine.</p>
-    <p>Deux variantes : le <b>feuillard sous flux</b> (procédé 122), avec un arc ; et le <b>soudage sous laitier</b>, dit électroslag (procédé 72), sans arc : le courant traverse un bain de laitier liquide qui chauffe par effet Joule et fond la bande. Le second dilue environ deux fois moins et dépose plus vite.</p>
-  </div>
+  <p>Recharger, c'est déposer une couche sur une surface sans assembler deux pièces : de l'inox (acier riche en chrome Cr et en nickel Ni) contre la corrosion à l'intérieur d'un réacteur en acier au carbone-manganèse (C-Mn), un alliage dur contre l'usure sur un rouleau. Un fil donne un cordon étroit et profond, qui mélange beaucoup de tôle : mauvais pour une couche qui doit garder sa composition. Le <b>feuillard</b>, une bande de 60 × 0,5 mm (ou 90 × 0,5 mm), remplace le fil : l'arc court le long de sa largeur et étale un cordon d'environ 65 mm de large et 4 à 5 mm d'épaisseur, qui creuse peu. C'est le couteau à beurre qui étale sans trouer la tartine.</p>
+  <p>Deux variantes : le <b>feuillard sous flux</b> (procédé 122), avec un arc ; et le <b>soudage sous laitier</b>, dit électroslag (procédé 72), sans arc : le courant traverse un bain de laitier liquide qui chauffe par effet Joule et fond la bande. Le second dilue environ deux fois moins et dépose plus vite.</p>
+  <div class="tbl-wrap"><table class="data">
+    <tr><th>Feuillard 60 × 0,5 mm</th><th>122 sous flux</th><th>72 sous laitier</th></tr>
+    <tr><td>Intensité ; tension</td><td>≈ 750 A ; 26 à 28 V</td><td>≈ 1 000 à 1 250 A ; 24 à 26 V</td></tr>
+    <tr><td>Vitesse</td><td>≈ 10 à 12 cm/min</td><td>≈ 16 à 18 cm/min</td></tr>
+    <tr><td>Dilution</td><td>≈ 15 à 20 %</td><td>≈ 8 à 15 %</td></tr>
+    <tr><td>Dépôt</td><td>≈ 14 kg/h</td><td>≈ 22 kg/h</td></tr>
+    <tr><td>Couches pour une surface inox</td><td>souvent 2</td><td>souvent 1</td></tr>
+  </table></div>
+  <p class="mut" style="font-size:.9rem;margin-top:-.4rem">Données d'un fabricant pour des inox austénitiques. L'ISO 14174 classe les flux pour feuillard en classe 2B.</p>
+  <div class="fx"><div class="row big" style="font-size:1.3rem"><span><span class="gam">X</span><sub>couche</sub> = (1 − <span class="mat">D</span>)·X<sub>feuillard</sub> + <span class="mat">D</span>·X<sub>dessous</sub></span><span>couverture (m²/h) = pas × <span class="mat">v</span> × 60/10⁶</span></div><p class="cap">X : teneur d'un élément (C, Cr, Ni) ; D : dilution ; « dessous » : la tôle pour la première couche, la couche précédente ensuite ; pas : distance entre deux bandes (≈ 60 mm) ; v en mm/min</p></div>
+  <p><b>Exemple</b> : sous flux, D = 18 % ; une couche de 309L (C 0,015 %) sur un acier à 0,18 % de carbone donne <span class="m">C = 0,82 × 0,015 + 0,18 × 0,18 ≈ 0,045 %</span>, trop pour une surface « L » (bas carbone, au plus 0,04 %). Une deuxième couche en 308L ramène C à 0,020 %. Sous laitier, D = 9 % : une seule couche donne C ≈ 0,030 %.</p>
+  <div class="def"><b>📖 Sous-couche</b> (en anglais <i>buffer layer</i>) : première couche d'un rechargement, d'une nuance plus alliée que la surface visée (309L sous une surface 308L ou 316L). Elle encaisse la dilution par la tôle et garde assez de chrome et de nickel.</div>
 
-  <div class="lab" id="m4">
+<div class="lab" id="m4">
     <p class="lab-h">Manipulation 4 : le couteau à beurre</p>
-    <p class="lab-sub">Feuillard 60 × 0,5 mm sur acier C-Mn à 0,18 % de carbone C, bandes tous les 60 mm. Couche 1 en 309L (Cr 23,5 %, Ni 13,5 %), couche 2 en 308L (Cr 20 %, Ni 10 %), inox austénitiques à bas carbone (L, C 0,015 %). Tension 28 V sous flux, 25 V sous laitier. Jauges : repères de cours pour une surface de type 308L. Modèle pédagogique calé sur des données de fabricant.</p>
+    <p class="lab-sub">Choisis le procédé et le nombre de couches, puis l'intensité et la vitesse : les jauges comparent la surface aux repères d'un 308L. Le bouton ▶ pose les bandes.<span class="predict">🔮 Prédis d'abord : sous flux, une seule couche de 309L reste-t-elle sous 0,04 % de carbone ?</span></p>
     <div class="btns" id="m4p">
       <button class="btn on" data-k="SAW" type="button">122 sous flux</button>
       <button class="btn" data-k="ESW" type="button">72 sous laitier</button>
@@ -617,35 +629,28 @@ body.photo-modal-open{overflow:hidden}
     </div>
     <div class="ctrl"><label for="m4i">Intensité <span class="mat">I</span></label><input type="range" id="m4i" class="r-mat" min="500" max="2400" step="10" value="750"><output id="m4io"></output></div>
     <div class="ctrl"><label for="m4v">Vitesse <span class="mat">v</span></label><input type="range" id="m4v" class="r-mat" min="60" max="400" step="5" value="120"><output id="m4vo"></output></div>
-    <div class="btns"><button class="btn play" id="m4play" type="button">▶ Poser les bandes</button></div>
+    <div class="btns"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" id="m4play" type="button">▶ Poser les bandes</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button></div>
     <svg id="m4svg" role="img" aria-label="Coupe d'un rechargement au feuillard et jauges de composition de la surface"></svg>
     <div class="readout" id="m4r"></div>
     <p class="status" id="m4msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">122 et 72, dilution, couches, productivité</span></div>
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>Feuillard 60 × 0,5 mm</th><th>122 sous flux</th><th>72 sous laitier (électroslag)</th></tr>
-      <tr><td>Fusion de la bande</td><td>arc entre la bande et la pièce</td><td>pas d'arc : effet Joule dans un laitier liquide à ≈ 2 300 °C</td></tr>
-      <tr><td>Intensité ; tension</td><td class="n">≈ 750 A ; 26 à 28 V</td><td class="n">≈ 1 000 à 1 250 A ; 24 à 26 V</td></tr>
-      <tr><td>Densité de courant</td><td class="n">≈ 25 A/mm²</td><td class="n">≈ 33 à 42 A/mm²</td></tr>
-      <tr><td>Vitesse</td><td class="n">≈ 10 à 12 cm/min</td><td class="n">≈ 16 à 18 cm/min</td></tr>
-      <tr><td>Épaisseur et largeur d'une bande</td><td class="n">≈ 4,5 mm ; ≈ 65 mm</td><td class="n">≈ 4,5 mm ; ≈ 68 mm</td></tr>
-      <tr><td>Dilution</td><td class="n">≈ 15 à 20 %</td><td class="n">≈ 8 à 15 %</td></tr>
-      <tr><td>Dépôt ; flux consommé</td><td class="n">≈ 14 kg/h ; ≈ 0,8 kg/kg</td><td class="n">≈ 22 kg/h ; ≈ 0,5 à 0,6 kg/kg</td></tr>
-      <tr><td>Couches pour une surface inox</td><td>souvent 2 (sous-couche puis couche de surface)</td><td>souvent 1</td></tr>
-    </table></div>
-    <p>Données d'un fabricant pour des inox austénitiques ; l'ISO 14174 classe les flux pour feuillard (classe 2B) et fixe leurs essais à 750 A, 28 V, 120 mm/min sous flux, et 1 250 A, 25 V, 160 mm/min sous laitier. Avec des flux conçus pour la grande vitesse, le sous laitier dépasse 2 000 A et 50 kg/h. Le laitier du 72 se fige plus lentement : les gaz et les oxydes ont le temps de remonter, d'où un dépôt propre, peu sensible aux porosités et à la fissuration à chaud. Les mâchoires de contact, au ras du laitier très chaud, sont refroidies à l'eau.</p>
-    <p>La composition de chaque couche suit la règle de dilution du cours 2, appliquée couche par couche :</p>
-    <div class="fx"><div class="big"><span class="gam">X</span><sub>couche</sub> = (1 − <span class="gam">D</span>)·X<sub>feuillard</sub> + <span class="gam">D</span>·X<sub>dessous</sub>   ·   couverture = pas × <span class="mat">v</span></div><p class="cap">X : teneur d'un élément (C, Cr, Ni) ; D : dilution ; « dessous » : la tôle pour la première couche, la couche précédente ensuite ; pas : distance entre deux bandes (≈ 60 mm). Couverture en m²/h : pas (mm) × v (mm/min) × 60/10⁶</p></div>
-    <p><b>Exemple</b> (modèle) : sous flux à 750 A et 120 mm/min, D = 18 % ; une couche de 309L sur l'acier à 0,18 % de carbone donne <span class="m">C = 0,82 × 0,015 + 0,18 × 0,18 ≈ 0,045 %</span> : trop de carbone pour une surface « L » (bas carbone). Une deuxième couche en 308L donne C ≈ 0,020 %, Cr ≈ 19,9 %, Ni ≈ 10,2 %, sur 8,3 mm. Sous laitier à 1 250 A et 160 mm/min, D = 9 % : une seule couche de 309L donne C ≈ 0,030 %, Cr ≈ 21,4 %, Ni ≈ 12,3 %, sur 4,9 mm. Pour 100 m² : environ 463 h d'arc sous flux en deux couches, 174 h sous laitier en une couche.</p>
-    <div class="def"><b>📖 Sous-couche</b> (en anglais <i>buffer layer</i>) : première couche d'un rechargement, d'une nuance plus alliée que la surface visée (par exemple 309L sous une surface 308L ou 316L). Elle « encaisse » la dilution par la tôle, garde assez de chrome et de nickel, et un peu de ferrite contre la fissuration à chaud.</div>
-    <div class="tip">💡 <b>Pense en m²/h, pas en kg/h</b> : pour un rechargement, ce qui compte est la surface couverte à la bonne composition. Une couche de trop double le temps ; une dilution trop forte oblige à cette couche de trop.</div>
-    <div class="warn"><b>⚠️ Piège : monter l'intensité ou la vitesse pour aller plus vite.</b> Plus d'intensité creuse davantage ; plus de vitesse amincit la couche. Dans les deux cas, la dilution monte, et la surface peut sortir des repères. On gagne en productivité par le procédé (sous laitier, feuillard plus large), pas en forçant le réglage.</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique : « l'arc dilue, le laitier épargne »</b> : sous flux, l'arc creuse et dilue ; sous laitier, sans arc, la tôle fond peu.</div>
-    <div class="weld"><b>🔥 Les réacteurs plaqués</b>
-      <p>Les grands réacteurs de raffinerie et de chimie ont des parois en acier faiblement allié de plus de 100 mm, plaquées à l'intérieur d'inox au feuillard sur des centaines de mètres carrés. Le mode opératoire de rechargement fixe la composition et l'épaisseur minimales en surface, vérifiées sur une pièce témoin (analyse chimique, mesure de ferrite, ressuage) : c'est le chapitre 6 appliqué à une surface.</p>
-    </div>
+  <div class="warn"><b>⚠️ Piège : monter l'intensité ou la vitesse pour aller plus vite.</b> Plus d'intensité creuse davantage ; plus de vitesse amincit la couche. Dans les deux cas, la dilution monte et la surface peut sortir des repères. On gagne en productivité par le procédé (sous laitier, feuillard plus large), pas en forçant le réglage ; et l'on raisonne en m²/h, pas en kg/h.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « L'arc dilue, le laitier épargne »</b>.</div>
+  <div class="weld"><b>🔥 Les réacteurs plaqués</b>
+    <p>Les grands réacteurs de raffinerie ont des parois en acier faiblement allié de plus de 100 mm, plaquées d'inox au feuillard sur des centaines de mètres carrés. Le mode opératoire de rechargement fixe la composition et l'épaisseur minimales en surface, vérifiées sur une pièce témoin (analyse chimique, mesure de ferrite, ressuage).</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : le sous laitier en détail</summary>
+    <p>Dans le procédé 72, le laitier liquide atteint environ 2 300 °C ; il se fige plus lentement qu'en sous flux, si bien que gaz et oxydes ont le temps de remonter : dépôt propre, peu sensible aux porosités et à la fissuration à chaud. Densité de courant : ≈ 25 A/mm² sous flux, ≈ 33 à 42 A/mm² sous laitier ; flux consommé ≈ 0,8 et 0,5 à 0,6 kg par kg de feuillard. Les essais de classement de l'ISO 14174 se font à 750 A, 28 V, 120 mm/min sous flux, et 1 250 A, 25 V, 160 mm/min sous laitier ; avec des flux conçus pour la grande vitesse, le sous laitier dépasse 2 000 A et 50 kg/h. Les mâchoires de contact, au ras du laitier, sont refroidies à l'eau.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Feuillard : couche large, mince, peu diluée.</li>
+      <li>122 sous flux (arc, D ≈ 18 %, souvent 2 couches) ; 72 sous laitier (sans arc, D ≈ 9 %, 1 couche).</li>
+      <li>X = (1 − D)·X<sub>feuillard</sub> + D·X<sub>dessous</sub>, couche par couche.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -658,21 +663,22 @@ body.photo-modal-open{overflow:hidden}
     <div class="c-img"><span class="ico">🕵️</span><span><small>Image à retenir</small>Le détective : chaque défaut laisse un indice qui remonte au réglage</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le détective du cordon</span></div>
-    <p>Sous flux, on ne voit ni l'arc ni le bain : le cordon se découvre quand on décroche le laitier, parfois des mètres plus loin. Le coordinateur travaille donc en détective : il regarde l'indice (où est le défaut, quelle forme, est-il répété ?) et remonte au suspect (le flux, la tôle, un réglage, la position du fil).</p>
-    <ul>
-      <li><b>des trous ronds</b> (porosités) : un gaz est resté piégé ; humidité, rouille, huile, peinture, ou flux trop mince ;</li>
-      <li><b>des petits cratères en surface</b> (empreintes) : le gaz s'est coincé entre le laitier et le métal ;</li>
-      <li><b>une fente au milieu</b> du cordon : cordon trop profond pour sa largeur ;</li>
-      <li><b>un sillon le long du bord</b> (caniveau) : trop vite et trop haut en tension ;</li>
-      <li><b>une racine non soudée</b> : pas assez d'intensité, ou fil à côté du joint ;</li>
-      <li><b>du laitier coincé</b> entre deux passes, ou un <b>bain effondré</b> sous la tôle.</li>
-    </ul>
-  </div>
+  <p>Sous flux, on ne voit ni l'arc ni le bain : le cordon se découvre quand on décroche le laitier, parfois des mètres plus loin. Le coordinateur travaille donc en détective : il regarde l'indice (où est le défaut, quelle forme, est-il répété ?) et remonte au suspect (le flux, la tôle, un réglage, la position du fil). En soudage automatique, un défaut est souvent <b>systématique</b> : la machine répète fidèlement un mauvais réglage. Au départ de chaque cordon, il accuse l'amorçage ; périodique, l'entraînement du fil ou le vireur ; continu, un paramètre ou le produit.</p>
+  <div class="tbl-wrap"><table class="data">
+    <tr><th>Défaut (ISO 6520-1)</th><th>Causes fréquentes en sous flux</th><th>Remèdes</th></tr>
+    <tr><td>Soufflures, porosités (2011, 2012)</td><td>flux humide ; rouille, huile, peinture sur les bords ; couche de flux trop mince ; vitesse trop élevée</td><td>étuver le flux ; meuler et dégraisser ; couche dans la plage ; ralentir</td></tr>
+    <tr><td>Empreintes (<i>pock marks</i>)</td><td>gaz coincé sous le laitier : flux humide, trop de fines, couche trop épaisse</td><td>étuver, tamiser, ramener la couche dans la plage</td></tr>
+    <tr><td>Fissure au centre (1011)</td><td>cordon plus profond que large (W/d &lt; 1) ; carbone de la tôle et forte dilution ; bridage</td><td>viser W/d ≈ 3/2 ; moins d'intensité, plus de tension ; chanfrein</td></tr>
+    <tr><td>Fissure de cratère (104)</td><td>arrêt brusque de l'arc sur la pièce</td><td>rampe de fin ; finir sur un appendice</td></tr>
+    <tr><td>Caniveaux (5011, 5012)</td><td>vitesse et tension trop élevées, fil tiré, soufflage</td><td>ralentir, baisser la tension, fil poussé, revoir la masse</td></tr>
+    <tr><td>Manque de pénétration (402), de fusion (401)</td><td>intensité trop faible ; fil décalé du joint ; talon trop épais ; arc trop large dans un V</td><td>monter l'intensité, recentrer le fil, contrôler le talon, baisser la tension en racine</td></tr>
+    <tr><td>Inclusions de laitier (301)</td><td>passes bombées ou caniveaux qui piègent le laitier ; nettoyage insuffisant</td><td>passes plates bien raccordées ; nettoyer entre passes</td></tr>
+    <tr><td>Effondrement (509), trou (510)</td><td>bain trop lourd ; support mal plaqué ; écartement trop grand</td><td>baisser l'intensité, plaquer le support, régler l'écartement</td></tr>
+  </table></div>
 
-  <div class="lab" id="m5">
+<div class="lab" id="m5">
     <p class="lab-h">Manipulation 5 : le détective du cordon</p>
-    <p class="lab-sub">Tôle de 12 mm à bords droits, soudée en une passe sur latte de cuivre, fil de 4 mm. Choisis l'état du flux et des bords, puis l'intensité <span class="mat">I</span>, la tension <span class="mat">U</span>, la vitesse <span class="mat">v</span>, l'épaisseur de la couche de flux et le décalage du fil par rapport au joint. Le cordon vu de dessus et la coupe montrent les défauts ; le commentaire donne leur numéro ISO 6520-1, la cause et le remède. Seuils pédagogiques tirés des cours 1 et 3 (couche de flux de 10 + 0,03·I à 35 + 0,03·I mm, W/d ≈ 3/2). Le bouton ▶ décroche le laitier.</p>
+    <p class="lab-sub">Choisis l'état du flux et des bords, puis I, U, v, la couche de flux et le décalage du fil : le commentaire donne le défaut, son numéro, sa cause et le remède. Le bouton ▶ décroche le laitier.<span class="predict">🔮 Prédis d'abord : couche de flux de 20 mm à 900 A, quel défaut ?</span></p>
     <div class="btns" id="m5f">
       <button class="btn on" data-k="0" type="button">Flux étuvé</button>
       <button class="btn" data-k="1" type="button">Flux humide</button>
@@ -686,34 +692,30 @@ body.photo-modal-open{overflow:hidden}
     <div class="ctrl"><label for="m5v">Vitesse <span class="mat">v</span></label><input type="range" id="m5v" class="r-mat" min="300" max="1500" step="10" value="550"><output id="m5vo"></output></div>
     <div class="ctrl"><label for="m5h">Couche de flux</label><input type="range" id="m5h" class="r-mat" min="5" max="90" step="1" value="45"><output id="m5ho"></output></div>
     <div class="ctrl"><label for="m5o">Décalage du fil</label><input type="range" id="m5o" class="r-mat" min="0" max="8" step="0.5" value="0"><output id="m5oo"></output></div>
-    <div class="btns"><button class="btn play" id="m5play" type="button">▶ Décrocher le laitier</button></div>
+    <div class="btns"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" id="m5play" type="button">▶ Décrocher le laitier</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button></div>
     <svg id="m5svg" role="img" aria-label="Cordon vu de dessus et coupe du joint, avec les défauts selon les réglages"></svg>
     <div class="readout" id="m5r"></div>
     <p class="status" id="m5msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">défaut, cause, remède</span></div>
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>Défaut (ISO 6520-1)</th><th>Ce qu'on voit</th><th>Causes fréquentes en soudage sous flux</th><th>Remèdes</th></tr>
-      <tr><td>Soufflures, porosités (2011, 2012) ; piqûres (2017)</td><td>cavités rondes dans le cordon, ou débouchant en surface</td><td>flux humide ; rouille, huile, peinture ou primaire épais sur les bords ; fil sale ; couche de flux trop mince ; vitesse trop élevée ; flux recyclé chargé de poussière</td><td>étuver le flux, le garder en trémie chauffée ; meuler et dégraisser les bords ; couche de flux dans la plage ; ralentir ; tamiser le flux recyclé</td></tr>
-      <tr><td>Empreintes (en anglais <i>pockmarks</i>)</td><td>petites dépressions sur la surface du cordon, sous le laitier</td><td>gaz coincé entre laitier et métal : flux humide, trop de fines, couche trop épaisse, désoxydation insuffisante</td><td>étuver, tamiser, ramener la couche dans la plage, revoir le couple fil-flux</td></tr>
-      <tr><td>Fissure longitudinale au centre (1011)</td><td>fente au milieu du cordon, parfois sous la surface</td><td>cordon plus profond que large (W/d &lt; 1) ; tôle riche en carbone, soufre, phosphore et forte dilution ; bridage</td><td>viser W/d ≈ 3/2 ; moins d'intensité, plus de tension ; chanfrein pour diluer moins ; fil riche en manganèse</td></tr>
-      <tr><td>Fissure de cratère (104)</td><td>étoile ou fente au bout du cordon</td><td>arrêt brusque de l'arc sur la pièce</td><td>rampe de fin ; finir sur un appendice de sortie</td></tr>
-      <tr><td>Caniveaux (5011, 5012)</td><td>sillon creusé dans la tôle le long du bord</td><td>vitesse et tension trop élevées, fil tiré, soufflage, fil mal placé dans un angle</td><td>ralentir, baisser la tension, fil poussé, revoir la masse</td></tr>
-      <tr><td>Manque de pénétration (402), de fusion (401)</td><td>racine non soudée, flanc non fondu</td><td>intensité trop faible ; fil décalé du joint ; talon trop épais ; chevauchement insuffisant en deux passes ; arc trop large dans un V</td><td>monter l'intensité, recentrer le fil (suivi de joint), contrôler le talon, baisser la tension à la racine</td></tr>
-      <tr><td>Inclusions de laitier (301)</td><td>laitier emprisonné entre passes ou contre un flanc</td><td>passes bombées ou caniveaux qui piègent le laitier ; laitier mal enlevé ; laitier collé (tension trop haute, flux inadapté) ; fil trop près du flanc</td><td>passes plates bien raccordées ; nettoyage entre passes ; flux à laitier détachable</td></tr>
-      <tr><td>Excès de pénétration (504), effondrement (509), trou (510)</td><td>bourrelet ou affaissement sous la tôle, ou trou</td><td>bain trop lourd ; support mal plaqué ; écartement trop grand ; vitesse trop lente</td><td>baisser l'intensité, plaquer le support, régler l'écartement</td></tr>
-      <tr><td>Inclusion de cuivre (3042)</td><td>traces de cuivre, fissures</td><td>l'arc atteint la latte de cuivre ou le tube contact touche le bain</td><td>baisser l'intensité sur support, régler le fil sorti</td></tr>
-      <tr><td>Mauvais raccordement (505), cordon irrégulier</td><td>cordon bombé, bords raides ; largeur qui ondule</td><td>tension trop basse ; vitesse instable, fil mal redressé, tube contact usé</td><td>remonter la tension, entretenir l'entraînement et le tube contact</td></tr>
-    </table></div>
-    <p>Les défauts se jugent ensuite selon les niveaux de qualité B, C et D de l'ISO 5817, après contrôle visuel (ISO 17637). Les joints épais sous flux se contrôlent surtout par ultrasons (ISO 17640) ou par radiographie (ISO 17636), qui révèlent les manques de fusion, les inclusions de laitier et les fissures internes.</p>
-    <div class="def"><b>📖 Défaut systématique</b> : un défaut qui se répète tout le long du cordon, ou à la même place sur chaque pièce. En soudage automatique, c'est la règle : la machine répète fidèlement un mauvais réglage. Un défaut au départ de chaque cordon accuse l'amorçage ; un défaut périodique, l'entraînement du fil ou le vireur ; un défaut continu, un paramètre ou le produit.</div>
-    <div class="tip">💡 <b>Repère où est le défaut</b> : au départ, à la fin, au milieu, sur un bord, à la racine, entre deux passes. La position dit souvent le suspect avant même l'analyse.</div>
-    <div class="warn"><b>⚠️ Piège : « porosités, donc flux humide ».</b> C'est une cause fréquente, mais pas la seule : une couche de flux trop mince, un primaire de peinture, de l'huile sur le fil ou une vitesse excessive donnent les mêmes trous. On vérifie les quatre avant d'étuver tout le stock.</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique : les « 4 P » des porosités</b> : <b>P</b>einture (et rouille, huile), <b>P</b>oudre humide, <b>P</b>eu de poudre, <b>P</b>ressé (trop vite).</div>
-    <div class="weld"><b>🔥 Arrêter la machine au premier défaut</b>
-      <p>Un soudeur manuel qui voit un défaut s'arrête. Une tête automatique continue. D'où trois réflexes : contrôler visuellement le premier mètre de chaque nouveau réglage, décrocher le laitier au plus tôt pour lire le cordon, et noter le défaut avec sa position (au millimètre près depuis le départ) pour retrouver sa cause.</p>
-    </div>
+  <p>Les défauts se jugent ensuite selon les niveaux de qualité B, C et D de l'ISO 5817, après contrôle visuel (ISO 17637). Les joints épais sous flux se contrôlent surtout par ultrasons (ISO 17640) ou par radiographie (ISO 17636), qui révèlent manques de fusion, inclusions de laitier et fissures internes.</p>
+
+  <div class="warn"><b>⚠️ Piège : « porosités, donc flux humide ».</b> C'est une cause fréquente, pas la seule : une couche de flux trop mince, un primaire de peinture, de l'huile sur le fil ou une vitesse excessive donnent les mêmes trous. On vérifie les quatre avant d'étuver tout le stock.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : les « 4 P » des porosités</b> : Peinture (et rouille, huile), Poudre humide, Peu de poudre, Pressé (trop vite).</div>
+  <div class="weld"><b>🔥 Arrêter la machine au premier défaut</b>
+    <p>Un soudeur manuel qui voit un défaut s'arrête ; une tête automatique continue. D'où trois réflexes : contrôler visuellement le premier mètre de chaque nouveau réglage, décrocher le laitier au plus tôt, et noter chaque défaut avec sa position depuis le départ.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : d'autres défauts du sous flux</summary>
+    <p><b>Excès de pénétration (504)</b> : bourrelet sous la tôle, bain trop lourd. <b>Inclusion de cuivre (3042)</b> : l'arc atteint la latte de cuivre ou le tube contact touche le bain ; baisser l'intensité sur support, régler le fil sorti. <b>Mauvais raccordement (505), cordon irrégulier</b> : tension trop basse, vitesse instable, fil mal redressé, tube contact usé. <b>Piqûres (2017)</b> : soufflures débouchantes, mêmes causes que les porosités.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Porosités : peinture, poudre humide, peu de poudre, pressé.</li>
+      <li>Fissure au centre : W/d &lt; 1 ; caniveaux : trop vite et trop haut.</li>
+      <li>Racine non fondue d'un côté, tout du long : fil décalé.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -726,14 +728,15 @@ body.photo-modal-open{overflow:hidden}
     <div class="c-img"><span class="ico">📋</span><span><small>Image à retenir</small>La check-list du pilote : on ne décolle pas sans l'avoir lue</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la check-list du pilote</span></div>
-    <p>En soudage automatique, la qualité du joint est « figée » dans les réglages. Le <b>descriptif de mode opératoire</b> (DMOS) est la recette : préparation, produits, intensité, tension, vitesse, ordre des passes. La <b>qualification</b> du mode opératoire (QMOS) est la dégustation : on soude une pièce d'essai selon la recette, on la découpe et on la teste. L'<b>opérateur</b>, qui conduit la machine, est qualifié pour cette installation. Et avant chaque soudure, comme un pilote avant le décollage, on fait la ronde : préparation, flux, appendices, pointage, réglages.</p>
-    <p>La sécurité a ses particularités : l'arc est caché, donc peu de rayonnement et très peu de fumées ; mais il y a la poussière de flux, le laitier brûlant, de très fortes intensités, et des charges lourdes en mouvement.</p>
-  </div>
+  <p>En soudage automatique, la qualité du joint est « figée » dans les réglages. Le <b>descriptif de mode opératoire</b> (DMOS, ISO 15609-1) est la recette : préparation, produits, intensité, tension, vitesse, ordre des passes ; pour le sous flux, il précise aussi la variante (121, 122, 124, 125), le nombre de fils, leur écartement et leurs angles, la désignation du fil et du flux, l'étuvage et le recyclage, le courant et la polarité de chaque fil, le fil sorti et l'apport de chaleur. La <b>qualification</b> du mode opératoire (QMOS, ISO 15614-1) est la dégustation : une pièce d'essai soudée selon la recette est contrôlée (CND) puis découpée pour des essais (traction, pliage, résilience, dureté, macrographie). Le PV-QMOS fixe le <b>domaine de validité</b>, dont l'apport de chaleur :</p>
+  <div class="fx"><div class="row big" style="font-size:1.3rem"><span>résilience exigée : <span class="sig">Q</span> ≤ 1,25·<span class="sig">Q</span><sub>essai</sub></span><span>dureté exigée : <span class="sig">Q</span> ≥ 0,75·<span class="sig">Q</span><sub>essai</sub></span></div><p class="cap">Q : apport de chaleur en production et lors de l'essai de qualification (kJ/mm). Un fort apport grossit les grains et peut faire chuter la résilience ; un faible apport refroidit vite et peut durcir la ZAT (zone affectée thermiquement).</p></div>
+  <p><b>Exemple</b> : QMOS à 600 A, 31,5 V, 500 mm/min : <span class="m">Q<sub>essai</sub> = 31,5 × 600 × 60/(1 000 × 500) ≈ 2,27 kJ/mm</span> ; avec résilience exigée, la production reste sous <span class="m">1,25 × 2,27 ≈ 2,84 kJ/mm</span>.</p>
+  <p><b>Les opérateurs</b> : en soudage mécanisé et automatique, on ne qualifie pas un soudeur (ISO 9606-1) mais un <b>opérateur</b>, qui conduit l'installation, et un <b>régleur</b>, qui la règle (ISO 14732). <b>La ronde avant d'amorcer</b>, comme la check-list du pilote : préparation et accostage conformes, bords propres et secs, pointage sain, support plaqué, flux étuvé en quantité, tôles martyres en place, réglages affichés.</p>
+  <div class="def"><b>📖 Tôles martyres</b> : appendices d'amorçage et de sortie, de même nuance, épaisseur et préparation que le joint, pointés à ses deux bouts. L'amorçage instable, le cratère de fin et le soufflage de bout de tôle restent hors du joint. On les enlève par coupage et meulage, jamais au marteau.</div>
 
-  <div class="lab" id="m6">
+<div class="lab" id="m6">
     <p class="lab-h">Manipulation 6 : la check-list du pilote</p>
-    <p class="lab-sub">DMOS d'école : X sur acier de construction S355 (limite d'élasticité 355 MPa) de 20 mm, procédé 121, fil S2 de 4 mm, flux ISO 14174 S A AB 1 67 AC H5 (cours 2), CC+. Passes de remplissage autorisées de 560 à 640 A, 30 à 33 V, 450 à 550 mm/min (bandes vertes). La QMOS a été soudée à 600 A, 31,5 V, 500 mm/min. Choisis les exigences de la qualification, puis règle la production avec <span class="mat">I</span>, <span class="mat">U</span>, <span class="mat">v</span>. Les boutons de la ronde se cochent et se décochent. Règle de l'ISO 15614-1 : avec exigence de résilience, apport de chaleur au plus 25 % au-dessus de celui de l'essai ; avec exigence de dureté, au plus 25 % au-dessous.</p>
+    <p class="lab-sub">Choisis l'exigence de la qualification, coche la ronde, puis règle I, U et v en production : les bandes vertes sont les plages du DMOS. Le bouton ▶ fait la ronde.<span class="predict">🔮 Prédis d'abord : 600 A, 34 V, 420 mm/min, avec résilience exigée : conforme ?</span></p>
     <div class="btns" id="m6x">
       <button class="btn on" data-k="kv" type="button">Résilience exigée</button>
       <button class="btn" data-k="hv" type="button">Dureté exigée</button>
@@ -748,43 +751,42 @@ body.photo-modal-open{overflow:hidden}
     <div class="ctrl"><label for="m6i">Intensité <span class="mat">I</span></label><input type="range" id="m6i" class="r-mat" min="500" max="700" step="10" value="600"><output id="m6io"></output></div>
     <div class="ctrl"><label for="m6u">Tension <span class="mat">U</span></label><input type="range" id="m6u" class="r-mat" min="28" max="36" step="0.5" value="31.5"><output id="m6uo"></output></div>
     <div class="ctrl"><label for="m6v">Vitesse <span class="mat">v</span></label><input type="range" id="m6v" class="r-mat" min="380" max="700" step="10" value="500"><output id="m6vo"></output></div>
-    <div class="btns"><button class="btn play" id="m6play" type="button">▶ Faire la ronde</button></div>
+    <div class="btns"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" id="m6play" type="button">▶ Faire la ronde</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button></div>
     <svg id="m6svg" role="img" aria-label="Jauges des paramètres du mode opératoire, domaine d'apport de chaleur qualifié et ronde avant amorçage"></svg>
     <div class="readout" id="m6r"></div>
     <p class="status" id="m6msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">DMOS, QMOS, opérateurs, chantier, HST</span></div>
-    <p><b>Le DMOS</b> (ISO 15609-1) d'un soudage sous flux précise, en plus des données de tout mode opératoire (matériau, épaisseur, préparation dessinée, position, préchauffage, température entre passes, ordre des passes, gougeage, traitement thermique) : la variante du procédé (121, 122, 124, 125), le nombre de fils, leur écartement et leurs angles, le diamètre et la désignation du fil, la désignation et la marque du flux, son étuvage et son recyclage, le type de courant et la polarité de chaque fil, les plages d'intensité, de tension et de vitesse, le fil sorti, et l'apport de chaleur.</p>
-    <p><b>La QMOS</b> (ISO 15614-1) : une pièce d'essai soudée selon un DMOS préliminaire (DMOS-P) est contrôlée (CND), puis découpée pour des essais (traction, pliage, résilience, dureté, macrographie). Le PV-QMOS fixe le <b>domaine de validité</b> : matériaux, épaisseurs, procédé, produits, et apport de chaleur.</p>
-    <div class="fx"><div class="big">résilience exigée : <span class="sig">Q</span> ≤ 1,25·<span class="sig">Q</span><sub>essai</sub>   ·   dureté exigée : <span class="sig">Q</span> ≥ 0,75·<span class="sig">Q</span><sub>essai</sub></div><p class="cap">Q : apport de chaleur en production et lors de l'essai de qualification (kJ/mm). Avec Q<sub>essai</sub> = 31,5 × 600 × 60/(1 000 × 500) = 2,27 kJ/mm : Q ≤ 2,84 kJ/mm et Q ≥ 1,70 kJ/mm</p></div>
-    <p>Un fort apport de chaleur fait grossir les grains et peut faire chuter la résilience ; un faible apport refroidit vite et peut durcir la zone affectée thermiquement : d'où la borne haute pour l'une, la borne basse pour l'autre. Une qualification obtenue avec un fil ne se transpose pas d'office au tandem : le passage d'une variante à l'autre (nombre de fils, ajout de poudre) est encadré par la norme, et le DMOS nomme la variante.</p>
-    <p><b>Les opérateurs</b> : en soudage mécanisé et automatique, on ne qualifie pas un « soudeur » (ISO 9606-1) mais un <b>opérateur de soudage</b>, qui conduit l'installation, et un <b>régleur</b>, qui la règle (ISO 14732). L'opérateur est qualifié sur un assemblage soudé (celui de la qualification du mode opératoire, un essai avant production, une pièce de production ou une éprouvette d'essai) et sur sa connaissance du fonctionnement de l'installation ; sa qualification se maintient ensuite par des confirmations périodiques de l'employeur.</p>
-    <p><b>Les recommandations générales</b> : accostage plus serré qu'en soudage manuel ; bords meulés et secs ; flux étuvé, couche dans la plage, recyclage tamisé ; fil propre et bien redressé ; tube contact en bon état ; masse serrée près du joint, et aux deux bouts pour un long joint ; pas d'arrêt en cours de cordon, ou reprise sur une zone meulée.</p>
-    <p><b>Les retours d'expérience des chantiers navals</b> :</p>
+  <div class="tbl-wrap"><table class="data">
+    <tr><th>Risque du poste</th><th>Prévention</th></tr>
+    <tr><td>Poussières de flux (fluorures, oxydes de manganèse, parfois silice : voir la FDS)</td><td>récupération par aspiration, jamais de soufflette ; masque anti-poussière pour remplir, tamiser ou vider le flux</td></tr>
+    <tr><td>Fumées : très faibles, ≈ 0,05 g par kg de fil, contre ≈ 10 à 40 g/kg en électrode enrobée (facteurs d'émission de l'EPA américaine)</td><td>ventilation générale ; captage pour les fortes intensités et les flux riches en fluorures</td></tr>
+    <tr><td>Rayonnement : arc caché, sauf couche trop mince ou amorçage</td><td>couche dans la plage ; lunettes et écrans près du poste</td></tr>
+    <tr><td>Brûlures : laitier à plusieurs centaines de degrés, qui peut éclater</td><td>gants, lunettes, vêtements couvrants ; laisser refroidir le laitier</td></tr>
+    <tr><td>Électricité : 1 000 A et plus par fil</td><td>câbles et serrages en bon état, masse serrée, ne pas toucher fil ni tube contact sous tension</td></tr>
+    <tr><td>Mécanique : bobines de plusieurs centaines de kilogrammes, vireurs, potences</td><td>moyens de levage, zones balisées, arrêt d'urgence accessible, pas de main près des galets</td></tr>
+  </table></div>
+
+  <div class="warn"><b>⚠️ Piège : rattraper une vitesse trop lente par une tension plus haute.</b> Les deux augmentent l'apport de chaleur : on peut sortir du DMOS et du domaine qualifié sans toucher à l'intensité. 600 A, 34 V, 420 mm/min donne 2,91 kJ/mm, au-dessus de 2,84.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : la cuisine</b> : le DMOS est la recette, la QMOS la dégustation, l'opérateur le cuisinier qualifié, la ronde la mise en place, les tôles martyres les tranches qu'on jette.</div>
+  <div class="weld"><b>🔥 Le premier mètre</b>
+    <p>Sur un chantier, la plupart des défauts de sous flux naissent avant l'amorçage : un primaire oublié, un flux resté ouvert la nuit, un appendice absent, une pointe fissurée. La ronde de dix minutes coûte moins cher qu'un mètre de gougeage et de reprise.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : retours d'expérience des chantiers navals</summary>
     <ul>
-      <li><b>la vérification avant soudage</b> : préparation et accostage conformes au DMOS, propreté (rouille, primaire, humidité), pointage sain, support plaqué, flux sec en quantité, réglages affichés ;</li>
-      <li><b>la séquence sur un platelage pré-pointé</b> (les tôles d'un pont, posées et pointées) : souder d'abord les <b>abouts</b> (joints transversaux entre les tôles d'une même virure, c'est-à-dire d'une même rangée de tôles), puis les <b>coutures</b> (joints longitudinaux entre virures), en partant du centre vers l'extérieur. À un croisement en T, on termine l'about, puis on rouvre l'extrémité de la couture avant de la souder : souder la couture d'abord briderait l'about, qui risquerait de fissurer ;</li>
-      <li><b>le pointage des virures à l'électrode enrobée (111)</b> : pointes faites à l'électrode basique étuvée, assez longues, sans fissure ni cratère, meulées en biseau aux extrémités pour être refondues par la passe sous flux ; une pointe fissurée s'enlève, elle ne se recouvre pas ;</li>
-      <li><b>les tôles martyres</b> (appendices d'amorçage et de sortie) : de même nuance, même épaisseur et même préparation que le joint, pointées à ses deux bouts. On amorce et on finit dessus : l'amorçage instable, le cratère de fin et le soufflage de bout de tôle restent hors du joint. On les enlève ensuite par coupage et meulage, jamais au marteau.</li>
+      <li><b>La séquence sur un platelage pré-pointé</b> (les tôles d'un pont, posées et pointées) : souder d'abord les <b>abouts</b> (joints transversaux entre les tôles d'une même virure, c'est-à-dire d'une même rangée), puis les <b>coutures</b> (joints longitudinaux entre virures), du centre vers l'extérieur. À un croisement en T, on termine l'about, puis on rouvre l'extrémité de la couture avant de la souder.</li>
+      <li><b>Le pointage à l'électrode enrobée (111)</b> : pointes à l'électrode basique étuvée, assez longues, sans fissure ni cratère, meulées en biseau pour être refondues par la passe sous flux ; une pointe fissurée s'enlève, elle ne se recouvre pas.</li>
+      <li><b>L'opérateur</b> est qualifié sur un assemblage soudé et sur sa connaissance de l'installation ; sa qualification se maintient par des confirmations périodiques de l'employeur. Une qualification obtenue avec un fil ne se transpose pas d'office au tandem.</li>
     </ul>
-    <p><b>Hygiène et sécurité du poste</b> :</p>
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>Risque</th><th>D'où il vient</th><th>Prévention</th></tr>
-      <tr><td>Poussières de flux</td><td>remplissage des trémies, tamisage, recyclage ; fluorures, oxydes de manganèse, parfois silice (voir la FDS)</td><td>récupération par aspiration, jamais de soufflette ; masque anti-poussière pour remplir, tamiser ou vider le flux</td></tr>
-      <tr><td>Fumées</td><td>très faibles : de l'ordre de 0,05 g par kg de fil, contre environ 10 à 40 g/kg pour les électrodes enrobées (facteurs d'émission de l'agence américaine de l'environnement, l'EPA)</td><td>ventilation générale ; captage pour les fortes intensités et les flux riches en fluorures</td></tr>
-      <tr><td>Rayonnement</td><td>arc caché, sauf si la couche de flux est trop mince ou à l'amorçage</td><td>couche dans la plage ; lunettes et écrans près du poste</td></tr>
-      <tr><td>Brûlures</td><td>laitier décroché à plusieurs centaines de degrés, qui peut éclater ; flux récupéré chaud ; pièces préchauffées</td><td>gants, lunettes, vêtements couvrants ; laisser refroidir le laitier avant de le manipuler</td></tr>
-      <tr><td>Électricité</td><td>intensités de 1 000 A et plus par fil, tensions à vide, câbles et connexions</td><td>câbles et serrages en bon état, masse serrée, ne pas toucher fil ni tube contact sous tension</td></tr>
-      <tr><td>Mécanique</td><td>bobines et fûts de fil de plusieurs centaines de kilogrammes, sacs de flux de 25 kg, vireurs, chariots et potences en mouvement</td><td>moyens de levage, zones balisées, arrêt d'urgence accessible, pas de main près des galets d'un vireur</td></tr>
-    </table></div>
-    <p>La <b>FDS</b> du flux et celle du fil sont la première source : seize rubriques, dont la composition, les dangers, les valeurs limites d'exposition professionnelle et les équipements de protection, le stockage et l'élimination (le laitier et le flux souillé sont des déchets).</p>
-    <div class="tip">💡 <b>Le DMOS est la recette, le PV-QMOS la preuve qu'elle marche</b> : en cas de doute sur un réglage de production, on vérifie d'abord le DMOS, puis le domaine de validité du PV-QMOS qui le couvre.</div>
-    <div class="warn"><b>⚠️ Piège : rattraper une vitesse trop lente par une tension plus haute.</b> Les deux augmentent l'apport de chaleur : on peut sortir du DMOS et du domaine qualifié sans changer l'intensité. Exemple : 600 A, 34 V, 420 mm/min donne 2,91 kJ/mm, au-dessus de 2,84.</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique : la cuisine</b> : le DMOS est la recette, la QMOS la dégustation, l'opérateur le cuisinier qualifié, la ronde la mise en place, et les tôles martyres les tranches qu'on jette.</div>
-    <div class="weld"><b>🔥 Le premier mètre</b>
-      <p>Sur un chantier, la plupart des défauts de soudage sous flux naissent avant l'amorçage : un primaire oublié, un flux resté ouvert la nuit, un appendice absent, une pointe fissurée. La ronde de dix minutes coûte moins cher qu'un mètre de gougeage et de reprise, surtout sur un joint épais contrôlé par ultrasons.</p>
-    </div>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>DMOS (ISO 15609-1) = recette ; QMOS (ISO 15614-1) = preuve ; opérateurs selon l'ISO 14732.</li>
+      <li>Résilience exigée : Q ≤ 1,25·Q<sub>essai</sub> ; dureté exigée : Q ≥ 0,75·Q<sub>essai</sub>.</li>
+      <li>Ronde avant d'amorcer ; tôles martyres ; poussière de flux et laitier brûlant.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -793,131 +795,38 @@ body.photo-modal-open{overflow:hidden}
 <div class="wrap">
   <div class="cartouche">
     <div class="c-num">✎</div>
-    <div class="c-title"><h2>Exercices corrigés</h2><p>Six exercices et un défi, du support envers à la virole plaquée</p></div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Deux exercices, du défaut à la virole plaquée</p></div>
     <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de musculation : on ne progresse qu'en soulevant soi-même</span></div>
   </div>
-  <div class="lv lv1"><div class="lv-h">👁 Mode d'emploi <span class="tag">valeurs des modèles pédagogiques du cours</span></div>
-    <p>Cherche chaque question sur papier avant d'ouvrir la correction. Les valeurs de pénétration, de dépôt et de dilution viennent des modèles des manipulations : retrouve-les en réglant les curseurs. Le défi se rejoue dans la manipulation 4.</p>
-  </div>
+
+  <p>Cherche chaque question sur papier avant d'ouvrir la correction. Les valeurs de dilution et de dépôt viennent des modèles des manipulations : retrouve-les en réglant les curseurs. Le premier exercice se vérifie dans les manipulations 5 et 6 ; le second se rejoue dans la manipulation 4.</p>
 
   <div class="exo">
-    <h4>Exercice 1 : le filet ou la contre-passe <span class="lvtag">N1 et N2 · chapitre 1</span></h4>
-    <p>Tôle de 16 mm à bords droits jointifs, fil de 4 mm (plage 400 à 900 A), 550 mm/min, tension U = 20 + 0,02·I.</p>
-    <p class="q"><b>a)</b> En reprise envers, quelle pénétration maximale pour la première passe ?</p>
-    <p class="q"><b>b)</b> Quelle pénétration minimale pour un chevauchement d'au moins 2 mm ?</p>
-    <p class="q"><b>c)</b> Quelle plage d'intensité donne le modèle ? Laquelle reste dans la plage du fil ?</p>
-    <p class="q"><b>d)</b> À 800 A, que valent p et le chevauchement c ?</p>
-    <p class="q"><b>e)</b> Pourquoi ne pas souder cette tôle d'un seul côté sur latte de cuivre, avec ce fil et cette vitesse ?</p>
+    <h4>Exercice 1 : l'enquête et le domaine qualifié <span class="lvtag">★ application · chapitres 5 et 6</span></h4>
+    <p class="q"><b>a)</b> Des soufflures dispersées dans tout le cordon et des éclairs de lumière pendant le soudage, à 900 A avec 20 mm de flux : défaut, cause, remède ?</p>
+    <p class="q"><b>b)</b> Une fente au milieu d'une passe de 13 mm de profondeur pour 8 mm de large ?</p>
+    <p class="q"><b>c)</b> La racine n'est pas fondue d'un seul côté, sur toute la longueur ?</p>
+    <p class="q"><b>d)</b> Une QMOS avec exigence de résilience a été soudée à 600 A, 31,5 V, 500 mm/min ; le DMOS autorise 560 à 640 A, 30 à 33 V, 450 à 550 mm/min. La production à 640 A, 33 V, 450 mm/min est-elle conforme ? Et à 600 A, 34 V, 420 mm/min ?</p>
     <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <span class="m">p ≤ e − 2 = 16 − 2 = 14 mm</span>, pour garder du métal solide sous le bain.</p>
-      <p><b>b)</b> <span class="m">c = 2p − e ≥ 2</span>, soit <span class="m">p ≥ (16 + 2)/2 = 9 mm</span>.</p>
-      <p><b>c)</b> 9 ≤ p ≤ 14 mm correspond à environ 700 à 980 A. Avec la plage du fil de 4 mm : <span class="m">700 à 900 A</span>. Manipulation 1, reprise envers, e = 16 mm.</p>
-      <p><b>d)</b> <span class="m">p ≈ 10,8 mm</span> et <span class="m">c = 2 × 10,8 − 16 ≈ 5,5 mm</span>.</p>
-      <p><b>e)</b> Sur support, il faut p ≥ e = 16 mm, soit environ 1 090 A : hors de la plage du fil de 4 mm. On passerait au fil de 5 mm, à deux fils, à une vitesse plus lente, ou à un chanfrein qui rapproche la racine de l'arc.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 2 : le gâteau et la tirelire <span class="lvtag">N2 · chapitre 2</span></h4>
-    <p>Talon c = 5 mm, angle α = 60°, masse volumique 7,85 g/cm³ (soit 0,00785 kg/m par mm² de section).</p>
-    <p class="q"><b>a)</b> Calcule l'aire d'un chanfrein en V sur 40 mm, puis sa masse de métal par mètre.</p>
-    <p class="q"><b>b)</b> Même question pour un X. Que gagne-t-on ?</p>
-    <p class="q"><b>c)</b> À 200 mm, compare X, double U et chanfrein étroit (manipulation 2, surépaisseurs comprises).</p>
-    <p class="q"><b>d)</b> Avec un fil seul à 7,5 kg/h, combien d'heures d'arc par mètre pour le X et pour le chanfrein étroit ?</p>
-    <p class="q"><b>e)</b> Donne deux exigences du chanfrein étroit et un de ses risques.</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <span class="m">A<sub>V</sub> = (40 − 5)² × tan 30° = 1 225 × 0,577 ≈ 707 mm²</span>, soit <span class="m">707 × 0,00785 ≈ 5,55 kg/m</span> (5,9 kg/m avec les surépaisseurs, environ 22 passes).</p>
-      <p><b>b)</b> <span class="m">A<sub>X</sub> = A<sub>V</sub>/2 ≈ 354 mm²</span>, soit 2,8 kg/m (3,2 kg/m avec les surépaisseurs, environ 12 passes) : moitié moins de métal, et une déformation angulaire faible si l'on alterne les faces.</p>
-      <p><b>c)</b> X ≈ 86,6 kg/m ; double U ≈ 37,0 kg/m ; chanfrein étroit ≈ 33,9 kg/m. Le chanfrein étroit demande environ 2,5 fois moins de métal que le X.</p>
-      <p><b>d)</b> X : <span class="m">86,6/7,5 ≈ 11,5 h</span> par mètre ; chanfrein étroit : <span class="m">33,9/7,5 ≈ 4,5 h</span> par mètre.</p>
-      <p><b>e)</b> Exigences : un flux à laitier très détachable, une torche plate isolée, un suivi de joint précis, de préférence deux passes par couche. Risques : manque de fusion des flancs, laitier coincé, réparation difficile au fond de la fente.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 3 : une ou deux locomotives <span class="lvtag">N2 · chapitre 3</span></h4>
-    <p>Passe de remplissage de 60 mm², fils de 4 mm, fil sorti 30 mm. Taux de fusion du cours 1 : MR = 0,0104·I·k<sub>pol</sub> + 9,5·10⁻⁷·L·I²/d², avec k<sub>pol</sub> = 1 en CC+ et 1,15 en CA.</p>
-    <p class="q"><b>a)</b> Fil seul à 800 A, 36 V, CC+ : calcule le dépôt.</p>
-    <p class="q"><b>b)</b> On ajoute un fil de queue à 640 A, 34,8 V, en CA : dépôt total ?</p>
-    <p class="q"><b>c)</b> Quelle vitesse remplit la section dans chaque cas ?</p>
-    <p class="q"><b>d)</b> Calcule l'apport de chaleur dans chaque cas.</p>
-    <p class="q"><b>e)</b> Sur le fil seul, un fil froid ajoute 35 % de métal. Nouvelle vitesse et nouvel apport de chaleur ?</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <span class="m">MR = 0,0104 × 800 + 9,5·10⁻⁷ × 30 × 800²/16 = 8,32 + 1,14 ≈ 9,46 kg/h</span>.</p>
-      <p><b>b)</b> Fil de queue : <span class="m">0,0104 × 640 × 1,15 + 9,5·10⁻⁷ × 30 × 640²/16 = 7,65 + 0,73 ≈ 8,38 kg/h</span> ; total <span class="m">≈ 17,84 kg/h</span>.</p>
-      <p><b>c)</b> <span class="m">v = MR/(ρ·A)</span> : fil seul 9 460 g/h ÷ (7,85·10⁻³ g/mm³ × 60 mm²) ≈ 20 080 mm/h ≈ <span class="m">335 mm/min</span> ; tandem ≈ <span class="m">631 mm/min</span>, presque deux fois plus vite.</p>
-      <p><b>d)</b> Fil seul : 36 × 800 = 28 800 W à 335 mm/min = 5,58 mm/s, soit <span class="m">Q ≈ 28 800/5,58 ≈ 5 160 J/mm ≈ 5,16 kJ/mm</span> ; tandem : 36 × 800 + 34,8 × 640 ≈ 51 070 W à 10,52 mm/s, soit <span class="m">Q ≈ 4,85 kJ/mm</span>.</p>
-      <p><b>e)</b> <span class="m">MR = 1,35 × 9,46 ≈ 12,77 kg/h</span>, v ≈ 452 mm/min, <span class="m">Q ≈ 3,82 kJ/mm</span> (−26 %), avec moins de pénétration : à réserver au remplissage. Manipulation 3.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 4 : une couche ou deux <span class="lvtag">N2 · chapitre 4</span></h4>
-    <p>Feuillard 309L (C 0,015 % ; Cr 23,5 % ; Ni 13,5 %) sur acier à 0,18 % de carbone ; deuxième couche éventuelle en 308L (C 0,015 % ; Cr 20 % ; Ni 10 %). Repères de surface : C ≤ 0,04 %, Cr ≥ 18 %, Ni ≥ 8 %. Bandes posées tous les 60 mm.</p>
-    <p class="q"><b>a)</b> Sous flux, D = 18 % : composition de la première couche. Conforme ?</p>
-    <p class="q"><b>b)</b> Composition après une deuxième couche en 308L ?</p>
-    <p class="q"><b>c)</b> Sous laitier, D = 9 % : composition d'une seule couche ?</p>
-    <p class="q"><b>d)</b> Couverture à 120 mm/min (sous flux) et à 160 mm/min (sous laitier) ? Heures d'arc pour 100 m² dans les cas b) et c) ?</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <span class="m">C = 0,82 × 0,015 + 0,18 × 0,18 ≈ 0,045 %</span> ; Cr = 0,82 × 23,5 ≈ 19,3 % ; Ni = 0,82 × 13,5 ≈ 11,1 %. Le carbone dépasse 0,04 % : <b>non conforme</b>.</p>
-      <p><b>b)</b> <span class="m">C = 0,82 × 0,015 + 0,18 × 0,045 ≈ 0,020 %</span> ; Cr = 0,82 × 20 + 0,18 × 19,3 ≈ 19,9 % ; Ni = 0,82 × 10 + 0,18 × 11,1 ≈ 10,2 % : conforme.</p>
-      <p><b>c)</b> <span class="m">C = 0,91 × 0,015 + 0,09 × 0,18 ≈ 0,030 %</span> ; Cr ≈ 21,4 % ; Ni ≈ 12,3 % : conforme en une couche.</p>
-      <p><b>d)</b> Sous flux : <span class="m">60 × 120 × 60/10⁶ ≈ 0,43 m²/h</span> ; sous laitier : <span class="m">60 × 160 × 60/10⁶ ≈ 0,58 m²/h</span>. Pour 100 m² : b) 2 × 100/0,432 ≈ 463 h ; c) 100/0,576 ≈ 174 h. Manipulation 4.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 5 : l'enquête <span class="lvtag">N1 · chapitre 5</span></h4>
-    <p>Pour chaque indice, nomme le défaut (numéro ISO 6520-1 si possible), sa cause probable et un remède.</p>
-    <p class="q"><b>a)</b> Des soufflures dispersées dans tout le cordon, et des éclairs de lumière pendant le soudage.</p>
-    <p class="q"><b>b)</b> Une fente au milieu d'une passe de 13 mm de profondeur pour 8 mm de large.</p>
-    <p class="q"><b>c)</b> Un sillon continu le long des deux bords, à 1 200 mm/min et 40 V.</p>
-    <p class="q"><b>d)</b> La racine n'est pas fondue d'un seul côté, sur toute la longueur.</p>
-    <p class="q"><b>e)</b> De petites dépressions sur la surface du cordon, le lendemain d'une nuit où la trémie est restée ouverte.</p>
-    <p class="q"><b>f)</b> Une étoile au bout de chaque cordon.</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> Porosités (2011) : la couche de flux est trop mince, l'arc la perce. Épaissir la couche (au moins 10 + 0,03·I mm). Manipulation 5 : couche de 20 mm à 900 A.</p>
-      <p><b>b)</b> Fissure au centre (1011) : W/d ≈ 0,6, cordon plus profond que large. Moins d'intensité, plus de tension, vitesse plus faible ; viser W/d ≈ 3/2.</p>
-      <p><b>c)</b> Caniveaux (5011) : vitesse et tension trop élevées ensemble. Ralentir et baisser la tension.</p>
-      <p><b>d)</b> Manque de pénétration d'un côté (402) : fil décalé par rapport au joint, défaut systématique. Recentrer le fil, régler le suivi de joint. Manipulation 5 : décalage de 4 mm.</p>
-      <p><b>e)</b> Empreintes : flux humide, le gaz se coince sous le laitier. Étuver le flux, le garder en trémie chauffée.</p>
-      <p><b>f)</b> Fissure de cratère (104) : arrêt brusque sur la pièce. Rampe de fin, et fin du cordon sur un appendice de sortie.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 6 : la recette et la dégustation <span class="lvtag">N2 · chapitre 6</span></h4>
-    <p>DMOS : passes de remplissage de 560 à 640 A, 30 à 33 V, 450 à 550 mm/min. QMOS soudée à 600 A, 31,5 V, 500 mm/min, avec exigence de résilience.</p>
-    <p class="q"><b>a)</b> Calcule l'apport de chaleur de l'essai et la borne du domaine qualifié.</p>
-    <p class="q"><b>b)</b> Production à 640 A, 33 V, 450 mm/min : conforme ?</p>
-    <p class="q"><b>c)</b> Production à 600 A, 34 V, 420 mm/min : conforme ?</p>
-    <p class="q"><b>d)</b> Production à 620 A, 32 V, 650 mm/min : conforme ?</p>
-    <p class="q"><b>e)</b> À quoi servent les tôles martyres, et comment les enlève-t-on ?</p>
-    <p class="q"><b>f)</b> Selon quelle norme qualifie-t-on la personne qui conduit l'installation ?</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <span class="m">Q = 31,5 × 600 × 60/(1 000 × 500) ≈ 2,27 kJ/mm</span> ; résilience exigée : <span class="m">Q ≤ 1,25 × 2,27 ≈ 2,84 kJ/mm</span>.</p>
-      <p><b>b)</b> Q = 33 × 640 × 60/(1 000 × 450) ≈ 2,82 kJ/mm : paramètres dans le DMOS, Q dans le domaine, au bord. <b>Conforme</b>.</p>
-      <p><b>c)</b> U = 34 V et v = 420 mm/min hors DMOS ; Q ≈ 2,91 kJ/mm au-dessus de 2,84 : <b>non conforme</b> trois fois.</p>
-      <p><b>d)</b> Q ≈ 1,83 kJ/mm : dans le domaine qualifié, mais v = 650 mm/min est hors DMOS : <b>non autorisé</b>. Manipulation 6.</p>
-      <p><b>e)</b> Ce sont les appendices d'amorçage et de sortie : l'amorçage instable, le cratère de fin et le soufflage de bout de tôle restent hors du joint. Même nuance, épaisseur et préparation que le joint ; on les enlève par coupage et meulage, jamais au marteau.</p>
-      <p><b>f)</b> L'ISO 14732 (opérateurs et régleurs du soudage mécanisé et automatique), et non l'ISO 9606-1 des soudeurs manuels.</p>
+      <p><b>a)</b> Porosités (2011) : la couche de flux est trop mince et l'arc la perce. Épaissir la couche (repère du cours : au moins 10 + 0,03·I = 37 mm à 900 A). Manipulation 5 : couche de 20 mm à 900 A.</p>
+      <p><b>b)</b> Fissure au centre (1011) : W/d = 8/13 ≈ 0,6, cordon plus profond que large. Moins d'intensité, plus de tension ; viser W/d ≈ 3/2.</p>
+      <p><b>c)</b> Manque de pénétration d'un côté (402), défaut systématique : fil décalé par rapport au joint. Recentrer le fil, régler le suivi de joint. Manipulation 5 : décalage de 4 mm.</p>
+      <p><b>d)</b> <span class="m">Q<sub>essai</sub> ≈ 2,27 kJ/mm</span>, borne <span class="m">1,25 × 2,27 ≈ 2,84 kJ/mm</span>. À 640 A, 33 V, 450 mm/min : <span class="m">Q = 33 × 640 × 60/(1 000 × 450) ≈ 2,82 kJ/mm</span>, réglages dans le DMOS : <b>conforme</b>, au bord. À 600 A, 34 V, 420 mm/min : U et v hors DMOS, <span class="m">Q ≈ 2,91 kJ/mm</span> &gt; 2,84 : <b>non conforme</b>. Manipulation 6.</p>
     </div></details>
   </div>
 
   <div class="exo defi">
-    <h4>🏆 Défi : la virole à plaquer <span class="lvtag">N2 · chapitre 4, à rejouer dans la manipulation 4</span></h4>
-    <p>Il faut recouvrir 30 m² de l'intérieur d'une virole en acier à 0,18 % de carbone d'une surface de type 308L : repères C ≤ 0,04 %, Cr ≥ 18 %, Ni ≥ 8 %, au moins 3 mm. Feuillard 60 × 0,5 mm, bandes tous les 60 mm. Flux consommé : 0,8 kg par kg de feuillard sous flux, 0,55 kg/kg sous laitier.</p>
-    <p class="q"><b>a)</b> Sous flux à 750 A et 120 mm/min, une couche suffit-elle ?</p>
-    <p class="q"><b>b)</b> En deux couches sous flux : épaisseur, heures d'arc, masse de feuillard et de flux pour 30 m² ?</p>
-    <p class="q"><b>c)</b> En une couche sous laitier à 1 250 A et 160 mm/min : mêmes grandeurs ?</p>
-    <p class="q"><b>d)</b> Trouve un réglage sous flux en une seule couche qui respecte les repères. Que coûte-t-il en couverture ?</p>
-    <p class="q"><b>e)</b> Quelle solution recommandes-tu, et pourquoi ?</p>
+    <h4>Exercice 2 : la virole à plaquer <span class="lvtag">★★ synthèse · chapitre 4, à rejouer dans la manipulation 4</span></h4>
+    <p>Il faut recouvrir 30 m² de l'intérieur d'une virole en acier à 0,18 % de carbone d'une surface de type 308L : repères C ≤ 0,04 %, Cr ≥ 18 %, Ni ≥ 8 %, au moins 3 mm. Feuillard 60 × 0,5 mm, bandes tous les 60 mm ; 309L (C 0,015 ; Cr 23,5 ; Ni 13,5) puis 308L (C 0,015 ; Cr 20 ; Ni 10). Dépôt : 14 kg/h sous flux, 22 kg/h sous laitier.</p>
+    <p class="q"><b>a)</b> Sous flux à 750 A et 120 mm/min (D ≈ 18 %), une couche de 309L suffit-elle ?</p>
+    <p class="q"><b>b)</b> En deux couches sous flux (309L puis 308L) : composition, heures d'arc et masse de feuillard pour 30 m² ?</p>
+    <p class="q"><b>c)</b> En une couche de 309L sous laitier à 1 250 A et 160 mm/min (D ≈ 9 %) : mêmes grandeurs ?</p>
+    <p class="q"><b>d)</b> Quelle solution recommandes-tu, et pourquoi ?</p>
     <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> D ≈ 18 %, C ≈ 0,045 % : <b>non</b>, trop de carbone pris à la tôle.</p>
-      <p><b>b)</b> 8,3 mm ; couverture 0,432 m²/h, donc <span class="m">2 × 30/0,432 ≈ 139 h</span> ; feuillard <span class="m">14 × 138,9 ≈ 1 944 kg</span> ; flux <span class="m">0,8 × 1 944 ≈ 1 556 kg</span>.</p>
-      <p><b>c)</b> D ≈ 9 %, C ≈ 0,030 %, 4,9 mm ; <span class="m">30/0,576 ≈ 52 h</span> ; feuillard <span class="m">22 × 52,1 ≈ 1 146 kg</span> ; flux ≈ 630 kg.</p>
-      <p><b>d)</b> Par exemple 600 A et 80 mm/min : D ≈ 14,4 %, C ≈ 0,039 %, 4,7 mm. Mais la couverture tombe à 0,288 m²/h : 104 h pour 30 m², deux fois plus que sous laitier, et le carbone reste au ras du repère.</p>
-      <p><b>e)</b> Le sous laitier en une couche : 2,7 fois moins d'heures d'arc que deux couches sous flux, 41 % de feuillard et 60 % de flux en moins, et une marge confortable sur le carbone. Le sous flux en une couche est trop juste pour une production : la moindre variation de dilution ferait sortir la surface des repères.</p>
+      <p><b>a)</b> <span class="m">C = 0,82 × 0,015 + 0,18 × 0,18 ≈ 0,045 %</span> &gt; 0,04 % : <b>non</b>, trop de carbone pris à la tôle (Cr ≈ 19,3 %, Ni ≈ 11,1 %).</p>
+      <p><b>b)</b> Deuxième couche : <span class="m">C = 0,82 × 0,015 + 0,18 × 0,045 ≈ 0,020 %</span> ; <span class="m">Cr = 0,82 × 20 + 0,18 × 19,3 ≈ 19,9 %</span> ; <span class="m">Ni = 0,82 × 10 + 0,18 × 11,1 ≈ 10,2 %</span> : conforme, sur 8,3 mm. Couverture <span class="m">60 × 120 × 60/10⁶ ≈ 0,432 m²/h</span>, donc <span class="m">2 × 30/0,432 ≈ 139 h</span> ; feuillard <span class="m">14 × 139 ≈ 1 944 kg</span>.</p>
+      <p><b>c)</b> <span class="m">C = 0,91 × 0,015 + 0,09 × 0,18 ≈ 0,030 %</span>, Cr ≈ 21,4 %, Ni ≈ 12,3 %, sur 4,9 mm : conforme. Couverture 0,576 m²/h, soit <span class="m">30/0,576 ≈ 52 h</span> ; feuillard <span class="m">22 × 52,1 ≈ 1 146 kg</span>.</p>
+      <p><b>d)</b> Le sous laitier en une couche : 2,7 fois moins d'heures d'arc, 41 % de feuillard en moins, et une marge confortable sur le carbone. Un sous flux en une couche (par exemple 600 A et 80 mm/min, D ≈ 14 %, C ≈ 0,039 %) resterait au ras du repère, avec une couverture deux fois plus faible. Manipulation 4.</p>
     </div></details>
   </div>
 </div>
@@ -954,7 +863,8 @@ body.photo-modal-open{overflow:hidden}
     <div><div class="ic">🕵️</div><h4>Le détective</h4><div class="f">4 P · W/d ≈ 3/2</div><p>Peinture, Poudre humide, Peu de poudre, Pressé ; un défaut répété accuse un réglage.</p></div>
     <div><div class="ic">📋</div><h4>La check-list</h4><div class="f"><span class="sig">Q</span> ≤ 1,25·<span class="sig">Q</span><sub>essai</sub></div><p>DMOS (ISO 15609-1), QMOS (ISO 15614-1), opérateurs (ISO 14732), ronde, tôles martyres, FDS.</p></div>
   </div>
-  <div class="fun"><span class="fun-h">🌉 Fun fact : le pont Paton, à Kiev</span>Le 5 novembre 1953, Kiev met en service sur le Dniepr un pont routier de 1 543 m, l'un des premiers ponts entièrement soudés du monde : 264 tronçons de 29 m, assemblés par 10 668 m de soudures. Il porte le nom d'Evgueni Paton, l'ingénieur de ponts devenu pionnier du soudage, qui en a eu l'idée et a suivi sa construction ; il est mort le 12 août 1953, sans voir l'ouverture. Selon l'institut de soudure qui porte son nom, 98 % des soudures du pont, y compris des soudures verticales, ont été faites à l'arc sous flux automatique. En 1995, l'American Welding Society l'a distingué comme un ouvrage entièrement soudé hors du commun. Encadrer la production de milliers de mètres de soudures, du mode opératoire à l'opérateur, c'est l'objet du <a href="#c6">chapitre 6</a>.</div>
+  <div class="btns"><button class="btn" id="printFiche" type="button">🖨 Imprimer la fiche mémoire</button></div>
+  <div class="fun"><span class="fun-h">🌉 Fun fact : le pont Paton, à Kiev</span>Le 5 novembre 1953, Kiev met en service sur le Dniepr un pont routier de 1 543 m, l'un des premiers ponts entièrement soudés du monde. Il porte le nom d'Evgueni Paton, l'ingénieur de ponts devenu pionnier du soudage, mort le 12 août 1953 sans voir l'ouverture. Selon l'institut de soudure qui porte son nom, 98 % de ses soudures ont été faites à l'arc sous flux automatique ; en 1995, l'American Welding Society l'a distingué comme un ouvrage soudé hors du commun. Encadrer la production de milliers de mètres de soudures, du mode opératoire à l'opérateur, c'est l'objet du <a href="#c6">chapitre 6</a>.</div>
 </div>
 </section>
 
@@ -984,7 +894,7 @@ body.photo-modal-open{overflow:hidden}
     <dt>e</dt><dd>Épaisseur de la tôle (mm).</dd>
     <dt>Empreintes</dt><dd>Petites dépressions à la surface du cordon, dues à un gaz coincé entre le laitier et le métal ; en anglais <i>pockmarks</i>.</dd>
     <dt>EPA</dt><dd><i>Environmental Protection Agency</i>, l'agence américaine de l'environnement, qui publie des facteurs d'émission de fumées.</dd>
-    <dt>EPI</dt><dd>Équipements de protection individuelle.</dd>
+
     <dt>FDS</dt><dd>Fiche de données de sécurité d'un produit, en seize rubriques.</dd>
     <dt>Feuillard (122), soudage sous laitier (72)</dt><dd>Électrode en bande (60 × 0,5 mm par exemple) ; procédé sans arc où un laitier liquide chauffé par effet Joule fond la bande, dit électroslag.</dd>
     <dt>Fil froid</dt><dd>Fil sans courant poussé dans le bain, fondu par la chaleur de l'arc voisin.</dd>
@@ -1006,7 +916,7 @@ body.photo-modal-open{overflow:hidden}
     <dt>Reprise envers</dt><dd>Seconde passe soudée de l'autre côté du joint, après gougeage s'il y a lieu.</dd>
     <dt>Sous-couche</dt><dd>Première couche d'un rechargement, plus alliée que la surface visée, qui absorbe la dilution.</dd>
     <dt>Tandem, twin, multi-fil</dt><dd>Deux fils en file avec deux sources ; deux fils fins dans un même tube contact avec une source ; trois fils ou plus.</dd>
-    <dt>Σ, ρ, ∝, tan</dt><dd>Somme sur tous les arcs ; masse volumique de l'acier (7,85 g/cm³) ; « proportionnel à » ; tangente d'un angle.</dd>
+    <dt>Σ, ρ, tan</dt><dd>Somme sur tous les arcs ; masse volumique de l'acier (7,85 g/cm³) ; tangente d'un angle.</dd>
     <dt>309L, 308L, C-Mn, S355, S2</dt><dd>Nuances d'acier inoxydable austénitique à bas carbone (L) ; acier au carbone-manganèse ; acier de construction de limite d'élasticité 355 MPa ; fil à environ 1 % de manganèse.</dd>
   </dl>
 </div>
@@ -1148,13 +1058,24 @@ function axes(svg,x0,x1,y0,y1,xmin,xmax,ymin,ymax,xlab,ylab,xstep,ystep,xfmt,yfm
   tx(svg,x0+4,y0-10,ylab,{class:"lbl"});tx(svg,x1,y1+32,xlab,{class:"lbl","text-anchor":"end"});
   return {X:X,Y:Y};
 }
-function animate(btn,label,dur,onStep,onEnd){
-  let raf=null,run=false;
+function animate(btn,label,dur,onStep,onEnd){/* lecteur pilotable : ▶ lecture ou ⏸ pause, qui reprend où elle s'est arrêtée ; les boutons voisins ⏮ début, ◀ pas et pas ▶ (data-a) la mènent à la main ; un pas avance jusqu'à la prochaine image différente (20 pas au plus) */
+  const box=btn.parentNode,lab=btn.closest(".lab")||box,N=20;let raf=null,run=false,t=0;
+  const go=v=>{t=Math.max(0,Math.min(1,v));onStep(t);};
+  const snap=()=>{let s="";lab.querySelectorAll("svg,.readout,.status").forEach(e=>{s+=e.innerHTML;});return s;};
   function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;btn.textContent=label;}
-  function start(){if(run){stop();return;}if(RM){onStep(1);stop();if(onEnd)onEnd();return;}
-    run=true;btn.textContent="⏸ Pause";const t0=performance.now();
-    const step=now=>{const p=Math.min(1,(now-t0)/dur);onStep(p);if(p>=1){stop();if(onEnd)onEnd();return;}raf=requestAnimationFrame(step);};raf=requestAnimationFrame(step);}
-  btn.addEventListener("click",start);return {stop:stop,running:()=>run};
+  function step(d){stop();const s0=snap();let k=Math.round(t*N);for(let i=0;i<N;i++){k+=d;if(k<0||k>N)break;go(k/N);if(snap()!==s0)break;}}
+  btn.addEventListener("click",()=>{if(run){stop();return;}if(t>=0.999)t=0;
+    if(RM){step(1);if(t>=1&&onEnd)onEnd();return;}
+    run=true;btn.textContent="⏸ Pause";const s0=performance.now()-t*dur;
+    const f=now=>{if(!run)return;go((now-s0)/dur);if(t>=1){stop();if(onEnd)onEnd();return;}raf=requestAnimationFrame(f);};raf=requestAnimationFrame(f);});
+  const pb=a=>box.querySelector('[data-a="'+a+'"]');
+  if(pb("start"))pb("start").addEventListener("click",()=>{stop();go(0);});
+  if(pb("back"))pb("back").addEventListener("click",()=>step(-1));
+  if(pb("fwd"))pb("fwd").addEventListener("click",()=>step(1));
+  /* un réglage fait à la main : la prochaine lecture repart du début */
+  lab.addEventListener("input",()=>{if(!run)t=0;});
+  lab.addEventListener("click",e=>{const b=e.target.closest("button");if(b&&b!==btn&&!b.dataset.a&&!run)t=0;});
+  return {stop:stop,running:()=>run};
 }
 
 
@@ -1325,7 +1246,7 @@ function hbars(svg,x0,x1,y0,rows,o){/* barres horizontales : rows = [{lab,val,tx
       else if(p-e>4)m=sup==="cuivre"?"⚠️ Bain trop chaud : l'arc atteint le cuivre, qui peut fondre dans le bain (inclusion de cuivre, 3042) et faire fissurer le cordon. Baisse l'intensité.":sup==="ceram"?"⚠️ Bain trop lourd : excès de pénétration (504), envers trop bombé. Baisse l'intensité.":"⚠️ Bain trop lourd : il enfonce le lit de flux ; envers irrégulier, voire effondré (509). Baisse l'intensité.";
       else m="✅ Pleine pénétration : "+ART[sup]+" moule l'envers (p − e = "+nf(p-e,1)+" mm).";}
     if(!(prog!==null&&prog<1)&&I>900)m+=" Au-delà de 900 A, on sort de la plage du fil de 4 mm : fil de 5 mm, ou deux fils.";
-    msg.innerHTML=nbsp(m);
+    msg.innerHTML=(nbsp(m))+"<br><b>À retenir :</b> sans support, p ≤ e − 2 ; en reprise, chevauchement c = 2p − e d'au moins 2 mm.";
   }
   const A=animate($("#m1play"),"▶ Monter l'intensité",6000,p=>{prog=Math.max(0,p);draw();},()=>{prog=null;draw();});
   $$("#m1s .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;sup=b.dataset.k;setOn("#m1s",b);draw();}));
@@ -1397,7 +1318,7 @@ function hbars(svg,x0,x1,y0,rows,o){/* barres horizontales : rows = [{lab,val,tx
     if(prog!==null&&prog<1)m="La tôle s'épaissit : l'aire d'un V croît comme le carré de l'épaisseur, celle d'un chanfrein étroit presque comme l'épaisseur.";
     else if(!ok)m="⚠️ "+T[typ].n+" hors de son domaine habituel ("+nf(T[typ].d[0],0)+" à "+nf(T[typ].d[1],0)+" mm, repère du cours)."+(best?" À "+nf(e,0)+" mm, la préparation la plus économe du domaine est : "+T[best].n+" ("+nf(tot(best,e,al)*RHO,1)+" kg/m).":"");
     else m="✅ "+T[typ].n+" à "+nf(e,0)+" mm : "+nf(M,1)+" kg de métal par mètre, environ "+nf(Np,0)+" passes."+(best&&best!==typ?" Plus économe ici : "+T[best].n+" ("+nf(tot(best,e,al)*RHO,1)+" kg/m).":" C'est la plus économe du domaine à cette épaisseur.")+(typ==="V"?" Le V concentre le retrait d'un côté : la tôle se plie.":typ==="NG"?" Bords presque parallèles : très peu de déformation, mais il faut un flux à laitier très détachable et un suivi de joint précis.":typ==="X"||typ==="U"?" En alternant les faces, les retraits s'équilibrent.":"");
-    msg.innerHTML=nbsp(m);
+    msg.innerHTML=(nbsp(m))+"<br><b>À retenir :</b> le V croît comme e², le X divise par deux, le chanfrein étroit croît comme e.";
   }
   const A=animate($("#m2play"),"▶ Épaissir la tôle",7000,p=>{prog=Math.max(0,p);draw();},()=>{prog=null;draw();});
   $$("#m2t .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;typ=b.dataset.k;setOn("#m2t",b);draw();}));
@@ -1468,7 +1389,7 @@ function hbars(svg,x0,x1,y0,rows,o){/* barres horizontales : rows = [{lab,val,tx
       else m=(cfg==="froid"?"Fil froid : ":"Poudre métallique (procédé 124) : ")+nf(r.extra,1)+" kg/h de métal ajouté sans arc. Pour la même section, Q passe de "+nf(Q0,2)+" à "+nf(Q,2)+" kJ/mm ("+nf((Q/Q0-1)*100,0)+" %). Le bain refroidi creuse moins : on réserve cet apport au remplissage."+(add>50?" ⚠️ Au-delà d'environ 50 %, le bain manque de chaleur pour tout fondre : risque de manque de fusion.":"");
       if(I1>900)m+=" Au-delà de 900 A en tête, on passe au fil de 5 mm.";
       if(v>1500)m+=" ⚠️ Vitesse très élevée : caniveaux, porosités et suivi de joint délicat.";else if(v<200)m+=" Vitesse lente : gros bain, apport de chaleur élevé.";}
-    msg.innerHTML=nbsp(m);
+    msg.innerHTML=(nbsp(m))+"<br><b>À retenir :</b> plus de fils, plus de kilos et de vitesse, pas plus de kilojoules par millimètre.";
   }
   const A=animate($("#m3play"),"▶ Pousser les locomotives",6000,p=>{prog=Math.max(0,p);draw();},()=>{prog=null;draw();});
   $$("#m3c .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;cfg=b.dataset.k;setOn("#m3c",b);draw();}));
@@ -1534,7 +1455,7 @@ function hbars(svg,x0,x1,y0,rows,o){/* barres horizontales : rows = [{lab,val,tx
       if(I<q.lo)m+=proc==="SAW"?" ⚠️ Intensité faible pour un feuillard de 60 mm : arc instable.":" ⚠️ Intensité trop faible : le bain de laitier refroidit et des arcs parasites apparaissent.";
       else if(I>q.hi)m+=proc==="SAW"?" ⚠️ Au-delà de la plage habituelle : pénétration et dilution montent.":" Au-delà d'environ 1 500 A, il faut un flux conçu pour la grande vitesse.";
       if(r.t>6)m+=" ⚠️ Couche épaisse : bords mal raccordés, risque de manque de fusion entre bandes.";}
-    msg.innerHTML=nbsp(m);
+    msg.innerHTML=(nbsp(m))+"<br><b>À retenir :</b> sous laitier, deux fois moins de dilution : une couche au lieu de deux.";
   }
   const A=animate($("#m4play"),"▶ Poser les bandes",6000,p=>{prog=Math.max(0,p);draw();},()=>{prog=null;draw();});
   $$("#m4p .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;proc=b.dataset.k;setOn("#m4p",b);si.value=PR[proc].I0;sv.value=PR[proc].v0;draw();}));
@@ -1600,7 +1521,7 @@ function hbars(svg,x0,x1,y0,rows,o){/* barres horizontales : rows = [{lab,val,tx
     if(prog!==null&&prog<1)m="On décroche le laitier : le cordon se découvre, avec ses indices.";
     else if(!D.length)m="✅ Cordon sain : pénétration complète, envers moulé, forme W/d = "+nf(Wd,2)+", couche de flux dans la plage. Change une condition pour faire apparaître un défaut.";
     else m=D.slice(0,3).map(d=>"🔎 <b>"+d[1]+"</b>"+(d[0]!=="—"?" ("+d[0]+")":"")+" : "+d[2]+" → "+d[3]).join(" ; ")+(D.length>3?" ; et "+(D.length-3)+" autre(s).":".");
-    msg.innerHTML=nbsp(m);
+    msg.innerHTML=(nbsp(m))+"<br><b>À retenir :</b> un défaut répété accuse un réglage : remonte de l'indice au suspect.";
   }
   const A=animate($("#m5play"),"▶ Décrocher le laitier",5000,p=>{prog=Math.max(0,p);draw();},()=>{prog=null;draw();});
   $$("#m5f .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;wet=b.dataset.k==="1";setOn("#m5f",b);draw();}));
@@ -1660,7 +1581,7 @@ function hbars(svg,x0,x1,y0,rows,o){/* barres horizontales : rows = [{lab,val,tx
       if(!qok)parts.push("❌ apport de chaleur "+nf(Q,2)+" kJ/mm hors du domaine qualifié par l'essai");
       miss.forEach(kk=>parts.push("⚠️ "+CHK[kk][1]+" : risque de "+CHK[kk][2]));
       m=parts.length?parts.join(" ; ")+".":"✅ Réglages dans le DMOS, apport de chaleur "+nf(Q,2)+" kJ/mm dans le domaine qualifié, ronde complète : on peut amorcer.";}
-    msg.innerHTML=nbsp(m);
+    msg.innerHTML=(nbsp(m))+"<br><b>À retenir :</b> résilience exigée, Q ≤ 1,25·Q<sub>essai</sub> ; dureté exigée, Q ≥ 0,75·Q<sub>essai</sub>.";
   }
   const A=animate($("#m6play"),"▶ Faire la ronde",5000,p=>{prog=Math.max(0,p);draw();},()=>{prog=null;draw();});
   $$("#m6x .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;req=b.dataset.k;setOn("#m6x",b);draw();}));
@@ -1776,6 +1697,13 @@ function hbars(svg,x0,x1,y0,rows,o){/* barres horizontales : rows = [{lab,val,tx
     stage.replaceChildren();caption.replaceChildren();
     if(opener)opener.focus({preventScroll:true});
   });
+})();
+</script>
+<script>
+(function(){/* impression de la fiche mémoire seule */
+  const b=document.getElementById("printFiche");if(!b)return;
+  b.addEventListener("click",()=>{document.body.classList.add("print-fiche");window.print();});
+  window.addEventListener("afterprint",()=>document.body.classList.remove("print-fiche"));
 })();
 </script>
 </body>

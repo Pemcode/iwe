@@ -109,12 +109,6 @@ section.chap{padding:46px 0 10px}
 .c-img span{font-size:.95rem;line-height:1.3}
 @media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
 
-/* niveaux */
-.lv{margin:1.2rem 0;padding:6px 22px 14px;border-radius:4px}
-.lv1{background:var(--card);border:2px solid var(--ink)}
-.lv2{background:var(--lv2);border-left:6px solid var(--ink)}
-.lv-h{display:flex;align-items:center;gap:10px;font-family:var(--font-head);font-size:1.35rem;font-weight:600;margin:10px 0 4px}
-.lv-h .tag{font-size:.95rem;font-family:var(--font-body);font-weight:400;color:var(--muted)}
 
 /* formule */
 .fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:560px;text-align:center;border-radius:3px}
@@ -323,6 +317,30 @@ input.r-gam{accent-color:var(--gam)}
 .hp{display:inline-block;font-size:.75rem;font-weight:700;padding:1px 7px;border-radius:9px;background:var(--weld);color:var(--card);vertical-align:middle;margin-left:6px}
 @media (max-width:700px){.m{white-space:normal}.fx{padding:12px 10px}.fx .big{font-size:1.45rem!important}}
 .fx{overflow-x:auto}
+
+/* gabarit court : approfondissement replié, à retenir, prédiction */
+details.deep{margin:1.2rem 0;padding:0 18px;background:var(--lv2);border-left:6px solid var(--ink);border-radius:4px}
+details.deep>summary{font-family:var(--font-head);font-size:1.2rem;font-weight:600;padding:9px 0}
+details.deep[open]{padding-bottom:10px}
+.retenir{margin:1.4rem 0 .4rem;padding:8px 18px 6px;background:var(--card);border:2px solid var(--ink);border-radius:4px}
+.retenir>b:first-child{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.retenir ul{margin:.3rem 0 .3rem}
+.predict{display:block;margin-top:.35rem;color:var(--ink);font-weight:700}
+@media (max-width:520px){details.deep{padding:0 12px}.retenir{padding:8px 12px 6px}}
+
+/* impression : le cours sur papier clair, ou la fiche mémoire seule sur une page */
+@media print{
+  :root,:root[data-theme]{--paper:#fff!important;--paper-2:#EEF2F6!important;--card:#fff!important;--ink:#111!important;--muted:#444!important;--line:#999!important;--grid:transparent!important;--lv2:#F2F5F8!important;--hl:#FFF3B0!important;color-scheme:light}
+  body{background:#fff;font-size:11pt}
+  .toc,.theme-btn,.btns,.ctrl,#qzReset,.score{display:none!important}
+  section.chap{padding:14px 0 4px}
+  .lab,.fx,.retenir,details.deep,.fiche>div,.exo{break-inside:avoid}
+  body.print-fiche header,body.print-fiche main>section:not(#fiche),body.print-fiche footer{display:none!important}
+  body.print-fiche #fiche .cartouche{margin-bottom:.6rem}
+  body.print-fiche .fiche>div{padding:8px 10px}
+}
+/* formules dans les replis et les corrections : retour à la ligne permis (sinon débordement vers 768 px) */
+details .m{white-space:normal}
 </style>
 </head>
 <body>
@@ -335,12 +353,12 @@ input.r-gam{accent-color:var(--gam)}
     </div>
     <div class="tb-cells">
       <div><small>Cours</small><b>5 sur 5 : loi de Hooke en 3D et critères de résistance</b></div>
-      <div><small>Durée conseillée</small><b>≈ 3 h avec les exercices</b></div>
+      <div><small>Durée conseillée</small><b>≈ 1 h 15 à 1 h 30 avec les exercices</b></div>
       <div><small>Prérequis</small><b>les cours 1 à 4</b></div>
       <div><small>À la fin tu sais</small><b>passer de [σ] à ℇ et retour, et vérifier une pièce avec Tresca et von Mises</b></div>
     </div>
   </div>
-  <p class="lede">Depuis le cours 1, on manipule deux matrices : <span class="sig">[σ]</span>, ce que la matière subit, et <span class="eps">ℇ</span>, comment elle se déforme. Ce dernier cours les relie en 3D, par la loi de Hooke et la loi de Lamé. Puis il répond à la question qui justifie tout le reste : <b>la pièce tient-elle ?</b> Pour cela, on transforme un état de contrainte 3D en un seul nombre, comparable à la limite d'élasticité mesurée par l'essai de traction.</p>
+  <p class="lede">Depuis le cours 1, on manipule deux matrices : <span class="sig">[σ]</span>, ce que la matière subit, et <span class="eps">ℇ</span>, comment elle se déforme. Ce dernier cours de la série les relie en 3D, par la loi de Hooke et la loi de Lamé. Puis il répond à la question qui justifie tout le reste : <b>la pièce tient-elle ?</b> Pour cela, on transforme un état de contrainte 3D en un seul nombre, comparable à la limite d'élasticité mesurée par l'essai de traction.</p>
   <div class="cc" role="img" aria-label="Code couleur : cause en couleurs chaudes, matériau en vert, effet en couleurs froides">
     <div class="cc-box cc-cause"><small>La cause</small><div class="cc-syms"><span class="sig">σ</span><span class="tau">τ</span></div><p>les contraintes, en MPa</p></div>
     <div class="cc-arrow">⇄</div>
@@ -379,20 +397,20 @@ input.r-gam{accent-color:var(--gam)}
     <div><div class="f"><span class="tau">τ<sub>max</sub></span> = (σ<sub>I</sub> − σ<sub>III</sub>)/2</div>Le rayon du grand cercle du tricercle. Sans oublier la troisième contrainte principale en contrainte plane.</div>
   </div>
 
-  <div class="def"><b>📘 Notations que tu croiseras</b> : ℇ (un ε en écriture ronde) pour le tenseur des déformations, <b>σ</b> en gras pour celui des contraintes, <b>σ<sub>Y</sub></b> sur certaines figures pour la limite d'élasticité Rₑ, et <b>R<sub>pe</sub></b> (résistance pratique à l'extension, R<sub>pe</sub> = Rₑ/s) dans les critères.</div>
+  <div class="def"><b>📘 Le sujet du planning</b> : sujet <b>3.2</b>, notions fondamentales de RDM. Attendu de l'IWE (<i>International Welding Engineer</i>) : calculer les contraintes combinées dans une soudure et les comparer à une résistance. Notations : R<sub>pe</sub> = R<sub>e</sub>/s, résistance pratique avec un coefficient de sécurité s ; certaines figures notent σ<sub>Y</sub> la limite d'élasticité R<sub>e</sub>.</div>
 
-  <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage (formation IWE)</b>
-    <p>(IWE : <i>International Welding Engineer</i>, ingénieur international en soudage.) Deux résultats de ce cours reviennent partout en soudage. <b>1.</b> Le facteur 3 de la formule de vérification des cordons d'angle, √(σ⊥² + 3(τ⊥² + τ∥²)) (cours 2), vient directement du critère de von Mises. <b>2.</b> La loi de Hooke en 3D, avec la dilatation thermique, est la base de tout calcul de contraintes résiduelles de soudage.</p>
+  <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage</b>
+    <p>Le facteur 3 de la vérification des cordons d'angle, √(σ⊥² + 3(τ⊥² + τ∥²)) (cours 2), vient directement du critère de von Mises. Et la loi de Hooke en 3D, avec la dilatation thermique, est le point de départ de tout calcul de contraintes résiduelles de soudage.</p>
   </div>
 
   <h4>Le plan du cours</h4>
   <ol class="route">
-    <li><span class="dot">1</span><b>La loi de Hooke en 3D</b><p>Des contraintes vers les déformations : chaque contrainte agit, et Poisson s'en mêle.</p></li>
-    <li><span class="dot">2</span><b>La loi de Lamé et les coefficients</b><p>Dans l'autre sens, et comment passer de E, ν à λ, μ.</p></li>
-    <li><span class="dot">3</span><b>Pourquoi un critère, et celui de Tresca</b><p>Transformer un état 3D en un seul nombre ; le critère du cisaillement maximal.</p></li>
-    <li><span class="dot">4</span><b>Le critère de von Mises</b><p>Le critère le plus utilisé, et l'origine du facteur 3 des soudures.</p></li>
-    <li><span class="dot">5</span><b>Vérifier une pièce</b><p>La méthode complète, du chargement jusqu'au coefficient de sécurité.</p></li>
-    <li><span class="dot">6</span><b>La fatigue</b><p>Quand la charge se répète : la courbe de Wöhler, et pourquoi les soudures y sont si sensibles.</p></li>
+    <li><span class="dot">1</span><b>La loi de Hooke en 3D</b><p>L'éponge.</p></li>
+    <li><span class="dot">2</span><b>La loi de Lamé et les coefficients</b><p>Le dictionnaire bilingue.</p></li>
+    <li><span class="dot">3</span><b>Pourquoi un critère, et celui de Tresca</b><p>Les ciseaux.</p></li>
+    <li><span class="dot">4</span><b>Le critère de von Mises</b><p>L'œuf et le nid hexagonal.</p></li>
+    <li><span class="dot">5</span><b>Vérifier une pièce</b><p>Le médecin.</p></li>
+    <li><span class="dot">6</span><b>La fatigue</b><p>Le trombone.</p></li>
   </ol>
 </div>
 </section>
@@ -405,19 +423,13 @@ input.r-gam{accent-color:var(--gam)}
     <div class="c-img"><span class="ico">🧽</span><span><small>Image à retenir</small>L'éponge : pressée d'un côté, elle s'allonge des deux autres</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">chacun sa part, puis on additionne</span></div>
-    <p>Au cours 1, une traction σ selon x donnait un allongement σ/E selon x, et deux rétrécissements −νσ/E selon y et z (Poisson). En 3D, trois tractions peuvent agir en même temps. En élasticité linéaire, leurs effets <b>s'additionnent</b> simplement (c'est le principe de superposition) : chaque contrainte fait sa part, et on fait la somme.</p>
-    <p>Selon x, par exemple : σ<sub>xx</sub> allonge de σ<sub>xx</sub>/E ; σ<sub>yy</sub> et σ<sub>zz</sub>, par effet Poisson, raccourcissent de ν·σ<sub>yy</sub>/E et ν·σ<sub>zz</sub>/E. D'où :</p>
-    <div class="fx" style="max-width:640px"><div class="big" style="font-size:1.3rem;line-height:1.9">
-      <span class="eps">ε<sub>xx</sub></span> = <span class="frac"><span>1</span><span class="mat">E</span></span>[<span class="sig">σ<sub>xx</sub></span> − <span class="mat">ν</span>(<span class="sig">σ<sub>yy</sub></span> + <span class="sig">σ<sub>zz</sub></span>)] &nbsp;&nbsp; et de même pour y et z<br>
-      <span class="gam">ε<sub>xy</sub></span> = <span class="frac"><span>1 + ν</span><span>E</span></span>·<span class="tau">τ<sub>xy</sub></span> = <span class="frac"><span class="tau">τ<sub>xy</sub></span><span>2<span class="mat">G</span></span></span> &nbsp;&nbsp; et de même pour xz et yz
-    </div><p class="cap">un cisaillement ne provoque qu'une distorsion, sans allongement ; le 2G répare le γ/2 du cours 3</p></div>
-    <div class="mnemo">🧽 <b>L'éponge :</b> presse une éponge entre tes mains, elle s'étale dans les deux autres directions. Chaque contrainte agit « chez elle » (divisée par E) et « chez les voisines » (multipliée par −ν/E). Retiens : <b>ma contrainte, moins ν fois celles des voisines, le tout divisé par E</b>.</div>
-  </div>
+  <p>Au cours 1, une traction σ selon x donnait un allongement σ/E selon x et deux rétrécissements −νσ/E selon y et z. En 3D, trois tractions peuvent agir en même temps ; en élasticité linéaire, leurs effets <b>s'additionnent</b> (principe de superposition). Presse une éponge entre tes mains : elle s'étale dans les deux autres directions. Chaque contrainte agit « chez elle » (divisée par E) et « chez les voisines » (multipliée par −ν/E) ; un cisaillement ne produit qu'une distorsion, sans allongement.</p>
 
-  <div class="lab" id="k1">
+  <div class="fx"><div class="big" style="font-size:1.25rem;line-height:1.8"><span class="eps">ε<sub>xx</sub></span> = <span class="frac"><span>1</span><span><span class="mat">E</span></span></span>[<span class="sig">σ<sub>xx</sub></span> − <span class="mat">ν</span>(<span class="sig">σ<sub>yy</sub></span> + <span class="sig">σ<sub>zz</sub></span>)] &nbsp; <span class="eps">ε<sub>xy</sub></span> = <span class="frac"><span><span class="tau">τ<sub>xy</sub></span></span><span>2<span class="mat">G</span></span></span><br><span class="eps">ℇ</span> = <span class="frac"><span>1 + <span class="mat">ν</span></span><span><span class="mat">E</span></span></span><span class="sig">σ</span> − <span class="frac"><span><span class="mat">ν</span></span><span><span class="mat">E</span></span></span> trace(<span class="sig">σ</span>)·𝕀 &nbsp; <span class="frac"><span>ΔV</span><span>V</span></span> = <span class="frac"><span>1 − 2<span class="mat">ν</span></span><span><span class="mat">E</span></span></span> trace(<span class="sig">σ</span>)</div><p class="cap">De même pour y et z, xz et yz. ℇ : le tenseur des déformations ; trace(σ) = σ<sub>xx</sub> + σ<sub>yy</sub> + σ<sub>zz</sub> ; 𝕀 : la matrice identité. Le 2G répare le γ/2 du cours 3. Avec la température, on ajoute simplement αΔT·𝕀 : c'est l'équation de départ de tout calcul de contraintes thermiques ou résiduelles.</p></div>
+
+<div class="lab" id="k1">
     <p class="lab-h">Manipulation 1 : le cube élastique</p>
-    <p class="lab-sub">Règle les contraintes et le matériau. À gauche, la face (x, y) du cube déformée (très exagérée) ; à droite, l'épaisseur selon z. En dessous, la contribution de chaque contrainte à ε<sub>xx</sub>, et la matrice ℇ complète.</p>
+    <p class="lab-sub">Règle les contraintes et le matériau : le cube se déforme, et chaque contrainte montre sa part dans ε<sub>xx</sub>.<span class="predict">🔮 Prédis d'abord : une compression selon y allonge-t-elle le cube selon x ?</span></p>
     <div class="btns" id="k1mat">
       <button class="btn on" type="button" data-e="210" data-n="0.3">Acier (E = 210 GPa, ν = 0,3)</button>
       <button class="btn" type="button" data-e="70" data-n="0.33">Aluminium (70 GPa ; 0,33)</button>
@@ -433,15 +445,17 @@ input.r-gam{accent-color:var(--gam)}
     <p class="status" id="k1note"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">la forme tensorielle</span></div>
-    <p>Les six équations tiennent en une seule ligne (loi de Hooke) :</p>
-    <div class="fx"><div class="big" style="font-size:1.55rem"><span class="eps">ℇ</span> = <span class="frac"><span>1 + <span class="mat">ν</span></span><span class="mat">E</span></span><span class="sig">σ</span> − <span class="frac"><span class="mat">ν</span><span class="mat">E</span></span> trace(<span class="sig">σ</span>)·𝕀</div><p class="cap">trace(σ) = σ<sub>xx</sub> + σ<sub>yy</sub> + σ<sub>zz</sub> ; 𝕀 : la matrice identité</p></div>
-    <p><b>Vérification sur la diagonale :</b> ε<sub>xx</sub> = (1 + ν)σ<sub>xx</sub>/E − ν(σ<sub>xx</sub> + σ<sub>yy</sub> + σ<sub>zz</sub>)/E = [σ<sub>xx</sub> − ν(σ<sub>yy</sub> + σ<sub>zz</sub>)]/E ✅. <b>Hors diagonale :</b> le terme en 𝕀 ne contribue pas, il reste ε<sub>xy</sub> = (1 + ν)τ<sub>xy</sub>/E = τ<sub>xy</sub>/(2G), puisque G = E/(2(1 + ν)) (cours 1).</p>
-    <p><b>La variation de volume</b> (la trace de ℇ, cours 1) : en prenant la trace des deux membres, on trouve</p>
-    <div class="fx"><div class="big" style="font-size:1.55rem"><span class="frac"><span>ΔV</span><span>V</span></span> = trace(<span class="eps">ℇ</span>) = <span class="frac"><span>1 − 2<span class="mat">ν</span></span><span class="mat">E</span></span>·trace(<span class="sig">σ</span>) = <span class="frac"><span>trace(σ)/3</span><span><span class="mat">K</span></span></span></div><p class="cap">K = E/(3(1 − 2ν)) : le module de compressibilité, qui résiste aux changements de volume</p></div>
-    <p>Pour ν = 0,5, 1 − 2ν = 0 : le volume ne change jamais, K est infini. C'est la limite physique du cours 1 (ν ≤ 0,5).</p>
-    <div class="tip">💡 <b>Avec la température</b> (cours 3), on ajoute simplement la dilatation : ℇ = (1 + ν)σ/E − ν trace(σ)𝕀/E + αΔT·𝕀. C'est l'équation de départ de tout calcul de contraintes thermiques ou résiduelles.</div>
-    <div class="warn">⚠️ <b>Les directions principales coïncident</b> (matériau isotrope) : la formule montre que si [σ] est diagonale dans un repère, ℇ l'est aussi. Les directions principales des contraintes et des déformations sont donc les mêmes. C'est ce qui permet de passer directement des déformations principales mesurées par une rosette aux contraintes principales (cours 3).</div>
+  <p><b>Exemple</b> : paroi extérieure d'un réservoir en acier, σ<sub>θθ</sub> = 100 MPa (x), σ<sub>zz</sub> = 50 MPa (y), σ<sub>rr</sub> = 0 (z). <span class="m">ε<sub>x</sub> = (100 − 0,3 × 50)/210 000 = 405 µε</span> ; ε<sub>y</sub> = (50 − 0,3 × 100)/210 000 = 95 µε ; ε<sub>z</sub> = (0 − 0,3 × 150)/210 000 = −214 µε. Variation de volume : 405 + 95 − 214 = 286 µε = 0,4 × 150/210 000 ✅. Ce sont les lectures de la rosette du cours 3, retrouvées dans l'autre sens.</p>
+
+  <div class="warn"><b>⚠️ Piège : les directions principales coïncident.</b> Pour un matériau isotrope, si [σ] est diagonale dans un repère, ℇ l'est aussi : les directions principales des contraintes et des déformations sont les mêmes. C'est ce qui permet de passer des déformations principales d'une rosette aux contraintes principales.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : l'éponge</b>, « ma contrainte, moins ν fois celles des voisines, le tout divisé par E ».</div>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>ε<sub>xx</sub> = [σ<sub>xx</sub> − ν(σ<sub>yy</sub> + σ<sub>zz</sub>)]/E ; ε<sub>xy</sub> = τ<sub>xy</sub>/(2G).</li>
+      <li>ΔV/V = (1 − 2ν)·trace(σ)/E : nul pour ν = 0,5.</li>
+      <li>Matériau isotrope : mêmes directions principales pour σ et ℇ.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -454,29 +468,30 @@ input.r-gam{accent-color:var(--gam)}
     <div class="c-img"><span class="ico">🔁</span><span><small>Image à retenir</small>Le dictionnaire bilingue : Hooke dans un sens, Lamé dans l'autre</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le chemin retour</span></div>
-    <p>En pratique, on mesure souvent des <b>déformations</b> (avec des jauges, cours 3) et on veut les <b>contraintes</b>. Il faut donc inverser la loi de Hooke. Le résultat s'appelle la <b>loi de Lamé</b> (du nom de Gabriel Lamé, rencontré au cours 2 avec son ellipse) :</p>
-    <div class="fx"><div class="big" style="font-size:1.6rem"><span class="sig">σ</span> = 2<span class="mat">μ</span>·<span class="eps">ℇ</span> + <span class="mat">λ</span>·trace(<span class="eps">ℇ</span>)·𝕀</div><p class="cap">λ (« lambda ») et μ (« mu ») sont les deux coefficients de Lamé du matériau, en MPa</p></div>
-    <p>Elle se lit en deux morceaux : <b>2μ·ℇ</b>, une contrainte proportionnelle à la déformation elle-même, direction par direction (μ n'est autre que le module de cisaillement G) ; et <b>λ·trace(ℇ)·𝕀</b>, un supplément identique dans les trois directions, proportionnel au changement de volume trace(ℇ). Attention, la résistance au changement de volume fait intervenir les deux coefficients : c'est le module de compressibilité K = λ + 2μ/3. Deux coefficients suffisent toujours pour décrire un matériau isotrope : (E, ν) ou (λ, μ), c'est le même matériau décrit dans deux langues.</p>
-    <div class="fx" style="max-width:680px"><div class="big" style="font-size:1.25rem;line-height:1.9">
-      <span class="mat">μ</span> = G = <span class="frac"><span>E</span><span>2(1 + ν)</span></span> &nbsp;&nbsp; <span class="mat">λ</span> = <span class="frac"><span>νE</span><span>(1 + ν)(1 − 2ν)</span></span> &nbsp;&nbsp; E = <span class="frac"><span>μ(2μ + 3λ)</span><span>λ + μ</span></span> &nbsp;&nbsp; ν = <span class="frac"><span>λ</span><span>2(λ + μ)</span></span>
-    </div><p class="cap">les quatre formules à connaître ; pour l'acier (210 GPa ; 0,3) : μ = 80,8 GPa et λ = 121,2 GPa</p></div>
-  </div>
+  <p>On mesure souvent des <b>déformations</b> (jauges, cours 3) et on veut les <b>contraintes</b> : il faut inverser la loi de Hooke. Le résultat s'appelle la <b>loi de Lamé</b>, du nom de Gabriel Lamé. Elle se lit en deux morceaux : 2μ·ℇ, une contrainte proportionnelle à la déformation, direction par direction ; et λ·trace(ℇ)·𝕀, un supplément identique dans les trois directions, proportionnel au changement de volume. (E, ν) ou (λ, μ) : c'est le même matériau décrit dans deux langues, comme un dictionnaire bilingue.</p>
 
-  <div class="lab" id="k2">
+  <div class="fx"><div class="big" style="font-size:1.25rem;line-height:1.8"><span class="sig">σ</span> = 2<span class="mat">μ</span>·<span class="eps">ℇ</span> + <span class="mat">λ</span>·trace(<span class="eps">ℇ</span>)·𝕀<br><span class="mat">μ</span> = G = <span class="frac"><span>E</span><span>2(1 + ν)</span></span> &nbsp; <span class="mat">λ</span> = <span class="frac"><span>νE</span><span>(1 + ν)(1 − 2ν)</span></span> &nbsp; K = <span class="frac"><span>E</span><span>3(1 − 2ν)</span></span> = λ + <span class="frac"><span>2μ</span><span>3</span></span></div><p class="cap">λ (« lambda ») et μ (« mu ») : coefficients de Lamé, en MPa ; μ est le module de cisaillement G. K : module de compressibilité, qui résiste aux changements de volume. Acier (210 GPa ; 0,3) : μ = 80,8 GPa, λ = 121,2 GPa, K = 175 GPa.</p></div>
+
+<div class="lab" id="k2">
     <p class="lab-h">Manipulation 2 : le dictionnaire E, ν ⇄ λ, μ</p>
-    <p class="lab-sub">Choisis E et ν : les coefficients de Lamé et le module de compressibilité K se calculent, puis on refait le chemin inverse pour vérifier. Le graphique montre ce que valent λ, μ et K rapportés à E quand ν varie : regarde ce qui se passe vers 0,5.</p>
+    <p class="lab-sub">Choisis E et ν : λ, μ et K se calculent, puis le chemin inverse les vérifie. Regarde ce qui se passe vers ν = 0,5.<span class="predict">🔮 Prédis d'abord : quand ν tend vers 0,5, K reste-t-il fini ?</span></p>
     <svg id="k2svg" viewBox="0 0 640 280" role="img" aria-label="Coefficients de Lamé et module de compressibilité en fonction du coefficient de Poisson"></svg>
     <div class="ctrl"><label for="k2e"><span class="mat">E</span></label><input id="k2e" class="r-mat" type="range" min="10" max="400" step="1" value="210"><output id="k2ev"></output></div>
     <div class="ctrl"><label for="k2n"><span class="mat">ν</span></label><input id="k2n" class="r-mat" type="range" min="0" max="0.49" step="0.01" value="0.3"><output id="k2nv"></output></div>
     <div class="mm-steps" id="k2out"></div>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">les deux cas plans</span></div>
-    <p><b>Contrainte plane</b> (σ<sub>zz</sub> = 0 : tôle mince, surface libre). En écrivant ε<sub>xx</sub> et ε<sub>yy</sub> avec Hooke et en résolvant pour σ<sub>xx</sub>, σ<sub>yy</sub> :</p>
-    <div class="fx" style="max-width:680px"><div class="big" style="font-size:1.3rem;line-height:1.9"><span class="sig">σ<sub>xx</sub></span> = <span class="frac"><span>E</span><span>1 − ν²</span></span>(<span class="eps">ε<sub>xx</sub></span> + ν<span class="eps">ε<sub>yy</sub></span>) &nbsp;&nbsp; <span class="sig">σ<sub>yy</sub></span> = <span class="frac"><span>E</span><span>1 − ν²</span></span>(<span class="eps">ε<sub>yy</sub></span> + ν<span class="eps">ε<sub>xx</sub></span>) &nbsp;&nbsp; <span class="tau">τ<sub>xy</sub></span> = 2G<span class="gam">ε<sub>xy</sub></span></div><p class="cap">c'est la formule de dépouillement des rosettes du cours 3, enfin démontrée ; et ε<sub>zz</sub> = −ν(σ<sub>xx</sub> + σ<sub>yy</sub>)/E</p></div>
-    <p><b>Déformation plane</b> (ε<sub>zz</sub> = 0 : pièce longue bloquée selon z). La troisième équation de Hooke donne 0 = σ<sub>zz</sub> − ν(σ<sub>xx</sub> + σ<sub>yy</sub>), donc <span class="m"><span class="sig">σ<sub>zz</sub></span> = ν(σ<sub>xx</sub> + σ<sub>yy</sub>)</span> : une contrainte apparaît selon z, justement pour empêcher la déformation. Les deux cas « plans » ne sont décidément pas les mêmes (cours 3).</p>
-    <div class="warn">⚠️ <b>Le piège du facteur 2, une dernière fois.</b> Dans la loi de Lamé, c'est bien 2μ·ε<sub>xy</sub> qui donne τ<sub>xy</sub> : si tu utilises γ<sub>xy</sub> (le glissement complet), c'est τ<sub>xy</sub> = μ·γ<sub>xy</sub> = Gγ<sub>xy</sub>. Les deux sont justes, mais pas en mélangeant.</div>
+  <p><b>Exemple</b> : en <b>contrainte plane</b> (σ<sub>zz</sub> = 0 : tôle mince, surface libre), la loi s'écrit <span class="m">σ<sub>xx</sub> = E(ε<sub>xx</sub> + νε<sub>yy</sub>)/(1 − ν²)</span>, σ<sub>yy</sub> = E(ε<sub>yy</sub> + νε<sub>xx</sub>)/(1 − ν²), τ<sub>xy</sub> = 2Gε<sub>xy</sub> : la formule de dépouillement des rosettes du cours 3. Avec 405 et 95 µε : σ<sub>xx</sub> = 230 769 × (405 + 28,5) × 10⁻⁶ ≈ 100 MPa. En <b>déformation plane</b> (ε<sub>zz</sub> = 0), il naît au contraire σ<sub>zz</sub> = ν(σ<sub>xx</sub> + σ<sub>yy</sub>) pour empêcher la déformation selon z.</p>
+
+  <div class="warn"><b>⚠️ Piège du facteur 2, une dernière fois.</b> Avec la composante du tenseur, τ<sub>xy</sub> = 2μ·ε<sub>xy</sub> ; avec le glissement complet, τ<sub>xy</sub> = μ·γ<sub>xy</sub> = Gγ<sub>xy</sub>. Les deux sont justes, à condition de ne pas les mélanger.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : le dictionnaire bilingue</b> : Hooke des contraintes vers les déformations, Lamé dans l'autre sens.</div>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>σ = 2μℇ + λ trace(ℇ)𝕀, avec μ = G.</li>
+      <li>Contrainte plane : σ<sub>xx</sub> = E(ε<sub>xx</sub> + νε<sub>yy</sub>)/(1 − ν²).</li>
+      <li>Deux coefficients suffisent pour un matériau isotrope : (E, ν) ou (λ, μ).</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -489,17 +504,13 @@ input.r-gam{accent-color:var(--gam)}
     <div class="c-img"><span class="ico">✂️</span><span><small>Image à retenir</small>Les ciseaux : le métal cède quand le glissement devient trop fort</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le traducteur</span></div>
-    <p>L'essai de traction (cours 1) fournit <b>un seul nombre</b> : la limite d'élasticité Rₑ, mesurée en traction simple. Or une vraie pièce subit un état 3D, avec trois contraintes principales. Comment savoir si elle plastifie ? Il faut un <b>critère</b> : une règle qui traduit l'état 3D en une <b>contrainte équivalente</b> σ<sub>éq</sub>, un seul nombre, à comparer à Rₑ :</p>
-    <div class="fx"><div class="big" style="font-size:1.7rem"><span class="sig">σ<sub>éq</sub></span> ≤ <span class="mat">Rₑ</span> &nbsp; (ou ≤ Rₑ/s avec un coefficient de sécurité s)</div></div>
-    <p><b>L'idée de Tresca</b> (Henri Tresca, ingénieur français, 1864, à partir de ses essais d'écoulement des métaux sous poinçon) : c'est le <b>cisaillement maximal</b> qui décide. On sait aujourd'hui pourquoi : les métaux plastifient par <b>glissement</b> de plans cristallins, grâce aux dislocations du cours 1, et ce glissement est piloté par le cisaillement. En traction simple, la plasticité démarre à σ = Rₑ, où τ<sub>max</sub> = Rₑ/2 (le résultat du cours 1, à 45°). Tresca en déduit la règle : quel que soit l'état 3D, la pièce reste élastique tant que</p>
-    <div class="fx"><div class="big" style="font-size:1.7rem"><span class="tau">τ<sub>max</sub></span> = <span class="frac"><span>σ<sub>I</sub> − σ<sub>III</sub></span><span>2</span></span> ≤ <span class="frac"><span class="mat">Rₑ</span><span>2</span></span> &nbsp;⇔&nbsp; <span class="sig">σ<sub>Tresca</sub></span> = σ<sub>I</sub> − σ<sub>III</sub> ≤ <span class="mat">Rₑ</span></div><p class="cap">σ<sub>Tresca</sub> : la contrainte équivalente de Tresca, c'est-à-dire le diamètre du grand cercle de Mohr</p></div>
-    <div class="mnemo">✂️ <b>Sur le tricercle, Tresca est un plafond :</b> deux droites horizontales à τ = ±Rₑ/2. Tant que le grand cercle reste entre les deux droites, la pièce est élastique. Le jour où il les touche, elle plastifie.</div>
-  </div>
+  <p>L'essai de traction fournit <b>un seul nombre</b>, la limite d'élasticité R<sub>e</sub>, mesurée en traction simple. Une vraie pièce subit un état 3D : comment savoir si elle plastifie ? Il faut un <b>critère</b>, une règle qui traduit l'état 3D en une <b>contrainte équivalente</b> σ<sub>éq</sub>, à comparer à R<sub>e</sub>. <b>L'idée de Tresca</b> (Henri Tresca, ingénieur français, 1864) : c'est le <b>cisaillement maximal</b> qui décide. Les métaux plastifient par glissement de plans cristallins, piloté par le cisaillement ; en traction simple, la plasticité démarre à σ = R<sub>e</sub>, où τ<sub>max</sub> = R<sub>e</sub>/2. Quel que soit l'état 3D, la pièce reste donc élastique tant que τ<sub>max</sub> ≤ R<sub>e</sub>/2.</p>
 
-  <div class="lab" id="k3">
+  <div class="fx"><div class="row big" style="font-size:1.3rem"><span><span class="sig">σ<sub>Tresca</sub></span> = <span class="sig">σ<sub>I</sub></span> − <span class="sig">σ<sub>III</sub></span> ≤ R<sub>e</sub> (ou R<sub>pe</sub> = R<sub>e</sub>/s)</span><span>σ et τ : <span class="sig">σ<sub>Tresca</sub></span> = √(σ² + 4τ²)</span></div><p class="cap">σ<sub>Tresca</sub> est le diamètre du grand cercle de Mohr. Sur le tricercle, Tresca est un plafond : deux droites à τ = ±R<sub>e</sub>/2 que le grand cercle ne doit pas toucher. Pour une contrainte normale σ et un cisaillement τ dans le même plan (σ<sub>zz</sub> = 0), les principales du plan sont de signes opposés, d'où la seconde formule. En cisaillement pur : σ<sub>Tresca</sub> = 2τ, limite τ = R<sub>e</sub>/2.</p></div>
+
+<div class="lab" id="k3">
     <p class="lab-h">Manipulation 3 : le tricercle sous le plafond de Tresca</p>
-    <p class="lab-sub">Règle les trois contraintes principales (rangées automatiquement) et la limite d'élasticité. Les deux droites horizontales en pointillés sont le plafond de Tresca, à τ = ±Rₑ/2. Le grand cercle doit rester dessous.</p>
+    <p class="lab-sub">Règle les trois contraintes principales et R<sub>e</sub> : le grand cercle doit rester sous le plafond de Tresca (pointillés).<span class="predict">🔮 Prédis d'abord : une pression uniforme de 300 MPa fait-elle plastifier un acier S235 ?</span></p>
     <div class="btns" id="k3pre">
       <button class="btn on" type="button" data-v="235,0,0">Traction à Rₑ (S235)</button>
       <button class="btn" type="button" data-v="120,0,-120">Cisaillement pur</button>
@@ -517,12 +528,17 @@ input.r-gam{accent-color:var(--gam)}
     <p class="status" id="k3note"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">ce que dit et ne dit pas Tresca</span></div>
-    <p><b>La pression hydrostatique ne compte pas.</b> Ajouter la même valeur p aux trois contraintes principales déplace le tricercle en bloc, sans changer sa taille : σ<sub>I</sub> − σ<sub>III</sub> ne bouge pas. Un métal sous 300 MPa de pression uniforme ne plastifie pas, ce que l'expérience confirme pour la plasticité des métaux.</p>
-    <p><b>Le cas d'un état plan</b> (σ<sub>zz</sub> = 0, principales du plan σ<sub>1</sub> et σ<sub>2</sub>) : il faut ranger 0 avec les deux autres. Si σ<sub>1</sub> et σ<sub>2</sub> sont de même signe, σ<sub>Tresca</sub> = max(|σ<sub>1</sub>|, |σ<sub>2</sub>|) ; s'ils sont de signes opposés, σ<sub>Tresca</sub> = |σ<sub>1</sub> − σ<sub>2</sub>|.</p>
-    <p><b>Traction + cisaillement</b> (le cas d'un arbre en flexion et torsion, ou d'une section de poutre) : σ et τ dans le plan, σ<sub>zz</sub> = 0. Les principales du plan sont σ/2 ± √((σ/2)² + τ²), de signes opposés, d'où</p>
-    <div class="fx"><div class="big" style="font-size:1.6rem"><span class="sig">σ<sub>Tresca</sub></span> = √(<span class="sig">σ</span>² + 4<span class="tau">τ</span>²)</div><p class="cap">en cisaillement pur (σ = 0) : σ<sub>Tresca</sub> = 2τ, donc la limite de cisaillement selon Tresca vaut τ = Rₑ/2</p></div>
-    <div class="warn">⚠️ <b>Ce que les critères ne disent pas.</b> Tresca et von Mises prédisent le début de la <b>plasticité</b> d'un matériau ductile. Ils ne disent rien de la <b>rupture fragile</b> : un état très triaxial peut rester loin du critère (petits cercles) et pourtant casser sans prévenir (cours 4). Pour les matériaux fragiles (fonte, céramiques), on utilise d'autres critères, fondés sur la contrainte normale maximale.</div>
+  <p><b>Exemple</b> : en état plan, il faut ranger 0 avec les deux principales du plan. Si σ<sub>1</sub> et σ<sub>2</sub> sont de même signe, σ<sub>Tresca</sub> = max(|σ<sub>1</sub>|, |σ<sub>2</sub>|) : paroi de réservoir (100 ; 50 ; 0) → 100 MPa. S'ils sont de signes opposés, σ<sub>Tresca</sub> = |σ<sub>1</sub> − σ<sub>2</sub>| : (87,1 ; 0 ; −47,1) → 134,2 MPa. <b>La pression hydrostatique ne compte pas</b> : ajouter la même valeur aux trois contraintes déplace le tricercle sans changer sa taille.</p>
+
+  <div class="warn"><b>⚠️ Piège : ce que les critères ne disent pas.</b> Tresca et von Mises prédisent le début de la <b>plasticité</b> d'un métal ductile. Ils ne disent rien de la <b>rupture fragile</b> : un état très triaxial peut rester loin du critère et casser sans prévenir (cours 4). Les matériaux fragiles (fonte, céramiques) relèvent de critères fondés sur la contrainte normale maximale.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : les ciseaux</b> : le métal cède quand le glissement devient trop fort ; Tresca, c'est un plafond posé sur le grand cercle.</div>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Critère : un état 3D → une contrainte équivalente, comparée à R<sub>e</sub> ou R<sub>e</sub>/s.</li>
+      <li>Tresca : σ<sub>I</sub> − σ<sub>III</sub> ≤ R<sub>e</sub> ; avec σ et τ : √(σ² + 4τ²).</li>
+      <li>La pression hydrostatique ne fait pas plastifier ; les critères ignorent la rupture fragile.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -535,21 +551,13 @@ input.r-gam{accent-color:var(--gam)}
     <div class="c-img"><span class="ico">🥚</span><span><small>Image à retenir</small>L'œuf et le nid hexagonal : von Mises est l'ellipse lisse, Tresca l'hexagone qui tient dedans</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">tous les cisaillements comptent</span></div>
-    <p>Tresca ne regarde que le plus grand des trois cercles. <b>Von Mises</b> (Richard von Mises, mathématicien, 1913) tient compte des <b>trois</b> : il fait une sorte de moyenne quadratique des trois écarts entre contraintes principales :</p>
-    <div class="fx" style="max-width:680px"><div class="big" style="font-size:1.4rem"><span class="sig">σ<sub>VM</sub></span> = √( ½ [ (σ<sub>I</sub> − σ<sub>II</sub>)² + (σ<sub>II</sub> − σ<sub>III</sub>)² + (σ<sub>III</sub> − σ<sub>I</sub>)² ] ) ≤ <span class="mat">Rₑ</span></div><p class="cap">en traction simple (σ, 0, 0) : σ<sub>VM</sub> = √(½(σ² + 0 + σ²)) = σ, le critère redonne bien Rₑ</p></div>
-    <p>Physiquement, von Mises mesure l'énergie élastique stockée en <b>changeant la forme</b> de la matière (sa distorsion), en ignorant celle qui change seulement son volume. C'est le critère le plus utilisé en calcul de structures et dans les logiciels, car il colle très bien aux essais sur les métaux ductiles.</p>
-    <p><b>Le cas qui sert partout</b> : une contrainte normale σ et un cisaillement τ dans le même plan (poutres, arbres, soudures) :</p>
-    <div class="fx"><div class="big" style="font-size:1.7rem"><span class="sig">σ<sub>VM</sub></span> = √(<span class="sig">σ</span>² + 3<span class="tau">τ</span>²)</div><p class="cap">en cisaillement pur : σ<sub>VM</sub> = √3·τ, donc la limite de cisaillement vaut τ = Rₑ/√3 ≈ 0,58 Rₑ</p></div>
-    <div class="weld"><b>🔥 Deux mystères résolus</b>
-      <p><b>1. Le facteur 3 des cordons d'angle.</b> La formule de l'Eurocode du cours 2, √(σ⊥² + 3(τ⊥² + τ∥²)), c'est exactement √(σ² + 3τ²) appliqué à la section de gorge, avec les deux cisaillements τ⊥ et τ∥. C'est un von Mises (simplifié : il néglige σ∥, la contrainte le long du cordon).</p>
-      <p><b>2. La « résistance au glissement » du cours 1</b>, R<sub>eg</sub> ≈ 0,5 à 0,6 Rₑ : 0,5 est la valeur de Tresca (Rₑ/2), 0,58 celle de von Mises (Rₑ/√3).</p>
-    </div>
-  </div>
+  <p>Tresca ne regarde que le plus grand des trois cercles. <b>Von Mises</b> (Richard von Mises, mathématicien, 1913) tient compte des <b>trois</b>, par une sorte de moyenne quadratique des trois écarts entre contraintes principales. Physiquement, il mesure l'énergie élastique stockée en <b>changeant la forme</b> de la matière, en ignorant celle qui change seulement son volume : une pression uniforme ne compte toujours pas. C'est le critère le plus utilisé en calcul de structures et dans les logiciels, car il colle très bien aux essais sur les métaux ductiles.</p>
 
-  <div class="lab" id="k4">
+  <div class="fx"><div class="big" style="font-size:1.2rem;line-height:1.8"><span class="sig">σ<sub>VM</sub></span> = √( ½ [ (σ<sub>I</sub> − σ<sub>II</sub>)² + (σ<sub>II</sub> − σ<sub>III</sub>)² + (σ<sub>III</sub> − σ<sub>I</sub>)² ] ) ≤ R<sub>e</sub><br>σ et τ : <span class="sig">σ<sub>VM</sub></span> = √(σ² + 3τ²)</div><p class="cap">En traction simple, σ<sub>VM</sub> = σ : le critère redonne R<sub>e</sub>. En cisaillement pur, σ<sub>VM</sub> = √3·τ, donc la limite de cisaillement vaut R<sub>e</sub>/√3 ≈ 0,58 R<sub>e</sub>. On a toujours σ<sub>VM</sub> ≤ σ<sub>Tresca</sub> ≤ 1,155·σ<sub>VM</sub> : Tresca est plus prudent, d'au plus 15,5 %.</p></div>
+
+<div class="lab" id="k4">
     <p class="lab-h">Manipulation 4 : l'hexagone et l'ellipse</p>
-    <p class="lab-sub">État de contrainte plane (σ<sub>zz</sub> = 0) : chaque point du plan (σ<sub>1</sub> ; σ<sub>2</sub>) est un état, avec σ<sub>1</sub> et σ<sub>2</sub> les deux contraintes principales du plan. L'hexagone est la limite de Tresca, l'ellipse celle de von Mises. Le point doit rester à l'intérieur ; la droite pointillée montre jusqu'où on peut multiplier le chargement.</p>
+    <p class="lab-sub">Contrainte plane : chaque point (σ<sub>1</sub> ; σ<sub>2</sub>) est un état ; l'hexagone est la limite de Tresca, l'ellipse celle de von Mises.<span class="predict">🔮 Prédis d'abord : en cisaillement pur, quel critère autorise le plus grand cisaillement ?</span></p>
     <div class="btns" id="k4pre">
       <button class="btn on" type="button" data-v="150,0">Traction simple</button>
       <button class="btn" type="button" data-v="120,-120">Cisaillement pur</button>
@@ -565,18 +573,24 @@ input.r-gam{accent-color:var(--gam)}
     <p class="status" id="k4note"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">les formes utiles et la comparaison</span></div>
-    <p><b>En composantes</b>, sans passer par les contraintes principales (pratique quand la matrice est donnée dans un repère quelconque) :</p>
-    <div class="fx" style="max-width:720px"><div class="big" style="font-size:1.2rem;line-height:1.9"><span class="sig">σ<sub>VM</sub></span>² = σ<sub>xx</sub>² + σ<sub>yy</sub>² + σ<sub>zz</sub>² − σ<sub>xx</sub>σ<sub>yy</sub> − σ<sub>yy</sub>σ<sub>zz</sub> − σ<sub>zz</sub>σ<sub>xx</sub> + 3(τ<sub>xy</sub>² + τ<sub>yz</sub>² + τ<sub>xz</sub>²)</div><p class="cap">avec σ<sub>zz</sub> = 0 et un seul cisaillement : σ<sub>VM</sub>² = σ<sub>xx</sub>² + σ<sub>yy</sub>² − σ<sub>xx</sub>σ<sub>yy</sub> + 3τ<sub>xy</sub>²</p></div>
-    <p><b>Lien avec le défi du cours 2</b> : σ<sub>VM</sub> = (3/√2)·τ<sub>oct</sub>, où τ<sub>oct</sub> est le cisaillement sur la facette octaédrique. Et comme pour Tresca, une pression hydrostatique ne change rien : seuls les écarts entre contraintes principales interviennent.</p>
-    <p><b>Tresca ou von Mises ?</b> On a toujours σ<sub>VM</sub> ≤ σ<sub>Tresca</sub> ≤ 1,155·σ<sub>VM</sub> (1,155 = 2/√3). Tresca est donc <b>plus prudent</b> (sur la figure, l'hexagone est à l'intérieur de l'ellipse), d'au plus 15,5 %. Cet écart maximal est atteint quand la contrainte principale intermédiaire est exactement au milieu des deux autres : en cisaillement pur (τ ; 0 ; −τ), mais aussi pour une paroi de réservoir (σ ; σ/2 ; 0). Les deux coïncident en traction simple et en traction égale dans deux directions.</p>
-    <h4>Une autre écriture : le déviateur</h4>
-    <p>On écrit aussi von Mises avec le <b>déviateur</b> des contraintes, la partie de [σ] qui change la forme :</p>
-    <div class="fx" style="max-width:680px"><div class="big" style="font-size:1.3rem;line-height:1.9"><span class="sig">σ<sub>D</sub></span> = <span class="sig">σ</span> − <span class="frac"><span>trace(σ)</span><span>3</span></span>𝕀 &nbsp;&nbsp;&nbsp; <span class="sig">σ<sub>VM</sub></span> = √( <span class="frac"><span>3</span><span>2</span></span> σ<sub>D</sub> : σ<sub>D</sub> ) ≤ R<sub>pe</sub></div><p class="cap">σ<sub>D</sub> : σ<sub>D</sub> (« contraction double ») est la somme des carrés des 9 termes de σ<sub>D</sub> ; on retrouve exactement les formules ci-dessus</p></div>
-    <p>On retire à [σ] sa partie hydrostatique (la contrainte moyenne sur la diagonale) : il ne reste que ce qui déforme sans changer le volume. D'où la propriété déjà vue : une pression uniforme ne compte pas. Et l'énergie de distorsion, celle qui justifie ce critère, est proportionnelle à σ<sub>D</sub> : ε<sub>D</sub>.</p>
-    <div class="warn">⚠️ <b>Deux pièges de notation.</b> <b>1.</b> N'écris pas « trace(σ<sub>D</sub> : σ<sub>D</sub>) » : le symbole « : » donne déjà un nombre ; la bonne écriture est σ<sub>D</sub> : σ<sub>D</sub>, ou trace(σ<sub>D</sub>·σ<sub>D</sub>), qui vaut la même chose. <b>2.</b> Le même symbole σ<sub>D</sub> désigne aussi la limite d'endurance en fatigue (chapitre 6) : deux notions sans rapport, attention au contexte.</div>
-    <p><b>Les surfaces de Tresca et de von Mises.</b> En contrainte plane, on retrouve l'hexagone de Tresca inscrit dans l'ellipse de von Mises (manipulation 4). En 3D, les deux critères sont des cylindres d'axe σ<sub>1</sub> = σ<sub>2</sub> = σ<sub>3</sub> (l'axe hydrostatique) : un prisme à base hexagonale pour Tresca, un cylindre à base circulaire pour von Mises. Vus dans l'axe, l'hexagone est inscrit dans le cercle. Qu'ils soient infinis le long de cet axe traduit encore une fois que la pression uniforme ne fait pas plastifier.</p>
-    <div class="tip">💡 <b>En examen :</b> utilise le critère demandé ; s'il n'est pas précisé, von Mises est le plus courant pour les métaux, Tresca le plus rapide à calculer une fois les contraintes principales connues. Donner les deux, en commentant l'écart, est souvent apprécié.</div>
+  <p><b>Exemple</b> : paroi de réservoir (100 ; 50 ; 0) MPa. <span class="m">σ<sub>VM</sub> = √(½[50² + 50² + 100²]) = √7 500 ≈ 86,6 MPa</span>, contre σ<sub>Tresca</sub> = 100 MPa : un écart de 15,5 %, le maximum, atteint quand la contrainte intermédiaire est au milieu des deux autres (aussi en cisaillement pur). Les deux critères coïncident en traction simple et en traction égale dans deux directions.</p>
+
+  <div class="warn"><b>⚠️ Piège de notation : σ<sub>D</sub>.</b> Le même symbole désigne le déviateur des contraintes (ci-dessous) et la limite d'endurance en fatigue (chapitre 6) : deux notions sans rapport.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : l'œuf et le nid hexagonal</b> : en contrainte plane, l'hexagone de Tresca tient à l'intérieur de l'ellipse de von Mises.</div>
+  <div class="weld"><b>🔥 Deux mystères résolus</b>
+    <p><b>Le facteur 3 des cordons d'angle</b> : la formule de l'Eurocode √(σ⊥² + 3(τ⊥² + τ∥²)) (cours 2), c'est √(σ² + 3τ²) appliqué à la section de gorge, avec les deux cisaillements ; un von Mises qui néglige σ∥. <b>La résistance au glissement du cours 1</b>, R<sub>eg</sub> ≈ 0,5 à 0,6 R<sub>e</sub> : 0,5 vient de Tresca, 0,58 de von Mises.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : en composantes, le déviateur, les surfaces</summary>
+    <p>Sans passer par les contraintes principales : σ<sub>VM</sub>² = σ<sub>xx</sub>² + σ<sub>yy</sub>² + σ<sub>zz</sub>² − σ<sub>xx</sub>σ<sub>yy</sub> − σ<sub>yy</sub>σ<sub>zz</sub> − σ<sub>zz</sub>σ<sub>xx</sub> + 3(τ<sub>xy</sub>² + τ<sub>yz</sub>² + τ<sub>xz</sub>²). Avec le <b>déviateur</b> σ<sub>D</sub> = σ − (trace(σ)/3)𝕀, la partie de [σ] qui change la forme : σ<sub>VM</sub> = √((3/2) σ<sub>D</sub> : σ<sub>D</sub>), où « : » désigne la somme des carrés des neuf termes. Et σ<sub>VM</sub> = (3/√2)·τ<sub>oct</sub>, le cisaillement sur la facette octaédrique. En 3D, les deux critères sont des cylindres d'axe σ<sub>1</sub> = σ<sub>2</sub> = σ<sub>3</sub> (l'axe hydrostatique) : prisme hexagonal pour Tresca, cylindre circulaire pour von Mises. Le critère de von Mises figurait déjà dans une lettre de Maxwell, au XIX<sup>e</sup> siècle (voir la fiche).</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>σ<sub>VM</sub> = √(½[(σ<sub>I</sub> − σ<sub>II</sub>)² + (σ<sub>II</sub> − σ<sub>III</sub>)² + (σ<sub>III</sub> − σ<sub>I</sub>)²]) ; avec σ et τ : √(σ² + 3τ²).</li>
+      <li>Limite en cisaillement : R<sub>e</sub>/√3 (von Mises), R<sub>e</sub>/2 (Tresca, plus prudent d'au plus 15,5 %).</li>
+      <li>Le facteur 3 des cordons d'angle, c'est von Mises.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -589,18 +603,17 @@ input.r-gam{accent-color:var(--gam)}
     <div class="c-img"><span class="ico">🩺</span><span><small>Image à retenir</small>Le médecin : prise des mesures, diagnostic, verdict</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la consultation en cinq temps</span></div>
-    <p><b>1. L'état de contrainte</b> au point le plus chargé : la matrice [σ] (donnée par l'énoncé, calculée par la RDM, ou déduite de déformations mesurées grâce à la loi de Lamé).<br><b>2. Les contraintes principales</b> (cours 4) : cercle de Mohr pour un bloc plan, équation caractéristique sinon.<br><b>3. La contrainte équivalente</b> : σ<sub>Tresca</sub> = σ<sub>I</sub> − σ<sub>III</sub> et/ou σ<sub>VM</sub>.<br><b>4. Le coefficient de sécurité</b> : s = Rₑ/σ<sub>éq</sub>.<br><b>5. Le verdict</b> : comparer s à la valeur exigée (ou σ<sub>éq</sub> à Rₑ/s).</p>
-    <p>La manipulation fait les cinq étapes pour toi, sur n'importe quelle matrice : utilise-la pour vérifier les exercices, pas pour les remplacer.</p>
-  </div>
+  <p>Vérifier une pièce, c'est une consultation en cinq temps, comme chez le médecin : 1. l'<b>état de contrainte</b> au point le plus chargé, la matrice [σ] (donnée, calculée par la RDM, ou déduite de déformations mesurées par la loi de Lamé) ; 2. les <b>contraintes principales</b> (cours 4) ; 3. la <b>contrainte équivalente</b>, σ<sub>Tresca</sub> et/ou σ<sub>VM</sub> ; 4. le <b>coefficient de sécurité</b> ; 5. le <b>verdict</b>, en comparant s à la valeur exigée.</p>
 
-  <div class="lab" id="k5">
+  <div class="fx"><div class="big">s = <span class="frac"><span>R<sub>e</sub></span><span><span class="sig">σ<sub>éq</sub></span></span></span> ≥ s<sub>exigé</sub> &nbsp;⟺&nbsp; <span class="sig">σ<sub>éq</sub></span> ≤ <span class="frac"><span>R<sub>e</sub></span><span>s<sub>exigé</sub></span></span> = R<sub>pe</sub></div><p class="cap">Chercher le point le plus chargé (souvent en surface, où flexion et torsion sont maximales) ; ne jamais oublier la troisième contrainte principale ; conclure par une phrase qui répond à la question posée.</p></div>
+
+<div class="lab" id="k5">
     <p class="lab-h">Manipulation 5 : le vérificateur de pièce</p>
-    <p class="lab-sub">Entre une matrice des contraintes (MPa), le matériau et le coefficient de sécurité exigé. Les barres comparent les contraintes équivalentes à Rₑ et à Rₑ/s ; les déformations sont calculées avec la loi de Hooke.</p>
+    <p class="lab-sub">Entre une matrice des contraintes, le matériau et le coefficient exigé : les barres comparent les contraintes équivalentes à R<sub>e</sub> et à R<sub>e</sub>/s.<span class="predict">🔮 Prédis d'abord : pour un arbre en flexion et torsion, Tresca donne-t-il un coefficient de sécurité plus petit ou plus grand que von Mises ?</span></p>
     <div class="btns" id="k5pre">
       <button class="btn on" type="button" data-s="120,0,0,60,0,0">Arbre : flexion + torsion</button>
       <button class="btn" type="button" data-s="100,50,0,0,0,0">Paroi de réservoir</button>
-      <button class="btn" type="button" data-s="60,0,20,40,0,0">Exercice 4 du cours 4</button>
+      <button class="btn" type="button" data-s="60,0,20,40,0,0">Exercice 2 du cours 4</button>
       <button class="btn" type="button" data-s="180,150,120,0,0,0">Soudure triaxiale</button>
       <button class="btn" type="button" data-s="50,-30,40,20,10,0">Cas 3D quelconque</button>
     </div>
@@ -620,13 +633,20 @@ input.r-gam{accent-color:var(--gam)}
       <label><span>Coefficient de sécurité exigé s</span><input id="k5s" type="number" min="1" max="5" step="0.1" value="1.5"></label>
     </div>
     <svg id="k5svg" viewBox="0 0 640 170" role="img" aria-label="Comparaison des contraintes équivalentes avec la limite d'élasticité"></svg>
-    <div class="mm-steps" id="k5out"></div>
+    <div class="mm-steps status" id="k5out"></div>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">rédiger une vérification</span></div>
-    <p><b>Exemple type</b> : un arbre en acier S235 est soumis, en un point de sa surface, à σ = 120 MPa (flexion) et τ = 60 MPa (torsion). Coefficient de sécurité exigé : 1,5.</p>
-    <p>« Surface libre : contrainte plane. Contraintes principales du plan : 60 ± √(60² + 60²) = 144,9 et −24,9 MPa ; avec σ<sub>zz</sub> = 0 : σ<sub>I</sub> = 144,9 ; σ<sub>II</sub> = 0 ; σ<sub>III</sub> = −24,9 MPa. Tresca : σ<sub>T</sub> = 144,9 + 24,9 = 169,7 MPa (= √(σ² + 4τ²)) ; s = 235/169,7 = 1,38. Von Mises : σ<sub>VM</sub> = √(120² + 3 × 60²) = 158,7 MPa ; s = 235/158,7 = 1,48. <b>Conclusion</b> : pas de plasticité (s &gt; 1), mais le coefficient exigé de 1,5 n'est atteint ni avec Tresca, ni (de justesse) avec von Mises : la pièce est à redimensionner. »</p>
-    <div class="tip">💡 <b>Les réflexes du bon vérificateur :</b> chercher le point le plus chargé (souvent en surface, où la flexion et la torsion sont maximales) ; ne jamais oublier la troisième contrainte principale ; donner les unités ; conclure par une phrase qui répond à la question posée.</div>
+  <p><b>Exemple type</b> : un arbre en S235 subit, en un point de sa surface, σ = 120 MPa (flexion) et τ = 60 MPa (torsion) ; coefficient exigé 1,5. « Surface libre : contrainte plane. Principales du plan : 60 ± √(60² + 60²) = 144,9 et −24,9 MPa ; avec σ<sub>zz</sub> = 0 : σ<sub>I</sub> = 144,9 ; σ<sub>II</sub> = 0 ; σ<sub>III</sub> = −24,9 MPa. Tresca : <span class="m">σ<sub>T</sub> = 169,7 MPa</span>, s = 235/169,7 = 1,38. Von Mises : <span class="m">σ<sub>VM</sub> = √(120² + 3 × 60²) = 158,7 MPa</span>, s = 1,48. Conclusion : pas de plasticité, mais le coefficient de 1,5 n'est atteint ni avec Tresca, ni de justesse avec von Mises : la pièce est à redimensionner. »</p>
+
+  <div class="warn"><b>⚠️ Piège : critère non précisé.</b> Utilise celui que demande l'énoncé ; sinon, von Mises est le plus courant pour les métaux, Tresca le plus rapide une fois les principales connues. Donner les deux, en commentant l'écart, est souvent apprécié.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : le médecin</b> : mesures, diagnostic, verdict.</div>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>État de contrainte → principales → contrainte équivalente → s = R<sub>e</sub>/σ<sub>éq</sub> → verdict.</li>
+      <li>Point le plus chargé, troisième principale, unités, phrase de conclusion.</li>
+      <li>Arbre σ = 120, τ = 60 MPa : Tresca 169,7, von Mises 158,7 MPa.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -640,28 +660,37 @@ input.r-gam{accent-color:var(--gam)}
     <div class="c-img"><span class="ico">📎</span><span><small>Image à retenir</small>Le trombone qu'on plie et déplie : il casse sans jamais avoir été trop chargé</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le trombone</span></div>
-    <p>Plie un trombone une fois : il tient. Plie-le et déplie-le trente fois : il casse. Pourtant, tu n'as jamais forcé davantage. C'est la <b>fatigue</b> : sous une charge <b>variable</b>, répétée un grand nombre de fois, une pièce peut rompre à une contrainte bien inférieure à Rₑ. Une petite fissure naît en un point faible (une rayure, un angle vif, le pied d'un cordon de soudure) et progresse un peu à chaque cycle.</p>
-    <p>L'essai de fatigue consiste à faire subir à des éprouvettes une contrainte alternée d'amplitude σ<sub>a</sub>, et à compter le nombre de cycles N avant rupture. On obtient la <b>courbe de Wöhler</b> (du nom de l'ingénieur allemand August Wöhler, qui étudiait les ruptures d'essieux de train vers 1860) : plus l'amplitude est forte, plus la vie est courte.</p>
-    <p>Pour beaucoup d'aciers, la courbe devient horizontale : en dessous d'une amplitude appelée <b>limite d'endurance</b>, notée σ<sub>D</sub>, la pièce supporte un nombre illimité de cycles. D'où une règle de dimensionnement simple : <b>on remplace Rₑ par σ<sub>D</sub> dans le critère de résistance</b>.</p>
-  </div>
+  <p>Plie un trombone une fois : il tient. Plie-le et déplie-le trente fois : il casse, sans que tu aies jamais forcé davantage. C'est la <b>fatigue</b> : sous une charge variable répétée un grand nombre de fois, une pièce peut rompre à une contrainte bien inférieure à R<sub>e</sub>. Une petite fissure naît en un point faible (une rayure, un angle vif, le pied d'un cordon) et progresse un peu à chaque cycle. L'essai de fatigue soumet des éprouvettes à une amplitude σ<sub>a</sub> et compte les cycles N avant rupture : c'est la <b>courbe de Wöhler</b> (August Wöhler, qui étudiait les ruptures d'essieux de train vers 1860). La série « Fatigue » détaille tout cela ; ce chapitre en donne l'essentiel.</p>
 
-  <div class="lab" id="k6">
+  <div class="fx"><div class="row big" style="font-size:1.3rem"><span><span class="sig">σ<sub>a</sub></span> ≤ <span class="mat">σ<sub>D</sub></span> (pièce lisse)</span><span>soudure : N ∝ Δ<span class="sig">σ</span><sup>−3</sup></span></div><p class="cap">σ<sub>D</sub> : <b>limite d'endurance</b>, l'amplitude sous laquelle beaucoup d'aciers lisses supportent un nombre illimité de cycles ; typiquement 0,4 à 0,5 R<sub>m</sub>, atteinte vers 10⁶ à 10⁷ cycles, et bien plus basse avec un mauvais état de surface ou une entaille. Pour les soudures, on raisonne en <b>étendue</b> Δσ = σ<sub>max</sub> − σ<sub>min</sub>, avec une pente 3.</p></div>
+
+<div class="lab" id="k6">
     <p class="lab-h">Manipulation 6 : la courbe de Wöhler</p>
-    <p class="lab-sub">Deux courbes schématiques, en échelles logarithmiques : une éprouvette d'acier S355 lisse et polie, et un assemblage soudé typique (cordon d'angle transversal). Règle l'amplitude de contrainte σ<sub>a</sub> : la durée de vie de chacun s'affiche. Valeurs indicatives, pour comprendre les ordres de grandeur.</p>
+    <p class="lab-sub">Deux courbes schématiques : éprouvette lisse en S355 et assemblage soudé typique. Règle l'amplitude : les durées de vie s'affichent.<span class="predict">🔮 Prédis d'abord : à amplitude égale, l'assemblage soudé vit-il 2 fois ou 100 fois moins longtemps ?</span></p>
     <svg id="k6svg" viewBox="0 0 640 320" role="img" aria-label="Courbes de Wöhler d'une éprouvette lisse et d'un assemblage soudé"></svg>
     <div class="ctrl"><label for="k6a">Amplitude σ<sub>a</sub></label><input id="k6a" class="r-frc" type="range" min="10" max="400" step="1" value="60"><output id="k6av"></output></div>
     <div class="readout" id="k6out"></div>
     <p class="status" id="k6note"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">les ordres de grandeur, et la fatigue des soudures</span></div>
-    <p><b>Ordres de grandeur pour un acier lisse :</b> la limite d'endurance vaut typiquement 0,4 à 0,5 fois Rₘ (la résistance à la traction, cours 1), et elle est atteinte vers 10⁶ à 10⁷ cycles. Elle diminue fortement avec l'état de surface, la taille de la pièce et les concentrations de contrainte.</p>
-    <p><b>La contrainte moyenne compte aussi.</b> Si la contrainte oscille autour d'une valeur moyenne σ<sub>m</sub> non nulle, une moyenne de traction réduit l'amplitude supportable (diagrammes de Haigh, droite de Goodman), une moyenne de compression l'augmente.</p>
-    <div class="weld"><b>🔥 Pourquoi la fatigue gouverne souvent les assemblages soudés</b>
-      <p><b>1.</b> Le pied du cordon est une <b>entaille</b> géométrique, avec de petits défauts de raccordement : la fissure y démarre très tôt. <b>2.</b> Les <b>contraintes résiduelles</b> y sont proches de Rₑ en traction (cours 3) : quelle que soit la charge appliquée, le métal travaille en réalité autour d'une forte traction moyenne. On caractérise donc la fatigue des soudures par l'<b>étendue</b> de contrainte Δσ = σ<sub>max</sub> − σ<sub>min</sub>, et non par la moyenne. <b>3.</b> Conséquence remarquable : la résistance en fatigue d'un assemblage soudé dépend très peu de la nuance d'acier. Un S690 soudé n'est guère meilleur en fatigue qu'un S235 soudé.</p>
-      <p>Les codes (Eurocode 3 partie 1-9, recommandations de l'IIW, <i>International Institute of Welding</i>, l'Institut international de la soudure) classent les détails soudés par <b>catégorie</b> (notée FAT dans les documents de l'IIW) : l'étendue de contrainte supportée pendant 2 millions de cycles, par exemple FAT 71 pour certains cordons d'angle transversaux. Les courbes suivent la loi N ∝ Δσ<sup>−m</sup> avec un exposant m = 3 : doubler l'étendue divise la durée de vie par 2³ = 8. Les techniques d'amélioration (meulage du pied de cordon, martelage, refusion TIG, c'est-à-dire la refonte superficielle du pied de cordon avec une torche TIG, <i>Tungsten Inert Gas</i>, à électrode de tungstène sous gaz inerte) visent précisément cette zone.</p>
-    </div>
+  <p><b>Exemple</b> : les codes (Eurocode 3 partie 1-9, recommandations de l'IIW) classent les détails soudés par <b>catégorie</b> FAT : l'étendue supportée pendant 2 millions de cycles, par exemple FAT 71 pour certains cordons d'angle transversaux. Avec la pente 3, doubler l'étendue divise la durée de vie par 2³ = 8 : <span class="m">à Δσ = 142 MPa, ce détail ne tient plus que 250 000 cycles</span>.</p>
+
+  <div class="warn"><b>⚠️ Piège : un acier plus résistant n'améliore pas une soudure brute en fatigue.</b> La fissure part du pied de cordon, une entaille avec de petits défauts, et les contraintes résiduelles y sont proches de R<sub>e</sub> : un S690 soudé n'est guère meilleur qu'un S235 soudé.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : le trombone</b> : il casse sans avoir jamais été trop chargé.</div>
+  <div class="weld"><b>🔥 Améliorer un pied de cordon</b>
+    <p>Meulage du pied, martelage, refusion TIG (refonte superficielle du pied à la torche TIG, sans métal d'apport) : ces techniques adoucissent l'entaille ou mettent le pied en compression, et relèvent la classe FAT du détail (série « Fatigue », cours 3 et 4).</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : la contrainte moyenne</summary>
+    <p>Si la contrainte oscille autour d'une valeur moyenne σ<sub>m</sub> non nulle, une moyenne de traction réduit l'amplitude supportable (diagramme de Haigh, droite de Goodman), une moyenne de compression l'augmente. Pour les soudures, les contraintes résiduelles imposent de toute façon une forte traction moyenne : c'est pourquoi on les caractérise par l'étendue Δσ seule.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Fatigue : rupture sous charge répétée, bien sous R<sub>e</sub> ; courbe de Wöhler.</li>
+      <li>Pièce lisse : limite d'endurance σ<sub>D</sub> ≈ 0,4 à 0,5 R<sub>m</sub>.</li>
+      <li>Soudures : étendue Δσ, classes FAT à 2 × 10⁶ cycles, pente 3, peu sensibles à la nuance.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -670,80 +699,37 @@ input.r-gam{accent-color:var(--gam)}
 <div class="wrap">
   <div class="cartouche">
     <div class="c-num">✎</div>
-    <div class="c-title"><h2>Exercices corrigés</h2><p>De la loi de Hooke au dimensionnement</p></div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Deux exercices, de la soudure triaxiale au réservoir</p></div>
     <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de muscu : on ne progresse qu'en soulevant soi-même</span></div>
   </div>
-  <div class="lv lv1"><div class="lv-h">👁 Mode d'emploi <span class="tag">de tête, puis la fiche, puis le cours</span></div>
-    <p>Essaie chaque question de tête 2 à 3 minutes, puis regarde la fiche mémoire, puis le chapitre. Sauf mention contraire, acier : E = 210 GPa, ν = 0,3. Les manipulations 1, 2 et 5 permettent de vérifier tes résultats.</p>
-  </div>
+
+  <p>Essaie chaque question de tête avant d'ouvrir la correction. Sauf mention contraire, acier : E = 210 GPa, ν = 0,3. Le premier exercice se vérifie dans la manipulation 3 (« Soudure triaxiale »), le second se rejoue dans la manipulation 5 (« Paroi de réservoir »).</p>
 
   <div class="exo">
-    <h4>Exercice 1 : les déformations d'une paroi de réservoir <span class="lvtag">N1 · chapitre 1</span></h4>
-    <p>Sur la surface extérieure d'un réservoir en acier : σ<sub>θθ</sub> = 100 MPa (x), σ<sub>zz</sub> = 50 MPa (y), σ<sub>rr</sub> = 0 (z).</p>
-    <p><b>a)</b> Calcule les trois allongements relatifs.<br><b>b)</b> Calcule la variation relative de volume de deux façons.<br><b>c)</b> Compare avec l'exercice 6 du cours 3.</p>
+    <h4>Exercice 1 : la soudure que les critères jugent « saine » <span class="lvtag">★ application · chapitres 3 et 4, à vérifier dans la manipulation 3</span></h4>
+    <p>Au cœur d'une soudure épaisse en S355 (R<sub>e</sub> = 355 MPa), les contraintes principales résiduelles valent 180, 150 et 120 MPa.</p>
+    <p class="q"><b>a)</b> Calcule σ<sub>Tresca</sub> et σ<sub>VM</sub>. La matière plastifie-t-elle ?</p>
+    <p class="q"><b>b)</b> Compare avec une traction simple de 180 MPa.</p>
+    <p class="q"><b>c)</b> Calcule le taux de triaxialité η = σ<sub>m</sub>/σ<sub>VM</sub> (σ<sub>m</sub> : la contrainte moyenne) et commente.</p>
     <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <span class="m"><span class="eps">ε<sub>x</sub></span> = (100 − 0,3 × 50)/210 000 = <b>405 µε</b></span> ; <span class="m"><span class="eps">ε<sub>y</sub></span> = (50 − 0,3 × 100)/210 000 = <b>95 µε</b></span> ; <span class="m"><span class="eps">ε<sub>z</sub></span> = (0 − 0,3 × 150)/210 000 = <b>−214 µε</b></span>.</p>
-      <p><b>b)</b> Somme : 405 + 95 − 214 = <b>286 µε</b>. Formule : (1 − 2ν)/E × trace(σ) = 0,4 × 150/210 000 = 286 µε ✅.</p>
-      <p><b>c)</b> Ce sont exactement les déformations de l'exercice 6 du cours 3 : les lectures de la rosette selon θ et z (405 et 95 µε), et ε<sub>zz</sub> = −214 µε. On vient de faire le chemin inverse, des contraintes vers les déformations.</p>
+      <p><b>a)</b> σ<sub>Tresca</sub> = 180 − 120 = <b>60 MPa</b> ; σ<sub>VM</sub> = √(½[30² + 30² + 60²]) = √2 700 ≈ <b>52 MPa</b>. Très loin de 355 MPa : aucune plasticité, la soudure paraît « saine ».</p>
+      <p><b>b)</b> En traction simple de 180 MPa, σ<sub>Tresca</sub> = σ<sub>VM</sub> = 180 MPa : trois fois plus. Les trois tractions voisines « s'annulent » presque dans le critère, qui ne voit que leurs écarts.</p>
+      <p><b>c)</b> σ<sub>m</sub> = (180 + 150 + 120)/3 = 150 MPa, η = 150/52 ≈ <b>2,9</b>, une triaxialité très forte (0,33 en traction simple). La matière ne peut presque pas plastifier, donc ne peut pas prévenir : le risque est la <b>rupture fragile</b>, que les critères de plasticité ne voient pas. D'où le détensionnement et les exigences de ténacité sur les assemblages épais.</p>
     </div></details>
   </div>
 
-  <div class="exo">
-    <h4>Exercice 2 : les coefficients de l'acier <span class="lvtag">N1 · chapitre 2</span></h4>
-    <p><b>a)</b> Calcule μ, λ et K pour l'acier.<br><b>b)</b> Retrouve E et ν à partir de λ et μ avec les formules du chapitre 2.</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <span class="m">μ = 210 000/2,6 = <b>80 770 MPa</b></span> (c'est G) ; <span class="m">λ = 0,3 × 210 000/(1,3 × 0,4) = <b>121 150 MPa</b></span> ; <span class="m">K = 210 000/(3 × 0,4) = <b>175 000 MPa</b></span>.</p>
-      <p><b>b)</b> <span class="m">E = μ(2μ + 3λ)/(λ + μ) = 80 770 × 525 000/201 920 = <b>210 000 MPa</b></span> ✅ et <span class="m">ν = λ/(2(λ + μ)) = 121 150/403 840 = <b>0,30</b></span> ✅.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 3 : la déformation plane <span class="lvtag">N2 · chapitres 1 et 2</span></h4>
-    <p>Une pièce longue, bloquée selon z (ε<sub>zz</sub> = 0), subit σ<sub>xx</sub> = 100 MPa et σ<sub>yy</sub> = 0.</p>
-    <p><b>a)</b> Quelle contrainte σ<sub>zz</sub> apparaît ?<br><b>b)</b> Calcule ε<sub>xx</sub> et ε<sub>yy</sub>, et compare avec une traction simple.</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> 0 = σ<sub>zz</sub> − ν(σ<sub>xx</sub> + σ<sub>yy</sub>), donc <span class="m"><span class="sig">σ<sub>zz</sub></span> = 0,3 × 100 = <b>30 MPa</b></span> : le blocage crée une traction selon z.</p>
-      <p><b>b)</b> <span class="m"><span class="eps">ε<sub>xx</sub></span> = (100 − 0,3 × 30)/210 000 = <b>433 µε</b></span> et <span class="m"><span class="eps">ε<sub>yy</sub></span> = (0 − 0,3 × 130)/210 000 = <b>−186 µε</b></span>. En traction simple, on aurait 476 et −143 µε : le blocage rend la pièce plus raide selon x (433 &lt; 476) et accentue le rétrécissement selon y.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 4 : l'arbre en flexion et torsion <span class="lvtag">N1 · chapitres 3 à 5</span></h4>
-    <p>En un point de la surface d'un arbre en S235 (Rₑ = 235 MPa) : σ = 120 MPa, τ = 60 MPa.</p>
-    <p><b>a)</b> Calcule les trois contraintes principales.<br><b>b)</b> Calcule σ<sub>Tresca</sub> et σ<sub>VM</sub>, puis les coefficients de sécurité.<br><b>c)</b> Le coefficient exigé est 1,5 : conclus.</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> C = 60, R = √(60² + 60²) = 84,9 : 144,9 et −24,9 MPa, et 0 selon z (surface libre). <b>σ<sub>I</sub> = 144,9 ; σ<sub>II</sub> = 0 ; σ<sub>III</sub> = −24,9 MPa</b>.</p>
-      <p><b>b)</b> <span class="m">σ<sub>T</sub> = 144,9 + 24,9 = <b>169,7 MPa</b></span> (= √(120² + 4 × 60²)), s = 235/169,7 = <b>1,38</b>. <span class="m">σ<sub>VM</sub> = √(120² + 3 × 60²) = <b>158,7 MPa</b></span>, s = <b>1,48</b>.</p>
-      <p><b>c)</b> Aucune plastification, mais le coefficient 1,5 n'est pas atteint : il faut augmenter le diamètre de l'arbre.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 5 : la limite en cisaillement pur <span class="lvtag">N2 · chapitres 3 et 4</span></h4>
-    <p>Pour un acier de Rₑ = 235 MPa soumis à un cisaillement pur τ :</p>
-    <p><b>a)</b> Quelle est la limite de τ selon Tresca ? Selon von Mises ?<br><b>b)</b> Relie ces valeurs à la résistance au glissement R<sub>eg</sub> du cours 1 et au facteur 3 de la formule des cordons du cours 2.</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> Principales : τ, 0, −τ. Tresca : 2τ ≤ Rₑ, soit <b>τ ≤ 117,5 MPa</b> (0,5 Rₑ). Von Mises : √3·τ ≤ Rₑ, soit <b>τ ≤ 135,7 MPa</b> (0,577 Rₑ).</p>
-      <p><b>b)</b> C'est l'encadrement R<sub>eg</sub> ≈ 0,5 à 0,6 Rₑ du cours 1. Et le « 3 » devant les cisaillements dans √(σ⊥² + 3(τ⊥² + τ∥²)) vient de von Mises : un cisaillement τ équivaut à une traction de √3·τ.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 6 : dimensionner un réservoir <span class="lvtag">N2 · chapitres 3 à 5</span></h4>
-    <p>Réservoir cylindrique en S235 : rayon R = 500 mm, pression p = 2 MPa, coefficient de sécurité 1,5.</p>
-    <p><b>a)</b> Donne les contraintes principales en fonction de l'épaisseur e (cours 2).<br><b>b)</b> Calcule l'épaisseur minimale avec Tresca, puis avec von Mises.<br><b>c)</b> Laquelle retenir ?</p>
+  <div class="exo defi">
+    <h4>Exercice 2 : dimensionner un réservoir <span class="lvtag">★★ synthèse · chapitres 3 à 5, à rejouer dans la manipulation 5</span></h4>
+    <p>Réservoir cylindrique en S235 : rayon moyen R = 500 mm, pression p = 2 MPa, coefficient de sécurité exigé 1,5.</p>
+    <p class="q"><b>a)</b> Donne les contraintes principales en fonction de l'épaisseur e (cours 2).</p>
+    <p class="q"><b>b)</b> Calcule l'épaisseur minimale avec Tresca, puis avec von Mises.</p>
+    <p class="q"><b>c)</b> Laquelle retenir ?</p>
+    <p class="q"><b>d)</b> Avec e = 10 mm, calcule les deux coefficients de sécurité.</p>
     <details><summary>Voir la correction</summary><div class="sol">
       <p><b>a)</b> σ<sub>I</sub> = pR/e, σ<sub>II</sub> = pR/(2e), σ<sub>III</sub> ≈ 0 (surface extérieure).</p>
-      <p><b>b)</b> Contrainte admissible : 235/1,5 = 156,7 MPa. Tresca : σ<sub>I</sub> − σ<sub>III</sub> = pR/e ≤ 156,7, donc <span class="m">e ≥ 1 000/156,7 = <b>6,4 mm</b></span>. Von Mises : σ<sub>VM</sub> = (pR/e)·√(½(¼ + ¼ + 1)) = 0,866·pR/e ≤ 156,7, donc <span class="m">e ≥ 866/156,7 = <b>5,5 mm</b></span>.</p>
+      <p><b>b)</b> Contrainte admissible : 235/1,5 = 156,7 MPa. Tresca : σ<sub>I</sub> − σ<sub>III</sub> = pR/e ≤ 156,7, donc e ≥ 1 000/156,7 = <b>6,4 mm</b>. Von Mises : σ<sub>VM</sub> = (pR/e)·√(½(¼ + ¼ + 1)) = 0,866·pR/e ≤ 156,7, donc e ≥ 866/156,7 = <b>5,5 mm</b>.</p>
       <p><b>c)</b> Tresca, plus prudent, conduit à 7 mm (épaisseur commerciale au-dessus) ; von Mises à 6 mm. En pratique, c'est le code de construction applicable qui fixe le critère, les coefficients et le coefficient de joint soudé (cours 2).</p>
-    </div></details>
-  </div>
-
-  <div class="exo" style="border-left-color:var(--mat)">
-    <h4>Défi : la soudure que les critères jugent « saine » <span class="lvtag">N2 · chapitres 3 et 4</span></h4>
-    <p>Au cœur d'une soudure épaisse en S355, les contraintes principales résiduelles valent 180, 150 et 120 MPa. Calcule σ<sub>Tresca</sub>, σ<sub>VM</sub> et le taux de triaxialité η = σ<sub>m</sub>/σ<sub>VM</sub> (σ<sub>m</sub> : la contrainte moyenne), et commente.</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><span class="m">σ<sub>T</sub> = 180 − 120 = <b>60 MPa</b></span> ; <span class="m">σ<sub>VM</sub> = √(½(30² + 30² + 60²)) = <b>52 MPa</b></span> : les deux critères sont très loin de Rₑ = 355 MPa, alors que la plus grande traction vaut 180 MPa. <span class="m">σ<sub>m</sub> = 150 MPa</span>, donc <span class="m">η = 150/52 = <b>2,9</b></span>, contre 1/3 en traction simple. La partie hydrostatique, énorme, est invisible pour les critères de plasticité. <b>Commentaire :</b> les critères de Tresca et de von Mises disent « pas de plasticité », et c'est vrai ; mais ils ne disent rien du risque de rupture fragile, qui augmente justement avec la triaxialité. C'est pourquoi les assemblages soudés épais font aussi l'objet d'exigences de ténacité et, souvent, d'un détensionnement.</p>
+      <p><b>d)</b> e = 10 mm : contraintes 100 ; 50 ; 0 MPa. σ<sub>Tresca</sub> = 100 MPa, s = <b>2,35</b> ; σ<sub>VM</sub> = 86,6 MPa, s = <b>2,71</b>. L'écart de 15,5 % est le maximum possible entre les deux critères.</p>
     </div></details>
   </div>
 </div>
@@ -780,6 +766,7 @@ input.r-gam{accent-color:var(--gam)}
     <div><div class="ic">🔥</div><h4>Soudure</h4><div class="f">√(σ⊥² + 3(τ⊥² + τ∥²))</div><p>Le facteur 3 vient de von Mises. Cisaillement pur : Rₑ/2 (Tresca) ou Rₑ/√3 (von Mises).</p></div>
     <div><div class="ic">🌊</div><h4>Ce que les critères ignorent</h4><div class="f">σ<sub>m</sub> = tr(σ)/3</div><p>La pression hydrostatique ne fait pas plastifier. Mais la triaxialité favorise la rupture fragile.</p></div>
   </div>
+  <div class="btns"><button class="btn" id="printFiche" type="button">🖨 Imprimer la fiche mémoire</button></div>
   <div class="fun"><span class="fun-h">✉️ Fun fact : Le critère de von Mises était déjà dans une lettre de Maxwell</span>Le critère du <a href="#c4">chapitre 4</a> porte le nom de Richard von Mises, qui l'a formulé rigoureusement en 1913. Mais l'idée figurait déjà, au XIX<sup>e</sup> siècle, dans une lettre de James Clerk Maxwell, le père des équations de l'électromagnétisme, au physicien William Thomson, le futur Lord Kelvin : la matière plastifie quand l'énergie de distorsion, celle qui change sa forme sans changer son volume, atteint un seuil. Le Polonais Tytus Huber l'a esquissée en 1904, dans un article écrit en polonais, et l'Allemand Heinrich Hencky l'a retrouvée en 1924. D'où le nom complet que tu croiseras dans certains livres : critère de Maxwell-Huber-Hencky-von Mises.</div>
 </div>
 </section>
@@ -1009,7 +996,7 @@ function triDraw(svg,s,o){ // s trié décroissant ; o : {W,H,x0,y0,show:[petits
     else if(Math.abs(sx-sy)<1&&Math.abs(sy-sz)<1&&Math.abs(t)<1&&Math.abs(sx)>=1)n="Les trois contraintes sont égales (état hydrostatique) : le cube grossit ou rétrécit sans changer de forme. Seul le volume change, piloté par K.";
     else if(Math.abs(sz)<1&&Math.abs(ezz)>1e-7)n="σ<sub>zz</sub> = 0 et pourtant ε<sub>zz</sub> = "+u(ezz)+" µε : c'est la <b>contrainte plane</b>. La tôle s'amincit sous l'effet de σ<sub>xx</sub> et σ<sub>yy</sub> (Poisson).";
     else n="Chaque contrainte agit chez elle (÷ E) et chez ses voisines (× −ν/E). Un cisaillement ne change aucune longueur des côtés : il ne fait que pencher le carré.";
-    $("#k1note").innerHTML=n;
+    $("#k1note").innerHTML=n+"<br><b>À retenir :</b> chaque contrainte agit chez elle (÷ E) et chez ses voisines (× −ν/E).";
   }
   Object.values(I).forEach(i=>i.addEventListener("input",draw));
   $$("#k1mat .btn").forEach(b=>b.addEventListener("click",()=>{E=+b.dataset.e*1000;nu=+b.dataset.n;$$("#k1mat .btn").forEach(o=>o.classList.toggle("on",o===b));draw();}));
@@ -1075,7 +1062,7 @@ const vmP=s=>Math.sqrt(((s[0]-s[1])**2+(s[1]-s[2])**2+(s[2]-s[0])**2)/2);
     else if(u>0.98)n="⚠️ <b>À la limite</b> : le grand cercle touche le plafond. C'est exactement le début de la plasticité selon Tresca.";
     else if(s[2]>0&&sT<0.35*s[0])n="🔩 <b>Très loin du plafond</b> malgré une forte traction ("+nf(s[0],0)+" MPa) : les trois contraintes sont proches, le cercle est petit. Pas de plasticité… mais attention à la rupture fragile (cours 4).";
     else n="Le grand cercle reste sous le plafond : pas de plasticité. Taux d'utilisation : "+nf(u*100,0)+" % de Rₑ.";
-    $("#k3note").innerHTML=n;
+    $("#k3note").innerHTML=n+"<br><b>À retenir :</b> Tresca : σ<sub>I</sub> − σ<sub>III</sub> ≤ R<sub>e</sub> ; une pression uniforme ne change pas la taille du grand cercle.";
   }
   [...I,ir].forEach(i=>i.addEventListener("input",()=>{if(i!==ir)$$("#k3pre .btn").forEach(b=>b.classList.remove("on"));draw();}));
   $$("#k3pre .btn").forEach(b=>b.addEventListener("click",()=>{const v=b.dataset.v.split(",").map(Number);I.forEach((i,k)=>{i.value=v[k];});ir.value=235;$$("#k3pre .btn").forEach(o=>o.classList.toggle("on",o===b));draw();}));
@@ -1130,7 +1117,7 @@ const vmP=s=>Math.sqrt(((s[0]-s[1])**2+(s[1]-s[2])**2+(s[2]-s[0])**2)/2);
     else if(Math.abs(a+b)<1&&Math.abs(a)>0.5)n="✂️ <b>Cisaillement pur</b> : l'écart entre les deux critères est maximal (15,5 %) : Rₑ/2 contre Rₑ/√3, les deux points marqués sur la diagonale. Même écart pour la paroi de réservoir (σ ; σ/2).";
     else if(Math.abs(a-b)<1||Math.abs(b)<1||Math.abs(a)<1)n="Sur ce type de chargement (traction simple ou traction égale), l'hexagone et l'ellipse se touchent : les deux critères donnent le même résultat.";
     else n="Les cercles creux marquent où le chargement, multiplié par s, atteint chaque limite. L'hexagone (Tresca) est à l'intérieur : il est toujours plus prudent.";
-    $("#k4note").innerHTML=n;
+    $("#k4note").innerHTML=n+"<br><b>À retenir :</b> l'hexagone de Tresca est dans l'ellipse de von Mises : Tresca est plus prudent, d'au plus 15,5 %.";
   }
   [ia,ib,ir].forEach(i=>i.addEventListener("input",()=>{if(i!==ir)$$("#k4pre .btn").forEach(b=>b.classList.remove("on"));draw();}));
   $$("#k4pre .btn").forEach(b=>b.addEventListener("click",()=>{const v=b.dataset.v.split(",").map(Number);ia.value=v[0];ib.value=v[1];$$("#k4pre .btn").forEach(o=>o.classList.toggle("on",o===b));draw();}));
@@ -1205,7 +1192,7 @@ const vmP=s=>Math.sqrt(((s[0]-s[1])**2+(s[1]-s[2])**2+(s[2]-s[0])**2)/2);
     if(!isFinite(N1)&&isFinite(N2))n="⚠️ L'éprouvette lisse tiendrait indéfiniment, mais le cordon de soudure casse après "+fN(N2)+". À 1 cycle par seconde, cela fait environ "+nf(N2/86400,0)+" jours. C'est pourquoi la fatigue dimensionne si souvent les structures soudées (ponts, grues, machines).";
     else if(!isFinite(N2))n="✅ En dessous du palier des deux courbes : durée de vie illimitée pour l'éprouvette comme pour le cordon (sous amplitude constante).";
     else n="Les deux cassent, mais le cordon beaucoup plus tôt. Rappel : amplitude et étendue ne sont pas la même chose, Δσ = 2σ<sub>a</sub> pour une charge alternée.";
-    $("#k6note").innerHTML=n;
+    $("#k6note").innerHTML=n+"<br><b>À retenir :</b> une soudure se calcule en étendue Δσ, avec une pente 3 : deux fois Δσ, huit fois moins de cycles.";
   }
   ia.addEventListener("input",draw);draw();
 })();
@@ -1260,6 +1247,13 @@ const vmP=s=>Math.sqrt(((s[0]-s[1])**2+(s[1]-s[2])**2+(s[2]-s[0])**2)/2);
     if(tin){const tgt=a.offsetLeft-tin.clientWidth/2+a.offsetWidth/2;try{tin.scrollTo({left:tgt,behavior:RM?"auto":"smooth"});}catch(e){tin.scrollLeft=tgt;}}});},{rootMargin:"-45% 0px -50% 0px"});
   Object.keys(map).forEach(id=>{const s=document.getElementById(id);if(s)obs.observe(s);});
 })();
+})();
+</script>
+<script>
+(function(){/* impression de la fiche mémoire seule */
+  const b=document.getElementById("printFiche");if(!b)return;
+  b.addEventListener("click",()=>{document.body.classList.add("print-fiche");window.print();});
+  window.addEventListener("afterprint",()=>document.body.classList.remove("print-fiche"));
 })();
 </script>
 </body>

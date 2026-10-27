@@ -109,12 +109,6 @@ section.chap{padding:46px 0 10px}
 .c-img span{font-size:.95rem;line-height:1.3}
 @media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
 
-/* niveaux */
-.lv{margin:1.2rem 0;padding:6px 22px 14px;border-radius:4px}
-.lv1{background:var(--card);border:2px solid var(--ink)}
-.lv2{background:var(--lv2);border-left:6px solid var(--ink)}
-.lv-h{display:flex;align-items:center;gap:10px;font-family:var(--font-head);font-size:1.35rem;font-weight:600;margin:10px 0 4px}
-.lv-h .tag{font-size:.95rem;font-family:var(--font-body);font-weight:400;color:var(--muted)}
 
 /* formule */
 .fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:560px;text-align:center;border-radius:3px}
@@ -323,6 +317,30 @@ input.r-gam{accent-color:var(--gam)}
 .hp{display:inline-block;font-size:.75rem;font-weight:700;padding:1px 7px;border-radius:9px;background:var(--weld);color:var(--card);vertical-align:middle;margin-left:6px}
 @media (max-width:700px){.m{white-space:normal}.fx{padding:12px 10px}.fx .big{font-size:1.45rem!important}}
 .fx{overflow-x:auto}
+
+/* gabarit court : approfondissement replié, à retenir, prédiction */
+details.deep{margin:1.2rem 0;padding:0 18px;background:var(--lv2);border-left:6px solid var(--ink);border-radius:4px}
+details.deep>summary{font-family:var(--font-head);font-size:1.2rem;font-weight:600;padding:9px 0}
+details.deep[open]{padding-bottom:10px}
+.retenir{margin:1.4rem 0 .4rem;padding:8px 18px 6px;background:var(--card);border:2px solid var(--ink);border-radius:4px}
+.retenir>b:first-child{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.retenir ul{margin:.3rem 0 .3rem}
+.predict{display:block;margin-top:.35rem;color:var(--ink);font-weight:700}
+@media (max-width:520px){details.deep{padding:0 12px}.retenir{padding:8px 12px 6px}}
+
+/* impression : le cours sur papier clair, ou la fiche mémoire seule sur une page */
+@media print{
+  :root,:root[data-theme]{--paper:#fff!important;--paper-2:#EEF2F6!important;--card:#fff!important;--ink:#111!important;--muted:#444!important;--line:#999!important;--grid:transparent!important;--lv2:#F2F5F8!important;--hl:#FFF3B0!important;color-scheme:light}
+  body{background:#fff;font-size:11pt}
+  .toc,.theme-btn,.btns,.ctrl,#qzReset,.score{display:none!important}
+  section.chap{padding:14px 0 4px}
+  .lab,.fx,.retenir,details.deep,.fiche>div,.exo{break-inside:avoid}
+  body.print-fiche header,body.print-fiche main>section:not(#fiche),body.print-fiche footer{display:none!important}
+  body.print-fiche #fiche .cartouche{margin-bottom:.6rem}
+  body.print-fiche .fiche>div{padding:8px 10px}
+}
+/* formules dans les replis et les corrections : retour à la ligne permis (sinon débordement vers 768 px) */
+details .m{white-space:normal}
 </style>
 </head>
 <body>
@@ -335,7 +353,7 @@ input.r-gam{accent-color:var(--gam)}
     </div>
     <div class="tb-cells">
       <div><small>Cours</small><b>7 : les diagrammes de sollicitations</b></div>
-      <div><small>Durée conseillée</small><b>≈ 3 h avec les exercices</b></div>
+      <div><small>Durée conseillée</small><b>≈ 1 h 15 à 1 h 30 avec les exercices</b></div>
       <div><small>Prérequis</small><b>le cours 6 (torseur de cohésion)</b></div>
       <div><small>À la fin tu sais</small><b>tracer N(x), T(x), Mf(x) et trouver la section la plus sollicitée</b></div>
     </div>
@@ -378,19 +396,19 @@ input.r-gam{accent-color:var(--gam)}
     <div><div class="f"><span class="sig">N, Mf → σ</span> · <span class="tau">T, Mt → τ</span></div>Les efforts intérieurs, rouges ou violets selon la contrainte qu'ils créent.</div>
   </div>
 
-  <div class="def"><b>📘 Dans le prolongement du cours 6</b> (torseur de cohésion, sollicitations internes) : un diagramme n'est rien d'autre que la représentation graphique de ces sollicitations le long de la poutre. On garde la convention de la série ({S<sub>2</sub> → S<sub>1</sub>}) et ses notations (N, T, Mf, repère x le long de la poutre, y vers le haut).</div>
+  <div class="def"><b>📘 Le sujet du planning</b> : sujets <b>3.1</b> et <b>3.2</b>. Attendu de l'IWE (<i>International Welding Engineer</i>) : interpréter, à l'aide de croquis, les diagrammes d'effort tranchant et de moment fléchissant de systèmes isostatiques simples. Un diagramme est la représentation des efforts intérieurs du cours 6 le long de la poutre ; on garde la convention de la série.</div>
 
-  <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage (formation IWE)</b>
-    <p>(IWE : <i>International Welding Engineer</i>, ingénieur international en soudage.) Le diagramme de moment de flexion dit où une poutre travaille le plus. Une règle de bon sens des constructeurs en découle : on évite de placer un joint soudé (un raboutage de poutre, une attache) dans la zone où le moment est maximal, et en tout cas on le vérifie là en priorité. Et pour une console soudée à un poteau, c'est à l'encastrement, donc dans les cordons eux-mêmes, que le moment est le plus grand.</p>
+  <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage</b>
+    <p>Le diagramme de moment dit où une poutre travaille le plus. On évite d'y placer un joint soudé (raboutage, attache), et on le vérifie là en priorité ; pour une console soudée à un poteau, c'est à l'encastrement, donc dans les cordons eux-mêmes, que le moment est le plus grand.</p>
   </div>
 
   <h4>Le plan du cours</h4>
   <ol class="route">
-    <li><span class="dot">1</span><b>Le principe</b><p>La coupe qui glisse laisse une trace : c'est le diagramme.</p></li>
-    <li><span class="dot">2</span><b>Les charges ponctuelles</b><p>Des marches pour T, des segments pour Mf.</p></li>
-    <li><span class="dot">3</span><b>Les charges réparties</b><p>Des droites pour T, des paraboles pour Mf.</p></li>
-    <li><span class="dot">4</span><b>Pente et aire</b><p>Les relations entre charge, T et Mf, pour tracer vite et vérifier.</p></li>
-    <li><span class="dot">5</span><b>Le diagrammeur et les cas types</b><p>Tous les cas, et le formulaire à connaître.</p></li>
+    <li><span class="dot">1</span><b>Le principe</b><p>La pellicule.</p></li>
+    <li><span class="dot">2</span><b>Les charges ponctuelles</b><p>L'escalier.</p></li>
+    <li><span class="dot">3</span><b>Les charges réparties</b><p>La neige sur le toit.</p></li>
+    <li><span class="dot">4</span><b>Pente et aire</b><p>La randonnée.</p></li>
+    <li><span class="dot">5</span><b>Le diagrammeur et les cas types</b><p>La boîte à outils.</p></li>
   </ol>
 </div>
 </section>
@@ -403,29 +421,33 @@ input.r-gam{accent-color:var(--gam)}
     <div class="c-img"><span class="ico">🎞️</span><span><small>Image à retenir</small>La pellicule : chaque image est une coupe, le diagramme est le film complet</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">de la coupe au diagramme</span></div>
-    <p>Au cours 6, la coupe à la position x donnait trois nombres : N, T et Mf. Fais glisser la coupe de l'appui gauche à l'appui droit, et note à chaque position la valeur trouvée : tu obtiens trois courbes, <b>N(x)</b>, <b>T(x)</b> et <b>Mf(x)</b>. Ce sont les diagrammes. La manipulation te montre la trace qui se dessine pendant que la coupe avance.</p>
-    <p><b>La méthode par tronçons.</b> Les formules ne changent qu'aux endroits où « il se passe quelque chose » : un appui, une charge ponctuelle, le début ou la fin d'une charge répartie, un couple. Entre deux de ces points, sur un <b>tronçon</b>, une seule expression suffit. On découpe donc la poutre en tronçons, on écrit N, T, Mf sur chacun, et on trace.</p>
-  </div>
+  <p>Au cours 6, la coupe à la position x donnait trois nombres : N, T et Mf. Fais glisser la coupe de l'appui gauche à l'appui droit et note à chaque position la valeur trouvée : tu obtiens trois courbes, <b>N(x)</b>, <b>T(x)</b> et <b>Mf(x)</b>, les <b>diagrammes</b>. Chaque coupe est une image, le diagramme est le film complet. Les formules ne changent qu'aux endroits où « il se passe quelque chose » : un appui, une charge ponctuelle, le début ou la fin d'une charge répartie, un couple. Entre deux de ces points, sur un <b>tronçon</b>, une seule expression suffit.</p>
 
-  <div class="lab" id="d1">
+  <div class="fx"><div class="big" style="font-size:1.2rem;line-height:1.8">0 &lt; x &lt; a : <span class="tau">T<sub>y</sub></span> = −Y<sub>A</sub> &nbsp; <span class="sig">Mf<sub>z</sub></span> = Y<sub>A</sub>·x<br>a &lt; x &lt; L : <span class="tau">T<sub>y</sub></span> = Y<sub>B</sub> &nbsp; <span class="sig">Mf<sub>z</sub></span> = Y<sub>B</sub>(L − x) &nbsp;&nbsp; <span class="sig">Mf<sub>max</sub></span> = <span class="frac"><span>F·a(L − a)</span><span>L</span></span></div><p class="cap">Poutre sur deux appuis A (x = 0) et B (x = L), charge F vers le bas en x = a ; réactions Y<sub>A</sub> = F(L − a)/L et Y<sub>B</sub> = F·a/L. T saute de F sous la charge ; Mf forme un triangle dont le sommet est sous la charge (FL/4 si la charge est au milieu).</p></div>
+
+<div class="lab" id="d1">
     <p class="lab-h">Manipulation 1 : la coupe qui trace le diagramme</p>
-    <p class="lab-sub">Une poutre de 4 m sur deux appuis, une charge F. Lance le film : la coupe avance, et les valeurs de T et de Mf qu'elle trouve se dessinent au fur et à mesure.</p>
+    <p class="lab-sub">Poutre de 4 m sur deux appuis, charge F : lance le film, la coupe avance et les valeurs de T et Mf se dessinent.<span class="predict">🔮 Prédis d'abord : sous la charge, T saute-t-il ou Mf saute-t-il ?</span></p>
     <svg id="d1svg" viewBox="0 0 680 420" role="img" aria-label="Poutre, coupe mobile et diagrammes qui se tracent"></svg>
     <div class="ctrl"><label for="d1x">Position de la coupe x</label><input id="d1x" class="r-geo" type="range" min="0" max="4" step="0.02" value="0"><output id="d1xv"></output></div>
     <div class="ctrl"><label for="d1a">Position a de la charge</label><input id="d1a" class="r-geo" type="range" min="0.2" max="3.8" step="0.1" value="1.5"><output id="d1av"></output></div>
-    <div class="btns">
-      <button class="btn" id="d1play" type="button">▶ Lancer le film</button>
+    <div class="btns" id="d1pl"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" data-a="play" type="button">▶ Lancer le film</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button>
       <label class="btn" style="display:inline-flex;gap:6px;align-items:center"><input type="checkbox" id="d1ghost"> Montrer le diagramme complet</label>
     </div>
     <div class="readout" id="d1out"></div>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">la méthode rédigée</span></div>
-    <p>Poutre sur deux appuis A (x = 0) et B (x = L), charge F vers le bas en x = a. Réactions (cours 6) : Y<sub>A</sub> = F(L − a)/L, Y<sub>B</sub> = F·a/L.</p>
-    <p><b>Tronçon 1 : 0 &lt; x &lt; a.</b> À gauche de la coupe, seulement Y<sub>A</sub>. <span class="m"><span class="tau">T<sub>y</sub></span> = −Y<sub>A</sub></span> (constant) et <span class="m"><span class="sig">Mf<sub>z</sub></span> = Y<sub>A</sub>·x</span> (droite qui monte).<br><b>Tronçon 2 : a &lt; x &lt; L.</b> Y<sub>A</sub> et F. <span class="m"><span class="tau">T<sub>y</sub></span> = F − Y<sub>A</sub> = Y<sub>B</sub></span> (constant) et <span class="m"><span class="sig">Mf<sub>z</sub></span> = Y<sub>A</sub>·x − F(x − a) = Y<sub>B</sub>(L − x)</span> (droite qui redescend à 0).</p>
-    <p><b>Lecture :</b> T saute de −Y<sub>A</sub> à +Y<sub>B</sub> sous la charge, soit un saut de F. Mf forme un triangle dont le sommet, sous la charge, vaut <span class="m">Mf<sub>max</sub> = F·a(L − a)/L</span> ; au milieu, FL/4.</p>
-    <div class="warn">⚠️ <b>Selon la convention, le diagramme de T peut être inversé.</b> Avec la convention de la série, T est négatif à gauche de la charge. Des ouvrages qui prennent l'action de la gauche sur la droite trouvent l'inverse. Les valeurs absolues, la position des sauts et la section la plus sollicitée ne changent jamais. Et certains métiers (le génie civil notamment) tracent le moment du côté des fibres tendues, donc vers le bas : regarde toujours la légende.</div>
+  <p><b>Exemple</b> : L = 4 m, F = 10 kN à a = 1 m. Y<sub>A</sub> = 7,5 kN, Y<sub>B</sub> = 2,5 kN. Tronçon 1 : T<sub>y</sub> = −7,5 kN, Mf<sub>z</sub> = 7,5x ; tronçon 2 : T<sub>y</sub> = +2,5 kN, Mf<sub>z</sub> = 2,5(4 − x). Sommet sous la charge : <span class="m">Mf<sub>max</sub> = 10 × 1 × 3/4 = 7,5 kN·m</span>.</p>
+
+  <div class="warn"><b>⚠️ Piège : selon la convention, le diagramme de T peut être inversé.</b> Avec la convention de la série, T est négatif à gauche de la charge ; les ouvrages qui prennent l'action de la gauche sur la droite trouvent l'inverse. Certains métiers (génie civil) tracent le moment du côté des fibres tendues, donc vers le bas. Les valeurs absolues, les sauts et la section la plus sollicitée ne changent jamais : regarde toujours la légende.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : la pellicule</b> : chaque image est une coupe, le diagramme est le film complet.</div>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Diagramme = valeurs de N, T, Mf pour toutes les positions de la coupe.</li>
+      <li>On découpe en tronçons aux appuis, charges, débuts et fins de charges réparties, couples.</li>
+      <li>Deux appuis, F en a : Mf<sub>max</sub> = F·a(L − a)/L sous la charge.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -438,15 +460,13 @@ input.r-gam{accent-color:var(--gam)}
     <div class="c-img"><span class="ico">🪜</span><span><small>Image à retenir</small>L'escalier : T fait des marches, Mf fait des rampes</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">trois règles</span></div>
-    <p>Quand la poutre ne porte que des forces ponctuelles :</p>
-    <p><b>1. Entre deux charges, T est constant</b> (une marche horizontale) : en déplaçant la coupe, on n'ajoute aucune force à gauche.<br><b>2. Sous chaque charge, T fait un saut</b> égal à la charge : la force entre d'un coup dans la partie gauche.<br><b>3. Entre deux charges, Mf est une droite</b>, qui change de pente sous chaque charge : on dit que le diagramme a un <b>point anguleux</b>.</p>
-    <p>Et aux extrémités sur appuis simples ou articulations (sans couple appliqué), Mf vaut toujours 0 : il n'y a rien pour faire tourner.</p>
-  </div>
+  <p>Quand la poutre ne porte que des forces ponctuelles, les diagrammes ressemblent à un escalier et à des rampes. <b>Entre deux charges, T est constant</b> (une marche) : en déplaçant la coupe, on n'ajoute aucune force à gauche. <b>Sous chaque charge, T fait un saut</b> égal à la charge : la force entre d'un coup dans la partie gauche. <b>Entre deux charges, Mf est une droite</b>, qui change de pente sous chaque charge : un <b>point anguleux</b>. Aux extrémités sur appui simple ou articulation, sans couple appliqué, Mf vaut toujours 0.</p>
 
-  <div class="lab" id="d2">
+  <div class="fx"><div class="big">ΔN = −F<sub>x</sub> &nbsp; Δ<span class="tau">T<sub>y</sub></span> = −F<sub>y</sub> &nbsp; Δ<span class="sig">Mf<sub>z</sub></span> = 0</div><p class="cap">Sauts au passage d'une force ponctuelle (F<sub>x</sub> ; F<sub>y</sub>), avec la convention de la série : une charge F vers le bas (F<sub>y</sub> = −F) fait monter T de F ; le moment ne saute pas, il change seulement de pente. Les réactions d'appui sont des forces ponctuelles comme les autres.</p></div>
+
+<div class="lab" id="d2">
     <p class="lab-h">Manipulation 2 : deux charges ponctuelles</p>
-    <p class="lab-sub">Poutre de 5 m sur deux appuis, deux charges réglables. Les sauts de T sont annotés ; le point le plus haut de Mf est repéré.</p>
+    <p class="lab-sub">Poutre de 5 m sur deux appuis, deux charges réglables : les sauts de T sont annotés, le sommet de Mf est repéré.<span class="predict">🔮 Prédis d'abord : le moment maximal est-il forcément sous la plus grosse charge ?</span></p>
     <svg id="d2svg" viewBox="0 0 680 420" role="img" aria-label="Diagrammes de T et de Mf pour deux charges ponctuelles"></svg>
     <div class="ctrl"><label for="d2F1"><span class="frc">F<sub>1</sub></span></label><input id="d2F1" class="r-frc" type="range" min="0" max="30" step="1" value="10"><output id="d2F1v"></output></div>
     <div class="ctrl"><label for="d2a1">Position de F<sub>1</sub></label><input id="d2a1" class="r-geo" type="range" min="0.2" max="4.8" step="0.1" value="1"><output id="d2a1v"></output></div>
@@ -455,10 +475,17 @@ input.r-gam{accent-color:var(--gam)}
     <div class="readout" id="d2out"></div>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">les sauts, en toute rigueur</span></div>
-    <p>Pour une force ponctuelle de composantes (F<sub>x</sub> ; F<sub>y</sub>) en x<sub>0</sub>, quand la coupe passe de x<sub>0</sub>⁻ (juste avant) à x<sub>0</sub>⁺ (juste après), la force rejoint la partie gauche, d'où, avec la convention de la série :</p>
-    <div class="fx"><div class="big" style="font-size:1.4rem">Δ<span class="sig">N</span> = −F<sub>x</sub> &nbsp;&nbsp; Δ<span class="tau">T<sub>y</sub></span> = −F<sub>y</sub> &nbsp;&nbsp; Δ<span class="sig">Mf<sub>z</sub></span> = 0</div><p class="cap">une charge de F vers le bas (F<sub>y</sub> = −F) fait monter T de F ; le moment ne saute pas, il change seulement de pente</p></div>
-    <p>Les <b>réactions d'appui</b> sont des forces ponctuelles comme les autres : T saute aussi au droit de chaque appui. Vérification très efficace : aux deux extrémités d'une poutre sur deux appuis, T part de 0 et revient à 0 après le dernier saut.</p>
+  <p><b>Exemple</b> : poutre de 4 m, 10 kN à 1 m de A. T part de 0, saute à −7,5 kN à l'appui A, remonte de 10 kN sous la charge (+2,5 kN), puis revient à 0 en sautant de −2,5 kN à l'appui B (la réaction Y<sub>B</sub> = 2,5 kN vers le haut).</p>
+
+  <div class="warn"><b>⚠️ Piège : oublier les réactions dans le diagramme.</b> T saute aussi au droit de chaque appui. Vérification très efficace : aux deux extrémités d'une poutre sur deux appuis, T part de 0 et revient à 0 après le dernier saut.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : l'escalier</b> : T fait des marches, Mf fait des rampes.</div>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Charges ponctuelles seules : T constant par morceaux, Mf affine par morceaux.</li>
+      <li>Sous une charge, T saute de la valeur de la charge ; Mf change de pente sans sauter.</li>
+      <li>Mf = 0 aux appuis d'extrémité sans couple ; T revient à 0 après le dernier appui.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -471,16 +498,13 @@ input.r-gam{accent-color:var(--gam)}
     <div class="c-img"><span class="ico">❄️</span><span><small>Image à retenir</small>La neige sur le toit : répartie partout, elle arrondit tout</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la charge qui s'accumule</span></div>
-    <p>Une <b>charge répartie</b> est étalée sur une longueur : le poids propre d'une poutre, la neige sur un toit, un plancher. On la décrit par son intensité <b>p</b>, en kN/m (kilonewtons par mètre de poutre). Sur une longueur ℓ, elle pèse p·ℓ.</p>
-    <p>Quand la coupe avance sous une charge répartie, la partie gauche en contient un peu plus à chaque pas. Résultat :</p>
-    <p><b>1. T varie en ligne droite</b> (en pente) : il gagne p à chaque mètre.<br><b>2. Mf varie en parabole</b> : une courbe arrondie.<br><b>3. Le sommet de la parabole est là où T s'annule.</b> C'est là que Mf est maximal.</p>
-    <div class="mnemo">❄️ <b>Le piège classique :</b> pour calculer les <b>réactions</b>, on remplace toute la charge répartie par sa résultante p·ℓ, placée au milieu de la zone chargée. Mais pour le torseur de cohésion, on ne remplace que <b>la partie de la charge qui est sur le morceau isolé</b> : p·x, placée à x/2 de l'appui si la coupe est en x.</div>
-  </div>
+  <p>Une <b>charge répartie</b> est étalée sur une longueur, comme la neige sur un toit, un plancher ou le poids propre d'une poutre. On la décrit par son intensité <b>p</b>, en kN/m : sur une longueur ℓ, elle pèse p·ℓ. Quand la coupe avance sous une charge répartie, la partie gauche en contient un peu plus à chaque pas : <b>T varie en ligne droite</b>, il gagne p par mètre ; <b>Mf varie en parabole</b> ; et <b>le sommet de la parabole est là où T s'annule</b>.</p>
 
-  <div class="lab" id="d3">
+  <div class="fx"><div class="big" style="font-size:1.25rem;line-height:1.8"><span class="tau">T<sub>y</sub></span>(x) = p·x − <span class="frac"><span>pL</span><span>2</span></span> &nbsp; <span class="sig">Mf<sub>z</sub></span>(x) = <span class="frac"><span>pL</span><span>2</span></span>x − <span class="frac"><span>p x²</span><span>2</span></span><br><span class="sig">Mf<sub>max</sub></span> = <span class="frac"><span>p L²</span><span>8</span></span> (au milieu) &nbsp; |<span class="tau">T</span>|<sub>max</sub> = <span class="frac"><span>pL</span><span>2</span></span> (aux appuis)</div><p class="cap">Poutre sur deux appuis, charge p sur toute la longueur L : réactions pL/2. Coupe en x, partie gauche : Y<sub>A</sub> et la charge p·x, appliquée à x/2 de A.</p></div>
+
+<div class="lab" id="d3">
     <p class="lab-h">Manipulation 3 : une charge répartie</p>
-    <p class="lab-sub">Poutre de 6 m sur deux appuis, charge répartie p sur une zone réglable. Observe la droite de T, la parabole de Mf et la position de son sommet.</p>
+    <p class="lab-sub">Poutre de 6 m sur deux appuis, charge p sur une zone réglable : observe la droite de T et la parabole de Mf.<span class="predict">🔮 Prédis d'abord : à charge totale égale, une charge répartie donne-t-elle plus ou moins de moment qu'une charge concentrée au milieu ?</span></p>
     <div class="btns"><button class="btn" id="d3full" type="button">Charge sur toute la portée</button></div>
     <svg id="d3svg" viewBox="0 0 680 420" role="img" aria-label="Diagrammes pour une charge répartie"></svg>
     <div class="ctrl"><label for="d3p"><span class="frc">p</span></label><input id="d3p" class="r-frc" type="range" min="0" max="10" step="0.5" value="2"><output id="d3pv"></output></div>
@@ -489,11 +513,17 @@ input.r-gam{accent-color:var(--gam)}
     <div class="readout" id="d3out"></div>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">le cas de référence</span></div>
-    <p>Poutre sur deux appuis, charge p sur toute la longueur L. Réactions : Y<sub>A</sub> = Y<sub>B</sub> = pL/2. Coupe en x, partie gauche : Y<sub>A</sub> et la charge p·x, appliquée à x/2 de A.</p>
-    <div class="fx" style="max-width:640px"><div class="big" style="font-size:1.35rem;line-height:1.9"><span class="tau">T<sub>y</sub>(x)</span> = −(pL/2 − p·x) = p·x − pL/2 &nbsp;&nbsp;&nbsp; <span class="sig">Mf<sub>z</sub>(x)</span> = <span class="frac"><span>pL</span><span>2</span></span>x − <span class="frac"><span>p x²</span><span>2</span></span></div><p class="cap">T s'annule au milieu (x = L/2), où Mf atteint son maximum</p></div>
-    <div class="fx"><div class="big" style="font-size:1.6rem"><span class="sig">Mf<sub>max</sub></span> = <span class="frac"><span>p L²</span><span>8</span></span> &nbsp; (au milieu) &nbsp;&nbsp; |<span class="tau">T</span>|<sub>max</sub> = <span class="frac"><span>pL</span><span>2</span></span> &nbsp; (aux appuis)</div></div>
-    <p><b>Comparaison utile :</b> la même charge totale pL, mais concentrée au milieu, donnerait FL/4 = pL²/4, soit <b>deux fois plus</b> de moment. Répartir une charge soulage la poutre.</p>
+  <p><b>Exemple</b> : poutre de 6 m, p = 2 kN/m. Y<sub>A</sub> = Y<sub>B</sub> = 6 kN ; T<sub>y</sub> = 2x − 6, Mf<sub>z</sub> = 6x − x². T s'annule en x = 3 m : <span class="m">Mf<sub>max</sub> = 18 − 9 = 9 kN·m = pL²/8</span>. La même charge totale (12 kN) concentrée au milieu donnerait FL/4 = 18 kN·m, <b>deux fois plus</b> : répartir une charge soulage la poutre.</p>
+
+  <div class="warn"><b>⚠️ Piège classique : la résultante de quelle charge ?</b> Pour les <b>réactions</b>, on remplace toute la charge répartie par sa résultante p·ℓ, au milieu de la zone chargée. Pour le <b>torseur de cohésion</b>, seulement la part qui est sur le morceau isolé : p·x, placée à x/2 de l'appui si la coupe est en x.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : la neige sur le toit</b> : répartie partout, elle arrondit tout ; le sommet de Mf est là où T s'annule.</div>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Charge répartie : T linéaire, Mf parabolique, sommet où T s'annule.</li>
+      <li>Deux appuis, p partout : Mf<sub>max</sub> = pL²/8 au milieu, |T|<sub>max</sub> = pL/2 aux appuis.</li>
+      <li>Réactions : toute la charge ; cohésion : seulement la part sur le morceau isolé.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -506,27 +536,34 @@ input.r-gam{accent-color:var(--gam)}
     <div class="c-img"><span class="ico">🏔️</span><span><small>Image à retenir</small>La randonnée : Mf est l'altitude, T donne la pente, et au sommet la pente est nulle</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">l'altitude et la pente</span></div>
-    <p>Imagine que le diagramme de Mf est le profil d'une randonnée. Alors T est lié à la <b>pente</b> du chemin : avec la convention de la série, la pente de Mf vaut −T. Quand T est négatif, Mf monte ; quand T est positif, Mf descend ; <b>quand T s'annule (ou change de signe), Mf passe par un sommet</b> : c'est là que se trouve la section la plus sollicitée en flexion. Exception à connaître : pour une console, T ne s'annule pas ; le maximum de |Mf| est en bout de diagramme, à l'encastrement.</p>
-    <p>Et de même, la charge répartie donne la pente de T : sous une charge répartie p vers le bas, T monte de p par mètre ; sans charge répartie, T est plat.</p>
-    <p><b>Le lien par les aires :</b> la variation de Mf entre deux points est égale à <b>moins l'aire</b> du diagramme de T entre ces deux points. Pour une poutre sur deux appuis, Mf(x) = −(aire de T entre 0 et x). La manipulation te montre la tangente et l'aire en direct.</p>
-  </div>
+  <p>Imagine que le diagramme de Mf est le profil d'une randonnée : T en donne la <b>pente</b>. Avec la convention de la série, la pente de Mf vaut −T : quand T est négatif, Mf monte ; positif, Mf descend ; <b>quand T s'annule ou change de signe, Mf passe par un sommet</b>, la section la plus sollicitée en flexion. Exception : pour une console, T ne s'annule pas, et |Mf| est maximal en bout de diagramme, à l'encastrement. De même, la charge répartie donne la pente de T : sans charge répartie, T est plat. Et la variation de Mf entre deux points vaut <b>moins l'aire</b> du diagramme de T entre ces points.</p>
 
-  <div class="lab" id="d4">
+  <div class="fx"><div class="row big" style="font-size:1.3rem"><span><span class="frac"><span>d<span class="tau">T<sub>y</sub></span></span><span>dx</span></span> = −p<sub>y</sub></span><span><span class="frac"><span>d<span class="sig">Mf<sub>z</sub></span></span><span>dx</span></span> = −<span class="tau">T<sub>y</sub></span></span><span><span class="sig">Mf</span>(x<sub>2</sub>) − <span class="sig">Mf</span>(x<sub>1</sub>) = −(aire de T entre x<sub>1</sub> et x<sub>2</sub>)</span></div><p class="cap">d/dx : la dérivée, c'est-à-dire la pente de la courbe ; p<sub>y</sub> : composante selon y de la charge par mètre (p<sub>y</sub> = −p pour une charge vers le bas) ; convention de la série. Un couple concentré C appliqué en x<sub>0</sub> ne change pas T mais fait sauter le moment : ΔMf<sub>z</sub> = −C.</p></div>
+
+<div class="lab" id="d4">
     <p class="lab-h">Manipulation 4 : la pente et l'aire</p>
-    <p class="lab-sub">Poutre de 6 m, charge répartie de 2 kN/m et charge ponctuelle F. Déplace le point x : sur T, l'aire hachurée de 0 à x ; sur Mf, la tangente en x. Compare les nombres.</p>
+    <p class="lab-sub">Poutre de 6 m, charge répartie de 2 kN/m et charge ponctuelle F : déplace x, compare l'aire hachurée de T et la tangente à Mf.<span class="predict">🔮 Prédis d'abord : là où T change de signe, la tangente à Mf est-elle horizontale ?</span></p>
     <svg id="d4svg" viewBox="0 0 680 420" role="img" aria-label="Pente de Mf et aire sous T"></svg>
     <div class="ctrl"><label for="d4x">Point x</label><input id="d4x" class="r-geo" type="range" min="0" max="6" step="0.05" value="2"><output id="d4xv"></output></div>
     <div class="ctrl"><label for="d4F"><span class="frc">F</span> (à 4 m)</label><input id="d4F" class="r-frc" type="range" min="0" max="20" step="1" value="6"><output id="d4Fv"></output></div>
     <div class="readout" id="d4out"></div>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">la démonstration sur une tranche</span></div>
-    <p>Isole une tranche de poutre entre x et x + dx, qui porte la charge répartie p<sub>y</sub>·dx (p<sub>y</sub> : composante selon y de la charge par mètre ; p<sub>y</sub> = −p pour une charge p vers le bas). Elle reçoit, à droite, l'action de la matière de droite, {τ}<sub>coh</sub>(x + dx), et, à gauche, l'action de la matière de gauche, −{τ}<sub>coh</sub>(x). Son équilibre donne :</p>
-    <div class="fx" style="max-width:640px"><div class="big" style="font-size:1.4rem;line-height:1.9"><span class="frac"><span>d<span class="tau">T<sub>y</sub></span></span><span>dx</span></span> = −p<sub>y</sub> &nbsp;&nbsp;&nbsp; <span class="frac"><span>d<span class="sig">Mf<sub>z</sub></span></span><span>dx</span></span> = −<span class="tau">T<sub>y</sub></span> &nbsp;&nbsp;&nbsp; <span class="frac"><span>d<span class="sig">N</span></span><span>dx</span></span> = −p<sub>x</sub></div><p class="cap">d/dx : la dérivée, c'est-à-dire la pente de la courbe ; convention de la série</p></div>
-    <p><b>Conséquences pratiques :</b> <b>1.</b> Pas de charge répartie : T constant, Mf linéaire. <b>2.</b> Charge répartie uniforme : T linéaire, Mf parabolique. <b>3.</b> Mf est extrémal là où T s'annule ou change de signe. <b>4.</b> En intégrant : <span class="m">Mf(x<sub>2</sub>) − Mf(x<sub>1</sub>) = −∫ T dx</span>, moins l'aire de T entre x<sub>1</sub> et x<sub>2</sub> (∫ : le symbole d'intégrale, qui calcule une aire).</p>
-    <p><b>Les couples concentrés.</b> Un couple C (sens trigonométrique) appliqué en x<sub>0</sub> ne change pas T, mais fait sauter le moment : <span class="m">ΔMf<sub>z</sub> = −C</span>. C'est le seul cas où Mf a une marche (voir le défi).</p>
-    <div class="tip">💡 <b>Et avec d'autres conventions ?</b> Si l'on prend l'action de la gauche sur la droite, N, T et Mf changent <b>tous</b> de signe : la relation dMf/dx = −T garde alors la même forme. En revanche, certaines combinaisons de conventions (en génie civil, par exemple, on compte positif le moment qui tend les fibres du bas et l'effort tranchant qui fait tourner la tranche dans le sens horaire) conduisent à dM/dx = +V, où V désigne l'effort tranchant. Ce qui ne change jamais : les extremums de Mf sont là où T s'annule ou change de signe, ou aux extrémités de la poutre.</div>
+  <p><b>Exemple</b> : poutre de 6 m dont le diagramme de T vaut −8 kN de 0 à 2 m, puis +4 kN de 2 à 6 m. T est constant par morceaux : pas de charge répartie ; il saute de 12 kN en x = 2 m : une charge ponctuelle de 12 kN vers le bas, avec Y<sub>A</sub> = 8 kN et Y<sub>B</sub> = 4 kN. <span class="m">Mf(2) = −(−8 × 2) = 16 kN·m</span> ; par la droite, Y<sub>B</sub> à 4 m de la coupe : 4 × 4 = 16 kN·m ✅.</p>
+
+  <div class="warn"><b>⚠️ Piège : la relation dépend de la convention.</b> Avec la convention de la série (ou son inverse complet), dMf/dx = −T. Certaines conventions du génie civil (moment positif quand il tend les fibres du bas, effort tranchant V positif quand il fait tourner la tranche dans le sens horaire) donnent dM/dx = +V. Ce qui ne change jamais : les extremums de Mf sont là où T s'annule ou change de signe, ou aux extrémités.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : la randonnée</b> : Mf est l'altitude, T donne la pente, au sommet la pente est nulle.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : la démonstration sur une tranche</summary>
+    <p>Isole une tranche entre x et x + dx, qui porte p<sub>y</sub>·dx. Elle reçoit à droite l'action de la matière de droite, {τ}<sub>coh</sub>(x + dx), et à gauche l'action de la matière de gauche, −{τ}<sub>coh</sub>(x). Son équilibre donne dT<sub>y</sub>/dx = −p<sub>y</sub>, dMf<sub>z</sub>/dx = −T<sub>y</sub> et dN/dx = −p<sub>x</sub>. En intégrant : Mf(x<sub>2</sub>) − Mf(x<sub>1</sub>) = −∫ T dx, où ∫ (l'intégrale) calcule une aire. Conséquences : pas de charge répartie, T constant et Mf linéaire ; charge uniforme, T linéaire et Mf parabolique.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>dMf/dx = −T (convention de la série) ; dT/dx = −p<sub>y</sub>.</li>
+      <li>Mf maximal là où T s'annule ou change de signe (ou à l'encastrement d'une console).</li>
+      <li>Variation de Mf = −(aire de T) ; un couple concentré fait sauter Mf, pas T.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -539,26 +576,25 @@ input.r-gam{accent-color:var(--gam)}
     <div class="c-img"><span class="ico">🧰</span><span><small>Image à retenir</small>La boîte à outils : quatre cas types et le principe de superposition suffisent presque toujours</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">quatre cas à connaître par cœur</span></div>
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>Cas</th><th>|T|<sub>max</sub></th><th>|Mf|<sub>max</sub></th><th>Où</th></tr>
-      <tr><td>Deux appuis, charge F au milieu</td><td>F/2</td><td><b>FL/4</b></td><td>sous la charge</td></tr>
-      <tr><td>Deux appuis, charge p sur toute la portée</td><td>pL/2</td><td><b>pL²/8</b></td><td>au milieu</td></tr>
-      <tr><td>Console, charge F en bout</td><td>F</td><td><b>FL</b></td><td>à l'encastrement</td></tr>
-      <tr><td>Console, charge p sur toute la longueur</td><td>pL</td><td><b>pL²/2</b></td><td>à l'encastrement</td></tr>
-    </table></div>
-    <p><b>Le principe de superposition :</b> en élasticité linéaire, les diagrammes de plusieurs charges <b>s'additionnent</b>. Une poutre avec une charge répartie et une charge ponctuelle a pour diagrammes la somme des deux cas types. Attention : on additionne les diagrammes point par point ; les maxima ne s'additionnent que s'ils sont au même endroit.</p>
-  </div>
+  <p>Quatre cas types et le <b>principe de superposition</b> suffisent presque toujours : en élasticité linéaire, les diagrammes de plusieurs charges <b>s'additionnent</b> point par point. Une poutre avec une charge répartie et une charge ponctuelle a pour diagrammes la somme des deux cas types ; les maxima ne s'additionnent que s'ils sont au même endroit.</p>
 
-  <div class="lab" id="d5">
+  <div class="tbl-wrap"><table class="data">
+    <tr><th>Cas</th><th>|T|<sub>max</sub></th><th>|Mf|<sub>max</sub></th><th>Où</th></tr>
+    <tr><td>Deux appuis, charge F au milieu</td><td>F/2</td><td><b>FL/4</b></td><td>sous la charge</td></tr>
+    <tr><td>Deux appuis, charge p sur toute la portée</td><td>pL/2</td><td><b>pL²/8</b></td><td>au milieu</td></tr>
+    <tr><td>Console, charge F en bout</td><td>F</td><td><b>FL</b></td><td>à l'encastrement</td></tr>
+    <tr><td>Console, charge p sur toute la longueur</td><td>pL</td><td><b>pL²/2</b></td><td>à l'encastrement</td></tr>
+  </table></div>
+
+<div class="lab" id="d5">
     <p class="lab-h">Manipulation 5 : le diagrammeur</p>
-    <p class="lab-sub">Choisis les appuis et combine les charges (mets 0 pour en retirer une). Les trois diagrammes, les réactions et la section la plus sollicitée se calculent en direct. Les boutons chargent les cas types et les exercices.</p>
+    <p class="lab-sub">Choisis les appuis et combine les charges (0 pour en retirer une) : diagrammes, réactions et section la plus sollicitée en direct.<span class="predict">🔮 Prédis d'abord : pour une console sous charge répartie, |Mf| au milieu vaut-il la moitié ou le quart de sa valeur à l'encastrement ?</span></p>
     <div class="btns" id="d5pre">
       <button class="btn on" type="button" data-c="aa,6,3,12,0,0,0,0,0,0,0,0">2 appuis, F au milieu</button>
       <button class="btn" type="button" data-c="aa,6,0,0,0,0,0,6,2,0,0,0">2 appuis, p partout</button>
       <button class="btn" type="button" data-c="con,3,3,4,0,0,0,0,0,0,0,0">Console, F en bout</button>
       <button class="btn" type="button" data-c="con,2,0,0,0,0,0,2,3,0,0,0">Console, p partout</button>
-      <button class="btn" type="button" data-c="aa,5,1,10,3,20,0,0,0,0,0,0">Exercice 3</button>
+      <button class="btn" type="button" data-c="aa,5,1,10,3,20,0,0,0,0,0,0">Exercice 1</button>
       <button class="btn" type="button" data-c="aa,4,0,0,0,0,0,0,0,2,8,0">Couple (défi)</button>
       <button class="btn" type="button" data-c="aa,6,4,8,0,0,0,6,1,0,0,15">Composé (N + T + Mf)</button>
     </div>
@@ -577,15 +613,23 @@ input.r-gam{accent-color:var(--gam)}
       <label><span>Traction en bout H (kN)</span><input id="d5H" type="number" step="0.5"></label>
     </div>
     <svg id="d5svg" viewBox="0 0 680 500" role="img" aria-label="Diagrammes N, T et Mf d'une poutre quelconque"></svg>
-    <div class="mm-steps" id="d5out"></div>
+    <div class="mm-steps status" id="d5out"></div>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">la méthode d'examen et les vérifications</span></div>
-    <p><b>La méthode en cinq étapes :</b> <b>1.</b> Réactions d'appui (cours 6). <b>2.</b> Découpage en tronçons (appuis, charges, débuts et fins de charges réparties, couples). <b>3.</b> Sur chaque tronçon, N(x), T(x), Mf(x), en gardant le côté le plus simple. <b>4.</b> Valeurs aux bornes des tronçons, et extremum de Mf là où T s'annule. <b>5.</b> Tracé, avec les valeurs remarquables écrites sur le dessin.</p>
-    <p><b>Les cinq vérifications qui attrapent presque toutes les erreurs :</b> T revient à 0 après le dernier appui ; chaque saut de T est égal à la charge ponctuelle correspondante ; Mf est nul aux extrémités libres et aux appuis d'extrémité (sauf couple appliqué) ; les extremums de Mf sont là où T change de signe, ou à un encastrement ; la pente de T sous une charge répartie vaut p.</p>
-    <div class="weld"><b>🔥 Où placer (ou ne pas placer) une soudure</b>
-      <p>Sur une poutre sur deux appuis chargée uniformément, le moment est maximal au milieu et nul aux appuis, tandis que l'effort tranchant fait l'inverse. Un raboutage soudé au milieu doit donc passer toute la flexion ; une attache soudée près d'un appui travaille surtout au cisaillement. Pour une console, tout se concentre à l'encastrement : la soudure d'attache y reçoit à la fois le moment maximal et l'effort tranchant maximal.</p>
-    </div>
+  <p><b>Exemple</b> : console de 2 m, p = 3 kN/m. Par la droite : T<sub>y</sub> = −3(2 − x), Mf<sub>z</sub> = −3(2 − x)²/2. À l'encastrement, <span class="m">|Mf| = 6 kN·m = pL²/2</span> ; au milieu, 1,5 kN·m, quatre fois moins, car Mf varie comme le carré de la distance au bout. <b>Méthode d'examen</b> : réactions, découpage en tronçons, N, T, Mf sur chaque tronçon (côté le plus simple), extremum de Mf là où T s'annule, tracé avec les valeurs remarquables.</p>
+
+  <div class="warn"><b>⚠️ Les cinq vérifications qui attrapent presque toutes les erreurs</b> : T revient à 0 après le dernier appui ; chaque saut de T égale la charge ponctuelle correspondante ; Mf est nul aux extrémités libres et aux appuis d'extrémité (sauf couple) ; les extremums de Mf sont là où T change de signe, ou à un encastrement ; la pente de T sous une charge répartie vaut p.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : la boîte à outils</b> : FL/4, pL²/8, FL, pL²/2, et on additionne.</div>
+  <div class="weld"><b>🔥 Où placer (ou ne pas placer) une soudure</b>
+    <p>Sur une poutre sur deux appuis chargée uniformément, le moment est maximal au milieu et nul aux appuis ; l'effort tranchant fait l'inverse. Un raboutage soudé au milieu doit passer toute la flexion ; une attache soudée près d'un appui travaille surtout au cisaillement. Pour une console, tout se concentre à l'encastrement : la soudure d'attache y reçoit le moment maximal et l'effort tranchant maximal.</p>
+  </div>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Deux appuis : FL/4 (F au milieu), pL²/8 (p partout) ; console : FL, pL²/2.</li>
+      <li>Superposition : on additionne les diagrammes point par point.</li>
+      <li>Cinq vérifications : T revient à 0, sauts = charges, Mf nul aux bouts libres, extremums où T change de signe, pente de T = p.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -594,82 +638,35 @@ input.r-gam{accent-color:var(--gam)}
 <div class="wrap">
   <div class="cartouche">
     <div class="c-num">✎</div>
-    <div class="c-title"><h2>Exercices corrigés</h2><p>Du cas type au diagramme à reconstruire</p></div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Deux exercices, des charges ponctuelles à la superposition</p></div>
     <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de muscu : on ne progresse qu'en soulevant soi-même</span></div>
   </div>
-  <div class="lv lv1"><div class="lv-h">👁 Mode d'emploi <span class="tag">de tête, puis la fiche, puis le cours</span></div>
-    <p>Pour chaque exercice : réactions, tronçons, expressions, valeurs remarquables, tracé. Convention de la série : T<sub>y</sub> = −ΣF<sub>y</sub>(gauche), Mf<sub>z</sub> = −ΣM<sub>G</sub>(gauche). Le diagrammeur (manipulation 5) te permet de vérifier chaque tracé.</p>
-  </div>
+
+  <p>Pour chaque exercice : réactions, tronçons, expressions, puis les cinq vérifications du chapitre 5. Le premier exercice se vérifie dans le diagrammeur (manipulation 5, bouton « Exercice 1 ») ; le second s'y rejoue en combinant deux charges.</p>
 
   <div class="exo">
-    <h4>Exercice 1 : la charge au milieu <span class="lvtag">N1 · chapitres 1 et 2</span></h4>
-    <p>Poutre de 6 m sur deux appuis, charge de 12 kN vers le bas au milieu.</p>
-    <p><b>a)</b> Calcule les réactions.<br><b>b)</b> Donne T<sub>y</sub> et Mf<sub>z</sub> sur chaque tronçon.<br><b>c)</b> Trace les diagrammes et donne le moment maximal.</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> Symétrie : <b>Y<sub>A</sub> = Y<sub>B</sub> = 6 kN</b>.</p>
-      <p><b>b)</b> Pour 0 &lt; x &lt; 3 : <span class="m">T<sub>y</sub> = −6 kN</span>, <span class="m">Mf<sub>z</sub> = 6x</span>. Pour 3 &lt; x &lt; 6 : <span class="m">T<sub>y</sub> = −6 + 12 = +6 kN</span>, <span class="m">Mf<sub>z</sub> = 6x − 12(x − 3) = 36 − 6x</span>.</p>
-      <p><b>c)</b> T : une marche à −6, un saut de +12 sous la charge, une marche à +6. Mf : un triangle, de 0 à <span class="m">Mf<sub>max</sub> = 6 × 3 = <b>18 kN·m</b></span> au milieu, puis retour à 0. On retrouve FL/4 = 12 × 6/4 = 18 kN·m ✅.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 2 : la console <span class="lvtag">N1 · chapitres 1 et 5</span></h4>
-    <p>Console de 3 m encastrée à gauche, charge de 4 kN vers le bas à son extrémité.</p>
-    <p><b>a)</b> Calcule les réactions.<br><b>b)</b> Écris T<sub>y</sub>(x) et Mf<sub>z</sub>(x) en gardant la partie droite.<br><b>c)</b> Où est la section la plus sollicitée ?</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <b>Y<sub>A</sub> = 4 kN</b>, <b>M<sub>A</sub> = 4 × 3 = 12 kN·m</b>.</p>
-      <p><b>b)</b> Partie droite : seulement la charge, à la distance 3 − x. <span class="m">T<sub>y</sub> = +ΣF<sub>y</sub>(droite) = <b>−4 kN</b></span> (constant) ; <span class="m">Mf<sub>z</sub> = +ΣM<sub>G</sub>(droite) = (3 − x) × (−4) = <b>−4(3 − x)</b></span>.</p>
-      <p><b>c)</b> À l'encastrement : <span class="m">|Mf|<sub>max</sub> = <b>12 kN·m</b></span> = FL. Mf est négatif : ce sont les fibres du <b>haut</b> qui sont tendues, comme toujours pour une console chargée vers le bas.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 3 : deux charges ponctuelles <span class="lvtag">N2 · chapitre 2</span></h4>
+    <h4>Exercice 1 : deux charges ponctuelles <span class="lvtag">★ application · chapitres 2 et 4, à vérifier dans la manipulation 5</span></h4>
     <p>Poutre de 5 m sur deux appuis ; F<sub>1</sub> = 10 kN à 1 m de A et F<sub>2</sub> = 20 kN à 3 m de A, vers le bas.</p>
-    <p><b>a)</b> Calcule les réactions.<br><b>b)</b> Donne T<sub>y</sub> sur les trois tronçons.<br><b>c)</b> Calcule Mf<sub>z</sub> sous chaque charge et trouve le maximum.</p>
+    <p class="q"><b>a)</b> Calcule les réactions.</p>
+    <p class="q"><b>b)</b> Donne T<sub>y</sub> sur les trois tronçons.</p>
+    <p class="q"><b>c)</b> Calcule Mf<sub>z</sub> sous chaque charge et trouve le maximum.</p>
     <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> Moments en A : <span class="m">5Y<sub>B</sub> = 10 × 1 + 20 × 3 = 70</span>, donc <b>Y<sub>B</sub> = 14 kN</b> et <b>Y<sub>A</sub> = 30 − 14 = 16 kN</b>.</p>
+      <p><b>a)</b> Moments en A : 5Y<sub>B</sub> = 10 × 1 + 20 × 3 = 70, donc <b>Y<sub>B</sub> = 14 kN</b> et <b>Y<sub>A</sub> = 30 − 14 = 16 kN</b>.</p>
       <p><b>b)</b> 0 &lt; x &lt; 1 : <b>−16 kN</b> ; 1 &lt; x &lt; 3 : −16 + 10 = <b>−6 kN</b> ; 3 &lt; x &lt; 5 : −6 + 20 = <b>+14 kN</b> (= Y<sub>B</sub> ✅).</p>
-      <p><b>c)</b> <span class="m">Mf(1) = 16 × 1 = <b>16 kN·m</b></span> ; <span class="m">Mf(3) = 16 × 3 − 10 × 2 = <b>28 kN·m</b></span> (par la droite : 14 × 2 = 28 ✅). Le maximum est en x = 3 m, là où T change de signe (de −6 à +14) : <b>Mf<sub>max</sub> = 28 kN·m</b>.</p>
+      <p><b>c)</b> Mf(1) = 16 × 1 = <b>16 kN·m</b> ; Mf(3) = 16 × 3 − 10 × 2 = <b>28 kN·m</b> (par la droite : 14 × 2 = 28 ✅). Le maximum est en x = 3 m, là où T change de signe (de −6 à +14) : <b>Mf<sub>max</sub> = 28 kN·m</b>, sous la plus grosse charge ici, mais ce n'est pas une règle : c'est le changement de signe de T qui décide.</p>
     </div></details>
   </div>
 
-  <div class="exo">
-    <h4>Exercice 4 : charge répartie, puis superposition <span class="lvtag">N2 · chapitres 3 et 5</span></h4>
-    <p>Poutre de 6 m sur deux appuis, charge répartie p = 2 kN/m sur toute la longueur.</p>
-    <p><b>a)</b> Écris T<sub>y</sub>(x) et Mf<sub>z</sub>(x) ; donne le moment maximal.<br><b>b)</b> On ajoute une charge de 6 kN au milieu : nouveau moment maximal et nouvel effort tranchant aux appuis, par superposition.</p>
+  <div class="exo defi">
+    <h4>Exercice 2 : charge répartie, puis superposition <span class="lvtag">★★ synthèse · chapitres 3 à 5, à rejouer dans la manipulation 5</span></h4>
+    <p>Poutre de 6 m sur deux appuis, charge répartie p = 2 kN/m sur toute la longueur. Dans le diagrammeur, pars de « 2 appuis, p partout ».</p>
+    <p class="q"><b>a)</b> Écris T<sub>y</sub>(x) et Mf<sub>z</sub>(x) ; donne le moment maximal.</p>
+    <p class="q"><b>b)</b> On ajoute une charge de 6 kN au milieu : nouveau moment maximal et nouvel effort tranchant aux appuis, par superposition.</p>
+    <p class="q"><b>c)</b> On envisage un raboutage soudé de la poutre : où le placer de préférence, et quels efforts devra-t-il transmettre à 1 m d'un appui ?</p>
     <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> Y<sub>A</sub> = Y<sub>B</sub> = 6 kN. <span class="m">T<sub>y</sub>(x) = 2x − 6</span> ; <span class="m">Mf<sub>z</sub>(x) = 6x − x²</span>. T s'annule en x = 3 m : <span class="m">Mf<sub>max</sub> = 18 − 9 = <b>9 kN·m</b></span> = pL²/8 ✅.</p>
-      <p><b>b)</b> La charge ponctuelle seule donne FL/4 = 6 × 6/4 = 9 kN·m au milieu, et ±3 kN d'effort tranchant. Les deux maxima sont au même endroit : <span class="m">Mf<sub>max</sub> = 9 + 9 = <b>18 kN·m</b></span>. Aux appuis : |T| = 6 + 3 = <b>9 kN</b>.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 5 : la console sous charge répartie <span class="lvtag">N1 · chapitres 3 et 5</span></h4>
-    <p>Console de 2 m encastrée à gauche, charge répartie p = 3 kN/m sur toute sa longueur.</p>
-    <p><b>a)</b> Calcule les réactions.<br><b>b)</b> Écris T<sub>y</sub>(x) et Mf<sub>z</sub>(x) par la droite.<br><b>c)</b> Donne les valeurs à l'encastrement et au milieu.</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> Charge totale 6 kN à 1 m : <b>Y<sub>A</sub> = 6 kN</b>, <b>M<sub>A</sub> = 6 × 1 = 6 kN·m</b>.</p>
-      <p><b>b)</b> Partie droite : charge 3(2 − x) vers le bas, appliquée à (2 − x)/2 de la coupe. <span class="m">T<sub>y</sub> = <b>−3(2 − x)</b></span> ; <span class="m">Mf<sub>z</sub> = <b>−3(2 − x)²/2</b></span>.</p>
-      <p><b>c)</b> Encastrement (x = 0) : T = −6 kN, Mf = <b>−6 kN·m</b> = pL²/2 ✅. Milieu (x = 1) : T = −3 kN, Mf = −1,5 kN·m : quatre fois moins qu'à l'encastrement, car Mf varie comme le carré de la distance au bout.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 6 : retrouver le chargement <span class="lvtag">N2 · chapitre 4</span></h4>
-    <p>Poutre de 6 m sur deux appuis. Son diagramme de T<sub>y</sub> vaut −8 kN de 0 à 2 m, puis +4 kN de 2 à 6 m.</p>
-    <p><b>a)</b> Quel est le chargement ? Quelles sont les réactions ?<br><b>b)</b> Calcule Mf<sub>z</sub> en x = 2 m par l'aire de T, puis vérifie par la droite.</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> T est constant par morceaux : pas de charge répartie. Il saute de −8 à +4 en x = 2 m : une charge ponctuelle de <b>12 kN vers le bas</b> à 2 m. T = −Y<sub>A</sub> au départ, donc <b>Y<sub>A</sub> = 8 kN</b> ; T = +Y<sub>B</sub> à la fin, donc <b>Y<sub>B</sub> = 4 kN</b> (et 8 + 4 = 12 ✅).</p>
-      <p><b>b)</b> <span class="m">Mf(2) = −(aire de T entre 0 et 2) = −(−8 × 2) = <b>16 kN·m</b></span>. Par la droite : Y<sub>B</sub> à 4 m de la coupe, <span class="m">Mf = 4 × 4 = 16 kN·m</span> ✅.</p>
-    </div></details>
-  </div>
-
-  <div class="exo" style="border-left-color:var(--mat)">
-    <h4>Défi : le couple concentré <span class="lvtag">N2 · chapitre 4</span></h4>
-    <p>Poutre de 4 m sur deux appuis, sans aucune force : seulement un couple C = 8 kN·m (sens trigonométrique) appliqué au milieu. Trace T et Mf.</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p>Moments en A : <span class="m">4Y<sub>B</sub> + 8 = 0</span>, donc <b>Y<sub>B</sub> = −2 kN</b> (vers le bas) et <b>Y<sub>A</sub> = +2 kN</b>. T<sub>y</sub> = −Y<sub>A</sub> = <b>−2 kN partout</b> : aucune force entre les appuis. Mf : pour x &lt; 2, <span class="m">Mf = 2x</span>, qui monte à <b>+4 kN·m</b> ; au passage du couple, saut de −C = −8 : <b>−4 kN·m</b> ; puis <span class="m">Mf = 2x − 8</span>, qui revient à 0 en B. Un diagramme en « dents de scie » : un couple fait sauter Mf, jamais T.</p>
+      <p><b>a)</b> Y<sub>A</sub> = Y<sub>B</sub> = 6 kN. T<sub>y</sub>(x) = 2x − 6 ; Mf<sub>z</sub>(x) = 6x − x². T s'annule en x = 3 m : Mf<sub>max</sub> = 18 − 9 = <b>9 kN·m</b> = pL²/8 ✅.</p>
+      <p><b>b)</b> La charge ponctuelle seule donne FL/4 = 6 × 6/4 = 9 kN·m au milieu, et ±3 kN d'effort tranchant. Les deux maxima sont au même endroit : Mf<sub>max</sub> = 9 + 9 = <b>18 kN·m</b>. Aux appuis : |T| = 6 + 3 = <b>9 kN</b>.</p>
+      <p><b>c)</b> Loin du milieu, où le moment est maximal : près d'un appui. À x = 1 m : réactions 9 kN ; T<sub>y</sub> = −(9 − 2 × 1) = <b>−7 kN</b> ; Mf<sub>z</sub> = 9 × 1 − 2 × 1²/2 = <b>8 kN·m</b>, moins de la moitié des 18 kN·m du milieu, mais avec presque tout l'effort tranchant.</p>
     </div></details>
   </div>
 </div>
@@ -706,6 +703,7 @@ input.r-gam{accent-color:var(--gam)}
     <div><div class="ic">🔄</div><h4>Le couple</h4><div class="f">Δ<span class="sig">Mf</span> = −C</div><p>Un couple concentré fait sauter Mf, pas T. Aux appuis d'extrémité sans couple, Mf = 0.</p></div>
     <div><div class="ic">➕</div><h4>Superposition</h4><div class="f">diagrammes qui s'additionnent</div><p>Point par point. Les maxima ne s'additionnent que s'ils sont au même endroit.</p></div>
   </div>
+  <div class="btns"><button class="btn" id="printFiche" type="button">🖨 Imprimer la fiche mémoire</button></div>
   <div class="fun"><span class="fun-h">🌉 Fun fact : Le pont du Forth, un diagramme de moment en acier</span>Le pont ferroviaire du Forth, en Écosse, ouvert en 1890, repose sur trois grandes consoles doubles en acier. Elles sont très hautes au-dessus de leurs piles et s'affinent vers leurs extrémités : leur hauteur suit l'allure du diagramme de moment fléchissant d'une console, maximal à l'encastrement et nul au bout libre (<a href="#c5">chapitre 5</a>). Pour faire comprendre ce principe, ses ingénieurs, John Fowler et Benjamin Baker, en présentent en 1887 un modèle vivant : deux hommes assis sur des chaises, bras tendus tenant des bâtons, forment deux consoles. Leurs bras travaillent en traction, les bâtons en compression, des piles de briques servent de contrepoids, et au milieu, assis sur une planche suspendue, l'ingénieur japonais Kaichi Watanabe joue le rôle de la charge. La photo est si célèbre qu'elle a figuré, de 2007 à 2022, sur le billet de 20 livres de la Bank of Scotland.</div>
 </div>
 </section>
@@ -769,6 +767,20 @@ const NS="http://www.w3.org/2000/svg";
 const $=s=>document.querySelector(s);
 const $$=s=>Array.from(document.querySelectorAll(s));
 const RM=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+function player(id,o){/* lecteur pilotable : ⏮ début, ◀ pas, ▶ lecture ou ⏸ pause (reprend où elle s'est arrêtée), pas ▶ ; o.get() et o.set(t) avec t de 0 à 1, o.dur (ms), o.steps */
+  const box=$("#"+id),bp=box.querySelector('[data-a="play"]'),lab=bp.textContent,n=o.steps||20;let raf=null,run=false;
+  const cl=t=>Math.max(0,Math.min(1,t));
+  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;bp.textContent=lab;}
+  function step(d){stop();o.set(cl(Math.round(o.get()*n+d)/n));}
+  bp.addEventListener("click",()=>{if(run){stop();return;}let t0=o.get();if(t0>=0.999)t0=0;
+    if(RM){o.set(cl(Math.round(t0*n+1)/n));return;}
+    run=true;bp.textContent="⏸ Pause";const s0=performance.now()-t0*o.dur;
+    const f=now=>{if(!run)return;const t=cl((now-s0)/o.dur);o.set(t);if(t>=1){stop();return;}raf=requestAnimationFrame(f);};raf=requestAnimationFrame(f);});
+  box.querySelector('[data-a="start"]').addEventListener("click",()=>{stop();o.set(0);});
+  box.querySelector('[data-a="back"]').addEventListener("click",()=>step(-1));
+  box.querySelector('[data-a="fwd"]').addEventListener("click",()=>step(1));
+  return {stop:stop};
+}
 
 function el(tag,attrs,parent){
   const e=document.createElementNS(NS,tag);
@@ -870,7 +882,8 @@ function drawBeamDiagrams(svg,sol,o){
     tx(svg,(a+b)/2,yb-12-h,"p = "+nf(c.p,1)+" kN/m","lbl",{"text-anchor":"middle",style:"fill:var(--frc);font-weight:700"});});
   sol.P.forEach((f,i)=>{if(Math.abs(f.F)<1e-9)return;const x=X(f.x),l=16+Math.min(Math.abs(f.F),30)*1.2;
     if(f.F>0)arrow(svg,x,yb-6-l,x,yb-5,"frc",3,10);else arrow(svg,x,yb-5,x,yb-6-l,"frc",3,10);
-    tx(svg,x+6,yb-l+2,(sol.P.length>1?"F"+"₁₂"[i]+" = ":"F = ")+nf(Math.abs(f.F),1),"lbl",{style:"fill:var(--frc);font-weight:700"});});
+    const rt=x>600;/* près du bord droit, l'étiquette passe à gauche de la flèche ; elle reste sous le haut du cadre */
+    tx(svg,rt?x-6:x+6,Math.max(16,yb-l+2),(sol.P.length>1?"F"+"₁₂"[i]+" = ":"F = ")+nf(Math.abs(f.F),1),"lbl",{"text-anchor":rt?"end":"start",style:"fill:var(--frc);font-weight:700"});});
   sol.C.forEach(c=>{if(Math.abs(c.C)<1e-9)return;arcArrow(svg,X(c.x),yb,18,c.C>0,"frc",2.4);tx(svg,X(c.x)+22,yb-22,"C = "+nf(c.C,1),"lbl",{style:"fill:var(--frc);font-weight:700"});});
   if(Math.abs(sol.H)>1e-9){if(sol.H>0)arrow(svg,X(L)+6,yb,X(L)+30,yb,"frc",2.8,9);else arrow(svg,X(L)+30,yb,X(L)+6,yb,"frc",2.8,9);}
   // réactions
@@ -905,7 +918,7 @@ function drawBeamDiagrams(svg,sol,o){
     }
     // sauts
     if(o.jumps&&key==="T"){for(let i=1;i<sol.S.length;i++){const a=sol.S[i-1],b=sol.S[i];const d=b.T-a.T;
-      if(Math.abs(b.x-a.x)<1e-9&&Math.abs(d)>1e-6&&b.x>1e-6&&b.x<L-1e-6){const yy=(Yv(a.T)+Yv(b.T))/2;tx(svg,X(b.x)+6,yy+4,"saut +"+nf(d,1),"lbl",{style:"fill:var(--frc);font-weight:700"});}}}
+      if(Math.abs(b.x-a.x)<1e-9&&Math.abs(d)>1e-6&&b.x>1e-6&&b.x<L-1e-6){const yy=(Yv(a.T)+Yv(b.T))/2;tx(svg,X(b.x)>590?X(b.x)-6:X(b.x)+6,yy+4,"saut +"+nf(d,1),"lbl",{"text-anchor":X(b.x)>590?"end":"start",style:"fill:var(--frc);font-weight:700"});}}}
     // aire
     if(o.area&&key==="T"&&o.cut!=null){const part=sol.S.filter(s=>s.x<=o.cut+1e-9).concat([Object.assign({x:o.cut},sol.at(o.cut,1))]);
       const poly=[X(0)+","+yc].concat(part.map(s=>X(s.x).toFixed(1)+","+Yv(s.T).toFixed(1))).concat([X(o.cut)+","+yc]);
@@ -937,10 +950,10 @@ const fx=v=>nf(Math.abs(v)<5e-4?0:v,2);
     const v=sol.at(x,1);
     $("#d1out").innerHTML="coupe à x = "+nf(x,2)+" m ("+(x<a?"tronçon 1, avant la charge":"tronçon 2, après la charge")+") : "+S("tau","T<sub>y</sub> = "+fx(v.T)+" kN")+" · "+S("sig","Mf<sub>z</sub> = "+fx(v.M)+" kN·m")+"<br>formules : "+(x<a?"T<sub>y</sub> = −Y<sub>A</sub> = "+fx(-sol.R.YA)+" ; Mf<sub>z</sub> = Y<sub>A</sub>·x = "+fx(sol.R.YA)+" × "+nf(x,2):"T<sub>y</sub> = F − Y<sub>A</sub> = "+fx(10-sol.R.YA)+" ; Mf<sub>z</sub> = Y<sub>A</sub>·x − F(x − a)");
   }
-  function stop(){if(anim){cancelAnimationFrame(anim);anim=null;}bp.textContent="▶ Lancer le film";}
+  function stop(){A.stop();}
   [ix,ia].forEach(i=>i.addEventListener("input",()=>{stop();draw();}));cg.addEventListener("change",draw);
-  bp.addEventListener("click",()=>{if(anim){stop();return;}if(+ix.value>=3.99)ix.value=0;bp.textContent="⏸ Pause";
-    const step=()=>{const v=Math.min(4,+ix.value+(RM?0.5:0.02));ix.value=v;draw();if(v<4)anim=requestAnimationFrame(step);else stop();};anim=requestAnimationFrame(step);});
+  /* lecteur : la coupe avance de x = 0 à 4 m, par pas de 25 cm */
+  const A=player("d1pl",{get:()=>+ix.value/4,set:t=>{ix.value=4*t;draw();},dur:6000,steps:16});
   draw();
 })();
 
@@ -1078,6 +1091,13 @@ const fx=v=>nf(Math.abs(v)<5e-4?0:v,2);
     if(tin){const tgt=a.offsetLeft-tin.clientWidth/2+a.offsetWidth/2;try{tin.scrollTo({left:tgt,behavior:RM?"auto":"smooth"});}catch(e){tin.scrollLeft=tgt;}}});},{rootMargin:"-45% 0px -50% 0px"});
   Object.keys(map).forEach(id=>{const s=document.getElementById(id);if(s)obs.observe(s);});
 })();
+})();
+</script>
+<script>
+(function(){/* impression de la fiche mémoire seule */
+  const b=document.getElementById("printFiche");if(!b)return;
+  b.addEventListener("click",()=>{document.body.classList.add("print-fiche");window.print();});
+  window.addEventListener("afterprint",()=>document.body.classList.remove("print-fiche"));
 })();
 </script>
 </body>

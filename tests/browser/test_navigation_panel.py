@@ -9,7 +9,7 @@ LAB = """<div class="lab" id="m1"><p class="lab-h">Manipulation 1 : refroidir un
 <div class="btns"><button class="btn" type="button">Acier S355</button><button class="btn" type="button">Inox</button></div>
 <div class="ctrl"><label for="m1e">Énergie</label><input type="range" id="m1e"><output>1,0 kJ/mm</output></div>
 <svg id="m1svg" viewBox="0 0 640 300" role="img" aria-label="Courbe de refroidissement"><rect x="1" y="1" width="638" height="298" fill="none" stroke="currentColor"/></svg>
-<div class="readout"><span>t8/5 = 6 s</span></div><p class="status">Refroidissement modéré.</p></div>"""
+<div class="tbl-wrap"><table><tr><th>Température</th><td>800 °C</td></tr></table></div><div class="lab-fig">Résultat complémentaire</div><div class="readout"><span>t8/5 = 6 s</span></div><p class="status">Refroidissement modéré.</p></div>"""
 
 DESKTOP = {"width": 1366, "height": 768}
 
@@ -123,3 +123,25 @@ def test_landscape_course_shows_a_manipulation_side_by_side(site):
     controls = page.locator("#m1 .ctrl").bounding_box()
     assert drawing["y"] >= controls["y"] + controls["height"] - 1, "sur téléphone, la présentation d’origine est conservée"
     assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+
+
+def test_landscape_keeps_results_with_the_drawing_and_restores_mobile_order(site):
+    page, base = site
+    page.goto(base + "Thermique/introduction.html#m1")
+    original = page.locator("#m1").evaluate("lab => [...lab.children].map(el => el.outerHTML)")
+    page.locator("#m1e").evaluate("el => { el.value = 37; el.addEventListener('input', () => window.lastEnergy = el.value); }")
+    for _ in range(2):
+        page.set_viewport_size(DESKTOP)
+        expect(page.locator("#m1")).to_have_class("lab wiki-lab-split")
+        controls = page.locator("#m1 .ctrl").bounding_box()
+        drawing = page.locator("#m1svg").bounding_box()
+        for selector in (".tbl-wrap", ".lab-fig", ".readout", ".status"):
+            result = page.locator("#m1 " + selector).bounding_box()
+            assert result["x"] < controls["x"], "les résultats restent dans la colonne du schéma"
+            assert result["y"] >= drawing["y"] + drawing["height"] - 1
+        page.set_viewport_size({"width": 390, "height": 844})
+        expect(page.locator("#m1 > .ctrl")).to_be_visible()
+        assert page.locator("#m1").evaluate("lab => [...lab.children].map(el => el.outerHTML)") == original
+        expect(page.locator("#m1e")).to_have_value("37")
+    page.locator("#m1e").dispatch_event("input")
+    assert page.evaluate("window.lastEnergy") == "37"

@@ -113,13 +113,6 @@ section.chap{padding:46px 0 10px}
 .c-img span{font-size:.95rem;line-height:1.3}
 @media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
 
-/* niveaux */
-.lv{margin:1.2rem 0;padding:6px 22px 14px;border-radius:4px}
-.lv1{background:var(--card);border:2px solid var(--ink)}
-.lv2{background:var(--lv2);border-left:6px solid var(--ink)}
-.lv-h{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;font-family:var(--font-head);font-size:1.35rem;font-weight:600;margin:10px 0 4px}
-.lv-h .tag{font-size:.95rem;font-family:var(--font-body);font-weight:400;color:var(--muted)}
-@media (max-width:520px){.lv{padding:6px 14px 12px}}
 
 /* formules et encadrés */
 .fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:600px;text-align:center;border-radius:3px;overflow-x:auto}
@@ -253,6 +246,28 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
 .btn.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,var(--card))}
 .btn.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--card))}
 .ctrl[hidden]{display:none}
+
+/* gabarit court : approfondissement replié, à retenir, prédiction */
+details.deep{margin:1.2rem 0;padding:0 18px;background:var(--lv2);border-left:6px solid var(--ink);border-radius:4px}
+details.deep>summary{font-family:var(--font-head);font-size:1.2rem;font-weight:600;padding:9px 0}
+details.deep[open]{padding-bottom:10px}
+.retenir{margin:1.4rem 0 .4rem;padding:8px 18px 6px;background:var(--card);border:2px solid var(--ink);border-radius:4px}
+.retenir>b:first-child{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.retenir ul{margin:.3rem 0 .3rem}
+.predict{display:block;margin-top:.35rem;color:var(--ink);font-weight:700}
+@media (max-width:520px){details.deep{padding:0 12px}.retenir{padding:8px 12px 6px}}
+
+/* impression : le cours sur papier clair, ou la fiche mémoire seule sur une page */
+@media print{
+  :root,:root[data-theme]{--paper:#fff!important;--paper-2:#EEF2F6!important;--card:#fff!important;--ink:#111!important;--muted:#444!important;--line:#999!important;--grid:transparent!important;--lv2:#F2F5F8!important;--hl:#FFF3B0!important;color-scheme:light}
+  body{background:#fff;font-size:11pt}
+  .toc,.theme-btn,.btns,.ctrl,#qzReset,.score{display:none!important}
+  section.chap{padding:14px 0 4px}
+  .lab,.fx,.retenir,details.deep,.fiche>div,.exo{break-inside:avoid}
+  body.print-fiche header,body.print-fiche main>section:not(#fiche),body.print-fiche footer{display:none!important}
+  body.print-fiche #fiche .cartouche{margin-bottom:.6rem}
+  body.print-fiche .fiche>div{padding:8px 10px}
+}
 </style>
 </head>
 <body>
@@ -268,7 +283,7 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     </div>
     <div class="tb-cells">
       <div><small>Cours</small><b>1 sur 4 : la couche passive, les réseaux du fer, la boucle γ, les éléments d'alliage, Cr<sub>eq</sub> et Ni<sub>eq</sub>, les désignations</b></div>
-      <div><small>Durée conseillée</small><b>≈ 3 h avec les exercices</b></div>
+      <div><small>Durée conseillée</small><b>≈ 1 h 15 à 1 h 30 avec les exercices</b></div>
       <div><small>Prérequis</small><b>diagramme fer-carbone, ferrite et austénite (Métallurgie, cours 1) ; éléments d'addition, trempe et martensite (Métallurgie, cours 2 et 3)</b></div>
       <div><small>À la fin tu sais</small><b>expliquer la passivité et ses limites ; prévoir avec la boucle γ qui peut prendre la trempe ; classer les éléments d'alliage ; calculer Cr<sub>eq</sub> et Ni<sub>eq</sub> ; décoder une désignation EN, AISI ou ISO/TR 15608</b></div>
     </div>
@@ -314,55 +329,33 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
   <h3 style="margin-top:0">Avant de commencer</h3>
   <h4>Ce que tu sais déjà, en trois cases</h4>
   <div class="recall">
-    <div><div class="f"><span class="gam">α</span> cc · <span class="gam">γ</span> cfc</div>Le fer pur est cubique centré (ferrite α) jusqu'à 912 °C, cubique à faces centrées (austénite γ) jusqu'à 1 394 °C, puis à nouveau cubique centré (ferrite δ) jusqu'à la fusion (Métallurgie, cours 1).</div>
-    <div><div class="f"><span class="mat">Cr</span> → α · <span class="mat">Ni</span> → γ</div>Les éléments d'addition favorisent la ferrite (alphagènes) ou l'austénite (gammagènes) et déplacent les températures de transformation (Métallurgie, cours 2).</div>
-    <div><div class="f">γ → M, sans diffusion</div>Une austénite trempée devient martensite dès qu'elle passe sous M<sub>s</sub> ; le carbone piégé la rend dure (Métallurgie, cours 3).</div>
+    <div><div class="f">α cc · γ cfc</div>Le fer pur est cubique centré (ferrite α) jusqu'à 912 °C, cubique à faces centrées (austénite γ) jusqu'à 1 394 °C, puis à nouveau cubique centré (ferrite δ) jusqu'à la fusion.</div>
+    <div><div class="f">Cr → α · Ni → γ</div>Les éléments d'addition favorisent la ferrite (alphagènes) ou l'austénite (gammagènes) et déplacent les transformations.</div>
+    <div><div class="f">γ → M, sans diffusion</div>Une austénite trempée devient martensite dès qu'elle passe sous M<sub>s</sub> ; le carbone piégé la rend dure.</div>
   </div>
 
-  <div class="def"><b>📘 Correspondance avec le planning et le référentiel</b>. Ce cours ouvre le sujet <b>2.15 « Aciers inoxydables »</b> du planning de la formation. Il sert aussi au sujet <b>2.14 « Introduction à la corrosion »</b> (chapitre 1) et au sujet <b>2.4 « Classification des aciers »</b> (chapitre 6).
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>Chapitre du cours</th><th>Ce qu'il apporte à l'IWE</th></tr>
-      <tr><td>1 La couche passive</td><td>passivité, seuil de 10,5 % de chrome, piqûres, corrosion galvanique, contaminations</td></tr>
-      <tr><td>2 Les réseaux du fer</td><td>ferrite, austénite, martensites ; sites interstitiels ; magnétisme</td></tr>
-      <tr><td>3 Le fer-chrome et la boucle γ</td><td>diagramme fer-chrome, effet du nickel, du carbone et de l'azote ; qui peut prendre la trempe</td></tr>
-      <tr><td>4 Alphagènes, gammagènes, carburigènes</td><td>rôle de chaque élément d'alliage, stabilisation au titane et au niobium</td></tr>
-      <tr><td>5 Cr<sub>eq</sub>, Ni<sub>eq</sub> et diagrammes prédictifs</td><td>équivalents de Schaeffler, DeLong et Schneider ; carte des familles</td></tr>
-      <tr><td>6 Désigner un inox</td><td>EN 10027-1 et -2, AISI, ancienne norme française, groupes ISO/TR 15608</td></tr>
-    </table></div>
-    Dans le référentiel de l'IIW (<i>International Institute of Welding</i>) pour la formation IWE (<i>International Welding Engineer</i>), ce cours répond aux attendus sur les aciers inoxydables : définir un inox, expliquer le rôle des éléments d'alliage, relier la composition à la structure, et lire les désignations normalisées et les groupes de matériaux utilisés pour qualifier les modes opératoires.
-  </div>
-
-  <div class="def"><b>📖 Les sigles et notations de ce cours</b>.
-    <ul>
-      <li><b>α</b> (alpha) : la ferrite, cubique centrée (<b>cc</b>) ; <b>δ</b> (delta) : la ferrite de haute température, même structure ; <b>γ</b> (gamma) : l'austénite, cubique à faces centrées (<b>cfc</b>) ; <b>α'</b> et <b>ε</b> : deux martensites, quadratique centrée et hexagonale compacte (<b>hc</b>). Sur les cartes, on écrit aussi A (austénite), F (ferrite) et M (martensite).</li>
-      <li><b>Cr<sub>eq</sub></b>, <b>Ni<sub>eq</sub></b> : chrome et nickel équivalents (chapitre 5) ; <b>PREN</b> (<i>Pitting Resistance Equivalent Number</i>) : indice de résistance aux piqûres (chapitre 1) ; <b>M<sub>s</sub></b> : température de début de transformation martensitique.</li>
-      <li><b>EN</b> : norme européenne ; <b>AISI</b> : <i>American Iron and Steel Institute</i> ; <b>ISO/TR</b> : rapport technique de l'ISO ; <b>nm</b> : nanomètre, un millionième de millimètre.</li>
-      <li>Sauf mention contraire, toutes les teneurs sont en <b>% massique</b>.</li>
-    </ul>
-    Les compositions des exemples sont des analyses types ; les modèles des manipulations sont pédagogiques, calés sur des ordres de grandeur publiés.
-  </div>
+  <div class="def"><b>📘 Le sujet du planning</b> : ce cours ouvre le sujet <b>2.15 « Aciers inoxydables »</b>, et sert aussi aux sujets <b>2.14 « Introduction à la corrosion »</b> (chapitre 1) et <b>2.4 « Classification des aciers »</b> (chapitre 6). Attendus de l'IWE (<i>International Welding Engineer</i>) selon le référentiel de l'IIW : définir un inox, expliquer le rôle des éléments d'alliage, relier composition et structure, lire les désignations et les groupes de matériaux des qualifications. <b>Sigles</b> : α, δ ferrite (cubique centrée, cc) ; γ austénite (cubique à faces centrées, cfc) ; α′ et ε, martensites ; Cr<sub>eq</sub>, Ni<sub>eq</sub> : chrome et nickel équivalents ; PREN : indice de résistance aux piqûres ; teneurs en % massique.</div>
 
   <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage</b>
-    <p>Souder, c'est refondre et réchauffer un alliage. Pour prévoir ce que deviendra un inox, il faut savoir d'où vient sa résistance à la corrosion (et ce qui la détruit à l'atelier), quelle structure il a et pourquoi, et lire sans erreur sa désignation sur un certificat matière ou un mode opératoire de soudage. Les groupes ISO/TR 15608 décident même de l'étendue de validité d'une qualification : un mode opératoire qualifié sur un groupe 8.1 ne couvre pas un groupe 10.</p>
+    <p>Souder, c'est refondre et réchauffer un alliage. Pour prévoir ce que deviendra un inox, il faut savoir d'où vient sa résistance à la corrosion (et ce qui la détruit à l'atelier), quelle structure il a et pourquoi, et lire sans erreur sa désignation sur un certificat ou un mode opératoire. Les groupes ISO/TR 15608 décident même de la validité d'une qualification : un mode opératoire qualifié sur un groupe 8.1 ne couvre pas un groupe 10.</p>
   </div>
 
   <h4>La série en quatre cours</h4>
   <div class="series">
     <div class="here"><b>1 Ce qui fait un inox</b>Passivité, réseaux du fer, boucle γ, éléments d'alliage, équivalents, désignations.</div>
-    <div><b>2 Les familles d'inox</b>Ferritiques, martensitiques, durcis par précipitation, austénitiques, duplex : propriétés et applications.</div>
-    <div><b>3 La carte des dangers et les fissurations</b>Schaeffler et Bystram, modes de solidification, fissuration à chaud, liquation, fissuration à froid, gros grains.</div>
-    <div><b>4 Ce qui précipite quand l'inox s'attarde au chaud</b>Diagramme fer-chrome, phase σ, courbes TTP, fragilisation à 475 °C, sensibilisation, rochage.</div>
+    <div><b>2 Les familles d'inox</b>Ferritiques, martensitiques, durcis par précipitation, austénitiques, duplex.</div>
+    <div><b>3 La carte des dangers et les fissurations</b>Schaeffler et Bystram, solidification, fissuration à chaud et à froid, gros grains.</div>
+    <div><b>4 Ce qui précipite au chaud</b>Phase σ, fragilisation à 475 °C, sensibilisation, rochage.</div>
   </div>
-  <p class="mut" style="font-size:.92rem">Déjà vu : fer-carbone, éléments d'addition et martensite (Métallurgie, cours 1 à 3). Voir aussi : les essais de traction et de dureté (Essais, cours 1 et 2).</p>
 
   <h4>Le plan du cours</h4>
   <ol class="route">
-    <li><span class="dot">1</span><b>La couche passive</b><p>Quelques nanomètres d'oxyde de chrome, qui se referment seuls… presque toujours.</p></li>
-    <li><span class="dot">2</span><b>Les réseaux du fer</b><p>Cubique centré, cubique à faces centrées, et les martensites : où se glisse le carbone.</p></li>
-    <li><span class="dot">3</span><b>Le fer-chrome et la boucle γ</b><p>Le chrome referme l'île d'austénite, le nickel, le carbone et l'azote la font gonfler.</p></li>
-    <li><span class="dot">4</span><b>Alphagènes, gammagènes, carburigènes</b><p>Le rôle de chaque élément d'alliage, et les stabilisants.</p></li>
-    <li><span class="dot">5</span><b>Cr<sub>eq</sub>, Ni<sub>eq</sub> et diagrammes prédictifs</b><p>Deux nombres pour prévoir une structure.</p></li>
-    <li><span class="dot">6</span><b>Désigner un inox</b><p>X5CrNi18-10, 1.4301, 304 : trois noms pour un même acier.</p></li>
+    <li><span class="dot">1</span><b>La couche passive</b><p>Le film étirable.</p></li>
+    <li><span class="dot">2</span><b>Les réseaux du fer</b><p>Les oranges sur l'étal.</p></li>
+    <li><span class="dot">3</span><b>Le fer-chrome et la boucle γ</b><p>L'île d'austénite.</p></li>
+    <li><span class="dot">4</span><b>Alphagènes, gammagènes, carburigènes</b><p>Le tir à la corde.</p></li>
+    <li><span class="dot">5</span><b>Cr<sub>eq</sub>, Ni<sub>eq</sub> et diagrammes prédictifs</b><p>La balance de l'apothicaire.</p></li>
+    <li><span class="dot">6</span><b>Désigner un inox</b><p>La carte d'identité.</p></li>
   </ol>
 </div>
 </section>
@@ -375,21 +368,14 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="c-img"><span class="ico">🛡️</span><span><small>Image à retenir</small>Le film étirable : une pellicule invisible qui se referme toute seule quand on la déchire, sauf si le sel s'en mêle</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">un bouclier qui se répare</span></div>
-    <p>Un acier ordinaire rouille parce que sa rouille ne le protège pas : les oxydes de fer (FeO, Fe₃O₄, Fe₂O₃) forment des couches épaisses, poreuses, qui laissent passer l'oxygène et l'eau. La corrosion continue en dessous, jusqu'à percer la tôle.</p>
-    <p>Ajoutons du chrome. Le chrome a une très grande affinité pour l'oxygène : il s'oxyde avant le fer et forme un oxyde, Cr₂O₃, compact et sans pores. Avec un peu de chrome, cet oxyde reste en îlots dispersés dans la rouille. Avec <b>au moins 10,5 % de chrome</b>, il forme une pellicule <b>continue</b>, épaisse de quelques nanomètres seulement (environ 1 à 5 nm, soit dix mille fois moins qu'un cheveu). Cette pellicule est une barrière : l'acier est dit <b>passif</b>. C'est la définition d'un acier inoxydable selon l'EN 10088-1 : au moins 10,5 % de chrome et au plus 1,2 % de carbone.</p>
-    <p>Son grand atout : elle <b>se reforme seule</b>. Une rayure met le métal à nu ; si l'oxygène de l'air ou de l'eau est présent, le chrome exposé se réoxyde en quelques instants. C'est la <b>repassivation</b>.</p>
-    <p>Mais un inox n'est pas inoxydable partout ni toujours :</p>
-    <ul>
-      <li>les <b>chlorures</b> (eau de mer, sels de déneigement, produits de nettoyage) attaquent la pellicule en des points précis : une <b>piqûre</b> se creuse avant que la couche ne se referme ;</li>
-      <li>des <b>copeaux ou des particules d'acier ordinaire</b> (meulage, brosse, outil) déposés sur l'inox rouillent et amorcent la corrosion ;</li>
-      <li>au <b>contact d'un autre métal</b>, dans un liquide conducteur, un courant électrique circule : c'est la <b>corrosion galvanique</b>, qui attaque le moins noble des deux, d'autant plus vite que sa surface est petite.</li>
-    </ul>
-  </div>
+  <p>Un acier ordinaire rouille parce que sa rouille, épaisse et poreuse, ne le protège pas. Avec <b>au moins 10,5 % de chrome</b>, le chrome, très avide d'oxygène, forme en surface une pellicule d'oxyde <b>continue</b> de quelques nanomètres (1 à 5 nm) : l'acier est <b>passif</b>. C'est la définition d'un inox selon l'EN 10088-1 : au moins 10,5 % de chrome et au plus 1,2 % de carbone. Comme un film étirable, cette pellicule <b>se reforme seule</b> après une rayure, en présence d'oxygène : c'est la <b>repassivation</b>.</p>
+  <p>Mais un inox n'est pas inoxydable partout ni toujours : les <b>chlorures</b> (eau de mer, sels de déneigement, produits de nettoyage) percent la pellicule en des points où se creusent des <b>piqûres</b> ; des <b>particules d'acier ordinaire</b> (meulage, brosse) déposées sur l'inox rouillent et amorcent la corrosion ; au <b>contact d'un autre métal</b> dans un liquide conducteur, la <b>corrosion galvanique</b> attaque le moins noble des deux, d'autant plus vite que sa surface est petite.</p>
 
-  <div class="lab" id="m1">
+  <div class="fx"><div class="big">PREN = %Cr + 3,3·%Mo + 16·%N</div><p class="cap">Indice de résistance aux piqûres, en % massique : il sert à comparer des nuances, pas de valeur physique absolue. Repères : 304L ≈ 19,5 ; 316L ≈ 25 ; 2205 ≈ 35,5 ; 2507 ≈ 42. Sous environ 35, une nuance ne convient pas à l'eau de mer ; on vise plus de 40 pour les applications marines.</p></div>
+
+<div class="lab" id="m1">
     <p class="lab-h">Manipulation 1 : le bouclier de chrome</p>
-    <p class="lab-sub">Trois situations, un même schéma en coupe. « La couche » : fais varier le chrome et regarde les oxydes se réorganiser, avec la perte de masse en atmosphère. « La rayure » : choisis une nuance et un milieu, puis lance la rayure : la couche se referme, ou une piqûre se creuse. « Lancer » anime la situation choisie. « Le couple » : deux métaux en contact dans l'eau salée ; règle le rapport des surfaces. Modèles pédagogiques, calés sur des ordres de grandeur publiés.</p>
+    <p class="lab-sub">« La couche » : fais varier le chrome. « La rayure » : choisis une nuance et un milieu. « Le couple » : deux métaux dans l'eau salée.<span class="predict">🔮 Prédis d'abord : un 316L tient-il dans l'eau de mer à 40 °C ?</span></p>
     <div class="btns" id="m1m">
       <button class="btn on" data-k="layer" type="button">La couche</button>
       <button class="btn" data-k="scratch" type="button">La rayure</button>
@@ -417,52 +403,30 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
       <button class="btn" data-k="cu" type="button">Inox + cuivre</button>
     </div>
     <div class="ctrl" id="m1ac"><label for="m1a">Surfaces <span class="mat">A<sub>c</sub>/A<sub>a</sub></span></label><input type="range" id="m1a" class="r-mat" min="-3" max="3" step="0.1" value="0"><output id="m1ao"></output></div>
-    <div class="btns"><button class="btn play" id="m1play" type="button">▶ Lancer</button></div>
+    <div class="btns"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" id="m1play" type="button">▶ Lancer</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button></div>
     <svg id="m1svg" role="img" aria-label="Coupe de la surface d'un acier avec ses oxydes, rayure et repassivation, ou couple galvanique"></svg>
     <div class="readout" id="m1r"></div>
     <p class="status" id="m1msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">passivité, piqûres, PREN, couples galvaniques</span></div>
-    <h4>De la rouille à la couche passive</h4>
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>Teneur en chrome</th><th>Ce qui se forme en surface</th><th>Comportement</th></tr>
-      <tr><td class="n">0 %</td><td>FeO, Fe₃O₄, Fe₂O₃ en couches épaisses et poreuses</td><td>la corrosion progresse sous la rouille</td></tr>
-      <tr><td class="n">quelques %</td><td>îlots d'oxyde mixte FeCr₂O₄ (une spinelle) et de Cr₂O₃ dans les oxydes de fer</td><td>corrosion ralentie, mais pas arrêtée</td></tr>
-      <tr><td class="n">≥ 10,5 à 12 %</td><td>pellicule continue riche en chrome, 1 à 5 nm</td><td>passivité : la corrosion devient extrêmement lente</td></tr>
-    </table></div>
-    <p>La pellicule passive n'est pas du Cr₂O₃ pur : c'est un oxyde et hydroxyde mixte, enrichi en chrome par rapport au métal. Elle ne se forme et ne se répare qu'en présence d'un oxydant (oxygène de l'air ou dissous dans l'eau). Un recoin confiné, sans renouvellement d'oxygène, ne se repassive pas : c'est l'origine de la <b>corrosion caverneuse</b> (sous un joint, un dépôt, dans un recouvrement de tôles).</p>
+  <p><b>Exemple</b> : une tôle d'inox de 2 m² assemblée par des rivets en acier au carbone de 20 cm² mouillés : la surface cathodique est 1 000 fois plus grande que l'anode, et les rivets sont dévorés ; des rivets en inox dans une tôle d'acier ne changent presque rien. Toujours la petite pièce dans le métal le plus noble, ou isoler électriquement. Un recoin confiné, sans renouvellement d'oxygène, ne se repassive pas : c'est la <b>corrosion caverneuse</b>, sous un joint, un dépôt, dans un recouvrement de tôles.</p>
 
-    <h4>Les piqûres et l'indice PREN</h4>
-    <p>Un ion chlorure Cl⁻ peut percer localement la pellicule. Au fond du trou, le métal se dissout ; les ions métalliques s'hydrolysent et rendent la solution acide, ce qui accélère la dissolution : la piqûre s'auto-entretient. Pour classer les nuances, on utilise l'indice de résistance aux piqûres :</p>
-    <div class="fx"><div class="big"><span class="eps">PREN</span> = %Cr + 3,3·%Mo + 16·%N</div><p class="cap">Teneurs en % massique. Exemples : 304L ≈ 19,5 ; 316L ≈ 24,9 ; 2205 ≈ 35,5 ; 2507 ≈ 41,9</p></div>
-    <p>Le PREN n'a pas de signification physique en valeur absolue : il sert à <b>comparer</b> des nuances entre elles. En règle générale, une nuance de PREN inférieur à environ 35 ne convient pas à l'eau de mer, et l'on vise plus de 40 (super duplex, super austénitiques) pour les applications marines. D'autres critères existent : le potentiel de piqûration E<sub>pit</sub>, mesuré par un essai électrochimique, et la température critique de piqûration (CPT), au-dessus de laquelle la nuance pique dans un milieu donné.</p>
-    <p>Dans la manipulation 1, la sévérité du milieu est traduite par un PREN requis : <span class="m">PREN<sub>requis</sub> ≈ 10 + 8·log<sub>10</sub>(c<sub>Cl</sub>/10) + 0,25·(T − 20)</span>, avec c<sub>Cl</sub> en mg/L de chlorures et T en °C. Ce modèle pédagogique retrouve les règles ci-dessus : environ 16 pour l'eau du robinet, 36 pour l'eau de mer à 20 °C, 41 à 40 °C.</p>
+  <div class="warn"><b>⚠️ Piège : « inoxydable » ne veut pas dire « inaltérable ».</b> Un 304 tient dans une cuisine mais pique en bord de mer ; un 316L tient en eau douce, pas en eau de mer chaude ; et n'importe quel inox rouille sous des particules d'acier laissées par une brosse ou un disque.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « 10,5 pour être inox, PREN 40 pour la mer »</b>.</div>
+  <div class="weld"><b>🔥 À l'atelier</b>
+    <p>Outils réservés à l'inox (brosses, disques, pinces), stockage séparé des aciers au carbone, protection contre les projections de meulage ; pas de produits chlorés ; après soudage, les teintes d'oxydation sont des zones où la couche passive est dégradée et s'éliminent (cours 4, rochage). Pour un assemblage inox sur acier, on peint l'acier en débordant sur l'inox.</p>
+  </div>
 
-    <h4>La corrosion galvanique</h4>
-    <p>Deux métaux différents en contact, dans un liquide conducteur (l'électrolyte), forment une pile. Le plus noble devient la <b>cathode</b>, où l'oxygène est réduit ; le moins noble devient l'<b>anode</b>, qui se dissout. La série galvanique en eau de mer classe les métaux (potentiels approximatifs, par rapport à l'électrode au calomel saturé) :</p>
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>Métal</th><th>Potentiel approximatif</th><th>Au contact d'un inox passif</th></tr>
-      <tr><td>Inox passif (316)</td><td class="n">≈ −0,05 V</td><td>cathode : protégé</td></tr>
-      <tr><td>Cuivre</td><td class="n">≈ −0,35 V</td><td>anode, attaque modérée</td></tr>
-      <tr><td>Acier au carbone</td><td class="n">≈ −0,6 V</td><td>anode, attaque nette</td></tr>
-      <tr><td>Alliages d'aluminium</td><td class="n">≈ −0,8 V</td><td>anode, attaque forte</td></tr>
-    </table></div>
-    <p>Le courant produit par toute la surface cathodique A<sub>c</sub> se concentre sur la surface anodique A<sub>a</sub>. La vitesse d'attaque de l'anode croît donc avec le rapport A<sub>c</sub>/A<sub>a</sub> :</p>
-    <div class="fx"><div class="big"><span class="eps">v</span>/v<sub>0</sub> ≈ 1 + (<span class="mat">A<sub>c</sub>/A<sub>a</sub></span>)·ΔE/(0,3 V)</div><p class="cap">Modèle pédagogique de la manipulation : v<sub>0</sub> vitesse de corrosion de l'anode seule, ΔE écart de potentiel entre les deux métaux</p></div>
-    <p>Un rivet en acier au carbone dans une grande tôle d'inox est dévoré ; un rivet en inox dans une grande tôle d'acier ne change presque rien. Le même raisonnement vaut à l'intérieur d'un même métal : des <b>hétérogénéités de composition</b> (une zone appauvrie en chrome, une inclusion) jouent le rôle de petites anodes.</p>
-    <div class="def"><b>📖 Passivité</b> : état d'un métal protégé par une pellicule d'oxyde très mince qui ralentit fortement la corrosion. <b>Repassivation</b> : reformation spontanée de cette pellicule après une rayure, en présence d'oxygène. <b>Piqûre</b> : cavité de corrosion localisée, étroite et profonde. <b>Électrolyte</b> : liquide conducteur où circulent des ions (eau, eau salée).</div>
-    <div class="tip">💡 <b>Le bon réflexe</b> : avant de choisir une nuance pour un milieu chloruré, compare son PREN à celui des nuances qui ont fait leurs preuves dans ce milieu. Et pour un assemblage de deux métaux, place le moins noble en grande surface, ou isole-les électriquement.</div>
-    <div class="warn"><b>⚠️ Piège : « inoxydable » ne veut pas dire « inaltérable ».</b> Un 304 tient parfaitement dans une cuisine, mais pique en bord de mer ; un 316L tient en eau douce, mais pas en eau de mer chaude. Et n'importe quel inox rouille sous des particules d'acier ordinaire laissées par une brosse ou un disque.</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique : « 10,5 pour être inox, PREN 40 pour la mer »</b>.</div>
-    <div class="weld"><b>🔥 À l'atelier</b>
-      <ul>
-        <li>Outils réservés à l'inox (brosses, disques, pinces), stockage séparé des aciers au carbone, protection contre les projections de meulage.</li>
-        <li>Pas de marquage avec des produits chlorés ; rinçage après dégraissage.</li>
-        <li>Après soudage, les teintes d'oxydation sont des zones où la couche passive est dégradée : on les élimine (cours 4, rochage).</li>
-        <li>Pour un assemblage inox sur acier au carbone, on protège l'acier (peinture, revêtement) en débordant sur l'inox, pour ne pas laisser une petite surface d'acier face à une grande surface d'inox.</li>
-      </ul>
-    </div>
+  <details class="deep"><summary>🔍 Pour aller plus loin : oxydes, piqûres, série galvanique</summary>
+    <p>Sans chrome, FeO, Fe<sub>3</sub>O<sub>4</sub>, Fe<sub>2</sub>O<sub>3</sub> forment des couches poreuses ; avec quelques %, des îlots de spinelle FeCr<sub>2</sub>O<sub>4</sub> et de Cr<sub>2</sub>O<sub>3</sub> ralentissent la corrosion sans l'arrêter ; au-delà de 10,5 à 12 %, la pellicule mixte oxyde-hydroxyde, enrichie en chrome, devient continue. Au fond d'une piqûre, le métal se dissout, les ions s'hydrolysent et acidifient la solution : la piqûre s'auto-entretient. Autres critères : potentiel de piqûration E<sub>pit</sub>, température critique de piqûration (CPT). Série galvanique en eau de mer (par rapport au calomel saturé) : inox passif ≈ −0,05 V, cuivre ≈ −0,35 V, acier ≈ −0,6 V, aluminium ≈ −0,8 V. Modèles de la manipulation : PREN requis ≈ 10 + 8·log(c<sub>Cl</sub>/10) + 0,25·(T − 20), soit ≈ 16 pour l'eau du robinet, 36 pour l'eau de mer à 20 °C, 41 à 40 °C ; vitesse de l'anode ≈ v<sub>0</sub>·[1 + (A<sub>c</sub>/A<sub>a</sub>)·ΔE/0,3 V].</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Inox : ≥ 10,5 % Cr, couche passive de quelques nm qui se répare seule en présence d'oxygène.</li>
+      <li>PREN = Cr + 3,3 Mo + 16 N ; plus de 40 pour l'eau de mer.</li>
+      <li>Ennemis : chlorures, pollution ferreuse, couple galvanique, recoins confinés.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -475,24 +439,14 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="c-img"><span class="ico">🍊</span><span><small>Image à retenir</small>Les oranges sur l'étal : empilées autrement, elles laissent des trous de tailles différentes, et le carbone cherche le plus grand</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">deux empilements et des trous</span></div>
-    <p>Dans un métal, les atomes s'empilent comme des oranges sur un étal, selon un motif qui se répète : la <b>maille</b>. Le fer et ses alliages en connaissent deux à l'équilibre :</p>
-    <ul>
-      <li>la <b>ferrite</b> (α, ou δ à haute température) : <b>cubique centrée</b> (cc), un atome à chaque coin du cube et un au centre. Elle est <b>ferromagnétique</b> : un aimant la colle, au-dessous de sa température de Curie (770 °C pour le fer pur) ;</li>
-      <li>l'<b>austénite</b> (γ) : <b>cubique à faces centrées</b> (cfc), un atome à chaque coin et un au centre de chaque face. Elle n'est <b>pas magnétique</b>.</li>
-    </ul>
-    <p>Paradoxe : l'austénite est plus compacte (74 % du volume occupé par les atomes, contre 68 %), et pourtant elle offre le plus grand « trou » entre ses atomes, au centre du cube. Le carbone, petit atome qui se glisse entre les atomes de fer (on dit <b>interstitiel</b>), y tient bien mieux : l'austénite dissout jusqu'à 2,1 % de carbone, la ferrite à peine 0,02 %.</p>
-    <p>Hors d'équilibre apparaissent deux <b>martensites</b> :</p>
-    <ul>
-      <li>la martensite <b>α'</b> : une austénite trempée n'a pas le temps de rejeter son carbone ; le réseau devient cubique centré, mais le carbone piégé l'étire dans une direction : la maille devient <b>quadratique centrée</b>, d'autant plus étirée qu'il y a de carbone. C'est la martensite des aciers trempés et des inox martensitiques ;</li>
-      <li>la martensite <b>ε</b>, <b>hexagonale compacte</b> : elle se forme quand on déforme à froid une austénite peu stable, par exemple en pliant un inox 301 ou 304.</li>
-    </ul>
-    <p>Test d'atelier : un aimant colle à un ferritique, un martensitique ou un duplex (qui contient de la ferrite), pas à un austénitique… sauf là où il a été fortement déformé à froid, car il y a formé de la martensite α' magnétique (cours 2).</p>
-  </div>
+  <p>Dans un métal, les atomes s'empilent comme des oranges sur un étal. Le fer et ses alliages en connaissent deux à l'équilibre : la <b>ferrite</b> (α, ou δ à haute température), <b>cubique centrée</b>, ferromagnétique sous sa température de Curie (770 °C pour le fer) ; l'<b>austénite</b> (γ), <b>cubique à faces centrées</b>, non magnétique. Paradoxe : l'austénite est plus compacte (74 % du volume occupé, contre 68 %) et pourtant offre le plus grand « trou » au centre du cube ; le carbone, petit atome <b>interstitiel</b>, s'y loge bien mieux : 2,1 % au plus dans l'austénite, 0,02 % dans la ferrite.</p>
+  <p>Hors d'équilibre apparaissent deux <b>martensites</b> : la martensite <b>α′</b>, cubique centrée étirée en <b>quadratique</b> par le carbone piégé lors d'une trempe (celle des aciers trempés et des inox martensitiques) ; la martensite <b>ε</b>, hexagonale compacte, qui se forme quand on déforme à froid une austénite peu stable (301, 304).</p>
 
-  <div class="lab" id="m2">
+  <div class="fx"><div class="big">c/a ≈ 1 + 0,045·%C</div><p class="cap">Quadraticité de la martensite α′ (relation de Roberts) : presque cubique à 0,1 % C (1,005), nettement étirée à 1 % C (1,045). Plus la maille est distordue, plus la martensite est dure : la dureté d'un inox martensitique dépend d'abord de son carbone. La transformation se fait sans diffusion.</p></div>
+
+<div class="lab" id="m2">
     <p class="lab-h">Manipulation 2 : le cristal à la loupe</p>
-    <p class="lab-sub">Une maille de chaque structure, en perspective. Active « Sites interstitiels » pour voir le plus grand trou de la maille et le comparer à un atome de carbone. En martensite α', fais varier le carbone : la maille s'allonge (déformation exagérée cinq fois pour la rendre visible). « Tourner » fait pivoter la maille.</p>
+    <p class="lab-sub">Choisis une structure, active « Sites interstitiels » pour comparer le plus grand trou au carbone ; en α′, fais varier le carbone.<span class="predict">🔮 Prédis d'abord : le plus grand site interstitiel est-il dans la ferrite ou dans l'austénite ?</span></p>
     <div class="btns" id="m2s">
       <button class="btn on" data-k="bcc" type="button">Ferrite (cc)</button>
       <button class="btn" data-k="fcc" type="button">Austénite (cfc)</button>
@@ -503,32 +457,36 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
       <button class="btn" data-k="sites" type="button">Sites interstitiels</button>
     </div>
     <div class="ctrl"><label for="m2c">Carbone <span class="mat">%C</span></label><input type="range" id="m2c" class="r-mat" min="0" max="1.2" step="0.05" value="0.4"><output id="m2co"></output></div>
-    <div class="btns"><button class="btn play" id="m2play" type="button">▶ Tourner</button></div>
+    <div class="btns"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" id="m2play" type="button">▶ Tourner</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button></div>
     <svg id="m2svg" role="img" aria-label="Maille cristalline du fer en perspective, avec ses sites interstitiels"></svg>
     <div class="readout" id="m2r"></div>
     <p class="status" id="m2msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">géométrie des mailles, sites, quadraticité</span></div>
-    <h4>Les mailles en chiffres</h4>
+  <p><b>Test d'atelier</b> : un aimant colle à un ferritique, un martensitique ou un duplex (qui contient de la ferrite), pas à un austénitique… sauf là où il a été fortement déformé à froid et a formé de la martensite α′ magnétique. L'aimant ne dit pas « inox ou pas inox », il dit « cubique centré ou pas ».</p>
+
+  <div class="warn"><b>⚠️ Piège : compacité et solubilité.</b> On croit souvent que le réseau le plus compact laisse le moins de place au carbone. C'est l'inverse : les sites du cfc sont moins nombreux mais plus grands que ceux du cc.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « cubique Centré : ça Colle ; Faces centrées : Fini l'aimant »</b>, et « 8 voisins en cc, 12 en cfc ».</div>
+  <div class="weld"><b>🔥 Pourquoi le soudeur s'y intéresse</b>
+    <p>La structure fixe la soudabilité. Le cfc ne connaît pas de transition ductile-fragile : un austénitique reste tenace jusqu'aux températures cryogéniques. Le cc devient fragile à froid et voit ses grains grossir en ZAT. La martensite α′ est dure et sensible à l'hydrogène. Et le carbone, très soluble dans l'austénite de la ZAT, se retrouve piégé ou rejeté au refroidissement : tout le cours 3 en découle.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : les mailles en chiffres</summary>
     <div class="tbl-wrap"><table class="data">
-      <tr><th>Structure</th><th>Atomes par maille</th><th>Voisins (coordinence)</th><th>Compacité</th><th>Paramètre du fer</th><th>Plus grand site</th></tr>
-      <tr><td>cc (ferrite)</td><td class="n">2</td><td class="n">8</td><td class="n">π√3/8 ≈ 0,68</td><td class="n">a ≈ 0,287 nm</td><td>octaédrique aplati, r ≈ 0,019 nm ; tétraédrique r ≈ 0,036 nm</td></tr>
-      <tr><td>cfc (austénite)</td><td class="n">4</td><td class="n">12</td><td class="n">π/(3√2) ≈ 0,74</td><td class="n">a ≈ 0,359 nm (à 912 °C)</td><td>octaédrique, r ≈ 0,053 nm</td></tr>
-      <tr><td>hc (martensite ε)</td><td class="n">6 (prisme)</td><td class="n">12</td><td class="n">≈ 0,74</td><td class="n">a ≈ 0,254 nm ; c ≈ 0,41 nm</td><td>octaédrique</td></tr>
+      <tr><th>Structure</th><th>Atomes par maille</th><th>Voisins</th><th>Compacité</th><th>Paramètre</th><th>Plus grand site</th></tr>
+      <tr><td>cc (ferrite)</td><td class="n">2</td><td class="n">8</td><td class="n">0,68</td><td class="n">a ≈ 0,287 nm</td><td>tétraédrique, r ≈ 0,036 nm (octaédrique aplati 0,019 nm)</td></tr>
+      <tr><td>cfc (austénite)</td><td class="n">4</td><td class="n">12</td><td class="n">0,74</td><td class="n">a ≈ 0,36 nm</td><td>octaédrique, r ≈ 0,053 nm</td></tr>
+      <tr><td>hc (martensite ε)</td><td class="n">6</td><td class="n">12</td><td class="n">≈ 0,74</td><td class="n">a ≈ 0,254 nm ; c ≈ 0,41 nm</td><td>octaédrique</td></tr>
     </table></div>
-    <p>Dans un réseau cc, les atomes se touchent le long de la grande diagonale du cube : <span class="m">4R = a√3</span>. Dans un réseau cfc, le long de la diagonale d'une face : <span class="m">4R = a√2</span>. Le site octaédrique de l'austénite, au centre du cube, a pour rayon <span class="m">r = a/2 − R ≈ 0,414·R</span> : environ 0,053 nm. L'atome de carbone, de rayon environ 0,077 nm, y entre en écartant un peu ses voisins. Dans la ferrite, le plus grand site ne mesure que 0,036 nm : le carbone y déforme fortement le réseau, d'où sa très faible solubilité.</p>
-    <h4>La martensite quadratique</h4>
-    <p>Une trempe piège le carbone dans les sites octaédriques d'une seule orientation du réseau cc : la maille s'allonge selon cette direction (paramètre c) et se contracte un peu dans les deux autres (paramètre a).</p>
-    <div class="fx"><div class="big">c/a ≈ 1 + 0,045·%C</div><p class="cap">Relation classique de Roberts (1953). À 0,1 % de carbone, c/a ≈ 1,005 : la martensite paraît presque cubique ; à 1 %, c/a ≈ 1,045</p></div>
-    <p>Plus le carbone est élevé, plus la maille est distordue et plus la martensite est dure : c'est pourquoi la dureté d'un inox martensitique dépend d'abord de son carbone (cours 2). La transformation se fait <b>sans diffusion</b>, par un cisaillement coordonné des atomes : elle ne dépend que de la température atteinte, pas du temps de maintien.</p>
-    <div class="def"><b>📖 Maille</b> : plus petit motif qui, répété dans les trois directions, reproduit le cristal. <b>Coordinence</b> : nombre de plus proches voisins d'un atome. <b>Compacité</b> : fraction du volume occupée par les atomes, assimilés à des sphères. <b>Site interstitiel</b> : espace vide entre les atomes du réseau, où peut se loger un petit atome (C, N, H). <b>Température de Curie</b> : température au-dessus de laquelle un matériau ferromagnétique perd son aimantation spontanée.</div>
-    <div class="tip">💡 <b>Le bon réflexe</b> : l'aimant ne dit pas « inox ou pas inox », il dit « cubique centré ou pas ». Un ferritique 430 colle, un austénitique 304 neuf ne colle pas, un 304 embouti colle un peu.</div>
-    <div class="warn"><b>⚠️ Piège : compacité et solubilité.</b> On croit souvent que le réseau le plus compact laisse le moins de place au carbone. C'est l'inverse : les sites du cfc sont moins nombreux mais plus grands que ceux du cc.</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique : « cubique Centré : ça Colle ; Faces centrées : Fini l'aimant »</b>, et « 8 voisins en cc, 12 en cfc ».</div>
-    <div class="weld"><b>🔥 Pourquoi le soudeur s'y intéresse</b>
-      <p>La structure fixe la soudabilité. Le cfc ne connaît pas de transition ductile-fragile : un austénitique reste tenace jusqu'aux températures cryogéniques. Le cc devient fragile à froid et voit ses grains grossir dans la zone affectée. La martensite α' est dure et sensible à l'hydrogène. Et le carbone, très soluble dans l'austénite de la zone affectée, se retrouve piégé ou rejeté au refroidissement : tout le cours 3 en découle.</p>
-    </div>
+    <p>Paramètre de l'austénite : environ 0,359 nm pour celle d'un inox à l'ambiante, 0,365 nm pour le fer pur à 912 °C. Dans le cc, les atomes se touchent le long de la grande diagonale (4R = a√3) ; dans le cfc, le long d'une diagonale de face (4R = a√2), et le site octaédrique a pour rayon r = a/2 − R ≈ 0,414 R. L'atome de carbone (r ≈ 0,077 nm) est 1,5 fois trop gros pour le site de l'austénite, 2,1 fois pour celui de la ferrite : il distord beaucoup plus la ferrite. La martensite α′ piège le carbone dans les sites octaédriques d'une seule orientation : la maille s'allonge selon c et se contracte selon a.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Ferrite cc (magnétique), austénite cfc (non magnétique, dissout beaucoup plus de carbone).</li>
+      <li>Martensite α′ quadratique (trempe), ε hexagonale (déformation à froid d'une austénite instable).</li>
+      <li>L'aimant reconnaît le cubique centré, pas l'inox.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -541,20 +499,19 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="c-img"><span class="ico">🏝️</span><span><small>Image à retenir</small>L'île d'austénite : le chrome fait monter la mer et la rétrécit, le nickel, le carbone et l'azote l'agrandissent</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">qui peut prendre la trempe</span></div>
-    <p>Le diagramme fer-chrome porte la teneur en chrome en abscisse et la température en ordonnée. Le fer pur passe par l'austénite entre 912 et 1 394 °C. Le chrome, alphagène, rétrécit ce domaine : il forme une petite <b>boucle γ</b>, comme une île collée à l'axe du fer. Au-delà d'environ <b>12 % de chrome</b>, il n'y a plus d'austénite seule ; au-delà d'environ <b>13 %</b>, plus d'austénite du tout. L'alliage reste ferritique de la solidification à l'ambiante.</p>
-    <p>Conséquence directe pour les familles d'inox :</p>
-    <ul>
-      <li><b>dans l'île</b> (environ 12 % de chrome avec un peu de carbone) : l'acier devient austénitique à 1 000 °C ; trempé, il devient martensite. Ce sont les <b>martensitiques</b> (410, 420) ;</li>
-      <li><b>hors de l'île</b> (17 % de chrome, peu de carbone) : jamais d'austénite, donc ni trempe ni affinage du grain par traitement thermique. Ce sont les <b>ferritiques</b> (430, 439) ;</li>
-      <li><b>avec du nickel</b>, l'île <b>gonfle</b> : vers 18 % de chrome et 8 à 10 % de nickel, elle englobe tout le domaine utile, et l'austénite reste même stable à l'ambiante. Ce sont les <b>austénitiques</b> (304, 316). Entre les deux, une île qui couvre juste la moitié du chemin donne les <b>duplex</b> (2205), moitié ferrite, moitié austénite ;</li>
-      <li><b>avec du carbone et de l'azote</b>, très gammagènes, la bande où ferrite et austénite coexistent s'élargit beaucoup. Un 430 à 0,05 % de carbone s'austénitise donc en partie aux joints de grains vers 1 000 °C, ce qui lui donne de la martensite aux joints après un refroidissement rapide, en soudage notamment (cours 2).</li>
-    </ul>
-  </div>
+  <p>Le diagramme fer-chrome porte le chrome en abscisse, la température en ordonnée. Le fer pur passe par l'austénite entre 912 et 1 394 °C ; le chrome, alphagène, rétrécit ce domaine en une petite <b>boucle γ</b>, une île collée à l'axe du fer. Au-delà d'environ <b>12 % de chrome</b>, plus d'austénite seule ; au-delà d'environ <b>13 %</b>, plus d'austénite du tout : l'alliage reste ferritique de la solidification à l'ambiante. D'où les familles :</p>
+  <ul>
+    <li><b>dans l'île</b> (environ 12 % Cr avec un peu de carbone) : austénitique à 1 000 °C, martensite après trempe : les <b>martensitiques</b> (410, 420) ;</li>
+    <li><b>hors de l'île</b> (17 % Cr, peu de carbone) : jamais d'austénite, ni trempe ni affinage du grain : les <b>ferritiques</b> (430, 439) ;</li>
+    <li><b>avec du nickel</b>, l'île gonfle : vers 18 % Cr et 8 à 10 % Ni, l'austénite reste stable à l'ambiante : les <b>austénitiques</b> (304, 316) ; à mi-chemin, les <b>duplex</b> (2205), moitié ferrite, moitié austénite ;</li>
+    <li><b>avec du carbone et de l'azote</b>, très gammagènes, la bande α + γ s'élargit : un 430 s'austénitise en partie aux joints de grains vers 1 000 °C, et y forme de la martensite au refroidissement rapide du soudage.</li>
+  </ul>
 
-  <div class="lab" id="m3">
+  <div class="fx"><div class="big">M<sub>s</sub> (°C) ≈ 502 − 810·C − 1 230·N − 13·Mn − 30·Ni − 12·Cr − 54·Cu − 46·Mo</div><p class="cap">Formule de Pickering (teneurs en %), pour les aciers fortement alliés : seule l'austénite présente au chauffage peut devenir martensite, et seulement si M<sub>s</sub> est au-dessus de l'ambiante. Elle sous-estime M<sub>s</sub> des martensitiques chargés en carbone (420), pour lesquels on préfère la formule d'Andrews.</p></div>
+
+<div class="lab" id="m3">
     <p class="lab-h">Manipulation 3 : l'île qui gonfle</p>
-    <p class="lab-sub">La partie haute du diagramme fer-chrome (de 750 à 1 400 °C) : boucle γ (austénite seule) et bande α + γ. Le nickel et ses semblables (« Ni + 0,5 Mn ») gonflent l'île ; le carbone et l'azote (« C + N ») élargissent surtout la bande α + γ. Choisis une nuance ou règle la composition : la verticale est l'alliage, le point sa température. « Chauffer puis tremper » austénitise à 1 050 °C puis trempe. Modèle simplifié d'après les coupes publiées.</p>
+    <p class="lab-sub">Choisis une nuance ou règle la composition : la verticale est l'alliage, le point sa température. « Chauffer puis tremper » austénitise à 1 050 °C puis trempe.<span class="predict">🔮 Prédis d'abord : un 430 chauffé à 1 050 °C puis trempé contient-il de la martensite ?</span></p>
     <div class="btns" id="m3g">
       <button class="btn" data-k="420" type="button">420</button>
       <button class="btn on" data-k="410" type="button">410</button>
@@ -568,34 +525,30 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="ctrl"><label for="m3n">Nickel <span class="mat">Ni + 0,5 Mn</span></label><input type="range" id="m3n" class="r-mat" min="0" max="12" step="0.05" value="0.6"><output id="m3no"></output></div>
     <div class="ctrl"><label for="m3k">Carbone et azote <span class="mat">C + N</span></label><input type="range" id="m3k" class="r-mat" min="0.005" max="0.25" step="0.005" value="0.14"><output id="m3ko"></output></div>
     <div class="ctrl"><label for="m3t">Température <span class="sig">T</span></label><input type="range" id="m3t" class="r-sig" min="750" max="1400" step="5" value="1050"><output id="m3to"></output></div>
-    <div class="btns"><button class="btn play" id="m3play" type="button">▶ Chauffer puis tremper</button></div>
+    <div class="btns"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" id="m3play" type="button">▶ Chauffer puis tremper</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button></div>
     <svg id="m3svg" role="img" aria-label="Boucle gamma du diagramme fer-chrome, déformée par le nickel, le carbone et l'azote, avec la verticale de la nuance"></svg>
     <div class="readout" id="m3r"></div>
     <p class="status" id="m3msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">la boucle en chiffres, coupes, levier</span></div>
-    <h4>Le binaire fer-chrome, partie haute</h4>
+  <p><b>Exemple</b> : un 410 (C 0,11 ; N 0,03 ; Mn 0,6 ; Ni 0,3 ; Cr 12,5) a <span class="m">M<sub>s</sub> ≈ 502 − 89 − 37 − 8 − 9 − 150 ≈ 209 °C</span> : il prend la trempe. Un 304L (C 0,02 ; N 0,06 ; Mn 1,5 ; Ni 9,2 ; Cr 18,2 ; Mo 0,1) a <span class="m">M<sub>s</sub> ≈ −107 °C</span> : son austénite reste à l'ambiante.</p>
+
+  <div class="warn"><b>⚠️ Piège : l'austénite d'un 304 n'est pas « stable » au sens de l'équilibre.</b> À basse température, l'équilibre prévoit de la ferrite, mais la transformation est si lente qu'elle ne se produit jamais : l'austénite est <b>métastable</b>, et une forte déformation à froid peut la transformer en martensite.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « 12 pour l'île, 13 pour la plage »</b> : jusqu'à 12 % Cr, de l'austénite seule ; jusqu'à 13 %, encore un peu d'austénite avec la ferrite.</div>
+  <div class="weld"><b>🔥 En soudage</b>
+    <p>La ZAT d'un ferritique dépasse 1 000 °C : si sa verticale traverse la bande α + γ, de l'austénite se forme aux joints et devient martensite au refroidissement. D'où les nuances stabilisées (439, 441), dont le titane ou le niobium fixent le carbone : leur verticale sort de la boucle, la ZAT reste entièrement ferritique.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : la boucle en chiffres, coupes, levier</summary>
+    <p>Boucle γ entre 912 et 1 394 °C sur l'axe du fer, avec un minimum vers 830 à 850 °C autour de 7 % Cr ; austénite seule jusqu'à 11 à 12 % Cr, bande α + γ jusqu'à 13 à 13,5 % ; au-delà, ferrite jusqu'à l'ambiante, avec plus bas la phase σ et la lacune α + α′ (cours 4). Les <b>coupes</b> à nickel ou à carbone fixés décrivent les aciers réels : avec 0,1 % C, l'austénite seule s'étend jusqu'à 11 à 12 % Cr sans nickel, 16 à 17 % avec 4 % Ni, 22 % avec 8 % Ni. Modèle de la manipulation, avec Ni<sub>*</sub> = Ni + 0,5 Mn : x<sub>γ</sub> ≈ 11,6 + 1,3 Ni<sub>*</sub> + 10(C + N) et x<sub>α</sub> ≈ 13,4 + 1,3 Ni<sub>*</sub> + 45(C + N), en % de Cr + Mo ; dans la bande, la règle du levier donne f<sub>γ</sub> = (x<sub>α</sub> − x)/(x<sub>α</sub> − x<sub>γ</sub>), environ 24 % pour un 430 à 1 050 °C.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
     <ul>
-      <li>Boucle γ entre <b>912 et 1 394 °C</b> sur l'axe du fer, avec un minimum vers <b>830 à 850 °C</b> autour de 7 % de chrome (selon les évaluations).</li>
-      <li>Austénite seule jusqu'à environ <b>11 à 12 %</b> de chrome ; bande α + γ jusqu'à environ <b>13 à 13,5 %</b>.</li>
-      <li>Au-delà, ferrite de la solidification à l'ambiante (la ferrite δ de haute température et la ferrite α de basse température se rejoignent). Plus bas apparaissent la phase σ et la lacune α + α' (cours 4).</li>
+      <li>Boucle γ du fer-chrome : austénite jusqu'à ≈ 12 % Cr, plus du tout au-delà de ≈ 13 %.</li>
+      <li>Le nickel gonfle l'île (austénitiques, duplex) ; C et N élargissent la bande α + γ.</li>
+      <li>Ferritique non stabilisé : martensite aux joints en ZAT ; Ti ou Nb l'évitent.</li>
     </ul>
-    <h4>Les coupes à nickel ou à carbone fixé</h4>
-    <p>Un acier réel contient d'autres éléments : on trace alors des <b>coupes</b> du diagramme ternaire à teneur fixée en nickel, ou à teneur fixée en carbone + azote. Ordres de grandeur, avec 0,1 % de carbone : l'austénite seule s'étend jusqu'à environ 11 à 12 % de chrome sans nickel, environ 16 à 17 % avec 4 % de nickel, environ 22 % avec 8 % de nickel. Le carbone et l'azote élargissent surtout la bande α + γ : avec 0,13 % de C + N, de l'austénite apparaît encore vers 19 à 22 % de chrome, à haute température.</p>
-    <p>Le modèle de la manipulation 3 résume ces coupes. En notant Ni<sub>*</sub> = Ni + 0,5·Mn et (C + N) en % :</p>
-    <div class="fx"><div class="row"><span class="big">x<sub>γ</sub> ≈ 11,6 + 1,3·<span class="mat">Ni<sub>*</sub></span> + 10·<span class="mat">(C + N)</span></span><span class="big">x<sub>α</sub> ≈ 13,4 + 1,3·<span class="mat">Ni<sub>*</sub></span> + 45·<span class="mat">(C + N)</span></span></div><p class="cap">x<sub>γ</sub> : extension maximale de l'austénite seule ; x<sub>α</sub> : de la bande α + γ, en % de Cr + Mo (le terme en C + N ne compte qu'au-delà de 0,01 %) ; le titane et le niobium neutralisent le carbone et l'azote qu'ils fixent</p></div>
-    <p>Dans la bande α + γ, la règle du levier donne la fraction d'austénite : <span class="m">f<sub>γ</sub> = (x<sub>α</sub>(T) − x)/(x<sub>α</sub>(T) − x<sub>γ</sub>(T))</span>, où x est la teneur en Cr + Mo de l'alliage et x<sub>α</sub>(T), x<sub>γ</sub>(T) les deux frontières lues à la température T.</p>
-    <h4>Tremper, c'est transformer l'austénite</h4>
-    <p>Seule l'austénite présente à la température de chauffage peut devenir martensite. Encore faut-il que sa température M<sub>s</sub> soit au-dessus de l'ambiante. Pour les aciers fortement alliés, la formule de Pickering donne un ordre de grandeur :</p>
-    <div class="fx"><div class="big">M<sub>s</sub> (°C) ≈ 502 − 810·C − 1 230·N − 13·Mn − 30·Ni − 12·Cr − 54·Cu − 46·Mo</div><p class="cap">Teneurs en %. Un 410 a un M<sub>s</sub> bien au-dessus de l'ambiante : il prend la trempe. Un 304L a un M<sub>s</sub> vers −100 °C : son austénite reste à l'ambiante. Établie sur des aciers riches en nickel, elle sous-estime M<sub>s</sub> des martensitiques chargés en carbone (420) : pour eux, on lui préfère la formule d'Andrews (cours 2)</p></div>
-    <div class="def"><b>📖 Boucle γ</b> : domaine fermé d'austénite d'un diagramme fer-élément alphagène. <b>Coupe (pseudo-binaire)</b> : section d'un diagramme à trois constituants ou plus, à teneur fixée d'un ou plusieurs éléments. <b>Austénitiser</b> : chauffer dans le domaine de l'austénite. <b>Normalisation</b> : austénitisation suivie d'un refroidissement à l'air, qui régénère un grain fin.</div>
-    <div class="tip">💡 <b>Le bon réflexe</b> : pour savoir si une nuance peut prendre la trempe ou être normalisée, trace sa verticale sur la boucle correspondant à son nickel et à son carbone. Dans l'île : oui. Dans la bande : en partie. Hors de l'île : non.</div>
-    <div class="warn"><b>⚠️ Piège : l'austénite d'un 304 n'est pas « stable » à l'ambiante au sens de l'équilibre.</b> À basse température, l'équilibre prévoit de la ferrite ; mais la transformation est si lente qu'elle ne se produit jamais. L'austénite est <b>métastable</b> : une forte déformation à froid peut la transformer en martensite (cours 2).</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique : « 12 pour l'île, 13 pour la plage »</b> : jusqu'à 12 % de chrome, de l'austénite seule ; jusqu'à 13 %, encore un peu d'austénite avec la ferrite.</div>
-    <div class="weld"><b>🔥 En soudage</b>
-      <p>La zone affectée d'un ferritique est chauffée au-dessus de 1 000 °C : si sa verticale traverse la bande α + γ, il s'y forme de l'austénite aux joints, qui devient martensite au refroidissement rapide du soudage. D'où l'intérêt des nuances stabilisées (439, 441) dont le titane ou le niobium fixent le carbone : leur verticale sort de la boucle, la zone affectée reste entièrement ferritique.</p>
-    </div>
   </div>
 </div>
 </section>
@@ -608,27 +561,18 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="c-img"><span class="ico">🪢</span><span><small>Image à retenir</small>Le tir à la corde : les alphagènes tirent vers la ferrite, les gammagènes vers l'austénite, et les carburigènes emportent le carbone</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">qui tire de quel côté</span></div>
-    <p>Chaque élément d'alliage joue dans une équipe :</p>
-    <ul>
-      <li>les <b>alphagènes</b> favorisent la ferrite et rétrécissent la boucle γ : <b>chrome</b>, <b>molybdène</b>, <b>silicium</b>, <b>aluminium</b>, <b>titane</b>, <b>niobium</b>, <b>vanadium</b>, <b>tungstène</b> ;</li>
-      <li>les <b>gammagènes</b> favorisent l'austénite et agrandissent la boucle : <b>nickel</b>, <b>carbone</b>, <b>azote</b>, <b>manganèse</b> (et, plus faiblement, cuivre et cobalt).</li>
-    </ul>
-    <p>Une troisième famille traverse les deux équipes : les <b>carburigènes</b>, qui forment des carbures avec le carbone. Par affinité croissante : manganèse, chrome, molybdène et tungstène, vanadium, niobium et titane. Le chrome est carburigène : en formant des carbures, il quitte la solution solide, et c'est autant de chrome en moins pour la couche passive. D'où l'astuce des aciers <b>stabilisés</b> : on ajoute du titane ou du niobium, plus avides de carbone que le chrome, qui forment des carbures MC et laissent le chrome en paix (cours 4, sensibilisation).</p>
-    <p>Chaque élément a aussi ses « talents » propres :</p>
-    <ul>
-      <li>soufre, phosphore, sélénium : meilleure <b>usinabilité</b> (mais mauvais pour la soudabilité, cours 3) ;</li>
-      <li>silicium, aluminium : meilleure tenue à l'<b>oxydation par les gaz chauds</b> (nuances réfractaires) ;</li>
-      <li>molybdène : meilleure tenue aux <b>chlorures</b> et aux acides réducteurs, et au <b>fluage</b> avec le bore ;</li>
-      <li>manganèse : meilleure aptitude au <b>formage à chaud</b>, car il fixe le soufre en sulfures MnS, plus stables que les sulfures de chrome ;</li>
-      <li>terres rares (scandium, yttrium, lanthanides) : meilleure aptitude au <b>forgeage</b> ;</li>
-      <li>cuivre, aluminium associé au nickel : <b>durcissement structural</b> par de fins précipités (cours 2).</li>
-    </ul>
-  </div>
+  <p>Chaque élément d'alliage joue dans une équipe, comme au tir à la corde :</p>
+  <ul>
+    <li>les <b>alphagènes</b> favorisent la ferrite et rétrécissent la boucle γ : <b>chrome, molybdène, silicium, aluminium, titane, niobium, vanadium, tungstène</b> ;</li>
+    <li>les <b>gammagènes</b> favorisent l'austénite : <b>nickel, carbone, azote, manganèse</b> (et, plus faiblement, cuivre et cobalt).</li>
+  </ul>
+  <p>Une troisième famille traverse les deux : les <b>carburigènes</b>, qui forment des carbures (par affinité croissante : Mn, Cr, Mo et W, V, Nb et Ti). Le chrome est carburigène : en formant des carbures, il quitte la solution solide, autant de chrome en moins pour la couche passive. D'où les aciers <b>stabilisés</b> : le titane ou le niobium, plus avides de carbone, forment des carbures MC et laissent le chrome en paix (cours 4, sensibilisation). Chaque élément a aussi ses talents : soufre et sélénium pour l'usinabilité (mais pas la soudabilité) ; silicium et aluminium contre l'oxydation à chaud ; molybdène contre les chlorures et pour le fluage ; manganèse qui fixe le soufre en MnS ; cuivre, ou aluminium avec le nickel, pour le durcissement structural.</p>
 
-  <div class="lab" id="m4">
+  <div class="fx"><div class="row big" style="font-size:1.35rem"><span>TiC : Ti ≈ 4 × C (en masse)</span><span>NbC : Nb ≈ 7,7 × C</span></div><p class="cap">Un atome de titane ou de niobium par atome de carbone (47,9/12,0 ; 92,9/12,0). Les normes imposent une marge : Ti ≥ 5 × C pour un 321, Nb ≥ 10 × C pour un 347 (EN 10088). Le titane fixe aussi l'azote (TiN).</p></div>
+
+<div class="lab" id="m4">
     <p class="lab-h">Manipulation 4 : la table des éléments</p>
-    <p class="lab-sub">On part d'un ferritique 430 (16,5 % de chrome, 0,05 % de carbone et 0,04 % d'azote). Choisis un élément et dose-le : la boucle γ et la verticale de l'alliage se déplacent, et la carte d'identité de l'élément s'affiche. Même modèle que la manipulation 3, avec les coefficients de Schneider pour les alphagènes secondaires. Modèle pédagogique. « ▶ Doser » ajoute l'élément peu à peu.</p>
+    <p class="lab-sub">On part d'un ferritique 430 : choisis un élément et dose-le, la boucle γ et la verticale de l'alliage se déplacent.<span class="predict">🔮 Prédis d'abord : ajouter du titane rapproche-t-il le 430 de l'austénite ou l'en éloigne-t-il ?</span></p>
     <div class="btns" id="m4e">
       <button class="btn on" data-k="Ni" type="button">Ni</button>
       <button class="btn" data-k="Mn" type="button">Mn</button>
@@ -645,36 +589,40 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
       <button class="btn" data-k="W" type="button">W</button>
     </div>
     <div class="ctrl"><label for="m4q">Ajout de l'élément <span class="mat">Δ%</span></label><input type="range" id="m4q" class="r-mat" min="0" max="100" step="1" value="0"><output id="m4qo"></output></div>
-    <div class="btns"><button class="btn play" id="m4play" type="button">▶ Doser</button></div>
+    <div class="btns"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" id="m4play" type="button">▶ Doser</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button></div>
     <svg id="m4svg" role="img" aria-label="Effet d'un élément d'alliage sur la boucle gamma et carte d'identité de l'élément"></svg>
     <div class="readout" id="m4r"></div>
     <p class="status" id="m4msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">tableau de référence, stabilisation</span></div>
+  <div class="warn"><b>⚠️ Piège : soufre et usinabilité.</b> Les nuances de décolletage (303, 430F) contiennent volontairement du soufre ou du sélénium : elles s'usinent mieux mais se soudent mal, avec fissuration à chaud assurée (cours 3). On ne les choisit pas pour une pièce soudée.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « Nicolas Mange du Carbone et de l'aZote »</b> pour les gammagènes (Ni, Mn, C, N) ; les autres éléments courants de l'inox jouent pour la ferrite.</div>
+  <div class="weld"><b>🔥 Lire un certificat matière</b>
+    <p>Sur un certificat 3.1, repère d'abord le chrome et le nickel (la famille), puis le carbone (L ou pas), le molybdène (piqûres), l'azote (duplex, résistance), le titane ou le niobium (stabilisé). Un soufre au-delà de 0,015 à 0,03 % est un signal d'alerte pour la soudabilité.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : tableau de référence des éléments</summary>
     <div class="tbl-wrap"><table class="data">
-      <tr><th>Élément</th><th>Alphagène</th><th>Gammagène</th><th>Carburigène</th><th>Autres effets</th></tr>
-      <tr><td>Cr</td><td>✔</td><td></td><td>✔</td><td>passivité, oxydation à chaud</td></tr>
-      <tr><td>Mo</td><td>✔</td><td></td><td>✔</td><td>chlorures, acides réducteurs, fluage ; favorise σ</td></tr>
-      <tr><td>Si</td><td>✔</td><td></td><td></td><td>oxydation à chaud, désoxydant, usinabilité</td></tr>
-      <tr><td>Al</td><td>✔</td><td></td><td></td><td>oxydation à chaud ; avec Ni, durcissement structural</td></tr>
-      <tr><td>Ti, Nb</td><td>✔</td><td></td><td>✔ (très fort)</td><td>stabilisation : carbures MC, moins de grossissement de grain</td></tr>
-      <tr><td>V, W</td><td>✔</td><td></td><td>✔</td><td>dureté à chaud, résistance à l'usure</td></tr>
-      <tr><td>Ni</td><td></td><td>✔</td><td></td><td>ténacité, ductilité, austénite stable</td></tr>
-      <tr><td>Mn</td><td></td><td>✔</td><td>✔ (faible)</td><td>fixe le soufre (MnS), formage à chaud</td></tr>
-      <tr><td>C</td><td></td><td>✔ (très fort)</td><td></td><td>dureté de la martensite ; carbures de chrome</td></tr>
-      <tr><td>N</td><td></td><td>✔ (très fort)</td><td></td><td>résistance mécanique, piqûres (PREN) ; retarde σ</td></tr>
-      <tr><td>Cu</td><td></td><td>✔ (faible)</td><td></td><td>durcissement structural, acide sulfurique</td></tr>
+      <tr><th>Élément</th><th>Équipe</th><th>Carbures</th><th>Autres effets</th></tr>
+      <tr><td>Cr</td><td>α</td><td>oui</td><td>passivité, oxydation à chaud</td></tr>
+      <tr><td>Mo</td><td>α</td><td>oui</td><td>chlorures, acides réducteurs, fluage ; favorise σ</td></tr>
+      <tr><td>Si, Al</td><td>α</td><td>non</td><td>oxydation à chaud ; Al avec Ni : durcissement structural</td></tr>
+      <tr><td>Ti, Nb</td><td>α</td><td>très fort</td><td>stabilisation, moins de grossissement du grain</td></tr>
+      <tr><td>V, W</td><td>α</td><td>oui</td><td>dureté à chaud, usure</td></tr>
+      <tr><td>Ni</td><td>γ</td><td>non</td><td>ténacité, ductilité, austénite stable</td></tr>
+      <tr><td>Mn</td><td>γ</td><td>faible</td><td>fixe le soufre, formage à chaud</td></tr>
+      <tr><td>C, N</td><td>γ (très fort)</td><td>C : carbures de Cr</td><td>C : dureté de la martensite ; N : résistance, piqûres, retarde σ</td></tr>
+      <tr><td>Cu</td><td>γ (faible)</td><td>non</td><td>durcissement structural, acide sulfurique</td></tr>
     </table></div>
-    <h4>La stabilisation, en masses</h4>
-    <p>Pour fixer le carbone en carbure TiC, il faut un atome de titane par atome de carbone, soit en masse <span class="m">47,9/12,0 ≈ 4</span> fois plus de titane que de carbone ; pour NbC, <span class="m">92,9/12,0 ≈ 7,7</span> fois plus de niobium. Le titane fixe aussi l'azote (TiN). Les normes de produit imposent donc des minimums avec une marge, par exemple <b>Ti ≥ 5 × C</b> pour un 321 et <b>Nb ≥ 10 × C</b> pour un 347 (EN 10088). Le modèle de la manipulation retient le carbone et l'azote « libres » : (C + N) − Ti/4 − Nb/8.</p>
-    <div class="def"><b>📖 Alphagène</b> : élément qui stabilise la ferrite (α, δ). <b>Gammagène</b> : élément qui stabilise l'austénite (γ). <b>Carburigène</b> : élément qui forme des carbures. <b>Stabilisé</b> : se dit d'une nuance dont le carbone est fixé par du titane ou du niobium. <b>Carbure MC</b> : carbure d'un métal M (Ti, Nb) avec un atome de carbone par atome de métal.</div>
-    <div class="tip">💡 <b>Le bon réflexe</b> : pour deviner l'effet d'un élément sur la structure, demande-toi d'abord dans quelle équipe il joue, puis s'il vole du carbone. Le titane, par exemple, est alphagène deux fois : par lui-même, et parce qu'il retire du jeu le carbone et l'azote, deux puissants gammagènes.</div>
-    <div class="warn"><b>⚠️ Piège : soufre et usinabilité.</b> Les nuances « décolletage » (303, 430F) contiennent volontairement du soufre ou du sélénium. Elles s'usinent mieux, mais se soudent mal : fissuration à chaud assurée (cours 3). On ne les choisit pas pour une pièce soudée.</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique : « Nicolas Mange du Carbone et de l'aZote » pour les gammagènes</b> (Ni, Mn, C, N) ; tous les autres éléments courants de l'inox jouent pour la ferrite.</div>
-    <div class="weld"><b>🔥 Lire un certificat matière</b>
-      <p>Sur un certificat 3.1, repère d'abord le chrome et le nickel (la famille), puis le carbone (L ou pas), le molybdène (piqûres), l'azote (duplex, résistance), le titane ou le niobium (stabilisé). Le soufre, s'il dépasse 0,015 à 0,03 %, est un signal d'alerte pour la soudabilité.</p>
-    </div>
+    <p>Le titane est alphagène deux fois : par lui-même, et parce qu'il retire du jeu le carbone et l'azote, deux puissants gammagènes. Le modèle de la manipulation compte le carbone et l'azote « libres » : (C + N) − Ti/4 − Nb/8, avec les coefficients de Schneider pour les alphagènes secondaires.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Alphagènes : Cr, Mo, Si, Al, Ti, Nb, V, W ; gammagènes : Ni, C, N, Mn (Cu, Co).</li>
+      <li>Les carbures de chrome volent le chrome de la couche passive.</li>
+      <li>Stabilisés : Ti ≥ 5 × C (321), Nb ≥ 10 × C (347).</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -687,15 +635,13 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="c-img"><span class="ico">⚖️</span><span><small>Image à retenir</small>La balance de l'apothicaire : les alphagènes d'un côté, les gammagènes de l'autre, et l'aiguille indique la famille</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">une balance à deux plateaux</span></div>
-    <p>Un inox contient une dizaine d'éléments ; impossible de tracer un diagramme à dix dimensions. L'astuce : remplacer le vrai alliage par un alliage fer-chrome-nickel fictif, qui aurait la même structure. On additionne tous les alphagènes, chacun pesé selon sa force par rapport au chrome : c'est le <b>chrome équivalent</b> <span class="mat">Cr<sub>eq</sub></span>. On additionne de même les gammagènes par rapport au nickel : c'est le <b>nickel équivalent</b> <span class="mat">Ni<sub>eq</sub></span>.</p>
-    <p>Ces deux nombres placent l'acier sur une carte, la plus connue étant celle de <b>Schaeffler</b> (1949) : austénite en haut, ferrite à droite, martensite en bas à gauche, et des zones mixtes entre elles. Les familles d'inox s'y rangent naturellement : les austénitiques en haut, les duplex en diagonale dans le domaine austénite + ferrite, les ferritiques en bas à droite, les martensitiques à gauche.</p>
-    <p>Deux mises en garde : les <b>coefficients sont empiriques</b>, tirés d'essais, et chaque diagramme a les siens ; ils ne valent que pour les conditions de leur établissement. Schaeffler a tracé sa carte pour du <b>métal fondu</b> refroidi à la vitesse d'un cordon de soudure : sur une tôle laminée et traitée, elle donne une tendance, pas une prévision exacte.</p>
-  </div>
+  <p>Un inox contient une dizaine d'éléments ; impossible de tracer un diagramme à dix dimensions. L'astuce : additionner les alphagènes, chacun pesé selon sa force par rapport au chrome, en un <b>chrome équivalent</b> Cr<sub>eq</sub>, et les gammagènes par rapport au nickel en un <b>nickel équivalent</b> Ni<sub>eq</sub>. Ces deux nombres placent l'acier sur une carte, la plus connue étant celle de <b>Schaeffler</b> (1949) : austénite en haut, ferrite à droite, martensite en bas à gauche, zones mixtes entre elles. Les austénitiques se rangent en haut, les duplex en diagonale (austénite + ferrite), les ferritiques en bas à droite, les martensitiques à gauche.</p>
 
-  <div class="lab" id="m5">
+  <div class="fx"><div class="row big" style="font-size:1.35rem"><span>Cr<sub>eq</sub> = Cr + Mo + 1,5·Si + 0,5·Nb</span><span>Ni<sub>eq</sub> = Ni + 30·C + 0,5·Mn</span></div><p class="cap">Équivalents de Schaeffler (teneurs en %). DeLong ajoute l'azote : Ni<sub>eq</sub> = Ni + 30·(C + N) + 0,5·Mn, et donne la ferrite en FN. Coefficients empiriques : chaque diagramme a les siens, et Schaeffler a tracé sa carte pour du métal fondu refroidi à la vitesse d'un cordon.</p></div>
+
+<div class="lab" id="m5">
     <p class="lab-h">Manipulation 5 : la balance</p>
-    <p class="lab-sub">Premier schéma : une balance, avec à gauche les alphagènes et à droite les gammagènes, chacun en bloc proportionnel à son poids dans l'équivalent. Second schéma : la carte de Schaeffler (lignes de phases et d'iso-ferrite) avec les zones typiques des familles. Choisis une nuance, ajuste sa composition, change de jeu d'équivalents. « ▶ Ajouter du nickel » fait monter le nickel de 0 à 25 % : regarde la balance basculer et le point traverser la carte.</p>
+    <p class="lab-sub">À gauche, la balance alphagènes-gammagènes ; à droite, la carte de Schaeffler. Choisis une nuance, ajuste la composition, change de jeu d'équivalents.<span class="predict">🔮 Prédis d'abord : pour un duplex 2205, la ferrite prévue est-elle plus forte avec Schaeffler ou avec DeLong ?</span></p>
     <div class="btns" id="m5g">
       <button class="btn" data-k="410" type="button">410</button>
       <button class="btn" data-k="431" type="button">431</button>
@@ -716,29 +662,36 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="ctrl"><label for="m5mo">Molybdène <span class="mat">Mo</span></label><input type="range" id="m5mo" class="r-mat" min="0" max="5" step="0.1" value="0.1"><output id="m5moo"></output></div>
     <div class="ctrl"><label for="m5c">Carbone <span class="mat">C</span></label><input type="range" id="m5c" class="r-mat" min="0.01" max="0.4" step="0.01" value="0.02"><output id="m5co"></output></div>
     <div class="ctrl"><label for="m5n">Azote <span class="mat">N</span></label><input type="range" id="m5n" class="r-mat" min="0" max="0.35" step="0.01" value="0.06"><output id="m5no"></output></div>
-    <div class="btns"><button class="btn play" id="m5play" type="button">▶ Ajouter du nickel</button></div>
+    <div class="btns"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" id="m5play" type="button">▶ Ajouter du nickel</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button></div>
     <svg id="m5svg" role="img" aria-label="Balance des éléments alphagènes et gammagènes et carte de Schaeffler avec les familles d'inox"></svg>
     <div class="readout" id="m5r"></div>
     <p class="status" id="m5msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">les jeux d'équivalents</span></div>
+  <p><b>Exemple</b> : 304L (C 0,02 ; Mn 1,5 ; Si 0,4 ; Cr 18,2 ; Ni 9,2 ; Mo 0,1 ; N 0,06). Schaeffler : <span class="m">Cr<sub>eq</sub> = 18,2 + 0,1 + 0,6 = 18,9</span> et <span class="m">Ni<sub>eq</sub> = 9,2 + 0,6 + 0,75 = 10,55</span>. Avec DeLong, l'azote ajoute 30 × 0,06 = 1,8 : Ni<sub>eq</sub> = 12,35, le point monte et la ferrite prévue baisse. Le rapport Cr<sub>eq</sub>/Ni<sub>eq</sub> résume la balance : 1,4 à 1,8 pour un métal fondu austénitique avec un peu de ferrite, 2,5 à 4 pour un duplex (cours 3).</p>
+
+  <div class="warn"><b>⚠️ Piège : oublier l'azote, ou mélanger les jeux.</b> Un duplex 2205 contient 0,17 % d'azote : sans lui (Schaeffler), le point tombe vers 80 % de ferrite ; avec lui (DeLong), vers 30 %. Et les équivalents d'un diagramme portés sur la carte d'un autre donnent un point faux : on calcule toujours avec les coefficients du diagramme qu'on lit.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « 30 fois le carbone »</b> : 0,1 % de carbone pèse autant que 3 % de nickel.</div>
+  <div class="weld"><b>🔥 Un outil de soudeur avant tout</b>
+    <p>Ces diagrammes ont été inventés pour choisir les produits d'apport : prévoir la structure d'un métal fondu, surtout quand il mélange un inox et un acier au carbone. Le cours 3 les utilise pour placer les zones de danger de soudage et calculer la dilution.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : les autres jeux d'équivalents</summary>
     <div class="tbl-wrap"><table class="data">
-      <tr><th>Diagramme</th><th>Cr<sub>eq</sub></th><th>Ni<sub>eq</sub></th><th>Domaine d'emploi</th></tr>
-      <tr><td>Schaeffler (1949)</td><td>Cr + Mo + 1,5·Si + 0,5·Nb</td><td>Ni + 30·C + 0,5·Mn</td><td>métal fondu de soudage ; carte A, F, M</td></tr>
-      <tr><td>DeLong (années 1950, révisé en 1973)</td><td>Cr + Mo + 1,5·Si + 0,5·Nb</td><td>Ni + 30·(C + N) + 0,5·Mn</td><td>métal fondu austénitique, azote compté ; ferrite en FN</td></tr>
-      <tr><td>WRC-1992</td><td>Cr + Mo + 0,7·Nb</td><td>Ni + 35·C + 20·N + 0,25·Cu</td><td>austénitiques et duplex soudés ; ferrite en FN</td></tr>
-      <tr><td>Schneider (1960)</td><td>Cr + 2·Si + 1,5·Mo + 5·V + 5,5·Al + 1,75·Nb + 1,5·Ti + 0,75·W</td><td>Ni + Co + 0,5·Mn + 0,3·Cu + 25·N + 30·C</td><td>aciers moulés et nuances martensitiques ; nombreux éléments</td></tr>
+      <tr><th>Diagramme</th><th>Cr<sub>eq</sub></th><th>Ni<sub>eq</sub></th><th>Emploi</th></tr>
+      <tr><td>DeLong (1956, révisé en 1973)</td><td>Cr + Mo + 1,5 Si + 0,5 Nb</td><td>Ni + 30(C + N) + 0,5 Mn</td><td>métal fondu austénitique ; ferrite en FN</td></tr>
+      <tr><td>WRC-1992</td><td>Cr + Mo + 0,7 Nb</td><td>Ni + 35 C + 20 N + 0,25 Cu</td><td>austénitiques et duplex soudés ; FN</td></tr>
+      <tr><td>Schneider (1960)</td><td>Cr + 2 Si + 1,5 Mo + 5 V + 5,5 Al + 1,75 Nb + 1,5 Ti + 0,75 W</td><td>Ni + Co + 0,5 Mn + 0,3 Cu + 25 N + 30 C</td><td>aciers moulés, martensitiques</td></tr>
     </table></div>
-    <p>Exemple, 304L (C 0,02 ; Mn 1,5 ; Si 0,4 ; Cr 18,2 ; Ni 9,2 ; Mo 0,1 ; N 0,06) avec Schaeffler : <span class="m">Cr<sub>eq</sub> = 18,2 + 0,1 + 0,6 = 18,9</span> et <span class="m">Ni<sub>eq</sub> = 9,2 + 0,6 + 0,75 = 10,55</span>. Avec DeLong, l'azote ajoute 30 × 0,06 = 1,8 : <span class="m">Ni<sub>eq</sub> = 12,35</span>, le point monte et la ferrite prévue baisse.</p>
-    <p>Le rapport <span class="m">Cr<sub>eq</sub>/Ni<sub>eq</sub></span> résume la balance : environ 1,4 à 1,8 pour un métal fondu austénitique avec un peu de ferrite, 2,5 à 4 pour un duplex, bien plus pour un ferritique. Il sert à prévoir la solidification (cours 3).</p>
-    <div class="def"><b>📖 Diagramme de constitution</b> : carte qui donne la structure d'un alliage, brut de solidification et refroidi à une vitesse donnée, en fonction de deux équivalents ; ce n'est pas un diagramme d'équilibre. <b>Pseudo-ternaire</b> : diagramme d'un alliage réel ramené à trois constituants fictifs (fer, chrome équivalent, nickel équivalent).</div>
-    <div class="tip">💡 <b>Le bon réflexe</b> : calcule toujours les équivalents avec les coefficients du diagramme que tu lis. Les équivalents de Schneider portés sur la carte de Schaeffler, ou l'inverse, donnent un point faux.</div>
-    <div class="warn"><b>⚠️ Piège : oublier l'azote.</b> Un duplex 2205 contient 0,17 % d'azote. Sans lui (Schaeffler), le point tombe vers 80 % de ferrite ; avec lui (DeLong), vers 30 %. Pour les nuances azotées, on utilise un jeu d'équivalents qui le compte.</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique : « 30 fois le carbone »</b> : dans tous les jeux d'équivalents, 0,1 % de carbone pèse autant que 3 % de nickel.</div>
-    <div class="weld"><b>🔥 Un outil de soudeur avant tout</b>
-      <p>Ces diagrammes ont été inventés pour choisir les produits d'apport : prévoir la structure d'un métal fondu, surtout quand il mélange un inox et un acier au carbone. Le cours 3 les utilise pour placer les zones de danger de soudage et calculer la dilution.</p>
-    </div>
+    <p>Un <b>diagramme de constitution</b> donne la structure brute de solidification, à une vitesse de refroidissement donnée : ce n'est pas un diagramme d'équilibre. On parle de pseudo-ternaire : l'alliage réel est ramené à trois constituants fictifs, fer, chrome équivalent et nickel équivalent.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Cr<sub>eq</sub> et Ni<sub>eq</sub> ramènent un inox à un fer-chrome-nickel fictif ; Schaeffler en donne la structure.</li>
+      <li>Coefficients empiriques ; DeLong et WRC-1992 comptent l'azote.</li>
+      <li>Ce sont d'abord des outils de choix des produits d'apport.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -751,19 +704,24 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="c-img"><span class="ico">🪪</span><span><small>Image à retenir</small>La carte d'identité : le nom symbolique dit la composition, le numéro identifie la nuance, comme un numéro d'immatriculation</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">lire un nom de nuance</span></div>
-    <p>On peut classer les aciers par leur structure, leur composition ou leurs propriétés. Pour s'y retrouver parmi des centaines de nuances, il faut une <b>normalisation</b>. Trois systèmes cohabitent dans les ateliers :</p>
-    <ul>
-      <li>la <b>désignation symbolique européenne</b> (EN 10027-1). Pour un acier fortement allié (au moins un élément au-dessus de 5 %), elle décrit la composition : <b>X</b>, puis <b>100 fois le carbone</b>, puis les symboles des éléments par teneurs décroissantes, puis leurs teneurs moyennes arrondies. <b>X5CrNi18-10</b> : 0,05 % de carbone, 18 % de chrome, 10 % de nickel. Pour les aciers de construction, elle décrit l'emploi et les propriétés : <b>S355J2</b> = acier de construction, limite d'élasticité minimale 355 MPa, 27 J à −20 °C ;</li>
-      <li>la <b>désignation numérique européenne</b> (EN 10027-2) : un numéro unique <b>1.xxxx</b>. Le 1 désigne l'acier, les deux chiffres suivants le <b>groupe</b> (40 à 49 pour les inox et réfractaires), les deux derniers l'ordre d'enregistrement. <b>1.4301</b> est le 304 ;</li>
-      <li>la <b>désignation américaine</b> AISI : <b>3xx</b> pour les austénitiques, <b>4xx</b> pour les ferritiques et martensitiques, suffixe <b>L</b> pour le bas carbone (C ≤ 0,03 %).</li>
-    </ul>
-    <p>On croise encore l'<b>ancienne norme française</b> : <b>Z6CNUD15-4</b> (Z = fortement allié, 6 = 0,06 % de carbone, C, N, U, D = chrome, nickel, cuivre, molybdène, 15-4 = teneurs de chrome et de nickel). Et le soudeur utilise les <b>groupes ISO/TR 15608</b>, qui rangent les matériaux pour qualifier les modes opératoires.</p>
-  </div>
+  <p>Trois systèmes de noms cohabitent dans les ateliers, comme une carte d'identité et un numéro d'immatriculation :</p>
+  <ul>
+    <li>la <b>désignation symbolique européenne</b> (EN 10027-1) d'un acier fortement allié : <b>X</b>, puis <b>100 fois le carbone</b>, puis les éléments par teneurs décroissantes et leurs teneurs moyennes arrondies : <b>X5CrNi18-10</b> = 0,05 % C, 18 % Cr, 10 % Ni. Pour les aciers de construction, elle décrit l'emploi : <b>S355J2</b> = construction, R<sub>e</sub> ≥ 355 MPa, 27 J à −20 °C ;</li>
+    <li>la <b>désignation numérique</b> (EN 10027-2) : <b>1.xxxx</b>, 1 pour l'acier, deux chiffres de groupe (40 à 49 pour les inox et réfractaires), deux d'ordre : <b>1.4301</b> est le 304 ;</li>
+    <li>la <b>désignation américaine</b> AISI : <b>3xx</b> austénitiques, <b>4xx</b> ferritiques et martensitiques, suffixe <b>L</b> pour le bas carbone (C ≤ 0,03 %).</li>
+  </ul>
+  <p>On croise encore l'ancienne norme française (<b>Z6CNUD15-4</b> : fortement allié, 0,06 % C, chrome, nickel, cuivre, molybdène, 15 % Cr et 4 % Ni). Et le soudeur utilise les <b>groupes ISO/TR 15608</b>, qui rangent les matériaux pour qualifier les modes opératoires (ISO 15614) et les soudeurs (ISO 9606-1).</p>
 
-  <div class="lab" id="m6">
+  <div class="tbl-wrap"><table class="data">
+    <tr><th>Groupe ISO/TR 15608</th><th>Contenu</th><th>Sous-groupes</th></tr>
+    <tr><td>7</td><td>ferritiques, martensitiques, durcis par précipitation (C ≤ 0,35 %, 10,5 à 30 % Cr)</td><td>7.1 ferritiques ; 7.2 martensitiques ; 7.3 durcis par précipitation</td></tr>
+    <tr><td>8</td><td>austénitiques (Ni ≤ 35 %)</td><td>8.1 Cr ≤ 19 % ; 8.2 Cr &gt; 19 % ; 8.3 au manganèse</td></tr>
+    <tr><td>10</td><td>austéno-ferritiques (duplex)</td><td>10.1 Cr ≤ 24 % ; 10.2 Cr &gt; 24 %</td></tr>
+  </table></div>
+
+<div class="lab" id="m6">
     <p class="lab-h">Manipulation 6 : le décodeur de nuances</p>
-    <p class="lab-sub">« Décoder » : choisis une désignation, chaque morceau est expliqué, avec le numéro EN, l'équivalent AISI et le groupe ISO/TR 15608. « Construire » : règle une composition, le décodeur fabrique le nom symbolique selon la règle générale, le groupe du numéro EN et le groupe ISO/TR 15608 (la famille est estimée avec le modèle de la manipulation 3). « ▶ Défiler les nuances » passe les désignations en revue.</p>
+    <p class="lab-sub">« Décoder » : chaque morceau d'une désignation est expliqué. « Construire » : règle une composition, le décodeur fabrique le nom et les groupes.<span class="predict">🔮 Prédis d'abord : dans quel groupe ISO/TR 15608 tombe un 316L ? Et un 2205 ?</span></p>
     <div class="btns" id="m6m">
       <button class="btn on" data-k="dec" type="button">Décoder</button>
       <button class="btn" data-k="bld" type="button">Construire</button>
@@ -790,40 +748,30 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
       <button class="btn" data-k="Nb" type="button">+ niobium</button>
       <button class="btn" data-k="CuNb" type="button">+ cuivre et niobium</button>
     </div>
-    <div class="btns"><button class="btn play" id="m6play" type="button">▶ Défiler les nuances</button></div>
+    <div class="btns"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" id="m6play" type="button">▶ Défiler les nuances</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button></div>
     <svg id="m6svg" role="img" aria-label="Désignation d'une nuance décomposée en morceaux expliqués, avec son numéro, son équivalent américain et son groupe de soudage"></svg>
     <div class="readout" id="m6r"></div>
     <p class="status" id="m6msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">les groupes EN 10027-2 et ISO/TR 15608</span></div>
-    <h4>Les groupes du numéro EN (inox et réfractaires)</h4>
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>Numéro</th><th>Groupe</th><th>Exemples</th></tr>
-      <tr><td class="n">1.40xx</td><td>Ni &lt; 2,5 %, sans Mo, Nb ni Ti</td><td>1.4016 (430), 1.4006 (410), 1.4057 (431)</td></tr>
-      <tr><td class="n">1.41xx</td><td>Ni &lt; 2,5 %, avec Mo, sans Nb ni Ti</td><td>1.4125 (440C)</td></tr>
-      <tr><td class="n">1.43xx</td><td>Ni ≥ 2,5 %, sans Mo, Nb ni Ti</td><td>1.4301 (304), 1.4307 (304L), 1.4362 (2304)</td></tr>
-      <tr><td class="n">1.44xx</td><td>Ni ≥ 2,5 %, avec Mo, sans Nb ni Ti</td><td>1.4404 (316L), 1.4462 (2205), 1.4410 (2507)</td></tr>
-      <tr><td class="n">1.45xx</td><td>avec additions particulières (Ti, Nb, Cu…)</td><td>1.4541 (321), 1.4550 (347), 1.4512 (409), 1.4542 (17-4PH)</td></tr>
-      <tr><td class="n">1.46xx à 1.49xx</td><td>nuances au nickel pour hautes températures et produits chimiques, réfractaires, nuances pour températures élevées</td><td>1.4762 (446), 1.4845 (310S)</td></tr>
-    </table></div>
-    <h4>Les groupes ISO/TR 15608 (inox)</h4>
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>Groupe</th><th>Contenu</th><th>Sous-groupes</th></tr>
-      <tr><td class="n">7</td><td>ferritiques, martensitiques ou durcis par précipitation, C ≤ 0,35 % et 10,5 % ≤ Cr ≤ 30 %</td><td>7.1 ferritiques ; 7.2 martensitiques ; 7.3 durcis par précipitation</td></tr>
-      <tr><td class="n">8</td><td>austénitiques, Ni ≤ 35 %</td><td>8.1 Cr ≤ 19 % ; 8.2 Cr &gt; 19 % ; 8.3 au manganèse, 4 % ≤ Mn ≤ 12 %</td></tr>
-      <tr><td class="n">10</td><td>austéno-ferritiques (duplex)</td><td>10.1 Cr ≤ 24 % ; 10.2 Cr &gt; 24 % (édition 2017 : sous-groupe pour les duplex à Ni ≤ 4 %)</td></tr>
-    </table></div>
-    <p>Ces groupes servent à définir le domaine de validité d'une qualification de mode opératoire de soudage (série ISO 15614) ou d'un soudeur (ISO 9606-1).</p>
-    <h4>Le cas des aciers de construction</h4>
-    <p>Pour les aciers non alliés désignés par leur emploi : lettre d'emploi (S construction, P appareils à pression, L tubes de conduite, B béton, Y béton précontraint, R rails, D produits plats pour formage à froid, H haute résistance pour formage à froid, T emballage, M électrique), puis la limite d'élasticité minimale en MPa pour la plus petite épaisseur, puis des précisions. Pour les aciers de construction, la ténacité : J, K ou L pour 27, 40 ou 60 J, suivis de la température d'essai (R = 20 °C, 0 = 0 °C, 2 = −20 °C… 6 = −60 °C). Préfixes : G pour les pièces moulées, PM pour la métallurgie des poudres.</p>
-    <div class="def"><b>📖 Désignation symbolique</b> : nom de nuance formé de lettres et de chiffres qui décrivent la composition ou l'emploi. <b>Désignation numérique</b> : numéro unique attribué à chaque nuance. <b>Groupe de matériaux</b> : ensemble de nuances de soudabilité voisine, utilisé pour qualifier les modes opératoires.</div>
-    <div class="tip">💡 <b>Le bon réflexe</b> : sur un plan ou un certificat, vérifie le <b>numéro</b> 1.4xxx plutôt que le nom AISI : 304 et 304L, ou 316 et 316L, ne sont pas interchangeables en soudage, alors que leurs numéros (1.4301 et 1.4307, 1.4401 et 1.4404) ne prêtent pas à confusion.</div>
-    <div class="warn"><b>⚠️ Piège : le X du nom n'est pas un multiplicateur.</b> Dans X5CrNi18-10, « 5 » vaut 0,05 % de carbone (100 fois la teneur), mais 18 et 10 sont des teneurs directes. Dans l'ancienne norme française, les teneurs des aciers faiblement alliés étaient multipliées par 4 ou 10 : 42CD4 contient 1 % de chrome, pas 4 %.</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique : « 3 pour l'austénite, 4 pour le reste »</b> chez les Américains ; « 43 sans Mo, 44 avec Mo » chez les Européens, pour les austénitiques et les duplex.</div>
-    <div class="weld"><b>🔥 Le groupe décide de la qualification</b>
-      <p>Un mode opératoire qualifié sur un 316L (groupe 8.1) couvre les autres nuances de ce groupe, selon les règles de la norme de qualification, mais pas un duplex (groupe 10) ni un ferritique (groupe 7.1). Identifier le bon groupe est donc la première étape d'une qualification : on la fait à partir de la composition réelle du certificat.</p>
-    </div>
+  <p><b>Groupes du numéro EN</b> : 1.40xx, Ni &lt; 2,5 % sans Mo (430 = 1.4016, 410 = 1.4006) ; 1.43xx, Ni ≥ 2,5 % sans Mo (304 = 1.4301, 304L = 1.4307) ; 1.44xx, Ni ≥ 2,5 % avec Mo (316L = 1.4404, 2205 = 1.4462) ; 1.45xx, additions particulières (321 = 1.4541, 347 = 1.4550, 17-4PH = 1.4542).</p>
+
+  <div class="warn"><b>⚠️ Piège : le X du nom n'est pas un multiplicateur.</b> Dans X5CrNi18-10, « 5 » vaut 0,05 % de carbone (100 fois la teneur), mais 18 et 10 sont des teneurs directes. Dans l'ancienne norme française, les faiblement alliés avaient des teneurs multipliées par 4 ou 10 : 42CD4 contient 1 % de chrome. Sur un plan ou un certificat, vérifie le <b>numéro</b> : 304 et 304L, 316 et 316L ne sont pas interchangeables en soudage, leurs numéros ne prêtent pas à confusion.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « 3 pour l'austénite, 4 pour le reste »</b> chez les Américains ; « 43 sans Mo, 44 avec Mo » chez les Européens.</div>
+  <div class="weld"><b>🔥 Le groupe décide de la qualification</b>
+    <p>Un mode opératoire qualifié sur un 316L (groupe 8.1) couvre les autres nuances de ce groupe, selon les règles de la norme de qualification, mais pas un duplex (groupe 10) ni un ferritique (groupe 7.1). Identifier le bon groupe, à partir de la composition réelle du certificat, est la première étape d'une qualification.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : autres groupes, aciers désignés par l'emploi</summary>
+    <p>Numéro EN : 1.41xx, Ni &lt; 2,5 % avec Mo (440C = 1.4125) ; 1.46xx à 1.49xx, nuances au nickel pour hautes températures, réfractaires (310S = 1.4845). ISO/TR 15608, édition 2017 : sous-groupe pour les duplex à Ni ≤ 4 % (lean duplex). Aciers désignés par l'emploi : lettre (S construction, P appareils à pression, L tubes de conduite, B béton, R rails, D produits plats pour formage à froid, H haute résistance…), puis R<sub>e</sub> minimale en MPa, puis des précisions ; ténacité J, K ou L pour 27, 40 ou 60 J, suivie de la température d'essai (R = 20 °C, 0 = 0 °C, 2 = −20 °C… 6 = −60 °C) ; préfixe G pour les pièces moulées.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>X5CrNi18-10 = 1.4301 = 304 : nom symbolique, numéro, AISI.</li>
+      <li>X, puis 100 × C, puis éléments et teneurs directes ; L = C ≤ 0,03 %.</li>
+      <li>ISO/TR 15608 : 7 ferritiques et martensitiques, 8 austénitiques, 10 duplex.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -832,108 +780,38 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
 <div class="wrap">
   <div class="cartouche">
     <div class="c-num">✎</div>
-    <div class="c-title"><h2>Exercices corrigés</h2><p>Six exercices et un défi, de la couche passive au nom de la nuance</p></div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Deux exercices, du nom de la nuance à la nuance mystère</p></div>
     <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de musculation : on ne progresse qu'en soulevant soi-même</span></div>
   </div>
-  <div class="lv lv1"><div class="lv-h">👁 Mode d'emploi <span class="tag">formule littérale, puis valeurs, puis unités</span></div>
-    <p>Cherche chaque question sur papier avant d'ouvrir la correction. Les teneurs sont en % massique. Les exercices 1 et 2 se vérifient dans la manipulation 1, l'exercice 3 dans la manipulation 2, l'exercice 4 dans la manipulation 3, l'exercice 5 dans la manipulation 5, l'exercice 6 dans la manipulation 6, et le défi se rejoue dans les manipulations 5 et 6.</p>
-  </div>
+
+  <p>Cherche chaque question sur papier avant d'ouvrir la correction. Le premier exercice se vérifie dans la manipulation 6, le second se rejoue dans les manipulations 5 et 6.</p>
 
   <div class="exo">
-    <h4>Exercice 1 : quelle nuance pour quelle eau ? <span class="lvtag">N1 · chapitre 1</span></h4>
-    <p>Analyses : 304L (Cr 18,2 ; Mo 0,1 ; N 0,06), 316L (Cr 17,2 ; Mo 2,1 ; N 0,05), 2205 (Cr 22,5 ; Mo 3,1 ; N 0,17), 2507 (Cr 25,0 ; Mo 3,8 ; N 0,27).</p>
-    <p class="q"><b>a)</b> Calcule le PREN de chaque nuance.</p>
-    <p class="q"><b>b)</b> Avec le modèle PREN<sub>requis</sub> ≈ 10 + 8·log<sub>10</sub>(c<sub>Cl</sub>/10) + 0,25·(T − 20), calcule le PREN requis pour l'eau du robinet (50 mg/L, 20 °C), l'eau saumâtre (2 000 mg/L, 20 °C), l'eau de mer (19 000 mg/L) à 20 °C puis à 40 °C.</p>
-    <p class="q"><b>c)</b> Quelles nuances conviennent à chaque eau ? Vérifie dans la manipulation 1 (« La rayure »).</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <span class="m">PREN = Cr + 3,3·Mo + 16·N</span> : 304L : 18,2 + 0,33 + 0,96 ≈ <b>19,5</b> ; 316L : 17,2 + 6,93 + 0,80 ≈ <b>24,9</b> ; 2205 : 22,5 + 10,23 + 2,72 ≈ <b>35,5</b> ; 2507 : 25,0 + 12,54 + 4,32 ≈ <b>41,9</b>.</p>
-      <p><b>b)</b> Robinet : 10 + 8 × log<sub>10</sub>(5) ≈ <b>15,6</b> ; saumâtre : 10 + 8 × log<sub>10</sub>(200) ≈ <b>28,4</b> ; mer à 20 °C : 10 + 8 × log<sub>10</sub>(1 900) ≈ <b>36,2</b> ; à 40 °C : 36,2 + 0,25 × 20 ≈ <b>41,2</b>.</p>
-      <p><b>c)</b> Eau du robinet : les quatre. Eau saumâtre : 2205 et 2507 seulement. Eau de mer à 20 °C : le 2507 ; le 2205 (35,5) est juste en dessous, conformément à la règle « PREN &lt; 35 environ : inapte aux applications marines ». À 40 °C, le 2507 garde une marge très faible : on regarde alors les super austénitiques ou d'autres matériaux.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 2 : rivets et tôles <span class="lvtag">N2 · chapitre 1</span></h4>
-    <p>Une tôle d'inox de 2 m² est assemblée par des rivets dont la surface mouillée totale est 20 cm². Le milieu est de l'eau salée. Modèle : <span class="m">v/v<sub>0</sub> ≈ 1 + (A<sub>c</sub>/A<sub>a</sub>)·ΔE/(0,3 V)</span>, inox passif ≈ −0,05 V, acier ≈ −0,6 V.</p>
-    <p class="q"><b>a)</b> Rivets en acier au carbone : quel est le rapport A<sub>c</sub>/A<sub>a</sub>, et le facteur d'accélération de la corrosion des rivets ?</p>
-    <p class="q"><b>b)</b> Même calcul pour l'assemblage inverse : tôle d'acier de 2 m², rivets en inox.</p>
-    <p class="q"><b>c)</b> Que conseilles-tu ?</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> 2 m² = 20 000 cm², donc <span class="m">A<sub>c</sub>/A<sub>a</sub> = 20 000/20 = 1 000</span> ; ΔE ≈ −0,05 − (−0,6) = 0,55 V ; <span class="m">v/v<sub>0</sub> ≈ 1 + 1 000 × 0,55/0,3 ≈ 1 834</span>. Les rivets sont dévorés.</p>
-      <p><b>b)</b> <span class="m">A<sub>c</sub>/A<sub>a</sub> = 20/20 000 = 0,001</span> : v/v<sub>0</sub> ≈ 1 + 0,001 × 1,83 ≈ <b>1,002</b>. La tôle d'acier corrode comme si l'inox n'était pas là.</p>
-      <p><b>c)</b> Toujours la petite pièce dans le métal le plus noble (rivets en inox), ou bien isoler électriquement les deux métaux, ou peindre l'ensemble en débordant sur l'inox. Jamais de petite surface d'acier face à une grande surface d'inox.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 3 : des trous dans les mailles <span class="lvtag">N2 · chapitre 2</span></h4>
-    <p>Paramètres : ferrite a = 0,2866 nm ; austénite a = 0,3591 nm (à 912 °C). Rayon de l'atome de carbone : 0,077 nm.</p>
-    <p class="q"><b>a)</b> Calcule le rayon R de l'atome de fer dans chaque réseau.</p>
-    <p class="q"><b>b)</b> Calcule le rayon du site octaédrique de l'austénite (r = a/2 − R) et du site tétraédrique de la ferrite (r = a·√5/4 − R).</p>
-    <p class="q"><b>c)</b> Compare au carbone. Que dire de la solubilité ?</p>
-    <p class="q"><b>d)</b> Calcule c/a d'une martensite à 0,2 % puis à 1 % de carbone. Vérifie dans la manipulation 2.</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> cc : <span class="m">R = a·√3/4 = 0,2866 × 0,433 ≈ 0,124 nm</span> ; cfc : <span class="m">R = a·√2/4 = 0,3591 × 0,354 ≈ 0,127 nm</span>.</p>
-      <p><b>b)</b> Austénite : <span class="m">r = 0,1796 − 0,1270 ≈ 0,053 nm</span> ; ferrite : <span class="m">r = 0,2866 × 0,559 − 0,1241 ≈ 0,036 nm</span>.</p>
-      <p><b>c)</b> Le carbone est 1,5 fois trop gros pour le site de l'austénite, 2,1 fois pour celui de la ferrite : il distord beaucoup plus la ferrite, d'où une solubilité de 0,02 % au plus contre 2,1 % dans l'austénite.</p>
-      <p><b>d)</b> <span class="m">c/a ≈ 1 + 0,045·%C</span> : <b>1,009</b> à 0,2 % ; <b>1,045</b> à 1 %.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 4 : trempera, trempera pas <span class="lvtag">N2 · chapitre 3</span></h4>
-    <p>Modèle de la boucle : x<sub>γ</sub> ≈ 11,6 + 1,3·Ni<sub>*</sub> + 10·(C + N − 0,01) et x<sub>α</sub> ≈ 13,4 + 1,3·Ni<sub>*</sub> + 45·(C + N − 0,01), avec Ni<sub>*</sub> = Ni + 0,5·Mn.</p>
-    <p class="q"><b>a)</b> 430 (Cr 16,5 ; Ni 0,3 ; Mn 0,5 ; C 0,05 ; N 0,04) : calcule x<sub>γ</sub> et x<sub>α</sub>. Où se trouve sa verticale ?</p>
-    <p class="q"><b>b)</b> Dans la manipulation 3, relève la part d'austénite du 430 à 1 050 °C et la martensite après trempe.</p>
-    <p class="q"><b>c)</b> 439 (Cr 17,5 ; Ti 0,35 ; C + N 0,03) : que devient la boucle ? Conclusion pour le soudage ?</p>
-    <p class="q"><b>d)</b> Avec la formule de Pickering, calcule M<sub>s</sub> d'un 410 (C 0,11 ; N 0,03 ; Mn 0,6 ; Ni 0,3 ; Cr 12,5) et d'un 304L (C 0,02 ; N 0,06 ; Mn 1,5 ; Ni 9,2 ; Cr 18,2 ; Mo 0,1).</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> Ni<sub>*</sub> = 0,3 + 0,25 = 0,55 ; C + N − 0,01 = 0,08. <span class="m">x<sub>γ</sub> ≈ 11,6 + 0,72 + 0,8 ≈ 13,1 %</span> ; <span class="m">x<sub>α</sub> ≈ 13,4 + 0,72 + 3,6 ≈ 17,7 %</span>. À 16,5 %, la verticale traverse la bande α + γ.</p>
-      <p><b>b)</b> Environ <b>24 %</b> d'austénite à 1 050 °C (règle du levier dans la bande α + γ), qui devient martensite à la trempe : de la martensite aux joints de grains d'une zone affectée de soudure.</p>
-      <p><b>c)</b> Le titane fixe le carbone et l'azote : C + N libres ≈ 0,03 − 0,35/4 &lt; 0, ramenés au minimum du modèle (0,005). Alors x<sub>α</sub> ≈ 13,4 + 0,72 ≈ 14,1 % : la verticale à 17,5 % sort de la boucle. Le 439 reste entièrement ferritique : pas de martensite en zone affectée.</p>
-      <p><b>d)</b> 410 : <span class="m">M<sub>s</sub> ≈ 502 − 89 − 37 − 8 − 9 − 150 ≈ 209 °C</span> : il prend la trempe. 304L : <span class="m">M<sub>s</sub> ≈ 502 − 16 − 74 − 20 − 276 − 218 − 5 ≈ −107 °C</span> : son austénite reste à l'ambiante.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 5 : trois balances pour un duplex <span class="lvtag">N1 · chapitre 5</span></h4>
-    <p>Duplex 2304 : C 0,02 ; Mn 1,5 ; Si 0,4 ; Cr 23,0 ; Ni 4,5 ; Mo 0,3 ; N 0,12.</p>
-    <p class="q"><b>a)</b> Calcule Cr<sub>eq</sub> et Ni<sub>eq</sub> de Schaeffler.</p>
-    <p class="q"><b>b)</b> Même calcul avec DeLong, puis avec Schneider.</p>
-    <p class="q"><b>c)</b> Dans la manipulation 5, relève la ferrite prévue sur la carte avec Schaeffler et avec DeLong. Commente.</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <span class="m">Cr<sub>eq</sub> = 23,0 + 0,3 + 1,5 × 0,4 = 23,9</span> ; <span class="m">Ni<sub>eq</sub> = 4,5 + 30 × 0,02 + 0,5 × 1,5 = 5,85</span>.</p>
-      <p><b>b)</b> DeLong : Ni<sub>eq</sub> = 5,85 + 30 × 0,12 = <b>9,45</b> (Cr<sub>eq</sub> inchangé, 23,9). Schneider : <span class="m">Cr<sub>eq</sub> = 23,0 + 2 × 0,4 + 1,5 × 0,3 = 24,25</span> ; <span class="m">Ni<sub>eq</sub> = 4,5 + 0,75 + 25 × 0,12 + 30 × 0,02 = 8,85</span>.</p>
-      <p><b>c)</b> Schaeffler : le point (23,9 ; 5,85) tombe dans la zone A + M + F, comme si de la martensite pouvait se former. DeLong : A + F avec environ <b>37 %</b> de ferrite (Schneider, à titre indicatif : environ 46 %). Sans l'azote, très gammagène, la carte se trompe de domaine pour une nuance azotée ; avec lui, on retrouve un duplex.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 6 : lire les noms <span class="lvtag">N1 · chapitre 6</span></h4>
+    <h4>Exercice 1 : lire les noms <span class="lvtag">★ application · chapitre 6, à vérifier dans la manipulation 6</span></h4>
     <p class="q"><b>a)</b> Décode X2CrNiMo17-12-2 et son numéro 1.4404.</p>
     <p class="q"><b>b)</b> Décode X6CrNiTi18-10 (1.4541). Pourquoi le titane n'a-t-il pas de chiffre ?</p>
     <p class="q"><b>c)</b> Décode Z6CNUD15-4 (ancienne norme française) et S355J2.</p>
     <p class="q"><b>d)</b> Donne le groupe ISO/TR 15608 de : 316L, 2205, 430, 410, 17-4PH, 310S (Cr 25 %).</p>
     <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> X : fortement allié ; 2 : 0,02 % de carbone ; Cr, Ni, Mo par teneurs décroissantes ; 17-12-2 : 17 % Cr, 12 % Ni, 2 % Mo. 1.4404 : 1 = acier, 44 = Ni ≥ 2,5 % avec Mo, sans Nb ni Ti ; c'est le 316L.</p>
-      <p><b>b)</b> 0,06 % de carbone, 18 % Cr, 10 % Ni, avec du titane en petite quantité (de l'ordre de 0,4 à 0,7 %), d'où pas de chiffre ; groupe 45 (additions particulières) : c'est le 321, austénitique stabilisé.</p>
-      <p><b>c)</b> Z6CNUD15-4 : Z = fortement allié, 0,06 % de carbone, chrome, nickel, cuivre, molybdène, 15 % Cr et 4 % Ni. S355J2 : acier de construction, limite d'élasticité minimale 355 MPa, 27 J à −20 °C.</p>
-      <p><b>d)</b> 316L : 8.1 ; 2205 : 10.1 ; 430 : 7.1 ; 410 : 7.2 ; 17-4PH : 7.3 ; 310S : 8.2.</p>
+      <p><b>a)</b> X : fortement allié ; 2 : 0,02 % C ; Cr, Ni, Mo par teneurs décroissantes : 17 % Cr, 12 % Ni, 2 % Mo. 1.4404 : 44 = Ni ≥ 2,5 % avec Mo, sans Nb ni Ti : le 316L.</p>
+      <p><b>b)</b> 0,06 % C, 18 % Cr, 10 % Ni, avec du titane en petite quantité (de l'ordre de 0,4 à 0,7 %), d'où pas de chiffre ; groupe 45 (additions particulières) : le 321, austénitique stabilisé.</p>
+      <p><b>c)</b> Z6CNUD15-4 : fortement allié, 0,06 % C, chrome, nickel, cuivre, molybdène, 15 % Cr et 4 % Ni. S355J2 : construction, R<sub>e</sub> ≥ 355 MPa, 27 J à −20 °C.</p>
+      <p><b>d)</b> 316L : <b>8.1</b> ; 2205 : <b>10.1</b> ; 430 : <b>7.1</b> ; 410 : <b>7.2</b> ; 17-4PH : <b>7.3</b> ; 310S : <b>8.2</b>.</p>
     </div></details>
   </div>
 
   <div class="exo defi">
-    <h4>🏆 Défi : la nuance mystère <span class="lvtag">N2 · chapitres 1, 5 et 6, à rejouer dans les manipulations 5 et 6</span></h4>
+    <h4>Exercice 2 : la nuance mystère <span class="lvtag">★★ synthèse · chapitres 1, 5 et 6, à rejouer dans les manipulations 5 et 6</span></h4>
     <p>Un certificat porte l'analyse suivante, sans nom de nuance : C 0,020 ; Mn 1,5 ; Si 0,4 ; Cr 22,4 ; Ni 5,4 ; Mo 3,1 ; N 0,17.</p>
-    <p class="q"><b>a)</b> Calcule Cr<sub>eq</sub> et Ni<sub>eq</sub> avec Schaeffler, puis avec DeLong. Dans la manipulation 5 (nuance 2205, puis règle la composition), relève la structure et la ferrite prévues.</p>
+    <p class="q"><b>a)</b> Calcule Cr<sub>eq</sub> et Ni<sub>eq</sub> avec Schaeffler, puis avec DeLong. Relève la ferrite prévue dans la manipulation 5.</p>
     <p class="q"><b>b)</b> Quelle famille ? Construis son nom symbolique et le groupe de son numéro EN (manipulation 6, « Construire », + azote).</p>
     <p class="q"><b>c)</b> Quel groupe ISO/TR 15608 ? Quel équivalent courant ?</p>
     <p class="q"><b>d)</b> Calcule son PREN. Convient-il à l'eau de mer à 20 °C ?</p>
     <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> Schaeffler : <span class="m">Cr<sub>eq</sub> = 22,4 + 3,1 + 0,6 = 26,1</span> ; <span class="m">Ni<sub>eq</sub> = 5,4 + 0,6 + 0,75 = 6,75</span> : A + F, ferrite ≈ <b>85 %</b>. DeLong : Ni<sub>eq</sub> = 6,75 + 5,1 = <b>11,85</b> : ferrite ≈ <b>32 %</b>.</p>
-      <p><b>b)</b> Un austéno-ferritique (duplex) : environ moitié ferrite, moitié austénite. Nom construit : <b>X2CrNiMoN22-5-3</b> ; numéro du groupe <b>1.44xx</b> (Ni ≥ 2,5 % avec Mo) : c'est le 1.4462.</p>
-      <p><b>c)</b> Groupe <b>10.1</b> (duplex, Cr ≤ 24 %) ; équivalent courant : 2205 (UNS S32205).</p>
-      <p><b>d)</b> <span class="m">PREN = 22,4 + 3,3 × 3,1 + 16 × 0,17 = 35,35</span> : un peu sous le seuil d'environ 36 du modèle pour l'eau de mer à 20 °C. Pour l'eau de mer, on préfère un super duplex (PREN &gt; 40).</p>
+      <p><b>a)</b> Schaeffler : <span class="m">Cr<sub>eq</sub> = 22,4 + 3,1 + 0,6 = 26,1</span> ; <span class="m">Ni<sub>eq</sub> = 5,4 + 0,6 + 0,75 = 6,75</span> : A + F, ferrite ≈ 85 %. DeLong : Ni<sub>eq</sub> = 6,75 + 30 × 0,17 = <b>11,85</b> : ferrite ≈ 32 %. Sans l'azote, la carte se trompe nettement.</p>
+      <p><b>b)</b> Un austéno-ferritique (duplex), environ moitié ferrite, moitié austénite : <b>X2CrNiMoN22-5-3</b>, numéro du groupe 1.44xx (Ni ≥ 2,5 % avec Mo) : le 1.4462.</p>
+      <p><b>c)</b> Groupe <b>10.1</b> (duplex, Cr ≤ 24 %) ; équivalent courant : 2205.</p>
+      <p><b>d)</b> <span class="m">PREN = 22,4 + 3,3 × 3,1 + 16 × 0,17 ≈ 35,4</span> : juste sous le seuil d'environ 36 du modèle pour l'eau de mer à 20 °C. Pour l'eau de mer, on préfère un super duplex (PREN &gt; 40).</p>
     </div></details>
   </div>
 </div>
@@ -962,7 +840,7 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
   <div class="fiche">
     <div><div class="ic">🛡️</div><h4>Inoxydable</h4><div class="f"><span class="mat">Cr</span> ≥ 10,5 % · C ≤ 1,2 %</div><p>Une pellicule riche en chrome de 1 à 5 nm, qui se reforme seule en présence d'oxygène.</p></div>
     <div><div class="ic">🧂</div><h4>Les piqûres</h4><div class="f"><span class="eps">PREN</span> = Cr + 3,3Mo + 16N</div><p>Les chlorures percent la couche ; PREN &gt; 40 environ pour l'eau de mer.</p></div>
-    <div><div class="ic">🔋</div><h4>Le couple</h4><div class="f">v/v₀ ≈ 1 + (A<sub>c</sub>/A<sub>a</sub>)·ΔE/0,3</div><p>Petite anode, grande cathode : attaque rapide. Outils réservés à l'inox.</p></div>
+    <div><div class="ic">🔋</div><h4>Le couple</h4><div class="f">petite anode + grande cathode = attaque</div><p>Petite anode, grande cathode : attaque rapide. Outils réservés à l'inox.</p></div>
     <div><div class="ic">🍊</div><h4>Les réseaux</h4><div class="f">cc 0,68 · cfc 0,74 · r<sub>cfc</sub> ≈ 0,053 nm</div><p>Le cfc a le plus grand site : il dissout le carbone ; il n'est pas magnétique.</p></div>
     <div><div class="ic">📏</div><h4>La martensite</h4><div class="f">c/a ≈ 1 + 0,045·%C</div><p>Trempe sans diffusion : le carbone piégé étire la maille et durcit l'acier.</p></div>
     <div><div class="ic">🏝️</div><h4>La boucle γ</h4><div class="f">γ ≤ 12 % Cr · α + γ ≤ 13 %</div><p>Dans l'île : trempe possible (martensitiques) ; hors de l'île : ferritiques.</p></div>
@@ -970,7 +848,8 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div><div class="ic">⚖️</div><h4>Les équivalents</h4><div class="f">Cr<sub>eq</sub> = Cr + Mo + 1,5Si + 0,5Nb · Ni<sub>eq</sub> = Ni + 30C + 0,5Mn</div><p>Schaeffler ; DeLong ajoute 30N ; chaque diagramme a ses coefficients.</p></div>
     <div><div class="ic">🪪</div><h4>Les noms</h4><div class="f">X5CrNi18-10 · 1.4301 · 304 · 8.1</div><p>Nom = composition ; numéro = identité ; AISI 3xx/4xx ; groupe ISO/TR 15608.</p></div>
   </div>
-  <div class="fun"><span class="fun-h">🍴 Fun fact : le couteau qui ne tachait pas</span>À Sheffield, en août 1913, le métallurgiste Harry Brearley cherche un acier qui résiste mieux à l'érosion dans les canons de fusil. Il coule un acier à 12,8 % de chrome et 0,24 % de carbone, et remarque qu'il résiste aux attaques chimiques qu'il utilise d'ordinaire pour observer les aciers au microscope. Il pense aussitôt à la coutellerie, où les lames tachées de rouille sont le cauchemar de chaque cuisine, et fait forger des couteaux par un coutelier de la ville, R. F. Mosley. Brearley appelle son acier « rustless steel », l'acier qui ne rouille pas. C'est Ernest Stuart, responsable chez Mosley, qui aurait proposé un nom plus vendeur après l'avoir mis à l'épreuve du vinaigre : « stainless steel », l'acier qui ne se tache pas. En 1914, la coutellerie George Ibberson &amp; Co, à Sheffield, parvient à en tirer des lames de couteau. C'était un inox martensitique, la famille du 420 de nos couteaux actuels. La passivité est au <a href="#c1">chapitre 1</a>, la martensite au <a href="#c2">chapitre 2</a>.</div>
+  <div class="btns"><button class="btn" id="printFiche" type="button">🖨 Imprimer la fiche mémoire</button></div>
+  <div class="fun"><span class="fun-h">🍴 Fun fact : le couteau qui ne tachait pas</span>À Sheffield, en août 1913, le métallurgiste Harry Brearley cherche un acier qui résiste mieux à l'érosion dans les canons de fusil. Il coule un acier à 12,8 % de chrome et 0,24 % de carbone, et remarque qu'il résiste aux attaques chimiques qu'il utilise d'ordinaire pour observer les aciers au microscope. Il pense aussitôt à la coutellerie. Il l'appelle « rustless steel » ; Ernest Stuart, chez le coutelier Mosley, aurait proposé après l'épreuve du vinaigre un nom plus vendeur : « stainless steel », l'acier qui ne se tache pas. C'était un inox martensitique, la famille du 420 de nos couteaux actuels. La passivité est au <a href="#c1">chapitre 1</a>, la martensite au <a href="#c2">chapitre 2</a>.</div>
 </div>
 </section>
 
@@ -1033,7 +912,7 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <label><input type="checkbox" data-c="b5"> <span>Je sais expliquer la martensite α' et la martensite ε.</span></label>
     <label><input type="checkbox" data-c="b6"> <span>Je sais lire la boucle γ et dire si une nuance peut prendre la trempe.</span></label>
     <label><input type="checkbox" data-c="b7"> <span>Je sais classer les éléments en alphagènes, gammagènes et carburigènes, et expliquer la stabilisation.</span></label>
-    <label><input type="checkbox" data-c="b8"> <span>Je sais calculer Cr<sub>eq</sub> et Ni<sub>eq</sub> avec Schaeffler, DeLong et Schneider.</span></label>
+    <label><input type="checkbox" data-c="b8"> <span>Je sais calculer Cr<sub>eq</sub> et Ni<sub>eq</sub> avec Schaeffler et DeLong.</span></label>
     <label><input type="checkbox" data-c="b9"> <span>Je sais décoder une désignation EN symbolique et numérique, AISI ou ancienne française.</span></label>
     <label><input type="checkbox" data-c="b10"> <span>Je sais donner le groupe ISO/TR 15608 d'une nuance.</span></label>
   </div>
@@ -1143,13 +1022,24 @@ function axes(svg,x0,x1,y0,y1,xmin,xmax,ymin,ymax,xlab,ylab,xstep,ystep,xfmt,yfm
   tx(svg,x0+4,y0-10,ylab,{class:"lbl"});tx(svg,x1,y1+32,xlab,{class:"lbl","text-anchor":"end"});
   return {X:X,Y:Y};
 }
-function animate(btn,label,dur,onStep,onEnd){
-  let raf=null,run=false;
+function animate(btn,label,dur,onStep,onEnd){/* lecteur pilotable : ▶ lecture ou ⏸ pause, qui reprend où elle s'est arrêtée ; les boutons voisins ⏮ début, ◀ pas et pas ▶ (data-a) la mènent à la main ; un pas avance jusqu'à la prochaine image différente (20 pas au plus) */
+  const box=btn.parentNode,lab=btn.closest(".lab")||box,N=20;let raf=null,run=false,t=0;
+  const go=v=>{t=Math.max(0,Math.min(1,v));onStep(t);};
+  const snap=()=>{let s="";lab.querySelectorAll("svg,.readout,.status").forEach(e=>{s+=e.innerHTML;});return s;};
   function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;btn.textContent=label;}
-  function start(){if(run){stop();return;}if(RM){onStep(1);stop();if(onEnd)onEnd();return;}
-    run=true;btn.textContent="⏸ Pause";const t0=performance.now();
-    const step=now=>{const p=Math.min(1,(now-t0)/dur);onStep(p);if(p>=1){stop();if(onEnd)onEnd();return;}raf=requestAnimationFrame(step);};raf=requestAnimationFrame(step);}
-  btn.addEventListener("click",start);return {stop:stop,running:()=>run};
+  function step(d){stop();const s0=snap();let k=Math.round(t*N);for(let i=0;i<N;i++){k+=d;if(k<0||k>N)break;go(k/N);if(snap()!==s0)break;}}
+  btn.addEventListener("click",()=>{if(run){stop();return;}if(t>=0.999)t=0;
+    if(RM){step(1);if(t>=1&&onEnd)onEnd();return;}
+    run=true;btn.textContent="⏸ Pause";const s0=performance.now()-t*dur;
+    const f=now=>{if(!run)return;go((now-s0)/dur);if(t>=1){stop();if(onEnd)onEnd();return;}raf=requestAnimationFrame(f);};raf=requestAnimationFrame(f);});
+  const pb=a=>box.querySelector('[data-a="'+a+'"]');
+  if(pb("start"))pb("start").addEventListener("click",()=>{stop();go(0);});
+  if(pb("back"))pb("back").addEventListener("click",()=>step(-1));
+  if(pb("fwd"))pb("fwd").addEventListener("click",()=>step(1));
+  /* un réglage fait à la main : la prochaine lecture repart du début */
+  lab.addEventListener("input",()=>{if(!run)t=0;});
+  lab.addEventListener("click",e=>{const b=e.target.closest("button");if(b&&b!==btn&&!b.dataset.a&&!run)t=0;});
+  return {stop:stop,running:()=>run};
 }
 
 
@@ -1421,7 +1311,7 @@ const E_INOX=-0.05;
       $("#m1ao").textContent=(R.ratio>=10||R.ratio<0.1)?p10(Math.round(lr)):nf(R.ratio,R.ratio<1?2:1);
       r="<span>A<sub>c</sub>/A<sub>a</sub> = <b class='mat'>"+(R.ratio>=100?nf(R.ratio,0):nf(R.ratio,R.ratio<1?3:1))+"</b></span><span>ΔE ≈ <b>"+nf(R.dE,2)+" V</b></span><span>v/v₀ ≈ <b class='eps'>"+(R.fac<10?nf(R.fac,R.fac<1.1?3:1):nf(R.fac,0))+"</b></span>";
       t=R.fac>100?"Petite anode, grande cathode : tout le courant se concentre sur "+le(PAIR[pk].n)+", qui est dévoré.":R.fac>3?"L'attaque "+du(PAIR[pk].n)+" est nettement accélérée par le contact avec l'inox.":"Grande anode, petite cathode : le courant se répartit, l'accélération reste faible.";}
-    ro.innerHTML=nbsp(r);msg.innerHTML=nbsp(t);
+    ro.innerHTML=nbsp(r);msg.innerHTML=(nbsp(t))+"<br><b>À retenir :</b> la couche passive se répare seule ; les chlorures, la pollution ferreuse et une petite anode la mettent en défaut.";
   }
   const A=animate($("#m1play"),"▶ Lancer",6000,p=>{prog=Math.max(0,p);upd();},()=>{prog=null;upd();});
   function setMode(m){mode=m;setOn("#m1m",$("#m1m .btn[data-k='"+m+"']"));}
@@ -1497,7 +1387,7 @@ const E_INOX=-0.05;
       fcc:"Austénite : plus compacte (0,74), et pourtant son site octaédrique, au centre du cube, mesure 0,053 nm : le carbone s'y loge en écartant un peu ses voisins, jusqu'à 2,1 %.",
       mart:"Martensite α' : le carbone piégé par la trempe occupe des sites orientés selon c et étire la maille : c/a ≈ 1 + 0,045·%C, soit "+nf(ca,3)+" ici. Plus de carbone, maille plus distordue, martensite plus dure.",
       hcp:"Martensite ε : hexagonale compacte, formée par déformation à froid d'une austénite peu stable ; elle précède souvent la martensite α'."};
-    msg.innerHTML=nbsp(T[kind]+(sites?" Le cercle vert montre le plus grand site, à l'échelle de la maille dessinée.":""));
+    msg.innerHTML=(nbsp(T[kind]+(sites?" Le cercle vert montre le plus grand site, à l'échelle de la maille dessinée.":"")))+"<br><b>À retenir :</b> le cfc offre le plus grand site interstitiel : il dissout le carbone ; seul le cc est magnétique.";
   }
   const A=animate($("#m2play"),"▶ Tourner",8000,p=>{prog=Math.max(0,p);phi=0.55+2*Math.PI*prog;upd();},()=>{prog=null;phi=0.55;upd();});
   $$("#m2s .btn").forEach(b=>b.addEventListener("click",()=>{kind=b.dataset.k;setOn("#m2s",b);upd();}));
@@ -1538,7 +1428,7 @@ const E_INOX=-0.05;
     else if(fg<=0.02)t=T<850&&x<13?"Sous la boucle : ferrite (avec des carbures à l'équilibre). Chauffe davantage pour austénitiser.":"Hors de l'île : ferrite seule, aucune transformation possible. Ni trempe, ni normalisation : c'est un ferritique.";
     else t=ms>20?"Dans la bande α + γ : seule la part austénitique ("+nf(fg*100,0)+" %) devient martensite à la trempe. C'est le cas d'un 430 non stabilisé : martensite aux joints de grains après soudage.":"Ferrite et austénite coexistent et l'austénite reste à l'ambiante : structure biphasée, celle d'un duplex.";
     if(quenched)t="Trempe depuis 1 050 °C. "+t;
-    msg.innerHTML=nbsp(t);
+    msg.innerHTML=(nbsp(t))+"<br><b>À retenir :</b> dans l'île γ, la trempe donne de la martensite ; hors de l'île, la nuance reste ferritique.";
   }
   const A=animate($("#m3play"),"▶ Chauffer puis tremper",7000,p=>{prog=Math.max(0,p);upd();},()=>{prog=null;sT.value=1050;upd();});
   $$("#m3g .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;gk=b.dataset.k;setGrade(gk);setOn("#m3g",b);upd();}));
@@ -1640,7 +1530,7 @@ const BASE430={C:0.05,N:0.04,Mn:0.5,Si:0.4,Cr:16.5,Ni:0.3};
     else if(ek==="Ti"||ek==="Nb")t="Le "+e.n+" est doublement alphagène : par lui-même, et parce qu'il fixe le carbone et l'azote (C + N libres : "+nf(L.cn,3)+" %). L'austénite à 1 050 °C tombe à "+nf(fg*100,0)+" %"+(fg<0.02?" : le 430 devient entièrement ferritique, comme un 439 stabilisé.":".");
     else if(e.team==="g")t="Gammagène : la boucle gonfle. À 1 050 °C, "+nf(fg*100,0)+" % d'austénite"+(fg>=0.98?(ms>20?" : l'acier devient trempable en entier (martensitique).":" et elle reste à l'ambiante : l'acier devient austénitique."):".")+(ek==="C"||ek==="N"?" Le carbone et l'azote élargissent surtout la bande α + γ.":"");
     else t="Alphagène : la verticale de l'alliage s'éloigne de l'île. À 1 050 °C, "+nf(fg*100,0)+" % d'austénite"+(fg<0.02?" : plus aucune, l'acier est entièrement ferritique.":".");
-    msg.innerHTML=nbsp(t);
+    msg.innerHTML=(nbsp(t))+"<br><b>À retenir :</b> alphagènes vers la ferrite, gammagènes vers l'austénite ; Ti et Nb volent le carbone.";
   }
   $$("#m4e .btn").forEach(b=>b.addEventListener("click",()=>{ek=b.dataset.k;setOn("#m4e",b);sQ.value=0;upd();}));
   sQ.addEventListener("input",upd);
@@ -1722,7 +1612,7 @@ const FAMZ=[["austénitiques",17,30,10,25],["duplex",22,30,5,9.5],["ferritiques"
     if(f==="S")t+=fam?"Le point tombe dans la zone typique des "+fam+" (zones tracées avec les équivalents de Schaeffler).":"Le point est hors des zones typiques des familles de tôles.";
     else if(f==="D")t+="DeLong compte l'azote (30 × N) : le point monte de "+nf(30*gv(c,"N"),1)+" et la ferrite prévue baisse.";
     else t+="Schneider pèse davantage le silicium et le molybdène et compte de nombreux éléments : adapté aux moulages et aux martensitiques. Le point n'est qu'indicatif sur la carte de Schaeffler.";
-    msg.innerHTML=nbsp(t);
+    msg.innerHTML=(nbsp(t))+"<br><b>À retenir :</b> Cr<sub>eq</sub> et Ni<sub>eq</sub> placent la nuance sur la carte ; chaque diagramme a ses coefficients.";
   }
   $$("#m5g .btn").forEach(b=>b.addEventListener("click",()=>{gk=b.dataset.k;setGrade(gk);setOn("#m5g",b);upd();}));
   $$("#m5f .btn").forEach(b=>b.addEventListener("click",()=>{f=b.dataset.k;setOn("#m5f",b);upd();}));
@@ -1812,7 +1702,7 @@ function buildGrade(c){
     let t;
     if(mode==="dec")t=dk.charAt(0)==="Z"?"Ancienne norme française : les lettres remplacent les symboles chimiques. On la rencontre encore sur d'anciens plans.":dk.charAt(0)==="S"?"Désignation par l'emploi : S pour la construction, la limite d'élasticité minimale, puis la ténacité. Rien sur la composition.":"Le nom dit la composition, le numéro identifie la nuance sans ambiguïté, le groupe ISO/TR 15608 sert à la qualification des modes opératoires.";
     else t="Nom construit selon la règle générale de l'EN 10027-1 : le nom officiel d'une nuance est celui de sa norme de produit (EN 10088), qui peut arrondir autrement. La famille, et donc le groupe ISO/TR 15608, est estimée avec le modèle de boucle γ de la manipulation 3.";
-    msg.innerHTML=nbsp(t);
+    msg.innerHTML=(nbsp(t))+"<br><b>À retenir :</b> nom symbolique, numéro EN, AISI et groupe ISO/TR 15608 désignent la même nuance.";
   }
   function setMode(m){mode=m;setOn("#m6m",$("#m6m .btn[data-k='"+m+"']"));}
   $$("#m6m .btn").forEach(b=>b.addEventListener("click",()=>{setMode(b.dataset.k);upd();}));
@@ -1884,6 +1774,13 @@ function buildGrade(c){
   b.addEventListener("click",()=>{t=t==="auto"?"light":t==="light"?"dark":"auto";try{localStorage.setItem(KEY,t);}catch(e){}apply();});
   apply();
 })();
+})();
+</script>
+<script>
+(function(){/* impression de la fiche mémoire seule */
+  const b=document.getElementById("printFiche");if(!b)return;
+  b.addEventListener("click",()=>{document.body.classList.add("print-fiche");window.print();});
+  window.addEventListener("afterprint",()=>document.body.classList.remove("print-fiche"));
 })();
 </script>
 </body>

@@ -85,6 +85,16 @@ sub{font-size:.72em}
 .tag{display:inline-block;font-size:.78rem;font-stretch:88%;font-weight:680;padding:.12rem .55rem;border-radius:4px;background:var(--ink);color:var(--bg);margin:0 0 .15rem}
 .lv2 .tag{background:var(--cA);color:var(--paper)}
 body[data-level="1"] .lv2, body[data-level="2"] .lv1{display:none}
+/* gabarit court, ancien format (Métallurgie) : replis et « À retenir » aux couleurs de la série */
+details.deep{margin:1.3rem 0;padding:.2rem 0 .2rem 14px;border-left:6px double var(--cA)}
+details.deep>summary{cursor:pointer;font-weight:720;font-stretch:106%;color:var(--cA);padding:.2rem 0}
+details.deep[open]>summary{margin-bottom:.3rem}
+.retenir{margin:1.4rem 0 .4rem;padding:.65rem .9rem;border-radius:8px;background:var(--paper);border:1.5px solid var(--good)}
+.retenir>b{display:block;color:var(--good);font-stretch:106%}
+.retenir ul{margin:.25rem 0 0}
+details li,details p{overflow-wrap:anywhere}
+.predict{display:block;margin-top:.3rem;font-weight:650;color:var(--cL)}
+@media print{details.deep>*{display:block}}
 .fig{background-color:var(--paper);background-image:linear-gradient(var(--grid2) 1px,transparent 1px),linear-gradient(90deg,var(--grid2) 1px,transparent 1px),linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:40px 40px,40px 40px,8px 8px,8px 8px;border:1px solid var(--rule);border-radius:10px;padding:12px;margin:1.2rem -6px}
 .fig svg{display:block;width:100%;height:auto;touch-action:manipulation;-webkit-user-select:none;user-select:none}
 .figt{font-stretch:104%;font-weight:720;font-size:.98rem;margin:0 0 .4rem}
@@ -186,9 +196,6 @@ details.sol[open] summary{border-bottom:1px solid var(--rule);margin-bottom:.4re
 
 <nav class="bar" aria-label="Navigation du cours">
   <div class="bar-in">
-    <div class="seg" role="group" aria-label="Niveau affiché">
-      <button data-l="both" class="on">Les deux niveaux</button><button data-l="1">Niveau 1</button><button data-l="2">Niveau 2</button>
-    </div>
     <div class="toc"><a href="#s0" title="Avant de commencer">0</a><a href="#s1" title="Pourquoi des courbes en C">1</a><a href="#s2" title="Les mécanismes">2</a><a href="#s3" title="Courbes TTT">3</a><a href="#s4" title="Courbes TRC">4</a><a href="#s5" title="Éléments d’addition">5</a><a href="#s6" title="Fiche méthode">6</a></div>
   </div>
 </nav>
@@ -210,7 +217,7 @@ details.sol[open] summary{border-bottom:1px solid var(--rule);margin-bottom:.4re
   </div>
 
   <div class="note">
-    <p><b>À propos des diagrammes de ce cours.</b> Les courbes TTT et TRC sont calculées par un modèle simplifié, calé sur l’allure des diagrammes des manuels. Cela permet de les rendre interactifs : chaque résultat affiché est cohérent avec la courbe dessinée. En revanche, ce ne sont pas des données d’acier réelles. En examen, lis toujours le diagramme fourni : tes valeurs peuvent différer des miennes, la méthode reste la même.</p>
+    <p><b>À propos des diagrammes de ce cours.</b> Les courbes TTT et TRC sont calculées par un modèle simplifié, calé sur l’allure des diagrammes des manuels. Cela permet de les rendre interactifs : chaque résultat affiché est cohérent avec la courbe dessinée. En revanche, ce ne sont pas des données d’acier réelles. En examen, lis toujours le diagramme fourni : tes valeurs peuvent différer de celles du cours, la méthode reste la même.</p>
   </div>
 
   <p><b>Rappel du cours 1.</b> Au-dessus de A<sub>3</sub>, l’acier est de l’austénite γ (CFC) qui dissout tout le carbone. En refroidissant, le fer redevient α (CC) et doit expulser ce carbone. À l’équilibre, on obtient ferrite + perlite. Ce cours répond à la question suivante : que se passe-t-il quand on ne laisse pas le temps à ce tri du carbone ?</p>
@@ -220,17 +227,16 @@ details.sol[open] summary{border-bottom:1px solid var(--rule);margin-bottom:.4re
 <section id="s1">
   <h2><span class="n">1</span><span>Pourquoi les courbes sont en forme de C</span></h2>
 
-  <div class="lv lv1">
-    <span class="tag">Niveau 1</span>
     <p>Une transformation à l’état solide se fait en deux temps. D’abord la <b>germination</b> : de tout petits îlots de la nouvelle phase apparaissent, surtout aux joints de grains. Puis la <b>croissance</b> : ces îlots grossissent en déplaçant des atomes. Deux effets s’opposent quand on transforme à une température T sous A<sub>1</sub> :</p>
     <ul>
       <li><b>la force motrice</b> : plus on descend sous 727&nbsp;°C, plus l’austénite est instable et « a envie » de se transformer. Elle augmente quand T baisse ;</li>
       <li><b>la mobilité des atomes</b> : le carbone doit diffuser, et la diffusion ralentit très vite quand T baisse.</li>
     </ul>
     <p>Juste sous 727&nbsp;°C, les atomes sont mobiles mais rien ne pousse : c’est lent. Très bas, tout pousse mais plus rien ne bouge : c’est lent aussi. Entre les deux, vers 540&nbsp;°C pour un acier eutectoïde, le produit des deux est maximal. Le temps nécessaire pour démarrer est alors minimal : c’est le <b>nez</b> de la courbe en C.</p>
-  </div>
 
-  <div class="fig">
+
+  <p class="predict">🔮 Prédis d'abord : vers quelle température un acier eutectoïde se transforme-t-il le plus vite : 700, 540 ou 300 °C ?</p>
+<div class="fig">
     <p class="figt">Force motrice × mobilité = vitesse</p>
     <svg id="kin" viewBox="0 0 360 270" role="img" aria-label="Force motrice, mobilité et temps de démarrage en fonction de la température"></svg>
     <input type="range" id="kinT" min="220" max="720" step="1" value="650" aria-label="Température de transformation">
@@ -238,13 +244,11 @@ details.sol[open] summary{border-bottom:1px solid var(--rule);margin-bottom:.4re
     <p class="cap">À gauche, les deux effets (normalisés) et leur produit. À droite, le temps de démarrage qui en découle, sur une échelle logarithmique : chaque graduation multiplie le temps par 10.</p>
   </div>
 
-  <div class="lv lv1">
-    <span class="tag">Niveau 1</span>
     <h3>Du début à la fin d’une transformation : la courbe en S</h3>
     <p>À température fixe, la fraction transformée suit une courbe en S : rien pendant un temps d’<b>incubation</b>, puis une accélération (de plus en plus de germes, de plus en plus grands), puis un ralentissement quand les colonies se touchent et qu’il ne reste plus d’austénite. Par convention, le <b>début</b> de la transformation est lu à 1&nbsp;% et la <b>fin</b> à 99&nbsp;%.</p>
-  </div>
 
-  <div class="fig">
+
+<div class="fig">
     <p class="figt">Germination et croissance de la perlite à température fixe</p>
     <div class="row">
       <div style="flex:0 1 240px;min-width:170px;margin:0 auto"><canvas class="micro" id="jm" width="440" height="440" aria-label="Germination et croissance de colonies de perlite"></canvas></div>
@@ -259,8 +263,7 @@ details.sol[open] summary{border-bottom:1px solid var(--rule);margin-bottom:.4re
     <p class="cap">Les germes naissent surtout sur les joints de grains de l’austénite. Compare 700&nbsp;°C (peu de colonies, grosses, lamelles épaisses) et 580&nbsp;°C (beaucoup de colonies, lamelles fines). La courbe en S se lit sur un axe des temps réel, calé sur le diagramme TTT de la partie 3.</p>
   </div>
 
-  <div class="lv lv2">
-    <span class="tag">Niveau 2</span>
+  <details class="deep"><summary>🔍 Pour aller plus loin : la germination en équations</summary>
     <h3>La germination en équations</h3>
     <p>Pour un germe sphérique de rayon r, l’enthalpie libre gagnée en volume et payée en surface s’écrit ΔG(r)&nbsp;=&nbsp;−(4/3)πr³Δg<sub>v</sub>&nbsp;+&nbsp;4πr²γ, où Δg<sub>v</sub> est la force motrice par unité de volume et γ l’énergie d’interface. ΔG passe par un maximum en r*&nbsp;=&nbsp;2γ/Δg<sub>v</sub>, la barrière valant ΔG*&nbsp;=&nbsp;16πγ³/(3Δg<sub>v</sub>²). Comme Δg<sub>v</sub> est à peu près proportionnelle au sous-refroidissement ΔT, la barrière varie en 1/ΔT² : elle est énorme près de A<sub>1</sub> et s’effondre en descendant.</p>
     <p>La vitesse de germination est le produit d’un terme de barrière, exp(−ΔG*/kT), et d’un terme de diffusion, exp(−Q/RT). Le premier croît quand T baisse, le second décroît : d’où le maximum. Aux joints de grains, une partie de l’interface préexiste et γ effectif diminue : la barrière est plus basse. C’est pourquoi un gros grain d’austénite, qui offre moins de joints, retarde la transformation. On y reviendra pour la zone à gros grains d’une soudure.</p>
@@ -268,6 +271,15 @@ details.sol[open] summary{border-bottom:1px solid var(--rule);margin-bottom:.4re
     <p>La courbe en S suit l’équation de Johnson-Mehl-Avrami-Kolmogorov : f(t)&nbsp;=&nbsp;1&nbsp;−&nbsp;exp(−k&nbsp;t<sup>n</sup>). Le terme k t<sup>n</sup> est le volume qu’occuperaient les colonies si elles pouvaient se chevaucher ; l’exponentielle corrige ces chevauchements. L’exposant n (souvent entre 1 et 4) dépend du mode de germination et de croissance. Entre 1&nbsp;% et 99&nbsp;%, le rapport des temps vaut (ln&nbsp;100/ln&nbsp;(1/0,99))<sup>1/n</sup>&nbsp;≈&nbsp;458<sup>1/n</sup> : pour n&nbsp;=&nbsp;2, la fin arrive environ 21 fois plus tard que le début.</p>
     <h3>Le carbone va vite, le fer et les éléments d’alliage lentement</h3>
     <p>Le carbone diffuse par sauts entre sites interstitiels ; le fer et les éléments substitutionnels (Mn, Cr, Mo, Ni…) doivent attendre qu’une lacune passe. Avec les données de Callister (C dans γ : D<sub>0</sub>&nbsp;=&nbsp;2,3·10<sup>−5</sup>&nbsp;m²/s, Q&nbsp;=&nbsp;148&nbsp;kJ/mol ; Fe dans γ : D<sub>0</sub>&nbsp;=&nbsp;5·10<sup>−5</sup>&nbsp;m²/s, Q&nbsp;=&nbsp;284&nbsp;kJ/mol), la distance parcourue en 1&nbsp;s à 900&nbsp;°C, √(Dt), vaut environ 2,4&nbsp;µm pour le carbone et quelques nanomètres pour le fer. Ce facteur de l’ordre de mille sur les distances explique, en partie 5, pourquoi les éléments d’alliage ralentissent tant les transformations.</p>
+
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Force motrice qui croît en descendant, mobilité qui s'effondre : leur produit fait le nez de la courbe en C.</li>
+      <li>À température fixe, la fraction transformée suit une courbe en S (début à 1 %, fin à 99 %).</li>
+      <li>Le carbone diffuse environ mille fois plus loin que le fer ou les éléments d'alliage.</li>
+    </ul>
   </div>
 </section>
 
@@ -275,12 +287,11 @@ details.sol[open] summary{border-bottom:1px solid var(--rule);margin-bottom:.4re
 <section id="s2">
   <h2><span class="n">2</span><span>Ferrite, perlite, bainite : les mécanismes</span></h2>
 
-  <div class="lv lv1">
-    <span class="tag">Niveau 1</span>
     <p>Toutes les transformations diffusives de l’austénite résolvent le même problème : fabriquer du fer α, qui ne garde presque pas de carbone. Ce qui change avec la température, c’est <b>la distance que le carbone peut parcourir</b> pendant la transformation. Plus on transforme bas, plus cette distance est courte, et plus la structure est fine et dure.</p>
-  </div>
 
-  <div class="fig">
+
+  <p class="predict">🔮 Prédis d'abord : plus on transforme bas, la structure devient-elle plus grossière ou plus fine ?</p>
+<div class="fig">
     <p class="figt">Galerie des microstructures</p>
     <div class="row">
       <div style="flex:0 1 250px;min-width:180px;margin:0 auto"><canvas class="micro" id="gal" width="440" height="440" aria-label="Microstructure schématique"></canvas></div>
@@ -294,8 +305,6 @@ details.sol[open] summary{border-bottom:1px solid var(--rule);margin-bottom:.4re
     <p id="galTxt" class="msg"></p>
   </div>
 
-  <div class="lv lv1">
-    <span class="tag">Niveau 1</span>
     <div class="tw"><table>
       <thead><tr><th>Produit (acier eutectoïde)</th><th>Formé vers</th><th>Comment se loge le carbone</th><th class="num">Dureté</th></tr></thead>
       <tbody>
@@ -313,29 +322,26 @@ details.sol[open] summary{border-bottom:1px solid var(--rule);margin-bottom:.4re
 
     <h3>La bainite : la ferrite pousse en lattes</h3>
     <p>Sous le nez, la ferrite ne pousse plus en lamelles coopératives avec la cémentite : elle se forme en fines <b>lattes</b>, groupées en paquets (les « gerbes »). Le carbone qu’elle contient en trop doit sortir ou précipiter :</p>
-  </div>
 
-  <div class="fig">
+
+<div class="fig">
     <p class="figt">Bainite supérieure et inférieure : où finit le carbone</p>
     <svg id="bain" viewBox="0 0 360 200" role="img" aria-label="Schéma des bainites supérieure et inférieure"></svg>
     <p class="cap">À gauche, le carbone a le temps de sortir des lattes : il s’accumule dans l’austénite entre elles, qui précipite de la cémentite en films. À droite, il n’a plus le temps : il précipite sur place, en fins carbures inclinés d’environ 60° dans chaque latte.</p>
   </div>
 
-  <div class="lv lv1">
-    <span class="tag">Niveau 1</span>
     <h3>La ferrite proeutectoïde change de forme selon la vitesse</h3>
     <p>Dans un acier hypoeutectoïde, la ferrite qui se forme avant la perlite ne pousse pas toujours en grains ronds :</p>
-  </div>
 
-  <div class="fig">
+
+<div class="fig">
     <p class="figt">Trois morphologies de ferrite</p>
     <svg id="morph" viewBox="0 0 360 220" role="img" aria-label="Morphologies de la ferrite"></svg>
     <div class="btns sm" id="morphBtns"><button class="btn on" data-f="allo">Aux joints de grains</button><button class="btn" data-f="wid">Widmanstätten</button><button class="btn" data-f="aci">Aciculaire</button></div>
     <p id="morphTxt" class="msg"></p>
   </div>
 
-  <div class="lv lv2">
-    <span class="tag">Niveau 2</span>
+  <details class="deep"><summary>🔍 Pour aller plus loin : conséquences technologiques</summary>
     <h3>Conséquences technologiques</h3>
     <ul>
       <li><b>Dureté et limite d’élasticité</b> augmentent quand la structure s’affine : c’est l’esprit de la loi de Hall-Petch, où la résistance croît comme 1/√d, d étant la taille de grain ou l’espacement caractéristique.</li>
@@ -344,6 +350,15 @@ details.sol[open] summary{border-bottom:1px solid var(--rule);margin-bottom:.4re
     </ul>
     <h3>La bainite est-elle vraiment « diffusive » ?</h3>
     <p>C’est un débat ancien. La croissance des lattes de ferrite bainitique présente des traits displacifs (relief de surface, relations d’orientation proches de la martensite), tandis que la précipitation des carbures exige la diffusion du carbone. On la classe souvent avec les transformations diffusives, parce que sa cinétique dépend du temps et de la température comme celle de la perlite. Retiens qu’elle est <b>intermédiaire</b> entre perlite et martensite, par sa température, sa dureté et son mécanisme.</p>
+
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Plus la transformation est basse, plus le trajet du carbone est court : structure plus fine et plus dure.</li>
+      <li>Perlite grossière, perlite fine, bainite supérieure (carbures entre les lattes), bainite inférieure (dans les lattes).</li>
+      <li>En soudage, on recherche la ferrite aciculaire, tenace, dans le métal fondu.</li>
+    </ul>
   </div>
 </section>
 
@@ -351,8 +366,6 @@ details.sol[open] summary{border-bottom:1px solid var(--rule);margin-bottom:.4re
 <section id="s3">
   <h2><span class="n">3</span><span>Les courbes TTT, transformation à température constante</span></h2>
 
-  <div class="lv lv1">
-    <span class="tag">Niveau 1</span>
     <p><b>TTT</b> signifie Temps, Température, Transformation. On l’appelle aussi diagramme de transformation <b>isotherme</b>. Pour le construire, on austénitise de petits échantillons, on les plonge brutalement dans un bain à la température T choisie, on les y maintient un temps t, puis on les trempe pour figer l’état. En répétant pour beaucoup de T et de t, on trace deux courbes :</p>
     <ul>
       <li>la courbe de <b>début</b> de transformation (1&nbsp;% transformé) ;</li>
@@ -360,9 +373,10 @@ details.sol[open] summary{border-bottom:1px solid var(--rule);margin-bottom:.4re
     </ul>
     <p>L’axe des temps est <b>logarithmique</b> : il couvre de 0,1&nbsp;s à plusieurs jours. Sous la courbe en C, les lignes horizontales M<sub>s</sub>, M<sub>50</sub> et M<sub>90</sub> indiquent l’apparition de la martensite, qui ne dépend pas du temps.</p>
     <p><b>Règle d’or de lecture.</b> Un diagramme TTT ne se lit que le long de trajets faits de <b>paliers horizontaux</b> et de <b>trempes verticales</b>. On suppose les trempes instantanées : pendant une trempe, rien ne se transforme, sauf la martensite quand on passe sous M<sub>s</sub>.</p>
-  </div>
 
-  <div class="fig">
+
+  <p class="predict">🔮 Prédis d'abord : un palier de 100 s à 250 °C, suivi d'une trempe, donne-t-il de la bainite ou de la martensite ?</p>
+<div class="fig">
     <p class="figt">Diagramme TTT d’un acier eutectoïde : construis ton traitement</p>
     <svg id="ttt" viewBox="0 0 360 300" role="img" aria-label="Diagramme TTT avec le trajet du traitement"></svg>
     <div class="btns sm" id="tttPre">
@@ -386,8 +400,6 @@ details.sol[open] summary{border-bottom:1px solid var(--rule);margin-bottom:.4re
     <p class="cap">Le trajet part de l’austénite au-dessus de A<sub>1</sub>, descend instantanément au palier, puis finit par une trempe à l’eau jusqu’à 20&nbsp;°C. La courbe en pointillés au milieu marque 50&nbsp;% de transformation.</p>
   </div>
 
-  <div class="lv lv1">
-    <span class="tag">Niveau 1</span>
     <h3><span class="ex">Exercice 1.</span> Six traitements d’un acier eutectoïde</h3>
     <p>Un acier à 0,76&nbsp;% C est austénitisé, puis subit les traitements ci-dessous. Tous les changements de température sont instantanés et chaque traitement se termine par une trempe à l’ambiante. Donne la microstructure finale et ses proportions. Utilise les boutons a à f pour placer chaque trajet sur le diagramme.</p>
     <ol type="a">
@@ -410,16 +422,24 @@ details.sol[open] summary{border-bottom:1px solid var(--rule);margin-bottom:.4re
       </ol>
       <p class="small">Valeurs lues sur le diagramme de ce cours. Sur un autre diagramme, les temps changent, le raisonnement reste le même.</p>
     </details>
-  </div>
 
-  <div class="lv lv2">
-    <span class="tag">Niveau 2</span>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : deux paliers successifs : ce qu’on néglige</summary>
     <h3>Deux paliers successifs : ce qu’on néglige</h3>
     <p>Au second palier, on a lu les courbes comme si le chronomètre repartait de zéro pour l’austénite restante. C’est l’usage en exercice, mais c’est une approximation : l’austénite a déjà « consommé » une partie de son incubation au premier palier, et elle s’est un peu enrichie en carbone près des colonies de perlite. La règle d’additivité de Scheil formalise la première correction : la transformation démarre quand Σ&nbsp;Δt<sub>i</sub>/t<sub>d</sub>(T<sub>i</sub>)&nbsp;=&nbsp;1. C’est exactement ce qu’on utilise pour passer du TTT au TRC (partie 4).</p>
     <h3>Et l’austénite résiduelle ?</h3>
     <p>Pour un acier eutectoïde, la fin de transformation martensitique M<sub>f</sub> est proche de l’ambiante, voire en dessous. Une trempe à 20&nbsp;°C laisse donc quelques pourcents d’<b>austénite résiduelle</b>. Les exercices la négligent ; on en reparlera au cours 3 (traitement par le froid, revenu).</p>
     <h3>TTT d’un acier hypoeutectoïde</h3>
     <p>Pour un acier à 0,4&nbsp;% C par exemple, le diagramme gagne une horizontale A<sub>3</sub> et une courbe supplémentaire « début de formation de la ferrite », à gauche de la courbe de la perlite, entre A<sub>3</sub> et A<sub>1</sub>. Le nez se décale vers les temps courts (moins de carbone à trier) et M<sub>s</sub> monte. C’est ce qui rend les aciers doux si difficiles à tremper.</p>
+
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>TTT : se lit seulement le long de paliers horizontaux et de trempes verticales.</li>
+      <li>Comparer la durée du palier aux temps de début et de fin lus à sa température.</li>
+      <li>L'austénite restante devient martensite sous M<sub>s</sub>, sans attendre.</li>
+    </ul>
   </div>
 </section>
 
@@ -427,8 +447,6 @@ details.sol[open] summary{border-bottom:1px solid var(--rule);margin-bottom:.4re
 <section id="s4">
   <h2><span class="n">4</span><span>Les courbes TRC, refroidissement continu</span></h2>
 
-  <div class="lv lv1">
-    <span class="tag">Niveau 1</span>
     <p>Dans la réalité, une pièce qu’on sort du four se refroidit <b>en continu</b> : au four, à l’air, dans l’huile ou dans l’eau. On utilise alors les diagrammes <b>TRC</b> (Transformation en Refroidissement Continu, en anglais CCT). Ils se construisent par dilatométrie, en refroidissant de petites éprouvettes à vitesse contrôlée : chaque transformation se voit comme un accident sur la courbe de longueur (cours&nbsp;1).</p>
     <p>Par rapport au TTT, les courbes de début et de fin sont <b>décalées vers le bas et vers la droite</b> : quand la température descend pendant l’incubation, il faut plus de temps pour démarrer, et on démarre plus bas. Un TRC se lit <b>le long des courbes de refroidissement</b> tracées dessus, et seulement ainsi.</p>
     <p>Deux vitesses critiques résument le diagramme :</p>
@@ -437,9 +455,10 @@ details.sol[open] summary{border-bottom:1px solid var(--rule);margin-bottom:.4re
       <li>en dessous d’une seconde vitesse, la courbe traverse toute la zone perlitique : 100&nbsp;% de perlite.</li>
     </ul>
     <p>Entre les deux, on obtient un mélange de perlite et de martensite.</p>
-  </div>
 
-  <div class="fig">
+
+  <p class="predict">🔮 Prédis d'abord : à 40 °C/s, une barre de 10 mm en acier eutectoïde sera-t-elle entièrement martensitique ?</p>
+<div class="fig">
     <p class="figt">Diagramme TRC d’un acier eutectoïde</p>
     <svg id="trc" viewBox="0 0 360 300" role="img" aria-label="Diagramme TRC avec courbes de refroidissement"></svg>
     <div class="btns sm" id="trcPre"><button class="btn" data-v="0.03">Four</button><button class="btn" data-v="2">Air</button><button class="btn on" data-v="40">Huile</button><button class="btn" data-v="200">Eau</button></div>
@@ -452,8 +471,6 @@ details.sol[open] summary{border-bottom:1px solid var(--rule);margin-bottom:.4re
     <p class="cap">Vitesse mesurée à 700&nbsp;°C. Les vitesses des boutons sont des ordres de grandeur pour une petite pièce ; elles dépendent énormément de l’épaisseur. Pour l’acier eutectoïde au carbone, la bainite n’apparaît pas en refroidissement continu : la perlite consomme l’austénite avant.</p>
   </div>
 
-  <div class="lv lv1">
-    <span class="tag">Niveau 1</span>
     <h3><span class="ex">Exercice 2.</span> Lire le TRC</h3>
     <ol>
       <li>Quelle microstructure obtient-on pour des vitesses de 1, 30 et 300&nbsp;°C/s à 700&nbsp;°C ?</li>
@@ -467,14 +484,22 @@ details.sol[open] summary{border-bottom:1px solid var(--rule);margin-bottom:.4re
         <li>Non : 40&nbsp;°C/s est bien sous la vitesse critique. On obtient environ 45&nbsp;% de perlite fine et 55&nbsp;% de martensite. Un acier au carbone de ce type se trempe à l’eau, et seulement en petites sections. C’est tout l’intérêt des éléments d’alliage (partie 5).</li>
       </ol>
     </details>
-  </div>
 
-  <div class="lv lv2">
-    <span class="tag">Niveau 2</span>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : comment on passe du TTT au TRC</summary>
     <h3>Comment on passe du TTT au TRC</h3>
     <p>Un refroidissement continu se découpe en une suite de petits paliers Δt<sub>i</sub> aux températures T<sub>i</sub>. Selon la règle d’additivité de Scheil, la transformation démarre quand la somme des fractions d’incubation consommées atteint 1 : Σ&nbsp;Δt<sub>i</sub>/t<sub>d</sub>(T<sub>i</sub>)&nbsp;=&nbsp;1. Chaque petit palier « compte » d’autant moins que t<sub>d</sub>(T<sub>i</sub>) est long, d’où le décalage vers la droite et vers le bas. Le diagramme de ce cours est calculé exactement ainsi à partir du TTT de la partie 3.</p>
     <h3>Les diagrammes TRC des aciers de construction et du soudage</h3>
     <p>Les TRC industriels indiquent, au bout de chaque courbe, la <b>dureté finale</b> (souvent entourée) et, le long de la courbe, le <b>pourcentage</b> de chaque constituant formé dans chaque domaine (F, P, B, M). Pour le soudage, on les trace en fonction du temps de refroidissement entre 800 et 500&nbsp;°C, le <b>t<sub>8/5</sub></b>, avec un cycle thermique de soudage au lieu d’une austénitisation au four. Le cours&nbsp;3 montre comment calculer t<sub>8/5</sub> à partir de l’énergie de soudage et de l’épaisseur.</p>
+
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>TRC : se lit seulement le long des courbes de refroidissement ; courbes décalées vers le bas et la droite par rapport au TTT.</li>
+      <li>Au-delà de la vitesse critique de trempe : 100 % martensite.</li>
+      <li>En soudage, le TRC se lit en t<sub>8/5</sub>, avec la dureté au bout de chaque courbe.</li>
+    </ul>
   </div>
 </section>
 
@@ -482,8 +507,6 @@ details.sol[open] summary{border-bottom:1px solid var(--rule);margin-bottom:.4re
 <section id="s5">
   <h2><span class="n">5</span><span>Les éléments d’addition</span></h2>
 
-  <div class="lv lv1">
-    <span class="tag">Niveau 1</span>
     <p>Un acier n’est jamais du Fe–C pur : il contient toujours du manganèse et du silicium issus de l’élaboration, et souvent du chrome, du nickel, du molybdène, du vanadium… On les range en trois catégories.</p>
     <div class="tw"><table>
       <thead><tr><th>Catégorie</th><th>Éléments</th><th>Effet principal</th></tr></thead>
@@ -494,9 +517,10 @@ details.sol[open] summary{border-bottom:1px solid var(--rule);margin-bottom:.4re
       </tbody>
     </table></div>
     <p>Un élément peut appartenir à deux catégories : le chrome est à la fois alphagène et carburigène. Le silicium et le nickel, eux, ne forment pas de carbures : ils restent en solution dans la ferrite.</p>
-  </div>
 
-  <div class="fig">
+
+  <p class="predict">🔮 Prédis d'abord : à carbone égal, le 42CrMo4 se trempe-t-il plus facilement ou moins facilement que le C45 ?</p>
+<div class="fig">
     <p class="figt">Gammagène ou alphagène : ce que devient le domaine γ</p>
     <svg id="loop" viewBox="0 0 360 260" role="img" aria-label="Diagrammes fer-élément schématiques"></svg>
     <div class="btns sm" id="loopBtns"><button class="btn on" data-e="ni">Nickel (gammagène)</button><button class="btn" data-e="cr">Chrome (alphagène)</button></div>
@@ -505,14 +529,12 @@ details.sol[open] summary{border-bottom:1px solid var(--rule);margin-bottom:.4re
     <p class="cap">Allures schématiques des diagrammes binaires fer–nickel et fer–chrome, sans carbone. Avec le chrome, le domaine γ se referme en « boucle » : au-delà, le fer reste cubique centré du solide jusqu’à l’ambiante, et ne peut donc pas prendre la trempe.</p>
   </div>
 
-  <div class="lv lv1">
-    <span class="tag">Niveau 1</span>
     <h3>Les deux effets qui comptent pour les traitements</h3>
     <p><b>1. Les températures de transformation bougent.</b> Les deux abaques classiques de l’effet des éléments d’addition sur le point eutectoïde le montrent : la température eutectoïde monte avec Ti, Mo, Si, W, Cr et descend avec Mn et Ni ; la teneur en carbone de l’eutectoïde diminue avec presque tous les éléments. Un acier allié peut donc être « eutectoïde » avec bien moins de 0,76&nbsp;% C.</p>
     <p><b>2. Les courbes TTT et TRC se décalent vers la droite</b>, avec tous les éléments usuels sauf le cobalt. Les atomes substitutionnels diffusent des milliers de fois moins vite que le carbone : pour former de la ferrite ou de la perlite, il faut qu’ils se redistribuent, ou au moins qu’ils freinent les interfaces. L’acier peut alors être refroidi moins vite tout en évitant la perlite : sa <b>trempabilité</b> augmente. C’est pour cela qu’on allie un acier de traitement.</p>
-  </div>
 
-  <div class="fig">
+
+<div class="fig">
     <p class="figt">Même carbone, alliage différent : C45 contre 42CrMo4</p>
     <svg id="trc2" viewBox="0 0 360 300" role="img" aria-label="Diagramme TRC comparé"></svg>
     <div class="btns sm" id="trc2S"><button class="btn on" data-s="C45">C45 (0,45 C, 0,7 Mn)</button><button class="btn" data-s="42CrMo4">42CrMo4 (+1 Cr, 0,2 Mo)</button></div>
@@ -522,8 +544,6 @@ details.sol[open] summary{border-bottom:1px solid var(--rule);margin-bottom:.4re
     <p class="cap">Domaines : F ferrite, P perlite, B bainite, M martensite. Les nombres au bas des courbes sont les duretés finales estimées (HV). Modèle simplifié : il reproduit l’écart de trempabilité entre les deux nuances, pas leurs diagrammes officiels.</p>
   </div>
 
-  <div class="lv lv1">
-    <span class="tag">Niveau 1</span>
     <h3>Les formules empiriques des points de transformation</h3>
     <p>Des formules établies sur des centaines d’aciers faiblement alliés (Andrews, Steven et Haynes) donnent ces températures à partir de la composition, en % massique :</p>
     <div class="eq">
@@ -533,9 +553,9 @@ details.sol[open] summary{border-bottom:1px solid var(--rule);margin-bottom:.4re
       B<sub>s</sub> = 830 − 270&nbsp;C − 90&nbsp;Mn − 37&nbsp;Ni − 70&nbsp;Cr − 83&nbsp;Mo
     </div>
     <p>Lis les signes : ils disent tout. Ni et Mn, gammagènes, abaissent Ac<sub>1</sub> ; Si et Cr, alphagènes, l’élèvent. Tous les éléments abaissent M<sub>s</sub> et B<sub>s</sub>, le carbone surtout.</p>
-  </div>
 
-  <div class="fig">
+
+<div class="fig">
     <p class="figt">Calcule les points de transformation d’une nuance</p>
     <div class="btns sm" id="calcPre"><button class="btn" data-k="S355">S355</button><button class="btn" data-k="C45">C45</button><button class="btn on" data-k="42CrMo4">42CrMo4</button><button class="btn" data-k="35NCD16">35NiCrMo16</button></div>
     <div id="calcIn"></div>
@@ -544,8 +564,6 @@ details.sol[open] summary{border-bottom:1px solid var(--rule);margin-bottom:.4re
     <p class="cap">Les barres grises donnent les valeurs d’un acier au carbone seul, au même % C ; les barres colorées celles de la nuance, avec entre parenthèses l’écart dû aux éléments d’addition. Formules valables pour les aciers faiblement alliés, environ C&nbsp;&lt;&nbsp;0,6&nbsp;% et moins de 5&nbsp;% d’éléments.</p>
   </div>
 
-  <div class="lv lv1">
-    <span class="tag">Niveau 1</span>
     <h3><span class="ex">Exercice 3.</span> C45 ou 42CrMo4 ?</h3>
     <ol>
       <li>Classe les éléments du 42CrMo4 (C 0,42 ; Mn 0,75 ; Si 0,25 ; Cr 1,05 ; Mo 0,22) : gammagène ou alphagène, carburigène ou non.</li>
@@ -561,10 +579,9 @@ details.sol[open] summary{border-bottom:1px solid var(--rule);margin-bottom:.4re
         <li>Le <b>42CrMo4</b> : sa trempabilité fait qu’une zone affectée, même refroidie assez lentement, devient martensitique. Avec 0,42&nbsp;% C, cette martensite est très dure et fragile, et sensible à la fissuration à froid par l’hydrogène. Il faut préchauffer et souvent traiter après soudage (cours&nbsp;3). Le C45 n’est pas pour autant facile à souder : son carbone élevé le rend lui aussi sensible, mais sur une plage de vitesses plus étroite.</li>
       </ol>
     </details>
-  </div>
 
-  <div class="lv lv2">
-    <span class="tag">Niveau 2</span>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : pourquoi les carburigènes séparent perlite et bainite</summary>
     <h3>Pourquoi les carburigènes séparent perlite et bainite</h3>
     <p>Dans un acier au Cr–Mo, la perlite exige que Cr et Mo se partagent entre ferrite et carbures : c’est très lent. La bainite, qui se forme sans redistribution des éléments substitutionnels, est beaucoup moins freinée. Le diagramme TTT se creuse alors en deux « nez » séparés par une baie, où l’austénite peut rester longtemps : c’est ce que montre le TRC du 42CrMo4, avec un large domaine bainitique.</p>
     <h3>Le grain d’austénite et le bore</h3>
@@ -573,14 +590,22 @@ details.sol[open] summary{border-bottom:1px solid var(--rule);margin-bottom:.4re
     <p>On austénitise une barre de 25&nbsp;mm de diamètre et on arrose une seule de ses extrémités. Chaque point de la barre voit une vitesse de refroidissement différente, de très rapide au bout arrosé à lente à l’autre bout. La courbe dureté–distance résume en une mesure la position des courbes TRC : plus la dureté se maintient loin du bout trempé, plus l’acier est trempant.</p>
     <h3>Le cobalt, l’exception</h3>
     <p>Le cobalt est le seul élément courant qui accélère les transformations diffusives : il augmente la force motrice de la transformation γ&nbsp;→&nbsp;α. Il diminue donc la trempabilité.</p>
+
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Gammagènes (Ni, Mn, C, N) élargissent γ ; alphagènes (Cr, Mo, Si) le rétrécissent ; carburigènes (Ti, Nb, V, Mo, Cr) forment des carbures.</li>
+      <li>Presque tous les éléments décalent TTT et TRC vers la droite : la trempabilité augmente (sauf le cobalt).</li>
+      <li>C'est le carbone qui fait la dureté de la martensite ; les éléments d'alliage la rendent plus facile à obtenir.</li>
+    </ul>
   </div>
 </section>
 
 <!-- ============ 6 ============ -->
 <section id="s6">
   <h2><span class="n">6</span><span>Fiche méthode et pièges</span></h2>
-  <div class="lv lv1">
-    <span class="tag">Niveau 1</span>
+
     <h3>Lire un TTT</h3>
     <ol>
       <li>Vérifie que le traitement est fait de paliers et de trempes instantanées.</li>
@@ -603,12 +628,11 @@ details.sol[open] summary{border-bottom:1px solid var(--rule);margin-bottom:.4re
       <li>Utiliser un TTT ou un TRC d’un autre acier, ou d’une autre austénitisation : la taille de grain déplace les courbes.</li>
       <li>Penser qu’un élément d’alliage durcit la martensite : c’est le carbone qui fait sa dureté. Les éléments d’alliage rendent la martensite plus <b>facile à obtenir</b>.</li>
     </ul>
-  </div>
-  <div class="lv lv2">
-    <span class="tag">Niveau 2</span>
+
+
     <h3>La suite : cours 3</h3>
     <p>On ouvre la boîte noire de la martensite : pourquoi elle se forme sans diffusion, pourquoi elle est si dure, comment le revenu la rend utilisable. Puis on passe au soudage : calcul du t<sub>8/5</sub>, lecture d’un TRC de soudage, carbone équivalent et choix du préchauffage.</p>
-  </div>
+
 </section>
 
 </main>

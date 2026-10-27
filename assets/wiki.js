@@ -298,7 +298,7 @@
   // La grille de la feuille de style a déjà donné au schéma sa largeur avant le premier dessin du cours ;
   // le regroupement ne la change pas. En dessous du seuil, l'ordre d'origine des éléments est rétabli.
   const landscape = matchMedia("(min-width: 1280px) and (orientation: landscape)");
-  const labs = [...document.querySelectorAll(".lab")].filter(lab => lab.querySelectorAll(":scope > svg").length === 1);
+  const labs = [...document.querySelectorAll(".lab")].filter(lab => lab.querySelectorAll(":scope > svg, :scope > .lab-figs").length === 1);
   function splitLab(lab) {
     if (lab.classList.contains("wiki-lab-split")) return;
     const children = [...lab.children];
@@ -308,7 +308,7 @@
     side.className = "wiki-lab-side";
     for (const child of children) {
       if (child.matches(".lab-h") || (child.matches(".lab-sub") && child === children[1])) continue;
-      (child.matches("svg, .readout, .status") ? figure : side).append(child);
+      (child.matches("svg, .lab-figs, .lab-fig, .tbl-wrap, .readout, .status") ? figure : side).append(child);
     }
     lab.wikiChildren = children;
     lab.append(figure, side);

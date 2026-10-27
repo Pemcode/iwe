@@ -109,12 +109,6 @@ section.chap{padding:46px 0 10px}
 .c-img span{font-size:.95rem;line-height:1.3}
 @media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
 
-/* niveaux */
-.lv{margin:1.2rem 0;padding:6px 22px 14px;border-radius:4px}
-.lv1{background:var(--card);border:2px solid var(--ink)}
-.lv2{background:var(--lv2);border-left:6px solid var(--ink)}
-.lv-h{display:flex;align-items:center;gap:10px;font-family:var(--font-head);font-size:1.35rem;font-weight:600;margin:10px 0 4px}
-.lv-h .tag{font-size:.95rem;font-family:var(--font-body);font-weight:400;color:var(--muted)}
 
 /* formule */
 .fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:560px;text-align:center;border-radius:3px}
@@ -321,6 +315,30 @@ svg .throat{stroke:var(--weld);stroke-width:3;stroke-dasharray:7 4}
 .arr.weldc{color:var(--weld)}
 @media (max-width:700px){.m{white-space:normal}.fx{padding:12px 10px}.fx .big{font-size:1.45rem!important}}
 .fx{overflow-x:auto}
+
+/* gabarit court : approfondissement replié, à retenir, prédiction */
+details.deep{margin:1.2rem 0;padding:0 18px;background:var(--lv2);border-left:6px solid var(--ink);border-radius:4px}
+details.deep>summary{font-family:var(--font-head);font-size:1.2rem;font-weight:600;padding:9px 0}
+details.deep[open]{padding-bottom:10px}
+.retenir{margin:1.4rem 0 .4rem;padding:8px 18px 6px;background:var(--card);border:2px solid var(--ink);border-radius:4px}
+.retenir>b:first-child{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.retenir ul{margin:.3rem 0 .3rem}
+.predict{display:block;margin-top:.35rem;color:var(--ink);font-weight:700}
+@media (max-width:520px){details.deep{padding:0 12px}.retenir{padding:8px 12px 6px}}
+
+/* impression : le cours sur papier clair, ou la fiche mémoire seule sur une page */
+@media print{
+  :root,:root[data-theme]{--paper:#fff!important;--paper-2:#EEF2F6!important;--card:#fff!important;--ink:#111!important;--muted:#444!important;--line:#999!important;--grid:transparent!important;--lv2:#F2F5F8!important;--hl:#FFF3B0!important;color-scheme:light}
+  body{background:#fff;font-size:11pt}
+  .toc,.theme-btn,.btns,.ctrl,#qzReset,.score{display:none!important}
+  section.chap{padding:14px 0 4px}
+  .lab,.fx,.retenir,details.deep,.fiche>div,.exo{break-inside:avoid}
+  body.print-fiche header,body.print-fiche main>section:not(#fiche),body.print-fiche footer{display:none!important}
+  body.print-fiche #fiche .cartouche{margin-bottom:.6rem}
+  body.print-fiche .fiche>div{padding:8px 10px}
+}
+/* formules dans les replis et les corrections : retour à la ligne permis (sinon débordement vers 768 px) */
+details .m{white-space:normal}
 </style>
 </head>
 <body>
@@ -333,7 +351,7 @@ svg .throat{stroke:var(--weld);stroke-width:3;stroke-dasharray:7 4}
     </div>
     <div class="tb-cells">
       <div><small>Cours</small><b>2 sur 5 : le tenseur des contraintes</b></div>
-      <div><small>Durée conseillée</small><b>≈ 2 h 30 avec les exercices</b></div>
+      <div><small>Durée conseillée</small><b>≈ 1 h 15 à 1 h 30 avec les exercices</b></div>
       <div><small>Prérequis</small><b>le cours 1</b></div>
       <div><small>À la fin tu sais</small><b>calculer σₙ et τ sur n'importe quelle facette, en 3D</b></div>
     </div>
@@ -377,23 +395,20 @@ svg .throat{stroke:var(--weld);stroke-width:3;stroke-dasharray:7 4}
     <div><div class="f"><span class="sig">[σ]</span> : 3 × 3</div>Ligne = la face, colonne = la direction. Diagonale : <span class="sig">σ</span>. Hors diagonale : <span class="tau">τ</span>. Symétrique, donc 6 valeurs indépendantes.</div>
   </div>
 
-  <div class="def"><b>📘 Deux variantes de notation à connaître.</b> <b>1.</b> Beaucoup d'ouvrages écrivent les cisaillements <b>σ<sub>xy</sub>, σ<sub>xz</sub>, σ<sub>yz</sub></b> ; ici on les écrit <span class="tau">τ<sub>xy</sub>, τ<sub>xz</sub>, τ<sub>yz</sub></span> pour les voir en violet. Ce sont les mêmes nombres. <b>2.</b> L'angle de la facette est souvent noté <b>φ</b> ; ici c'est <b>θ</b>. La convention de signe de τ est fixée au chapitre 4.</div>
+  <div class="def"><b>📘 Le sujet du planning</b> : sujet <b>3.2</b>, notions fondamentales de RDM. Attendu de l'IWE (<i>International Welding Engineer</i>) : calculer les contraintes nominales et combinées dans les soudures. Ce cours donne l'outil : la contrainte sur n'importe quelle facette, jusqu'à la section de gorge d'un cordon.</div>
 
-  <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage (formation IWE)</b>
-    <p><b>IWE</b> signifie <i>International Welding Engineer</i> (ingénieur international en soudage), le diplôme délivré selon les règles de l'<b>IIW</b> (<i>International Institute of Welding</i>, l'Institut international de la soudure). Dans son programme de conception et de calcul des assemblages, tu retrouveras exactement ce que tu vas apprendre ici, sous trois formes :</p>
-    <p><b>1. Le calcul des cordons d'angle.</b> La vérification d'un cordon selon l'Eurocode 3 consiste à calculer la contrainte sur une facette inclinée à 45°, la « section de gorge », puis à la décomposer en trois morceaux. C'est littéralement le produit <span class="m"><span class="sig">[σ]</span>·<span class="vec">n</span></span> de ce cours (chapitre 6).</p>
-    <p><b>2. Les réservoirs sous pression soudés.</b> Leur paroi est dans un état de contrainte à deux directions, et on verra pourquoi la soudure longitudinale est deux fois plus chargée que la soudure circulaire (chapitre 5).</p>
-    <p><b>3. Les contraintes résiduelles de soudage.</b> Au cœur d'une soudure épaisse, la matière est tirée dans les trois directions à la fois : un état triaxial, qui ne s'écrit correctement qu'avec une matrice 3 × 3.</p>
+  <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage</b>
+    <p>Vérifier un cordon d'angle selon l'Eurocode 3, c'est calculer la contrainte sur une facette inclinée, la section de gorge, et la décomposer (chapitre 6). La paroi d'un réservoir soudé charge la soudure longitudinale deux fois plus que la circulaire (chapitre 5), et le cœur d'une soudure épaisse est tiré dans les trois directions.</p>
   </div>
 
   <h4>Le plan du cours</h4>
   <ol class="route">
-    <li><span class="dot">1</span><b>Le vecteur contrainte T⃗</b><p>La vraie définition de « la contrainte sur une facette », et la preuve qu'elle change quand la facette tourne.</p></li>
-    <li><span class="dot">2</span><b>Le tétraèdre de Cauchy</b><p>Pourquoi 3 faces (donc 9 nombres) suffisent à tout connaître.</p></li>
-    <li><span class="dot">3</span><b>La formule T⃗ = [σ]·n⃗</b><p>Le produit matrice × vecteur, appris de zéro avec une machine pas à pas.</p></li>
-    <li><span class="dot">4</span><b>Décomposer T⃗ en σₙ et τ</b><p>Un produit scalaire et un Pythagore. Et le cercle de Mohr réapparaît.</p></li>
-    <li><span class="dot">5</span><b>La galerie des états de contrainte</b><p>Les matrices types à reconnaître au premier coup d'œil, dont celle d'un réservoir soudé.</p></li>
-    <li><span class="dot">6</span><b>Application : la section de gorge d'un cordon d'angle</b><p>σ⊥, τ⊥, τ∥ et la vérification de l'Eurocode 3.</p></li>
+    <li><span class="dot">1</span><b>Le vecteur contrainte T⃗</b><p>La main sur la vitre.</p></li>
+    <li><span class="dot">2</span><b>Le tétraèdre de Cauchy</b><p>Les trois vues du dessin technique.</p></li>
+    <li><span class="dot">3</span><b>La formule T⃗ = [σ]·n⃗</b><p>La ligne qui se couche sur la colonne.</p></li>
+    <li><span class="dot">4</span><b>Décomposer T⃗ en σₙ et τ</b><p>L'ombre du bâton.</p></li>
+    <li><span class="dot">5</span><b>La galerie des états de contrainte</b><p>Un cube par situation.</p></li>
+    <li><span class="dot">6</span><b>La section de gorge d'un cordon d'angle</b><p>Le triangle et sa gorge à 45°.</p></li>
   </ol>
 </div>
 </section>
@@ -406,17 +421,13 @@ svg .throat{stroke:var(--weld);stroke-width:3;stroke-dasharray:7 4}
     <div class="c-img"><span class="ico">🖐</span><span><small>Image à retenir</small>La main posée à plat sur une vitre</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la main sur la vitre</span></div>
-    <p>Pose ta main à plat sur une vitre et pousse en biais, vers le haut. Ta paume ressent deux choses à la fois : une poussée qui l'écrase contre la vitre (perpendiculaire), et un frottement qui la fait glisser (parallèle). La <b>force par unité de surface</b> que ressent ta paume, avec sa direction, c'est le <b>vecteur contrainte</b> <span class="m"><span class="vec">T</span></span>.</p>
-    <p>Dans la matière, c'est pareil. Choisis un point M, et fais passer par ce point une petite surface imaginaire, la <b>facette</b>. Coupe par la pensée : la matière d'un côté exerce sur l'autre une force répartie. Ramenée à la surface, cette force est le vecteur <span class="m"><span class="vec">T</span></span>, en MPa.</p>
-    <div class="def"><b>📖 Vecteur :</b> une flèche, avec une longueur (sa « norme ») et une direction. En 3D, on l'écrit avec ses trois composantes, par exemple <span class="m"><span class="vec">T</span> = (T<sub>x</sub> ; T<sub>y</sub> ; T<sub>z</sub>)</span> : ce qu'il avance selon x, selon y, selon z. La flèche au-dessus de la lettre signale un vecteur.</div>
-    <div class="def"><b>📖 Normale unitaire n⃗ :</b> la flèche perpendiculaire à la facette, de longueur exactement 1. Elle sert d'« étiquette » à la facette : dire « la facette de normale n⃗ », c'est désigner une orientation précise. Par convention, elle pointe <b>vers l'extérieur</b> du morceau de matière qu'on garde.</div>
-    <p><b>La phrase à retenir :</b> en un point, <span class="m"><span class="vec">T</span></span> dépend de la facette choisie. Change <span class="m"><span class="vec">n</span></span>, et <span class="m"><span class="vec">T</span></span> change de longueur <b>et</b> de direction. La manipulation ci-dessous le montre : fais tourner la facette autour du point, et regarde la flèche noire.</p>
-  </div>
+  <p>Pose ta main à plat sur une vitre et pousse en biais, vers le haut. Ta paume ressent deux choses : une poussée qui l'écrase contre la vitre (perpendiculaire) et un frottement qui la fait glisser (parallèle). Dans la matière, c'est pareil : par un point M, fais passer une petite surface imaginaire, la <b>facette</b>, et coupe par la pensée. La matière d'un côté exerce sur l'autre une force répartie ; ramenée à la surface, c'est le <b>vecteur contrainte</b> T⃗, en MPa.</p>
 
-  <div class="lab" id="h1">
+  <div class="fx"><div class="row big" style="font-size:1.35rem"><span>T⃗(M, n⃗) = <span class="frac"><span>d<span class="frc">F⃗</span></span><span>dS</span></span></span><span>T⃗(M, −n⃗) = −T⃗(M, n⃗)</span></div><p class="cap">dF⃗ : force sur une petite facette d'aire dS ; n⃗ : <b>normale unitaire</b>, la flèche perpendiculaire à la facette, de longueur 1, qui pointe vers l'extérieur du morceau gardé. T⃗ dépend de deux choses, le point et l'orientation. Retourner la facette inverse la force (action et réaction).</p></div>
+
+<div class="lab" id="h1">
     <p class="lab-h">Manipulation 1 : le hérisson de facettes</p>
-    <p class="lab-sub">Au centre, le point M. Le cercle en pointillés est le cercle des normales (longueur 1). Pour chaque orientation n⃗, la flèche noire est le vecteur contrainte T⃗ que ressent la facette. Règle d'abord l'état de contrainte (ou choisis un exemple), puis fais tourner n⃗.</p>
+    <p class="lab-sub">Règle l'état de contrainte ou choisis un exemple, puis fais tourner n⃗ : la flèche noire est T⃗.<span class="predict">🔮 Prédis d'abord : sous la pression d'un fluide, T⃗ est-il toujours parallèle à n⃗ ?</span></p>
     <div class="btns" id="h1pre">
       <button class="btn on" type="button" data-p="80,-30,40">Cas quelconque</button>
       <button class="btn" type="button" data-p="100,0,0">Traction simple</button>
@@ -429,36 +440,28 @@ svg .throat{stroke:var(--weld);stroke-width:3;stroke-dasharray:7 4}
     <div class="ctrl"><label for="h1sx"><span class="sig">σ</span><sub>xx</sub></label><input id="h1sx" class="r-frc" type="range" min="-100" max="100" step="5" value="80"><output id="h1sxv"></output></div>
     <div class="ctrl"><label for="h1sy"><span class="sig">σ</span><sub>yy</sub></label><input id="h1sy" class="r-frc" type="range" min="-100" max="100" step="5" value="-30"><output id="h1syv"></output></div>
     <div class="ctrl"><label for="h1t"><span class="tau">τ</span><sub>xy</sub></label><input id="h1t" class="r-th" type="range" min="-100" max="100" step="5" value="40"><output id="h1tv"></output></div>
-    <div class="btns">
-      <button class="btn" id="h1play" type="button">▶ Faire un tour complet</button>
+    <div class="btns" id="h1pl"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" data-a="play" type="button">▶ Faire un tour complet</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button>
       <label class="btn" style="display:inline-flex;gap:6px;align-items:center"><input type="checkbox" id="h1ell"> Montrer la courbe des pointes de T⃗</label>
     </div>
     <div class="readout" id="h1out"></div>
     <p class="status" id="h1note"></p>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : ce qu'il faut observer <span class="tag">trois constats</span></div>
-    <p><b>1. En général, T⃗ n'est pas parallèle à n⃗.</b> La facette est à la fois tirée (ou poussée) et cisaillée. C'est exactement la main sur la vitre.</p>
-    <p><b>2. Il existe des orientations spéciales où T⃗ est pile dans l'axe de n⃗</b> : aucun cisaillement sur ces facettes. Ce sont les <b>directions principales</b>, le cœur du cours 4. Cherche-les avec le curseur : il y en a deux, perpendiculaires entre elles.</p>
-    <p><b>3. Avec « Pression d'un fluide », T⃗ est toujours parallèle à n⃗</b> et pointe vers l'intérieur : un plongeur ressent la même poussée dans toutes les directions, sans aucun frottement. Toutes les facettes sont principales.</p>
-    <div class="mnemo">🥚 Coche « Montrer la courbe » et fais un tour : la pointe de T⃗ dessine une <b>ellipse</b>, l'<b>ellipse de Lamé</b> (du nom du mathématicien et ingénieur des Mines Gabriel Lamé, 1795-1870). Ses deux demi-axes sont justement portés par les directions principales. Image : un œuf posé autour du point.</div>
-  </div>
+  <p>Trois constats. En général, <b>T⃗ n'est pas parallèle à n⃗</b> : la facette est à la fois tirée et cisaillée. Il existe deux orientations perpendiculaires où T⃗ est pile dans l'axe de n⃗, sans cisaillement : ce sont les <b>directions principales</b> (cours 4). Sous la pression d'un fluide, T⃗ est toujours parallèle à n⃗ et pointe vers l'intérieur : toutes les facettes sont principales. <b>Exemple</b> : en traction simple σ = 100 MPa selon x, sur la facette de normale n⃗ = (0,5 ; 0,866) (inclinée de 60°), <span class="m">T⃗ = (σ × 0,5 ; 0) = (50 ; 0) MPa</span> : horizontal, alors que n⃗ est incliné.</p>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">la définition rigoureuse</span></div>
-    <p>Soit une facette d'aire <span class="m">dS</span> (« d » pour « très petite ») autour du point M, de normale unitaire sortante <span class="m"><span class="vec">n</span></span>. La matière située du côté de <span class="m"><span class="vec">n</span></span> exerce sur elle une force <span class="m">d<span class="vec">F</span></span>. On définit :</p>
-    <div class="fx"><div class="big"><span class="vec">T</span>(M, <span class="vec">n</span>) = <span class="frac"><span>d<span class="vec">F</span></span><span>dS</span></span></div><p class="cap">limite quand dS tend vers 0, en MPa</p></div>
-    <dl class="syms">
-      <dt><span class="vec">T</span>(M, <span class="vec">n</span>)</dt><dd>vecteur contrainte au point M sur la facette de normale n⃗ : il dépend de deux choses, <b>le point</b> et <b>l'orientation</b></dd>
-      <dt>d<span class="vec">F</span></dt><dd>force élémentaire exercée sur la facette, en N</dd>
-      <dt>dS</dt><dd>aire élémentaire de la facette, en mm²</dd>
-    </dl>
-    <h4>Le principe d'action et de réaction</h4>
-    <p>Retourne la facette (normale <span class="m">−<span class="vec">n</span></span>) : tu regardes maintenant l'autre morceau de matière. Il subit la force opposée :</p>
-    <div class="fx"><div class="big" style="font-size:1.7rem"><span class="vec">T</span>(M, −<span class="vec">n</span>) = −<span class="vec">T</span>(M, <span class="vec">n</span>)</div></div>
-    <p>C'est pour ça que, sur le cube du cours 1, les faces cachées portent les mêmes flèches en sens inverse : elles n'apportent aucune information nouvelle.</p>
-    <h4>Normale et tangentielle</h4>
-    <p>On décompose toujours <span class="m"><span class="vec">T</span></span> en deux morceaux : sa projection sur <span class="m"><span class="vec">n</span></span>, la contrainte normale <span class="sig">σ<sub>n</sub></span> (positive en traction), et le reste, dans le plan de la facette, le cisaillement <span class="tau">τ</span>. On apprendra à les calculer au chapitre 4.</p>
-    <div class="warn">⚠️ <b>Ne confonds pas</b> <span class="m"><span class="vec">T</span></span> (un vecteur : 3 nombres, qui dépend de la facette) et <span class="sig">[σ]</span> (une matrice : 9 nombres, qui ne dépend que du point). <span class="sig">[σ]</span> est la « machine » ; <span class="m"><span class="vec">T</span></span> est ce qu'elle produit quand on lui donne une facette.</div>
+  <div class="warn"><b>⚠️ Piège : ne confonds pas T⃗ et [σ].</b> T⃗ est un vecteur (3 nombres) qui dépend de la facette ; [σ] est une matrice (9 nombres) qui ne dépend que du point. [σ] est la machine, T⃗ ce qu'elle produit quand on lui donne une facette.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « la main sur la vitre »</b> : poussée (σ<sub>n</sub>) et frottement (τ) à la fois.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : l'ellipse de Lamé, les variantes de notation</summary>
+    <p>Dans la manipulation, coche « Montrer la courbe » et fais un tour : la pointe de T⃗ dessine une <b>ellipse</b>, l'ellipse de Lamé (Gabriel Lamé, 1795-1870), dont les demi-axes sont portés par les directions principales. Variantes : beaucoup d'ouvrages écrivent les cisaillements σ<sub>xy</sub>, σ<sub>xz</sub>, σ<sub>yz</sub> (ici τ<sub>xy</sub>, τ<sub>xz</sub>, τ<sub>yz</sub>, en violet) et notent φ l'angle de la facette (ici θ).</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>T⃗ : force par unité de surface sur une facette, en MPa ; il dépend du point et de la facette.</li>
+      <li>En général T⃗ n'est pas parallèle à n⃗ : la facette est tirée et cisaillée.</li>
+      <li>Facettes sans cisaillement : les directions principales (cours 4).</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -471,16 +474,13 @@ svg .throat{stroke:var(--weld);stroke-width:3;stroke-dasharray:7 4}
     <div class="c-img"><span class="ico">📐</span><span><small>Image à retenir</small>Les trois vues du dessin technique</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">trois vues suffisent</span></div>
-    <p>En dessin industriel, trois vues (face, dessus, gauche) suffisent pour définir entièrement une pièce : toutes les autres vues s'en déduisent. En contraintes, c'est pareil. Si tu connais <span class="m"><span class="vec">T</span></span> sur <b>trois facettes perpendiculaires</b> (celles de normales x, y et z), tu peux calculer <span class="m"><span class="vec">T</span></span> sur <b>n'importe quelle</b> autre facette.</p>
-    <p>Pourquoi ? Découpe un petit coin de matière avec une facette inclinée. Ce coin est en équilibre : les forces sur ses faces s'annulent. Les forces sur les faces « x », « y » (et « z » en 3D) étant connues, la force sur la face inclinée est forcée : c'est celle qui ferme le bilan.</p>
-    <p>Et comme chacun des trois vecteurs <span class="m"><span class="vec">T</span></span> a 3 composantes, il faut <span class="m">3 × 3 = 9</span> nombres : ce sont exactement les 9 cases de <span class="sig">[σ]</span>. La matrice n'est pas une convention arbitraire, c'est le <b>minimum d'information</b> nécessaire.</p>
-    <p>Ce résultat est dû à <b>Augustin-Louis Cauchy</b>, mathématicien français, en 1822 : c'est l'acte de naissance du tenseur des contraintes.</p>
-  </div>
+  <p>En dessin industriel, trois vues suffisent à définir une pièce : toutes les autres s'en déduisent. En contraintes, c'est pareil : si tu connais T⃗ sur <b>trois facettes perpendiculaires</b> (normales x, y et z), tu peux calculer T⃗ sur <b>n'importe quelle</b> autre. Découpe un petit coin de matière par une facette inclinée : il est en équilibre, et la force sur la face inclinée est celle qui ferme le bilan. Chacun des trois vecteurs ayant 3 composantes, il faut 3 × 3 = <b>9 nombres</b>, les 9 cases de [σ] : la matrice est le minimum d'information nécessaire. C'est le résultat d'Augustin-Louis Cauchy, en 1822, l'acte de naissance du tenseur des contraintes.</p>
 
-  <div class="lab" id="c2w">
+  <div class="fx"><div class="row big" style="font-size:1.3rem"><span>T⃗(n⃗) = n<sub>x</sub>·T⃗(e⃗<sub>x</sub>) + n<sub>y</sub>·T⃗(e⃗<sub>y</sub>) + n<sub>z</sub>·T⃗(e⃗<sub>z</sub>)</span><span>T⃗ = <span class="sig">[σ]</span>·n⃗</span></div><p class="cap">e⃗<sub>x</sub>, e⃗<sub>y</sub>, e⃗<sub>z</sub> : vecteurs unitaires des axes ; T⃗(e⃗<sub>x</sub>), le vecteur contrainte sur la face de normale x, est la <b>première ligne</b> de [σ], (σ<sub>xx</sub> ; τ<sub>xy</sub> ; τ<sub>xz</sub>). n<sub>x</sub>, n<sub>y</sub>, n<sub>z</sub> : composantes de n⃗, ou <b>cosinus directeurs</b>, avec n<sub>x</sub>² + n<sub>y</sub>² + n<sub>z</sub>² = 1. La seconde écriture est la <b>formule de Cauchy</b>.</p></div>
+
+<div class="lab" id="c2w">
     <p class="lab-h">Manipulation 2 : le triangle de Cauchy (version 2D)</p>
-    <p class="lab-sub">Un petit coin triangulaire découpé dans la matière. Sur sa face verticale et sa face horizontale, les forces sont connues (grâce à [σ]). La force sur la face inclinée est celle qui équilibre le tout. À droite, les trois forces mises bout à bout : si le triangle des forces se referme, la somme est nulle.</p>
+    <p class="lab-sub">Un coin triangulaire : les forces sur les faces verticale et horizontale sont connues ; celle de la face inclinée ferme le triangle des forces.<span class="predict">🔮 Prédis d'abord : quand la face inclinée tourne, le triangle des forces reste-t-il fermé ?</span></p>
     <div class="btns" id="c2pre">
       <button class="btn on" type="button" data-p="80,-30,40">Cas quelconque</button>
       <button class="btn" type="button" data-p="100,0,0">Traction simple</button>
@@ -491,18 +491,21 @@ svg .throat{stroke:var(--weld);stroke-width:3;stroke-dasharray:7 4}
     <div class="readout" id="c2out"></div>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">la démonstration en 3D</span></div>
-    <p>Prends un tétraèdre (une pyramide à base triangulaire) dont trois faces sont perpendiculaires aux axes x, y, z, et dont la quatrième, d'aire <span class="m">dS</span>, a pour normale sortante <span class="m"><span class="vec">n</span> = (n<sub>x</sub> ; n<sub>y</sub> ; n<sub>z</sub>)</span>.</p>
-    <p><b>Étape 1, les aires.</b> Chaque face « d'axe » est la projection de la face inclinée sur un plan de coordonnées. Son aire vaut <span class="m">dS<sub>i</sub> = n<sub>i</sub>·dS</span> (pour i = x, y, z). C'est le même raisonnement que la tranche de saucisson coupée en biais du cours 1.</p>
-    <div class="def"><b>📖 Cosinus directeurs :</b> les composantes n<sub>x</sub>, n<sub>y</sub>, n<sub>z</sub> d'un vecteur unitaire sont les cosinus des angles qu'il fait avec les axes x, y, z. D'où leur nom. Ils vérifient toujours <span class="m">n<sub>x</sub>² + n<sub>y</sub>² + n<sub>z</sub>² = 1</span>.</div>
-    <p><b>Étape 2, l'équilibre.</b> Les faces d'axe ont pour normales sortantes <span class="m">−<span class="vec">e</span><sub>x</sub></span>, <span class="m">−<span class="vec">e</span><sub>y</sub></span>, <span class="m">−<span class="vec">e</span><sub>z</sub></span> (elles « regardent » vers les axes négatifs), donc elles portent <span class="m">−<span class="vec">T</span>(<span class="vec">e</span><sub>i</sub>)</span> (action-réaction). La somme des forces est nulle :</p>
-    <div class="fx"><div class="big" style="font-size:1.45rem"><span class="vec">T</span>(<span class="vec">n</span>)·dS − <span class="vec">T</span>(<span class="vec">e</span><sub>x</sub>)·n<sub>x</sub>dS − <span class="vec">T</span>(<span class="vec">e</span><sub>y</sub>)·n<sub>y</sub>dS − <span class="vec">T</span>(<span class="vec">e</span><sub>z</sub>)·n<sub>z</sub>dS = <span class="vec">0</span></div><p class="cap">le poids du tétraèdre est négligeable : il est proportionnel à son volume, qui devient infiniment plus petit que ses surfaces quand on le rétrécit</p></div>
-    <p><b>Étape 3, on simplifie par dS :</b></p>
-    <div class="fx"><div class="big" style="font-size:1.6rem"><span class="vec">T</span>(<span class="vec">n</span>) = n<sub>x</sub>·<span class="vec">T</span>(<span class="vec">e</span><sub>x</sub>) + n<sub>y</sub>·<span class="vec">T</span>(<span class="vec">e</span><sub>y</sub>) + n<sub>z</sub>·<span class="vec">T</span>(<span class="vec">e</span><sub>z</sub>)</div><p class="cap">le vecteur contrainte sur n'importe quelle facette est un mélange des trois vecteurs des faces d'axe</p></div>
-    <div class="def"><b>📖 e⃗<sub>x</sub>, e⃗<sub>y</sub>, e⃗<sub>z</sub> :</b> les vecteurs unitaires des axes x, y, z (on dit « vecteurs de base »). <span class="m"><span class="vec">T</span>(<span class="vec">e</span><sub>x</sub>)</span> est donc le vecteur contrainte sur la face de normale x : ses trois composantes sont la <b>première ligne</b> de <span class="sig">[σ]</span>, <span class="m">(<span class="sig">σ</span><sub>xx</sub> ; <span class="tau">τ</span><sub>xy</sub> ; <span class="tau">τ</span><sub>xz</sub>)</span>.</div>
-    <p>Écrit composante par composante, cette somme est exactement un produit « matrice × vecteur », que le chapitre suivant t'apprend à faire à la main :</p>
-    <div class="fx"><div class="big"><span class="vec">T</span> = <span class="sig">[σ]</span>·<span class="vec">n</span></div><p class="cap">la formule de Cauchy : la formule centrale de ce cours</p></div>
-    <div class="tip">💡 <b>Un détail pour les puristes :</b> avec la convention « ligne = face », la somme ci-dessus donne en toute rigueur <span class="m"><span class="vec">T</span> = <span class="sig">[σ]</span><sup>T</sup>·<span class="vec">n</span></span>, où <span class="sig">[σ]</span><sup>T</sup> est la <b>transposée</b> (la matrice retournée autour de sa diagonale). Mais <span class="sig">[σ]</span> est symétrique (le petit carré qui ne tourne pas), donc <span class="m"><span class="sig">[σ]</span><sup>T</sup> = <span class="sig">[σ]</span></span>. Voilà une deuxième raison pour laquelle la symétrie est précieuse.</div>
+  <p><b>Exemple</b> : traction simple σ<sub>xx</sub> = 100 MPa, facette de normale n⃗ = (0,6 ; 0,8). T⃗(e⃗<sub>x</sub>) = (100 ; 0) et T⃗(e⃗<sub>y</sub>) = (0 ; 0), donc <span class="m">T⃗ = 0,6 × (100 ; 0) + 0,8 × (0 ; 0) = (60 ; 0) MPa</span>.</p>
+
+  <div class="warn"><b>⚠️ Piège : une matrice des contraintes non symétrique trahit une erreur.</b> 9 cases mais 6 valeurs indépendantes : τ<sub>xy</sub> = τ<sub>yx</sub>, τ<sub>xz</sub> = τ<sub>zx</sub>, τ<sub>yz</sub> = τ<sub>zy</sub> (le petit carré qui ne tourne pas, cours 1).</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « trois vues suffisent »</b>, comme en dessin technique.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : la démonstration du tétraèdre</summary>
+    <p>Prends un tétraèdre dont trois faces sont perpendiculaires aux axes et dont la quatrième, d'aire dS, a pour normale sortante n⃗. Chaque face d'axe est la projection de la face inclinée : son aire vaut n<sub>i</sub>·dS. Ses normales sortantes sont −e⃗<sub>i</sub>, donc elle porte −T⃗(e⃗<sub>i</sub>). L'équilibre donne T⃗(n⃗)·dS − Σ T⃗(e⃗<sub>i</sub>)·n<sub>i</sub>dS = 0 ; le poids est négligeable, car proportionnel au volume, infiniment plus petit que les surfaces quand on rétrécit le tétraèdre. On simplifie par dS. En toute rigueur, la convention « ligne = face » donne T⃗ = [σ]<sup>T</sup>·n⃗ (la transposée) ; [σ] étant symétrique, [σ]<sup>T</sup> = [σ].</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Connaître T⃗ sur trois facettes perpendiculaires suffit (Cauchy, 1822).</li>
+      <li>T⃗ = [σ]·n⃗ : les 9 cases de [σ] sont le minimum d'information.</li>
+      <li>La ligne i de [σ] est le vecteur contrainte de la face de normale i.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -515,22 +518,17 @@ svg .throat{stroke:var(--weld);stroke-width:3;stroke-dasharray:7 4}
     <div class="c-img"><span class="ico">🧮</span><span><small>Image à retenir</small>La ligne qui se couche sur la colonne</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la recette en trois gestes</span></div>
-    <p>Multiplier une matrice 3 × 3 par un vecteur (une colonne de 3 nombres) donne un nouveau vecteur de 3 nombres. Pour obtenir chaque composante, on répète la même recette :</p>
-    <p><b>Geste 1 :</b> prends <b>une ligne</b> de la matrice et <b>couche-la</b> sur la colonne du vecteur (le 1er nombre de la ligne en face du 1er du vecteur, etc.).<br><b>Geste 2 :</b> <b>multiplie</b> les nombres qui se font face.<br><b>Geste 3 :</b> <b>additionne</b> les trois produits. Ce total est la composante cherchée.</p>
-    <p>Ligne 1 → T<sub>x</sub>, ligne 2 → T<sub>y</sub>, ligne 3 → T<sub>z</sub>. C'est tout.</p>
+  <p>Multiplier une matrice 3 × 3 par un vecteur colonne donne un nouveau vecteur. Chaque composante s'obtient par la même recette en trois gestes : <b>prends une ligne</b> de la matrice et <b>couche-la</b> sur la colonne du vecteur (le 1<sup>er</sup> nombre en face du 1<sup>er</sup>, etc.) ; <b>multiplie</b> les nombres qui se font face ; <b>additionne</b> les trois produits. Ligne 1 → T<sub>x</sub>, ligne 2 → T<sub>y</sub>, ligne 3 → T<sub>z</sub>.</p>
+
     <div class="fx" style="max-width:700px"><div class="big" style="font-size:1.25rem;line-height:1.7">
       <span class="inlinemat"><span class="sig">σ<sub>xx</sub></span><span class="tau">τ<sub>xy</sub></span><span class="tau">τ<sub>xz</sub></span><span class="tau">τ<sub>xy</sub></span><span class="sig">σ<sub>yy</sub></span><span class="tau">τ<sub>yz</sub></span><span class="tau">τ<sub>xz</sub></span><span class="tau">τ<sub>yz</sub></span><span class="sig">σ<sub>zz</sub></span></span>
       · <span class="inlinemat" style="grid-template-columns:auto"><span>n<sub>x</sub></span><span>n<sub>y</sub></span><span>n<sub>z</sub></span></span>
       = <span class="inlinemat" style="grid-template-columns:auto;text-align:left"><span><span class="sig">σ<sub>xx</sub></span>n<sub>x</sub> + <span class="tau">τ<sub>xy</sub></span>n<sub>y</sub> + <span class="tau">τ<sub>xz</sub></span>n<sub>z</sub></span><span><span class="tau">τ<sub>xy</sub></span>n<sub>x</sub> + <span class="sig">σ<sub>yy</sub></span>n<sub>y</sub> + <span class="tau">τ<sub>yz</sub></span>n<sub>z</sub></span><span><span class="tau">τ<sub>xz</sub></span>n<sub>x</sub> + <span class="tau">τ<sub>yz</sub></span>n<sub>y</sub> + <span class="sig">σ<sub>zz</sub></span>n<sub>z</sub></span></span>
-    </div><p class="cap">chaque ligne de la matrice « se couche » sur la colonne n⃗</p></div>
-    <div class="mnemo">🧮 <b>Pour s'en souvenir :</b> « la <b>ligne</b> se couche sur la <b>colonne</b> ». Une matrice se lit ligne par ligne, un vecteur colonne se lit de haut en bas, et on les fait se rencontrer terme à terme.</div>
-    <div class="warn">⚠️ <b>Le piège qui coûte le plus de points :</b> n⃗ doit être <b>unitaire</b> (longueur 1). Si l'énoncé donne une direction comme (1 ; 2 ; 2), sa longueur vaut √(1² + 2² + 2²) = 3 : il faut d'abord la <b>normaliser</b>, c'est-à-dire diviser chaque composante par 3, ce qui donne (1/3 ; 2/3 ; 2/3). Sinon, T⃗ est 3 fois trop grand, et σₙ 9 fois trop grand. La machine ci-dessous te le fait vivre.</div>
-  </div>
+    </div><p class="cap">chaque ligne de la matrice « se couche » sur la colonne n⃗ ; [σ] en MPa, n⃗ sans unité, T⃗ en MPa</p></div>
 
-  <div class="lab" id="mm">
+<div class="lab" id="mm">
     <p class="lab-h">Manipulation 3 : la machine à multiplier</p>
-    <p class="lab-sub">Tape (ou choisis) une matrice [σ] en MPa et une direction n⃗. Les cases grises se remplissent seules, par symétrie. Puis avance étape par étape : la ligne utilisée et le vecteur s'allument en jaune. Tu peux t'en servir pour vérifier tes exercices.</p>
+    <p class="lab-sub">Tape ou choisis [σ] et n⃗, puis avance étape par étape : la ligne utilisée et le vecteur s'allument.<span class="predict">🔮 Prédis d'abord : si n⃗ est trois fois trop long, σ<sub>n</sub> est-il 3 fois ou 9 fois trop grand ?</span></p>
     <div class="btns" id="mm-pre">
       <button class="btn" type="button" data-s="80,-40,0,30,0,0" data-n="0.7071,0.7071,0">Exemple 2D à 45°</button>
       <button class="btn" type="button" data-s="100,50,-20,0,0,0" data-n="1,2,2">Piège : n⃗ non unitaire</button>
@@ -560,19 +558,21 @@ svg .throat{stroke:var(--weld);stroke-width:3;stroke-dasharray:7 4}
     <div class="mm-steps" id="mm-steps"></div>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">l'écriture indicielle</span></div>
-    <p>Les ingénieurs écrivent souvent la formule de Cauchy de façon compacte, avec des indices :</p>
-    <div class="fx"><div class="big">T<sub>i</sub> = <span style="font-size:1.3em">Σ</span><sub>j</sub> <span class="sig">σ</span><sub>ij</sub> n<sub>j</sub></div><p class="cap">pour i = x, y, z ; la somme porte sur j = x, y, z</p></div>
-    <dl class="syms">
-      <dt>i</dt><dd>l'indice de la composante qu'on calcule (donc de la <b>ligne</b> utilisée)</dd>
-      <dt>j</dt><dd>l'indice qui « court » le long de la ligne et du vecteur : c'est lui qu'on additionne</dd>
-      <dt>Σ</dt><dd>la lettre grecque sigma majuscule, qui signifie « somme de »</dd>
-    </dl>
-    <p>En mécanique, on sous-entend souvent le Σ : c'est la <b>convention d'Einstein</b>, qui dit qu'un indice répété dans un produit est automatiquement sommé. On écrit alors simplement <span class="m">T<sub>i</sub> = <span class="sig">σ</span><sub>ij</sub>n<sub>j</sub></span>. Tu rencontreras souvent cette écriture : tu sais maintenant la lire.</p>
-    <h4>Trois vérifications express à faire à chaque fois</h4>
-    <p><b>1. n⃗ est-il unitaire ?</b> Calcule n<sub>x</sub>² + n<sub>y</sub>² + n<sub>z</sub>² : ça doit faire 1.</p>
-    <p><b>2. Les faces d'axe redonnent-elles les lignes ?</b> Avec <span class="m"><span class="vec">n</span> = (1 ; 0 ; 0)</span>, tu dois retrouver la première ligne de <span class="sig">[σ]</span>. C'est un bon test pour vérifier que tu multiplies dans le bon sens.</p>
-    <p><b>3. Les unités :</b> <span class="sig">[σ]</span> en MPa et n⃗ sans unité, donc <span class="m"><span class="vec">T</span></span> en MPa.</p>
+  <p><b>Exemple</b> : [σ] = (50 20 0 / 20 −30 10 / 0 10 40) MPa, direction (2 ; 1 ; 2). Sa longueur vaut √(4 + 1 + 4) = 3, donc n⃗ = (2/3 ; 1/3 ; 2/3). Ligne 1 : (50 × 2 + 20 × 1 + 0 × 2)/3 = 40 ; ligne 2 : (20 × 2 − 30 × 1 + 10 × 2)/3 = 10 ; ligne 3 : (0 × 2 + 10 × 1 + 40 × 2)/3 = 30. <span class="m">T⃗ = (40 ; 10 ; 30) MPa</span>.</p>
+
+  <div class="warn"><b>⚠️ Le piège qui coûte le plus de points : n⃗ doit être unitaire.</b> Une direction donnée comme (1 ; 2 ; 2) a pour longueur √(1 + 4 + 4) = 3 : il faut diviser chaque composante par 3. Sinon T⃗ est 3 fois trop grand, et σ<sub>n</sub> 9 fois trop grand.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « la ligne se couche sur la colonne »</b>.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : l'écriture indicielle, trois vérifications</summary>
+    <p>En écriture compacte, T<sub>i</sub> = Σ<sub>j</sub> σ<sub>ij</sub> n<sub>j</sub> : i est l'indice de la ligne, j celui qui court le long de la ligne et du vecteur. La <b>convention d'Einstein</b> sous-entend le Σ : un indice répété est sommé, T<sub>i</sub> = σ<sub>ij</sub>n<sub>j</sub>. Trois vérifications à chaque calcul : n<sub>x</sub>² + n<sub>y</sub>² + n<sub>z</sub>² = 1 ; n⃗ = (1 ; 0 ; 0) redonne la première ligne de [σ] ; T⃗ est en MPa.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>T<sub>x</sub> = ligne 1 · n⃗, T<sub>y</sub> = ligne 2 · n⃗, T<sub>z</sub> = ligne 3 · n⃗.</li>
+      <li>n⃗ doit être unitaire : diviser une direction par sa longueur.</li>
+      <li>Test : n⃗ = (1 ; 0 ; 0) redonne la première ligne de [σ].</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -585,27 +585,19 @@ svg .throat{stroke:var(--weld);stroke-width:3;stroke-dasharray:7 4}
     <div class="c-img"><span class="ico">☀️</span><span><small>Image à retenir</small>L'ombre d'un bâton au soleil de midi</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">l'ombre et le reste</span></div>
-    <p>Tu as <span class="m"><span class="vec">T</span></span>. Tu veux savoir quelle part <b>tire</b> la facette (<span class="sig">σ<sub>n</sub></span>) et quelle part la <b>fait glisser</b> (<span class="tau">τ</span>).</p>
-    <p><b>σₙ, c'est l'ombre.</b> Imagine un bâton incliné (le vecteur <span class="m"><span class="vec">T</span></span>) et un soleil qui éclaire perpendiculairement à la direction <span class="m"><span class="vec">n</span></span>. L'ombre du bâton sur l'axe de <span class="m"><span class="vec">n</span></span> a pour longueur <span class="sig">σ<sub>n</sub></span>. Mathématiquement, cette « ombre » s'appelle la <b>projection</b>, et elle se calcule avec un <b>produit scalaire</b> :</p>
-    <div class="fx"><div class="big" style="font-size:1.8rem"><span class="sig">σ<sub>n</sub></span> = <span class="vec">T</span>·<span class="vec">n</span> = T<sub>x</sub>n<sub>x</sub> + T<sub>y</sub>n<sub>y</sub> + T<sub>z</sub>n<sub>z</sub></div><p class="cap">on multiplie composante par composante, puis on additionne</p></div>
-    <div class="def"><b>📖 Produit scalaire :</b> opération qui prend deux vecteurs et donne un nombre. Recette : multiplier les composantes deux à deux et additionner. Si l'un des deux vecteurs est unitaire, le résultat est la longueur de l'ombre de l'autre sur lui. Il est positif si les deux flèches vont dans le même sens, négatif sinon, nul si elles sont perpendiculaires.</div>
-    <p><b>τ, c'est le reste.</b> <span class="m"><span class="vec">T</span></span>, sa partie normale et sa partie tangentielle forment un <b>triangle rectangle</b> : <span class="m"><span class="vec">T</span></span> est l'hypoténuse. Pythagore donne donc :</p>
-    <div class="fx"><div class="big" style="font-size:1.8rem">|<span class="tau">τ</span>| = √( |<span class="vec">T</span>|² − <span class="sig">σ<sub>n</sub></span>² )</div><p class="cap">avec |T⃗|² = T<sub>x</sub>² + T<sub>y</sub>² + T<sub>z</sub>² (la longueur de T⃗ au carré)</p></div>
-    <div class="mnemo">☀️ <b>La méthode complète en une phrase :</b> « je <b>multiplie</b> (T⃗ = [σ]n⃗), je <b>projette</b> (σₙ = T⃗·n⃗), je <b>Pythagorise</b> (τ = √(T² − σₙ²)) ». Multiplier, projeter, Pythagoriser : <b>M-P-P</b>.</div>
-    <p>En 3D, cette méthode donne la <b>valeur</b> du cisaillement (toujours positive). Si l'on a besoin de sa <b>direction</b> dans le plan de la facette (c'est le cas pour un cordon de soudure, où l'on distingue τ⊥ et τ∥), on calcule le vecteur <span class="m"><span class="vec">τ</span> = <span class="vec">T</span> − <span class="sig">σ<sub>n</sub></span><span class="vec">n</span></span>, puis on le projette sur les directions qui nous intéressent.</p>
-  </div>
+  <p>Tu as T⃗ ; tu veux savoir quelle part <b>tire</b> la facette (σ<sub>n</sub>) et quelle part la <b>fait glisser</b> (τ). <b>σ<sub>n</sub>, c'est l'ombre</b> : imagine un bâton incliné (T⃗) éclairé par un soleil perpendiculaire à n⃗ ; la longueur de son ombre sur l'axe de n⃗ est σ<sub>n</sub>, la <b>projection</b>, qui se calcule par un <b>produit scalaire</b> (multiplier les composantes deux à deux, puis additionner). <b>τ, c'est le reste</b> : T⃗, sa partie normale et sa partie tangentielle forment un triangle rectangle dont T⃗ est l'hypoténuse.</p>
 
-  <div class="lab" id="f4">
+  <div class="fx"><div class="row big" style="font-size:1.35rem"><span><span class="sig">σ<sub>n</sub></span> = T⃗·n⃗ = T<sub>x</sub>n<sub>x</sub> + T<sub>y</sub>n<sub>y</sub> + T<sub>z</sub>n<sub>z</sub></span><span>|<span class="tau">τ</span>| = √(|T⃗|² − <span class="sig">σ<sub>n</sub></span>²)</span></div><p class="cap">σ<sub>n</sub> &gt; 0 en traction ; |T⃗|² = T<sub>x</sub>² + T<sub>y</sub>² + T<sub>z</sub>². En état plan, les points (σ<sub>n</sub> ; τ) décrivent un cercle de centre C = (σ<sub>xx</sub> + σ<sub>yy</sub>)/2 et de rayon R = √(((σ<sub>xx</sub> − σ<sub>yy</sub>)/2)² + τ<sub>xy</sub>²) : le cercle de Mohr, exploité au cours 4.</p></div>
+
+<div class="lab" id="f4">
     <p class="lab-h">Manipulation 4 : la facette qui tourne, version générale</p>
-    <p class="lab-sub">Comme au cours 1, mais avec n'importe quel état de contrainte plan : règle σ<sub>xx</sub>, σ<sub>yy</sub> et τ<sub>xy</sub>. La facette passe par le centre du petit carré ; sa normale n⃗ fait l'angle θ avec l'axe x (on le note aussi φ). Signe de τ : convention de la série, t⃗ = n⃗ tourné de +90°. À droite, chaque orientation donne un point (σₙ ; τ).</p>
+    <p class="lab-sub">Règle σ<sub>xx</sub>, σ<sub>yy</sub> et τ<sub>xy</sub>, puis fais tourner la facette : chaque orientation θ donne un point (σ<sub>n</sub> ; τ).<span class="predict">🔮 Prédis d'abord : entre −90° et +90°, combien d'orientations donnent τ = 0 ?</span></p>
     <svg id="f4svg" viewBox="0 0 680 340" role="img" aria-label="Carré élémentaire, facette tournante et points sigma n, tau"></svg>
     <div class="ctrl"><label for="f4a">Angle <b>θ</b></label><input id="f4a" class="r-th" type="range" min="-90" max="90" step="1" value="30"><output id="f4av"></output></div>
     <div class="ctrl"><label for="f4sx"><span class="sig">σ</span><sub>xx</sub></label><input id="f4sx" class="r-frc" type="range" min="-100" max="100" step="5" value="80"><output id="f4sxv"></output></div>
     <div class="ctrl"><label for="f4sy"><span class="sig">σ</span><sub>yy</sub></label><input id="f4sy" class="r-frc" type="range" min="-100" max="100" step="5" value="-20"><output id="f4syv"></output></div>
     <div class="ctrl"><label for="f4t"><span class="tau">τ</span><sub>xy</sub></label><input id="f4t" class="r-th" type="range" min="-100" max="100" step="5" value="30"><output id="f4tv"></output></div>
-    <div class="btns">
-      <button class="btn" id="f4play" type="button">▶ Faire tourner de −90° à +90°</button>
+    <div class="btns" id="f4pl"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" data-a="play" type="button">▶ Faire tourner la facette</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button>
       <button class="btn" id="f4clr" type="button">Effacer la trace</button>
       <label class="btn" style="display:inline-flex;gap:6px;align-items:center"><input type="checkbox" id="f4circ"> Montrer le cercle</label>
     </div>
@@ -613,19 +605,22 @@ svg .throat{stroke:var(--weld);stroke-width:3;stroke-dasharray:7 4}
     <p class="status" id="f4note"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">les formules en 2D et le retour du cercle</span></div>
-    <p>En état plan, avec <span class="m"><span class="vec">n</span> = (cos θ ; sin θ)</span> et la tangente <span class="m"><span class="vec">t</span> = (−sin θ ; cos θ)</span> (c'est <span class="m"><span class="vec">n</span></span> tourné de 90° dans le <b>sens trigonométrique</b>, la convention de la série), la méthode M-P-P donne :</p>
-    <div class="fx" style="max-width:660px"><div class="big" style="font-size:1.3rem;line-height:1.8">
-      <span class="sig">σ<sub>n</sub></span> = <span class="sig">σ<sub>xx</sub></span>cos²θ + <span class="sig">σ<sub>yy</sub></span>sin²θ + 2<span class="tau">τ<sub>xy</sub></span> sin θ cos θ<br>
-      <span class="tau">τ</span> = −(<span class="sig">σ<sub>xx</sub></span> − <span class="sig">σ<sub>yy</sub></span>) sin θ cos θ + <span class="tau">τ<sub>xy</sub></span>(cos²θ − sin²θ)
-    </div><p class="cap">avec σ<sub>xx</sub> seul : σₙ = σ cos²θ et τ = −σ sin θ cos θ (même valeur qu'au cours 1, signe opposé : voir l'encadré plus bas)</p></div>
-    <p>Avec les formules d'angle double <span class="m">cos²θ = (1 + cos 2θ)/2</span>, <span class="m">sin²θ = (1 − cos 2θ)/2</span> et <span class="m">2 sin θ cos θ = sin 2θ</span>, cela devient :</p>
-    <div class="fx" style="max-width:660px"><div class="big" style="font-size:1.3rem;line-height:1.8">
-      <span class="sig">σ<sub>n</sub></span> = C + a cos 2θ + <span class="tau">τ<sub>xy</sub></span> sin 2θ<br>
-      <span class="tau">τ</span> = −a sin 2θ + <span class="tau">τ<sub>xy</sub></span> cos 2θ
-    </div><p class="cap">avec C = (σ<sub>xx</sub> + σ<sub>yy</sub>)/2 et a = (σ<sub>xx</sub> − σ<sub>yy</sub>)/2</p></div>
-    <p>Le point <span class="m">(<span class="sig">σ<sub>n</sub></span> ; <span class="tau">τ</span>)</span> est donc à la distance <span class="m">R = √(a² + <span class="tau">τ<sub>xy</sub></span>²)</span> du point <span class="m">(C ; 0)</span>, quel que soit θ : il décrit un <b>cercle de centre C et de rayon R</b>, en tournant de 2θ <b>dans le sens contraire</b> de la facette. C'est le cercle de Mohr, cette fois pour un état plan quelconque. Ce sont exactement les formules que l'on écrit aussi pour les déformations (cours 3) : remplace σ par ε et τ<sub>xy</sub> par ε<sub>xy</sub>, et tu retrouves ε<sub>n</sub> et ε<sub>nt</sub> mot pour mot. On en tirera tout au cours 4 : contraintes principales <span class="m">C ± R</span>, cisaillement maximal <span class="m">R</span>.</p>
-    <div class="warn">⚠️ <b>La convention de signe de τ de la série.</b> Le signe de <span class="tau">τ</span> dépend du sens choisi pour la tangente <span class="m"><span class="vec">t</span></span>. On prend <span class="m"><span class="vec">t</span></span> = <span class="m"><span class="vec">n</span></span> tourné de +90° (sens trigonométrique) : c'est la convention de toute la série à partir d'ici. Deux conséquences à retenir. <b>1.</b> En traction seule, <span class="m"><span class="tau">τ</span> = −<span class="sig">σ</span> sin θ cos θ</span> : le cours 1, qui oriente la tangente dans l'autre sens, écrit +σ sin θ cos θ. <b>2.</b> Sur le cercle de Mohr, quand la facette tourne de θ dans un sens, le point tourne de 2θ <b>dans l'autre sens</b>. <b>La valeur absolue |τ|, celle qui compte pour la résistance, ne dépend jamais de la convention.</b></div>
+  <p><b>Exemple</b> (suite du chapitre 3) : T⃗ = (40 ; 10 ; 30) MPa et n⃗ = (2/3 ; 1/3 ; 2/3). <b>Projeter</b> : <span class="m">σ<sub>n</sub> = (40 × 2 + 10 × 1 + 30 × 2)/3 = 50 MPa</span>. <b>Pythagoriser</b> : |T⃗|² = 1 600 + 100 + 900 = 2 600, donc <span class="m">|τ| = √(2 600 − 2 500) = 10 MPa</span>.</p>
+
+  <div class="warn"><b>⚠️ Piège : le signe de τ est une convention.</b> La série compte τ positif selon la tangente t⃗ obtenue en tournant n⃗ de +90° (sens trigonométrique). En traction seule, τ = −σ sin θ cos θ, et sur le cercle de Mohr le point tourne de 2θ en sens <b>inverse</b> de la facette. La valeur |τ|, celle qui compte pour la résistance, ne dépend jamais de la convention.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : M-P-P</b>, « je <b>multiplie</b> (T⃗ = [σ]n⃗), je <b>projette</b> (σ<sub>n</sub> = T⃗·n⃗), je <b>Pythagorise</b> (τ = √(T² − σ<sub>n</sub>²)) ».</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : les formules en 2D, le vecteur cisaillement</summary>
+    <p>Avec n⃗ = (cos θ ; sin θ) et t⃗ = (−sin θ ; cos θ) : σ<sub>n</sub> = σ<sub>xx</sub>cos²θ + σ<sub>yy</sub>sin²θ + 2τ<sub>xy</sub> sin θ cos θ et τ = −(σ<sub>xx</sub> − σ<sub>yy</sub>) sin θ cos θ + τ<sub>xy</sub>(cos²θ − sin²θ). Avec les angles doubles et a = (σ<sub>xx</sub> − σ<sub>yy</sub>)/2 : σ<sub>n</sub> = C + a cos 2θ + τ<sub>xy</sub> sin 2θ et τ = −a sin 2θ + τ<sub>xy</sub> cos 2θ ; le point reste à la distance R de (C ; 0). Les mêmes formules valent pour les déformations (cours 3), avec ε à la place de σ et ε<sub>xy</sub> à la place de τ<sub>xy</sub>.</p>
+    <p>En 3D, la méthode donne la <b>valeur</b> du cisaillement. Pour sa <b>direction</b> dans la facette (utile pour un cordon, où l'on distingue τ⊥ et τ∥), on calcule le vecteur τ⃗ = T⃗ − σ<sub>n</sub>n⃗, puis on le projette sur les directions voulues. Dans l'exemple : τ⃗ = (6,67 ; −6,67 ; −3,33), de longueur 10 et perpendiculaire à n⃗.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>σ<sub>n</sub> = T⃗·n⃗ (positive en traction) ; |τ| = √(|T⃗|² − σ<sub>n</sub>²).</li>
+      <li>Méthode M-P-P : multiplier, projeter, Pythagoriser.</li>
+      <li>En 2D, (σ<sub>n</sub> ; τ) décrit le cercle de Mohr de centre C et de rayon R.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -638,22 +633,21 @@ svg .throat{stroke:var(--weld);stroke-width:3;stroke-dasharray:7 4}
     <div class="c-img"><span class="ico">🖼</span><span><small>Image à retenir</small>La galerie des cubes : un cube par situation</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">sept cubes à photographier</span></div>
-    <p>Dans la pratique, les mêmes formes de matrice reviennent sans cesse. Savoir les reconnaître, c'est gagner un temps fou en examen : on écrit la matrice directement, sans calcul.</p>
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>État</th><th>Ce qui est non nul</th><th>Où on le rencontre</th></tr>
-      <tr><td><b>Traction simple</b></td><td><span class="sig">σ<sub>xx</sub></span> seul</td><td>tirant, éprouvette, boulon</td></tr>
-      <tr><td><b>Compression simple</b></td><td><span class="sig">σ<sub>xx</sub></span> &lt; 0 seul</td><td>poteau, béquille</td></tr>
-      <tr><td><b>Cisaillement pur</b></td><td><span class="tau">τ<sub>xy</sub> = τ<sub>yx</sub></span></td><td>arbre en torsion, cordon latéral, plot en caoutchouc</td></tr>
-      <tr><td><b>Pression hydrostatique</b></td><td>diagonale <span class="m">−p, −p, −p</span></td><td>pièce plongée dans un fluide sous pression</td></tr>
-      <tr><td><b>Biaxial (réservoir)</b></td><td><span class="sig">σ<sub>θθ</sub></span> et <span class="sig">σ<sub>zz</sub></span> = <span class="sig">σ<sub>θθ</sub></span>/2</td><td>paroi de réservoir cylindrique, tuyauterie</td></tr>
-      <tr><td><b>État plan</b></td><td>le coin 2 × 2 : <span class="sig">σ<sub>xx</sub></span>, <span class="sig">σ<sub>yy</sub></span>, <span class="tau">τ<sub>xy</sub></span></td><td>tôle mince chargée dans son plan</td></tr>
-      <tr><td><b>Triaxial</b></td><td>toute la diagonale positive</td><td>cœur d'une soudure épaisse (contraintes résiduelles), fond d'entaille</td></tr>
-    </table></div>
-    <p>Joue avec la manipulation : clique sur un exemple, observe le cube et la matrice, puis bouge les curseurs pour créer tes propres états. Une flèche qui pointe <b>vers</b> la face signale une compression.</p>
-  </div>
+  <p>Les mêmes formes de matrice reviennent sans cesse. Les reconnaître, c'est écrire [σ] directement, sans calcul.</p>
+  <div class="tbl-wrap"><table class="data">
+    <tr><th>État</th><th>Ce qui est non nul</th><th>Où on le rencontre</th></tr>
+    <tr><td><b>Traction simple</b></td><td>σ<sub>xx</sub> seul</td><td>tirant, éprouvette, boulon</td></tr>
+    <tr><td><b>Compression simple</b></td><td>σ<sub>xx</sub> &lt; 0 seul</td><td>poteau, béquille</td></tr>
+    <tr><td><b>Cisaillement pur</b></td><td>τ<sub>xy</sub> = τ<sub>yx</sub></td><td>arbre en torsion, cordon latéral</td></tr>
+    <tr><td><b>Pression hydrostatique</b></td><td>diagonale −p, −p, −p</td><td>pièce plongée dans un fluide sous pression</td></tr>
+    <tr><td><b>Biaxial (réservoir)</b></td><td>σ<sub>θθ</sub> et σ<sub>zz</sub> = σ<sub>θθ</sub>/2</td><td>paroi de réservoir cylindrique, tuyauterie</td></tr>
+    <tr><td><b>État plan</b></td><td>σ<sub>xx</sub>, σ<sub>yy</sub>, τ<sub>xy</sub></td><td>tôle mince chargée dans son plan</td></tr>
+    <tr><td><b>Triaxial</b></td><td>toute la diagonale positive</td><td>cœur d'une soudure épaisse, fond d'entaille</td></tr>
+  </table></div>
 
-  <div class="lab" id="k5">
+  <div class="fx"><div class="row big" style="font-size:1.4rem"><span><span class="sig">σ<sub>θθ</sub></span> = <span class="frac"><span>p·R</span><span>e</span></span></span><span><span class="sig">σ<sub>zz</sub></span> = <span class="frac"><span>p·R</span><span>2e</span></span></span><span><span class="sig">σ<sub>rr</sub></span> ≈ 0</span></div><p class="cap">Réservoir cylindrique mince (R/e &gt; 10) : rayon moyen R, épaisseur e, pression p (1 MPa = 10 bar). θ : direction circonférentielle (le tour), z : axiale, r : radiale. Pour une sphère, σ = pR/(2e) dans toutes les directions de la paroi.</p></div>
+
+<div class="lab" id="k5">
     <p class="lab-h">Manipulation 5 : le cube paramétrable</p>
     <div class="btns" id="k5pre">
       <button class="btn on" type="button" data-v="100,0,0,0,0,0" data-k="trac">Traction</button>
@@ -685,21 +679,24 @@ svg .throat{stroke:var(--weld);stroke-width:3;stroke-dasharray:7 4}
     <div class="ctrl"><label for="k5xz"><span class="tau">τ</span><sub>xz</sub></label><input id="k5xz" class="r-th" type="range" min="-100" max="100" step="5"><output id="k5xzv"></output></div>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">le réservoir mince, pièce par pièce</span></div>
-    <p>Un réservoir cylindrique de rayon moyen R et d'épaisseur e (mince : <span class="m">R/e &gt; 10</span>) contient un gaz à la pression p. On travaille en coordonnées <b>cylindriques</b> : r (radial, vers l'extérieur), θ (circonférentiel, « le tour »), z (axial, le long du cylindre).</p>
-    <div class="def"><b>📖 Pression p :</b> force par unité de surface exercée par le fluide, perpendiculairement à la paroi. Même unité que les contraintes : 1 MPa = 10 bar.</div>
-    <p><b>Coupe 1 : le long de l'axe (on ouvre le cylindre comme un livre).</b> Sur une longueur L, la pression pousse les deux moitiés l'une contre l'autre avec une force <span class="m">p × 2R × L</span> (pression × surface projetée). Deux bandes de paroi, de section <span class="m">e × L</span> chacune, résistent avec <span class="sig">σ<sub>θθ</sub></span>. Équilibre : <span class="m"><span class="sig">σ<sub>θθ</sub></span> × 2eL = p × 2RL</span>.</p>
-    <p><b>Coupe 2 : perpendiculaire à l'axe (on coupe une rondelle).</b> La pression sur le fond pousse avec <span class="m">p × πR²</span>. La paroi résiste sur un anneau de périmètre 2πR et d'épaisseur e : <span class="m"><span class="sig">σ<sub>zz</sub></span> × 2πR e = p × πR²</span>.</p>
-    <div class="fx"><div class="big" style="font-size:1.6rem"><span class="sig">σ<sub>θθ</sub></span> = <span class="frac"><span>pR</span><span>e</span></span> &nbsp;&nbsp;&nbsp; <span class="sig">σ<sub>zz</sub></span> = <span class="frac"><span>pR</span><span>2e</span></span> &nbsp;&nbsp;&nbsp; <span class="sig">σ<sub>rr</sub></span> ≈ 0</div><p class="cap">formules des réservoirs minces (dites « de la chaudière ») ; σᵣᵣ varie de −p à l'intérieur à 0 à l'extérieur, négligeable devant les deux autres</p></div>
-    <p>Et le tenseur en coordonnées (r, θ, z) est diagonal : <span class="m"><span class="sig">[σ]</span> = diag(0 ; pR/e ; pR/2e)</span>. Pour une <b>sphère</b>, les deux directions sont équivalentes : <span class="m"><span class="sig">σ</span> = pR/(2e)</span> partout, deux fois moins qu'un cylindre de même rayon. C'est pour ça que les grands stockages de gaz sont sphériques.</p>
-    <div class="mnemo">🌭 <b>La saucisse qui éclate :</b> quand une saucisse éclate à la cuisson, elle se fend <b>dans le sens de la longueur</b>. La contrainte circonférentielle <span class="sig">σ<sub>θθ</sub></span> est la plus forte, et elle ouvre une fente parallèle à l'axe.</div>
-    <div class="weld"><b>🔥 Conséquence pour le soudeur</b>
-      <p>La <b>soudure longitudinale</b> (le long de l'axe z) est tirée perpendiculairement par <span class="sig">σ<sub>θθ</sub></span> = pR/e. La <b>soudure circulaire</b> (qui fait le tour) est tirée par <span class="sig">σ<sub>zz</sub></span> = pR/2e, <b>deux fois moins</b>. La soudure longitudinale est donc la plus critique : c'est elle qu'on contrôle en priorité, et c'est pour ça que les codes de calcul des appareils à pression (par exemple l'EN 13445 en Europe) introduisent un <b>coefficient de joint soudé</b>, inférieur ou égal à 1, qui dépend de l'étendue des contrôles non destructifs réalisés.</p>
-      <p>Et une <b>soudure hélicoïdale</b> (tube soudé en spirale) ? Elle est sur une facette inclinée : sa contrainte normale se calcule exactement avec la méthode M-P-P de ce cours. C'est l'exercice 4.</p>
-    </div>
-    <h4>L'état triaxial des soudures épaisses</h4>
-    <p>Pendant le refroidissement, le cordon veut se rétracter, mais le métal froid autour l'en empêche : il reste tiré. Dans une tôle mince, il est tiré surtout selon deux directions ; dans une tôle épaisse, <b>selon les trois</b>. Or, quand les trois contraintes principales sont proches et positives, le cisaillement maximal est faible (tu le démontreras au cours 4 avec les trois cercles de Mohr). Le métal ne peut presque plus se déformer plastiquement, puisque la plasticité est pilotée par le cisaillement (cours 1). Il perd sa ductilité apparente, et le risque de <b>rupture fragile</b> augmente. C'est une des raisons d'être du <b>traitement thermique de détensionnement</b> après soudage.</p>
-    <div class="def"><b>📖 Triaxialité :</b> caractère d'un état de contrainte où les trois contraintes principales sont du même signe et d'ordres de grandeur voisins. Forte triaxialité en traction = matière « bridée », qui casse sans prévenir.</div>
+  <p><b>Exemple</b> : conduite de rayon moyen 500 mm, épaisseur 10 mm, pression 2 MPa (20 bar) : <span class="m">σ<sub>θθ</sub> = 2 × 500/10 = 100 MPa</span> et <span class="m">σ<sub>zz</sub> = 50 MPa</span>. Une soudure en hélice à 60° de l'axe porte une contrainte normale de 100 cos²60° + 50 sin²60° = 62,5 MPa : bien moins qu'une soudure longitudinale.</p>
+
+  <div class="warn"><b>⚠️ Piège : forte triaxialité ≠ sécurité.</b> Trois contraintes de traction voisines laissent très peu de cisaillement ; or la plasticité est pilotée par le cisaillement. La matière ne peut presque plus plastifier et casse sans prévenir : c'est le danger du cœur des soudures épaisses, et une raison d'être du traitement thermique de détensionnement.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : la saucisse qui éclate</b> se fend dans le sens de la longueur : σ<sub>θθ</sub> est la plus forte, et elle ouvre une fente parallèle à l'axe.</div>
+  <div class="weld"><b>🔥 La soudure longitudinale d'un réservoir est la plus critique</b>
+    <p>Elle est tirée perpendiculairement par σ<sub>θθ</sub> = pR/e, la soudure circulaire par σ<sub>zz</sub>, deux fois moins. C'est elle qu'on contrôle en priorité ; les codes d'appareils à pression (EN 13445 en Europe) introduisent un <b>coefficient de joint soudé</b>, au plus égal à 1, qui dépend de l'étendue des contrôles non destructifs.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : d'où viennent les formules du réservoir</summary>
+    <p><b>Coupe le long de l'axe</b> (on ouvre le cylindre comme un livre) : sur une longueur L, la pression pousse les deux moitiés avec p × 2R × L ; deux bandes de paroi e × L résistent : σ<sub>θθ</sub> × 2eL = p × 2RL. <b>Coupe perpendiculaire à l'axe</b> : la pression sur le fond pousse avec p × πR², l'anneau de paroi résiste sur 2πR × e : σ<sub>zz</sub> × 2πRe = p × πR². σ<sub>rr</sub> varie de −p à l'intérieur à 0 à l'extérieur, négligeable devant les deux autres. La sphère porte deux fois moins qu'un cylindre de même rayon : d'où les grands stockages de gaz sphériques.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Reconnaître : traction, compression, cisaillement pur, hydrostatique, réservoir, état plan, triaxial.</li>
+      <li>Réservoir mince : σ<sub>θθ</sub> = pR/e = 2σ<sub>zz</sub> : la soudure longitudinale est la plus chargée.</li>
+      <li>Triaxialité en traction (soudure épaisse) : la matière plastifie mal et casse fragile.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -712,28 +709,24 @@ svg .throat{stroke:var(--weld);stroke-width:3;stroke-dasharray:7 4}
     <div class="c-img"><span class="ico">🔥</span><span><small>Image à retenir</small>Le triangle et sa gorge inclinée à 45°</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le vocabulaire et l'idée</span></div>
-    <p>Un <b>cordon d'angle</b> relie deux pièces qui forment un angle (souvent droit), sans chanfrein. En coupe, c'est un triangle.</p>
+  <p>Un <b>cordon d'angle</b> relie deux pièces qui forment un angle, souvent droit, sans chanfrein : en coupe, c'est un triangle. Il cassera là où il est le plus mince, à travers la <b>section de gorge</b> : un plan qui passe par la racine, contient l'axe du cordon et est incliné à 45°, d'aire a × L. C'est une <b>facette</b>, au sens exact de ce cours : on calcule la force qui la traverse, on la ramène à la surface et on la décompose.</p>
     <dl class="syms">
-      <dt>racine</dt><dd>le sommet de l'angle droit, au fond du coin entre les deux pièces</dd>
-      <dt>côté z</dt><dd>la longueur de chaque côté du triangle le long des pièces (on dit aussi « jambe »)</dd>
-      <dt>gorge a</dt><dd>la hauteur du triangle issue de la racine : la plus petite épaisseur de métal fondu. Pour un cordon à côtés égaux, <span class="m">a = z/√2 ≈ 0,7 z</span></dd>
-      <dt>L</dt><dd>la longueur efficace du cordon (le long de son axe)</dd>
+      <dt>gorge a</dt><dd>hauteur du triangle issue de la racine (le fond du coin) : la plus petite épaisseur de métal fondu ; à côtés z égaux, <span class="m">a = z/√2 ≈ 0,7 z</span></dd>
+      <dt>L</dt><dd>longueur efficace du cordon</dd>
+      <dt class="sig">σ⊥</dt><dd>contrainte <b>normale</b> à la section de gorge, qui cherche à l'ouvrir</dd>
+      <dt class="tau">τ⊥</dt><dd>cisaillement dans la gorge, <b>perpendiculaire</b> à l'axe du cordon</dd>
+      <dt class="tau">τ∥</dt><dd>cisaillement dans la gorge, <b>parallèle</b> à l'axe du cordon</dd>
     </dl>
-    <div class="def"><b>📖 Notation des plans :</b> selon la norme ISO 2553 (la norme de représentation symbolique des soudures), « a5 » désigne un cordon de gorge 5 mm et « z7 » un cordon de côté 7 mm. Confondre les deux surestime la résistance de 41 % (car √2 ≈ 1,41) : c'est une erreur classique.</div>
-    <p><b>L'idée de la vérification :</b> le cordon cassera là où il est le plus mince, c'est-à-dire à travers la <b>section de gorge</b>, un plan qui passe par la racine, contient l'axe du cordon, et est incliné à 45°. Son aire vaut <span class="m">a × L</span>. C'est une <b>facette</b>, au sens exact de ce cours ! On calcule la force qui la traverse, on la ramène à la surface, et on la décompose :</p>
-    <dl class="syms">
-      <dt class="sig">σ⊥</dt><dd>contrainte <b>normale</b> à la section de gorge (« sigma perpendiculaire »), qui cherche à l'ouvrir</dd>
-      <dt class="tau">τ⊥</dt><dd>cisaillement <b>dans</b> la section de gorge, <b>perpendiculaire</b> à l'axe du cordon</dd>
-      <dt class="tau">τ∥</dt><dd>cisaillement dans la section de gorge, <b>parallèle</b> à l'axe du cordon</dd>
-    </dl>
-    <p>Une quatrième contrainte, σ∥ (normale et parallèle à l'axe du cordon, dans le cordon lui-même), existe aussi, mais la vérification l'ignore.</p>
-    <div class="mnemo">🔥 <b>Image :</b> le triangle du cordon, la gorge qui le coupe en deux à 45° comme une diagonale de mouchoir plié, et trois flèches sur cette diagonale : une rouge qui l'ouvre (σ⊥), une violette qui la fait glisser en travers (τ⊥), et un point violet ⊙ qui file le long du cordon (τ∥).</div>
-  </div>
 
-  <div class="lab" id="wl">
+    <div class="fx" style="max-width:640px"><div class="big" style="font-size:1.35rem;line-height:1.9">
+      √( <span class="sig">σ⊥</span>² + 3(<span class="tau">τ⊥</span>² + <span class="tau">τ∥</span>²) ) ≤ <span class="frac"><span>f<sub>u</sub></span><span><span class="mat">β<sub>w</sub></span> γ<sub>M2</sub></span></span>
+      &nbsp;&nbsp;et&nbsp;&nbsp;
+      <span class="sig">σ⊥</span> ≤ <span class="frac"><span>0,9 f<sub>u</sub></span><span>γ<sub>M2</sub></span></span>
+    </div><p class="cap">Méthode directionnelle de l'EN 1993-1-8, § 4.5.3.2 (version 2005), contraintes supposées uniformes sur la gorge. f<sub>u</sub> : résistance à la traction de la pièce la plus faible (S235 : 360 MPa ; S275 : 430 ; S355 : 490, épaisseurs ≤ 40 mm) ; β<sub>w</sub> : facteur de corrélation (0,80 ; 0,85 ; 0,90) ; γ<sub>M2</sub> = 1,25 (valeur recommandée). Le facteur 3 vient du critère de von Mises (cours 5).</p></div>
+
+<div class="lab" id="wl">
     <p class="lab-h">Manipulation 6 : le cordon d'angle sous la loupe</p>
-    <p class="lab-sub">Coupe d'une liaison en T avec un cordon d'angle (vue perpendiculaire à l'axe du cordon). La force F⊥ agit dans le plan de la coupe, dans la direction φ (« phi ») ; F∥ agit le long du cordon. La ligne en pointillés bronze est la section de gorge. Les valeurs sont vérifiées selon la méthode directionnelle de l'EN 1993-1-8.</p>
+    <p class="lab-sub">Liaison en T avec cordon d'angle : règle l'effort dans le plan de la coupe et le long du cordon ; la gorge est en pointillés bronze.<span class="predict">🔮 Prédis d'abord : à longueur égale, un cordon frontal ou un cordon latéral tient-il le plus d'effort ?</span></p>
     <div class="btns" id="wlpre">
       <button class="btn" type="button" data-p="frontal">Cordons frontaux (effort en travers)</button>
       <button class="btn" type="button" data-p="lateral">Cordons latéraux (effort le long)</button>
@@ -754,28 +747,27 @@ svg .throat{stroke:var(--weld);stroke-width:3;stroke-dasharray:7 4}
     <p class="status" id="wlst"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">la méthode directionnelle de l'EN 1993-1-8</span></div>
-    <p>L'<b>Eurocode 3</b> (EC3, ensemble de normes européennes de calcul des structures en acier) traite les assemblages dans sa partie <b>EN 1993-1-8</b>. Pour un cordon d'angle, on suppose les contraintes <b>uniformes</b> sur la section de gorge, puis on vérifie deux conditions :</p>
-    <div class="fx" style="max-width:640px"><div class="big" style="font-size:1.35rem;line-height:1.9">
-      √( <span class="sig">σ⊥</span>² + 3(<span class="tau">τ⊥</span>² + <span class="tau">τ∥</span>²) ) ≤ <span class="frac"><span>f<sub>u</sub></span><span><span class="mat">β<sub>w</sub></span> γ<sub>M2</sub></span></span>
-      &nbsp;&nbsp;et&nbsp;&nbsp;
-      <span class="sig">σ⊥</span> ≤ <span class="frac"><span>0,9 f<sub>u</sub></span><span>γ<sub>M2</sub></span></span>
-    </div><p class="cap">EN 1993-1-8, § 4.5.3.2 (version 2005)</p></div>
-    <dl class="syms">
-      <dt>f<sub>u</sub></dt><dd>résistance à la traction (le Rₘ du cours 1) de la pièce assemblée <b>la plus faible</b> : 360 MPa pour le S235, 430 pour le S275, 490 pour le S355 (épaisseurs ≤ 40 mm)</dd>
-      <dt class="mat">β<sub>w</sub></dt><dd>« bêta w », <b>facteur de corrélation</b> qui tient compte de la résistance réelle du métal d'apport par rapport au métal de base : 0,80 (S235), 0,85 (S275), 0,90 (S355)</dd>
-      <dt>γ<sub>M2</sub></dt><dd>« gamma M2 », coefficient partiel de sécurité des assemblages : 1,25 (valeur recommandée, que l'annexe nationale peut ajuster)</dd>
-    </dl>
-    <p>Le facteur 3 devant les cisaillements n'est pas arbitraire : il vient du <b>critère de von Mises</b> (cours 5), qui dit qu'un cisaillement τ est aussi dangereux qu'une traction de <span class="m">√3·τ</span>. Tu verras alors que cette formule est un von Mises simplifié.</p>
-    <h4>Les deux cas d'école</h4>
-    <p><b>Cordons frontaux</b> (perpendiculaires à l'effort, par exemple aux extrémités d'un plat à recouvrement). La force par unité de longueur <span class="m">f = F/ΣL</span> (ΣL : longueur totale des cordons) arrive à 45° sur la section de gorge. Sa projection sur la normale et sur la gorge vaut <span class="m">f/√2</span> chacune :</p>
-    <div class="fx"><div class="big" style="font-size:1.5rem"><span class="sig">σ⊥</span> = <span class="tau">τ⊥</span> = <span class="frac"><span>F</span><span>√2 · a · ΣL</span></span> &nbsp;⇒&nbsp; √(<span class="sig">σ⊥</span>² + 3<span class="tau">τ⊥</span>²) = √2 · <span class="frac"><span>F</span><span>a · ΣL</span></span></div></div>
-    <p><b>Cordons latéraux</b> (parallèles à l'effort). Tout l'effort file le long du cordon :</p>
-    <div class="fx"><div class="big" style="font-size:1.5rem"><span class="tau">τ∥</span> = <span class="frac"><span>F</span><span>a · ΣL</span></span> &nbsp;⇒&nbsp; √(3<span class="tau">τ∥</span>²) = √3 · <span class="frac"><span>F</span><span>a · ΣL</span></span></div></div>
-    <div class="tip">💡 <b>Le résultat à retenir :</b> à longueur égale, un cordon <b>frontal</b> est plus favorable qu'un cordon <b>latéral</b> dans la méthode directionnelle, dans le rapport √3/√2 ≈ 1,22. Vérifie-le avec les boutons de la manipulation 6.</div>
-    <h4>La méthode simplifiée</h4>
-    <p>L'EN 1993-1-8 propose aussi une méthode plus rapide et plus prudente : on ignore la direction de l'effort, et on vérifie que la force par unité de longueur reste inférieure à <span class="m">f<sub>vw,d</sub> · a</span>, avec <span class="m">f<sub>vw,d</sub> = f<sub>u</sub> / (√3 <span class="mat">β<sub>w</sub></span> γ<sub>M2</sub>)</span>. Cela revient à traiter tout effort comme s'il était un cisaillement le long du cordon (le cas le plus défavorable).</p>
-    <div class="warn">⚠️ <b>Vérifie la version de la norme applicable.</b> Les valeurs ci-dessus sont celles de l'EN 1993-1-8:2005 et de son annexe nationale, encore très utilisées. Une nouvelle génération des Eurocodes est en cours de déploiement, et certaines valeurs (notamment β<sub>w</sub> pour les aciers à haute résistance) peuvent y différer. La démarche, elle, est la même : une facette, un vecteur contrainte, trois composantes.</div>
+  <p><b>Les deux cas d'école</b>, avec f = F/ΣL la force par unité de longueur (ΣL : longueur totale des cordons) :</p>
+  <div class="fx"><div class="big" style="font-size:1.35rem">frontaux : <span class="sig">σ⊥</span> = <span class="tau">τ⊥</span> = <span class="frac"><span>F</span><span>√2 · a · ΣL</span></span> &nbsp;⇒&nbsp; équivalente √2 · <span class="frac"><span>F</span><span>a · ΣL</span></span></div></div>
+  <div class="fx"><div class="big" style="font-size:1.35rem">latéraux : <span class="tau">τ∥</span> = <span class="frac"><span>F</span><span>a · ΣL</span></span> &nbsp;⇒&nbsp; équivalente √3 · <span class="frac"><span>F</span><span>a · ΣL</span></span></div></div>
+  <p><b>Exemple</b> : deux cordons de 100 mm, gorge 4 mm, F = 120 kN, S235 (limite 360/(0,8 × 1,25) = 360 MPa). Frontaux : <span class="m">√2 × 120 000/800 ≈ 212 MPa</span> ✅ ; latéraux : <span class="m">√3 × 150 ≈ 260 MPa</span> ✅. Un cordon frontal est plus favorable dans le rapport √3/√2 ≈ 1,22.</p>
+
+  <div class="warn"><b>⚠️ Piège classique : « a5 » ou « z7 » ?</b> Selon l'ISO 2553, « a5 » désigne une gorge de 5 mm, « z7 » un côté de 7 mm. Confondre les deux surestime la résistance de 41 % (√2 ≈ 1,41).</div>
+  <div class="mnemo">🧠 <b>Image : le mouchoir plié</b>. Le triangle du cordon, la gorge qui le coupe en deux à 45° comme une diagonale, et trois flèches sur la diagonale : une rouge qui l'ouvre (σ⊥), une violette qui la fait glisser en travers (τ⊥), un point violet qui file le long du cordon (τ∥).</div>
+  <div class="weld"><b>🔥 La méthode simplifiée de l'Eurocode</b>
+    <p>Plus rapide et plus prudente : on ignore la direction de l'effort et on vérifie que la force par unité de longueur reste sous f<sub>vw,d</sub> · a, avec f<sub>vw,d</sub> = f<sub>u</sub>/(√3 β<sub>w</sub> γ<sub>M2</sub>). Cela revient à traiter tout effort comme un cisaillement le long du cordon, le cas latéral. La gorge d'un cordon porteur ne descend pas sous 3 mm.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : σ∥, version de la norme</summary>
+    <p>Une quatrième contrainte, σ∥ (normale, parallèle à l'axe du cordon, dans le cordon lui-même), existe aussi ; la vérification l'ignore. Les valeurs ci-dessus sont celles de l'EN 1993-1-8:2005 et de son annexe nationale ; la nouvelle génération des Eurocodes peut modifier certaines valeurs (notamment β<sub>w</sub> pour les aciers à haute résistance). La démarche reste la même : une facette, un vecteur contrainte, trois composantes.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Section de gorge : a × L, inclinée à 45° ; a = z/√2 ≈ 0,7 z.</li>
+      <li>EC3 : √(σ⊥² + 3(τ⊥² + τ∥²)) ≤ f<sub>u</sub>/(β<sub>w</sub>γ<sub>M2</sub>) et σ⊥ ≤ 0,9 f<sub>u</sub>/γ<sub>M2</sub>.</li>
+      <li>À longueur égale, un cordon frontal est plus favorable qu'un latéral (rapport ≈ 1,22).</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -784,84 +776,37 @@ svg .throat{stroke:var(--weld);stroke-width:3;stroke-dasharray:7 4}
 <div class="wrap">
   <div class="cartouche">
     <div class="c-num">✎</div>
-    <div class="c-title"><h2>Exercices corrigés</h2><p>De la lecture d'une matrice jusqu'à la vérification d'un cordon</p></div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Deux exercices, de la matrice au cordon d'angle</p></div>
     <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de muscu : on ne progresse qu'en soulevant soi-même</span></div>
   </div>
-  <div class="lv lv1"><div class="lv-h">👁 Mode d'emploi <span class="tag">la méthode M-P-P</span></div>
-    <p>Pour chaque facette : <b>0.</b> je vérifie que n⃗ est unitaire (sinon je normalise), <b>1.</b> je <b>multiplie</b> : T⃗ = [σ]·n⃗, <b>2.</b> je <b>projette</b> : σₙ = T⃗·n⃗, <b>3.</b> je <b>Pythagorise</b> : τ = √(|T⃗|² − σₙ²). La manipulation 3 (la machine à multiplier) te permet de vérifier tes résultats.</p>
-  </div>
+
+  <p>Pour chaque facette : vérifie que n⃗ est unitaire (sinon normalise), puis <b>multiplie</b> (T⃗ = [σ]·n⃗), <b>projette</b> (σ<sub>n</sub> = T⃗·n⃗) et <b>Pythagorise</b> (τ = √(|T⃗|² − σ<sub>n</sub>²)). Le premier exercice se vérifie dans la manipulation 3, le second se rejoue dans la manipulation 6.</p>
 
   <div class="exo">
-    <h4>Exercice 1 : lire, puis calculer, en 2D <span class="lvtag">N1 · chapitres 3 et 4</span></h4>
-    <p>En un point d'une tôle, l'état de contrainte plan est <span class="m"><span class="sig">[σ]</span> = <span class="inlinemat" style="grid-template-columns:repeat(2,auto)"><span class="sig">80</span><span class="tau">30</span><span class="tau">30</span><span class="sig">−40</span></span></span> MPa.</p>
-    <p><b>a)</b> Sans calcul, donne T⃗ sur la facette de normale x, puis sur celle de normale y.<br><b>b)</b> Calcule T⃗, σₙ et |τ| sur la facette dont la normale fait 45° avec l'axe x.</p>
+    <h4>Exercice 1 : lire, puis calculer, en 2D <span class="lvtag">★ application · chapitres 3 et 4, à vérifier dans la manipulation 3</span></h4>
+    <p>En un point d'une tôle, l'état de contrainte plan est [σ] = (80 30 / 30 −40) MPa.</p>
+    <p class="q"><b>a)</b> Sans calcul, donne T⃗ sur la facette de normale x, puis sur celle de normale y.</p>
+    <p class="q"><b>b)</b> Calcule T⃗, σ<sub>n</sub> et |τ| sur la facette dont la normale fait 45° avec l'axe x.</p>
+    <p class="q"><b>c)</b> Vérifie σ<sub>n</sub> et |τ| avec le centre C et le rayon R du cercle de Mohr.</p>
     <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> Il suffit de lire les lignes : <span class="m"><span class="vec">T</span>(<span class="vec">e</span><sub>x</sub>) = (80 ; 30)</span> MPa et <span class="m"><span class="vec">T</span>(<span class="vec">e</span><sub>y</sub>) = (30 ; −40)</span> MPa.</p>
-      <p><b>b)</b> <span class="m"><span class="vec">n</span> = (cos 45° ; sin 45°) = (0,7071 ; 0,7071)</span>, déjà unitaire. <b>Multiplier :</b> <span class="m">T<sub>x</sub> = 80 × 0,7071 + 30 × 0,7071 = 77,78</span> et <span class="m">T<sub>y</sub> = 30 × 0,7071 − 40 × 0,7071 = −7,07</span>. <b>Projeter :</b> <span class="m"><span class="sig">σ<sub>n</sub></span> = 77,78 × 0,7071 − 7,07 × 0,7071 = <b>50,0 MPa</b></span>. <b>Pythagoriser :</b> <span class="m">|<span class="vec">T</span>|² = 77,78² + 7,07² = 6 100</span>, donc <span class="m">|<span class="tau">τ</span>| = √(6 100 − 2 500) = <b>60,0 MPa</b></span>.</p>
-      <p><b>Vérification par les formules d'angle double :</b> C = (80 − 40)/2 = 20, a = (80 + 40)/2 = 60, 2θ = 90°. <span class="m"><span class="sig">σ<sub>n</sub></span> = 20 + 60 × 0 + 30 × 1 = 50</span> ✅ et <span class="m"><span class="tau">τ</span> = −60 × 1 + 30 × 0 = −60</span>, soit |τ| = 60 ✅. Le signe moins (convention de la série) indique seulement que le cisaillement va dans le sens opposé à t⃗.</p>
+      <p><b>a)</b> On lit les lignes : T⃗(e⃗<sub>x</sub>) = <b>(80 ; 30) MPa</b> et T⃗(e⃗<sub>y</sub>) = <b>(30 ; −40) MPa</b>.</p>
+      <p><b>b)</b> n⃗ = (0,7071 ; 0,7071), déjà unitaire. <b>Multiplier</b> : T<sub>x</sub> = 80 × 0,7071 + 30 × 0,7071 = 77,78 ; T<sub>y</sub> = 30 × 0,7071 − 40 × 0,7071 = −7,07. <b>Projeter</b> : σ<sub>n</sub> = 77,78 × 0,7071 − 7,07 × 0,7071 = <b>50,0 MPa</b>. <b>Pythagoriser</b> : |T⃗|² = 77,78² + 7,07² = 6 100, donc |τ| = √(6 100 − 2 500) = <b>60,0 MPa</b>.</p>
+      <p><b>c)</b> C = (80 − 40)/2 = 20, a = (80 + 40)/2 = 60, 2θ = 90° : σ<sub>n</sub> = C + a cos 90° + τ<sub>xy</sub> sin 90° = 20 + 0 + 30 = 50 ✅ ; τ = −a sin 90° + τ<sub>xy</sub> cos 90° = −60, soit |τ| = 60 ✅ (le signe moins indique seulement que le cisaillement va dans le sens opposé à t⃗).</p>
     </div></details>
   </div>
 
-  <div class="exo">
-    <h4>Exercice 2 : le piège de la normale <span class="lvtag">N1 · chapitres 3 et 4</span></h4>
-    <p><span class="m"><span class="sig">[σ]</span> = diag(100 ; 50 ; −20)</span> MPa (seule la diagonale est non nulle). On étudie la facette de direction normale (1 ; 2 ; 2).</p>
-    <p><b>a)</b> Calcule σₙ et |τ| correctement.<br><b>b)</b> Refais le calcul en oubliant de normaliser : de combien σₙ est-il faux ?</p>
+  <div class="exo defi">
+    <h4>Exercice 2 : frontal ou latéral ? <span class="lvtag">★★ synthèse · chapitres 4 et 6, à rejouer dans la manipulation 6</span></h4>
+    <p>Un plat en S235 (f<sub>u</sub> = 360 MPa, β<sub>w</sub> = 0,8, γ<sub>M2</sub> = 1,25) transmet F = 120 kN par <b>deux</b> cordons d'angle de gorge a = 4 mm et de longueur L = 100 mm chacun. Dans la manipulation 6, compare les boutons « Cordons frontaux » et « Cordons latéraux ».</p>
+    <p class="q"><b>a)</b> Calcule les deux limites de l'Eurocode, puis, pour des cordons <b>frontaux</b>, σ⊥, τ⊥ et la contrainte équivalente. Vérifie.</p>
+    <p class="q"><b>b)</b> Même question pour des cordons <b>latéraux</b>.</p>
+    <p class="q"><b>c)</b> Quelle gorge minimale faudrait-il dans le cas latéral ?</p>
+    <p class="q"><b>d)</b> Vérifie avec la méthode simplifiée. Que constates-tu ?</p>
     <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> Longueur de la direction : <span class="m">√(1 + 4 + 4) = 3</span>, donc <span class="m"><span class="vec">n</span> = (1/3 ; 2/3 ; 2/3)</span>. <span class="m"><span class="vec">T</span> = (100/3 ; 100/3 ; −40/3) = (33,3 ; 33,3 ; −13,3)</span> MPa. <span class="m"><span class="sig">σ<sub>n</sub></span> = (33,3 × 1 + 33,3 × 2 − 13,3 × 2)/3 = <b>24,4 MPa</b></span>. <span class="m">|<span class="vec">T</span>|² = 1 111 + 1 111 + 178 = 2 400</span>, donc <span class="m">|<span class="tau">τ</span>| = √(2 400 − 597) = <b>42,5 MPa</b></span>.</p>
-      <p><b>b)</b> Avec (1 ; 2 ; 2) : <span class="m"><span class="vec">T</span> = (100 ; 100 ; −40)</span> et « σₙ » = 100 + 200 − 80 = 220 MPa, soit <b>9 fois trop</b> (3 × 3 : une fois dans T⃗, une fois dans la projection). En examen, c'est la différence entre « la pièce tient » et « la pièce casse ».</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 3 : le calcul 3D complet <span class="lvtag">N2 · chapitres 3 et 4</span></h4>
-    <p><span class="m"><span class="sig">[σ]</span> = <span class="inlinemat"><span class="sig">50</span><span class="tau">20</span><span>0</span><span class="tau">20</span><span class="sig">−30</span><span class="tau">10</span><span>0</span><span class="tau">10</span><span class="sig">40</span></span></span> MPa, facette de direction normale (2 ; 1 ; 2).</p>
-    <p>Calcule T⃗, σₙ, |τ|, puis le vecteur cisaillement <span class="m"><span class="vec">τ</span></span> et vérifie sa longueur.</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p>Longueur √(4 + 1 + 4) = 3, donc <span class="m"><span class="vec">n</span> = (2/3 ; 1/3 ; 2/3)</span>.</p>
-      <p><b>Multiplier :</b> ligne 1 : <span class="m">(50 × 2 + 20 × 1 + 0 × 2)/3 = 40</span> ; ligne 2 : <span class="m">(20 × 2 − 30 × 1 + 10 × 2)/3 = 10</span> ; ligne 3 : <span class="m">(0 × 2 + 10 × 1 + 40 × 2)/3 = 30</span>. Donc <span class="m"><span class="vec">T</span> = (40 ; 10 ; 30)</span> MPa.</p>
-      <p><b>Projeter :</b> <span class="m"><span class="sig">σ<sub>n</sub></span> = (40 × 2 + 10 × 1 + 30 × 2)/3 = <b>50 MPa</b></span>.</p>
-      <p><b>Pythagoriser :</b> <span class="m">|<span class="vec">T</span>|² = 1 600 + 100 + 900 = 2 600</span>, donc <span class="m">|<span class="tau">τ</span>| = √(2 600 − 2 500) = <b>10 MPa</b></span>.</p>
-      <p><b>Vecteur :</b> <span class="m"><span class="vec">τ</span> = <span class="vec">T</span> − 50<span class="vec">n</span> = (40 − 33,33 ; 10 − 16,67 ; 30 − 33,33) = (6,67 ; −6,67 ; −3,33)</span>. Longueur : √(44,4 + 44,4 + 11,1) = √100 = 10 ✅. Et <span class="m"><span class="vec">τ</span>·<span class="vec">n</span> = (13,33 − 6,67 − 6,67)/3 = 0</span> : il est bien dans le plan de la facette.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 4 : le tube soudé en spirale <span class="lvtag">N2 · chapitres 4 et 5</span></h4>
-    <p>Une conduite de rayon moyen R = 500 mm et d'épaisseur e = 10 mm est sous une pression p = 2 MPa (20 bar). Elle est fabriquée en tôle enroulée en hélice : la soudure fait un angle α = 60° avec l'axe du tube.</p>
-    <p><b>a)</b> Calcule σ<sub>θθ</sub> et σ<sub>zz</sub>.<br><b>b)</b> Dans le plan de la paroi (axes θ et z), la normale à la soudure fait l'angle α avec la direction θ : <span class="m"><span class="vec">n</span> = (cos α ; −sin α)</span>. Calcule la contrainte normale à la soudure et le cisaillement le long de la soudure.<br><b>c)</b> Compare avec une soudure longitudinale (α = 0°) et une soudure circulaire (α = 90°).</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <span class="m"><span class="sig">σ<sub>θθ</sub></span> = pR/e = 2 × 500/10 = <b>100 MPa</b></span> ; <span class="m"><span class="sig">σ<sub>zz</sub></span> = pR/2e = <b>50 MPa</b></span>.</p>
-      <p><b>b)</b> Le tenseur, dans le plan (θ, z), est diagonal : <span class="m">diag(100 ; 50)</span>. <b>Multiplier :</b> <span class="m"><span class="vec">T</span> = (100 cos 60° ; −50 sin 60°) = (50 ; −43,30)</span>. <b>Projeter :</b> <span class="m"><span class="sig">σ<sub>n</sub></span> = 50 × 0,5 + 43,30 × 0,866 = <b>62,5 MPa</b></span> (c'est aussi <span class="m">100 cos²60° + 50 sin²60°</span>). <b>Pythagoriser :</b> <span class="m">|<span class="vec">T</span>|² = 2 500 + 1 875 = 4 375</span>, donc <span class="m">|<span class="tau">τ</span>| = √(4 375 − 3 906) = <b>21,7 MPa</b></span> (c'est aussi <span class="m">(100 − 50) sin 60° cos 60°</span>).</p>
-      <p><b>c)</b> Longitudinale : <span class="sig">σ<sub>n</sub></span> = 100 MPa ; circulaire : 50 MPa ; hélicoïdale à 60° : 62,5 MPa. La soudure en spirale est nettement moins sollicitée en ouverture qu'une soudure longitudinale : c'est un des atouts des tubes soudés en hélice.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 5 : frontal ou latéral ? <span class="lvtag">N2 · chapitre 6</span></h4>
-    <p>Un plat en S235 (f<sub>u</sub> = 360 MPa, β<sub>w</sub> = 0,8, γ<sub>M2</sub> = 1,25) transmet F = 120 kN par <b>deux</b> cordons d'angle de gorge a = 4 mm et de longueur L = 100 mm chacun.</p>
-    <p><b>a)</b> Les cordons sont <b>frontaux</b> : calcule σ⊥, τ⊥, la contrainte équivalente, et vérifie les deux conditions.<br><b>b)</b> Même question s'ils sont <b>latéraux</b>.<br><b>c)</b> Quelle gorge minimale faudrait-il dans le cas latéral ?</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>Limites :</b> <span class="m">f<sub>u</sub>/(β<sub>w</sub>γ<sub>M2</sub>) = 360/(0,8 × 1,25) = 360 MPa</span> et <span class="m">0,9 f<sub>u</sub>/γ<sub>M2</sub> = 259,2 MPa</span>. Surface de gorge totale : <span class="m">a·ΣL = 4 × 200 = 800 mm²</span>.</p>
-      <p><b>a)</b> <span class="m"><span class="sig">σ⊥</span> = <span class="tau">τ⊥</span> = 120 000/(√2 × 800) = <b>106,1 MPa</b></span>. Équivalente : <span class="m">√(106,1² + 3 × 106,1²) = 2 × 106,1 = <b>212,1 MPa</b> ≤ 360</span> ✅, et <span class="m">106,1 ≤ 259,2</span> ✅. Taux de travail : 212,1/360 = <b>0,59</b>.</p>
-      <p><b>b)</b> <span class="m"><span class="tau">τ∥</span> = 120 000/800 = <b>150 MPa</b></span>. Équivalente : <span class="m">√3 × 150 = <b>259,8 MPa</b> ≤ 360</span> ✅. Taux : <b>0,72</b>. Le cas latéral est plus défavorable, dans le rapport √3/√2 ≈ 1,22.</p>
-      <p><b>c)</b> Il faut <span class="m">√3 × 120 000/(200 a) ≤ 360</span>, soit <span class="m">a ≥ 2,9 mm</span> : on retient <b>a = 3 mm</b>, qui est aussi la gorge minimale usuelle exigée par l'Eurocode pour un cordon porteur.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 6 : reconnaître au premier coup d'œil <span class="lvtag">N1 · chapitre 5</span></h4>
-    <p>Nomme chaque état : A = diag(−5 ; −5 ; −5) ; B = seules les cases xy et yx valent 45 ; C = diag(0 ; 120 ; 60) en (r, θ, z) ; D = diag(180 ; 150 ; 110).</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p>A : <b>pression hydrostatique</b> (p = 5 MPa, sous 500 m d'eau environ). B : <b>cisaillement pur</b> dans le plan xy. C : <b>paroi de réservoir cylindrique</b> (σ<sub>θθ</sub> = 2σ<sub>zz</sub>, σ<sub>rr</sub> ≈ 0). D : <b>triaxial en traction</b>, typique du cœur d'une soudure épaisse : attention au risque de rupture fragile.</p>
-    </div></details>
-  </div>
-
-  <div class="exo" style="border-left-color:var(--tau)">
-    <h4>Défi : la facette octaédrique <span class="lvtag">N2 · pour préparer le cours 5</span></h4>
-    <p>Soit <span class="m"><span class="sig">[σ]</span> = diag(<span class="sig">σ</span><sub>1</sub> ; <span class="sig">σ</span><sub>2</sub> ; <span class="sig">σ</span><sub>3</sub>)</span> et la facette également inclinée sur les trois axes, <span class="m"><span class="vec">n</span> = (1 ; 1 ; 1)/√3</span> (on l'appelle facette <b>octaédrique</b>, car 8 facettes de ce type forment un octaèdre). Montre que <span class="m"><span class="sig">σ<sub>n</sub></span> = (<span class="sig">σ</span><sub>1</sub> + <span class="sig">σ</span><sub>2</sub> + <span class="sig">σ</span><sub>3</sub>)/3</span> et que <span class="m"><span class="tau">τ</span> = ⅓ √((<span class="sig">σ</span><sub>1</sub> − <span class="sig">σ</span><sub>2</sub>)² + (<span class="sig">σ</span><sub>2</sub> − <span class="sig">σ</span><sub>3</sub>)² + (<span class="sig">σ</span><sub>3</sub> − <span class="sig">σ</span><sub>1</sub>)²)</span>.</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><span class="m"><span class="vec">T</span> = (<span class="sig">σ</span><sub>1</sub> ; <span class="sig">σ</span><sub>2</sub> ; <span class="sig">σ</span><sub>3</sub>)/√3</span>, donc <span class="m"><span class="sig">σ<sub>n</sub></span> = (<span class="sig">σ</span><sub>1</sub> + <span class="sig">σ</span><sub>2</sub> + <span class="sig">σ</span><sub>3</sub>)/3</span> : c'est la <b>contrainte moyenne</b>. Ensuite <span class="m">|<span class="vec">T</span>|² = (<span class="sig">σ</span><sub>1</sub>² + <span class="sig">σ</span><sub>2</sub>² + <span class="sig">σ</span><sub>3</sub>²)/3</span>, et <span class="m"><span class="tau">τ</span>² = |<span class="vec">T</span>|² − <span class="sig">σ<sub>n</sub></span>² = [3Σ<span class="sig">σ</span><sub>i</sub>² − (Σ<span class="sig">σ</span><sub>i</sub>)²]/9</span>. Or <span class="m">3Σ<span class="sig">σ</span><sub>i</sub>² − (Σ<span class="sig">σ</span><sub>i</sub>)² = (<span class="sig">σ</span><sub>1</sub> − <span class="sig">σ</span><sub>2</sub>)² + (<span class="sig">σ</span><sub>2</sub> − <span class="sig">σ</span><sub>3</sub>)² + (<span class="sig">σ</span><sub>3</sub> − <span class="sig">σ</span><sub>1</sub>)²</span> (développe pour t'en convaincre), d'où le résultat.</p>
-      <p class="mut">Pourquoi c'est important : ce cisaillement octaédrique est, à un facteur près, la <b>contrainte de von Mises</b> du cours 5 (<span class="m"><span class="sig">σ</span><sub>VM</sub> = (3/√2) <span class="tau">τ</span><sub>oct</sub></span>). Et remarque : si <span class="sig">σ</span><sub>1</sub> = <span class="sig">σ</span><sub>2</sub> = <span class="sig">σ</span><sub>3</sub> (hydrostatique, ou triaxialité parfaite), il vaut zéro : la matière ne peut pas plastifier. C'est la formule qui explique le danger des états triaxiaux du chapitre 5.</p>
+      <p><b>a)</b> f<sub>u</sub>/(β<sub>w</sub>γ<sub>M2</sub>) = 360/(0,8 × 1,25) = <b>360 MPa</b> ; 0,9 f<sub>u</sub>/γ<sub>M2</sub> = <b>259,2 MPa</b>. Gorge totale : a·ΣL = 4 × 200 = 800 mm². σ⊥ = τ⊥ = 120 000/(√2 × 800) = <b>106,1 MPa</b> ; équivalente √(106,1² + 3 × 106,1²) = 2 × 106,1 = <b>212,1 MPa</b> ≤ 360 ✅, et σ⊥ = 106,1 ≤ 259,2 ✅. Taux de travail 0,59.</p>
+      <p><b>b)</b> τ∥ = 120 000/800 = <b>150 MPa</b> ; équivalente √3 × 150 = <b>259,8 MPa</b> ≤ 360 ✅. Taux 0,72 : le cas latéral est plus défavorable, dans le rapport √3/√2 ≈ 1,22.</p>
+      <p><b>c)</b> √3 × 120 000/(200 a) ≤ 360 donne a ≥ 2,9 mm : on retient <b>a = 3 mm</b>, qui est aussi la gorge minimale d'un cordon porteur.</p>
+      <p><b>d)</b> f<sub>vw,d</sub> = 360/(√3 × 0,8 × 1,25) = 207,8 MPa, et f<sub>vw,d</sub> × a = 831 N/mm ; la force par unité de longueur vaut 120 000/200 = 600 N/mm ✅. Taux 600/831 = <b>0,72</b>, le même que le cas latéral : la méthode simplifiée traite tout effort comme un cisaillement le long du cordon.</p>
     </div></details>
   </div>
 </div>
@@ -898,6 +843,7 @@ svg .throat{stroke:var(--weld);stroke-width:3;stroke-dasharray:7 4}
     <div><div class="ic">🌭</div><h4>Réservoir</h4><div class="f"><span class="sig">σ<sub>θθ</sub></span> = pR/e = 2<span class="sig">σ<sub>zz</sub></span></div><p>La saucisse éclate en long : la soudure longitudinale est deux fois plus chargée.</p></div>
     <div><div class="ic">🔥</div><h4>Cordon d'angle</h4><div class="f">√(<span class="sig">σ⊥</span>² + 3(<span class="tau">τ⊥</span>² + <span class="tau">τ∥</span>²)) ≤ f<sub>u</sub>/(<span class="mat">β<sub>w</sub></span>γ<sub>M2</sub>)</div><p>Section de gorge a·L à 45°. Frontal : σ⊥ = τ⊥ = F/(√2 aΣL). Latéral : τ∥ = F/(aΣL).</p></div>
   </div>
+  <div class="btns"><button class="btn" id="printFiche" type="button">🖨 Imprimer la fiche mémoire</button></div>
   <div class="fun"><span class="fun-h">✍️ Fun fact : Cauchy, ou pourquoi les articles ne dépassaient pas quatre pages</span>Augustin-Louis Cauchy, qui a introduit en 1822 la contrainte et le tétraèdre du <a href="#c2">chapitre 2</a>, est l'un des mathématiciens les plus prolifiques de l'histoire : près de 800 articles. Quand l'Académie des sciences lance en 1835 sa revue hebdomadaire, les <i>Comptes rendus</i>, il l'inonde de mémoires si longs et si nombreux qu'une règle est adoptée pour endiguer le flot : quatre pages au maximum par article. Le père du tenseur des contraintes a donc aussi provoqué, sans le vouloir, la règle des quatre pages.</div>
 </div>
 </section>
@@ -984,6 +930,20 @@ const NS="http://www.w3.org/2000/svg";
 const $=s=>document.querySelector(s);
 const $$=s=>Array.from(document.querySelectorAll(s));
 const RM=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+function player(id,o){/* lecteur pilotable : ⏮ début, ◀ pas, ▶ lecture ou ⏸ pause (reprend où elle s'est arrêtée), pas ▶ ; o.get() et o.set(t) avec t de 0 à 1, o.dur (ms), o.steps */
+  const box=$("#"+id),bp=box.querySelector('[data-a="play"]'),lab=bp.textContent,n=o.steps||20;let raf=null,run=false;
+  const cl=t=>Math.max(0,Math.min(1,t));
+  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;bp.textContent=lab;}
+  function step(d){stop();o.set(cl(Math.round(o.get()*n+d)/n));}
+  bp.addEventListener("click",()=>{if(run){stop();return;}let t0=o.get();if(t0>=0.999)t0=0;
+    if(RM){o.set(cl(Math.round(t0*n+1)/n));return;}
+    run=true;bp.textContent="⏸ Pause";const s0=performance.now()-t0*o.dur;
+    const f=now=>{if(!run)return;const t=cl((now-s0)/o.dur);o.set(t);if(t>=1){stop();return;}raf=requestAnimationFrame(f);};raf=requestAnimationFrame(f);});
+  box.querySelector('[data-a="start"]').addEventListener("click",()=>{stop();o.set(0);});
+  box.querySelector('[data-a="back"]').addEventListener("click",()=>step(-1));
+  box.querySelector('[data-a="fwd"]').addEventListener("click",()=>step(1));
+  return {stop:stop};
+}
 
 function el(tag,attrs,parent){
   const e=document.createElementNS(NS,tag);
@@ -1056,7 +1016,8 @@ const S=(c,t)=>'<span class="'+c+'">'+t+'</span>';
         [tp,tp+Math.PI/2].forEach((a,i)=>{
           const dx=Math.cos(a),dy=Math.sin(a);
           el("line",{x1:M[0]-dx*200,y1:M[1]+dy*200,x2:M[0]+dx*200,y2:M[1]-dy*200,style:"stroke:var(--mat);stroke-width:1.4;stroke-dasharray:3 5"},svg);
-          tx(svg,M[0]+dx*205,M[1]-dy*205+4,i?"II":"I","lbl",{style:"fill:var(--mat)"});
+          const r=Math.min(205,160/Math.max(Math.abs(dy),1e-6));/* étiquette gardée dans le cadre quand la direction est presque verticale */
+          tx(svg,M[0]+dx*r+(Math.abs(dy)>0.9?10:0),M[1]-dy*r+4,i?"II":"I","lbl",{style:"fill:var(--mat)"});
         });
         tx(svg,20,346,"en vert : les deux directions principales (τ = 0)","lbl",{style:"fill:var(--mat)"});
       }
@@ -1080,9 +1041,9 @@ const S=(c,t)=>'<span class="'+c+'">'+t+'</span>';
     else if(Math.abs(s.t)<0.01&&Math.abs(s.sx-s.sy)<0.01)no="💧 <b>État hydrostatique</b> : T⃗ est toujours parallèle à n⃗, quelle que soit la facette. "+(s.sx<0?"Il pointe vers l'intérieur : c'est la pression d'un fluide, sans aucun frottement.":"Ici il pointe vers l'extérieur : traction égale dans toutes les directions.");
     else if(Math.abs(tau)<0.8)no="🎯 <b>T⃗ est parallèle à n⃗</b> : pas de cisaillement sur cette facette. C'est une <b>direction principale</b> (cours 4).";
     else no="La facette est à la fois "+(sig>=0?"tirée":"comprimée")+" ("+S("sig","σ<sub>n</sub>")+", la flèche rouge) et cisaillée ("+S("tau","τ")+", la flèche violette). Rouge + violet = noir : T⃗ est l'hypoténuse d'un triangle rectangle.";
-    $("#h1note").innerHTML=no;
+    $("#h1note").innerHTML=no+"<br><b>À retenir :</b> T⃗ change de longueur et de direction avec la facette ; il n'est parallèle à n⃗ que sur les directions principales.";
   }
-  function stop(){if(anim){cancelAnimationFrame(anim);anim=null;}bp.textContent="▶ Faire un tour complet";}
+  function stop(){A.stop();}
   [ia,isx,isy,it].forEach(i=>i.addEventListener("input",()=>{if(i!==ia)$$("#h1pre .btn").forEach(b=>b.classList.remove("on"));draw();}));
   ia.addEventListener("input",stop);
   cb.addEventListener("change",draw);
@@ -1090,13 +1051,8 @@ const S=(c,t)=>'<span class="'+c+'">'+t+'</span>';
     const v=b.dataset.p.split(",").map(Number);isx.value=v[0];isy.value=v[1];it.value=v[2];
     $$("#h1pre .btn").forEach(o=>o.classList.toggle("on",o===b));draw();
   }));
-  bp.addEventListener("click",()=>{
-    if(anim){stop();return;}
-    let a=0;ia.value=0;bp.textContent="⏸ Pause";
-    const step=()=>{a=Math.min(360,a+(RM?12:1.5));ia.value=Math.round(a);draw();
-      if(a<360)anim=requestAnimationFrame(step);else{cb.checked=true;draw();stop();}};
-    anim=requestAnimationFrame(step);
-  });
+  /* lecteur : la normale fait un tour complet ; à la fin, la courbe des pointes de T⃗ s'affiche */
+  const A=player("h1pl",{get:()=>+ia.value/360,set:t=>{ia.value=Math.round(360*t);if(t>=1)cb.checked=true;draw();},dur:8000,steps:24});
   draw();
 })();
 
@@ -1283,21 +1239,18 @@ const S=(c,t)=>'<span class="'+c+'">'+t+'</span>';
     else if(Math.abs(ta)<0.8)no="🎯 <b>τ = 0 : facette principale.</b> Le point est sur l'axe horizontal, à "+(sg>Cc?"l'extrémité droite (C + R, la plus grande contrainte normale)":"l'extrémité gauche (C − R, la plus petite)")+" du cercle.";
     else if(Math.abs(Math.abs(ta)-R)<0.8)no="⚡ Cisaillement maximal : |τ| = R = "+nf(R,1)+" MPa, au sommet du cercle. La facette est à 45° des directions principales.";
     else no="La facette a tourné de θ = "+nf(th,0)+"° ; le point a tourné de <b>2θ = "+nf(2*th,0)+"° dans le sens contraire</b>, sur un cercle de centre C et de rayon R (convention de la série). Cherche avec le curseur les deux facettes où τ = 0 : ce sont les directions principales (cours 4).";
-    $("#f4note").innerHTML=no;
+    $("#f4note").innerHTML=no+"<br><b>À retenir :</b> (σ<sub>n</sub> ; τ) décrit un cercle de centre C et de rayon R ; τ = 0 sur deux facettes perpendiculaires.";
   }
   function addR(a,b){for(let q=Math.min(a,b);q<=Math.max(a,b);q++)vis.add(q);}
-  function stop(){if(anim){cancelAnimationFrame(anim);anim=null;}bp.textContent="▶ Faire tourner de −90° à +90°";}
+  function stop(){A.stop();}
   ia.addEventListener("input",()=>{stop();const q=+ia.value;addR(last,q);last=q;draw();});
   [isx,isy,it].forEach(i=>i.addEventListener("input",draw));
   cb.addEventListener("change",draw);
   bc.addEventListener("click",()=>{vis=new Set([+ia.value]);last=+ia.value;draw();});
-  bp.addEventListener("click",()=>{
-    if(anim){stop();return;}
-    ia.value=-90;last=-90;vis=new Set([-90]);bp.textContent="⏸ Pause";
-    const step=()=>{const q=Math.min(90,+ia.value+(RM?6:1));ia.value=q;addR(last,q);last=q;
-      if(q>=90){cb.checked=true;draw();stop();return;}draw();anim=requestAnimationFrame(step);};
-    anim=requestAnimationFrame(step);
-  });
+  /* lecteur : θ de −90° à +90° ; revenir au début efface la trace */
+  const A=player("f4pl",{get:()=>(+ia.value+90)/180,set:t=>{const q=Math.round(-90+180*t);ia.value=q;
+    if(t===0){vis=new Set([-90]);last=-90;}else{addR(last,q);last=q;}
+    if(q>=90)cb.checked=true;draw();},dur:6000,steps:12});
   draw();
 })();
 
@@ -1431,7 +1384,7 @@ const S=(c,t)=>'<span class="'+c+'">'+t+'</span>';
     if(F===0&&Fp===0)st="Aucun effort : règle F⊥ ou F∥, ou choisis un cas.";
     else st=(u<=1?"✅ <b>Le cordon tient</b>":"❌ <b>Le cordon ne tient pas</b>")+" : taux de travail <b>"+nf(u,2)+"</b> ("+(u1>=u2?"condition de von Mises":"condition sur σ⊥")+" déterminante). "+
       "Méthode simplifiée, pour comparer : "+nf(fres,0)+" N/mm pour une résistance de f<sub>vw,d</sub>·a = "+nf(fvw*a,0)+" N/mm, taux "+nf(us,2)+(us>u+0.005?" : plus prudente, comme prévu.":".");
-    $("#wlst").innerHTML=st;
+    $("#wlst").innerHTML=st+"<br><b>À retenir :</b> √(σ⊥² + 3(τ⊥² + τ∥²)) ≤ f<sub>u</sub>/(β<sub>w</sub>γ<sub>M2</sub>) ; un cordon frontal tient 1,22 fois plus qu'un latéral.";
   }
   [iF,iphi,iFp].forEach(i=>i.addEventListener("input",()=>{$$("#wlpre .btn").forEach(b=>b.classList.remove("on"));draw();}));
   [ia,iL,inn,igr].forEach(i=>{i.addEventListener("input",draw);i.addEventListener("change",draw);});
@@ -1519,6 +1472,13 @@ const S=(c,t)=>'<span class="'+c+'">'+t+'</span>';
   },{rootMargin:"-45% 0px -50% 0px"});
   Object.keys(map).forEach(id=>{const s=document.getElementById(id);if(s)obs.observe(s);});
 })();
+})();
+</script>
+<script>
+(function(){/* impression de la fiche mémoire seule */
+  const b=document.getElementById("printFiche");if(!b)return;
+  b.addEventListener("click",()=>{document.body.classList.add("print-fiche");window.print();});
+  window.addEventListener("afterprint",()=>document.body.classList.remove("print-fiche"));
 })();
 </script>
 </body>

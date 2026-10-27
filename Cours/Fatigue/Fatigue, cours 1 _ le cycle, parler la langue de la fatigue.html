@@ -113,13 +113,6 @@ section.chap{padding:46px 0 10px}
 .c-img span{font-size:.95rem;line-height:1.3}
 @media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
 
-/* niveaux */
-.lv{margin:1.2rem 0;padding:6px 22px 14px;border-radius:4px}
-.lv1{background:var(--card);border:2px solid var(--ink)}
-.lv2{background:var(--lv2);border-left:6px solid var(--ink)}
-.lv-h{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;font-family:var(--font-head);font-size:1.35rem;font-weight:600;margin:10px 0 4px}
-.lv-h .tag{font-size:.95rem;font-family:var(--font-body);font-weight:400;color:var(--muted)}
-@media (max-width:520px){.lv{padding:6px 14px 12px}}
 
 /* formules et encadrés */
 .fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:600px;text-align:center;border-radius:3px;overflow-x:auto}
@@ -248,6 +241,31 @@ footer{padding:40px 0 60px;color:var(--muted);font-size:.9rem}
 hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
 @media (max-width:700px){.m{white-space:normal}.fx{padding:12px 10px}.fx .big{font-size:1.4rem}}
 @media (max-width:400px){body{font-size:16.5px}.wrap{padding:0 14px}.lab{padding:12px 10px}}
+
+/* gabarit court : approfondissement replié, à retenir, prédiction */
+details.deep{margin:1.2rem 0;padding:0 18px;background:var(--lv2);border-left:6px solid var(--ink);border-radius:4px}
+details.deep>summary{font-family:var(--font-head);font-size:1.2rem;font-weight:600;padding:9px 0}
+details.deep[open]{padding-bottom:10px}
+.retenir{margin:1.4rem 0 .4rem;padding:8px 18px 6px;background:var(--card);border:2px solid var(--ink);border-radius:4px}
+.retenir>b:first-child{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.retenir ul{margin:.3rem 0 .3rem}
+.predict{display:block;margin-top:.35rem;color:var(--ink);font-weight:700}
+.lab-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:6px 16px;align-items:start}
+@media (max-width:520px){details.deep{padding:0 12px}.retenir{padding:8px 12px 6px}}
+
+/* impression : le cours sur papier clair, ou la fiche mémoire seule sur une page */
+@media print{
+  :root,:root[data-theme]{--paper:#fff!important;--paper-2:#EEF2F6!important;--card:#fff!important;--ink:#111!important;--muted:#444!important;--line:#999!important;--grid:transparent!important;--lv2:#F2F5F8!important;--hl:#FFF3B0!important;color-scheme:light}
+  body{background:#fff;font-size:11pt}
+  .toc,.theme-btn,.btns,.ctrl,#qzReset,.score{display:none!important}
+  section.chap{padding:14px 0 4px}
+  .lab,.fx,.retenir,details.deep,.fiche>div,.exo{break-inside:avoid}
+  body.print-fiche header,body.print-fiche main>section:not(#fiche),body.print-fiche footer{display:none!important}
+  body.print-fiche #fiche .cartouche{margin-bottom:.6rem}
+  body.print-fiche .fiche>div{padding:8px 10px}
+}
+/* formules dans les replis et les corrections : retour à la ligne permis (sinon débordement vers 768 px) */
+details .m{white-space:normal}
 </style>
 <style id="course-photo-style">
 /* Photographies documentées : compléments aux manipulations, lisibles hors ligne. */
@@ -300,12 +318,12 @@ body.photo-modal-open{overflow:hidden}
     </div>
     <div class="tb-cells">
       <div><small>Cours</small><b>1 sur 4 : le chargement cyclique et ses paramètres</b></div>
-      <div><small>Durée conseillée</small><b>≈ 2 h 30 à 3 h avec les exercices</b></div>
+      <div><small>Durée conseillée</small><b>≈ 1 h 15 à 1 h 30 avec les exercices</b></div>
       <div><small>Prérequis</small><b>σ = F/S, R<sub>e</sub> et R<sub>m</sub>, et la flexion |σ|<sub>max</sub> = |Mf|/W (série RDM)</b></div>
       <div><small>À la fin tu sais</small><b>décrire n'importe quel cycle par σ<sub>m</sub>, σ<sub>a</sub>, Δσ et R, et raconter la vie d'une fissure</b></div>
     </div>
   </div>
-  <p class="lede">Essaie de casser un trombone en tirant dessus : impossible, il faudrait dépasser sa résistance. Plie-le et déplie-le une quinzaine de fois : il casse net. C'est la <b>fatigue</b> : une charge trop faible pour casser une pièce d'un seul coup finit par la casser à force d'être répétée. Essieux, arbres de transmission, ailes d'avion, ponts, éoliennes et, surtout, assemblages soudés : une grande partie des ruptures de pièces en service sont des ruptures de fatigue. Avant d'étudier comment une fissure naît puis grandit (cours 2 à 4), il faut savoir <b>décrire exactement ce qui se répète</b>. C'est le vocabulaire du cycle, l'objet de ce cours.</p>
+  <p class="lede">Essaie de casser un trombone en tirant dessus : impossible. Plie-le et déplie-le une quinzaine de fois : il casse net. C'est la <b>fatigue</b> : une charge trop faible pour casser une pièce d'un coup finit par la casser à force d'être répétée, et c'est le premier mode de rupture des assemblages soudés en service. Avant d'étudier comment une fissure naît puis grandit, ce cours apprend à <b>décrire exactement ce qui se répète</b> : le vocabulaire du cycle.</p>
 
   <h4>Le code couleur de la série</h4>
   <div class="cc" role="img" aria-label="Code couleur : les causes en rouge et violet, les liens en vert, les effets en bleu">
@@ -345,22 +363,19 @@ body.photo-modal-open{overflow:hidden}
 <div class="wrap">
   <h3 style="margin-top:0">Avant de commencer</h3>
   <h4>Les bases à avoir en tête, en trois cases</h4>
-  <p class="mut" style="margin-top:0">Ce premier cours de la série s'appuie sur la série « Résistance des matériaux ».</p>
+  <p>Ce premier cours de la série s'appuie sur la série « Résistance des matériaux ».</p>
   <div class="recall">
     <div><div class="f"><span class="sig">σ</span> = <span class="frc">F</span>/<span class="mat">S</span></div>La <b>contrainte normale</b> σ (lettre grecque « sigma ») : une force F par unité de surface S. Elle s'exprime en MPa (mégapascal) : 1 MPa = 1 N/mm². Convention : <b>σ &gt; 0 en traction, σ &lt; 0 en compression</b>.</div>
     <div><div class="f">R<sub>e</sub> &lt; R<sub>m</sub></div>L'essai de traction donne <b>R<sub>e</sub></b>, la limite d'élasticité (au-delà, la déformation devient permanente), et <b>R<sub>m</sub></b>, la résistance à la traction (la contrainte maximale supportée). Acier de construction : R<sub>e</sub> ≈ 235 à 355 MPa, R<sub>m</sub> ≈ 360 à 630 MPa.</div>
     <div><div class="f">|<span class="sig">σ</span>|<sub>max</sub> = |<span class="frc">Mf</span>|/<span class="mat">W</span></div>En <b>flexion</b>, la contrainte est maximale sur les fibres les plus éloignées de l'axe neutre. Mf est le moment fléchissant, W le module de flexion ; pour un rond plein de diamètre d, W = πd³/32.</div>
   </div>
 
-  <div class="def"><b>🔎 Quatre remarques de lecture</b>
-    <p><b>1. Amplitude ou étendue ?</b> Certains documents appellent σ<sub>a</sub> la « composante alternative » et Δσ l'« amplitude totale ». Dans beaucoup d'ouvrages et dans les normes, le mot « amplitude » désigne σ<sub>a</sub>, et Δσ s'appelle l'« étendue de contrainte » (en anglais : <i>stress amplitude</i> pour σ<sub>a</sub>, <i>stress range</i> pour Δσ). Ce cours dit <b>amplitude σ<sub>a</sub></b> et <b>étendue Δσ</b>, avec Δσ = 2σ<sub>a</sub>.</p>
-    <p><b>2. Contrainte moyenne négative.</b> Le chapitre 4 ne s'arrête pas aux cycles de moyenne positive ou nulle : il ajoute ceux où domine la compression.</p>
-    <p><b>3. La lettre R.</b> Dans tout ce cours, R = σ<sub>min</sub>/σ<sub>max</sub> est le rapport de charge. Rien à voir avec R<sub>e</sub> et R<sub>m</sub>, ni avec la « courbe-R » évoquée au cours 4.</p>
-    <p><b>4. La lettre N.</b> En RDM, N désigne l'effort normal ; en fatigue, N est un <b>nombre de cycles</b>. Ici, l'effort axial s'appelle donc F.</p>
-  </div>
+  <div class="def"><b>📘 Le sujet du planning</b> : ce cours ouvre les sujets <b>3.7 « Comportement des structures soudées sous chargement cyclique »</b> et <b>3.8 « Conception des structures soudées sollicitées en fatigue »</b>. Attendus de l'IWE (<i>International Welding Engineer</i>) selon le référentiel de l'IIW (<i>International Institute of Welding</i>) : décrire les phénomènes caractéristiques du chargement cyclique, utiliser un diagramme S-N, interpréter l'effet des entailles et des défauts de soudure, connaître les méthodes d'amélioration de la tenue en fatigue des assemblages soudés. Ce cours en pose le vocabulaire.</div>
+
+  <div class="def"><b>📖 Sigles et notations</b> : <b>σ<sub>max</sub></b>, <b>σ<sub>min</sub></b>, <b>σ<sub>m</sub></b> contraintes maximale, minimale, moyenne ; <b>σ<sub>a</sub></b> amplitude ; <b>Δσ</b> étendue (Δσ = 2σ<sub>a</sub>) ; <b>R</b> = σ<sub>min</sub>/σ<sub>max</sub> rapport de charge (rien à voir avec R<sub>e</sub> et R<sub>m</sub>) ; <b>N</b> nombre de cycles (l'effort axial s'appelle donc F, et non N comme en RDM) ; <b>f</b> fréquence (Hz) ; <b>K<sub>t</sub></b> coefficient de concentration de contrainte ; <b>K<sub>I</sub></b>, <b>K<sub>IC</sub></b> facteur d'intensité de contrainte et ténacité ; <b>CND</b> contrôles non destructifs ; <b>EN 1993-1-9</b> Eurocode 3, partie fatigue ; <b>FAT</b> classe de fatigue d'un détail soudé.</div>
 
   <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage</b>
-    <p>(Formation IWE : <i>International Welding Engineer</i>, ingénieur international en soudage.) Les structures soudées travaillent presque toujours sous des charges variables : ponts, ponts roulants, grues, plateformes en mer, mâts d'éoliennes, véhicules ferroviaires. Leur calcul en fatigue, selon l'Eurocode 3 partie 1-9 (norme <b>EN 1993-1-9</b>) ou selon les recommandations de l'<b>IIW</b> (<i>International Institute of Welding</i>, l'Institut international de la soudure), s'écrit entièrement avec le vocabulaire de ce cours : étendue de contrainte Δσ, nombre de cycles N, rapport R, cycles comptés par la méthode rainflow. Et le raccordement d'un cordon avec la tôle, le <b>pied de cordon</b>, est par nature une zone de concentration de contrainte (chapitre 5).</p>
+    <p>Ponts, ponts roulants, grues, plateformes en mer, mâts d'éoliennes, véhicules ferroviaires : les structures soudées travaillent presque toujours sous des charges variables. Leur calcul en fatigue (EN 1993-1-9, recommandations IIW) s'écrit avec le vocabulaire de ce cours, et le pied de cordon est par nature une zone de concentration de contrainte.</p>
   </div>
 
   <h4>La série en quatre cours</h4>
@@ -373,12 +388,12 @@ body.photo-modal-open{overflow:hidden}
 
   <h4>Le plan du cours</h4>
   <ol class="route">
-    <li><span class="dot">1</span><b>Qu'est-ce que la fatigue ?</b><p>Casser sans jamais dépasser R<sub>m</sub> ; compter les cycles d'une vie.</p></li>
-    <li><span class="dot">2</span><b>Du chargement réel au cycle d'essai</b><p>Le signal aléatoire, la sinusoïde du laboratoire, et le comptage des cycles.</p></li>
-    <li><span class="dot">3</span><b>Les six grandeurs du cycle</b><p>σ<sub>max</sub>, σ<sub>min</sub>, σ<sub>m</sub>, σ<sub>a</sub>, Δσ et R, et toutes leurs relations.</p></li>
-    <li><span class="dot">4</span><b>Les familles de cycles</b><p>Une seule règle graduée, R, pour ranger tous les cycles, compression comprise.</p></li>
-    <li><span class="dot">5</span><b>Traction, flexion, torsion : où ça travaille</b><p>La surface en première ligne, l'arbre qui tourne et le trou qui concentre.</p></li>
-    <li><span class="dot">6</span><b>Le film d'une rupture</b><p>Les six phases de l'endommagement, de la première trace à la cassure.</p></li>
+    <li><span class="dot">1</span><b>Qu'est-ce que la fatigue ?</b><p>Le trombone.</p></li>
+    <li><span class="dot">2</span><b>Du chargement réel au cycle d'essai</b><p>Le diapason et la goutte de pluie.</p></li>
+    <li><span class="dot">3</span><b>Les six grandeurs du cycle</b><p>La houle au ponton.</p></li>
+    <li><span class="dot">4</span><b>Les familles de cycles</b><p>La règle de R.</p></li>
+    <li><span class="dot">5</span><b>Traction, flexion, torsion : où ça travaille</b><p>La baguette pliée.</p></li>
+    <li><span class="dot">6</span><b>Le film d'une rupture</b><p>La pellicule en six images.</p></li>
   </ol>
 </div>
 </section>
@@ -390,27 +405,17 @@ body.photo-modal-open{overflow:hidden}
     <div class="c-img"><span class="ico">📎</span><span><small>Image à retenir</small>Le trombone : impossible à casser en tirant, il cède après une quinzaine de pliages</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le trombone et le sentier</span></div>
-    <p>Reprends le trombone. En tirant dessus, tu ne le casses pas : il faudrait atteindre sa résistance R<sub>m</sub>, et tes doigts n'y arrivent pas. En le pliant puis en le dépliant, tu déformes un peu le métal au niveau du pli, de façon <b>permanente</b>. Chaque pliage laisse une petite blessure qui ne se répare pas ; les blessures <b>s'additionnent</b>. Au bout d'une quinzaine d'allers-retours, une fissure apparaît, traverse le fil, et il casse.</p>
-    <p>Pense à un <b>sentier dans l'herbe</b> : un seul passage ne laisse aucune trace visible, mille passages tracent un chemin. En fatigue, chaque cycle de chargement laisse une trace microscopique, invisible à l'œil nu, et c'est leur accumulation qui finit par rompre la pièce.</p>
-    <p>Dans une machine ou une structure, les contraintes sont bien plus faibles que dans le trombone, souvent inférieures à R<sub>e</sub> : chaque cycle abîme beaucoup moins. Mais les cycles se comptent alors en millions, voire en milliards : selon les pièces, le nombre d'« alternances » va de quelques unités à plusieurs centaines de millions.</p>
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>Pièce</th><th>Ce qui fait un cycle</th><th>Cycles sur une vie (ordre de grandeur)</th></tr>
-      <tr><td>Trombone plié à la main</td><td>un pliage aller-retour</td><td class="n">10 à 20</td></tr>
-      <tr><td>Fuselage d'avion de ligne</td><td>une pressurisation par vol</td><td class="n">10⁴ à 10⁵</td></tr>
-      <tr><td>Pont routier</td><td>le passage d'un camion</td><td class="n">≈ 4 × 10⁷ <small>(1 000 camions/jour, 100 ans)</small></td></tr>
-      <tr><td>Essieu ferroviaire</td><td>un tour de roue</td><td class="n">≈ 3,5 × 10⁸ <small>par million de km</small></td></tr>
-      <tr><td>Pale d'éolienne</td><td>un tour de rotor (poids propre)</td><td class="n">≈ 1,6 × 10⁸ <small>(15 tr/min, 20 ans)</small></td></tr>
-      <tr><td>Vilebrequin d'automobile</td><td>un tour moteur</td><td class="n">10⁸ à 10⁹</td></tr>
-    </table></div>
-    <p class="mut" style="font-size:.9rem">La notation 10⁸ (« dix puissance huit ») veut dire 1 suivi de 8 zéros : 100 000 000, cent millions. Le symbole ≈ se lit « environ égal à ».</p>
-  </div>
+  <p>Reprends le trombone. En tirant dessus, tu ne le casses pas : il faudrait atteindre sa résistance R<sub>m</sub>. En le pliant puis le dépliant, tu déformes un peu le métal au pli, de façon <b>permanente</b> ; chaque pliage laisse une petite blessure qui ne se répare pas, et les blessures <b>s'additionnent</b>. Au bout d'une quinzaine d'allers-retours, une fissure apparaît, et il casse. Comme un sentier dans l'herbe : un passage ne laisse aucune trace, mille passages tracent un chemin.</p>
+  <p>Dans une machine ou une structure, les contraintes sont bien plus faibles, souvent sous R<sub>e</sub> : chaque cycle abîme beaucoup moins, mais les cycles se comptent en millions, voire en milliards. La fatigue est dangereuse parce qu'elle agit <b>sans dépasser R<sub>m</sub></b> (le calcul statique dit « ça tient »), <b>sans déformation visible</b>, et <b>sans prévenir</b> : la rupture finale est brutale, même dans un métal ductile.</p>
 
-  <div class="lab" id="m1">
+  <div class="def"><b>📖 Fatigue</b> : ensemble des mécanismes qui conduisent à l'<b>endommagement</b>, à la <b>fissuration</b> puis à la <b>rupture</b> d'un matériau sous un <b>chargement mécanique cyclique</b>, avec des contraintes inférieures à la contrainte de rupture en conditions quasi statiques (R<sub>m</sub>). <b>Endommagement</b> : dégradation progressive et irréversible de la matière (déformations permanentes locales, puis microfissures).</div>
+  <div class="fx"><div class="row big" style="font-size:1.35rem"><span>N = f·t ⟺ t = <span class="frac"><span>N</span><span>f</span></span></span></div><p class="cap">N nombre de cycles ; f fréquence (Hz, un cycle par seconde) ; t durée (s). Un essai de 10⁷ cycles à 50 Hz dure 2 × 10⁵ s, soit 2,3 jours : on ne peut pas tout tester.</p></div>
+
+<div class="lab" id="m1">
     <p class="lab-h">Manipulation 1 : statique contre cyclique</p>
-    <p class="lab-sub">Deux éprouvettes identiques en acier. À gauche, une contrainte σ <b>constante</b> ; à droite, la même valeur appliquée en <b>alternance</b> : +σ, puis −σ, puis +σ… Règle le niveau en pourcentage de R<sub>m</sub>, puis lance l'essai. Le compteur de cycles accélère en échelle logarithmique (chaque graduation vaut dix fois la précédente).</p>
+    <p class="lab-sub">Deux éprouvettes identiques : à gauche une contrainte constante, à droite la même valeur en alternance. Règle le niveau en % de R<sub>m</sub>.<span class="predict">🔮 Prédis d'abord : à 60 % de R<sub>m</sub>, laquelle casse : la statique, la cyclique, ou aucune ?</span></p>
     <div class="ctrl"><label for="m1s">Niveau <span class="sig">σ</span>/R<sub>m</sub></label><input type="range" id="m1s" class="r-sig" min="20" max="100" step="1" value="70"><output id="m1so">70 %</output></div>
-    <div class="btns"><button class="btn play" id="m1play" type="button">▶ Lancer l'essai</button><button class="btn" id="m1reset" type="button">↺ Remettre à zéro</button></div>
+    <div class="btns" id="m1pl"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" data-a="play" type="button">▶ Lancer l'essai</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button></div>
     <div class="btns" id="m1ex"><button class="btn" data-v="40" type="button">40 %</button><button class="btn" data-v="60" type="button">60 %</button><button class="btn" data-v="80" type="button">80 %</button><button class="btn" data-v="96" type="button">96 %</button></div>
     <svg id="m1svg" role="img" aria-label="Deux éprouvettes, l'une chargée en statique, l'autre en cyclique, avec un compteur de cycles"></svg>
     <div class="readout" id="m1r"></div>
@@ -418,35 +423,24 @@ body.photo-modal-open{overflow:hidden}
     <p class="mut" style="font-size:.85rem;margin:0">Courbe illustrative d'un acier, détaillée au cours 2 : rupture en 10³ cycles à 90 % de R<sub>m</sub>, en 10⁶ cycles à 50 %, et plus du tout en dessous. Fréquence d'essai supposée : 10 Hz (dix cycles par seconde).</p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">la définition et ses conséquences</span></div>
-    <div class="def"><b>📖 Fatigue</b> : ensemble des mécanismes qui conduisent à l'<b>endommagement</b>, à la <b>fissuration</b> puis à la <b>rupture</b> d'un matériau sous l'effet d'un <b>chargement mécanique cyclique</b>, avec des contraintes inférieures à la contrainte de rupture mesurée en conditions quasi statiques.</div>
-    <div class="def"><b>📖 Quasi statique</b> : se dit d'un chargement appliqué assez lentement pour que la vitesse n'ait aucun effet, comme dans un essai de traction. La « contrainte de rupture en conditions quasi statiques » est donc R<sub>m</sub>.</div>
-    <div class="def"><b>📖 Endommagement</b> : dégradation progressive et irréversible de la matière (déformations permanentes locales, puis microfissures), qui diminue sa capacité à résister.</div>
-    <p>Les contraintes cycliques peuvent être de traction, de compression, de traction-compression, de cisaillement, de torsion, de flexion ou, dans le cas général, <b>triaxiales</b> : les trois contraintes principales sont alors non nulles (série RDM, cours 4). La situation est aggravée par les <span class="tau">concentrations de contraintes</span> et les <span class="tau">défauts</span> (chapitre 5).</p>
+  <p><b>Ordres de grandeur</b> : trombone plié à la main, 10 à 20 cycles ; fuselage d'avion (une pressurisation par vol), 10⁴ à 10⁵ ; pont routier (1 000 camions par jour pendant 100 ans), ≈ 4 × 10⁷ ; essieu ferroviaire, ≈ 3,5 × 10⁸ tours par million de kilomètres ; pale d'éolienne à 15 tr/min pendant 20 ans, ≈ 1,6 × 10⁸ ; vilebrequin, 10⁸ à 10⁹. Les contraintes cycliques peuvent être de traction, de compression, de flexion, de torsion ou, en général, triaxiales ; les concentrations de contrainte et les défauts aggravent tout (chapitre 5).</p>
 
-    <h4>Des cycles au temps</h4>
-    <p>Une pièce sollicitée à une fréquence constante subit un nombre de cycles proportionnel au temps :</p>
-    <div class="fx"><div class="big"><span class="eps">N</span> = <span class="mat">f</span> · <span class="mat">t</span> &nbsp;⟺&nbsp; <span class="mat">t</span> = <span class="frac"><span><span class="eps">N</span></span><span><span class="mat">f</span></span></span></div><p class="cap">⟺ se lit « équivaut à »</p></div>
-    <dl class="syms">
-      <dt class="eps">N</dt><dd>nombre de cycles, sans unité</dd>
-      <dt class="mat">f</dt><dd>fréquence des cycles, en hertz (Hz) : 1 Hz = un cycle par seconde</dd>
-      <dt class="mat">t</dt><dd>durée, en secondes (s)</dd>
-    </dl>
-    <p><b>Exemple.</b> Un essai de fatigue de 10⁷ cycles sur une machine à 50 Hz dure <span class="m">t = 10⁷/50 = 2 × 10⁵ s ≈ 55,6 h ≈ 2,3 jours</span>. Les essais de fatigue sont longs : c'est une des raisons pour lesquelles on ne peut pas tout tester.</p>
+  <div class="warn"><b>⚠️ Piège : fatigue, usure, fluage, corrosion.</b> La fatigue vient de la <b>variation</b> de la charge ; l'usure est une perte de matière par frottement ; le fluage une déformation lente sous charge constante, surtout à chaud ; la corrosion une attaque chimique. Ils peuvent se combiner (fatigue-corrosion), pas se confondre. Et « sous R<sub>m</sub> » ne veut pas dire « sous R<sub>e</sub> » : au-dessus de R<sub>e</sub>, c'est la fatigue oligocyclique, en peu de cycles, comme le trombone.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : la fatigue, c'est le goutte-à-goutte</b>. Chaque goutte est inoffensive, la somme ne l'est pas ; et, comme l'eau qui creuse la pierre, on ne voit rien pendant très longtemps.</div>
+  <div class="weld"><b>🔥 Trois accidents qui ont fait la fatigue</b>
+    <p><b>Meudon, 8 mai 1842</b> : l'essieu de la locomotive de tête d'un train Versailles-Paris casse, plusieurs dizaines de morts ; August Wöhler testera ensuite systématiquement des essieux (cours 2). <b>Comet, 1954</b> : un fuselage pressurisé des milliers de fois en cuve révèle une fissure partie du coin d'une découpe ; depuis, les hublots ont des coins arrondis. <b>Alexander L. Kielland, 27 mars 1980</b> : une plateforme chavire en mer du Nord, 123 morts, après la rupture par fatigue d'une entretoise depuis une <b>soudure d'angle</b> de mauvaise qualité qui fixait un support d'instrument.</p>
+  </div>
 
-    <h4>Pourquoi la fatigue est-elle si dangereuse ?</h4>
-    <p>Elle agit <b>sans dépasser R<sub>m</sub></b> (le calcul statique dit « ça tient »), <b>sans déformation visible</b> de la pièce (la fissure reste longtemps minuscule), et <b>sans prévenir</b> : la rupture finale est brutale, même dans un métal ductile qui, en traction simple, se serait allongé et aminci avant de casser.</p>
-    <div class="warn"><b>⚠️ Piège : fatigue, usure, fluage, corrosion.</b> La <b>fatigue</b> vient de la <b>variation</b> de la charge. L'<b>usure</b> est une perte de matière par frottement. Le <b>fluage</b> est une déformation lente sous charge constante, surtout à haute température. La <b>corrosion</b> est une attaque chimique. Ces phénomènes peuvent se combiner (on parle de fatigue-corrosion), mais ils ne se confondent pas.</div>
-    <div class="warn"><b>⚠️ Piège : « sous R<sub>m</sub> » ne veut pas dire « sous R<sub>e</sub> ».</b> La définition exige seulement σ<sub>max</sub> &lt; R<sub>m</sub>. Au-dessus de R<sub>e</sub>, chaque cycle déforme plastiquement toute la section et la rupture arrive en peu de cycles : c'est la fatigue oligocyclique (du grec <i>oligos</i>, « peu »), comme pour le trombone (cours 2).</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique :</b> la fatigue, c'est le <b>goutte-à-goutte</b>. Chaque goutte est inoffensive, la somme ne l'est pas. Et comme pour l'eau qui creuse la pierre, on ne voit rien pendant très longtemps.</div>
+  <details class="deep"><summary>🔍 Pour aller plus loin : quasi statique, triaxialité</summary>
+    <p><b>Quasi statique</b> : chargement assez lent pour que la vitesse n'ait aucun effet, comme dans un essai de traction ; la « contrainte de rupture en conditions quasi statiques » est donc R<sub>m</sub>. Une sollicitation est <b>triaxiale</b> quand les trois contraintes principales sont non nulles (série RDM, cours 4). La notation 10⁸ veut dire 1 suivi de 8 zéros, cent millions ; le symbole ≈ se lit « environ égal à ».</p>
+  </details>
 
-    <div class="weld"><b>🔥 Trois accidents qui ont fait la fatigue</b>
-      <div class="hist">
-        <div><div class="yr">1842</div><b>Meudon.</b> Le 8 mai, l'essieu de la locomotive de tête d'un train Versailles-Paris casse ; le train déraille et prend feu, faisant plusieurs dizaines de morts. Les ingénieurs ferroviaires comprennent qu'un essieu peut casser sous une charge qu'il supporte sans peine en statique. Dans les années 1850 et 1860, l'ingénieur allemand <b>August Wöhler</b> teste systématiquement des essieux : sa courbe est le sujet du cours 2.</div>
-        <div><div class="yr">1954</div><b>Comet.</b> Le premier avion de ligne à réaction, le de Havilland Comet, subit deux accidents en vol. Un fuselage complet, immergé dans une cuve et pressurisé des milliers de fois, révèle la cause : une fissure de fatigue partie du coin d'une découpe du fuselage, là où la contrainte est concentrée. Depuis, les ouvertures des avions ont des coins arrondis.</div>
-        <div><div class="yr">1980</div><b>Alexander L. Kielland.</b> Le 27 mars, cette plateforme d'hébergement chavire en mer du Nord : 123 morts. Une entretoise s'est rompue par fatigue, à partir d'une <b>soudure d'angle</b> de mauvaise qualité qui fixait un support d'instrument. Un détail soudé « secondaire » a suffi.</div>
-      </div>
-    </div>
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Fatigue : rupture sous charge répétée, avec σ &lt; R<sub>m</sub>, souvent sous R<sub>e</sub>.</li>
+      <li>Les dommages de chaque cycle s'additionnent, sans signe visible.</li>
+      <li>N = f·t : des millions de cycles en service, des jours d'essai.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -459,60 +453,40 @@ body.photo-modal-open{overflow:hidden}
     <div class="c-img"><span class="ico">🎵</span><span><small>Image à retenir</small>Le diapason : au laboratoire, on remplace le vacarme de la route par une note pure</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">compter les vagues</span></div>
-    <p>En service, la contrainte dans une pièce ne varie presque jamais de façon régulière. La suspension d'une voiture encaisse des nids-de-poule, une éolienne des rafales, une plateforme pétrolière des vagues de toutes tailles, un pont roulant des charges différentes à chaque levage. Le signal mêle de grandes oscillations, de petites ondulations par-dessus et des moments calmes. On parle de <b>chargement aléatoire</b>.</p>
-    <p>Impossible de tester en laboratoire chaque histoire de chargement possible. Alors on simplifie : on soumet des éprouvettes à des <b>cycles sinusoïdaux</b> bien réglés, toujours les mêmes, comme un <b>diapason</b> qui donne une note pure au lieu du vacarme de la rue. On « simule » ainsi les conditions réelles par des essais simplifiés.</p>
-    <p>Reste à faire le chemin inverse : pour utiliser les résultats du laboratoire, il faut <b>découper le signal réel en cycles</b>. C'est comme compter les vagues depuis la plage : il y a les grosses vagues, et les petites rides qui courent dessus. Deux remarques simplifient tout :</p>
-    <ul>
-      <li>seuls comptent les <b>extremums</b> du signal, c'est-à-dire ses <b>pics</b> (maximums locaux) et ses <b>vallées</b> (minimums locaux) ;</li>
-      <li>pour un métal à température ambiante, la forme exacte du signal entre deux extremums, et le temps mis pour aller de l'un à l'autre, comptent peu en première approximation.</li>
-    </ul>
-    <div class="def"><b>📖 Alternance et cycle.</b> Une <b>alternance</b> est une montée ou une descente entre deux extremums successifs (une demi-oscillation). Un <b>cycle</b> est un aller-retour complet : deux alternances. Le mot « alternances » s'emploie aussi au sens large de « répétitions ».</div>
-  </div>
+  <p>En service, la contrainte varie rarement de façon régulière : nids-de-poule pour une suspension, rafales pour une éolienne, vagues pour une plateforme, charges différentes à chaque levage pour un pont roulant. C'est un <b>chargement aléatoire</b>. Impossible de tester chaque histoire possible : au laboratoire, on applique des <b>cycles sinusoïdaux</b> bien réglés, comme un <b>diapason</b> qui donne une note pure au lieu du vacarme de la rue.</p>
+  <p>Pour se servir des résultats, il faut faire le chemin inverse : <b>découper le signal réel en cycles</b>, comme on compte les vagues depuis la plage, les grosses et les petites rides qui courent dessus. Deux remarques simplifient tout : seuls comptent les <b>extremums</b> (pics et vallées) ; et, pour un métal à l'ambiante, la forme exacte du signal entre deux extremums compte peu. Une <b>alternance</b> est une montée ou une descente entre deux extremums ; un <b>cycle</b>, un aller-retour complet, deux alternances.</p>
 
-  <div class="lab" id="m2">
+  <div class="def"><b>📖 Méthode rainflow</b> (« écoulement de la pluie », Matsuishi et Endo, 1968 ; ASTM E1049) : on lit les extremums un par un en les empilant. Tant que la pile compte au moins trois points, on compare l'étendue X des deux derniers à l'étendue Y précédente. <b>Si X ≥ Y</b>, on compte Y : comme un <b>demi-cycle</b> si Y contient le premier point de la pile (on retire ce point), comme un <b>cycle complet</b> sinon (on retire ses deux points). Sinon, on lit le point suivant. À la fin, chaque étendue restante compte pour un demi-cycle. Chaque cycle est décrit par son étendue Δσ et sa moyenne σ<sub>m</sub>.</div>
+
+<div class="lab" id="m2">
     <p class="lab-h">Manipulation 2 : le compteur de gouttes</p>
-    <p class="lab-sub">Un signal aléatoire, réduit à ses extremums (les points). Avance <b>pas à pas</b> : la méthode rainflow lit les points un par un et extrait les cycles. Les cycles complets apparaissent en trait plein rouge, les demi-cycles en pointillés. Le bouton « Exemple du cours » charge la séquence du niveau 2.</p>
-    <div class="btns"><button class="btn play" id="m2step" type="button">▶ Pas suivant</button><button class="btn" id="m2all" type="button">⏩ Tout compter</button><button class="btn" id="m2reset" type="button">↺ Recommencer</button></div>
+    <p class="lab-sub">Un signal réduit à ses extremums : avance pas à pas, la méthode rainflow extrait les cycles (trait plein) et les demi-cycles (pointillés).<span class="predict">🔮 Prédis d'abord : le plus grand cycle relie-t-il deux points voisins, ou le maximum et le minimum absolus ?</span></p>
+    <div class="btns"><button class="btn" id="m2step" type="button">▶ Pas suivant</button><button class="btn" id="m2all" type="button">⏩ Tout compter</button><button class="btn" id="m2reset" type="button">↺ Recommencer</button></div>
     <div class="btns"><button class="btn" id="m2new" type="button">🎲 Nouveau signal aléatoire</button><button class="btn on" id="m2ex" type="button">📘 Exemple du cours</button></div>
     <svg id="m2svg" role="img" aria-label="Signal de contrainte en fonction du temps, avec les cycles extraits par la méthode rainflow"></svg>
     <p class="status" id="m2msg" aria-live="polite"></p>
-    <div class="tbl-wrap"><table class="data" id="m2tab"></table></div>
-    <svg id="m2hist" role="img" aria-label="Histogramme du nombre de cycles par classe d'étendue"></svg>
+    <div class="lab-row"><div class="tbl-wrap"><table class="data" id="m2tab"></table></div>
+    <svg id="m2hist" role="img" aria-label="Histogramme du nombre de cycles par classe d'étendue"></svg></div>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">la méthode rainflow</span> <span class="hp">complément</span></div>
-    <p>La méthode <b>rainflow</b> (« écoulement de la pluie »), proposée par les Japonais Matsuishi et Endo en 1968, est la méthode de référence pour découper un signal en cycles. Son nom vient d'une image : tourne le graphique d'un quart de tour, le temps vers le bas ; le signal ressemble alors à une série de toits de pagode, et on imagine l'eau de pluie qui ruisselle d'un toit à l'autre. Elle est décrite dans la norme américaine <b>ASTM E1049</b> (ASTM : <i>American Society for Testing and Materials</i>, organisme de normalisation). Voici sa version « trois points », la plus simple à appliquer à la main.</p>
-    <div class="fx" style="text-align:left;max-width:680px">
-      <p style="margin:.2rem 0"><b>0.</b> Réduis le signal à la suite de ses extremums (pic, vallée, pic…).</p>
-      <p style="margin:.2rem 0"><b>1.</b> Lis le point suivant et empile-le. Tant qu'il y a au moins trois points dans la pile, appelle <span class="mat">X</span> l'étendue entre les deux derniers points et <span class="mat">Y</span> l'étendue précédente.</p>
-      <p style="margin:.2rem 0"><b>2.</b> Si <span class="mat">X</span> &lt; <span class="mat">Y</span> : retourne à l'étape 1.</p>
-      <p style="margin:.2rem 0"><b>3.</b> Si <span class="mat">X</span> ≥ <span class="mat">Y</span> et que Y contient le premier point de la pile : compte Y comme un <b>demi-cycle</b>, retire ce premier point, retourne à l'étape 1.</p>
-      <p style="margin:.2rem 0"><b>4.</b> Si <span class="mat">X</span> ≥ <span class="mat">Y</span> et que Y ne contient pas le premier point : compte Y comme un <b>cycle complet</b>, retire ses deux points, puis refais la comparaison avec les points qui restent (étape 2, s'il y en a au moins trois ; sinon étape 1).</p>
-      <p style="margin:.2rem 0"><b>5.</b> Quand il n'y a plus de point à lire, chaque étendue restante dans la pile compte pour un <b>demi-cycle</b>.</p>
-    </div>
-    <p>Chaque cycle extrait est décrit par son étendue <span class="sig">Δσ</span> (l'écart entre ses deux extremums) et par sa moyenne <span class="tau">σ<sub>m</sub></span> (la demi-somme de ses deux extremums), deux grandeurs définies proprement au chapitre 3.</p>
-    <h4>Exemple du cours</h4>
-    <p>Extremums successifs, en MPa : A = −40, B = 20, C = −60, D = 100, E = −20, F = 60, G = −80, H = 80, I = −40. (C'est l'exemple de la norme ASTM E1049, multiplié par 20.)</p>
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>Lecture</th><th>Pile</th><th>Comparaison</th><th>Décision</th></tr>
-      <tr><td>A, B, C</td><td class="n">A B C</td><td class="n">X = 80 ≥ Y = 60</td><td>Y contient A, le premier point : <b>demi-cycle A-B</b> de 60 MPa, on retire A</td></tr>
-      <tr><td>D</td><td class="n">B C D</td><td class="n">X = 160 ≥ Y = 80</td><td>Y contient B, premier point : <b>demi-cycle B-C</b> de 80 MPa, on retire B</td></tr>
-      <tr><td>E</td><td class="n">C D E</td><td class="n">X = 120 &lt; Y = 160</td><td>on continue</td></tr>
-      <tr><td>F</td><td class="n">C D E F</td><td class="n">X = 80 &lt; Y = 120</td><td>on continue</td></tr>
-      <tr><td>G</td><td class="n">C D E F G</td><td class="n">X = 140 ≥ Y = 80</td><td><b>cycle complet E-F</b> de 80 MPa (moyenne 20 MPa), on retire E et F</td></tr>
-      <tr><td></td><td class="n">C D G</td><td class="n">X = 180 ≥ Y = 160</td><td>Y contient C, premier point : <b>demi-cycle C-D</b> de 160 MPa, on retire C</td></tr>
-      <tr><td>H</td><td class="n">D G H</td><td class="n">X = 160 &lt; Y = 180</td><td>on continue</td></tr>
-      <tr><td>I</td><td class="n">D G H I</td><td class="n">X = 120 &lt; Y = 160</td><td>on continue</td></tr>
-      <tr><td>fin</td><td class="n">D G H I</td><td></td><td><b>demi-cycles résiduels</b> D-G (180), G-H (160), H-I (120)</td></tr>
-    </table></div>
-    <p><b>Bilan :</b> un cycle complet de 80 MPa, et des demi-cycles de 60, 80, 160, 180, 160 et 120 MPa. En regroupant : 0,5 cycle à 60 MPa, 1,5 cycle à 80 MPa, 0,5 à 120, 1 à 160 et 0,5 à 180 MPa, soit <b>4 cycles</b> au total.</p>
-    <div class="tip"><b>💡 Deux vérifications express.</b> 1. Le signal compte 8 alternances (9 extremums) : il doit donner 8/2 = <b>4 cycles</b>. 2. Le plus grand cycle relie toujours le <b>maximum absolu</b> (D = 100) au <b>minimum absolu</b> (G = −80) : ici le demi-cycle de 180 MPa.</div>
-    <div class="warn"><b>⚠️ Piège :</b> compter seulement les « bosses » une par une sous-estime les grands cycles. Dans l'exemple, la grande excursion D-G (180 MPa) est interrompue par la petite oscillation E-F. La méthode rainflow « met de côté » la petite oscillation et rend à la grande son étendue complète. Or ce sont les grands cycles qui font le plus de dégâts.</div>
-    <p>Le résultat du comptage, rangé par classes d'étendue, s'appelle un <b>spectre de chargement</b> (ou histogramme). Pour estimer une durée de vie, on compare ensuite chaque classe à la courbe de Wöhler (cours 2) et on additionne les dommages (règle de Miner).</p>
-    <div class="weld"><b>🔥 En bureau d'études soudage</b>
-      <p>L'EN 1993-1-9 (annexe A) et les recommandations IIW demandent de compter les cycles d'un chargement variable par la méthode rainflow ou par sa cousine, la méthode du réservoir, pour obtenir le spectre des étendues Δσ appliquées à chaque détail soudé. Les jauges de déformation collées près d'un cordon, puis un logiciel de comptage rainflow, sont l'outil de base des mesures de fatigue sur site.</p>
-    </div>
+  <p><b>Exemple</b> (celui de l'ASTM E1049, multiplié par 20) : extremums A = −40, B = 20, C = −60, D = 100, E = −20, F = 60, G = −80, H = 80, I = −40 MPa. Le comptage donne un <b>cycle complet E-F de 80 MPa</b> (moyenne 20 MPa) et des demi-cycles de 60 (A-B), 80 (B-C), 160 (C-D), 180 (D-G), 160 (G-H) et 120 MPa (H-I) : <b>4 cycles</b> au total. Deux vérifications : 9 extremums font 8 alternances, donc 4 cycles ; et le plus grand cycle relie le <b>maximum absolu</b> (D) au <b>minimum absolu</b> (G). Rangé par classes d'étendue, le résultat forme un <b>spectre de chargement</b>, que l'on compare ensuite à la courbe de Wöhler (cours 2).</p>
+
+  <div class="warn"><b>⚠️ Piège : compter les « bosses » une par une.</b> Cela sous-estime les grands cycles : la grande excursion D-G (180 MPa) est interrompue par la petite oscillation E-F. Le rainflow met la petite de côté et rend à la grande son étendue complète ; or ce sont les grands cycles qui font le plus de dégâts.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « X ≥ Y, on compte Y »</b> ; et « le plus grand relie le plus haut au plus bas ».</div>
+  <div class="weld"><b>🔥 En bureau d'études soudage</b>
+    <p>L'EN 1993-1-9 (annexe A) et les recommandations IIW demandent de compter les cycles d'un chargement variable par la méthode rainflow, ou sa cousine la méthode du réservoir, pour obtenir le spectre des étendues Δσ de chaque détail soudé. Jauges de déformation collées près d'un cordon, puis logiciel de comptage : l'outil de base des mesures de fatigue sur site.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : le comptage pas à pas de l'exemple</summary>
+    <p>Pile A B C : X = 80 ≥ Y = 60, Y contient A : demi-cycle A-B, on retire A. Lecture de D : pile B C D, X = 160 ≥ Y = 80, Y contient B : demi-cycle B-C. Lecture de E puis F : X &lt; Y, on continue. Lecture de G : pile C D E F G, X = 140 ≥ Y = 80 : cycle complet E-F, on retire E et F ; pile C D G, X = 180 ≥ Y = 160, Y contient C : demi-cycle C-D. Lectures de H et I : X &lt; Y. Fin : demi-cycles résiduels D-G (180), G-H (160), H-I (120). Le nom vient d'une image : tourne le graphique d'un quart de tour, le signal ressemble à des toits de pagode sur lesquels ruisselle la pluie.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Au laboratoire, des cycles sinusoïdaux remplacent le chargement aléatoire.</li>
+      <li>Rainflow : seuls les extremums comptent ; si X ≥ Y, on compte Y.</li>
+      <li>Le plus grand cycle relie le maximum et le minimum absolus.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -524,16 +498,13 @@ body.photo-modal-open{overflow:hidden}
     <div class="c-img"><span class="ico">🌊</span><span><small>Image à retenir</small>La houle au ponton : le niveau moyen de la mer, c'est σ<sub>m</sub> ; la hauteur d'une crête au-dessus, c'est σ<sub>a</sub></span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la houle au ponton</span></div>
-    <p>Assieds-toi au bout d'un ponton et regarde la mer. Le <b>niveau moyen</b> de l'eau, autour duquel tout oscille, c'est la <span class="tau"><b>contrainte moyenne σ<sub>m</sub></b></span>. Une crête monte au-dessus de ce niveau d'une hauteur <span class="sig"><b>σ<sub>a</sub></b></span>, l'<b>amplitude</b> ; un creux descend d'autant au-dessous. La crête, c'est <span class="sig"><b>σ<sub>max</sub></b></span> ; le creux, <span class="sig"><b>σ<sub>min</sub></b></span>.</p>
-    <p>Un surfeur, lui, mesure sa vague <b>du creux à la crête</b> : c'est l'<b>étendue</b> <span class="sig"><b>Δσ</b></span> (Δ, la lettre grecque « delta », désigne un écart). Elle vaut deux fois l'amplitude.</p>
-    <p>Quand la <b>marée monte</b>, le niveau moyen s'élève mais les vagues gardent la même hauteur : σ<sub>m</sub> change, σ<sub>a</sub> ne change pas. Ces deux grandeurs sont indépendantes ; il en faut <b>deux</b> pour décrire un cycle, et les quatre autres s'en déduisent.</p>
-    <p>Enfin, le <span class="mat"><b>rapport de charge R</b></span> compare le creux à la crête : R = σ<sub>min</sub>/σ<sub>max</sub>. Un seul nombre, sans unité, qui dit à quoi ressemble le cycle (chapitre 4).</p>
-  </div>
+  <p>Assieds-toi au bout d'un ponton. Le <b>niveau moyen</b> de la mer, autour duquel tout oscille, c'est la <b>contrainte moyenne σ<sub>m</sub></b>. Une crête monte au-dessus de ce niveau d'une hauteur <b>σ<sub>a</sub></b>, l'<b>amplitude</b> ; la crête, c'est <b>σ<sub>max</sub></b>, le creux <b>σ<sub>min</sub></b>. Un surfeur mesure sa vague du creux à la crête : c'est l'<b>étendue Δσ</b>, deux fois l'amplitude. Quand la marée monte, σ<sub>m</sub> change mais pas σ<sub>a</sub> : ces deux grandeurs sont indépendantes, il en faut <b>deux</b> pour décrire un cycle, et les quatre autres s'en déduisent. Enfin, le <b>rapport de charge R</b> compare le creux à la crête.</p>
 
-  <div class="lab" id="m3">
+  <div class="fx"><div class="row" style="font-size:1.1rem"><span>σ(t) = <span class="sig">σ<sub>m</sub></span> + <span class="eps">σ<sub>a</sub></span>·sin(2πft)</span><span>σ<sub>max</sub> = σ<sub>m</sub> + σ<sub>a</sub></span><span>σ<sub>min</sub> = σ<sub>m</sub> − σ<sub>a</sub></span></div><div class="row" style="font-size:1.1rem"><span>σ<sub>m</sub> = <span class="frac"><span>σ<sub>max</sub> + σ<sub>min</sub></span><span>2</span></span></span><span>σ<sub>a</sub> = <span class="frac"><span>σ<sub>max</sub> − σ<sub>min</sub></span><span>2</span></span></span><span>Δσ = 2σ<sub>a</sub></span><span>R = <span class="frac"><span>σ<sub>min</sub></span><span>σ<sub>max</sub></span></span></span></div><p class="cap">Les six grandeurs du cycle (MPa ; R sans unité). σ<sub>min</sub> se met avec son signe ; σ<sub>a</sub> et Δσ sont toujours positives ou nulles. Avec σ<sub>min</sub> = R·σ<sub>max</sub> : Δσ = σ<sub>max</sub>(1 − R), σ<sub>m</sub> = σ<sub>max</sub>(1 + R)/2.</p></div>
+
+<div class="lab" id="m3">
     <p class="lab-h">Manipulation 3 : le générateur de cycle</p>
-    <p class="lab-sub">Règle le cycle avec deux curseurs : les quatre autres grandeurs se calculent en direct. Lance la lecture pour voir l'éprouvette s'allonger (traction) et se raccourcir (compression) au rythme du cycle. Déformations très exagérées.</p>
+    <p class="lab-sub">Règle le cycle avec deux curseurs : les quatre autres grandeurs se calculent, et l'éprouvette s'allonge et se raccourcit au rythme du cycle.<span class="predict">🔮 Prédis d'abord : quand la marée monte de 50 MPa, l'étendue Δσ change-t-elle ?</span></p>
     <div class="radios" role="radiogroup" aria-label="Mode de réglage">
       <label><input type="radio" name="m3mode" value="ma" checked> régler σ<sub>m</sub> et σ<sub>a</sub></label>
       <label><input type="radio" name="m3mode" value="mm"> régler σ<sub>max</sub> et σ<sub>min</sub></label>
@@ -546,7 +517,7 @@ body.photo-modal-open{overflow:hidden}
       <div class="ctrl"><label for="m3x">Maximum <span class="sig">σ<sub>max</sub></span></label><input type="range" id="m3x" class="r-sig" min="-300" max="400" step="5" value="250"><output id="m3xo"></output></div>
       <div class="ctrl"><label for="m3n">Minimum <span class="sig">σ<sub>min</sub></span></label><input type="range" id="m3n" class="r-sig" min="-300" max="400" step="5" value="-50"><output id="m3no"></output></div>
     </div>
-    <div class="btns"><button class="btn play" id="m3play" type="button">▶ Lecture</button>
+    <div class="btns"><button class="btn" id="m3play" type="button">▶ Lecture</button>
       <button class="btn" data-ex="0,150" type="button">Essieu tournant</button>
       <button class="btn" data-ex="75,75" type="button">Crochet de grue</button>
       <button class="btn" data-ex="220,30" type="button">Boulon précontraint</button>
@@ -556,58 +527,24 @@ body.photo-modal-open{overflow:hidden}
     <p class="status" id="m3msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">définitions et relations</span></div>
-    <p>Le cycle sinusoïdal s'écrit :</p>
-    <div class="fx"><div class="big"><span class="sig">σ</span>(<span class="mat">t</span>) = <span class="tau">σ<sub>m</sub></span> + <span class="sig">σ<sub>a</sub></span> · sin(2π<span class="mat">f</span><span class="mat">t</span>)</div><p class="cap">sin : la fonction sinus, qui oscille entre −1 et +1 ; π ≈ 3,1416 ; f en Hz, t en s</p></div>
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>Symbole</th><th>Nom</th><th>Définition</th></tr>
-      <tr><td class="n sig" style="font-size:1.15em">σ<sub>max</sub><br><small class="mut">MPa</small></td><td>contrainte maximale</td><td>la plus grande valeur du cycle (la crête)</td></tr>
-      <tr><td class="n sig" style="font-size:1.15em">σ<sub>min</sub><br><small class="mut">MPa</small></td><td>contrainte minimale</td><td>la plus petite valeur du cycle (le creux), avec son signe</td></tr>
-      <tr><td class="n tau" style="font-size:1.15em">σ<sub>m</sub><br><small class="mut">MPa</small></td><td>contrainte moyenne</td><td>le niveau autour duquel on oscille</td></tr>
-      <tr><td class="n sig" style="font-size:1.15em">σ<sub>a</sub><br><small class="mut">MPa</small></td><td>amplitude (aussi appelée « composante alternative »)</td><td>l'écart entre la moyenne et la crête, toujours ≥ 0</td></tr>
-      <tr><td class="n sig" style="font-size:1.15em">Δσ<br><small class="mut">MPa</small></td><td>étendue (parfois appelée « amplitude totale »)</td><td>l'écart entre le creux et la crête, toujours ≥ 0</td></tr>
-      <tr><td class="n mat" style="font-size:1.15em">R<br><small class="mut">sans unité</small></td><td>rapport de charge</td><td>le quotient σ<sub>min</sub>/σ<sub>max</sub></td></tr>
-    </table></div>
-    <div class="fx"><div class="row big" style="font-size:1.5rem">
-      <span><span class="sig">σ<sub>max</sub></span> = <span class="tau">σ<sub>m</sub></span> + <span class="sig">σ<sub>a</sub></span></span>
-      <span><span class="sig">σ<sub>min</sub></span> = <span class="tau">σ<sub>m</sub></span> − <span class="sig">σ<sub>a</sub></span></span></div>
-      <div class="row big" style="font-size:1.5rem">
-      <span><span class="tau">σ<sub>m</sub></span> = <span class="frac"><span><span class="sig">σ<sub>max</sub></span> + <span class="sig">σ<sub>min</sub></span></span><span>2</span></span></span>
-      <span><span class="sig">σ<sub>a</sub></span> = <span class="frac"><span><span class="sig">σ<sub>max</sub></span> − <span class="sig">σ<sub>min</sub></span></span><span>2</span></span></span></div>
-      <div class="row big" style="font-size:1.5rem">
-      <span><span class="sig">Δσ</span> = <span class="sig">σ<sub>max</sub></span> − <span class="sig">σ<sub>min</sub></span> = 2<span class="sig">σ<sub>a</sub></span></span>
-      <span><span class="mat">R</span> = <span class="frac"><span><span class="sig">σ<sub>min</sub></span></span><span><span class="sig">σ<sub>max</sub></span></span></span></span></div>
-      <p class="cap">les six grandeurs du cycle</p></div>
+  <p><b>Exemple</b> : un cycle de σ<sub>max</sub> = 250 à σ<sub>min</sub> = −50 MPa donne <span class="m">σ<sub>m</sub> = 100 MPa</span>, <span class="m">σ<sub>a</sub> = 150 MPa</span>, <span class="m">Δσ = 300 MPa</span> et <span class="m">R = −50/250 = −0,2</span>. Ordres de grandeur : sur un détail soudé de charpente, Δσ de quelques dizaines de MPa à environ 150 MPa ; sur un arbre de machine en acier traité, σ<sub>a</sub> de 100 à 300 MPa.</p>
 
-    <h4>Deux nombres suffisent</h4>
-    <p>Un cycle sinusoïdal est entièrement fixé par <b>deux</b> grandeurs indépendantes (plus sa fréquence) : (σ<sub>m</sub>, σ<sub>a</sub>), ou (σ<sub>max</sub>, σ<sub>min</sub>), ou (σ<sub>max</sub>, R), ou encore (Δσ, R). Les essais et les normes utilisent surtout les deux derniers couples. Les conversions se démontrent en remplaçant σ<sub>min</sub> par R·σ<sub>max</sub> :</p>
-    <div class="fx"><div class="row big" style="font-size:1.4rem">
-      <span><span class="sig">σ<sub>min</sub></span> = <span class="mat">R</span>·<span class="sig">σ<sub>max</sub></span></span>
-      <span><span class="tau">σ<sub>m</sub></span> = <span class="sig">σ<sub>max</sub></span>·<span class="frac"><span>1 + <span class="mat">R</span></span><span>2</span></span></span>
-      <span><span class="sig">σ<sub>a</sub></span> = <span class="sig">σ<sub>max</sub></span>·<span class="frac"><span>1 − <span class="mat">R</span></span><span>2</span></span></span>
-      <span><span class="sig">Δσ</span> = <span class="sig">σ<sub>max</sub></span>(1 − <span class="mat">R</span>)</span></div>
-      <p class="cap">exemple : σ<sub>m</sub> = (σ<sub>max</sub> + Rσ<sub>max</sub>)/2 = σ<sub>max</sub>(1 + R)/2</p></div>
-    <p>Et, dans l'autre sens, à partir de la moyenne et de l'amplitude :</p>
-    <div class="fx"><div class="big" style="font-size:1.6rem"><span class="mat">R</span> = <span class="frac"><span><span class="tau">σ<sub>m</sub></span> − <span class="sig">σ<sub>a</sub></span></span><span><span class="tau">σ<sub>m</sub></span> + <span class="sig">σ<sub>a</sub></span></span></span></div></div>
+  <div class="warn"><b>⚠️ Piège : le facteur 2.</b> σ<sub>a</sub> va de la moyenne à la crête, Δσ du creux à la crête. Les courbes des soudures sont en Δσ, beaucoup de courbes d'éprouvettes lisses en σ<sub>a</sub> : vérifie toujours laquelle une courbe emploie. Certains documents appellent σ<sub>a</sub> « composante alternative » et Δσ « amplitude totale » ; l'anglais dit <i>stress amplitude</i> et <i>stress range</i>.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « m comme marée, a comme vague »</b> : la marée fixe σ<sub>m</sub>, la vague σ<sub>a</sub>, et le surfeur mesure Δσ du creux à la crête.</div>
+  <div class="weld"><b>🔥 Pourquoi les soudures se calculent en Δσ</b>
+    <p>Près d'un cordon brut, les contraintes résiduelles de traction atteignent souvent R<sub>e</sub>. Au premier cycle, la matière plastifie localement, puis le cycle local se cale sous R<sub>e</sub> : il va de R<sub>e</sub> à R<sub>e</sub> − Δσ, <b>quelle que soit la contrainte moyenne nominale</b>. Seule l'étendue reste inchangée. D'où les <b>classes FAT</b> de l'EN 1993-1-9 et de l'IIW : FAT 71 désigne un détail qui supporte Δσ = 71 MPa pendant <b>2 millions de cycles</b> (cours 2).</p>
+  </div>
 
-    <p><b>Exemple complet.</b> Un cycle va de σ<sub>max</sub> = 250 MPa à σ<sub>min</sub> = −50 MPa (le réglage initial de la manipulation 3 en mode σ<sub>max</sub>/σ<sub>min</sub>).</p>
+  <details class="deep"><summary>🔍 Pour aller plus loin : les couples de grandeurs, le rapport A</summary>
+    <p>Un cycle sinusoïdal est fixé par deux grandeurs indépendantes (plus sa fréquence) : (σ<sub>m</sub>, σ<sub>a</sub>), (σ<sub>max</sub>, σ<sub>min</sub>), (σ<sub>max</sub>, R) ou (Δσ, R), les deux derniers couples étant ceux des essais et des normes. Conversions : σ<sub>a</sub> = σ<sub>max</sub>(1 − R)/2 ; σ<sub>max</sub> = Δσ/(1 − R) ; à partir de la moyenne et de l'amplitude, R = (σ<sub>m</sub> − σ<sub>a</sub>)/(σ<sub>m</sub> + σ<sub>a</sub>). R n'est pas défini quand σ<sub>max</sub> = 0. Certains ouvrages utilisent aussi le rapport d'amplitude A = σ<sub>a</sub>/σ<sub>m</sub> = (1 − R)/(1 + R).</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
     <ul>
-      <li><span class="m">σ<sub>m</sub> = (250 + (−50))/2 = 200/2 = <b>100 MPa</b></span></li>
-      <li><span class="m">σ<sub>a</sub> = (250 − (−50))/2 = 300/2 = <b>150 MPa</b></span></li>
-      <li><span class="m">Δσ = 250 − (−50) = <b>300 MPa</b> = 2 × 150</span> ✅</li>
-      <li><span class="m">R = −50/250 = <b>−0,2</b></span> ; contrôle : (100 − 150)/(100 + 150) = −50/250 = −0,2 ✅</li>
+      <li>Deux grandeurs suffisent : σ<sub>m</sub> et σ<sub>a</sub>, ou Δσ et R.</li>
+      <li>Δσ = σ<sub>max</sub> − σ<sub>min</sub> = 2σ<sub>a</sub> ; R = σ<sub>min</sub>/σ<sub>max</sub>.</li>
+      <li>Les soudures se calculent en Δσ : les contraintes résiduelles effacent σ<sub>m</sub>.</li>
     </ul>
-    <p><b>Ordres de grandeur.</b> Sur un détail soudé de charpente, les étendues Δσ dues au trafic vont de quelques dizaines de MPa à environ 150 MPa. Sur un arbre de machine en acier traité, les amplitudes σ<sub>a</sub> atteignent couramment 100 à 300 MPa.</p>
-
-    <div class="warn"><b>⚠️ Piège n° 1 : le facteur 2.</b> σ<sub>a</sub> va de la moyenne à la crête, Δσ du creux à la crête. Avant d'utiliser une courbe ou une formule, vérifie toujours laquelle des deux elle emploie : les courbes des soudures sont en Δσ, beaucoup de courbes d'éprouvettes lisses en σ<sub>a</sub>.</div>
-    <div class="warn"><b>⚠️ Piège n° 2 : les signes.</b> σ<sub>min</sub> se met avec son signe (−50, pas 50). σ<sub>a</sub> et Δσ sont toujours positives ou nulles. Et R n'est pas défini quand σ<sub>max</sub> = 0 (division par zéro) : c'est le cas d'un cycle qui va de 0 à une compression (chapitre 4).</div>
-    <div class="tip"><b>💡 Le rapport d'amplitude A.</b> Certains ouvrages utilisent aussi A = σ<sub>a</sub>/σ<sub>m</sub> = (1 − R)/(1 + R). Ce n'est qu'une autre façon de dire la même chose ; ce cours emploie R.</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique :</b> « <b>m</b> comme <b>m</b>arée, <b>a</b> comme v<b>a</b>gue ». La marée fixe σ<sub>m</sub>, la vague fixe σ<sub>a</sub>, et le surfeur mesure Δσ du creux à la crête.</div>
-
-    <div class="weld"><b>🔥 Pourquoi les soudures se calculent en Δσ</b>
-      <p>Au voisinage d'un cordon brut de soudage, le refroidissement laisse des <span class="tau">contraintes résiduelles</span> de traction qui atteignent souvent R<sub>e</sub>. Quand on ajoute un cycle de chargement, la matière plastifie localement au premier passage, et le cycle local se « cale » juste sous R<sub>e</sub> : il va de R<sub>e</sub> à R<sub>e</sub> − Δσ, <b>quelle que soit la contrainte moyenne nominale</b>. Seule l'étendue Δσ reste inchangée.</p>
-      <p>C'est pourquoi l'EN 1993-1-9 et les recommandations IIW expriment la résistance en fatigue des assemblages soudés en <b>étendue de contrainte Δσ</b>, en général sans correction de σ<sub>m</sub>. Chaque détail soudé reçoit une <b>classe FAT</b> : le nombre qui suit FAT est l'étendue Δσ, en MPa, que le détail supporte (valeur caractéristique) pendant <b>2 millions de cycles</b>. Un détail FAT 71 supporte Δσ = 71 MPa à 2 × 10⁶ cycles (cours 2).</p>
-    </div>
   </div>
 </div>
 </section>
@@ -620,20 +557,21 @@ body.photo-modal-open{overflow:hidden}
     <div class="c-img"><span class="ico">📏</span><span><small>Image à retenir</small>La règle de R : la balançoire à −1, le crochet de grue à 0, la corde de guitare entre 0 et 1, le poids posé à 1</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">quatre images du quotidien</span></div>
-    <p>On range les cycles en quatre familles, selon la position de la moyenne par rapport à l'amplitude. Associe à chacune une image :</p>
-    <ul>
-      <li><b>(a) La balançoire, R = −1 : contrainte alternée symétrique.</b> σ<sub>m</sub> = 0 : autant de traction que de compression, comme une balançoire qui monte aussi haut devant que derrière. Exemple : un essieu qui tourne.</li>
-      <li><b>(b) Le plongeoir, −1 &lt; R &lt; 0 : contrainte alternée asymétrique.</b> 0 &lt; σ<sub>m</sub> &lt; σ<sub>a</sub> : la planche plie fort sous le plongeur, puis rebondit un peu dans l'autre sens. On passe en compression, mais moins qu'en traction.</li>
-      <li><b>(c) Le crochet de grue, R = 0 : contrainte répétée.</b> σ<sub>m</sub> = σ<sub>a</sub>, donc σ<sub>min</sub> = 0 : on charge, on décharge jusqu'à zéro, on recommence.</li>
-      <li><b>(d) La corde de guitare, 0 &lt; R &lt; 1 : contrainte ondulée.</b> σ<sub>m</sub> &gt; σ<sub>a</sub> : la corde est toujours tendue et vibre autour de sa tension. Exemple : un boulon serré qui encaisse de petites variations.</li>
-    </ul>
-    <p>La figure ne montre pas les cycles où domine la <b>compression</b>. Ils existent pourtant : une bielle de moteur poussée très fort puis tirée un peu, un appui de pont écrasé un peu plus à chaque camion. Et tout en haut de la règle, R = 1 : σ<sub>min</sub> = σ<sub>max</sub>, plus rien ne varie, c'est le chargement statique.</p>
-  </div>
+  <p>On range les cycles en familles selon la position de la moyenne par rapport à l'amplitude, avec une image pour chacune :</p>
+  <ul>
+    <li><b>la balançoire, R = −1</b> : contrainte <b>alternée symétrique</b>, σ<sub>m</sub> = 0, autant de traction que de compression ; un essieu qui tourne ;</li>
+    <li><b>le plongeoir, −1 &lt; R &lt; 0</b> : <b>alternée asymétrique</b>, 0 &lt; σ<sub>m</sub> &lt; σ<sub>a</sub> ; on passe en compression, mais moins qu'en traction ;</li>
+    <li><b>le crochet de grue, R = 0</b> : <b>répétée</b>, σ<sub>m</sub> = σ<sub>a</sub>, σ<sub>min</sub> = 0 ; on charge, on décharge jusqu'à zéro ;</li>
+    <li><b>la corde de guitare, 0 &lt; R &lt; 1</b> : <b>ondulée</b>, σ<sub>m</sub> &gt; σ<sub>a</sub>, toujours tendue ; un boulon serré ;</li>
+    <li>tout en haut, <b>R = 1</b> : plus rien ne varie, c'est le chargement statique.</li>
+  </ul>
+  <p>Côté compression : <b>R &lt; −1</b>, la compression domine (une bielle poussée fort puis tirée un peu) ; <b>R &gt; 1</b>, tout est en compression (un appui de pont écrasé un peu plus à chaque camion) ; et quand σ<sub>max</sub> = 0, R n'est pas défini.</p>
 
-  <div class="lab" id="m4">
+  <div class="fx"><div class="row big" style="font-size:1.35rem"><span>R = <span class="frac"><span>x − 1</span><span>x + 1</span></span></span><span>x = <span class="frac"><span>σ<sub>m</sub></span><span>σ<sub>a</sub></span></span> = <span class="frac"><span>1 + R</span><span>1 − R</span></span></span></div><p class="cap">Lien entre le rapport x (la marée divisée par la vague) et R, obtenu en divisant haut et bas de R = (σ<sub>m</sub> − σ<sub>a</sub>)/(σ<sub>m</sub> + σ<sub>a</sub>) par σ<sub>a</sub>. Quand x s'approche de −1 (σ<sub>max</sub> → 0), R part vers l'infini.</p></div>
+
+<div class="lab" id="m4">
     <p class="lab-h">Manipulation 4 : la règle de R</p>
-    <p class="lab-sub">Le curseur règle le rapport x = σ<sub>m</sub>/σ<sub>a</sub> (la marée divisée par la vague). La courbe donne R = (x − 1)/(x + 1) et le petit graphique dessine le cycle correspondant. Les bandes colorées sont les familles.</p>
+    <p class="lab-sub">Le curseur règle x = σ<sub>m</sub>/σ<sub>a</sub> : la courbe donne R, le petit graphique dessine le cycle, les bandes colorées sont les familles.<span class="predict">🔮 Prédis d'abord : un cycle à R = 3 est-il en traction, alterné ou en compression ?</span></p>
     <div class="ctrl"><label for="m4x">Rapport x = <span class="tau">σ<sub>m</sub></span>/<span class="sig">σ<sub>a</sub></span></label><input type="range" id="m4x" class="r-tau" min="-4" max="4" step="0.05" value="0.5"><output id="m4xo"></output></div>
     <div class="btns" id="m4ex">
       <button class="btn" data-x="0" type="button">(a) R = −1</button>
@@ -649,31 +587,24 @@ body.photo-modal-open{overflow:hidden}
     <p class="status" id="m4msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">la carte complète des familles</span></div>
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>Famille</th><th>Condition sur σ<sub>m</sub></th><th>Rapport R</th><th>Exemple</th></tr>
-      <tr><td>Statique</td><td>σ<sub>a</sub> = 0</td><td class="n">R = 1</td><td>poids posé</td></tr>
-      <tr><td>(d) ondulée de traction</td><td>σ<sub>m</sub> &gt; σ<sub>a</sub></td><td class="n">0 &lt; R &lt; 1</td><td>boulon précontraint, câble tendu</td></tr>
-      <tr><td>(c) répétée de traction</td><td>σ<sub>m</sub> = σ<sub>a</sub></td><td class="n">R = 0</td><td>crochet de grue, pied de dent d'engrenage</td></tr>
-      <tr><td>(b) alternée asymétrique</td><td>0 &lt; σ<sub>m</sub> &lt; σ<sub>a</sub></td><td class="n">−1 &lt; R &lt; 0</td><td>arbre qui tourne et qui est tiré</td></tr>
-      <tr><td>(a) alternée symétrique</td><td>σ<sub>m</sub> = 0</td><td class="n">R = −1</td><td>essieu en flexion rotative</td></tr>
-      <tr><td>alternée, dominante de compression</td><td>−σ<sub>a</sub> &lt; σ<sub>m</sub> &lt; 0</td><td class="n">R &lt; −1</td><td>bielle de moteur</td></tr>
-      <tr><td>répétée de compression</td><td>σ<sub>m</sub> = −σ<sub>a</sub></td><td class="n">σ<sub>max</sub> = 0 : R non défini (« infini »)</td><td>butée écrasée puis relâchée</td></tr>
-      <tr><td>ondulée de compression</td><td>σ<sub>m</sub> &lt; −σ<sub>a</sub></td><td class="n">R &gt; 1</td><td>appui de pont sous le trafic</td></tr>
-    </table></div>
-    <h4>Démonstration : pourquoi −1 &lt; R &lt; 0 pour la famille (b)</h4>
-    <p>On part de <span class="m">R = (σ<sub>m</sub> − σ<sub>a</sub>)/(σ<sub>m</sub> + σ<sub>a</sub>)</span> avec 0 &lt; σ<sub>m</sub> &lt; σ<sub>a</sub>. Le numérateur σ<sub>m</sub> − σ<sub>a</sub> est négatif, le dénominateur σ<sub>m</sub> + σ<sub>a</sub> est positif : R &lt; 0. Et la valeur absolue du numérateur, σ<sub>a</sub> − σ<sub>m</sub>, est plus petite que le dénominateur σ<sub>a</sub> + σ<sub>m</sub> (on enlève σ<sub>m</sub> au lieu de l'ajouter) : |R| &lt; 1. Donc <b>−1 &lt; R &lt; 0</b>. Le même raisonnement donne 0 &lt; R &lt; 1 pour la famille (d).</p>
-    <h4>Le lien entre x = σ<sub>m</sub>/σ<sub>a</sub> et R</h4>
-    <div class="fx"><div class="row big" style="font-size:1.5rem"><span><span class="mat">R</span> = <span class="frac"><span><span class="tau">x</span> − 1</span><span><span class="tau">x</span> + 1</span></span></span><span><span class="tau">x</span> = <span class="frac"><span><span class="tau">σ<sub>m</sub></span></span><span><span class="sig">σ<sub>a</sub></span></span></span> = <span class="frac"><span>1 + <span class="mat">R</span></span><span>1 − <span class="mat">R</span></span></span></span></div>
-      <p class="cap">on obtient la première en divisant haut et bas de R = (σ<sub>m</sub> − σ<sub>a</sub>)/(σ<sub>m</sub> + σ<sub>a</sub>) par σ<sub>a</sub></p></div>
-    <p>La courbe de la manipulation 4 est une <b>hyperbole</b> : quand x s'approche de −1 (σ<sub>max</sub> → 0), R part vers l'infini. Toute la droite des réels est parcourue : R peut valoir n'importe quel nombre, sauf exactement 1 pour un cycle qui varie.</p>
-    <div class="warn"><b>⚠️ Piège : R ne dit pas tout.</b> R décrit la <b>forme</b> du cycle, pas son <b>intensité</b>. Les cycles 50 → 100 MPa et 200 → 400 MPa ont tous les deux R = 0,5, mais le second est bien plus sévère. Pour décrire un cycle, il faut R <b>et</b> un niveau (σ<sub>max</sub> ou Δσ).</div>
-    <div class="warn"><b>⚠️ Piège : « R négatif » ne veut pas dire « compression ».</b> Entre −1 et 0, la traction domine. C'est en dessous de −1 que la compression domine, et au-dessus de 1 que tout est en compression.</div>
-    <div class="tip"><b>💡 Pourquoi la compression est moins grave.</b> Une fissure se referme en compression : ses lèvres se touchent et la compression ne la fait pas avancer. C'est la traction qui l'ouvre et la propage (cours 4). À amplitude égale, un cycle à σ<sub>m</sub> &gt; 0 est donc plus nocif qu'un cycle à σ<sub>m</sub> &lt; 0, et σ<sub>m</sub> joue bien le rôle d'un « aggravant » (couleur violette).</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique :</b> monte la règle de bas en haut : <b>balançoire</b> (−1), <b>plongeoir</b>, <b>crochet</b> (0), <b>corde</b>, <b>poids posé</b> (1). Au-delà de 1, ou en dessous de −1, on est passé côté compression.</div>
-    <div class="weld"><b>🔥 R en laboratoire et dans les recommandations IIW</b>
-      <p>Les essais de fatigue d'éprouvettes soudées se font souvent à <b>R = 0,1</b> (traction ondulée) : l'éprouvette reste toujours tendue, ce qui évite le flambement et le jeu dans les mors de la machine. Les recommandations IIW accordent un <b>bonus</b> de résistance pour les cycles à R faible ou négatif (jusqu'à 1,6 fois), mais <b>seulement</b> si les contraintes résiduelles sont faibles : élément détensionné (traité thermiquement pour relâcher ses contraintes) ou petite pièce simple. Pour une structure soudée brute et complexe, aucun bonus : on revient au Δσ seul du chapitre 3.</p>
-    </div>
+  <p><b>Exemples</b> : un crochet de grue de section 400 mm² qui soulève 50 kN puis repose la charge : σ<sub>max</sub> = 125 MPa, σ<sub>min</sub> = 0, <b>R = 0</b>, répétée. Un boulon précontraint entre 360 et 400 MPa : σ<sub>a</sub> = 20 MPa, <b>R = 0,9</b>, ondulée ; très chargé, mais il varie peu, c'est l'intérêt de la précontrainte. R = 3 n'est possible qu'avec deux valeurs négatives, par exemple −50 et −150 MPa : compression ondulée.</p>
+
+  <div class="warn"><b>⚠️ Piège : R ne dit pas tout, et « R négatif » ne veut pas dire « compression ».</b> Les cycles 50 → 100 et 200 → 400 MPa ont tous deux R = 0,5, mais le second est bien plus sévère : il faut R <b>et</b> un niveau (σ<sub>max</sub> ou Δσ). Entre −1 et 0, la traction domine ; c'est sous −1 que la compression domine.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique</b> : monte la règle de bas en haut : <b>balançoire</b> (−1), <b>plongeoir</b>, <b>crochet</b> (0), <b>corde</b>, <b>poids posé</b> (1). Au-delà de 1, ou sous −1, on est passé côté compression.</div>
+  <div class="weld"><b>🔥 R en laboratoire et dans les recommandations IIW</b>
+    <p>Les éprouvettes soudées s'essaient souvent à <b>R = 0,1</b> : toujours tendues, sans flambement ni jeu dans les mors. Les recommandations IIW accordent un bonus de résistance (jusqu'à 1,6) aux cycles à R faible ou négatif, <b>seulement</b> si les contraintes résiduelles sont faibles (élément détensionné, petite pièce simple). Pour une structure soudée brute, aucun bonus : on revient à Δσ seul.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : pourquoi la compression est moins grave</summary>
+    <p>Une fissure se referme en compression : ses lèvres se touchent, et la compression ne la fait pas avancer ; c'est la traction qui l'ouvre et la propage (cours 4). À amplitude égale, un cycle à σ<sub>m</sub> &gt; 0 est donc plus nocif qu'un cycle à σ<sub>m</sub> &lt; 0. Démonstration de −1 &lt; R &lt; 0 pour 0 &lt; σ<sub>m</sub> &lt; σ<sub>a</sub> : le numérateur σ<sub>m</sub> − σ<sub>a</sub> est négatif, le dénominateur positif, et |σ<sub>m</sub> − σ<sub>a</sub>| &lt; σ<sub>m</sub> + σ<sub>a</sub>. La courbe R(x) est une hyperbole qui parcourt toute la droite des réels, sauf R = 1 pour un cycle qui varie.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>R = −1 alternée symétrique, R = 0 répétée, 0 &lt; R &lt; 1 ondulée.</li>
+      <li>R &lt; −1 ou R &gt; 1 : la compression domine.</li>
+      <li>R donne la forme du cycle, pas son intensité.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -685,67 +616,30 @@ body.photo-modal-open{overflow:hidden}
     <div class="c-img"><span class="ico">🥖</span><span><small>Image à retenir</small>La baguette pliée : elle craque toujours côté extérieur, là où la croûte est le plus étirée</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la baguette et l'eau autour de la pile du pont</span></div>
-    <p>Pour mesurer la résistance en fatigue, on utilise des <b>sollicitations-types</b> : traction-compression, flexion, torsion, cisaillement. Elles ne font pas travailler la matière de la même façon :</p>
-    <ul>
-      <li>en <b>traction-compression</b>, toute la section porte la même contrainte ;</li>
-      <li>en <b>flexion</b>, comme une baguette qu'on plie, la contrainte est nulle au centre (sur l'axe neutre) et <b>maximale à la surface</b> : un côté s'étire, l'autre s'écrase ;</li>
-      <li>en <b>torsion</b>, comme une serviette qu'on essore, le cisaillement est nul au centre et <b>maximal à la surface</b>.</li>
-    </ul>
-    <p>La machine historique de Wöhler utilise la <b>flexion rotative</b> : on plie un arbre qui tourne. Le côté tendu et le côté comprimé restent fixes dans l'espace, mais la matière tourne : chaque point de la surface passe par le côté tendu, puis par le côté comprimé, à chaque tour. Résultat : un cycle alterné symétrique (R = −1) par tour, sans aucun mécanisme compliqué.</p>
-    <p>Ajoute maintenant un trou dans une plaque tendue. Les « lignes de force » qui transmettent l'effort doivent le contourner, comme l'eau d'une rivière autour de la pile d'un pont : elles se <b>resserrent</b> sur les bords du trou, et la contrainte y monte. C'est une <span class="tau"><b>concentration de contrainte</b></span>. Un trou rond triple la contrainte locale ; une entaille fine, une rayure ou le pied d'un cordon de soudure font de même, parfois pire.</p>
-    <p>Bilan : en flexion et en torsion, la contrainte est maximale en surface ; les entailles, les rayures d'usinage et les pieds de cordon sont en surface ; l'air humide et les agents corrosifs attaquent la surface. <b>Les fissures de fatigue naissent donc presque toujours en surface.</b> (Le cours 3 ajoutera une raison métallurgique : les grains de surface sont moins tenus par leurs voisins.)</p>
-  </div>
+  <p>En <b>traction-compression</b>, toute la section porte la même contrainte. En <b>flexion</b>, comme une baguette qu'on plie, la contrainte est nulle sur l'axe neutre et <b>maximale à la surface</b>. En <b>torsion</b>, comme une serviette qu'on essore, le cisaillement est nul au centre et maximal en surface. La machine historique de Wöhler utilise la <b>flexion rotative</b> : on plie un arbre qui tourne ; chaque point de la surface passe par le côté tendu puis par le côté comprimé à chaque tour : un cycle alterné symétrique (<b>R = −1</b>) par tour.</p>
+  <p>Ajoute un trou dans une plaque tendue : les lignes de force le contournent, comme l'eau autour de la pile d'un pont, et se <b>resserrent</b> sur ses bords, où la contrainte monte : c'est une <b>concentration de contrainte</b>. Un trou rond triple la contrainte locale ; une entaille fine, une rayure ou le pied d'un cordon font de même, parfois pire. Contrainte maximale en flexion et en torsion, entailles et pieds de cordon, air humide et corrosion : <b>les fissures de fatigue naissent presque toujours en surface</b>.</p>
 
-  <div class="lab" id="m5">
+  <div class="fx"><div class="row big" style="font-size:1.25rem"><span><span class="eps">σ<sub>a</sub></span> = <span class="frac"><span>|<span class="frc">Mf</span>|</span><span>W</span></span>, W = <span class="frac"><span>πd³</span><span>32</span></span></span><span>σ<sub>m</sub> = <span class="frac"><span>4<span class="frc">F</span></span><span>πd²</span></span></span><span>f = <span class="frac"><span>n</span><span>60</span></span></span><span><span class="sig">σ<sub>loc</sub></span> = K<sub>t</sub>·σ<sub>nom</sub></span></div><p class="cap">Arbre rond plein de diamètre d en flexion rotative (moment Mf) et traction (effort F) : amplitude en surface, moyenne, fréquence (n en tr/min). Coefficient de concentration K<sub>t</sub> ≥ 1, qui ne dépend que de la géométrie : <b>trou rond, K<sub>t</sub> = 3</b> ; trou elliptique de demi-axes a (perpendiculaire à l'effort) et b, K<sub>t</sub> = 1 + 2a/b (Inglis, 1913).</p></div>
+
+<div class="lab" id="m5">
     <p class="lab-h">Manipulation 5 : l'arbre qui tourne</p>
-    <p class="lab-sub">Un arbre rond plein est plié par un moment <span class="frc">Mf</span> constant (le côté tendu est en haut) et, si tu le veux, tiré par un effort axial <span class="frc">F</span>. Suis le point P pendant que l'arbre tourne : sa contrainte trace une sinusoïde. Le curseur « position de P » le rapproche du centre.</p>
+    <p class="lab-sub">Un arbre plié par un moment constant, et éventuellement tiré : suis le point P qui tourne, sa contrainte trace une sinusoïde.<span class="predict">🔮 Prédis d'abord : en ajoutant un effort axial, change-t-on l'amplitude ou la moyenne du cycle ?</span></p>
     <div class="ctrl"><label for="m5M">Moment <span class="frc">Mf</span></label><input type="range" id="m5M" class="r-frc" min="0" max="1000" step="10" value="400"><output id="m5Mo"></output></div>
     <div class="ctrl"><label for="m5F">Effort axial <span class="frc">F</span></label><input type="range" id="m5F" class="r-frc" min="0" max="150" step="5" value="0"><output id="m5Fo"></output></div>
     <div class="ctrl"><label for="m5d">Diamètre <span class="mat">d</span></label><input type="range" id="m5d" class="r-mat" min="20" max="80" step="1" value="40"><output id="m5do"></output></div>
     <div class="ctrl"><label for="m5p">Position de P <span class="mat">ρ</span>/r</label><input type="range" id="m5p" class="r-mat" min="0" max="100" step="5" value="100"><output id="m5po"></output></div>
     <div class="ctrl"><label for="m5n">Vitesse <span class="mat">n</span></label><input type="range" id="m5n" class="r-mat" min="300" max="3000" step="100" value="1500"><output id="m5no"></output></div>
-    <div class="btns"><button class="btn play" id="m5play" type="button">▶ Faire tourner</button><button class="btn" id="m5clr" type="button">↺ Effacer la trace</button></div>
+    <div class="btns"><button class="btn" id="m5play" type="button">▶ Faire tourner</button><button class="btn" id="m5clr" type="button">↺ Effacer la trace</button></div>
     <svg id="m5svg" role="img" aria-label="Section d'un arbre en rotation sous flexion et contrainte au point P en fonction de l'angle de rotation"></svg>
     <div class="readout" id="m5r"></div>
     <p class="status" id="m5msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">les formules de l'arbre</span> <span class="hp">complément</span></div>
-    <p>Rappels de la série RDM, pour un <b>rond plein</b> de diamètre <span class="mat">d</span> :</p>
-    <dl class="syms">
-      <dt><span class="mat">S</span> = πd²/4</dt><dd>aire de la section (mm²)</dd>
-      <dt><span class="mat">I<sub>Gz</sub></span> = πd⁴/64</dt><dd>moment quadratique par rapport à un diamètre (mm⁴) : la « rigidité de forme » en flexion</dd>
-      <dt><span class="mat">W</span> = πd³/32</dt><dd>module de flexion, W = I<sub>Gz</sub>/(d/2) (mm³)</dd>
-      <dt><span class="mat">I<sub>G</sub></span> = πd⁴/32</dt><dd>moment polaire (mm⁴), pour la torsion</dd>
-    </dl>
-    <h4>La flexion rotative</h4>
-    <p>Repère le point P par sa distance au centre <span class="mat">ρ</span> (lettre grecque « rhô », 0 ≤ ρ ≤ d/2) et par l'angle <span class="mat">θ</span> (« thêta ») dont l'arbre a tourné depuis que P était sur l'axe neutre. La distance de P à l'axe neutre vaut alors ρ·sin θ, et la contrainte de flexion est proportionnelle à cette distance :</p>
-    <div class="fx"><div class="big" style="font-size:1.6rem"><span class="sig">σ</span>(<span class="mat">θ</span>) = <span class="tau"><span class="frac"><span><span class="frc">F</span></span><span><span class="mat">S</span></span></span></span> + <span class="sig"><span class="frac"><span>|<span class="frc">Mf</span>|·<span class="mat">ρ</span></span><span><span class="mat">I<sub>Gz</sub></span></span></span></span> · sin <span class="mat">θ</span></div>
-      <p class="cap">la traction F/S fixe la moyenne σ<sub>m</sub> ; la flexion fixe l'amplitude σ<sub>a</sub></p></div>
-    <div class="fx"><div class="row big" style="font-size:1.5rem"><span><span class="tau">σ<sub>m</sub></span> = <span class="frac"><span>4<span class="frc">F</span></span><span>π<span class="mat">d</span>²</span></span></span><span><span class="sig">σ<sub>a</sub></span> (surface) = <span class="frac"><span>|<span class="frc">Mf</span>|</span><span><span class="mat">W</span></span></span> = <span class="frac"><span>32|<span class="frc">Mf</span>|</span><span>π<span class="mat">d</span>³</span></span></span></div>
-      <p class="cap">un tour de l'arbre = un cycle, donc f = n/60 avec n en tours par minute (tr/min)</p></div>
-    <p><b>Exemple numérique</b> (réglage initial de la manipulation) : d = 40 mm, Mf = 400 N·m = 400 000 N·mm, F = 0.</p>
-    <ul>
-      <li><span class="m">W = π × 40³/32 = π × 64 000/32 = 6 283 mm³</span></li>
-      <li><span class="m">σ<sub>a</sub> = 400 000/6 283 = <b>63,7 MPa</b></span>, et σ<sub>m</sub> = 0 : R = −1</li>
-      <li>à n = 1 500 tr/min : <span class="m">f = 1 500/60 = 25 Hz</span>, soit <span class="m">25 × 3 600 = 90 000 cycles par heure</span></li>
-    </ul>
-    <div class="warn"><b>⚠️ Piège des unités :</b> un moment en N·m se convertit en N·mm en multipliant par 1 000. Avec des forces en N et des longueurs en mm, les contraintes sortent directement en MPa (N/mm²).</div>
-    <h4>La torsion</h4>
-    <p>Un arbre qui transmet un couple <span class="frc">Mt</span> (moment de torsion) subit un <b>cisaillement</b> τ (lettre grecque « tau ») : une contrainte qui fait glisser les tranches de matière les unes sur les autres. Il vaut τ = Mt·r/I<sub>G</sub> à la distance r du centre, et il est maximal en surface : <span class="m"><span class="sig">τ<sub>max</sub></span> = 16<span class="frc">Mt</span>/(π<span class="mat">d</span>³)</span>. Un couple qui varie (moteur à explosion, éolienne en rafales) crée donc lui aussi des cycles, de cisaillement cette fois.</p>
+  <p><b>Exemple</b> : d = 40 mm, Mf = 400 N·m = 400 000 N·mm : <span class="m">W = π × 40³/32 ≈ 6 283 mm³</span> et <span class="m">σ<sub>a</sub> = 400 000/6 283 ≈ 63,7 MPa</span>, avec σ<sub>m</sub> = 0 : R = −1. À 1 500 tr/min, f = 25 Hz, soit 90 000 cycles par heure ; à 3 000 tr/min pendant une heure, 180 000 cycles. Une plaque percée d'un trou rond et tirée à 80 MPa voit <b>240 MPa</b> au bord du trou : un S235 y plastifie déjà alors que le calcul nominal semblait rassurant.</p>
 
-    <h4>Le coefficient de concentration de contrainte K<sub>t</sub></h4>
-    <div class="def"><b>📖 K<sub>t</sub></b> : rapport entre la contrainte maximale locale, au fond de l'entaille, et la contrainte nominale (celle qu'on calculerait sans l'entaille). Sans unité, toujours ≥ 1 ; il ne dépend que de la géométrie.</div>
-    <div class="fx"><div class="big" style="font-size:1.6rem"><span class="sig">σ<sub>max,loc</sub></span> = <span class="tau">K<sub>t</sub></span> · <span class="sig">σ<sub>nom</sub></span></div><p class="cap">trou rond dans une plaque large tendue : K<sub>t</sub> = 3</p></div>
-    <p>Pour un trou <b>elliptique</b> dans une plaque large, de demi-axe <span class="mat">a</span> perpendiculaire à l'effort et de demi-axe <span class="mat">b</span> parallèle à l'effort, la formule d'Inglis (1913) donne :</p>
-    <div class="fx"><div class="big" style="font-size:1.6rem"><span class="tau">K<sub>t</sub></span> = 1 + 2<span class="frac"><span><span class="mat">a</span></span><span><span class="mat">b</span></span></span></div><p class="cap">cercle : a = b, K<sub>t</sub> = 3 ; fente perpendiculaire à l'effort : a ≫ b, K<sub>t</sub> énorme (≫ : « très grand devant »)</p></div>
-    <p>Quand l'ellipse s'aplatit jusqu'à devenir une fissure, K<sub>t</sub> tend vers l'infini : le coefficient K<sub>t</sub> n'a plus de sens, et la mécanique de la rupture le remplace par le facteur d'intensité de contrainte K (chapitre 6 et cours 4).</p>
-  </div>
-
-  <div class="lab" id="m5b">
+<div class="lab" id="m5b">
     <p class="lab-h">Manipulation 5 bis : le trou qui concentre</p>
-    <p class="lab-sub">Une plaque large tirée horizontalement à σ<sub>nom</sub> = 100 MPa. Change la forme du trou : les lignes de force se resserrent, et les zones rouges aux bords du trou montrent où la contrainte locale est maximale.</p>
+    <p class="lab-sub">Une plaque large tirée à 100 MPa : change la forme du trou, les lignes de force se resserrent et le bord rougit.<span class="predict">🔮 Prédis d'abord : un ovale couché (a/b = 3) concentre-t-il plus ou moins qu'un trou rond ?</span></p>
     <div class="ctrl"><label for="m5bk">Forme <span class="mat">a</span>/<span class="mat">b</span></label><input type="range" id="m5bk" class="r-mat" min="0" max="100" step="1" value="40"><output id="m5bko"></output></div>
     <div class="btns" id="m5bex"><button class="btn" data-k="40" type="button">Trou rond</button><button class="btn" data-k="10" type="button">Ovale couché</button><button class="btn" data-k="75" type="button">Ovale debout</button><button class="btn" data-k="100" type="button">Fente (presque une fissure)</button></div>
     <svg id="m5bsvg" role="img" aria-label="Plaque tendue percée d'un trou elliptique, lignes de force et concentration de contrainte"></svg>
@@ -753,14 +647,22 @@ body.photo-modal-open{overflow:hidden}
     <p class="status" id="m5bmsg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2, suite <span class="tag">la concentration en fatigue</span></div>
-    <p><b>Exemple.</b> Une plaque large percée d'un trou rond, tirée à σ<sub>nom</sub> = 80 MPa : <span class="m">σ<sub>max,loc</sub> = 3 × 80 = <b>240 MPa</b></span> au bord du trou. Si la plaque est en acier S235 (R<sub>e</sub> = 235 MPa), le bord du trou plastifie déjà alors que le calcul nominal semblait très rassurant.</p>
-    <div class="warn"><b>⚠️ Piège : la ductilité ne protège pas en fatigue.</b> En statique, un acier ductile « pardonne » un trou : le bord plastifie, la contrainte se redistribue, et la pièce casse à peu près à la charge prévue sans le trou. En fatigue, c'est la pointe locale qui amorce la fissure, cycle après cycle : la concentration compte presque pleinement. (L'effet réel en fatigue, noté K<sub>f</sub>, est un peu plus faible que K<sub>t</sub> ; cours 2.)</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique :</b> « <b>la fissure naît là où la contrainte est la plus haute et la surface la plus abîmée</b> » : surface d'un arbre plié, bord d'un trou, fond d'une gorge, pied d'un cordon.</div>
-    <div class="weld"><b>🔥 Le pied de cordon, triple point faible</b>
-      <p>Le pied de cordon cumule les trois facteurs : une <span class="tau">géométrie</span> qui concentre la contrainte (un raccordement brusque entre le cordon et la tôle, K<sub>t</sub> souvent de l'ordre de 2 à 3, davantage si l'angle est raide), des <span class="tau">contraintes résiduelles</span> de traction proches de R<sub>e</sub> (chapitre 3), et de petits <span class="tau">défauts</span> : micro-inclusions de laitier, <b>caniveaux</b> (sillons creusés dans la tôle le long du pied par la fusion, et non comblés).</p>
-      <p>D'où les techniques d'<b>amélioration</b> des soudures sollicitées en fatigue : le <b>meulage</b> du pied de cordon (adoucir le raccordement et enlever les défauts), la <b>refusion TIG</b> (refondre le pied avec une torche TIG, <i>Tungsten Inert Gas</i> : électrode de tungstène sous gaz inerte, sans métal d'apport) et le <b>martelage</b> (marteler le pied pour y créer des contraintes résiduelles de compression).</p>
-    </div>
+  <div class="warn"><b>⚠️ Piège : la ductilité ne protège pas en fatigue.</b> En statique, un acier ductile « pardonne » un trou : le bord plastifie, la contrainte se redistribue. En fatigue, c'est la pointe locale qui amorce la fissure, cycle après cycle : la concentration compte presque pleinement (l'effet réel K<sub>f</sub> est un peu plus faible que K<sub>t</sub>, cours 2). Et attention aux unités : N·m × 1 000 = N·mm, et N/mm² = MPa.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « la fissure naît là où la contrainte est la plus haute et la surface la plus abîmée »</b> : surface d'un arbre plié, bord d'un trou, fond d'une gorge, pied d'un cordon.</div>
+  <div class="weld"><b>🔥 Le pied de cordon, triple point faible</b>
+    <p>Une géométrie qui concentre (raccordement brusque cordon-tôle, K<sub>t</sub> souvent de 2 à 3, davantage si l'angle est raide), des contraintes résiduelles de traction proches de R<sub>e</sub>, et de petits défauts (inclusions de laitier, <b>caniveaux</b>). D'où les techniques d'amélioration des soudures en fatigue : <b>meulage</b> du pied, <b>refusion TIG</b> (refondre le pied sans apport) et <b>martelage</b> (créer des contraintes résiduelles de compression).</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : formules de l'arbre, torsion, de K<sub>t</sub> à K</summary>
+    <p>Rond plein : S = πd²/4 ; I<sub>Gz</sub> = πd⁴/64 ; W = I<sub>Gz</sub>/(d/2) ; I<sub>G</sub> = πd⁴/32 (moment polaire). En un point à la distance ρ du centre, tourné d'un angle θ : <span class="m">σ(θ) = F/S + (|Mf|·ρ/I<sub>Gz</sub>)·sin θ</span> ; la flexion fixe l'amplitude, la traction la moyenne. Torsion : τ = Mt·r/I<sub>G</sub>, maximal en surface, τ<sub>max</sub> = 16Mt/(πd³) ; un couple variable crée des cycles de cisaillement. Quand l'ellipse s'aplatit jusqu'à devenir une fissure, K<sub>t</sub> tend vers l'infini et perd son sens : la mécanique de la rupture le remplace par le facteur d'intensité de contrainte K (chapitre 6, cours 4). Les grains de surface sont aussi moins tenus par leurs voisins (cours 3).</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Flexion et torsion : contrainte maximale en surface ; flexion rotative, R = −1.</li>
+      <li>σ<sub>loc</sub> = K<sub>t</sub>·σ<sub>nom</sub> ; trou rond, K<sub>t</sub> = 3.</li>
+      <li>Les fissures de fatigue naissent en surface, souvent au pied des cordons.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -773,22 +675,10 @@ body.photo-modal-open{overflow:hidden}
     <div class="c-img"><span class="ico">🎬</span><span><small>Image à retenir</small>La pellicule en six images : la trace, la graine, la fêlure, la fissure, la croissance, la chute</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la biographie d'une fissure</span></div>
-    <p>On découpe la vie d'une pièce fatiguée en <b>six phases</b>, plus ou moins distinctes. Imagine une pellicule de film en six images ; à chaque image, on change de grossissement :</p>
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>Scène</th><th>Ce qui se passe</th><th>Échelle</th><th>Cours</th></tr>
-      <tr><td>1 La trace</td><td>des <span class="gam">changements irréversibles</span> dans la matière, par <span class="gam">déformation plastique</span> très localisée</td><td>quelques grains</td><td>3</td></tr>
-      <tr><td>2 La graine</td><td><b>nucléation</b> (apparition) en surface de défauts microscopiques : marches, creux et saillies</td><td>µm</td><td>3</td></tr>
-      <tr><td>3 La fêlure</td><td>formation de <span class="eps">microfissures</span> superficielles à partir de ces microdéfauts</td><td>taille d'un grain, 10 à 100 µm</td><td>3</td></tr>
-      <tr><td>4 La fissure</td><td>une microfissure devient une <span class="eps">macrofissure</span>, décelable en CND</td><td>≈ 0,1 à 1 mm</td><td>3 et 4</td></tr>
-      <tr><td>5 La croissance</td><td><b>propagation lente</b> de la macrofissure, un peu à chaque cycle</td><td>du mm au cm</td><td>4</td></tr>
-      <tr><td>6 La chute</td><td><span class="eps">rupture brutale</span> quand la fissure atteint une <b>taille critique</b></td><td>toute la section</td><td>4</td></tr>
-    </table></div>
-    <p class="mut" style="font-size:.9rem">µm : micromètre (micron), un millième de millimètre. Un cheveu mesure environ 70 µm d'épaisseur. CND : contrôle non destructif (voir le niveau 2).</p>
-    <p>On regroupe ces scènes en deux actes : l'<span class="eps"><b>amorçage</b></span> (scènes 1 à 4 : naître) et la <span class="eps"><b>propagation</b></span> (scènes 5 et 6 : grandir puis casser). La part de chaque acte dans la vie de la pièce dépend énormément de la pièce : c'est ce que montre la manipulation.</p>
-  </div>
+  <p>On découpe la vie d'une pièce fatiguée en <b>six scènes</b>, comme une pellicule de film, en changeant de grossissement à chaque image : <b>1 la trace</b>, des changements irréversibles par déformation plastique très localisée, à l'échelle de quelques grains ; <b>2 la graine</b>, l'apparition en surface de défauts microscopiques (marches, creux, saillies) ; <b>3 la fêlure</b>, des microfissures de la taille d'un grain (10 à 100 µm) ; <b>4 la fissure</b>, une macrofissure décelable en CND (≈ 0,1 à 1 mm) ; <b>5 la croissance</b>, une propagation lente, un peu à chaque cycle ; <b>6 la chute</b>, la rupture brutale quand la fissure atteint une <b>taille critique</b>.</p>
+  <p>Deux actes : l'<b>amorçage</b> (scènes 1 à 4 : naître) et la <b>propagation</b> (scènes 5 et 6 : grandir puis casser). La part de chacun dépend énormément de la pièce : la plus grande partie de la vie pour une éprouvette lisse et polie peu chargée, environ la moitié pour une pièce entaillée, très peu pour un assemblage soudé.</p>
 
-  <!-- Photographies pédagogiques : fatigue-01-c6 -->
+<!-- Photographies pédagogiques : fatigue-01-c6 -->
 <div class="photo-study" id="photos-fatigue-macro">
 <h3>Relier le scénario à une pièce rompue</h3>
 <figure class="course-photo" id="photo-fatigue-macro" aria-labelledby="photo-fatigue-macro-title">
@@ -798,39 +688,41 @@ body.photo-modal-open{overflow:hidden}
 <div class="photo-question"><p><b>À toi d’observer.</b> Vois-tu les six étapes de la vie de la fissure sur cette photo ?</p><details><summary>Voir les repères</summary><p>Non : tu vois la pièce après rupture. La chronologie d’amorçage et de propagation se reconstitue à partir de l’examen détaillé du faciès et des conditions de service, pas de cette seule vue d’ensemble.</p></details></div>
 </div>
 <!-- Fin des photographies : fatigue-01-c6 -->
+
+  <div class="fx"><div class="row big" style="font-size:1.35rem"><span>N<sub>r</sub> = N<sub>a</sub> + N<sub>p</sub></span><span>a<sub>c</sub> = (<span class="frac"><span>K<sub>IC</sub></span><span>Y·<span class="sig">σ<sub>max</sub></span></span></span>)²</span></div><p class="cap">Durée de vie N<sub>r</sub> = cycles d'amorçage N<sub>a</sub> + cycles de propagation N<sub>p</sub>. La pièce casse quand le facteur d'intensité de contrainte K<sub>I</sub> = σ·Y·√a atteint la <b>ténacité</b> K<sub>IC</sub> (MPa·√m) : longueur critique a<sub>c</sub> (m), Y facteur géométrique (≈ 2 pour une fissure débouchante, √π compris).</p></div>
+
 <div class="lab" id="m6">
     <p class="lab-h">Manipulation 6 : le film</p>
-    <p class="lab-sub">Choisis la pièce, puis fais défiler sa vie avec le curseur ou la lecture. En haut, la barre de vie (amorçage clair, propagation foncée) ; au milieu, la vue au microscope ; en bas, la longueur de fissure en échelle logarithmique. Durées indicatives.</p>
+    <p class="lab-sub">Choisis la pièce, puis fais défiler sa vie : barre de vie (amorçage, propagation), vue au microscope, longueur de fissure.<span class="predict">🔮 Prédis d'abord : pour un assemblage soudé, l'amorçage occupe-t-il l'essentiel de la vie, la moitié, ou presque rien ?</span></p>
     <div class="radios" role="radiogroup" aria-label="Type de pièce">
       <label><input type="radio" name="m6t" value="lisse" checked> éprouvette lisse polie</label>
       <label><input type="radio" name="m6t" value="ent"> pièce entaillée</label>
       <label><input type="radio" name="m6t" value="soud"> assemblage soudé</label>
     </div>
     <div class="ctrl"><label for="m6f">Fraction de la vie</label><input type="range" id="m6f" class="r-eps" min="0" max="1000" step="1" value="0"><output id="m6fo"></output></div>
-    <div class="btns"><button class="btn play" id="m6play" type="button">▶ Lecture</button></div>
+    <div class="btns" id="m6pl"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" data-a="play" type="button">▶ Lecture</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button></div>
     <svg id="m6svg" role="img" aria-label="Barre de vie, vue microscopique de la scène en cours et longueur de fissure"></svg>
     <p class="status" id="m6msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">amorçage, propagation, taille critique</span></div>
-    <div class="def"><b>📖 Amorçage</b> : ensemble des phases qui mènent à une fissure « d'ingénieur », c'est-à-dire assez grande pour être détectée et traitée par la mécanique de la rupture (de l'ordre de 0,1 à 1 mm selon les auteurs : la frontière est une convention). <b>Propagation</b> : croissance de cette fissure jusqu'à la rupture.</div>
-    <div class="fx"><div class="big"><span class="eps">N<sub>r</sub></span> = <span class="eps">N<sub>a</sub></span> + <span class="eps">N<sub>p</sub></span></div><p class="cap">durée de vie N<sub>r</sub> (cycles à rupture) = cycles d'amorçage N<sub>a</sub> + cycles de propagation N<sub>p</sub></p></div>
-    <p>L'amorçage peut représenter une part négligeable ou au contraire prépondérante de la durée de vie, selon le matériau, les concentrations de contrainte, le chargement et l'état de surface. Ordres de grandeur indicatifs : la plus grande partie de la vie pour une éprouvette lisse et polie peu chargée, environ la moitié pour une pièce entaillée, très peu pour un assemblage soudé.</p>
+  <p><b>Exemple</b> : acier de ténacité K<sub>IC</sub> = 50 MPa·√m, fissure débouchante (Y ≈ 2), σ<sub>max</sub> = 200 MPa : <span class="m">a<sub>c</sub> = (50/(2 × 200))² ≈ 0,016 m = 16 mm</span>. Une fissure de 1 mm est donc détectable bien avant d'être dangereuse : c'est l'enjeu des inspections. Les <b>CND</b> (contrôles non destructifs : ressuage, magnétoscopie, ultrasons, radiographie, courants de Foucault) détectent de l'ordre du millimètre.</p>
 
-    <h4>La taille critique (simple rappel de mécanique de la rupture)</h4>
-    <p>La fissure de longueur <span class="eps">a</span> est caractérisée par le <b>facteur d'intensité de contrainte</b> K<sub>I</sub>, qui mesure la sévérité de la contrainte à sa pointe (l'indice I désigne le mode I, l'ouverture de la fissure par traction perpendiculaire à ses lèvres). La pièce casse brutalement quand K<sub>I</sub> atteint la <b>ténacité</b> K<sub>IC</sub> du matériau, sa résistance à la propagation brutale d'une fissure. Avec la notation de la série :</p>
-    <div class="fx"><div class="row big" style="font-size:1.5rem"><span><span class="sig">K<sub>I</sub></span> = <span class="sig">σ</span>·<span class="mat">Y</span>·√<span class="eps">a</span></span><span><span class="eps">a<sub>c</sub></span> = <span style="font-size:1.3em">(</span><span class="frac"><span><span class="mat">K<sub>IC</sub></span></span><span><span class="mat">Y</span>·<span class="sig">σ<sub>max</sub></span></span></span><span style="font-size:1.3em">)</span>²</span></div>
-      <p class="cap">K en MPa·√m, σ en MPa, a en m ; Y : facteur géométrique sans unité (dans la convention de la série, il contient le √π que d'autres ouvrages écrivent à part)</p></div>
-    <p><b>Exemple.</b> Acier de ténacité K<sub>IC</sub> = 50 MPa·√m, fissure débouchante en surface (Y ≈ 1,12√π ≈ 2), σ<sub>max</sub> = 200 MPa : <span class="m">a<sub>c</sub> = (50/(2 × 200))² = (0,125)² = 0,0156 m ≈ <b>16 mm</b></span>. Une fissure de 1 mm est donc détectable bien avant d'être dangereuse : c'est tout l'enjeu des inspections.</p>
-    <div class="warn"><b>⚠️ Piège :</b> a<sub>c</sub> varie comme 1/σ<sub>max</sub>². Doubler la contrainte maximale divise la taille critique par <b>quatre</b>. Et c'est σ<sub>max</sub> qui compte ici, pas σ<sub>a</sub> : la rupture finale se produit au sommet d'un cycle.</div>
-    <div class="def"><b>📖 CND (contrôles non destructifs)</b> : méthodes qui détectent les défauts sans abîmer la pièce. Les principales : le <b>ressuage</b> (un liquide coloré pénètre dans les fissures débouchantes), la <b>magnétoscopie</b> (une poudre magnétique révèle les fissures des aciers), les <b>ultrasons</b>, la <b>radiographie</b> et les <b>courants de Foucault</b>. Leur seuil de détection pratique est de l'ordre du millimètre, parfois moins.</div>
-    <h4>Deux métiers, deux connaissances</h4>
-    <p>Pour prévoir la tenue en fatigue d'une pièce réelle, il faut donc <b>connaître les conditions réelles de chargement</b> (le travail du mécanicien : mesurer, compter et décrire les cycles, objet de ce cours) et <b>connaître la réponse du matériau</b> et son endommagement selon le niveau de contrainte, le nombre et l'amplitude des cycles (le travail du métallurgiste : cours 2 à 4).</p>
-    <div class="mnemo">🧠 <b>Mnémotechnique :</b> « <b>Trace, graine, fêlure, fissure, croissance, chute</b> ». Les quatre premières font l'amorçage, les deux dernières la propagation.</div>
-    <div class="weld"><b>🔥 Dans une soudure, presque tout est propagation</b>
-      <p>Un pied de cordon contient dès la fabrication de petits défauts (micro-inclusions de laitier, caniveaux, manques de fusion) de l'ordre de 0,1 mm, dans une zone de concentration de contrainte et de contraintes résiduelles de traction. La phase d'amorçage y est donc très courte : la durée de vie d'un assemblage soudé est presque entièrement une durée de <b>propagation</b>.</p>
-      <p>Deux conséquences pratiques : améliorer l'acier (un acier plus résistant amorce plus tard, mais propage presque aussi vite) n'augmente guère la tenue en fatigue d'une soudure brute ; et la pente des courbes de fatigue des soudures (exposant 3, cours 2) vient directement de la loi de propagation de Paris (cours 4). C'est aussi pour cela que les grandes structures soudées (ponts, avions, plateformes) sont inspectées à intervalles réguliers : on laisse une fissure exister, à condition de la trouver avant qu'elle n'atteigne a<sub>c</sub>. C'est le principe de la <b>tolérance aux dommages</b>.</p>
-    </div>
+  <div class="warn"><b>⚠️ Piège : a<sub>c</sub> varie comme 1/σ<sub>max</sub>².</b> Doubler la contrainte maximale divise la taille critique par quatre. Et c'est σ<sub>max</sub> qui compte ici, pas σ<sub>a</sub> : la rupture finale se produit au sommet d'un cycle.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « trace, graine, fêlure, fissure, croissance, chute »</b> : les quatre premières font l'amorçage, les deux dernières la propagation.</div>
+  <div class="weld"><b>🔥 Dans une soudure, presque tout est propagation</b>
+    <p>Un pied de cordon contient dès la fabrication de petits défauts d'environ 0,1 mm, dans une zone de concentration et de contraintes résiduelles de traction : l'amorçage est très court. Un acier plus résistant amorce plus tard mais propage presque aussi vite : il n'augmente guère la tenue d'une soudure brute. Et les grandes structures soudées sont inspectées à intervalles réguliers : on tolère une fissure, à condition de la trouver avant a<sub>c</sub>. C'est la <b>tolérance aux dommages</b>.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : amorçage, propagation, deux métiers</summary>
+    <p>L'<b>amorçage</b> mène à une fissure « d'ingénieur », assez grande pour être détectée et traitée par la mécanique de la rupture (0,1 à 1 mm selon les auteurs : une convention). La <b>propagation</b> la fait croître jusqu'à la rupture. L'indice I de K<sub>I</sub> désigne le mode I, l'ouverture par traction perpendiculaire aux lèvres. Pour prévoir la tenue d'une pièce réelle, il faut connaître les conditions réelles de chargement (mesurer, compter et décrire les cycles : ce cours) et la réponse du matériau (cours 2 à 4). La pente des courbes de fatigue des soudures (exposant 3, cours 2) vient de la loi de propagation de Paris (cours 4).</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Six scènes : trace, graine, fêlure, fissure (amorçage), croissance, chute (propagation).</li>
+      <li>a<sub>c</sub> = (K<sub>IC</sub>/(Y·σ<sub>max</sub>))² : doubler σ<sub>max</sub> divise a<sub>c</sub> par quatre.</li>
+      <li>Soudure brute : l'amorçage est très court, presque tout est propagation.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -838,126 +730,39 @@ body.photo-modal-open{overflow:hidden}
 <div class="wrap">
   <div class="cartouche">
     <div class="c-num">✎</div>
-    <div class="c-title"><h2>Exercices corrigés</h2><p>Six exercices et un défi, du trombone à la poutre soudée</p></div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Deux exercices, du crochet de grue à la poutre soudée</p></div>
     <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de musculation : on ne progresse qu'en soulevant soi-même</span></div>
   </div>
-  <div class="lv lv1"><div class="lv-h">👁 Mode d'emploi <span class="tag">de tête, puis la fiche, puis le cours</span></div>
-    <p>Cherche chaque question sur papier avant d'ouvrir la correction. Écris toujours la formule littérale, puis les valeurs avec leurs unités. Les manipulations 3, 4 et 5 permettent de vérifier tes résultats.</p>
-  </div>
+
+  <p>Cherche chaque question sur papier avant d'ouvrir la correction. Écris la formule littérale, puis les valeurs avec leurs unités. Le premier exercice se vérifie dans les manipulations 3 et 4, le second se rejoue dans la manipulation 3.</p>
 
   <div class="exo">
-    <h4>Exercice 1 : l'essieu qui compte ses tours <span class="lvtag">N1 · chapitres 1 et 5</span></h4>
-    <p>Une roue de train a un diamètre D = 0,92 m. L'essieu tourne avec elle et il est plié par le poids du wagon : à chaque tour, un point de sa surface passe une fois du côté tendu et une fois du côté comprimé.</p>
-    <p class="q"><b>a)</b> Combien de tours la roue fait-elle par kilomètre ?</p>
-    <p class="q"><b>b)</b> Combien de cycles un point de l'essieu subit-il en un million de kilomètres ?</p>
-    <p class="q"><b>c)</b> À 300 km/h, quelle est la fréquence de ces cycles ?</p>
-    <p class="q"><b>d)</b> Que vaut le rapport de charge R de ce cycle ?</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> Périmètre de la roue : <span class="m">p = π·D = π × 0,92 = 2,890 m</span>. Nombre de tours par kilomètre : <span class="m">1 000 m / 2,890 m = <b>346 tours</b></span>.</p>
-      <p><b>b)</b> Un tour = un cycle : <span class="m">N = 346 × 10⁶ ≈ <b>3,5 × 10⁸ cycles</b></span>. Plus de trois cents millions de cycles : un essieu doit pouvoir durer « indéfiniment » (endurance illimitée, cours 2).</p>
-      <p><b>c)</b> Vitesse : <span class="m">v = 300/3,6 = 83,3 m/s</span>. Fréquence : <span class="m">f = v/p = 83,3/2,890 = <b>28,8 Hz</b></span>, soit près de 29 cycles par seconde.</p>
-      <p><b>d)</b> Flexion rotative sans autre effort : la contrainte va de +σ<sub>a</sub> à −σ<sub>a</sub>, σ<sub>m</sub> = 0, donc <span class="m">R = −σ<sub>a</sub>/σ<sub>a</sub> = <b>−1</b></span> : contrainte alternée symétrique.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 2 : trois pièces, trois familles <span class="lvtag">N1 · chapitres 3 et 4</span></h4>
+    <h4>Exercice 1 : trois pièces, trois familles <span class="lvtag">★ application · chapitres 3 et 4, à vérifier dans les manipulations 3 et 4</span></h4>
     <p>Pour chaque pièce, calcule σ<sub>max</sub>, σ<sub>min</sub>, σ<sub>m</sub>, σ<sub>a</sub>, Δσ et R, puis nomme la famille du cycle.</p>
     <p class="q"><b>a)</b> Un crochet de grue, assimilé à une barre tendue de section utile S = 400 mm², soulève une charge de 50 kN puis la repose complètement.</p>
     <p class="q"><b>b)</b> Un boulon précontraint voit sa contrainte osciller entre 360 et 400 MPa.</p>
     <p class="q"><b>c)</b> Une tige de vérin travaille entre +90 MPa (traction) et −90 MPa (compression).</p>
+    <p class="q"><b>d)</b> σ<sub>max</sub> = 200 MPa et R = 0,1 : calcule σ<sub>min</sub>, σ<sub>m</sub>, σ<sub>a</sub> et Δσ.</p>
     <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <span class="m">σ<sub>max</sub> = F/S = 50 000 N / 400 mm² = <b>125 MPa</b></span> ; σ<sub>min</sub> = 0 (charge reposée). <span class="m">σ<sub>m</sub> = (125 + 0)/2 = 62,5 MPa</span> ; <span class="m">σ<sub>a</sub> = (125 − 0)/2 = 62,5 MPa</span> ; <span class="m">Δσ = 125 MPa</span> ; <span class="m">R = 0/125 = <b>0</b></span>. σ<sub>m</sub> = σ<sub>a</sub> : <b>contrainte répétée</b> (famille c).</p>
-      <p><b>b)</b> <span class="m">σ<sub>m</sub> = (400 + 360)/2 = 380 MPa</span> ; <span class="m">σ<sub>a</sub> = (400 − 360)/2 = 20 MPa</span> ; <span class="m">Δσ = 40 MPa</span> ; <span class="m">R = 360/400 = <b>0,9</b></span>. σ<sub>m</sub> ≫ σ<sub>a</sub> : <b>contrainte ondulée</b> (famille d). Le boulon est très chargé, mais il varie peu : c'est l'intérêt de la précontrainte.</p>
-      <p><b>c)</b> <span class="m">σ<sub>m</sub> = (90 + (−90))/2 = 0</span> ; <span class="m">σ<sub>a</sub> = 90 MPa</span> ; <span class="m">Δσ = 180 MPa</span> ; <span class="m">R = −90/90 = <b>−1</b></span> : <b>contrainte alternée symétrique</b> (famille a).</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 3 : jongler avec R <span class="lvtag">N2 · chapitres 3 et 4</span></h4>
-    <p class="q"><b>a)</b> σ<sub>max</sub> = 200 MPa et R = 0,1. Calcule σ<sub>min</sub>, σ<sub>m</sub>, σ<sub>a</sub> et Δσ.</p>
-    <p class="q"><b>b)</b> Δσ = 160 MPa et R = −1. Calcule σ<sub>a</sub>, σ<sub>max</sub> et σ<sub>min</sub>.</p>
-    <p class="q"><b>c)</b> Montre que σ<sub>max</sub> = Δσ/(1 − R), puis calcule σ<sub>max</sub>, σ<sub>min</sub> et σ<sub>m</sub> pour Δσ = 100 MPa et R = 0,5.</p>
-    <p class="q"><b>d)</b> Démontre que σ<sub>m</sub>/σ<sub>a</sub> = (1 + R)/(1 − R), et vérifie-le sur le cas a).</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <span class="m">σ<sub>min</sub> = R·σ<sub>max</sub> = 0,1 × 200 = <b>20 MPa</b></span> ; <span class="m">σ<sub>m</sub> = (200 + 20)/2 = <b>110 MPa</b></span> ; <span class="m">σ<sub>a</sub> = (200 − 20)/2 = <b>90 MPa</b></span> ; <span class="m">Δσ = <b>180 MPa</b></span>.</p>
-      <p><b>b)</b> <span class="m">σ<sub>a</sub> = Δσ/2 = <b>80 MPa</b></span>. R = −1 signifie σ<sub>min</sub> = −σ<sub>max</sub>, donc σ<sub>m</sub> = 0 : <span class="m">σ<sub>max</sub> = <b>80 MPa</b></span>, <span class="m">σ<sub>min</sub> = <b>−80 MPa</b></span>.</p>
-      <p><b>c)</b> <span class="m">Δσ = σ<sub>max</sub> − σ<sub>min</sub> = σ<sub>max</sub> − R·σ<sub>max</sub> = σ<sub>max</sub>(1 − R)</span>, d'où <span class="m">σ<sub>max</sub> = Δσ/(1 − R)</span>. Application : <span class="m">σ<sub>max</sub> = 100/(1 − 0,5) = <b>200 MPa</b></span> ; <span class="m">σ<sub>min</sub> = 0,5 × 200 = <b>100 MPa</b></span> ; <span class="m">σ<sub>m</sub> = <b>150 MPa</b></span> (et σ<sub>a</sub> = 50 MPa).</p>
-      <p><b>d)</b> <span class="m">σ<sub>m</sub> = σ<sub>max</sub>(1 + R)/2</span> et <span class="m">σ<sub>a</sub> = σ<sub>max</sub>(1 − R)/2</span> ; en divisant, σ<sub>max</sub> et le 2 disparaissent : <span class="m">σ<sub>m</sub>/σ<sub>a</sub> = (1 + R)/(1 − R)</span>. Vérification sur a) : <span class="m">110/90 = 1,222</span> et <span class="m">(1 + 0,1)/(1 − 0,1) = 1,1/0,9 = 1,222</span> ✅.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 4 : l'arbre tendu qui tourne <span class="lvtag">N2 · chapitres 3, 4 et 5</span></h4>
-    <p>Un arbre rond plein de diamètre d = 40 mm tourne à n = 1 500 tr/min. Il est plié par un moment constant Mf = 400 N·m et tiré par un effort axial constant F = 50 kN.</p>
-    <p class="q"><b>a)</b> Calcule le module de flexion W et l'amplitude σ<sub>a</sub> en surface.</p>
-    <p class="q"><b>b)</b> Calcule la section S et la contrainte moyenne σ<sub>m</sub>.</p>
-    <p class="q"><b>c)</b> Déduis σ<sub>max</sub>, σ<sub>min</sub>, R et la famille du cycle en surface.</p>
-    <p class="q"><b>d)</b> Quelle est la fréquence des cycles ? Combien de cycles en une journée de travail de 8 h ?</p>
-    <p class="q"><b>e)</b> Reprends c) pour un point situé à mi-rayon. Que remarques-tu ?</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <span class="m">W = πd³/32 = π × 40³/32 = <b>6 283 mm³</b></span>. Mf = 400 N·m = 400 000 N·mm, donc <span class="m">σ<sub>a</sub> = Mf/W = 400 000/6 283 = <b>63,7 MPa</b></span>.</p>
-      <p><b>b)</b> <span class="m">S = πd²/4 = π × 40²/4 = <b>1 256,6 mm²</b></span> ; <span class="m">σ<sub>m</sub> = F/S = 50 000/1 256,6 = <b>39,8 MPa</b></span>.</p>
-      <p><b>c)</b> <span class="m">σ<sub>max</sub> = 39,8 + 63,7 = <b>103,5 MPa</b></span> ; <span class="m">σ<sub>min</sub> = 39,8 − 63,7 = <b>−23,9 MPa</b></span> ; <span class="m">R = −23,9/103,5 = <b>−0,23</b></span>. Comme 0 &lt; σ<sub>m</sub> &lt; σ<sub>a</sub> : <b>alternée asymétrique</b> (famille b).</p>
-      <p><b>d)</b> <span class="m">f = n/60 = 1 500/60 = <b>25 Hz</b></span> ; <span class="m">N = f·t = 25 × 8 × 3 600 = <b>720 000 cycles</b></span> (7,2 × 10⁵) par journée.</p>
-      <p><b>e)</b> La flexion est proportionnelle à la distance au centre : à mi-rayon, <span class="m">σ<sub>a</sub> = 63,7/2 = 31,8 MPa</span>. La traction est uniforme : σ<sub>m</sub> = 39,8 MPa. Donc <span class="m">σ<sub>max</sub> = 71,6 MPa</span>, <span class="m">σ<sub>min</sub> = 8,0 MPa</span>, <span class="m">R = 8,0/71,6 = <b>0,11</b></span> : σ<sub>m</sub> &gt; σ<sub>a</sub>, le cycle est devenu <b>ondulé</b> (famille d). Dans un même arbre, la famille du cycle change avec la profondeur ; et la surface reste le point le plus sollicité.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 5 : compter à la goutte de pluie <span class="lvtag">N2 · chapitre 2</span></h4>
-    <p>Une jauge collée près d'un cordon a enregistré la suite d'extremums suivante (en MPa) :</p>
-    <p class="m" style="text-align:center">A = 20, B = 140, C = 40, D = 100, E = −60, F = 80, G = 0, H = 160, I = 20</p>
-    <p class="q"><b>a)</b> Vérifie que cette suite alterne bien pics et vallées. Combien de cycles doit-on trouver au total ?</p>
-    <p class="q"><b>b)</b> Applique la méthode rainflow pas à pas.</p>
-    <p class="q"><b>c)</b> Dresse la liste des cycles et demi-cycles avec leur étendue Δσ et leur moyenne σ<sub>m</sub>.</p>
-    <p class="q"><b>d)</b> Quel est le plus grand cycle ? Vérifie la règle du maximum et du minimum absolus.</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> 20 ↗ 140 ↘ 40 ↗ 100 ↘ −60 ↗ 80 ↘ 0 ↗ 160 ↘ 20 : les sens alternent, ce sont bien des extremums. 9 points font 8 alternances, donc <b>4 cycles</b> au total.</p>
-      <p><b>b)</b> Pile A B C : X = 100 &lt; Y = 120, on continue. Lecture de D : pile A B C D, X = 60 &lt; Y = 100, on continue. Lecture de E : X = |−60 − 100| = 160 ≥ Y = 60, et Y (C-D) ne contient pas le premier point : <b>cycle complet C-D</b>, on retire C et D. Pile A B E : X = 200 ≥ Y = 120, Y contient A : <b>demi-cycle A-B</b>, on retire A. Pile B E ; lecture de F : X = 140 &lt; Y = 200. Lecture de G : X = 80 &lt; Y = 140. Lecture de H : X = 160 ≥ Y = 80 : <b>cycle complet F-G</b>, on retire F et G. Pile B E H : X = 220 ≥ Y = 200, Y contient B : <b>demi-cycle B-E</b>, on retire B. Pile E H ; lecture de I : X = 140 &lt; Y = 220. Fin : demi-cycles résiduels <b>E-H</b> et <b>H-I</b>.</p>
-      <p><b>c)</b></p>
-      <div class="tbl-wrap"><table class="data">
-        <tr><th>Cycle</th><th>Type</th><th>Δσ (MPa)</th><th>σ<sub>m</sub> (MPa)</th></tr>
-        <tr><td>C-D</td><td>complet</td><td class="n">60</td><td class="n">(40 + 100)/2 = 70</td></tr>
-        <tr><td>F-G</td><td>complet</td><td class="n">80</td><td class="n">(80 + 0)/2 = 40</td></tr>
-        <tr><td>A-B</td><td>demi</td><td class="n">120</td><td class="n">80</td></tr>
-        <tr><td>B-E</td><td>demi</td><td class="n">200</td><td class="n">40</td></tr>
-        <tr><td>E-H</td><td>demi</td><td class="n">220</td><td class="n">50</td></tr>
-        <tr><td>H-I</td><td>demi</td><td class="n">140</td><td class="n">90</td></tr>
-      </table></div>
-      <p>Total : 2 cycles complets + 4 demi-cycles = <b>4 cycles</b> ✅.</p>
-      <p><b>d)</b> Le plus grand est le demi-cycle E-H, de <b>220 MPa</b> : il relie le minimum absolu (E = −60) au maximum absolu (H = 160) ✅. En comptant naïvement les oscillations, on ne l'aurait jamais vu entier : il est « coupé » par la petite oscillation F-G.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 6 : grande ou petite fissure ? <span class="lvtag">N1 et N2 · chapitre 6</span></h4>
-    <p>Un acier a une ténacité K<sub>IC</sub> = 60 MPa·√m. Une fissure débouchante en surface a un facteur géométrique Y = 2 (convention de la série). La contrainte maximale du cycle vaut σ<sub>max</sub> = 150 MPa.</p>
-    <p class="q"><b>a)</b> Calcule la longueur critique a<sub>c</sub>.</p>
-    <p class="q"><b>b)</b> Les CND détectent les fissures à partir de 2 mm. Y a-t-il une marge entre la détection et la rupture ?</p>
-    <p class="q"><b>c)</b> Que devient a<sub>c</sub> si σ<sub>max</sub> double ?</p>
-    <p class="q"><b>d)</b> Pourquoi, dans un assemblage soudé, la propagation représente-t-elle presque toute la durée de vie ?</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> Rupture quand <span class="m">σ<sub>max</sub>·Y·√a<sub>c</sub> = K<sub>IC</sub></span>, d'où <span class="m">a<sub>c</sub> = (K<sub>IC</sub>/(Y·σ<sub>max</sub>))² = (60/(2 × 150))² = (0,2)² = <b>0,04 m = 40 mm</b></span>. Unités : (MPa·√m / MPa)² = (√m)² = m ✅.</p>
-      <p><b>b)</b> Oui : la fissure est détectable à 2 mm et ne devient critique qu'à 40 mm, vingt fois plus. Il reste à savoir <b>combien de cycles</b> elle met pour passer de 2 à 40 mm : c'est ce que donnera la loi de Paris (cours 4), et c'est ce qui fixe l'intervalle entre deux inspections.</p>
-      <p><b>c)</b> <span class="m">a<sub>c</sub> = (60/(2 × 300))² = (0,1)² = 0,01 m = <b>10 mm</b></span> : quatre fois plus petite, car a<sub>c</sub> varie comme 1/σ<sub>max</sub>².</p>
-      <p><b>d)</b> Le pied de cordon contient dès la fabrication de petits défauts (≈ 0,1 mm : inclusions, caniveaux), placés dans une zone de concentration de contrainte et de contraintes résiduelles de traction. La fissure n'a presque pas besoin de « naître » : l'amorçage est très court et toute la vie se passe à propager.</p>
+      <p><b>a)</b> σ<sub>max</sub> = F/S = 50 000 N/400 mm² = <b>125 MPa</b> ; σ<sub>min</sub> = 0 ; σ<sub>m</sub> = σ<sub>a</sub> = 62,5 MPa ; Δσ = 125 MPa ; R = <b>0</b> : contrainte <b>répétée</b>.</p>
+      <p><b>b)</b> σ<sub>m</sub> = (400 + 360)/2 = 380 MPa ; σ<sub>a</sub> = 20 MPa ; Δσ = 40 MPa ; R = 360/400 = <b>0,9</b> : contrainte <b>ondulée</b>. Très chargé, mais il varie peu : l'intérêt de la précontrainte.</p>
+      <p><b>c)</b> σ<sub>m</sub> = 0 ; σ<sub>a</sub> = 90 MPa ; Δσ = 180 MPa ; R = <b>−1</b> : <b>alternée symétrique</b>.</p>
+      <p><b>d)</b> σ<sub>min</sub> = R·σ<sub>max</sub> = <b>20 MPa</b> ; σ<sub>m</sub> = (200 + 20)/2 = <b>110 MPa</b> ; σ<sub>a</sub> = (200 − 20)/2 = <b>90 MPa</b> ; Δσ = <b>180 MPa</b>.</p>
     </div></details>
   </div>
 
   <div class="exo defi">
-    <h4>🏆 Défi : la poutre de roulement soudée <span class="lvtag">N2 · chapitres 1 à 6</span></h4>
-    <p>Un pont roulant (une grue d'atelier qui roule sur des rails) circule sur une poutre soudée en acier S355 (R<sub>e</sub> = 355 MPa). À chaque passage, la contrainte nominale au droit d'un raidisseur soudé varie de 20 à 80 MPa. Le pont roulant passe 40 fois par heure, 16 h par jour, 250 jours par an, pendant 25 ans. On suppose que ce détail relève de la classe <b>FAT 80</b>.</p>
-    <p class="q"><b>a)</b> Calcule σ<sub>m</sub>, σ<sub>a</sub>, Δσ et R nominaux. Quelle est la famille du cycle ?</p>
-    <p class="q"><b>b)</b> Au pied du cordon, les contraintes résiduelles atteignent environ R<sub>e</sub>. Estime σ<sub>max</sub>, σ<sub>min</sub> et R du cycle local après le premier passage (on néglige la concentration de contrainte). Quelle grandeur n'a pas changé ?</p>
+    <h4>Exercice 2 : la poutre de roulement soudée <span class="lvtag">★★ synthèse · chapitres 1 à 6, à rejouer dans la manipulation 3</span></h4>
+    <p>Un pont roulant circule sur une poutre soudée en S355 (R<sub>e</sub> = 355 MPa). À chaque passage, la contrainte nominale au droit d'un raidisseur soudé varie de 20 à 80 MPa. Le pont passe 40 fois par heure, 16 h par jour, 250 jours par an, pendant 25 ans. On suppose que ce détail relève de la classe <b>FAT 80</b>.</p>
+    <p class="q"><b>a)</b> Calcule σ<sub>m</sub>, σ<sub>a</sub>, Δσ et R nominaux. Quelle est la famille du cycle ? (Règle σ<sub>max</sub> et σ<sub>min</sub> dans la manipulation 3.)</p>
+    <p class="q"><b>b)</b> Au pied du cordon, les contraintes résiduelles atteignent environ R<sub>e</sub>. Estime σ<sub>max</sub>, σ<sub>min</sub> et R du cycle local après le premier passage. Quelle grandeur n'a pas changé ?</p>
     <p class="q"><b>c)</b> Combien de cycles le détail subit-il sur sa vie ? Compare à 2 × 10⁶.</p>
-    <p class="q"><b>d)</b> Avant-goût du cours 2 : la courbe FAT 80 suit la loi Δσ³·N = constante, et passe par Δσ = 80 MPa à N = 2 × 10⁶ cycles. Quelle étendue le détail supporte-t-il à N = 4 × 10⁶ cycles ? Conclus, sans coefficient de sécurité.</p>
+    <p class="q"><b>d)</b> Avant-goût du cours 2 : la courbe FAT 80 suit Δσ³·N = constante et passe par Δσ = 80 MPa à N = 2 × 10⁶. Quelle étendue le détail supporte-t-il à 4 × 10⁶ cycles ? Conclus, sans coefficient de sécurité.</p>
     <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <span class="m">σ<sub>m</sub> = (80 + 20)/2 = <b>50 MPa</b></span> ; <span class="m">σ<sub>a</sub> = (80 − 20)/2 = <b>30 MPa</b></span> ; <span class="m">Δσ = <b>60 MPa</b></span> ; <span class="m">R = 20/80 = <b>0,25</b></span> : contrainte <b>ondulée</b> de traction (famille d).</p>
-      <p><b>b)</b> Au premier passage, contrainte résiduelle et contrainte appliquée s'ajoutent et dépassent R<sub>e</sub> : la matière plastifie localement, puis le cycle se cale sous R<sub>e</sub>. <span class="m">σ<sub>max,loc</sub> ≈ <b>355 MPa</b></span>, <span class="m">σ<sub>min,loc</sub> ≈ 355 − 60 = <b>295 MPa</b></span>, <span class="m">R<sub>loc</sub> = 295/355 ≈ <b>0,83</b></span>. La moyenne et R ont complètement changé ; seule l'étendue <b>Δσ = 60 MPa</b> est conservée.</p>
-      <p><b>c)</b> <span class="m">N = 40 × 16 × 250 × 25 = <b>4 × 10⁶ cycles</b></span> : deux fois la référence des classes FAT.</p>
-      <p><b>d)</b> <span class="m">Δσ<sub>R</sub>³ × 4 × 10⁶ = 80³ × 2 × 10⁶</span>, d'où <span class="m">Δσ<sub>R</sub> = 80 × (2/4)<sup>1/3</sup> = 80 × 0,794 = <b>63,5 MPa</b></span>. L'étendue appliquée (60 MPa) est juste inférieure : le détail tient, de justesse. Une vraie vérification ajoute des coefficients partiels de sécurité, qui peuvent faire basculer la conclusion (cours 2).</p>
-      <p><b>Morale :</b> la note de calcul ne retient que <b>Δσ et N</b>, parce que les contraintes résiduelles effacent l'influence de la contrainte moyenne nominale.</p>
+      <p><b>a)</b> σ<sub>m</sub> = (80 + 20)/2 = <b>50 MPa</b> ; σ<sub>a</sub> = <b>30 MPa</b> ; Δσ = <b>60 MPa</b> ; R = 20/80 = <b>0,25</b> : contrainte <b>ondulée</b> de traction.</p>
+      <p><b>b)</b> Au premier passage, contrainte résiduelle et contrainte appliquée dépassent ensemble R<sub>e</sub> : la matière plastifie localement, puis le cycle se cale sous R<sub>e</sub>. σ<sub>max,loc</sub> ≈ <b>355 MPa</b>, σ<sub>min,loc</sub> ≈ 355 − 60 = <b>295 MPa</b>, R<sub>loc</sub> ≈ <b>0,83</b>. La moyenne et R ont complètement changé ; seule l'étendue <b>Δσ = 60 MPa</b> est conservée.</p>
+      <p><b>c)</b> N = 40 × 16 × 250 × 25 = <b>4 × 10⁶ cycles</b> : deux fois la référence des classes FAT.</p>
+      <p><b>d)</b> Δσ<sub>R</sub>³ × 4 × 10⁶ = 80³ × 2 × 10⁶, d'où Δσ<sub>R</sub> = 80 × (2/4)<sup>1/3</sup> ≈ <b>63,5 MPa</b>. L'étendue appliquée (60 MPa) est juste inférieure : le détail tient, de justesse ; une vraie vérification ajoute des coefficients partiels qui peuvent faire basculer la conclusion. La note de calcul ne retient que <b>Δσ et N</b>, parce que les contraintes résiduelles effacent la contrainte moyenne nominale.</p>
     </div></details>
   </div>
 </div>
@@ -994,7 +799,8 @@ body.photo-modal-open{overflow:hidden}
     <div><div class="ic">🕳️</div><h4>Le trou</h4><div class="f"><span class="sig">σ<sub>loc</sub></span> = <span class="tau">K<sub>t</sub></span>·<span class="sig">σ<sub>nom</sub></span></div><p>Trou rond : K<sub>t</sub> = 3 ; ellipse : 1 + 2a/b. En fatigue, la ductilité ne protège pas.</p></div>
     <div><div class="ic">🎬</div><h4>La pellicule</h4><div class="f"><span class="eps">N<sub>r</sub></span> = <span class="eps">N<sub>a</sub></span> + <span class="eps">N<sub>p</sub></span></div><p>Six scènes, amorçage puis propagation. a<sub>c</sub> = (K<sub>IC</sub>/(Yσ<sub>max</sub>))². Dans une soudure, presque tout est propagation.</p></div>
   </div>
-  <div class="fun"><span class="fun-h">🔍 Fun fact : Non, le métal fatigué ne « cristallise » pas</span>Au XIX<sup>e</sup> siècle, devant un essieu rompu, les ingénieurs voyaient une cassure à gros grains brillants et en concluaient que le fer, à force de vibrer, avait « cristallisé » et perdu sa texture fibreuse. Dès 1843, un an après l'accident de Meudon, l'ingénieur écossais William Rankine conteste cette idée : rien ne prouve que ces grains n'étaient pas déjà là dans l'essieu neuf. Il remarque que les ruptures partent des épaulements à angle vif et progressent lentement, et il conseille des changements de diamètre progressifs. Il avait raison : le métal est cristallin dès sa fabrication, et l'aspect grenu n'est que la zone de rupture finale, brutale, de la dernière scène du <a href="#c6">chapitre 6</a>. Le mythe de la « cristallisation » a pourtant survécu des décennies dans les ateliers.</div>
+  <div class="btns"><button class="btn" id="printFiche" type="button">🖨 Imprimer la fiche mémoire</button></div>
+  <div class="fun"><span class="fun-h">🔍 Fun fact : Non, le métal fatigué ne « cristallise » pas</span>Au XIX<sup>e</sup> siècle, devant la cassure à gros grains brillants d'un essieu rompu, les ingénieurs croyaient que le fer, à force de vibrer, avait « cristallisé ». Dès 1843, un an après Meudon, l'ingénieur écossais William Rankine conteste l'idée : rien ne prouve que ces grains n'étaient pas déjà là. Il remarque que les ruptures partent des épaulements à angle vif et progressent lentement, et conseille des changements de diamètre progressifs. Le métal est cristallin dès sa fabrication ; l'aspect grenu n'est que la rupture finale du <a href="#c6">chapitre 6</a>.</div>
 </div>
 </section>
 
@@ -1105,6 +911,20 @@ const NS="http://www.w3.org/2000/svg";
 const $=s=>document.querySelector(s);
 const $$=s=>Array.from(document.querySelectorAll(s));
 const RM=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+function player(id,o){/* lecteur pilotable : ⏮ début, ◀ pas, ▶ lecture ou ⏸ pause (reprend où elle s'est arrêtée), pas ▶ ; o.get() et o.set(t) avec t de 0 à 1, o.dur (ms), o.steps */
+  const box=$("#"+id),bp=box.querySelector('[data-a="play"]'),lab=bp.textContent,n=o.steps||20;let raf=null,run=false;
+  const cl=t=>Math.max(0,Math.min(1,t));
+  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;bp.textContent=lab;}
+  function step(d){stop();o.set(cl(Math.round(o.get()*n+d)/n));}
+  bp.addEventListener("click",()=>{if(run){stop();return;}let t0=o.get();if(t0>=0.999)t0=0;
+    if(RM){o.set(cl(Math.round(t0*n+1)/n));return;}
+    run=true;bp.textContent="⏸ Pause";const s0=performance.now()-t0*o.dur;
+    const f=now=>{if(!run)return;const t=cl((now-s0)/o.dur);o.set(t);if(t>=1){stop();return;}raf=requestAnimationFrame(f);};raf=requestAnimationFrame(f);});
+  box.querySelector('[data-a="start"]').addEventListener("click",()=>{stop();o.set(0);});
+  box.querySelector('[data-a="back"]').addEventListener("click",()=>step(-1));
+  box.querySelector('[data-a="fwd"]').addEventListener("click",()=>step(1));
+  return {stop:stop};
+}
 
 function el(tag,attrs,parent){
   const e=document.createElementNS(NS,tag);
@@ -1259,36 +1079,21 @@ function Rtxt(smax,smin){if(Math.abs(smax)<1e-9)return "non défini";return nf(s
   function message(){
     const s=+sl.value/100,nr=Nr(s);
     if(!run&&!done&&N===0){
-      msg.innerHTML=s>=1?"À 100 % de R<sub>m</sub>, les deux éprouvettes cassent dès le premier chargement : ce n'est plus de la fatigue, c'est une rupture statique.":
-        "Prêt. Prédiction à "+Math.round(s*100)+" % de R<sub>m</sub> : l'éprouvette statique tiendra indéfiniment ; la cyclique "+(isFinite(nr)?"cassera vers <b>"+bigN(nr)+" cycles</b>.":"devrait tenir aussi (niveau sous la limite d'endurance). Lance l'essai.");
+      msg.innerHTML=(s>=1?"À 100 % de R<sub>m</sub>, les deux éprouvettes cassent dès le premier chargement : ce n'est plus de la fatigue, c'est une rupture statique.":
+        "Prêt. Prédiction à "+Math.round(s*100)+" % de R<sub>m</sub> : l'éprouvette statique tiendra indéfiniment ; la cyclique "+(isFinite(nr)?"cassera vers <b>"+bigN(nr)+" cycles</b>.":"devrait tenir aussi (niveau sous la limite d'endurance). Lance l'essai."))+"<br><b>À retenir :</b> une charge trop faible pour casser d'un coup casse à force d'être répétée.";
       return;
     }
     if(done){
-      if(s>=1){msg.innerHTML="💥 Rupture immédiate des deux éprouvettes : σ = R<sub>m</sub>.";return;}
-      if(isFinite(nr))msg.innerHTML="💥 L'éprouvette cyclique a cassé après <b>"+bigN(nr)+" cycles</b>, soit "+dur(nr/F)+" à 10 Hz, sous une contrainte qui ne dépasse jamais "+Math.round(s*100)+" % de R<sub>m</sub>. La statique, chargée à la même valeur, est intacte et le restera. "+(nr<1e4?"Si peu de cycles : on est dans le domaine oligocyclique, comme le trombone.":"C'est la fatigue.");
-      else msg.innerHTML="✅ 10⁸ cycles (près de 4 mois à 10 Hz) et toujours intacte : à "+Math.round(s*100)+" % de R<sub>m</sub>, cet acier est sous sa <b>limite d'endurance</b> (≈ 50 % de R<sub>m</sub> ici). Cours 2.";
+      if(s>=1){msg.innerHTML=("💥 Rupture immédiate des deux éprouvettes : σ = R<sub>m</sub>.")+"<br><b>À retenir :</b> une charge trop faible pour casser d'un coup casse à force d'être répétée.";return;}
+      if(isFinite(nr))msg.innerHTML=("💥 L'éprouvette cyclique a cassé après <b>"+bigN(nr)+" cycles</b>, soit "+dur(nr/F)+" à 10 Hz, sous une contrainte qui ne dépasse jamais "+Math.round(s*100)+" % de R<sub>m</sub>. La statique, chargée à la même valeur, est intacte et le restera. "+(nr<1e4?"Si peu de cycles : on est dans le domaine oligocyclique, comme le trombone.":"C'est la fatigue."))+"<br><b>À retenir :</b> une charge trop faible pour casser d'un coup casse à force d'être répétée.";
+      else msg.innerHTML=("✅ 10⁸ cycles (près de 4 mois à 10 Hz) et toujours intacte : à "+Math.round(s*100)+" % de R<sub>m</sub>, cet acier est sous sa <b>limite d'endurance</b> (≈ 50 % de R<sub>m</sub> ici). Cours 2.")+"<br><b>À retenir :</b> une charge trop faible pour casser d'un coup casse à force d'être répétée.";
       return;
     }
-    msg.innerHTML="⏳ Essai en cours… "+(isFinite(nr)&&N>1&&Math.log10(N+1)/Math.log10(nr+1)>0.75?"Une fissure est apparue au bord de l'éprouvette cyclique : invisible en vrai, ici grossie.":"Rien ne se voit, et pourtant chaque cycle laisse une trace.");
+    msg.innerHTML=("⏳ Essai en cours… "+(isFinite(nr)&&N>1&&Math.log10(N+1)/Math.log10(nr+1)>0.75?"Une fissure est apparue au bord de l'éprouvette cyclique : invisible en vrai, ici grossie.":"Rien ne se voit, et pourtant chaque cycle laisse une trace."))+"<br><b>À retenir :</b> une charge trop faible pour casser d'un coup casse à force d'être répétée.";
   }
-  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;bP.textContent="▶ Lancer l'essai";}
+  function stop(){A.stop();}
   function finish(){const s=+sl.value/100,nr=Nr(s);N=isFinite(nr)?Math.max(nr,s>=1?0.25:nr):1e8;done=true;stop();draw();message();}
-  bP.addEventListener("click",()=>{
-    if(run){stop();message();return;}
-    if(done){N=0;done=false;}
-    const s=+sl.value/100;
-    if(s>=1||RM){finish();return;}
-    run=true;bP.textContent="⏸ Pause";
-    const p0=N>0?Math.log10(N+1)/8:0;t0=performance.now()-p0*6000;
-    const step=now=>{
-      const p=Math.min(1,(now-t0)/6000);N=Math.pow(10,8*p)-1;vis+=0.35;
-      const nr=Nr(+sl.value/100);
-      if(N>=nr||p>=1){finish();return;}
-      draw();message();raf=requestAnimationFrame(step);
-    };
-    raf=requestAnimationFrame(step);
-  });
-  bR.addEventListener("click",()=>{stop();N=0;done=false;vis=0;draw();message();});
+  const A=player("m1pl",{get:()=>N>0?Math.min(1,Math.log10(N+1)/8):0,set:t=>{{const s=+sl.value/100,nr=Nr(s);N=Math.pow(10,8*t)-1;vis+=0.35;if(N>=nr||t>=1){finish();}else{done=false;draw();message();}}},dur:6000,steps:16});
   sl.addEventListener("input",()=>{stop();N=0;done=false;draw();message();});
   $$("#m1ex .btn").forEach(b=>b.addEventListener("click",()=>{sl.value=b.dataset.v;stop();N=0;done=false;draw();message();}));
   redraws.push(draw);draw();message();
@@ -1377,7 +1182,7 @@ function Rtxt(smax,smin){if(Math.abs(smax)<1e-9)return "non défini";return nf(s
       tx(svg,X(i),Y(v)+(up?-11:20),L(i),{"text-anchor":"middle","font-size":"12.5","font-weight":inSt?"700":"400",opacity:read?1:.5});
     });
     if(W>=420){const g=tx(svg,W-mr,mt-8,"● dans la pile   ○ pas encore lu ou retiré",{class:"lbl","text-anchor":"end"});}
-    msg.innerHTML=f.msg+(f.st.length?" <span class='mut'>Pile : "+f.st.map(L).join(" ")+"</span>":"");
+    msg.innerHTML=(f.msg+(f.st.length?" <span class='mut'>Pile : "+f.st.map(L).join(" ")+"</span>":""))+"<br><b>À retenir :</b> seuls les extremums comptent ; le plus grand cycle relie le maximum et le minimum absolus.";
     /* tableau */
     let h="<tr><th>N°</th><th>Points</th><th>Type</th><th>Δσ (MPa)</th><th>σ<sub>m</sub> (MPa)</th></tr>";
     if(!f.cnt.length)h+="<tr><td colspan='5' class='mut'>Aucun cycle compté pour l'instant.</td></tr>";
@@ -1496,7 +1301,7 @@ function Rtxt(smax,smin){if(Math.abs(smax)<1e-9)return "non défini";return nf(s
     let m="Famille : <b>"+fam.n+"</b> : "+fam.d;
     if(fam.k==="a")m+=" Remarque σ<sub>min</sub> = −σ<sub>max</sub>.";
     if(sa>0&&Math.abs(smax)>1e-9)m+=" Vérifie : Δσ = 2 × σ<sub>a</sub> = "+nf(2*sa,0)+" MPa, et R = ("+nf(sm,0)+" − "+nf(sa,0)+")/("+nf(sm,0)+" + "+nf(sa,0)+") = "+Rtxt(smax,smin)+".";
-    msg.innerHTML=m;
+    msg.innerHTML=(m)+"<br><b>À retenir :</b> deux grandeurs fixent le cycle ; la marée change σ<sub>m</sub>, pas Δσ.";
   }
   function loop(now){const dt=Math.min(50,now-last);last=now;ph+=dt*0.0032;draw();if(run)raf=requestAnimationFrame(loop);}
   bP.addEventListener("click",()=>{run=!run;bP.textContent=run?"⏸ Pause":"▶ Lecture";if(run){last=performance.now();raf=requestAnimationFrame(loop);}else if(raf)cancelAnimationFrame(raf);});
@@ -1567,7 +1372,7 @@ function Rtxt(smax,smin){if(Math.abs(smax)<1e-9)return "non défini";return nf(s
     $("#m4xo").textContent=nf(x,2);
     const Rv=isAs?"non défini (σ<sub>max</sub> = 0)":nf((x-1)/(x+1),2);
     ro.innerHTML="<span>x = <span class='tau'>σ<sub>m</sub></span>/<span class='sig'>σ<sub>a</sub></span> = "+nf(x,2)+"</span><span class='mat'>R = "+Rv+"</span><span>pour σ<sub>a</sub> = 100 MPa :</span><span>σ<sub>m</sub> = "+nf(100*x,0)+",</span><span>σ<sub>max</sub> = "+nf(100*x+100,0)+",</span><span>σ<sub>min</sub> = "+nf(100*x-100,0)+" MPa</span>";
-    msg.innerHTML="Famille : <b>"+fam.n+"</b> : "+fam.d+(EXS[fam.k]?" Exemple : "+EXS[fam.k]+".":"")+(x>3.5?" Plus x grandit, plus R s'approche de 1 sans l'atteindre : le cycle devient une petite vibration sur une grosse charge statique.":"")+(x<-3.5?" Toujours en compression ; R s'approche de 1 par au-dessus.":"");
+    msg.innerHTML=("Famille : <b>"+fam.n+"</b> : "+fam.d+(EXS[fam.k]?" Exemple : "+EXS[fam.k]+".":"")+(x>3.5?" Plus x grandit, plus R s'approche de 1 sans l'atteindre : le cycle devient une petite vibration sur une grosse charge statique.":"")+(x<-3.5?" Toujours en compression ; R s'approche de 1 par au-dessus.":""))+"<br><b>À retenir :</b> R donne la forme du cycle : −1 alterné, 0 répété, entre 0 et 1 ondulé, au-delà la compression domine.";
   }
   sl.addEventListener("input",draw);
   $$("#m4ex .btn").forEach(b=>b.addEventListener("click",()=>{sl.value=b.dataset.x;draw();}));
@@ -1588,7 +1393,7 @@ function Rtxt(smax,smin){if(Math.abs(smax)<1e-9)return "non défini";return nf(s
     return {M,F,d,rho,S,I,Wf,sm,sa,smax:sm+sa,smin:sm-sa,n:+sN.value};
   }
   function draw(){
-    const W=svgW(svg),wide=W>=620,H=wide?300:500;setVB(svg,W,H);clear(svg);
+    const W=svgW(svg),wide=W>=580,H=wide?300:500;setVB(svg,W,H);clear(svg);
     const v=vals();
     /* section */
     const cx=wide?130:W/2,cy=wide?150:130,Rp=48+(v.d-20)/60*42;
@@ -1643,7 +1448,7 @@ function Rtxt(smax,smin){if(Math.abs(smax)<1e-9)return "non défini";return nf(s
     else m="Famille : <b>"+fam.n+"</b>. "+(fam.k==="a"?"Chaque tour de l'arbre fait passer P du côté tendu au côté comprimé : un cycle complet, R = −1, sans aucun mécanisme. C'est le principe de la machine de Wöhler.":fam.k==="b"?"L'effort axial a relevé tout le cycle de σ<sub>m</sub> = F/S, mais l'amplitude reste fixée par la flexion.":fam.k==="c"?"σ<sub>m</sub> = σ<sub>a</sub> : P revient exactement à zéro à chaque tour.":"La traction l'emporte : P reste tendu tout le tour. Essaie de ramener P vers la surface.");
     if(+sP.value<100&&v.sa>0)m+=" P est à "+sP.value+" % du rayon : l'amplitude y est "+sP.value+" % de celle de la surface, la surface reste le point le plus sollicité.";
     if(v.smax>600)m+=" ⚠️ σ<sub>max</sub> dépasse 600 MPa, la résistance d'un acier de construction courant : l'arbre casserait presque tout de suite. Augmente le diamètre.";
-    msg.innerHTML=m;
+    msg.innerHTML=(m)+"<br><b>À retenir :</b> en flexion rotative, chaque tour fait un cycle R = −1, maximal en surface.";
   }
   function reset(){trace=[];acc=0;th=Math.PI/2;}
   function loop(now){const dt=Math.min(50,now-last);last=now;const w=0.0025*dt;th+=w;acc+=w;
@@ -1697,7 +1502,7 @@ function Rtxt(smax,smin){if(Math.abs(smax)<1e-9)return "non défini";return nf(s
     else if(r<1)m="Ovale couché dans le sens de l'effort : K<sub>t</sub> = "+nf(Kt,2)+" &lt; 3. Les lignes de force sont peu déviées. C'est pourquoi on oriente les trous oblongs dans le sens de l'effort.";
     else if(r<5)m="Ovale debout, en travers de l'effort : K<sub>t</sub> = "+nf(Kt,2)+". Plus le trou est allongé en travers, plus les lignes de force se serrent à ses extrémités.";
     else m="Presque une fente : K<sub>t</sub> = "+nf(Kt,1)+" et il tend vers l'infini quand l'ovale s'aplatit. Pour une vraie fissure, K<sub>t</sub> n'a plus de sens : on passe au facteur d'intensité de contrainte K (chapitre 6, cours 4).";
-    msg.innerHTML=m;
+    msg.innerHTML=m+"<br><b>À retenir :</b> plus le trou s'aplatit en travers de l'effort, plus K<sub>t</sub> monte ; un trou rond triple la contrainte.";
   }
   sl.addEventListener("input",draw);
   $$("#m5bex .btn").forEach(b=>b.addEventListener("click",()=>{sl.value=b.dataset.k;draw();}));
@@ -1820,7 +1625,7 @@ function Rtxt(smax,smin){if(Math.abs(smax)<1e-9)return "non défini";return nf(s
     scaleBar(g,wx+12,wy+wh-6,70,"≈ 10 mm");
   }
   function draw(){
-    const W=svgW(svg),wide=W>=620,H=wide?480:570;setVB(svg,W,H);clear(svg);
+    const W=svgW(svg),wide=W>=620,mid=!wide&&W>=560,H=wide?480:mid?430:570;setVB(svg,W,H);clear(svg);
     const F=+sl.value/1000,A=SH[type],ph=phase(F),a=aOf(F);
     const x0=20,x1=W-20;
     /* barre de vie */
@@ -1835,7 +1640,7 @@ function Rtxt(smax,smin){if(Math.abs(smax)<1e-9)return "non défini";return nf(s
     el("polygon",{points:cxF+","+(by+18)+" "+(cxF-7)+","+(by+30)+" "+(cxF+7)+","+(by+30),fill:"var(--ink)"},svg);
     el("line",{x1:cxF,y1:by-4,x2:cxF,y2:by+18,stroke:"var(--ink)","stroke-width":2},svg);
     /* fenêtre microscope */
-    const ww=Math.min(W-40,460),wx=(W-ww)/2,wy=by+48,wh=wide?190:200;
+    const ww=Math.min(W-40,460),wx=(W-ww)/2,wy=by+48,wh=wide?190:mid?160:200;
     const g=el("g",{},svg);
     tx(svg,wx,wy-6,"Scène "+ph.ph+" : "+["","la trace","la graine","la fêlure",ph.weld?"le défaut qui grandit":"la fissure","la croissance","la chute"][ph.ph],{class:"ttl"});
     scene(g,ph.ph,ph.p,!!ph.weld,wx,wy+4,ww,wh,F);
@@ -1866,17 +1671,10 @@ function Rtxt(smax,smin){if(Math.abs(smax)<1e-9)return "non défini";return nf(s
       w:"<b>Assemblage soudé.</b> Un petit défaut existe dès la fabrication au pied de cordon (≈ 0,1 mm), dans une zone de concentration de contrainte et de contraintes résiduelles. Les scènes 1 à 3 sont pratiquement sautées.",
       5:"<b>La croissance.</b> La macrofissure avance un peu à chaque cycle et laisse des lignes d'arrêt sur la cassure. Elle devient détectable par CND vers 1 mm. Lente au début, elle accélère en grandissant (cours 4).",
       6:"<b>La chute.</b> La section restante ne suffit plus : K atteint la ténacité K<sub>IC</sub>, la pièce casse brutalement. La cassure montre une zone lisse (fatigue) et une zone rugueuse (rupture finale)."};
-    msg.innerHTML=(ph.weld?M.w:M[ph.ph])+" <span class='mut'>Fraction de vie : "+nf(F*100,1)+" % ; a ≈ "+aTxt(a)+" ; amorçage = "+Math.round(A*100)+" % de la vie pour cette pièce.</span>";
+    msg.innerHTML=((ph.weld?M.w:M[ph.ph])+" <span class='mut'>Vie écoulée : "+nf(F*100,1)+" % ; a ≈ "+aTxt(a)+" ; amorçage : "+Math.round(A*100)+" % de la vie.</span>")+"<br><b>À retenir :</b> soudure brute : l'amorçage est très court, presque toute la vie est propagation.";
   }
-  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;bP.textContent="▶ Lecture";}
-  bP.addEventListener("click",()=>{
-    if(run){stop();return;}
-    if(+sl.value>=1000)sl.value=0;
-    if(RM){sl.value=1000;draw();return;}
-    run=true;bP.textContent="⏸ Pause";const v0=+sl.value;t0=performance.now();
-    const step=now=>{const v=Math.min(1000,v0+(now-t0)/14);sl.value=v;draw();if(v>=1000){stop();return;}raf=requestAnimationFrame(step);};
-    raf=requestAnimationFrame(step);
-  });
+  function stop(){A.stop();}
+  const A=player("m6pl",{get:()=>+sl.value/1000,set:t=>{sl.value=1000*t;draw();},dur:14000,steps:20});
   sl.addEventListener("input",()=>{stop();draw();});
   $$("input[name=m6t]").forEach(r=>r.addEventListener("change",()=>{if(r.checked){type=r.value;draw();}}));
   redraws.push(draw);draw();
@@ -1988,6 +1786,13 @@ function Rtxt(smax,smin){if(Math.abs(smax)<1e-9)return "non défini";return nf(s
     stage.replaceChildren();caption.replaceChildren();
     if(opener)opener.focus({preventScroll:true});
   });
+})();
+</script>
+<script>
+(function(){/* impression de la fiche mémoire seule */
+  const b=document.getElementById("printFiche");if(!b)return;
+  b.addEventListener("click",()=>{document.body.classList.add("print-fiche");window.print();});
+  window.addEventListener("afterprint",()=>document.body.classList.remove("print-fiche"));
 })();
 </script>
 </body>

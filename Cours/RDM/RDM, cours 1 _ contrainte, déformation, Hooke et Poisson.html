@@ -109,12 +109,6 @@ section.chap{padding:46px 0 10px}
 .c-img span{font-size:.95rem;line-height:1.3}
 @media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
 
-/* niveaux */
-.lv{margin:1.2rem 0;padding:6px 22px 14px;border-radius:4px}
-.lv1{background:var(--card);border:2px solid var(--ink)}
-.lv2{background:var(--lv2);border-left:6px solid var(--ink)}
-.lv-h{display:flex;align-items:center;gap:10px;font-family:var(--font-head);font-size:1.35rem;font-weight:600;margin:10px 0 4px}
-.lv-h .tag{font-size:.95rem;font-family:var(--font-body);font-weight:400;color:var(--muted)}
 
 /* formule */
 .fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:560px;text-align:center;border-radius:3px}
@@ -129,6 +123,12 @@ section.chap{padding:46px 0 10px}
 .warn{margin:1rem 0;padding:.7rem 1rem;border:2px solid var(--bad);border-radius:4px;font-size:.97rem;background:color-mix(in srgb,var(--bad) 7%,transparent)}
 .meta{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--frc);border-radius:4px;background:color-mix(in srgb,var(--frc) 6%,transparent)}
 .mnemo{margin:1rem 0;padding:.7rem 1rem;background:var(--hl);border-radius:4px;font-size:.98rem}
+:root{--weld:#9A5B12}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--weld:#E7A95A}}
+:root[data-theme="dark"]{--weld:#E7A95A}
+.weld{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--weld);border-radius:4px;background:color-mix(in srgb,var(--weld) 7%,transparent)}
+.weld>b:first-child{font-family:var(--font-head);font-size:1.15rem;font-weight:600;color:var(--weld)}
+.exo .q{margin:.25rem 0}
 .fun{margin:1.2rem 0;padding:.8rem 1rem;border:2px dashed var(--muted);border-radius:10px;background:var(--card);font-size:.98rem}
 .fun-h{display:block;margin-bottom:.35rem;font-family:var(--font-head);font-size:1.15rem;font-weight:600;letter-spacing:.02em}
 
@@ -286,6 +286,30 @@ footer{padding:40px 0 60px;color:var(--muted);font-size:.9rem}
 hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
 @media (max-width:700px){.m{white-space:normal}.fx{padding:12px 10px}.fx .big{font-size:1.45rem!important}}
 .fx{overflow-x:auto}
+
+/* gabarit court : approfondissement replié, à retenir, prédiction */
+details.deep{margin:1.2rem 0;padding:0 18px;background:var(--lv2);border-left:6px solid var(--ink);border-radius:4px}
+details.deep>summary{font-family:var(--font-head);font-size:1.2rem;font-weight:600;padding:9px 0}
+details.deep[open]{padding-bottom:10px}
+.retenir{margin:1.4rem 0 .4rem;padding:8px 18px 6px;background:var(--card);border:2px solid var(--ink);border-radius:4px}
+.retenir>b:first-child{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.retenir ul{margin:.3rem 0 .3rem}
+.predict{display:block;margin-top:.35rem;color:var(--ink);font-weight:700}
+@media (max-width:520px){details.deep{padding:0 12px}.retenir{padding:8px 12px 6px}}
+
+/* impression : le cours sur papier clair, ou la fiche mémoire seule sur une page */
+@media print{
+  :root,:root[data-theme]{--paper:#fff!important;--paper-2:#EEF2F6!important;--card:#fff!important;--ink:#111!important;--muted:#444!important;--line:#999!important;--grid:transparent!important;--lv2:#F2F5F8!important;--hl:#FFF3B0!important;color-scheme:light}
+  body{background:#fff;font-size:11pt}
+  .toc,.theme-btn,.btns,.ctrl,#qzReset,.score{display:none!important}
+  section.chap{padding:14px 0 4px}
+  .lab,.fx,.retenir,details.deep,.fiche>div,.exo{break-inside:avoid}
+  body.print-fiche header,body.print-fiche main>section:not(#fiche),body.print-fiche footer{display:none!important}
+  body.print-fiche #fiche .cartouche{margin-bottom:.6rem}
+  body.print-fiche .fiche>div{padding:8px 10px}
+}
+/* formules dans les replis et les corrections : retour à la ligne permis (sinon débordement vers 768 px) */
+details .m{white-space:normal}
 </style>
 </head>
 <body>
@@ -298,7 +322,7 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     </div>
     <div class="tb-cells">
       <div><small>Cours</small><b>1 sur 5 : les fondations</b></div>
-      <div><small>Durée conseillée</small><b>≈ 2 h 30 avec les exercices</b></div>
+      <div><small>Durée conseillée</small><b>≈ 1 h 15 à 1 h 30 avec les exercices</b></div>
       <div><small>Prérequis</small><b>aucun</b></div>
       <div><small>À la fin tu sais</small><b>écrire tes deux premières matrices</b></div>
     </div>
@@ -338,36 +362,32 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
 <div class="wrap">
   <h3 style="margin-top:0">Avant de commencer</h3>
 
-  <div class="def"><b>📘 Trois variantes de notation</b> que tu croiseras ailleurs. <b>1.</b> La déformation est parfois notée <b>ϵ</b> et appelée « déformation longitudinale » ; c'est le <span class="eps">ε</span> de ce cours. <b>2.</b> Pour Poisson, on écrit aussi <span class="m"><span class="mat">ν</span> = −ε′/ε</span> avec <span class="m">ε′ = −Δd/d</span>, où <b>Δd est la diminution du diamètre</b> (un nombre positif, le diamètre passe de d à d − Δd). Ici, Δd désigne la variation algébrique (négative quand le diamètre diminue) : les deux écritures donnent le même ν. <b>3.</b> τ est aussi appelée « scission » et γ « déformation angulaire ».</div>
+  <div class="def"><b>📘 Le sujet du planning</b> : cette série couvre les sujets <b>3.1</b> et <b>3.2</b> (bases de la statique des structures et de la résistance des matériaux). Attendus de l'IWE (<i>International Welding Engineer</i>) selon le référentiel de l'IIW (<i>International Institute of Welding</i>) : calculer les efforts intérieurs et les contraintes nominales d'une section, et les contraintes qui en résultent dans un assemblage soudé. Ce premier cours pose les briques : contrainte, déformation et constantes du matériau.</div>
 
   <div class="fix">
     <h4>Une confusion fréquente, à lever dès le départ</h4>
-    <p>On entend souvent « matrice des déformations » et « tenseur des contraintes » comme s'il s'agissait d'une seule et même chose. C'est la confusion numéro 1, et elle est parfaitement normale quand on débute : <b>ce ne sont pas deux noms pour la même chose</b>. Il existe <b>deux matrices différentes</b>, qui décrivent deux réalités différentes, et l'essentiel du travail en RDM consiste à passer de l'une à l'autre.</p>
+    <p>« Matrice des déformations » et « tenseur des contraintes » ne sont <b>pas deux noms pour la même chose</b> : ce sont deux matrices différentes, la cause et l'effet, et l'essentiel du travail en RDM consiste à passer de l'une à l'autre.</p>
     <div class="fix-diag">
       <div class="bx" style="border-color:var(--sig)"><small>tenseur des contraintes</small><div class="s sig">[σ]</div><small>les efforts internes (la cause)<br>unité : MPa</small></div>
       <div class="ar">⇄<small>loi de Hooke<br>avec <span class="mat">E</span> et <span class="mat">ν</span></small></div>
       <div class="bx" style="border-color:var(--eps)"><small>tenseur des déformations</small><div class="s eps">[ε]</div><small>le changement de forme (l'effet)<br>sans unité</small></div>
     </div>
-    <p>La loi de Hooke joue le rôle d'un <b>dictionnaire</b> qui traduit l'une dans l'autre, grâce aux constantes du matériau. Tout le cours 1 sert à comprendre chaque morceau de ce schéma en version simple (une seule direction), avant de passer aux matrices complètes.</p>
-    <p>Au passage, le célèbre <b>cercle de Mohr</b> doit son nom à l'ingénieur allemand Christian Otto Mohr (1882). Retiens bien l'orthographe : elle est utile pour chercher des exercices corrigés.</p>
-    <div class="def"><b>📖 Tenseur :</b> mot savant pour un objet mathématique qui décrit une grandeur physique dans toutes les directions à la fois. En RDM, tu peux le voir comme une <b>matrice 3 × 3</b> (un tableau de 3 lignes et 3 colonnes) livrée avec un mode d'emploi : ses cases changent si on tourne les axes, mais l'état physique qu'elle décrit reste le même. Dans ta tête, pour l'instant : tenseur ≈ matrice.</div>
+    <div class="def"><b>📖 Tenseur :</b> un objet qui décrit une grandeur physique dans toutes les directions à la fois. En RDM, une <b>matrice 3 × 3</b> dont les cases changent si l'on tourne les axes, alors que l'état physique décrit reste le même. Pour l'instant : tenseur ≈ matrice.</div>
   </div>
 
-  <h4>Le parcours complet</h4>
-  <p>La série avance en 5 cours, chacun s'appuyant sur le précédent, pour environ 13 h 30 de travail au total, exercices compris. Ne saute pas celui-ci, même s'il paraît « facile » : chaque case des matrices des cours suivants est une des notions d'aujourd'hui.</p>
-  <ol class="route">
-    <li class="here"><span class="dot">1</span><b>Les fondations</b> <span class="dur">≈ 2 h 30, tu es ici</span><p>σ, ε, E, ν, τ, γ, G, et la facette qui tourne. On termine en écrivant les deux premières matrices.</p></li>
-    <li><span class="dot">2</span><b>Le tenseur des contraintes</b> <span class="dur">≈ 2 h 30</span><p>Lire et écrire [σ], calculer la contrainte sur n'importe quelle facette avec T⃗ = [σ]·n⃗.</p></li>
-    <li><span class="dot">3</span><b>Le tenseur des déformations</b> <span class="dur">≈ 2 h 30</span><p>Construire [ε], le piège du « ½ », mesurer les déformations avec des jauges et des rosettes.</p></li>
-    <li><span class="dot">4</span><b>Directions principales et cercle de Mohr</b> <span class="dur">≈ 3 h</span><p>Tourner les axes, trouver les contraintes maximales, tracer et exploiter le cercle.</p></li>
-    <li><span class="dot">5</span><b>Hooke généralisée et critères de résistance</b> <span class="dur">≈ 3 h</span><p>Passer de [σ] à [ε] et inversement, critères de Tresca et de von Mises, sujets types d'examen.</p></li>
-  </ol>
+  <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage</b>
+    <p>Vérifier un cordon, c'est comparer une contrainte à une limite et une déformation à une valeur admissible. Tous les calculs d'assemblages soudés de la série (efforts, sections, contraintes combinées) reposent sur les notions de ce cours.</p>
+  </div>
 
-  <h4>Comment lire ce cours</h4>
-  <p>Chaque chapitre est construit de la même façon, pour que ton cerveau sache où regarder :</p>
-  <div class="lv lv1" style="margin-top:.6rem"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">l'intuition</span></div><p>Des images, des analogies, presque pas de formules. Si tu ne lis que les niveaux 1, tu <b>comprends</b> la RDM.</p></div>
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">le calcul</span></div><p>Les définitions précises, les démonstrations et les réflexes attendus à l'examen. Avec les niveaux 2, tu <b>sais faire</b>.</p></div>
-  <p>Entre les deux, une <b>manipulation</b> : une animation que tu pilotes avec des curseurs. Ne la survole pas, joue avec pendant une minute ou deux : c'est là que l'image se grave. Et chaque chapitre a une <b>image à retenir</b> (en haut à droite de son cartouche) : ferme les yeux cinq secondes et « photographie-la ». Tu les retrouveras toutes alignées dans la fiche mémoire finale, prêtes à être revisitées de tête le jour de l'examen.</p>
+  <h4>Le parcours de la série</h4>
+  <ol class="route">
+    <li class="here"><span class="dot">1</span><b>Les fondations</b><p>σ, ε, E, ν, τ, γ, G, et la facette qui tourne.</p></li>
+    <li><span class="dot">2</span><b>Le tenseur des contraintes</b><p>Lire [σ], calculer la contrainte sur n'importe quelle facette.</p></li>
+    <li><span class="dot">3</span><b>Le tenseur des déformations</b><p>Construire [ε], le piège du « ½ », jauges et rosettes.</p></li>
+    <li><span class="dot">4</span><b>Directions principales et cercle de Mohr</b><p>Trouver les contraintes extrêmes.</p></li>
+    <li><span class="dot">5</span><b>Hooke en 3D et critères de résistance</b><p>Passer de [σ] à [ε], Tresca et von Mises.</p></li>
+  </ol>
+  <p>Une seconde série, la théorie des poutres (cours 6 à 8 : torseur de cohésion, diagrammes de sollicitations, caractéristiques des sections), prolonge celle-ci.</p>
 </div>
 </section>
 <!-- ================= CHAPITRE 0 ================= -->
@@ -379,24 +399,32 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="c-img"><span class="ico">📚</span><span><small>Image à retenir</small>L'étagère qui plie sans casser, le verre qui casse sans plier</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">l'intuition</span></div>
-    <p><b>RDM</b> signifie <b>Résistance Des Matériaux</b>. C'est la discipline qui permet de répondre, <i>avant</i> de fabriquer une pièce, à deux questions :</p>
-    <p>1. <b>Est-ce que ça va casser ?</b> Pour y répondre, on calcule la <b class="sig">contrainte</b> : la « souffrance » de la matière.<br>
-       2. <b>Est-ce que ça va trop se déformer ?</b> Pour y répondre, on calcule la <b class="eps">déformation</b>.</p>
-    <p>Ces deux questions sont vraiment différentes. Pense à une étagère chargée de livres : elle peut très bien ne pas casser, mais plier au point que les livres glissent. Elle <i>résiste</i>, mais elle n'est pas assez <i>rigide</i>. À l'inverse, un verre ne se déforme presque pas… puis casse d'un coup. Un bon ingénieur vérifie toujours les deux.</p>
+  <p><b>RDM</b> signifie <b>Résistance Des Matériaux</b> : la discipline qui répond, avant de fabriquer une pièce, à deux questions. <b>Est-ce que ça va casser ?</b> On calcule la <b>contrainte</b>, la « souffrance » de la matière. <b>Est-ce que ça va trop se déformer ?</b> On calcule la <b>déformation</b>. Une étagère chargée peut ne pas casser mais plier au point que les livres glissent : elle résiste, sans être assez rigide. Un verre, lui, ne se déforme presque pas, puis casse d'un coup. Un bon ingénieur vérifie toujours les deux.</p>
+
+  <div class="def"><b>📖 Le cadre de la RDM classique</b> : quand un énoncé dit « matériau homogène et isotrope, élastique linéaire, sous HPP », il annonce les cinq hypothèses ci-dessous.</div>
+  <div class="tbl-wrap"><table class="data">
+    <tr><th>Hypothèse</th><th>Ce que ça veut dire</th><th>Contre-exemple</th></tr>
+    <tr><td><b>Continu</b></td><td>pas de trous : on oublie les atomes</td><td>une mousse, un tas de sable</td></tr>
+    <tr><td><b>Homogène</b></td><td>mêmes propriétés en tout point</td><td>une soudure, un béton armé</td></tr>
+    <tr><td><b>Isotrope</b></td><td>mêmes propriétés dans toutes les directions</td><td>le bois, les composites</td></tr>
+    <tr><td><b>Élastique linéaire</b></td><td>déformation proportionnelle à l'effort, tout revient à zéro au relâchement</td><td>un métal au-delà de sa limite d'élasticité</td></tr>
+    <tr><td><b>HPP</b></td><td>petites perturbations : on calcule sur la forme initiale</td><td>un élastique très étiré, une tôle emboutie</td></tr>
+  </table></div>
+
+  <p><b>Ordre de grandeur</b> : dans le domaine élastique des métaux, les déformations restent de l'ordre de 0,1 % : un fil d'acier d'un mètre s'allonge d'environ un millimètre avant tout dommage. Les manipulations de ce cours <b>exagèrent</b> donc les déformations pour qu'on les voie.</p>
+
+  <div class="warn"><b>⚠️ Piège : résister et être assez rigide sont deux vérifications distinctes.</b> La première compare une contrainte à une limite du matériau ; la seconde compare un déplacement (allongement, flèche) à une valeur admissible. Une pièce peut passer l'une et rater l'autre.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « l'étagère plie, le verre casse »</b> : la déformation d'un côté, la contrainte de l'autre.</div>
+  <div class="weld"><b>🔥 Une soudure n'est pas homogène</b>
+    <p>Métal fondu, zone affectée thermiquement et métal de base n'ont pas les mêmes propriétés, et des contraintes résiduelles s'y ajoutent. La RDM donne les contraintes <b>nominales</b> ; les règles de calcul des assemblages soudés tiennent compte ensuite de ces écarts.</p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">le cadre de travail</span></div>
-    <p>La RDM « classique » (celle des cours d'initiation) repose sur cinq hypothèses. À l'examen, quand l'énoncé dit « matériau homogène et isotrope, élastique linéaire, sous HPP », il te dit exactement que ce cadre s'applique.</p>
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>Hypothèse</th><th>Ce que ça veut dire</th><th>Contre-exemple</th></tr>
-      <tr><td><b>Continu</b></td><td>La matière n'a pas de trous : on peut zoomer indéfiniment sur un point (on oublie les atomes).</td><td>Une mousse, un tas de sable.</td></tr>
-      <tr><td><b>Homogène</b></td><td>Mêmes propriétés en tout point de la pièce.</td><td>Une soudure, un béton armé.</td></tr>
-      <tr><td><b>Isotrope</b></td><td>Mêmes propriétés dans toutes les directions.</td><td>Le bois, bien plus solide dans le sens des fibres ; les composites.</td></tr>
-      <tr><td><b>Élastique linéaire</b></td><td>La déformation est proportionnelle à l'effort, et tout revient à zéro quand on relâche (chapitre 3).</td><td>Un métal au-delà de sa limite élastique.</td></tr>
-      <tr><td><b>HPP</b></td><td>Hypothèse des Petites Perturbations : déformations et déplacements minuscules, donc on calcule sur la forme initiale de la pièce.</td><td>Un élastique très étiré, une tôle emboutie.</td></tr>
-    </table></div>
-    <p>Pour les métaux dans le domaine élastique, les déformations sont de l'ordre de 0,1 % : un fil d'acier d'un mètre s'allonge d'environ un millimètre avant de risquer quoi que ce soit. C'est pour ça que toutes les animations de ce cours <b>exagèrent</b> les déformations : sinon tu ne verrais rien bouger.</p>
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Deux questions : la pièce casse-t-elle (contrainte) ? se déforme-t-elle trop (déformation) ?</li>
+      <li>Cadre : continu, homogène, isotrope, élastique linéaire, petites perturbations (HPP).</li>
+      <li>Métaux en élastique : déformations de l'ordre de 0,1 %, invisibles à l'œil.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -410,24 +438,13 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="c-img"><span class="ico">🧘</span><span><small>Image à retenir</small>Le fakir sur son lit de clous</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">l'intuition</span></div>
-    <p>Un fakir s'allonge sur un lit de 1 000 clous : il est parfaitement tranquille. Sur un seul clou, il serait transpercé. Pourtant son poids, la <b class="frc">force</b>, est exactement le même dans les deux cas ! Ce qui change, c'est la <b>surface</b> sur laquelle cette force se répartit : sur 1 000 clous, chaque clou ne porte qu'un millième du poids.</p>
-    <p>La matière, c'est pareil. Ce qui la fait « souffrir », ce n'est pas la force totale : c'est la force que doit porter <b>chaque petit morceau de surface</b>. Cette force par unité de surface s'appelle la <b class="sig">contrainte</b>.</p>
-    <div class="fx"><div class="big"><span class="sig">σ</span> = <span class="frac"><span class="frc">F</span><span>S</span></span></div><p class="cap">la contrainte normale = la force divisée par l'aire qui la supporte</p></div>
-    <dl class="syms">
-      <dt class="sig">σ</dt><dd><b>« sigma »</b>, la lettre grecque qui correspond à notre « s ». C'est la <b>contrainte normale</b>. Unité : le mégapascal (MPa).</dd>
-      <dt class="frc">F</dt><dd>La <b>force</b>, en newtons (N). Pour te faire une idée : un objet de 1 kg pèse environ 10 N, et 1 kN (kilonewton) = 1 000 N, soit à peu près le poids de 100 kg.</dd>
-      <dt>S</dt><dd>L'<b>aire de la section droite</b>, en mm². Pour une barre ronde de diamètre d : <span class="m">S = π·d²/4</span>, avec π (« pi ») ≈ 3,14.</dd>
-    </dl>
-    <div class="def"><b>📖 Section droite :</b> la surface que tu obtiens en coupant la barre perpendiculairement à sa longueur, comme une tranche de saucisson.</div>
-    <div class="def"><b>📖 Normale :</b> en géométrie, « normal » veut dire <b>perpendiculaire</b>. Une contrainte normale agit perpendiculairement à la surface : soit elle tire dessus (<b>traction</b>), soit elle appuie dessus (<b>compression</b>).</div>
-    <div class="tip">💡 <b>Le réflexe des unités.</b> Travaille toujours en <b>N</b> et en <b>mm²</b> : le résultat tombe directement en <b>MPa</b>, car <span class="m">1 MPa = 1 N/mm²</span>. Le pascal (Pa) vaut 1 N/m², c'est minuscule ; « méga » (M) veut dire million, et comme 1 m² = 1 000 000 mm², les deux millions se compensent.</div>
-    <p><b>Quelques ordres de grandeur</b> pour étalonner ton intuition : la pression de l'air qui t'entoure ≈ 0,1 MPa ; un talon aiguille qui porte 60 kg sur 1 cm² ≈ 6 MPa ; un acier de construction courant (S235) commence à se déformer définitivement vers 235 MPa ; un câble d'acier haute résistance supporte plus de 1 500 MPa.</p>
-  </div>
+  <p>Un fakir s'allonge sur un lit de 1 000 clous : il est tranquille. Sur un seul clou, il serait transpercé. Son poids est le même ; ce qui change, c'est la <b>surface</b> qui le porte. La matière, c'est pareil : ce qui la fait « souffrir », ce n'est pas la force totale, c'est la force portée par <b>chaque petit morceau de surface</b>, la <b>contrainte</b>.</p>
 
-  <div class="lab" id="w1">
+  <div class="fx"><div class="big"><span class="sig">σ</span> = <span class="frac"><span><span class="frc">F</span></span><span>S</span></span></div><p class="cap">σ (« sigma ») : contrainte <b>normale</b>, perpendiculaire à la surface, en MPa ; F : force en N (1 kg pèse environ 10 N) ; S : aire de la <b>section droite</b> (la tranche perpendiculaire à la barre), en mm² ; barre ronde : S = π·d²/4. Avec des N et des mm², σ tombe en MPa, car 1 MPa = 1 N/mm². σ &gt; 0 en traction, σ &lt; 0 en compression.</p></div>
+
+<div class="lab" id="w1">
     <p class="lab-h">Manipulation 1 : le lit de clous de la matière</p>
-    <p class="lab-sub">Une tige ronde en acier S235 est tirée par une force F. À droite, la section vue de face : chaque point représente un petit carré de matière, et sa taille montre la force qu'il porte.</p>
+    <p class="lab-sub">Tige en S235 tirée par F : chaque point de la section porte une part de la force. Règle F et d.<span class="predict">🔮 Prédis d'abord : si tu doubles le diamètre, la contrainte est-elle divisée par 2 ou par 4 ?</span></p>
     <svg id="w1svg" viewBox="0 0 640 290" role="img" aria-label="Barre en traction et sa section, dont la couleur dépend de la contrainte"></svg>
     <div class="ctrl"><label for="w1F">Force <b class="frc">F</b></label><input id="w1F" class="r-frc" type="range" min="0" max="120" step="1" value="50"><output id="w1Fv"></output></div>
     <div class="ctrl"><label for="w1d">Diamètre d</label><input id="w1d" class="r-geo" type="range" min="6" max="40" step="1" value="20"><output id="w1dv"></output></div>
@@ -438,18 +455,24 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <p class="lab-sub">À essayer : garde F fixe et double le diamètre (de 20 à 40 mm). La contrainte est divisée par <b>4</b>, pas par 2, parce que l'aire varie comme le <b>carré</b> du diamètre.</p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">la définition précise</span></div>
-    <h4>La méthode des coupures</h4>
-    <p>La contrainte est à l'intérieur de la matière : on ne peut pas la voir. Pour la faire apparaître, on <b>coupe la pièce par la pensée</b>. La partie qu'on enlève exerçait des efforts sur celle qu'on garde : on les remplace par des forces réparties sur la surface de coupe. Ces efforts cachés s'appellent les <b>efforts intérieurs</b> (ou efforts de cohésion : ce qui fait que la matière « tient ensemble »).</p>
-    <p>La contrainte est la <b>densité</b> de ces efforts : la force élémentaire <span class="m">d<span class="frc">F</span></span> qui agit sur un tout petit morceau de surface <span class="m">dS</span> :</p>
-    <div class="fx"><div class="big"><span class="sig">σ</span> = <span class="frac"><span>d<span class="frc">F</span></span><span>dS</span></span></div><p class="cap">le « d » se lit « un tout petit morceau de »</p></div>
-    <p>La formule <span class="m"><span class="sig">σ</span> = <span class="frc">F</span>/S</span> suppose que la force est répartie <b>uniformément</b> sur la section. C'est vrai loin des endroits où l'on applique l'effort : c'est le <b>principe de Saint-Venant</b>. Il dit qu'à une distance de l'ordre de la largeur de la pièce, la façon exacte dont on tire (crochet, mors, soudure…) n'a plus d'importance, seule compte la force totale.</p>
-    <div class="warn">⚠️ Près d'un trou, d'une entaille ou d'un brusque changement de diamètre, la contrainte grimpe localement bien au-dessus de F/S. C'est la <b>concentration de contraintes</b>, et c'est là que les pièces cassent en vrai. On la corrige avec un coefficient donné dans des abaques (des tableaux ou graphiques de référence).</div>
-    <h4>Convention de signe</h4>
-    <p><span class="m"><span class="sig">σ</span> &gt; 0</span> en <b>traction</b> (la matière est tirée), <span class="m"><span class="sig">σ</span> &lt; 0</span> en <b>compression</b> (elle est écrasée). Cette convention sera la même dans les matrices.</p>
-    <h4>Le vecteur contrainte : ce qu'il faut garder en tête pour la suite</h4>
-    <p>En réalité, sur une surface, la force par unité de surface est une <b>flèche</b> qui peut être inclinée. On l'appelle le <b>vecteur contrainte</b>, noté <span class="m"><span class="vec">T</span></span>. La petite flèche au-dessus de la lettre indique un <b>vecteur</b> : une grandeur qui a une valeur <i>et</i> une direction. Ici, la force est perpendiculaire à la coupe, donc <span class="m"><span class="vec">T</span></span> est « tout normal » : il se réduit à <span class="sig">σ</span>. Au chapitre 6, on coupera en biais : <span class="m"><span class="vec">T</span></span> se penchera et se décomposera en deux morceaux, <span class="sig">σ</span> (normal) et <span class="tau">τ</span> (parallèle à la surface). C'est la porte d'entrée vers les matrices.</p>
-    <div class="mnemo">🇬🇧 <b>Vocabulaire anglais</b> (utile pour les vidéos) : <i>stress</i> = contrainte, <i>strain</i> = déformation. Astuce : le <i>stress</i>, c'est ce que tu <b>subis</b> (la cause) ; le <i>strain</i>, c'est comment tu t'<b>étires</b> (l'effet).</div>
+  <p><b>Exemple</b> : une tige de 10 mm de diamètre porte une tonne, soit environ 10 kN. <span class="m">S = π × 10²/4 = 78,5 mm²</span> et <span class="m">σ = 10 000/78,5 ≈ 127 MPa</span>, sous les 235 MPa où un acier S235 commence à se déformer définitivement. Ordres de grandeur : la pression de l'air, 0,1 MPa ; un talon aiguille qui porte 60 kg sur 1 cm², 6 MPa ; un câble d'acier à haute résistance, plus de 1 500 MPa.</p>
+
+  <div class="warn"><b>⚠️ Piège : σ = F/S suppose une force répartie uniformément.</b> C'est vrai loin des points d'application (principe de Saint-Venant). Près d'un trou, d'une entaille ou d'un changement brusque de section, la contrainte locale grimpe bien au-dessus de F/S : c'est la <b>concentration de contraintes</b>, et c'est là que les pièces cassent.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique</b> : en anglais, <i>stress</i> = contrainte, ce que tu subis ; <i>strain</i> = déformation, comment tu t'étires.</div>
+  <div class="weld"><b>🔥 La contrainte dans un cordon d'angle</b>
+    <p>Elle se calcule de la même façon : la force transmise divisée par l'aire de la <b>section de gorge</b>, l'épaisseur de gorge a multipliée par la longueur du cordon. C'est la contrainte nominale qu'on compare ensuite à la résistance de calcul.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : la méthode des coupures, le vecteur contrainte</summary>
+    <p>La contrainte est à l'intérieur de la matière. Pour la faire apparaître, on <b>coupe la pièce par la pensée</b> : la partie enlevée exerçait sur l'autre des efforts, les <b>efforts intérieurs</b> (ou de cohésion), qu'on remplace par des forces réparties sur la coupe. La contrainte est leur densité : σ = dF/dS, la force élémentaire sur un petit morceau de surface. Sur une coupe quelconque, cette force par unité de surface est un vecteur, le <b>vecteur contrainte</b> T⃗, qui peut être incliné : au chapitre 6, on le décompose en une partie normale σ et une partie tangentielle τ.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>σ = F/S, en MPa avec des N et des mm² ; positive en traction.</li>
+      <li>Valable loin des points d'application (Saint-Venant) ; une entaille concentre la contrainte.</li>
+      <li>Repères : un S235 plastifie vers 235 MPa ; un câble à haute résistance dépasse 1 500 MPa.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -463,21 +486,13 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="c-img"><span class="ico">📏</span><span><small>Image à retenir</small>Deux élastiques, un court et un long, étirés du même centimètre</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">l'intuition</span></div>
-    <p>Prends deux élastiques : un de 10 cm et un de 1 m. Étire chacun de <b>1 cm</b>. Lequel est le plus tendu ? Le petit, évidemment : il a gagné 10 % de sa longueur, le grand seulement 1 %. L'allongement en centimètres ne suffit donc pas à décrire l'état de la matière : il faut un allongement <b>relatif</b>, rapporté à la longueur de départ.</p>
-    <div class="fx"><div class="big"><span class="eps">ε</span> = <span class="frac"><span>ΔL</span><span>L₀</span></span></div><p class="cap">la déformation = l'allongement divisé par la longueur initiale</p></div>
-    <dl class="syms">
-      <dt class="eps">ε</dt><dd><b>« epsilon »</b>, le « e » grec : pense <b>É</b>tirement. C'est la <b>déformation</b> (on dit aussi allongement relatif ou allongement unitaire).</dd>
-      <dt>L₀</dt><dd>La <b>longueur initiale</b> (le petit 0 veut dire « au départ »).</dd>
-      <dt>ΔL</dt><dd>« delta L », l'<b>allongement</b> : <span class="m">ΔL = L − L₀</span>. La lettre Δ (delta majuscule) signifie toujours « variation de » : valeur finale moins valeur initiale.</dd>
-    </dl>
-    <p><b class="eps">ε</b> <b>n'a pas d'unité</b> (des mm divisés par des mm). On l'exprime en %, ou en <b>microdéformations</b> notées <b>µε</b> (« micro-epsilon ») : 1 µε = 10⁻⁶, un millionième, soit 1 µm d'allongement par mètre. Exemple : <span class="m"><span class="eps">ε</span> = 0,001 = 0,1 % = 1 000 µε</span>, c'est 1 mm d'allongement par mètre de barre.</p>
-    <p>La propriété qui rend <span class="eps">ε</span> si utile : dans une barre uniforme, <b>chaque petit tronçon s'allonge du même pourcentage</b>. La déformation est donc une propriété <b>locale</b>, valable en chaque point de la matière. C'est exactement ce qui permettra, au cours 3, de la ranger dans une matrice « en un point ».</p>
-  </div>
+  <p>Prends deux élastiques, un de 10 cm et un de 1 m, et étire chacun de 1 cm. Le petit a gagné 10 % de sa longueur, le grand 1 % : l'allongement seul ne dit pas l'état de la matière, il faut le rapporter à la longueur de départ. Dans une barre uniforme, <b>chaque tronçon s'allonge du même pourcentage</b> : la déformation est une propriété <b>locale</b>, valable en chaque point. C'est ce qui permettra de la ranger dans une matrice « en un point » (cours 3).</p>
 
-  <div class="lab" id="w2">
+  <div class="fx"><div class="big"><span class="eps">ε</span> = <span class="frac"><span>Δ<span class="eps">L</span></span><span>L₀</span></span></div><p class="cap">ε (« epsilon ») : déformation, <b>sans unité</b> ; ΔL = L − L₀ : allongement (Δ, « variation de », valeur finale moins valeur initiale) ; L₀ : longueur initiale. On l'exprime en % ou en microdéformations : 1 µε = 10⁻⁶, soit 1 µm par mètre. ε &gt; 0 : allongement ; ε &lt; 0 : raccourcissement.</p></div>
+
+<div class="lab" id="w2">
     <p class="lab-h">Manipulation 2 : les deux élastiques</p>
-    <p class="lab-sub">Barre A (100 mm) et barre B (200 mm), avec un quadrillage tous les 10 mm. Regarde les carreaux : ce sont eux qui « ressentent » la déformation.</p>
+    <p class="lab-sub">Barre A (100 mm) et barre B (200 mm), quadrillées tous les 10 mm : ce sont les carreaux qui « ressentent » la déformation.<span class="predict">🔮 Prédis d'abord : pour un même allongement, laquelle des deux barres est la plus déformée ?</span></p>
     <div class="radios" role="radiogroup" aria-label="Mode">
       <label><input type="radio" name="w2m" value="dl" checked> Même allongement ΔL</label>
       <label><input type="radio" name="w2m" value="eps"> Même déformation ε</label>
@@ -489,14 +504,24 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <p class="status" id="w2note"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">la définition locale</span></div>
-    <h4>Déplacement et déformation : deux choses différentes</h4>
-    <p>On note <span class="m">u(x)</span> le <b>déplacement</b> du point qui se trouvait à l'abscisse x (sa position le long de la barre) : de combien il a bougé. Si toute la barre glisse de 5 mm sans s'étirer, tous ses points ont <span class="m">u = 5 mm</span> : gros déplacement, <b>zéro déformation</b> (c'est le troisième mode de la manipulation). Ce qui déforme la matière, c'est quand deux points voisins <b>ne bougent pas de la même quantité</b>.</p>
-    <div class="fx"><div class="big"><span class="eps">ε</span> = <span class="frac"><span>du</span><span>dx</span></span></div><p class="cap">la dérivée du déplacement : de combien le déplacement change quand on avance d'un tout petit pas dx le long de la barre</p></div>
-    <p>Vérification sur la barre uniforme fixée à gauche : le point à l'abscisse x bouge de <span class="m">u(x) = <span class="eps">ε</span>·x</span> (proportionnellement à sa distance au bout fixe). L'extrémité, à <span class="m">x = L₀</span>, bouge de <span class="m">u = ΔL</span>. Donc <span class="m"><span class="eps">ε</span> = du/dx = ΔL/L₀</span> : les deux définitions coïncident.</p>
-    <div class="tip">💡 Retiens bien cette définition par la dérivée : au cours 3, <b>chaque case de la matrice des déformations sera la dérivée d'un déplacement</b>. La matrice [ε], c'est « du/dx » généralisé à toutes les directions.</div>
-    <h4>Signe et ordre de grandeur</h4>
-    <p><span class="m"><span class="eps">ε</span> &gt; 0</span> : allongement ; <span class="m"><span class="eps">ε</span> &lt; 0</span> : raccourcissement. Dans le domaine élastique des métaux, <span class="eps">ε</span> reste de l'ordre de 0,1 % (1 000 µε), totalement invisible à l'œil. C'est l'hypothèse HPP du chapitre 0, et c'est pourquoi on mesure les déformations avec des <b>jauges</b> (de petits fils collés sur la pièce dont la résistance électrique change quand ils s'étirent ; on les verra au cours 3).</p>
+  <p><b>Exemple</b> : ε = 0,001 = 0,1 % = 1 000 µε, c'est 1 mm d'allongement par mètre de barre. Une barre de 2 m qui s'allonge de 1,5 mm a <span class="m">ε = 1,5/2 000 = 7,5 × 10⁻⁴ = 750 µε</span> : invisible à l'œil, on la mesure avec des <b>jauges</b>, de petits fils collés dont la résistance électrique change quand ils s'étirent (cours 3).</p>
+
+  <div class="warn"><b>⚠️ Piège : déplacement ≠ déformation.</b> Si toute la barre glisse de 5 mm sans s'étirer, chaque point bouge de 5 mm, mais ε = 0. Ce qui déforme la matière, c'est que deux points voisins ne bougent pas de la même quantité.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : ε comme Étirement</b>, le « e » grec.</div>
+  <div class="weld"><b>🔥 Le retrait d'un cordon est une déformation imposée</b>
+    <p>En refroidissant, le cordon veut se raccourcir. S'il est bridé, ce retrait empêché devient des <b>contraintes résiduelles</b> (par la loi de Hooke, chapitre 3) ; s'il est libre, il devient des <b>distorsions</b>. Les deux faces d'une même médaille.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : la déformation comme dérivée du déplacement</summary>
+    <p>Notons u(x) le <b>déplacement</b> du point qui se trouvait à l'abscisse x. La déformation est sa dérivée, ε = du/dx : de combien le déplacement change quand on avance d'un petit pas dx. Pour la barre uniforme fixée à gauche, u(x) = ε·x, et l'extrémité bouge de u(L₀) = ΔL : on retrouve ε = ΔL/L₀. Au cours 3, <b>chaque case de la matrice des déformations sera la dérivée d'un déplacement</b>.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>ε = ΔL/L₀, sans unité ; 1 µε = 10⁻⁶.</li>
+      <li>Même ε en tout point d'une barre uniforme : c'est une propriété locale.</li>
+      <li>Un déplacement d'ensemble ne déforme pas : il faut un écart entre points voisins.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -509,34 +534,15 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="c-img"><span class="ico">📈</span><span><small>Image à retenir</small>La courbe de traction : une rampe, un virage, une colline, une chute</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">l'intuition</span></div>
-    <p>Accroche un poids à un ressort : il s'allonge. Accroches-en deux : il s'allonge deux fois plus. C'est la <b>loi de Hooke</b>, énoncée par Robert Hooke en 1678 sous la forme d'une devinette latine : <i>ut tensio, sic vis</i>, « telle extension, telle force ».</p>
-    <p>La surprise, c'est qu'une barre d'acier se comporte <b>exactement comme un ressort</b> très raide, tant que l'effort reste raisonnable. Pourquoi ? Zoome jusqu'aux atomes : ils sont reliés par des liaisons qui se comportent comme de minuscules ressorts. Tirer sur la barre, c'est étirer des milliards de ces ressorts en même temps.</p>
-    <div class="fx"><div class="big"><span class="sig">σ</span> = <span class="mat">E</span> · <span class="eps">ε</span></div><p class="cap">la contrainte est proportionnelle à la déformation (loi de Hooke)</p></div>
-    <dl class="syms">
-      <dt class="mat">E</dt><dd>Le <b>module d'Young</b> (Thomas Young, 1807), aussi appelé module d'élasticité longitudinale. Comme <span class="eps">ε</span> n'a pas d'unité, E a la même unité que <span class="sig">σ</span> : on le donne en <b>GPa</b> (gigapascals ; 1 GPa = 1 000 MPa).</dd>
-    </dl>
-    <p><b class="mat">E</b> mesure la <b>rigidité</b> du matériau : plus E est grand, plus il faut forcer pour obtenir la même déformation. Attention, rigide ne veut pas dire résistant : le verre est aussi rigide que l'aluminium (même E), mais il casse bien plus facilement.</p>
-    <div class="mnemo">🧠 <b>E comme Entêté</b> : plus il est grand, plus le matériau refuse de s'allonger. Et les deux « e » vont ensemble : <span class="mat">E</span> fois <span class="eps">ε</span>psilon.</div>
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>Matériau</th><th>E (GPa)</th><th style="width:45%">Rigidité comparée</th></tr>
-      <tr><td>Acier</td><td>210</td><td><div class="ebar" style="width:100%"></div></td></tr>
-      <tr><td>Cuivre</td><td>120</td><td><div class="ebar" style="width:57%"></div></td></tr>
-      <tr><td>Titane</td><td>110</td><td><div class="ebar" style="width:52%"></div></td></tr>
-      <tr><td>Fonte grise</td><td>≈ 100</td><td><div class="ebar" style="width:48%"></div></td></tr>
-      <tr><td>Aluminium</td><td>70</td><td><div class="ebar" style="width:33%"></div></td></tr>
-      <tr><td>Verre</td><td>70</td><td><div class="ebar" style="width:33%"></div></td></tr>
-      <tr><td>Béton</td><td>≈ 30</td><td><div class="ebar" style="width:14%"></div></td></tr>
-      <tr><td>Os</td><td>≈ 17</td><td><div class="ebar" style="width:8%"></div></td></tr>
-      <tr><td>Bois (dans le sens des fibres)</td><td>≈ 10</td><td><div class="ebar" style="width:5%"></div></td></tr>
-      <tr><td>Caoutchouc</td><td>0,001 à 0,01</td><td><div class="ebar" style="width:0"></div> <small class="mut">invisible à cette échelle !</small></td></tr>
-    </table></div>
-    <p><b>L'essai de traction</b> est l'expérience fondatrice de la RDM. On tire lentement sur une <b>éprouvette</b> (un barreau aux dimensions normalisées) jusqu'à ce qu'elle casse, en enregistrant <span class="sig">σ</span> et <span class="eps">ε</span> à chaque instant. La courbe obtenue est la <b>carte d'identité mécanique</b> du matériau. Lance l'essai ci-dessous, puis teste le bouton « Relâcher » à différents moments : c'est le geste le plus instructif de tout le chapitre.</p>
-  </div>
+  <p>Accroche un poids à un ressort : il s'allonge ; deux poids, deux fois plus. Une barre d'acier se comporte exactement comme un ressort très raide, tant que l'effort reste raisonnable : ses atomes sont reliés par des liaisons qui agissent comme de minuscules ressorts. Robert Hooke l'a publié en 1676 sous forme d'anagramme latine, dont il a donné la clé en 1678 : <i>ut tensio, sic vis</i>, « telle extension, telle force ».</p>
 
-  <div class="lab" id="w3">
+  <div class="fx"><div class="row big" style="font-size:1.4rem"><span><span class="sig">σ</span> = <span class="mat">E</span> · <span class="eps">ε</span></span><span>Δ<span class="eps">L</span> = <span class="frac"><span><span class="frc">F</span>·L₀</span><span><span class="mat">E</span>·S</span></span></span></div><p class="cap">E : <b>module d'Young</b> (Thomas Young, 1807), la <b>rigidité</b> du matériau, en GPa (1 GPa = 1 000 MPa). Acier 210 ; cuivre 120 ; titane 110 ; aluminium et verre 70 ; béton ≈ 30 ; bois (sens des fibres) ≈ 10. Une barre en traction est un ressort de raideur k = E·S/L₀.</p></div>
+
+  <p><b>L'essai de traction</b> trace la carte d'identité du matériau, en six étapes : 1. la <b>rampe élastique</b>, de pente E (tout revient à zéro au relâchement) ; 2. le virage à la <b>limite d'élasticité R<sub>e</sub></b> ; 3. la <b>zone plastique</b>, où le métal durcit (<b>écrouissage</b>) et où, au relâchement, on redescend parallèlement à la rampe : la déformation plastique reste ; 4. le sommet, la <b>résistance à la traction R<sub>m</sub></b> ; 5. la <b>striction</b>, un cou qui s'amincit ; 6. la rupture, avec l'<b>allongement A %</b>. Un matériau <b>ductile</b> (acier doux, cuivre) se déforme beaucoup avant de casser ; un matériau <b>fragile</b> (fonte grise, verre) casse au bout de la rampe, sans prévenir.</p>
+
+<div class="lab" id="w3">
     <p class="lab-h">Manipulation 3 : l'essai de traction</p>
-    <p class="lab-sub">Courbe schématique : l'échelle des ε est dilatée au début pour qu'on voie la zone élastique (en vrai, elle ne représente que 0,1 à 0,3 % de déformation).</p>
+    <p class="lab-sub">Lance l'essai ou tire au curseur, puis « Relâcher ici » à différents moments ; compare les trois matériaux.<span class="predict">🔮 Prédis d'abord : relâchée en zone plastique, l'éprouvette revient-elle à sa longueur initiale ?</span></p>
     <div class="btns" id="w3mat">
       <button class="btn on" data-m="acier" type="button">Acier doux S235</button>
       <button class="btn" data-m="alu" type="button">Alliage d'aluminium</button>
@@ -544,41 +550,30 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     </div>
     <svg id="w3svg" viewBox="0 0 640 370" role="img" aria-label="Courbe contrainte-déformation et éprouvette qui s'allonge"></svg>
     <div class="ctrl"><label for="w3p">Tirer</label><input id="w3p" class="r-frc" type="range" min="0" max="1000" step="1" value="0"><output id="w3pv"></output></div>
-    <div class="btns">
-      <button class="btn" id="w3play" type="button">▶ Lancer l'essai</button>
-      <button class="btn" id="w3rel" type="button">🖐 Relâcher ici</button>
-      <button class="btn" id="w3reset" type="button">↺ Recommencer</button>
-    </div>
+    <div class="btns" id="w3pl"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" data-a="play" type="button">▶ Lancer l'essai</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button><button class="btn" id="w3rel" type="button">🖐 Relâcher ici</button></div>
     <div class="readout" id="w3out"></div>
     <p class="status" id="w3zone"></p>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : lire la courbe <span class="tag">les six étapes, dans l'ordre</span></div>
-    <p><b>1. La rampe : zone élastique.</b> <span class="m"><span class="sig">σ</span> = <span class="mat">E</span>·<span class="eps">ε</span></span>, droite parfaite. Si on relâche, tout revient à zéro. <b>La pente de cette droite, c'est E.</b></p>
-    <p><b>2. Le virage : la limite d'élasticité R<sub>e</sub></b> (R pour résistance, e pour élastique). C'est la fin de la rampe. Au-delà, les dégâts sont permanents.</p>
-    <p><b>3. La montée de la colline : zone plastique.</b> La matière se déforme durablement. Si on relâche, on redescend <b>parallèlement à la rampe</b> : on récupère la partie élastique, pas le reste. En même temps, le métal durcit : c'est l'<b>écrouissage</b>.</p>
-    <p><b>4. Le sommet : la résistance maximale à la traction R<sub>m</sub></b> (m pour maximale). C'est la plus grande contrainte que l'éprouvette supporte.</p>
-    <p><b>5. La chute : la striction.</b> Un « cou » se forme à un endroit de l'éprouvette et s'amincit très vite ; l'effort nécessaire diminue.</p>
-    <p><b>6. La rupture.</b> L'allongement final, en %, s'appelle <b>A %</b> (allongement à la rupture) : il mesure la capacité du matériau à se déformer avant de casser.</p>
-    <div class="def"><b>📖 Écrouissage :</b> durcissement d'un métal quand on le déforme plastiquement. C'est pour ça qu'un trombone plié et déplié plusieurs fois devient raide à l'endroit du pli… avant de casser.</div>
-    <div class="def"><b>📖 Ductile / fragile :</b> un matériau <b>ductile</b> se déforme beaucoup avant de casser (acier doux, cuivre, aluminium) : il « prévient ». Un matériau <b>fragile</b> casse sans déformation plastique notable (fonte grise, verre, céramique, craie) : il ne prévient pas. Compare la courbe de l'acier et celle de la fonte dans la manipulation.</div>
-    <div class="meta">⚙️ <b>Côté métallurgie : pourquoi un métal devient-il plastique ?</b> Dans un cristal métallique, les plans d'atomes peuvent glisser les uns sur les autres grâce à des défauts appelés <b>dislocations</b> (une ligne de désordre dans l'empilement régulier des atomes). Image : pour déplacer un grand tapis lourd, tu ne le tires pas d'un bloc, tu y fais une ride que tu pousses d'un bout à l'autre. La dislocation, c'est la ride : elle permet de faire glisser le tapis atome par atome, avec un effort bien plus faible. Retiens surtout que ce glissement est provoqué par du <b class="tau">cisaillement</b> (chapitre 5). On découvrira au chapitre 6 que, dans une barre qu'on tire, le cisaillement est maximal sur des plans inclinés à 45°… et c'est justement là que glissent les dislocations.</div>
+  <p><b>Exemple</b> : barre d'acier S235 de 1 m, de section 100 mm², tirée par 10 kN : <span class="m">σ = 100 MPa</span>, <span class="m">ε = 100/210 000 ≈ 4,8 × 10⁻⁴</span>, <span class="m">ΔL ≈ 0,48 mm</span>. On ne dimensionne jamais à R<sub>e</sub> : avec un coefficient de sécurité s = 2, la contrainte admissible est R<sub>pe</sub> = R<sub>e</sub>/s = 117,5 MPa ; la barre convient.</p>
+
+  <div class="warn"><b>⚠️ Piège : rigide ne veut pas dire résistant.</b> E (la pente) mesure la rigidité ; R<sub>e</sub> et R<sub>m</sub> mesurent la résistance. Le verre a le même E que l'aluminium mais casse bien plus facilement ; et tous les aciers ont E ≈ 210 GPa, du S235 au S690 : un acier plus résistant n'est pas plus rigide.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : E comme Entêté</b> : plus il est grand, plus le matériau refuse de s'allonger.</div>
+  <div class="weld"><b>🔥 Aluminium et inox : pas de palier</b>
+    <p>Leur courbe s'infléchit sans virage net : on utilise la limite conventionnelle <b>R<sub>p0,2</sub></b>, la contrainte qui laisse 0,2 % de déformation permanente. Et à contrainte égale, une structure soudée en aluminium (E ≈ 70 GPa) se déforme trois fois plus qu'en acier.</p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">les formules de dimensionnement</span></div>
-    <h4>De Hooke à la raideur d'une barre</h4>
-    <p>Pars de <span class="m"><span class="sig">σ</span> = <span class="mat">E</span>·<span class="eps">ε</span></span> et remplace chaque terme par sa définition :</p>
-    <div class="fx"><div class="big" style="font-size:1.7rem"><span class="frac"><span class="frc">F</span><span>S</span></span> = <span class="mat">E</span> · <span class="frac"><span>ΔL</span><span>L₀</span></span> &nbsp;⟺&nbsp; <span class="frc">F</span> = <span class="frac"><span><span class="mat">E</span>·S</span><span>L₀</span></span> · ΔL</div><p class="cap">une barre en traction est un ressort de raideur k = E·S / L₀</p></div>
-    <p>C'est la loi du ressort <span class="m"><span class="frc">F</span> = k·ΔL</span>, avec une <b>raideur</b> <span class="m">k = <span class="mat">E</span>·S/L₀</span> en N/mm. La raideur d'une barre dépend donc du <b>matériau</b> (E) <i>et</i> de la <b>géométrie</b> (S et L₀) : une barre deux fois plus longue est deux fois plus souple, une barre de section double est deux fois plus raide. On en tire la formule la plus utilisée en traction :</p>
-    <div class="fx"><div class="big">ΔL = <span class="frac"><span><span class="frc">F</span>·L₀</span><span><span class="mat">E</span>·S</span></span></div></div>
-    <h4>Mesurer E sur la courbe</h4>
-    <p>E est la pente de la partie droite : <span class="m"><span class="mat">E</span> = Δ<span class="sig">σ</span> / Δ<span class="eps">ε</span></span>. Prends deux points de la rampe, fais « différence des σ divisée par différence des ε ».</p>
-    <h4>La limite conventionnelle R<sub>p0,2</sub></h4>
-    <p>Certains matériaux, comme l'aluminium ou les aciers inoxydables, n'ont pas de « virage » net (compare l'acier et l'alu dans la manipulation). On définit alors une limite conventionnelle <b>R<sub>p0,2</sub></b> : la contrainte qui laisse <b>0,2 % de déformation permanente</b> après relâchement. Graphiquement, on trace une parallèle à la rampe élastique décalée de 0,2 % vers la droite, et on lit où elle coupe la courbe.</p>
-    <h4>Condition de résistance et coefficient de sécurité</h4>
-    <p>On ne dimensionne jamais une pièce pile à R<sub>e</sub> : on garde une marge, le <b>coefficient de sécurité</b> <span class="m">s</span> (souvent entre 1,5 et 3, imposé par le cahier des charges ou les normes). On définit la <b>résistance pratique à l'extension</b> :</p>
-    <div class="fx"><div class="big" style="font-size:1.8rem"><span class="sig">σ</span><sub>max</sub> ≤ R<sub>pe</sub> = <span class="frac"><span>R<sub>e</sub></span><span>s</span></span></div></div>
-    <p>Exemple : acier S235 avec <span class="m">s = 2</span> donne <span class="m">R<sub>pe</sub> = 117,5 MPa</span>. On vérifie aussi, si besoin, une <b>condition de rigidité</b> : <span class="m">ΔL ≤ ΔL<sub>admissible</sub></span> (la pièce ne doit pas trop s'allonger pour fonctionner).</p>
+  <details class="deep"><summary>🔍 Pour aller plus loin : mesurer E, construire R<sub>p0,2</sub>, pourquoi un métal plastifie</summary>
+    <p><b>Mesurer E</b> : c'est la pente de la rampe, Δσ/Δε entre deux de ses points. <b>R<sub>p0,2</sub></b> : on trace une parallèle à la rampe décalée de 0,2 % vers la droite et on lit où elle coupe la courbe. <b>Condition de rigidité</b> : en plus de σ ≤ R<sub>pe</sub>, on vérifie parfois ΔL ≤ ΔL<sub>admissible</sub>.</p>
+    <p><b>Pourquoi un métal plastifie</b> : dans un cristal, les plans d'atomes glissent grâce à des défauts linéaires, les <b>dislocations</b>, comme une ride qu'on pousse dans un tapis lourd au lieu de le tirer d'un bloc. Ce glissement est provoqué par du cisaillement, maximal à 45° de l'effort dans une barre tirée (chapitre 6) : d'où les bandes de glissement inclinées et la cassure en « cône-coupelle » des métaux ductiles.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>σ = E·ε sous R<sub>e</sub> ; E ≈ 210 GPa pour l'acier, ≈ 70 GPa pour l'aluminium.</li>
+      <li>Courbe de traction : rampe (E), R<sub>e</sub>, écrouissage, R<sub>m</sub>, striction, rupture (A %).</li>
+      <li>Dimensionner : σ ≤ R<sub>e</sub>/s ; allongement ΔL = F·L₀/(E·S).</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -592,34 +587,13 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="c-img"><span class="ico">🐟</span><span><small>Image à retenir</small>Le poisson qu'on étire par la queue devient une anguille</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">l'intuition</span></div>
-    <p>Étire un élastique large ou un chewing-gum : il s'allonge… et devient plus fin. Ce n'est pas un détail : <b>toute matière fait ça</b>. Une déformation dans le sens de la traction s'accompagne d'une contraction dans les directions perpendiculaires.</p>
-    <p>Le nom vient de Siméon Denis Poisson, mathématicien français (1781-1840). Aucun rapport avec les poissons, mais l'image aide : tire un poisson par la queue, il devient une anguille 🐟 → 🐍.</p>
-    <div class="fx"><div class="big"><span class="eps">ε</span><sub>t</sub> = − <span class="mat">ν</span> · <span class="eps">ε</span><sub>ℓ</sub></div><p class="cap">la déformation transversale est proportionnelle à la déformation longitudinale, avec le signe opposé</p></div>
-    <dl class="syms">
-      <dt><span class="eps">ε</span><sub>ℓ</sub></dt><dd>La déformation <b>longitudinale</b> (ℓ), dans le sens de l'effort.</dd>
-      <dt><span class="eps">ε</span><sub>t</sub></dt><dd>La déformation <b>transversale</b> (t), perpendiculaire à l'effort. Pour une barre ronde : <span class="m"><span class="eps">ε</span><sub>t</sub> = Δd/d</span> (variation de diamètre divisée par le diamètre).</dd>
-      <dt class="mat">ν</dt><dd><b>« nu »</b>, le « n » grec : le <b>coefficient de Poisson</b>. Sans unité.</dd>
-      <dt>−</dt><dd>Le signe moins traduit le fait que l'un grandit quand l'autre diminue. Comme ν est positif pour presque tous les matériaux, <span class="eps">ε</span><sub>t</sub> est de signe opposé à <span class="eps">ε</span><sub>ℓ</sub>.</dd>
-    </dl>
-    <div class="mnemo">🧠 <b>ν comme nouille</b> : tire sur une nouille, elle s'affine. Et ν est toujours ≤ 0,5 : en pourcentage, une nouille maigrit au plus moitié moins qu'elle ne s'allonge.</div>
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>Matériau</th><th>ν</th><th>À retenir</th></tr>
-      <tr><td>Acier</td><td>0,30</td><td>La valeur à connaître par cœur.</td></tr>
-      <tr><td>Aluminium, cuivre</td><td>0,33 à 0,34</td><td>Proche de l'acier.</td></tr>
-      <tr><td>Fonte, verre</td><td>0,22 à 0,26</td><td></td></tr>
-      <tr><td>Béton</td><td>≈ 0,2</td><td></td></tr>
-      <tr><td>Caoutchouc</td><td>≈ 0,5</td><td>Le volume ne change pas : on dit qu'il est incompressible.</td></tr>
-      <tr><td>Liège</td><td>≈ 0</td><td>Il ne gonfle pas sur les côtés quand on l'écrase.</td></tr>
-      <tr><td>Matériaux auxétiques</td><td>&lt; 0</td><td>Ils s'épaississent quand on les tire !</td></tr>
-    </table></div>
-    <p><b>Pourquoi les bouchons sont en liège :</b> avec ν ≈ 0, quand tu enfonces le bouchon, il se raccourcit sans gonfler sur les côtés, donc il rentre dans le goulot. Un bouchon en caoutchouc (ν ≈ 0,5) gonflerait latéralement en l'enfonçant et se coincerait.</p>
-    <div class="def"><b>📖 Auxétique</b> (du grec <i>auxetos</i>, « qui grossit ») : matériau à structure particulière (mousses ou nids d'abeille aux cellules rentrantes) qui s'élargit quand on le tire. On en trouve dans des protections anti-chocs et des stents (petits tubes médicaux qui maintiennent une artère ouverte).</div>
-  </div>
+  <p>Étire un élastique large : il s'allonge et devient plus fin. Toute matière fait ça : un allongement dans le sens de l'effort s'accompagne d'une contraction dans les directions perpendiculaires. Le nom vient du mathématicien Siméon Denis Poisson (1781-1840) ; l'image aide quand même : tire un poisson par la queue, il devient une anguille.</p>
 
-  <div class="lab" id="w4">
+  <div class="fx"><div class="row big" style="font-size:1.4rem"><span><span class="eps">ε<sub>t</sub></span> = −<span class="mat">ν</span> · <span class="eps">ε<sub>ℓ</sub></span></span><span><span class="frac"><span>ΔV</span><span>V</span></span> ≈ <span class="eps">ε<sub>ℓ</sub></span>(1 − 2<span class="mat">ν</span>)</span></div><p class="cap">ε<sub>ℓ</sub> : déformation <b>longitudinale</b>, dans le sens de l'effort ; ε<sub>t</sub> : déformation <b>transversale</b> (barre ronde : Δd/d) ; ν (« nu ») : <b>coefficient de Poisson</b>, sans unité. Acier 0,30 ; aluminium, cuivre ≈ 0,33 ; béton ≈ 0,2 ; caoutchouc ≈ 0,5 ; liège ≈ 0. En traction σ selon x : ε<sub>x</sub> = σ/E et ε<sub>y</sub> = ε<sub>z</sub> = −νσ/E. ΔV/V : variation relative de volume.</p></div>
+
+<div class="lab" id="w4">
     <p class="lab-h">Manipulation 4 : le poisson qui devient anguille</p>
-    <p class="lab-sub">Un bloc tiré dans le sens de sa longueur (déformation très exagérée). En pointillés : la forme de départ.</p>
+    <p class="lab-sub">Un bloc tiré dans sa longueur (déformation exagérée) ; en pointillés, la forme de départ. Compare les matériaux.<span class="predict">🔮 Prédis d'abord : le liège (ν ≈ 0) s'amincit-il quand on le tire ?</span></p>
     <svg id="w4svg" viewBox="0 0 640 300" role="img" aria-label="Bloc étiré qui s'amincit selon le coefficient de Poisson"></svg>
     <div class="ctrl"><label for="w4e">Étirement <b class="eps">ε</b><sub>ℓ</sub></label><input id="w4e" class="r-eps" type="range" min="0" max="40" step="1" value="25"><output id="w4ev"></output></div>
     <div class="ctrl"><label for="w4n">Poisson <b class="mat">ν</b></label><input id="w4n" class="r-mat" type="range" min="-50" max="50" step="1" value="30"><output id="w4nv"></output></div>
@@ -633,20 +607,25 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <p class="status" id="w4note"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">la version 3D et le volume</span></div>
-    <h4>En trois dimensions</h4>
-    <p>Pour une traction <span class="sig">σ</span> selon l'axe x, la barre s'allonge selon x et se contracte <b>dans les deux autres directions</b>, y et z :</p>
-    <div class="fx"><div class="big" style="font-size:1.6rem"><span class="eps">ε</span><sub>x</sub> = <span class="frac"><span class="sig">σ</span><span class="mat">E</span></span> &nbsp;&nbsp; <span class="eps">ε</span><sub>y</sub> = <span class="eps">ε</span><sub>z</sub> = − <span class="mat">ν</span>·<span class="frac"><span class="sig">σ</span><span class="mat">E</span></span></div><p class="cap">retiens ce trio : c'est déjà la diagonale d'une matrice des déformations</p></div>
-    <h4>La variation de volume</h4>
-    <p>Un bloc de dimensions L × b × h a un volume <span class="m">V = L·b·h</span>. Après déformation, chaque dimension est multipliée par (1 + sa déformation) :</p>
-    <p class="m" style="text-align:center;white-space:normal">V′ = L(1 + <span class="eps">ε</span><sub>x</sub>) · b(1 + <span class="eps">ε</span><sub>y</sub>) · h(1 + <span class="eps">ε</span><sub>z</sub>)</p>
-    <p>En développant, on obtient des termes comme <span class="m"><span class="eps">ε</span><sub>x</sub>·<span class="eps">ε</span><sub>y</sub></span>. Sous HPP, ces produits sont négligeables (0,001 × 0,001 = 0,000 001, mille fois plus petit). Il reste :</p>
-    <div class="fx"><div class="big" style="font-size:1.7rem"><span class="frac"><span>ΔV</span><span>V</span></span> ≈ <span class="eps">ε</span><sub>x</sub> + <span class="eps">ε</span><sub>y</sub> + <span class="eps">ε</span><sub>z</sub> = <span class="eps">ε</span><sub>x</sub>(1 − 2<span class="mat">ν</span>)</div><p class="cap">la variation relative de volume = la somme des trois déformations</p></div>
-    <div class="tip">💡 Cette somme des trois termes diagonaux porte un nom en algèbre : la <b>trace</b> de la matrice (somme des termes de sa diagonale). Tu viens de démontrer que <b>la trace de la matrice des déformations est la variation relative de volume</b>. C'est un résultat très souvent utilisé.</div>
-    <h4>Pourquoi ν ne dépasse jamais 0,5</h4>
-    <p>On définit le <b>module de compressibilité</b> <span class="m"><span class="mat">K</span> = <span class="mat">E</span> / [3(1 − 2<span class="mat">ν</span>)]</span> : il mesure la résistance d'un matériau à un changement de volume quand on l'écrase de tous les côtés (comme au fond de la mer). La physique impose K &gt; 0 : sinon, comprimer la matière de partout la ferait gonfler, ce qui est absurde. Il faut donc <span class="m">1 − 2<span class="mat">ν</span> &gt; 0</span>, soit <b>ν &lt; 0,5</b>. À ν = 0,5 pile, le volume ne change plus du tout : c'est la limite <b>incompressible</b> (caoutchouc, et aussi les métaux pendant leur déformation plastique).</p>
-    <h4>Exemple express</h4>
-    <p>Barre d'acier de diamètre 20 mm avec <span class="m"><span class="eps">ε</span><sub>ℓ</sub> = 0,001</span> et <span class="m"><span class="mat">ν</span> = 0,3</span> : <span class="m"><span class="eps">ε</span><sub>t</sub> = −0,3 × 0,001 = −0,0003</span>, donc <span class="m">Δd = −0,0003 × 20 = −0,006 mm</span>, soit −6 µm. Invisible, mais parfaitement mesurable avec une jauge.</p>
+  <p><b>Exemple</b> : barre d'acier de 20 mm de diamètre, ε<sub>ℓ</sub> = 0,001, ν = 0,3 : <span class="m">ε<sub>t</sub> = −0,3 × 0,001 = −0,0003</span>, donc Δd = −0,0003 × 20 = −0,006 mm = −6 µm. Et ΔV/V = 0,001 × (1 − 0,6) = 4 × 10⁻⁴ : le volume augmente un peu en traction.</p>
+  <p><b>Pourquoi ν ≤ 0,5</b> : au-delà, une traction ferait diminuer le volume, et le module de compressibilité K = E/[3(1 − 2ν)] deviendrait négatif : comprimer la matière de partout la ferait gonfler, ce qui est absurde. À ν = 0,5, le volume ne change plus : c'est le caoutchouc, et les métaux pendant leur déformation plastique.</p>
+
+  <div class="warn"><b>⚠️ Piège de signe</b> : ε<sub>t</sub> est de signe opposé à ε<sub>ℓ</sub>. Une traction (ε<sub>ℓ</sub> &gt; 0) amincit la barre (ε<sub>t</sub> &lt; 0) ; une compression la fait gonfler.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : ν comme nouille</b> : tire sur une nouille, elle s'affine, et jamais plus de moitié moins qu'elle ne s'allonge (ν ≤ 0,5).</div>
+  <div class="weld"><b>🔥 Les tôles épaisses bloquent la contraction de Poisson</b>
+    <p>Au cœur d'un assemblage soudé épais, la matière voisine empêche la contraction transversale : il naît des contraintes dans les trois directions (état <b>triaxial</b>), qui gênent la plastification et favorisent la rupture fragile.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : la trace, le liège, les auxétiques</summary>
+    <p>Un bloc L × b × h devient L(1 + ε<sub>x</sub>) × b(1 + ε<sub>y</sub>) × h(1 + ε<sub>z</sub>) ; sous HPP, les produits de déformations sont négligeables et ΔV/V ≈ ε<sub>x</sub> + ε<sub>y</sub> + ε<sub>z</sub> : la <b>trace</b> de la matrice des déformations est la variation relative de volume. Les bouchons sont en liège parce que, avec ν ≈ 0, il se raccourcit sans gonfler quand on l'enfonce. Les matériaux <b>auxétiques</b> (mousses ou nids d'abeille à cellules rentrantes) ont ν &lt; 0 : ils s'élargissent quand on les tire.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>ε<sub>t</sub> = −ν·ε<sub>ℓ</sub> ; ν ≈ 0,3 pour l'acier, toujours ≤ 0,5.</li>
+      <li>En traction selon x : ε<sub>x</sub> = σ/E, ε<sub>y</sub> = ε<sub>z</sub> = −νσ/E.</li>
+      <li>ΔV/V = ε<sub>ℓ</sub>(1 − 2ν) : nul à ν = 0,5 (incompressible).</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -659,24 +638,13 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="c-img"><span class="ico">🃏</span><span><small>Image à retenir</small>Le jeu de cartes qu'on pousse du plat de la main</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">l'intuition</span></div>
-    <p>Jusqu'ici, on tirait perpendiculairement à la surface. Maintenant, pose un jeu de cartes sur la table, pose ta main à plat dessus et pousse <b>horizontalement</b> : les cartes glissent un peu les unes sur les autres et le paquet se penche. La force est <b>parallèle</b> à la surface : c'est du <b class="tau">cisaillement</b>. Même racine que « ciseaux » : les deux lames font glisser les deux moitiés de la feuille l'une contre l'autre.</p>
-    <p>Deux nouveautés par rapport à la traction. La contrainte n'est plus normale mais <b>tangentielle</b> : on la note <span class="tau">τ</span>. Et la déformation n'est plus un allongement mais un <b>changement d'angle</b> : l'angle droit du paquet se referme un peu. Cette perte d'angle s'appelle la <b class="gam">distorsion</b>, notée <span class="gam">γ</span>.</p>
-    <div class="fx"><div class="big"><span class="tau">τ</span> = <span class="frac"><span class="frc">F</span><span>S</span></span> &nbsp;&nbsp;&nbsp; <span class="tau">τ</span> = <span class="mat">G</span> · <span class="gam">γ</span></div><p class="cap">F parallèle à la surface S ; la loi de Hooke version glissement</p></div>
-    <dl class="syms">
-      <dt class="tau">τ</dt><dd><b>« tau »</b>, le « t » grec : pense <b>T</b>angentiel. C'est la <b>contrainte de cisaillement</b> (ou contrainte tangentielle), en MPa comme σ.</dd>
-      <dt class="gam">γ</dt><dd><b>« gamma »</b>, le « g » grec : pense <b>G</b>lissement. C'est la <b>distorsion</b> (ou glissement), en <b>radians</b>.</dd>
-      <dt class="mat">G</dt><dd>Le <b>module de cisaillement</b> (ou module de Coulomb), en GPa : la rigidité du matériau vis-à-vis du glissement. Acier ≈ 81 GPa, aluminium ≈ 26 GPa, caoutchouc ≈ 0,3 à 3 MPa.</dd>
-    </dl>
-    <div class="def"><b>📖 Tangentiel :</b> dans le plan de la surface, qui « rase » la surface au lieu de la percer.</div>
-    <div class="def"><b>📖 Radian (rad) :</b> une autre unité d'angle. 180° = π rad ≈ 3,14 rad, donc 1 rad ≈ 57,3°. Son grand avantage : pour les petits angles, <span class="m">tan <span class="gam">γ</span> ≈ <span class="gam">γ</span></span> quand γ est en radians. C'est pour ça qu'on l'utilise en RDM.</div>
-    <div class="mnemo">🧠 <b>Deux phrases jumelles</b> : <span class="m"><span class="sig">σ</span> = <span class="mat">E</span>·<span class="eps">ε</span></span> pour tirer, <span class="m"><span class="tau">τ</span> = <span class="mat">G</span>·<span class="gam">γ</span></span> pour faire glisser. Dans la seconde, tout parle de <b>G</b>lissement : <span class="mat">G</span> et <span class="gam">γ</span> (le « g » grec).</div>
-    <p><b>Où rencontre-t-on du cisaillement ?</b> Dans les boulons, rivets et goupilles qui assemblent deux plaques ; dans les clavettes (petites pièces qui lient un arbre à une roue pour transmettre la rotation) ; quand on poinçonne une tôle ; dans les ciseaux ; dans les plots antivibratoires en caoutchouc ; dans les joints collés.</p>
-  </div>
+  <p>Pose ta main à plat sur un jeu de cartes et pousse <b>horizontalement</b> : les cartes glissent les unes sur les autres et le paquet se penche. La force est <b>parallèle</b> à la surface : c'est du <b>cisaillement</b>, comme entre les deux lames de ciseaux. La contrainte devient <b>tangentielle</b>, notée τ, et la déformation n'est plus un allongement mais un <b>changement d'angle</b> : l'angle droit du paquet se referme d'un angle γ, la <b>distorsion</b>.</p>
 
-  <div class="lab" id="w5">
+  <div class="fx"><div class="row big" style="font-size:1.4rem"><span><span class="tau">τ</span> = <span class="frac"><span><span class="frc">F</span></span><span>S</span></span></span><span><span class="tau">τ</span> = <span class="mat">G</span> · <span class="gam">γ</span></span><span><span class="mat">G</span> = <span class="frac"><span><span class="mat">E</span></span><span>2(1 + <span class="mat">ν</span>)</span></span></span></div><p class="cap">τ (« tau ») : contrainte de cisaillement, en MPa, F parallèle à la surface S ; γ (« gamma ») : distorsion, en <b>radians</b> (1 rad ≈ 57,3° ; un décalage δ sur une hauteur h donne γ ≈ δ/h) ; G : module de cisaillement, acier ≈ 81 GPa (210/2,6), aluminium ≈ 26 GPa. Un matériau isotrope est entièrement décrit par deux nombres, E et ν.</p></div>
+
+<div class="lab" id="w5">
     <p class="lab-h">Manipulation 5 : le jeu de cartes</p>
-    <p class="lab-sub">Un bloc de 100 × 100 mm (vu de côté), de hauteur h = 20 mm, collé sur la table. On pousse la plaque du dessus avec une force F horizontale.</p>
+    <p class="lab-sub">Bloc de 100 × 100 mm, haut de 20 mm, collé sur la table : on pousse sa plaque supérieure.<span class="predict">🔮 Prédis d'abord : à force égale, l'acier se décale-t-il 10 fois, 1 000 fois ou 80 000 fois moins que le caoutchouc souple ?</span></p>
     <div class="btns" id="w5mat">
       <button class="btn on" type="button" data-g="1">Caoutchouc souple (G = 1 MPa)</button>
       <button class="btn" type="button" data-g="3">Caoutchouc ferme (G = 3 MPa)</button>
@@ -688,9 +656,11 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <p class="status" id="w5note"></p>
   </div>
 
-  <div class="lab" id="w5b">
+  <p>Le cisaillement va toujours <b>par paires</b>. Sur un petit carré de matière, le cisaillement du haut et celui du bas forment un couple qui le ferait tourner comme une toupie ; or une pièce immobile ne tourne pas : les faces verticales portent un cisaillement de même valeur, qui bloque la rotation. C'est la <b>réciprocité des contraintes tangentielles</b>, τ<sub>xy</sub> = τ<sub>yx</sub>.</p>
+
+<div class="lab" id="w5b">
     <p class="lab-h">Manipulation 6 : le petit carré qui ne doit pas tourner</p>
-    <p class="lab-sub">Un minuscule carré de matière, avec du cisaillement sur ses faces. Retire le cisaillement des faces verticales pour voir ce qui se passerait.</p>
+    <p class="lab-sub">Un carré de matière cisaillé : retire le cisaillement des faces verticales pour voir ce qui se passerait.<span class="predict">🔮 Prédis d'abord : sans cisaillement sur les faces verticales, le carré reste-t-il immobile ?</span></p>
     <svg id="w5bsvg" viewBox="0 0 320 250" role="img" aria-label="Petit carré soumis à du cisaillement sur ses quatre faces" style="max-width:380px;margin:0 auto">
       <g id="spinner">
         <rect x="105" y="70" width="110" height="110" class="bar"/>
@@ -710,23 +680,24 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <p class="status" id="w5bnote" style="text-align:center">Équilibre : les deux couples se compensent, le carré reste immobile.</p>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : ce que montre le petit carré <span class="tag">une image capitale</span></div>
-    <p>Le cisaillement du haut (→) et celui du bas (←) forment un <b>couple</b> : deux forces opposées décalées, comme tes deux mains sur un volant. À eux seuls, ils feraient tourner le carré comme une toupie. Or une pièce immobile ne tourne pas ! Il faut donc forcément du cisaillement sur les faces verticales aussi (↑ à droite, ↓ à gauche), <b>de même valeur</b>, pour bloquer la rotation.</p>
-    <p>Conclusion : <b>le cisaillement va toujours par paires sur des faces perpendiculaires</b>, et les deux valeurs sont égales : <span class="m"><span class="tau">τ</span><sub>xy</sub> = <span class="tau">τ</span><sub>yx</sub></span>. C'est la <b>réciprocité des contraintes tangentielles</b>. Garde cette image de toupie bloquée : c'est elle qui rendra les matrices <b>symétriques</b>.</p>
+  <p><b>Exemple</b> : un axe de 10 mm relie une patte à une chape (pièce en U) et transmet 12 kN. Il est coupé en deux sections : <span class="m">τ = F/(2S) = 12 000/(2 × 78,5) ≈ 76 MPa</span>. En S235, avec une résistance au glissement R<sub>eg</sub> ≈ 0,5 R<sub>e</sub> = 117,5 MPa, il tient. Monté en simple cisaillement, il subirait 153 MPa et céderait.</p>
+
+  <div class="warn"><b>⚠️ Piège : simple ou double cisaillement.</b> Un axe qui traverse une chape et une patte est cisaillé sur deux sections à la fois : τ = F/(2S). Oublier le 2, ou l'ajouter à tort, est une erreur classique d'examen.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : deux phrases jumelles</b>, σ = E·ε pour tirer, τ = G·γ pour faire glisser (G et γ : <b>G</b>lissement).</div>
+  <div class="weld"><b>🔥 Les cordons d'angle travaillent en cisaillement</b>
+    <p>La force qui traverse un cordon d'angle se répartit sur sa section de gorge, où règnent surtout des contraintes tangentielles. On les combine ensuite à la contrainte normale par un critère (cours 5) : c'est la base du calcul des soudures d'angle.</p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">définitions et relations</span></div>
-    <h4>Définition précise de la distorsion</h4>
-    <p><span class="gam">γ</span> est la <b>variation de l'angle</b>, initialement droit, entre deux directions de la matière (par exemple x et y), exprimée en radians. Si le haut du bloc se décale de δ (« delta » minuscule, un petit déplacement) sur une hauteur h : <span class="m">tan <span class="gam">γ</span> = δ/h</span>, et sous HPP <span class="m"><span class="gam">γ</span> ≈ δ/h</span>.</p>
-    <h4>Seulement deux constantes indépendantes</h4>
-    <p>Pour un matériau isotrope, G n'est pas une nouvelle constante libre : il se déduit de E et ν.</p>
-    <div class="fx"><div class="big"><span class="mat">G</span> = <span class="frac"><span class="mat">E</span><span>2(1 + <span class="mat">ν</span>)</span></span></div><p class="cap">vérification pour l'acier : 210 / (2 × 1,3) = 80,8 GPa ✓</p></div>
-    <p>On le démontrera au cours 4 avec le cercle de Mohr : c'est une des plus jolies démonstrations de la RDM. Pour l'instant, retiens qu'un matériau isotrope est <b>entièrement décrit par deux nombres</b>, E et ν.</p>
-    <h4>Démonstration de la réciprocité</h4>
-    <p>Prends le petit carré de côté a et d'épaisseur e. Sur la face du haut, la force vaut <span class="m"><span class="tau">τ</span><sub>yx</sub>·a·e</span> (contrainte × aire) ; avec celle du bas, elle forme un couple de bras de levier a, donc un moment <span class="m"><span class="tau">τ</span><sub>yx</sub>·a²·e</span>. De même, les faces verticales donnent un moment <span class="m"><span class="tau">τ</span><sub>xy</sub>·a²·e</span> en sens inverse. L'équilibre des moments impose <span class="m"><span class="tau">τ</span><sub>xy</sub> = <span class="tau">τ</span><sub>yx</sub></span>.</p>
-    <h4>Assemblages : le piège du double cisaillement</h4>
-    <p>Pour un boulon ou un axe, la contrainte de cisaillement moyenne vaut <span class="m"><span class="tau">τ</span> = <span class="frc">F</span>/S</span>, où S est l'aire de la section cisaillée. Mais si l'axe traverse une chape (une pièce en U) et une patte au milieu, il est coupé en <b>deux sections</b> à la fois : <span class="m"><span class="tau">τ</span> = <span class="frc">F</span>/(2S)</span>. C'est le <b>double cisaillement</b>, un classique des examens.</p>
-    <p>Condition de résistance : <span class="m"><span class="tau">τ</span> ≤ R<sub>pg</sub> = R<sub>eg</sub>/s</span>, où R<sub>eg</sub> est la limite élastique en cisaillement (glissement). Pour les aciers, on prend souvent <span class="m">R<sub>eg</sub> ≈ 0,5 à 0,6 × R<sub>e</sub></span> : on comprendra pourquoi au cours 5 avec les critères de Tresca et de von Mises.</p>
+  <details class="deep"><summary>🔍 Pour aller plus loin : démonstration de la réciprocité, résistance au glissement</summary>
+    <p>Sur un carré de côté a et d'épaisseur e, les faces horizontales portent τ<sub>yx</sub>·a·e, qui forment un couple de bras a, de moment τ<sub>yx</sub>·a²·e ; les faces verticales donnent τ<sub>xy</sub>·a²·e en sens inverse. L'équilibre des moments impose τ<sub>xy</sub> = τ<sub>yx</sub>. La relation G = E/(2(1 + ν)) se démontre au cours 4 avec le cercle de Mohr. Pour les aciers, on prend souvent R<sub>eg</sub> ≈ 0,5 à 0,6 R<sub>e</sub> : les critères de Tresca (0,5) et de von Mises (0,577) l'expliquent au cours 5.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>τ = F/S, force parallèle à la surface ; τ = G·γ, γ en radians.</li>
+      <li>G = E/(2(1 + ν)) ≈ 81 GPa pour l'acier ; double cisaillement : τ = F/(2S).</li>
+      <li>Réciprocité τ<sub>xy</sub> = τ<sub>yx</sub> : le petit carré ne tourne pas.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -740,21 +711,16 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="c-img"><span class="ico">⭕</span><span><small>Image à retenir</small>Le point qui dessine un cercle quand la coupe tourne</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la grande découverte</span></div>
-    <p>Voici l'idée qui justifie tout le reste. Reprends la barre en traction simple du chapitre 1. On l'avait coupée <b>perpendiculairement</b> : sur cette coupe, il n'y a que de la traction <span class="sig">σ</span>.</p>
-    <p>Mais rien ne t'oblige à couper droit ! Coupe <b>en biais</b> : la force est maintenant inclinée par rapport à la surface de coupe. Elle se décompose en une partie qui tire perpendiculairement (<span class="sig">σ<sub>n</sub></span>, contrainte normale) et une partie qui fait glisser (<span class="tau">τ</span>, cisaillement). Autrement dit : <b>même dans la traction la plus simple, il y a du cisaillement caché</b>. Il suffit de regarder sous le bon angle.</p>
-    <p>Conclusion capitale : en un point de la matière, « la contrainte » n'est pas <b>un</b> nombre. Sa valeur dépend de l'orientation de la surface qu'on regarde. Il faut donc un objet capable de donner la réponse pour <b>toutes les orientations d'un coup</b> : c'est le tenseur des contraintes, la fameuse matrice.</p>
-    <div class="def"><b>📖 Facette :</b> petite surface imaginaire passant par le point étudié. On la repère par sa <b>normale</b> <span class="m"><span class="vec">n</span></span> : la flèche perpendiculaire à la facette, de longueur 1 (on dit « unitaire »).</div>
-    <p>Une image pour ranger ça dans ta tête : un diamant. Selon l'angle, tu vois des reflets différents, mais c'est toujours le même diamant. <b>La matrice, c'est le diamant ; <span class="sig">σ<sub>n</sub></span> et <span class="tau">τ</span> sur une facette, ce sont les reflets.</b></p>
-  </div>
+  <p>Reprends la barre en traction et coupe-la <b>en biais</b> : la force n'est plus perpendiculaire à la coupe. Elle se décompose en une partie qui tire, σ<sub>n</sub> (normale), et une partie qui fait glisser, τ. Même dans la traction la plus simple, il y a du <b>cisaillement caché</b> : il suffit de regarder sous le bon angle. En un point, « la contrainte » n'est donc pas un nombre : sa valeur dépend de l'orientation de la <b>facette</b> regardée, une petite surface repérée par sa normale unitaire n⃗. Comme un diamant : selon l'angle, des reflets différents, mais toujours le même diamant.</p>
 
-  <div class="lab" id="w6">
+  <div class="fx"><div class="row big" style="font-size:1.35rem"><span><span class="sig">σ<sub>n</sub></span> = <span class="sig">σ</span> cos²θ</span><span><span class="tau">τ</span> = <span class="sig">σ</span> sin θ cos θ = <span class="frac"><span><span class="sig">σ</span></span><span>2</span></span> sin 2θ</span></div><p class="cap">θ (« thêta ») : angle entre la normale de la facette et l'axe de la barre. Les points (σ<sub>n</sub> ; τ) décrivent un cercle de centre σ/2 et de rayon σ/2 : le <b>cercle de Mohr</b> (Christian Otto Mohr, 1882). τ est maximal à 45° et vaut σ/2.</p></div>
+
+<div class="lab" id="w6">
     <p class="lab-h">Manipulation 7 : la facette qui tourne</p>
-    <p class="lab-sub">Barre tirée avec σ = 100 MPa. On garde la partie gauche ; la partie droite (en transparence) tire sur la coupe avec le vecteur contrainte T⃗. θ (« thêta ») est l'angle entre la normale n⃗ de la coupe et l'axe de la barre. À droite, chaque orientation donne un point (σₙ ; τ).</p>
+    <p class="lab-sub">Barre tirée à 100 MPa : fais tourner la coupe ; chaque orientation θ donne un point (σ<sub>n</sub> ; τ).<span class="predict">🔮 Prédis d'abord : à quel angle le cisaillement est-il maximal, et combien vaut-il ?</span></p>
     <svg id="w6svg" viewBox="0 0 680 340" role="img" aria-label="Coupe inclinée d'une barre en traction et tracé des points sigma n, tau"></svg>
     <div class="ctrl"><label for="w6t">Angle <b>θ</b> de la coupe</label><input id="w6t" class="r-th" type="range" min="-90" max="90" step="1" value="30"><output id="w6tv"></output></div>
-    <div class="btns">
-      <button class="btn" id="w6play" type="button">▶ Faire tourner la coupe de −90° à +90°</button>
+    <div class="btns" id="w6pl"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" data-a="play" type="button">▶ Faire tourner la coupe</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button>
       <button class="btn" id="w6clr" type="button">Effacer la trace</button>
       <label class="btn" style="display:inline-flex;gap:6px;align-items:center"><input type="checkbox" id="w6circ"> Montrer le cercle</label>
     </div>
@@ -762,34 +728,12 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <p class="status" id="w6note"></p>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : ce qu'il faut observer <span class="tag">quatre constats</span></div>
-    <p><b>À θ = 0°</b> (coupe droite) : <span class="m"><span class="sig">σ<sub>n</sub></span> = <span class="sig">σ</span></span> et <span class="m"><span class="tau">τ</span> = 0</span>. On retrouve le chapitre 1.</p>
-    <p><b>À θ = 45°</b> : le cisaillement est <b>maximal</b> et vaut <span class="m"><span class="tau">τ</span><sub>max</sub> = <span class="sig">σ</span>/2</span>. C'est pour ça que les métaux ductiles, qui cèdent par glissement de dislocations, montrent des bandes de glissement inclinées à 45° et une rupture en « cône-coupelle » : le bord de la cassure forme une collerette inclinée à 45°.</p>
-    <p><b>À θ = 90°</b> (coupe parallèle à l'axe) : plus rien. Deux « fibres » voisines de la barre ne se tirent pas l'une l'autre.</p>
-    <p><b>Les points dessinent un cercle.</b> C'est le <b>cercle de Mohr</b>, en avant-première ! Et regarde bien : quand la coupe tourne de θ dans la réalité, le point tourne de <b>2θ</b> sur le cercle. Retiens dès maintenant la règle d'or du cours 4 : <b>angle réel θ → angle double 2θ sur le cercle</b>.</p>
-    <div class="meta">🧪 <b>Expérience à faire chez toi :</b> prends une craie, tiens-la par les deux bouts et tords-la. Elle casse selon une hélice inclinée à 45°. La craie est fragile : elle casse là où la traction est maximale, et en torsion, cette traction maximale se trouve sur des facettes à 45°. Tu comprendras exactement pourquoi au cours 4, avec le cercle de Mohr.</div>
-  </div>
-
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">le calcul sur la facette inclinée</span></div>
-    <p><b>Étape 1, l'aire.</b> La coupe inclinée est plus grande que la section droite (une tranche de saucisson coupée en biais est ovale et plus grande) : <span class="m">S<sub>θ</sub> = S / cos θ</span>.</p>
-    <p><b>Étape 2, la force.</b> On décompose <span class="frc">F</span> selon la normale à la facette et selon la facette : partie normale <span class="m"><span class="frc">F</span> cos θ</span>, partie tangentielle <span class="m"><span class="frc">F</span> sin θ</span>.</p>
-    <p><b>Étape 3, on divise.</b></p>
-    <div class="fx"><div class="big" style="font-size:1.55rem"><span class="sig">σ<sub>n</sub></span> = <span class="frac"><span><span class="frc">F</span> cos θ</span><span>S / cos θ</span></span> = <span class="sig">σ</span> cos²θ &nbsp;&nbsp;&nbsp; <span class="tau">τ</span> = <span class="frac"><span><span class="frc">F</span> sin θ</span><span>S / cos θ</span></span> = <span class="sig">σ</span> sin θ cos θ</div></div>
-    <p><b>Étape 4, l'angle double.</b> Avec les formules de trigonométrie <span class="m">cos²θ = (1 + cos 2θ)/2</span> et <span class="m">sin θ cos θ = (sin 2θ)/2</span> :</p>
-    <div class="fx"><div class="big" style="font-size:1.55rem"><span class="sig">σ<sub>n</sub></span> = <span class="frac"><span class="sig">σ</span><span>2</span></span> + <span class="frac"><span class="sig">σ</span><span>2</span></span> cos 2θ &nbsp;&nbsp;&nbsp; <span class="tau">τ</span> = <span class="frac"><span class="sig">σ</span><span>2</span></span> sin 2θ</div></div>
-    <p><b>Étape 5, le cercle.</b> Isole cos 2θ et sin 2θ, élève au carré et additionne (en utilisant <span class="m">cos² + sin² = 1</span>) :</p>
-    <div class="fx"><div class="big" style="font-size:1.6rem">(<span class="sig">σ<sub>n</sub></span> − <span class="sig">σ</span>/2)² + <span class="tau">τ</span>² = (<span class="sig">σ</span>/2)²</div><p class="cap">l'équation d'un cercle (X − a)² + Y² = R² : centre (σ/2 ; 0), rayon σ/2</p></div>
-    <p>Le maximum de <span class="tau">τ</span> est atteint quand <span class="m">sin 2θ = 1</span>, donc <span class="m">2θ = 90°</span>, c'est-à-dire <span class="m">θ = 45°</span>, et il vaut le rayon : <span class="m"><span class="tau">τ</span><sub>max</sub> = <span class="sig">σ</span>/2</span>.</p>
-    <div class="warn">⚠️ <b>Signe de τ : une question de convention.</b> Ici, τ est compté positif selon la tangente obtenue en tournant n⃗ de 90° dans le sens des aiguilles d'une montre, d'où <span class="m"><span class="tau">τ</span> = +<span class="sig">σ</span> sin θ cos θ</span>. Beaucoup de cours tournent n⃗ dans l'autre sens (sens trigonométrique) : on obtient alors <span class="m"><span class="tau">τ</span> = −<span class="sig">σ</span> sin θ cos θ</span>, et sur le cercle de Mohr le point tourne de 2θ en sens inverse de la facette. C'est la convention adoptée à partir du cours 2. Seul le signe change : la valeur |τ|, et donc τ<sub>max</sub> = σ/2 à 45°, sont identiques.</div>
-  </div>
+  <p>Quatre constats : à θ = 0°, σ<sub>n</sub> = σ et τ = 0 (le chapitre 1) ; à 45°, τ<sub>max</sub> = σ/2 ; à 90°, plus rien, deux fibres voisines ne se tirent pas ; et quand la coupe tourne de θ, le point tourne de <b>2θ</b> sur le cercle. <b>Exemple</b> : deux barres de 100 mm² collées en biseau, tirées par 1 000 N (σ = 10 MPa), plan de colle à θ = 60° : <span class="m">σ<sub>n</sub> = 10 × 0,25 = 2,5 MPa</span> et <span class="m">τ = 10 × 0,866 × 0,5 ≈ 4,3 MPa</span>.</p>
 
   <h3>La matrice : la carte d'identité complète d'un point</h3>
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">9 nombres, un cube</span></div>
-    <p>Isole par la pensée un cube minuscule autour du point étudié. Sur chacune de ses faces, la matière voisine exerce une contrainte, qui se décompose en <b>3 morceaux</b> : <b>1 normal</b> (qui tire ou pousse la face) et <b>2 tangentiels</b> (qui la font glisser dans les deux directions possibles du plan de la face). Trois faces × trois composantes = <b>9 nombres</b>. On les range dans un tableau 3 × 3 : c'est la <b>matrice des contraintes</b> <span class="sig">[σ]</span>. Les trois faces cachées portent les mêmes valeurs en sens opposé (équilibre), elles n'apportent donc rien de nouveau.</p>
-    <p>Clique sur une case de la matrice (ou sur une flèche du cube) pour voir à quoi elle correspond, puis essaie les différents cas.</p>
-  </div>
+  <p>Isole un cube minuscule autour du point. Sur chacune de ses trois faces visibles, la contrainte a trois composantes : une normale, deux tangentielles. Trois faces × trois composantes = <b>9 nombres</b>, rangés dans la <b>matrice des contraintes</b> [σ] : <b>ligne = la face</b> (sa normale), <b>colonne = la direction</b> de la composante ; dans τ<sub>xy</sub>, x désigne la face, y la direction. La diagonale porte les contraintes normales, le reste les cisaillements. Par réciprocité, la matrice est <b>symétrique</b> : 6 valeurs indépendantes sur 9. En état plan (2D), on garde le coin σ<sub>xx</sub>, τ<sub>xy</sub>, σ<sub>yy</sub>.</p>
 
-  <div class="lab" id="w7">
+<div class="lab" id="w7">
     <p class="lab-h">Manipulation 8 : du cube à la matrice</p>
     <div class="btns" id="w7modes">
       <button class="btn on" type="button" data-mode="gen">Cas général (9 cases)</button>
@@ -812,31 +756,30 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="emtx" id="w7eps"></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : les quatre règles à photographier <span class="tag">lecture d'une matrice</span></div>
-    <p><b>Ligne = la face.</b> La ligne i correspond à la face de normale i (la face perpendiculaire à l'axe i). <b>Colonne = la direction</b> de la composante.</p>
-    <p><b>Diagonale = contraintes normales</b> <span class="sig">σ</span> (en rouge) : elles tirent ou poussent. <b>Hors diagonale = cisaillements</b> <span class="tau">τ</span> (en violet) : ils font glisser.</p>
-    <p><b>La matrice est symétrique</b> par rapport à sa diagonale : <span class="m"><span class="tau">τ</span><sub>xy</sub> = <span class="tau">τ</span><sub>yx</sub></span>, <span class="m"><span class="tau">τ</span><sub>xz</sub> = <span class="tau">τ</span><sub>zx</sub></span>, <span class="m"><span class="tau">τ</span><sub>yz</sub> = <span class="tau">τ</span><sub>zy</sub></span>. C'est le petit carré qui ne tourne pas ! Il n'y a donc que <b>6 valeurs indépendantes</b> sur 9.</p>
-    <p><b>En 2D (état plan)</b>, on ne garde que le coin 2 × 2 en haut à gauche : <span class="m"><span class="sig">σ</span><sub>xx</sub>, <span class="tau">τ</span><sub>xy</sub>, <span class="sig">σ</span><sub>yy</sub></span>. Beaucoup d'exercices se font dans ce cadre.</p>
-    <div class="def"><b>📖 Notation des indices :</b> dans <span class="m"><span class="tau">τ</span><sub>xy</sub></span>, le premier indice (x) désigne la face (sa normale), le second (y) la direction de la composante. Certains livres inversent l'ordre ; comme la matrice est symétrique, les valeurs sont les mêmes, pas de panique. On écrit aussi souvent <span class="m"><span class="sig">σ</span><sub>x</sub></span> au lieu de <span class="m"><span class="sig">σ</span><sub>xx</sub></span>.</div>
-  </div>
-
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">tes deux premières matrices</span></div>
-    <p>En traction simple de valeur <span class="sig">σ</span> selon x, tu sais déjà tout écrire, grâce aux chapitres 3 et 4 :</p>
-    <div class="fx" style="max-width:680px"><div class="big" style="font-size:1.35rem;line-height:1.6">
+  <p>En traction simple σ selon x, les chapitres 3 et 4 donnent déjà les deux premières matrices : [σ] n'a qu'une case non nulle, [ε] en a <b>trois</b>, à cause de Poisson. C'est pourquoi il faudra une loi de Hooke « matricielle » (cours 5) pour passer de l'une à l'autre.</p>
+  <div class="fx" style="max-width:680px"><div class="big" style="font-size:1.35rem;line-height:1.6">
       <span class="sig">[σ]</span> = <span class="inlinemat"><span class="sig">σ</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span></span>
       &nbsp;&nbsp;
       <span class="eps">[ε]</span> = <span class="inlinemat"><span><span class="sig">σ</span>/<span class="mat">E</span></span><span>0</span><span>0</span><span>0</span><span>−<span class="mat">ν</span><span class="sig">σ</span>/<span class="mat">E</span></span><span>0</span><span>0</span><span>0</span><span>−<span class="mat">ν</span><span class="sig">σ</span>/<span class="mat">E</span></span></span>
-    </div><p class="cap">tu viens d'écrire ton premier tenseur des contraintes et ton premier tenseur des déformations</p></div>
-    <p><b>Remarque cruciale :</b> <span class="sig">[σ]</span> n'a qu'une case non nulle, mais <span class="eps">[ε]</span> en a <b>trois</b> ! La traction selon x ne crée des contraintes que selon x, mais des déformations dans les trois directions, à cause de Poisson. C'est exactement pour ça qu'on a besoin d'une loi de Hooke « matricielle » (dite généralisée, cours 5) pour passer d'une matrice à l'autre.</p>
-    <p>En cisaillement pur <span class="tau">τ</span> dans le plan xy :</p>
-    <div class="fx" style="max-width:680px"><div class="big" style="font-size:1.35rem;line-height:1.6">
-      <span class="sig">[σ]</span> = <span class="inlinemat"><span>0</span><span class="tau">τ</span><span>0</span><span class="tau">τ</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span></span>
-      &nbsp;&nbsp;
-      <span class="eps">[ε]</span> = <span class="inlinemat"><span>0</span><span><span class="gam">γ</span>/2</span><span>0</span><span><span class="gam">γ</span>/2</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span></span>
-    </div><p class="cap">avec γ = τ / G</p></div>
-    <div class="warn">⚠️ <b>Piège numéro 1 des examens :</b> dans la matrice des déformations, la case hors diagonale vaut <b><span class="gam">γ</span>/2</b>, pas <span class="gam">γ</span> ! On note <span class="m"><span class="eps">ε</span><sub>xy</sub> = <span class="gam">γ</span><sub>xy</sub>/2</span>. On expliquera d'où vient ce ½ au cours 3 ; note-le dès aujourd'hui en rouge dans ta tête.</div>
-    <h4>Le lien avec la facette qui tourne</h4>
-    <p>Au cours 2, tu apprendras que le vecteur contrainte sur n'importe quelle facette s'obtient par un simple produit « matrice × vecteur » : <span class="m"><span class="vec">T</span> = <span class="sig">[σ]</span>·<span class="vec">n</span></span>. Vérifie-le déjà sur la traction simple : avec <span class="m"><span class="vec">n</span> = (cos θ ; sin θ ; 0)</span>, le produit donne <span class="m"><span class="vec">T</span> = (<span class="sig">σ</span> cos θ ; 0 ; 0)</span>. C'est exactement la flèche T⃗ de la manipulation 7 : horizontale, de longueur <span class="m"><span class="sig">σ</span> cos θ</span>. Tout est cohérent.</p>
+    </div><p class="cap">les deux premières matrices : la cause et l'effet</p></div>
+
+  <div class="warn"><b>⚠️ Piège numéro 1 des examens :</b> dans la matrice des <b>déformations</b>, une case hors diagonale vaut <b>γ/2</b>, pas γ : ε<sub>xy</sub> = γ<sub>xy</sub>/2. En cisaillement pur τ, [σ] porte τ hors diagonale et [ε] porte γ/2 = τ/(2G). L'origine de ce ½ est expliquée au cours 3.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « ligne = face, colonne = direction ; la diagonale tire, le reste fait glisser »</b>.</div>
+  <div class="weld"><b>🔥 Un cordon d'angle est une facette inclinée</b>
+    <p>La force qui le traverse se décompose, sur sa section de gorge inclinée, en une contrainte normale et des contraintes tangentielles, exactement comme la coupe en biais de ce chapitre. C'est ce que font les méthodes de calcul des soudures d'angle.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : démonstration, convention de signe, T⃗ = [σ]·n⃗</summary>
+    <p><b>Démonstration.</b> La coupe inclinée a une aire S/cos θ ; la force se décompose en F cos θ (normale) et F sin θ (tangentielle). En divisant : σ<sub>n</sub> = σ cos²θ et τ = σ sin θ cos θ. Avec cos²θ = (1 + cos 2θ)/2 et sin θ cos θ = sin 2θ/2 : σ<sub>n</sub> = σ/2 + (σ/2) cos 2θ et τ = (σ/2) sin 2θ ; en élevant au carré et en additionnant, (σ<sub>n</sub> − σ/2)² + τ² = (σ/2)², l'équation d'un cercle.</p>
+    <p><b>Signe de τ.</b> Ici, τ est compté positif selon la tangente obtenue en tournant n⃗ de 90° dans le sens horaire. Beaucoup de cours, et la suite de la série à partir du cours 2, tournent dans le sens trigonométrique : τ = −σ sin θ cos θ. Seul le signe change ; |τ| et τ<sub>max</sub> = σ/2 à 45° sont identiques. <b>Lien avec le cours 2</b> : le vecteur contrainte sur une facette s'obtient par T⃗ = [σ]·n⃗ ; en traction simple, avec n⃗ = (cos θ ; sin θ ; 0), T⃗ = (σ cos θ ; 0 ; 0), la flèche de la manipulation 7. <b>Expérience</b> : une craie tordue casse selon une hélice à 45°, là où la traction est maximale en torsion (cours 4).</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>σ<sub>n</sub> = σ cos²θ et τ = σ sin θ cos θ : τ<sub>max</sub> = σ/2 à 45°.</li>
+      <li>Les points (σ<sub>n</sub> ; τ) forment le cercle de Mohr ; un angle θ réel devient 2θ sur le cercle.</li>
+      <li>[σ] : ligne = face, colonne = direction, symétrique (6 valeurs) ; en traction simple, [σ] a 1 case non nulle, [ε] en a 3.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -845,104 +788,37 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
 <div class="wrap">
   <div class="cartouche">
     <div class="c-num">✎</div>
-    <div class="c-title"><h2>Exercices corrigés</h2><p>Du plus simple au plus complet, avec la correction pas à pas</p></div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Deux exercices, de la tige au tirant complet</p></div>
     <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de muscu : on ne progresse qu'en soulevant soi-même</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Mode d'emploi <span class="tag">la méthode en 4 temps</span></div>
-    <p>Pour chaque exercice : <b>1.</b> écris les données avec leurs unités, <b>2.</b> convertis tout en <b>N</b> et en <b>mm</b> (les MPa tombent tout seuls), <b>3.</b> écris la formule littérale <i>avant</i> de mettre les chiffres, <b>4.</b> vérifie l'ordre de grandeur (une contrainte de 10 000 MPa dans de l'acier, c'est une erreur d'unité, pas un exploit). Ouvre la correction seulement après avoir vraiment essayé : c'est l'effort de rappel qui grave les formules.</p>
-    <p class="mut">Les exercices « N1 » n'utilisent que le niveau 1 ; les « N2 » demandent les encadrés du niveau 2.</p>
-  </div>
+  <p>Pour chaque exercice : écris les données avec leurs unités, convertis tout en <b>N</b> et en <b>mm</b> (les MPa tombent tout seuls), écris la formule littérale avant les chiffres, puis vérifie l'ordre de grandeur. Le premier exercice se vérifie dans la manipulation 1, le second s'y rejoue en partie.</p>
 
   <div class="exo">
-    <h4>Exercice 1 : la tige de suspension <span class="lvtag">N1 · chapitres 1 et 3</span></h4>
-    <p>Une tige ronde en acier S235 (limite d'élasticité <span class="m">R<sub>e</sub> = 235 MPa</span>), de diamètre <span class="m">d = 12 mm</span>, supporte une charge <span class="m"><span class="frc">F</span> = 20 kN</span> (kilonewtons : 1 kN = 1 000 N).</p>
-    <p><b>a)</b> Calcule l'aire S de la section et la contrainte <span class="sig">σ</span>.<br><b>b)</b> Calcule le coefficient de sécurité <span class="m">s = R<sub>e</sub>/<span class="sig">σ</span></span>.<br><b>c)</b> Le bureau d'études impose <span class="m">s = 2</span>. Quel diamètre minimal faut-il ? On choisira dans la liste des diamètres du commerce : 12, 14, 16, 20 mm.</p>
+    <h4>Exercice 1 : la tige de suspension <span class="lvtag">★ application · chapitres 1 et 3, à vérifier dans la manipulation 1</span></h4>
+    <p>Une tige ronde en acier S235 (R<sub>e</sub> = 235 MPa), de diamètre d = 12 mm, supporte une charge F = 20 kN.</p>
+    <p class="q"><b>a)</b> Calcule l'aire S de la section et la contrainte σ.</p>
+    <p class="q"><b>b)</b> Calcule le coefficient de sécurité s = R<sub>e</sub>/σ.</p>
+    <p class="q"><b>c)</b> Le bureau d'études impose s = 2. Quel diamètre minimal faut-il, parmi les diamètres du commerce 12, 14, 16 et 20 mm ?</p>
     <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <span class="m">S = π d²/4 = π × 12²/4 = 113,1 mm²</span>. Puis <span class="m"><span class="sig">σ</span> = <span class="frc">F</span>/S = 20 000 / 113,1 = <b>176,8 MPa</b></span>.</p>
-      <p><b>b)</b> <span class="m">s = 235 / 176,8 = <b>1,33</b></span>. La tige tient (s &gt; 1), mais la marge est faible.</p>
-      <p><b>c)</b> Avec s = 2, la contrainte admissible est <span class="m">R<sub>pe</sub> = R<sub>e</sub>/s = 117,5 MPa</span>. Il faut <span class="m"><span class="frc">F</span>/S ≤ 117,5</span>, donc <span class="m">S ≥ 20 000/117,5 = 170,2 mm²</span>. Puis <span class="m">d ≥ √(4S/π) = √(4 × 170,2/π) = 14,7 mm</span>. Le 14 est trop petit : on prend <b>d = 16 mm</b>.</p>
-      <p class="mut">Piège classique : on arrondit toujours <b>au-dessus</b> en dimensionnement.</p>
+      <p><b>a)</b> S = π d²/4 = π × 12²/4 = <b>113,1 mm²</b> ; σ = F/S = 20 000/113,1 = <b>176,8 MPa</b>.</p>
+      <p><b>b)</b> s = 235/176,8 = <b>1,33</b> : la tige tient, mais la marge est faible.</p>
+      <p><b>c)</b> R<sub>pe</sub> = R<sub>e</sub>/s = 117,5 MPa ; il faut S ≥ 20 000/117,5 = 170,2 mm², donc d ≥ √(4 × 170,2/π) = 14,7 mm. Le 14 est trop petit : <b>d = 16 mm</b>. En dimensionnement, on arrondit toujours au-dessus.</p>
     </div></details>
   </div>
 
-  <div class="exo">
-    <h4>Exercice 2 : identifier le matériau <span class="lvtag">N1 · chapitres 1 à 3</span></h4>
-    <p>Une éprouvette de section <span class="m">S<sub>0</sub> = 50 mm²</span> et de longueur utile <span class="m">L<sub>0</sub> = 100 mm</span> est tirée par <span class="m"><span class="frc">F</span> = 10 kN</span>. On mesure un allongement <span class="m">ΔL = 0,095 mm</span>, et tout revient à zéro quand on relâche.</p>
-    <p><b>a)</b> Calcule <span class="sig">σ</span> et <span class="eps">ε</span> (en µε, microdéformations).<br><b>b)</b> Déduis-en le module d'Young <span class="mat">E</span>. De quel métal s'agit-il probablement ?</p>
+  <div class="exo defi">
+    <h4>Exercice 2 : le tirant, son axe et ses matrices <span class="lvtag">★★ synthèse · chapitres 1 à 6, à rejouer dans la manipulation 1</span></h4>
+    <p>Un tirant en acier S235, de diamètre d = 20 mm et de longueur L₀ = 2 m, est tiré par F = 50 kN. E = 210 GPa, ν = 0,3 ; l'axe x est l'axe du tirant. À son extrémité, il est fixé par un axe de 18 mm monté dans une chape (double cisaillement), avec R<sub>eg</sub> ≈ 0,5 R<sub>e</sub>. Dans la manipulation 1 : F = 50 kN, d = 20 mm.</p>
+    <p class="q"><b>a)</b> Calcule σ, ε<sub>ℓ</sub> et l'allongement ΔL.</p>
+    <p class="q"><b>b)</b> Calcule ε<sub>t</sub>, la variation du diamètre Δd et ΔV/V.</p>
+    <p class="q"><b>c)</b> L'axe de chape tient-il ? Et s'il était monté en simple cisaillement ?</p>
+    <p class="q"><b>d)</b> Écris [σ] et [ε], puis vérifie que la somme de la diagonale de [ε] redonne ΔV/V.</p>
     <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <span class="m"><span class="sig">σ</span> = 10 000/50 = <b>200 MPa</b></span> et <span class="m"><span class="eps">ε</span> = 0,095/100 = 0,000 95 = <b>950 µε</b></span>.</p>
-      <p><b>b)</b> Tout revient à zéro : on est en élastique, donc Hooke s'applique. <span class="m"><span class="mat">E</span> = <span class="sig">σ</span>/<span class="eps">ε</span> = 200 / 0,000 95 = 210 500 MPa ≈ <b>210 GPa</b></span> : c'est de l'<b>acier</b>.</p>
-      <p class="mut">Réflexe : pour diviser par un petit nombre, écris-le en puissance de 10 : 200 / (9,5 × 10⁻⁴) = 2,1 × 10⁵ MPa.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 3 : le tirant complet et ses deux matrices <span class="lvtag">N2 · chapitres 1 à 4 et 6</span></h4>
-    <p>Un tirant (une barre qui travaille en traction) en acier, de diamètre <span class="m">d = 20 mm</span> et de longueur <span class="m">L<sub>0</sub> = 2 m</span>, est tiré par <span class="m"><span class="frc">F</span> = 50 kN</span>. Données : <span class="m"><span class="mat">E</span> = 210 GPa</span>, <span class="m"><span class="mat">ν</span> = 0,3</span>. L'axe x est l'axe de la barre.</p>
-    <p><b>a)</b> Calcule <span class="sig">σ</span>, <span class="eps">ε</span><sub>ℓ</sub> (longitudinale) et l'allongement ΔL.<br><b>b)</b> Calcule la déformation transversale <span class="eps">ε</span><sub>t</sub> et la variation du diamètre Δd.<br><b>c)</b> Calcule la variation relative de volume ΔV/V.<br><b>d)</b> Écris les matrices <span class="sig">[σ]</span> et <span class="eps">[ε]</span>, puis vérifie que la somme de la diagonale de <span class="eps">[ε]</span> (sa « trace ») redonne ΔV/V.</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <span class="m">S = π × 20²/4 = 314,16 mm²</span> ; <span class="m"><span class="sig">σ</span> = 50 000/314,16 = <b>159,2 MPa</b></span>. Avec E = 210 000 MPa : <span class="m"><span class="eps">ε</span><sub>ℓ</sub> = 159,2/210 000 = 7,58 × 10⁻⁴ = <b>758 µε</b></span>. Et <span class="m">ΔL = <span class="eps">ε</span><sub>ℓ</sub> L<sub>0</sub> = 7,58 × 10⁻⁴ × 2 000 = <b>1,52 mm</b></span>.</p>
-      <p><b>b)</b> <span class="m"><span class="eps">ε</span><sub>t</sub> = −<span class="mat">ν</span><span class="eps">ε</span><sub>ℓ</sub> = −0,3 × 758 = <b>−227 µε</b></span>. Donc <span class="m">Δd = <span class="eps">ε</span><sub>t</sub> × d = −227 × 10⁻⁶ × 20 = −0,0045 mm = <b>−4,5 µm</b></span> (micromètres). Le diamètre diminue d'un vingtième de cheveu : invisible, mais mesurable.</p>
-      <p><b>c)</b> <span class="m">ΔV/V = <span class="eps">ε</span><sub>ℓ</sub>(1 − 2<span class="mat">ν</span>) = 758 × 10⁻⁶ × 0,4 = <b>3,03 × 10⁻⁴</b></span> : le volume augmente très légèrement.</p>
-      <p><b>d)</b></p>
-      <div class="fx" style="max-width:640px"><div class="big" style="font-size:1.2rem;line-height:1.6">
-        <span class="sig">[σ]</span> = <span class="inlinemat"><span class="sig">159,2</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span></span> MPa
-        &nbsp;&nbsp;
-        <span class="eps">[ε]</span> = <span class="inlinemat"><span class="eps">758</span><span>0</span><span>0</span><span>0</span><span class="eps">−227</span><span>0</span><span>0</span><span>0</span><span class="eps">−227</span></span> µε
-      </div></div>
-      <p>Trace de <span class="eps">[ε]</span> : <span class="m">758 − 227 − 227 = 304 µε = 3,04 × 10⁻⁴</span>. C'est bien ΔV/V (l'écart de 0,01 vient des arrondis). Retiens ce résultat, il resservira : <b>la trace du tenseur des déformations, c'est la variation relative de volume.</b></p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 4 : le plot antivibratoire <span class="lvtag">N2 · chapitres 4 et 5</span></h4>
-    <p>Un plot en caoutchouc (comme sous une machine à laver) a une face carrée de <span class="m">100 × 100 mm</span> et une hauteur <span class="m">h = 20 mm</span>. Il est collé en bas sur le sol et en haut sur la machine. La machine le pousse horizontalement avec <span class="m"><span class="frc">F</span> = 2 000 N</span>. Module de cisaillement : <span class="m"><span class="mat">G</span> = 1 MPa</span>.</p>
-    <p><b>a)</b> Calcule <span class="tau">τ</span>, puis la distorsion <span class="gam">γ</span> (en radians et en degrés).<br><b>b)</b> De combien le dessus du plot se décale-t-il (δ, « delta ») ?<br><b>c)</b> Le caoutchouc a <span class="m"><span class="mat">ν</span> ≈ 0,5</span> : que vaut son module d'Young <span class="mat">E</span> ?<br><b>d)</b> Même question a) si le plot était en acier (<span class="m"><span class="mat">G</span> = 81 000 MPa</span>).</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> La surface cisaillée est la face collée : <span class="m">S = 100 × 100 = 10 000 mm²</span>. <span class="m"><span class="tau">τ</span> = 2 000/10 000 = <b>0,2 MPa</b></span>. Puis <span class="m"><span class="gam">γ</span> = <span class="tau">τ</span>/<span class="mat">G</span> = 0,2/1 = <b>0,2 rad</b></span>, soit <span class="m">0,2 × 180/π = <b>11,5°</b></span>.</p>
-      <p><b>b)</b> <span class="m">δ = h · tan <span class="gam">γ</span> = 20 × tan(0,2) = <b>4,05 mm</b></span>. (Pour un petit angle, tan γ ≈ γ donne 4,0 mm : quasiment pareil.)</p>
-      <p><b>c)</b> <span class="m"><span class="mat">E</span> = 2<span class="mat">G</span>(1 + <span class="mat">ν</span>) = 2 × 1 × 1,5 = <b>3 MPa</b></span>. Soixante-dix mille fois moins que l'acier !</p>
-      <p><b>d)</b> <span class="m"><span class="gam">γ</span> = 0,2/81 000 = <b>2,5 × 10⁻⁶ rad</b></span>, soit un décalage de 0,05 µm : totalement invisible. C'est pour ça qu'on fait les plots en caoutchouc : ils <i>doivent</i> se déformer pour absorber les vibrations.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 5 : l'axe de chape <span class="lvtag">N1 · chapitre 5</span></h4>
-    <p>Un axe (une goupille cylindrique) de diamètre <span class="m">d = 10 mm</span> relie une patte à une chape (pièce en U). Il transmet <span class="m"><span class="frc">F</span> = 12 kN</span>. Il est en acier S235, dont on prend la résistance au glissement <span class="m">R<sub>eg</sub> ≈ 0,5 R<sub>e</sub></span>.</p>
-    <p><b>a)</b> Combien de sections de l'axe sont cisaillées ? Calcule <span class="tau">τ</span>.<br><b>b)</b> Tient-il ?<br><b>c)</b> Et si, par erreur de montage, l'axe ne travaillait que sur une seule section (montage « en simple cisaillement ») ?</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> Avec une chape, l'axe est coupé en <b>deux</b> endroits (de chaque côté de la patte) : double cisaillement. <span class="m">S = π × 10²/4 = 78,5 mm²</span>, donc <span class="m"><span class="tau">τ</span> = <span class="frc">F</span>/(2S) = 12 000/157 = <b>76,4 MPa</b></span>.</p>
-      <p><b>b)</b> <span class="m">R<sub>eg</sub> ≈ 0,5 × 235 = 117,5 MPa</span> &gt; 76,4 MPa : <b>ça tient</b>, avec <span class="m">s = 117,5/76,4 ≈ 1,5</span>.</p>
-      <p><b>c)</b> <span class="m"><span class="tau">τ</span> = 12 000/78,5 = <b>152,8 MPa</b></span> &gt; 117,5 MPa : l'axe <b>se cisaille</b>. Oublier le facteur 2 (ou l'ajouter à tort) est une des erreurs les plus fréquentes en examen.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 6 : le joint collé en biseau <span class="lvtag">N2 · chapitre 6</span></h4>
-    <p>Deux morceaux de barre de section droite <span class="m">S = 100 mm²</span> sont collés bout à bout selon une coupe inclinée (un « biseau » : c'est l'assemblage utilisé en menuiserie et dans les composites). La normale au plan de colle fait un angle <span class="m">θ</span> avec l'axe de la barre. L'ensemble est tiré par <span class="m"><span class="frc">F</span> = 1 000 N</span>.</p>
-    <p>La colle résiste à <span class="m"><span class="sig">σ<sub>n</sub></span> ≤ 3 MPa</span> en arrachement et à <span class="m"><span class="tau">τ</span> ≤ 5 MPa</span> en glissement.</p>
-    <p><b>a)</b> Calcule <span class="sig">σ</span> dans la barre.<br><b>b)</b> Pour <span class="m">θ = 60°</span>, calcule <span class="sig">σ<sub>n</sub></span> et <span class="tau">τ</span> sur le joint : tient-il ?<br><b>c)</b> Et pour θ = 45° ? pour θ = 0° (collage bout à bout droit) ?<br><b>d)</b> Quel est l'angle minimal pour que le joint tienne ?</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <span class="m"><span class="sig">σ</span> = 1 000/100 = <b>10 MPa</b></span>.</p>
-      <p><b>b)</b> <span class="m"><span class="sig">σ<sub>n</sub></span> = <span class="sig">σ</span> cos²60° = 10 × 0,25 = <b>2,5 MPa</b> ≤ 3</span> ✅ ; <span class="m"><span class="tau">τ</span> = <span class="sig">σ</span> sin 60° cos 60° = 10 × 0,866 × 0,5 = <b>4,33 MPa</b> ≤ 5</span> ✅. <b>Le joint tient.</b></p>
-      <p><b>c)</b> À 45° : <span class="m"><span class="sig">σ<sub>n</sub></span> = 10 × 0,5 = 5 MPa &gt; 3</span> ❌, le joint s'ouvre. À 0° : <span class="m"><span class="sig">σ<sub>n</sub></span> = 10 MPa</span> ❌❌, c'est le pire cas.</p>
-      <p><b>d)</b> Le cisaillement ne dépasse jamais <span class="m"><span class="tau">τ</span><sub>max</sub> = <span class="sig">σ</span>/2 = 5 MPa</span> : il est toujours acceptable (juste à la limite à 45°). La condition qui décide est donc <span class="m">10 cos²θ ≤ 3</span>, soit <span class="m">cos θ ≤ √0,3 = 0,548</span>, donc <b>θ ≥ 56,8°</b>. Plus le biseau est allongé, mieux c'est : la colle travaille surtout en glissement, sur une grande surface <span class="m">S/cos θ</span>.</p>
-      <p class="mut">Tu viens de faire, sans le savoir, ton premier calcul de « critère de résistance » sur une facette : c'est l'esprit exact du cours 4.</p>
-    </div></details>
-  </div>
-
-  <div class="exo" style="border-left-color:var(--tau)">
-    <h4>Défi : les matrices du plot <span class="lvtag">N2 · chapitre 6, pour préparer le cours 2</span></h4>
-    <p>Reprends le plot de l'exercice 4. Prends x horizontal (dans le sens de <span class="frc">F</span>), y vertical (la hauteur du plot) et z perpendiculaire à la feuille. En supposant que le plot est en cisaillement pur, écris <span class="sig">[σ]</span> (en MPa) et <span class="eps">[ε]</span>.</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p>La face du dessus a pour normale y et reçoit une force selon x : c'est <span class="m"><span class="tau">τ</span><sub>yx</sub> = 0,2 MPa</span>. Par réciprocité, <span class="m"><span class="tau">τ</span><sub>xy</sub> = 0,2 MPa</span> aussi. Pour les déformations, <b>attention au piège n° 1</b> : la case vaut <span class="m"><span class="gam">γ</span>/2 = 0,1</span>, pas 0,2.</p>
-      <div class="fx" style="max-width:600px"><div class="big" style="font-size:1.2rem;line-height:1.6">
-        <span class="sig">[σ]</span> = <span class="inlinemat"><span>0</span><span class="tau">0,2</span><span>0</span><span class="tau">0,2</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span></span> MPa
-        &nbsp;&nbsp;
-        <span class="eps">[ε]</span> = <span class="inlinemat"><span>0</span><span class="gam">0,1</span><span>0</span><span class="gam">0,1</span><span>0</span><span>0</span><span>0</span><span>0</span><span>0</span></span>
-      </div></div>
-      <p class="mut">Remarque : la diagonale de <span class="eps">[ε]</span> est nulle, donc la trace aussi : le cisaillement pur ne change pas le volume, il ne fait que déformer les angles.</p>
+      <p><b>a)</b> S = π × 20²/4 = 314,2 mm² ; σ = 50 000/314,2 = <b>159,2 MPa</b> (sous R<sub>e</sub> : élastique). ε<sub>ℓ</sub> = 159,2/210 000 = 7,58 × 10⁻⁴ = <b>758 µε</b> ; ΔL = ε<sub>ℓ</sub>·L₀ = 7,58 × 10⁻⁴ × 2 000 = <b>1,52 mm</b>.</p>
+      <p><b>b)</b> ε<sub>t</sub> = −0,3 × 758 = <b>−227 µε</b> ; Δd = −227 × 10⁻⁶ × 20 = <b>−4,5 µm</b>. ΔV/V = ε<sub>ℓ</sub>(1 − 2ν) = 758 × 10⁻⁶ × 0,4 = <b>3,03 × 10⁻⁴</b>.</p>
+      <p><b>c)</b> Section de l'axe : π × 18²/4 = 254,5 mm². Double cisaillement : τ = 50 000/(2 × 254,5) = <b>98,2 MPa</b> ≤ R<sub>eg</sub> = 117,5 MPa ✅ (s ≈ 1,2). En simple cisaillement : τ = <b>196,5 MPa</b> ❌, l'axe se cisaillerait.</p>
+      <p><b>d)</b> [σ] n'a qu'une case non nulle, σ<sub>xx</sub> = 159,2 MPa. [ε] a sa diagonale (758 ; −227 ; −227) µε et des zéros ailleurs. Trace : 758 − 227 − 227 = 304 µε = 3,04 × 10⁻⁴, soit ΔV/V aux arrondis près : <b>la trace du tenseur des déformations est la variation relative de volume</b>.</p>
     </div></details>
   </div>
 </div>
@@ -980,6 +856,7 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div><div class="ic">🧊</div><h4>Les deux matrices</h4><div class="f"><span class="sig">[σ]</span> ≠ <span class="eps">[ε]</span></div><p>Ligne = face, colonne = direction. Diagonale = normales. Dans <span class="eps">[ε]</span>, hors diagonale : <span class="gam">γ</span>/2 (piège n° 1).</p></div>
     <div><div class="ic">🧮</div><h4>Les nombres à connaître</h4><div class="f"><span class="mat">E</span><sub>acier</sub> = 210 GPa</div><p><span class="mat">E</span><sub>alu</sub> ≈ 70 GPa, R<sub>e</sub>(S235) = 235 MPa, 1 GPa = 1 000 MPa, 1 MPa = 1 N/mm².</p></div>
   </div>
+  <div class="btns"><button class="btn" id="printFiche" type="button">🖨 Imprimer la fiche mémoire</button></div>
   <div class="fun"><span class="fun-h">🪨 Fun fact : Thomas Young, du ressort à la pierre de Rosette</span>Le E de ce cours porte le nom de Thomas Young, médecin et physicien anglais, qui l'a présenté dans ses leçons de 1807. Young ne s'est pas arrêté aux ressorts. Avec deux fentes fines éclairées par une même source, il montre que la lumière se comporte comme une onde : ce sont les célèbres « fentes d'Young ». Il s'attaque aussi aux hiéroglyphes de la pierre de Rosette et fait les premiers pas de leur déchiffrement, avant que le Français Jean-François Champollion n'en perce le système en 1822. Le même nom désigne donc la raideur de l'acier (<a href="#c3">chapitre 3</a>), une expérience d'optique et un chapitre de l'égyptologie.</div>
 </div>
 </section>
@@ -1068,6 +945,20 @@ const NS="http://www.w3.org/2000/svg";
 const $=s=>document.querySelector(s);
 const $$=s=>Array.from(document.querySelectorAll(s));
 const RM=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+function player(id,o){/* lecteur pilotable : ⏮ début, ◀ pas, ▶ lecture ou ⏸ pause (reprend où elle s'est arrêtée), pas ▶ ; o.get() et o.set(t) avec t de 0 à 1, o.dur (ms), o.steps */
+  const box=$("#"+id),bp=box.querySelector('[data-a="play"]'),lab=bp.textContent,n=o.steps||20;let raf=null,run=false;
+  const cl=t=>Math.max(0,Math.min(1,t));
+  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;bp.textContent=lab;}
+  function step(d){stop();o.set(cl(Math.round(o.get()*n+d)/n));}
+  bp.addEventListener("click",()=>{if(run){stop();return;}let t0=o.get();if(t0>=0.999)t0=0;
+    if(RM){o.set(cl(Math.round(t0*n+1)/n));return;}
+    run=true;bp.textContent="⏸ Pause";const s0=performance.now()-t0*o.dur;
+    const f=now=>{if(!run)return;const t=cl((now-s0)/o.dur);o.set(t);if(t>=1){stop();return;}raf=requestAnimationFrame(f);};raf=requestAnimationFrame(f);});
+  box.querySelector('[data-a="start"]').addEventListener("click",()=>{stop();o.set(0);});
+  box.querySelector('[data-a="back"]').addEventListener("click",()=>step(-1));
+  box.querySelector('[data-a="fwd"]').addEventListener("click",()=>step(1));
+  return {stop:stop};
+}
 
 function el(tag,attrs,parent){
   const e=document.createElementNS(NS,tag);
@@ -1160,7 +1051,7 @@ const S=(c,t)=>'<span class="'+c+'">'+t+'</span>';
     else if(sig<235)st="✅ <b>Domaine élastique</b> (σ &lt; Rₑ = 235 MPa) : si on relâche, la tige reprend exactement sa forme. Coefficient de sécurité s = Rₑ/σ = <b>"+nf(235/sig,2)+"</b>.";
     else if(sig<360)st="⚠️ <b>Au-delà de Rₑ</b> : déformation permanente. La tige ne casse pas encore, mais elle restera allongée pour toujours : en conception, c'est déjà un échec.";
     else st="💥 <b>Au-delà de Rₘ = 360 MPa</b> : rupture. Augmente le diamètre ou baisse la force.";
-    $("#w1st").innerHTML=st;
+    $("#w1st").innerHTML=st+"<br><b>À retenir :</b> même force, section deux fois plus large en diamètre : quatre fois plus de surface, quatre fois moins de contrainte.";
   }
   iF.addEventListener("input",draw);iD.addEventListener("input",draw);draw();
 })();
@@ -1213,7 +1104,7 @@ const S=(c,t)=>'<span class="'+c+'">'+t+'</span>';
       eps:"👀 <b>Même ε, carreaux identiques.</b> Dans les deux barres, chaque carreau est étiré pareil : la matière souffre autant (même contrainte). B s'allonge simplement deux fois plus, parce qu'elle a deux fois plus de carreaux.",
       tr:"👀 <b>Déplacement sans déformation.</b> Les barres changent de place, mais aucun carreau ne change de taille : aucune contrainte. Déformer, c'est changer de forme, pas changer de place."
     };
-    $("#w2note").innerHTML=notes[mo];
+    $("#w2note").innerHTML=notes[mo]+"<br><b>À retenir :</b> la déformation se lit sur les carreaux, en allongement relatif, pas en millimètres.";
   }
   iv.addEventListener("input",draw);
   $$('input[name="w2m"]').forEach(r=>r.addEventListener("change",draw));
@@ -1261,7 +1152,7 @@ const S=(c,t)=>'<span class="'+c+'">'+t+'</span>';
     return m.xs[lo]+t*(m.xs[hi]-m.xs[lo]);
   }
   let mat="acier",rel=null,anim=null;
-  function stop(){if(anim){cancelAnimationFrame(anim);anim=null;}bPlay.textContent="▶ Lancer l'essai";}
+  function stop(){if(anim){cancelAnimationFrame(anim);anim=null;}A.stop();}
 
   function spec(eps,neck,broken,ductile,lueders,sig){
     const cx=545,T=46,L=170*(1+1.8*eps),w=34/Math.sqrt(1+eps),ym=T+L/2,wid=0.09*L+6;
@@ -1375,28 +1266,22 @@ const S=(c,t)=>'<span class="'+c+'">'+t+'</span>';
     else if(x<m.xm)z=mat==="alu"?"<b>③ Zone plastique</b> : pas de palier pour l'aluminium, la courbe s'infléchit doucement. D'où la limite conventionnelle R\u209a\u2080,\u2082 (en pointillés, voir niveau 2). Le métal s'écrouit : il faut tirer plus fort pour continuer.":
       "<b>③ Écrouissage</b> : il faut tirer de plus en plus fort pour continuer, le métal durcit. Essaie « Relâcher ici » : la déformation ne disparaît plus entièrement.";
     else z="<b>⑤ Striction</b> : un cou se forme au milieu et s'amincit très vite ; la force nécessaire diminue.";
-    $("#w3zone").innerHTML=z;
+    $("#w3zone").innerHTML=z+"<br><b>À retenir :</b> sous R<sub>e</sub>, tout revient à zéro ; au-delà, on redescend parallèlement à la rampe et la déformation plastique reste.";
   }
   function relAnim(){
     const step=()=>{rel.t=Math.min(1,rel.t+(RM?1:0.025));draw();if(rel.t<1)anim=requestAnimationFrame(step);else anim=null;};
     anim=requestAnimationFrame(step);
   }
   ip.addEventListener("input",()=>{stop();rel=null;draw();});
-  bPlay.addEventListener("click",()=>{
-    if(anim&&!rel){stop();return;}
-    stop();
-    if(rel||+ip.value>=1000){rel=null;ip.value=0;}
-    bPlay.textContent="⏸ Pause";
-    const step=()=>{ip.value=Math.min(1000,+ip.value+(RM?20:3));draw();if(+ip.value<1000)anim=requestAnimationFrame(step);else stop();};
-    anim=requestAnimationFrame(step);
-  });
+  /* lecteur : le curseur « Tirer » avance de 0 à 1000 ; un pas en arrière annule le relâchement */
+  const A=player("w3pl",{get:()=>+ip.value/1000,set:t=>{if(anim){cancelAnimationFrame(anim);anim=null;}rel=null;ip.value=Math.round(1000*t);draw();},dur:5500,steps:20});
   bRel.addEventListener("click",()=>{
     const m=M[mat],p=+ip.value;
     if(rel||p===0)return;
     if(p>=1000){$("#w3zone").innerHTML="Trop tard : l'éprouvette est déjà cassée ! Recommence et relâche avant la rupture.";return;}
     stop();const x=xFromP(m,p);rel={x:x,s:m.f(x),t:0};relAnim();
   });
-  bReset.addEventListener("click",()=>{stop();rel=null;ip.value=0;draw();});
+
   $$("#w3mat .btn").forEach(b=>b.addEventListener("click",()=>{
     $$("#w3mat .btn").forEach(o=>o.classList.toggle("on",o===b));
     mat=b.dataset.m;stop();rel=null;ip.value=0;draw();
@@ -1449,7 +1334,7 @@ const S=(c,t)=>'<span class="'+c+'">'+t+'</span>';
     else if(nu>=0.5)n="🎈 "+S("mat","ν")+" = 0,5 : matériau <b>incompressible</b> (caoutchouc, et presque l'eau) : ΔV/V ≈ 0, le volume ne change pas. C'est la limite physique.";
     else if(nu>=0.25&&nu<=0.35)n="⚙️ Valeur typique des <b>métaux</b> ("+S("mat","ν")+" ≈ 0,3) : le bloc s'amincit, et son volume augmente un peu.";
     else n="Le bloc s'amincit de "+nf(-et*100,2)+" % pendant qu'il s'allonge de "+nf(e*100,1)+" %. Plus "+S("mat","ν")+" est grand, plus il s'amincit.";
-    $("#w4note").innerHTML=n;
+    $("#w4note").innerHTML=n+"<br><b>À retenir :</b> ε<sub>t</sub> = −ν·ε<sub>ℓ</sub>, et ν ne dépasse jamais 0,5.";
   }
   ie.addEventListener("input",draw);inu.addEventListener("input",draw);
   $$("#w4pre .btn").forEach(b=>b.addEventListener("click",()=>{inu.value=b.dataset.nu;draw();}));
@@ -1505,7 +1390,7 @@ const S=(c,t)=>'<span class="'+c+'">'+t+'</span>';
     else if(G>=1000)n="🔩 <b>Acier</b> : le glissement existe mais il est "+nf(G,0)+" fois plus petit qu'avec le caoutchouc souple. Le dessus bouge d'environ <b>"+nf(delta*1e6,0)+" nanomètres</b> : totalement invisible à l'œil.";
     else if(G===3)n="Caoutchouc 3 fois plus raide : pour la même force, 3 fois moins de glissement. "+S("mat","G")+" mesure la résistance au glissement, comme "+S("mat","E")+" mesure la résistance à l'allongement.";
     else n="🃏 Chaque couche glisse un peu par rapport à celle du dessous, comme les cartes d'un jeu. Tous les angles droits penchent du même angle "+S("gam","γ")+" : c'est la <b>distorsion</b>.";
-    $("#w5note").innerHTML=n;
+    $("#w5note").innerHTML=n+"<br><b>À retenir :</b> τ = G·γ : à force égale, la distorsion est inversement proportionnelle à G.";
   }
   iF.addEventListener("input",draw);
   $$("#w5mat .btn").forEach(b=>b.addEventListener("click",()=>{
@@ -1632,24 +1517,17 @@ const S=(c,t)=>'<span class="'+c+'">'+t+'</span>';
     else if(Math.abs(th)===45)no="🎯 <b>45° : cisaillement maximal</b>, "+S("tau","τ")+"<sub>max</sub> = "+S("sig","σ")+"/2 = 50 MPa (et "+S("sig","σ<sub>n</sub>")+" = 50 MPa aussi). Le point est tout en "+(th>0?"haut":"bas")+" du cercle : c'est là que glissent les dislocations.";
     else if(Math.abs(th)===90)no="Coupe parallèle à l'axe : ni traction ni cisaillement. Deux fibres voisines ne se tirent pas l'une l'autre. Le point est à l'origine.";
     else no="La coupe a tourné de θ = "+nf(th,0)+"°, le point a tourné de <b>2θ = "+nf(2*th,0)+"°</b> autour du centre du cercle. Angle réel θ → angle double sur le cercle.";
-    $("#w6note").innerHTML=no;
+    $("#w6note").innerHTML=no+"<br><b>À retenir :</b> τ<sub>max</sub> = σ/2 sur les facettes à 45° ; θ réel, 2θ sur le cercle.";
   }
   function addRange(a,b){const lo=Math.min(a,b),hi=Math.max(a,b);for(let v=lo;v<=hi;v++)visited.add(v);}
-  function stop(){if(anim){cancelAnimationFrame(anim);anim=null;}bPlay.textContent="▶ Faire tourner la coupe de −90° à +90°";}
+  function stop(){A.stop();}
   it.addEventListener("input",()=>{stop();const v=+it.value;addRange(last,v);last=v;draw();});
   bClr.addEventListener("click",()=>{visited=new Set([+it.value]);last=+it.value;draw();});
   cb.addEventListener("change",draw);
-  bPlay.addEventListener("click",()=>{
-    if(anim){stop();return;}
-    it.value=-90;last=-90;visited=new Set([-90]);
-    bPlay.textContent="⏸ Pause";
-    const step=()=>{
-      const v=Math.min(90,+it.value+(RM?6:1));it.value=v;addRange(last,v);last=v;
-      if(v>=90){cb.checked=true;draw();stop();return;}
-      draw();anim=requestAnimationFrame(step);
-    };
-    anim=requestAnimationFrame(step);
-  });
+  /* lecteur : θ de −90° à +90° ; revenir au début efface la trace */
+  const A=player("w6pl",{get:()=>(+it.value+90)/180,set:t=>{const v=Math.round(-90+180*t);it.value=v;
+    if(t===0){visited=new Set([-90]);last=-90;}else{addRange(last,v);last=v;}
+    if(v>=90)cb.checked=true;draw();},dur:6000,steps:12});
   draw();
 })();
 
@@ -1847,6 +1725,13 @@ const S=(c,t)=>'<span class="'+c+'">'+t+'</span>';
   Object.keys(map).forEach(id=>{const s=document.getElementById(id);if(s)obs.observe(s);});
 })();
 
+})();
+</script>
+<script>
+(function(){/* impression de la fiche mémoire seule */
+  const b=document.getElementById("printFiche");if(!b)return;
+  b.addEventListener("click",()=>{document.body.classList.add("print-fiche");window.print();});
+  window.addEventListener("afterprint",()=>document.body.classList.remove("print-fiche"));
 })();
 </script>
 </body>

@@ -109,12 +109,6 @@ section.chap{padding:46px 0 10px}
 .c-img span{font-size:.95rem;line-height:1.3}
 @media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
 
-/* niveaux */
-.lv{margin:1.2rem 0;padding:6px 22px 14px;border-radius:4px}
-.lv1{background:var(--card);border:2px solid var(--ink)}
-.lv2{background:var(--lv2);border-left:6px solid var(--ink)}
-.lv-h{display:flex;align-items:center;gap:10px;font-family:var(--font-head);font-size:1.35rem;font-weight:600;margin:10px 0 4px}
-.lv-h .tag{font-size:.95rem;font-family:var(--font-body);font-weight:400;color:var(--muted)}
 
 /* formule */
 .fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:560px;text-align:center;border-radius:3px}
@@ -323,6 +317,30 @@ input.r-gam{accent-color:var(--gam)}
 .hp{display:inline-block;font-size:.75rem;font-weight:700;padding:1px 7px;border-radius:9px;background:var(--weld);color:var(--card);vertical-align:middle;margin-left:6px}
 @media (max-width:700px){.m{white-space:normal}.fx{padding:12px 10px}.fx .big{font-size:1.45rem!important}}
 .fx{overflow-x:auto}
+
+/* gabarit court : approfondissement replié, à retenir, prédiction */
+details.deep{margin:1.2rem 0;padding:0 18px;background:var(--lv2);border-left:6px solid var(--ink);border-radius:4px}
+details.deep>summary{font-family:var(--font-head);font-size:1.2rem;font-weight:600;padding:9px 0}
+details.deep[open]{padding-bottom:10px}
+.retenir{margin:1.4rem 0 .4rem;padding:8px 18px 6px;background:var(--card);border:2px solid var(--ink);border-radius:4px}
+.retenir>b:first-child{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.retenir ul{margin:.3rem 0 .3rem}
+.predict{display:block;margin-top:.35rem;color:var(--ink);font-weight:700}
+@media (max-width:520px){details.deep{padding:0 12px}.retenir{padding:8px 12px 6px}}
+
+/* impression : le cours sur papier clair, ou la fiche mémoire seule sur une page */
+@media print{
+  :root,:root[data-theme]{--paper:#fff!important;--paper-2:#EEF2F6!important;--card:#fff!important;--ink:#111!important;--muted:#444!important;--line:#999!important;--grid:transparent!important;--lv2:#F2F5F8!important;--hl:#FFF3B0!important;color-scheme:light}
+  body{background:#fff;font-size:11pt}
+  .toc,.theme-btn,.btns,.ctrl,#qzReset,.score{display:none!important}
+  section.chap{padding:14px 0 4px}
+  .lab,.fx,.retenir,details.deep,.fiche>div,.exo{break-inside:avoid}
+  body.print-fiche header,body.print-fiche main>section:not(#fiche),body.print-fiche footer{display:none!important}
+  body.print-fiche #fiche .cartouche{margin-bottom:.6rem}
+  body.print-fiche .fiche>div{padding:8px 10px}
+}
+/* formules dans les replis et les corrections : retour à la ligne permis (sinon débordement vers 768 px) */
+details .m{white-space:normal}
 </style>
 </head>
 <body>
@@ -335,7 +353,7 @@ input.r-gam{accent-color:var(--gam)}
     </div>
     <div class="tb-cells">
       <div><small>Cours</small><b>6 : le torseur de cohésion</b></div>
-      <div><small>Durée conseillée</small><b>≈ 3 h avec les exercices</b></div>
+      <div><small>Durée conseillée</small><b>≈ 1 h 15 à 1 h 30 avec les exercices</b></div>
       <div><small>Prérequis</small><b>les cours 1 et 5 ; aucune statique supposée</b></div>
       <div><small>À la fin tu sais</small><b>calculer les efforts intérieurs d'une poutre et nommer sa sollicitation</b></div>
     </div>
@@ -378,19 +396,19 @@ input.r-gam{accent-color:var(--gam)}
     <div><div class="f">√(σ² + 3τ²) ≤ R<sub>pe</sub></div>Le critère de von Mises pour une contrainte normale et un cisaillement : exactement le cas des poutres.</div>
   </div>
 
-  <div class="def"><b>📘 Convention de la série</b> : le torseur de cohésion est l'action de la partie <b>droite</b> sur la partie <b>gauche</b>, {τ}<sub>coh</sub> = {S<sub>2</sub> → S<sub>1</sub>}. Attention à une collision de lettres : dans les tableaux de liaisons, on note souvent <b>X, Y, Z</b> les forces et <b>L, M, N</b> les moments ; ce N-là est un moment autour de z, sans rapport avec l'effort normal N.</div>
+  <div class="def"><b>📘 Le sujet du planning</b> : sujets <b>3.1</b> (bases de la statique des structures) et <b>3.2</b>. Attendus de l'IWE (<i>International Welding Engineer</i>) : expliquer l'équilibre, les liaisons, la différence entre systèmes isostatiques et hyperstatiques, et calculer les efforts intérieurs de systèmes isostatiques simples. <b>Convention de la série</b> : le torseur de cohésion est l'action de la partie <b>droite</b> sur la partie <b>gauche</b>.</div>
 
-  <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage (formation IWE)</b>
-    <p>(IWE : <i>International Welding Engineer</i>, ingénieur international en soudage.) Pour vérifier un cordon, il faut connaître les efforts qui le traversent : l'effort qui passe dans une attache soudée d'une poutre, le moment qui ouvre un cordon d'angle, le couple que transmet la soudure d'un arbre. Tous se calculent avec le geste de ce cours : couper, isoler, écrire l'équilibre.</p>
+  <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage</b>
+    <p>Pour vérifier un cordon, il faut connaître les efforts qui le traversent : l'effort qui passe dans l'attache soudée d'une poutre, le moment qui ouvre un cordon d'angle, le couple que transmet la soudure d'un arbre. Tous se calculent avec le geste de ce cours : couper, isoler, écrire l'équilibre.</p>
   </div>
 
   <h4>Le plan du cours</h4>
   <ol class="route">
-    <li><span class="dot">1</span><b>La poutre et ses hypothèses</b><p>Ce qu'est une poutre, et pourquoi le tenseur des contraintes s'y simplifie.</p></li>
-    <li><span class="dot">2</span><b>Statique express</b><p>Force, moment, torseur, équilibre : tout ce qu'il faut, repris de zéro.</p></li>
-    <li><span class="dot">3</span><b>Les liaisons et les réactions</b><p>Ce que bloque un appui, et comment calculer ce qu'il exerce.</p></li>
-    <li><span class="dot">4</span><b>Le torseur de cohésion</b><p>Couper, isoler, équilibrer : les efforts intérieurs d'une section.</p></li>
-    <li><span class="dot">5</span><b>Les sollicitations</b><p>Les six efforts intérieurs, leurs noms, et les sollicitations composées.</p></li>
+    <li><span class="dot">1</span><b>La poutre et ses hypothèses</b><p>Le spaghetti.</p></li>
+    <li><span class="dot">2</span><b>Statique express</b><p>La clé plate.</p></li>
+    <li><span class="dot">3</span><b>Les liaisons et les réactions</b><p>L'ancre.</p></li>
+    <li><span class="dot">4</span><b>Le torseur de cohésion</b><p>La bûche sciée.</p></li>
+    <li><span class="dot">5</span><b>Les sollicitations</b><p>La table de mixage.</p></li>
   </ol>
 </div>
 </section>
@@ -403,15 +421,13 @@ input.r-gam{accent-color:var(--gam)}
     <div class="c-img"><span class="ico">🍝</span><span><small>Image à retenir</small>Le spaghetti : très long devant son épaisseur</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la section qui glisse le long d'une ligne</span></div>
-    <p>Prends une surface plane, par exemple un disque ou un rectangle : c'est la <b>section droite</b> S. Fais glisser son centre G le long d'une ligne, en gardant la section perpendiculaire à cette ligne. Le volume balayé est une <b>poutre</b>, et la ligne suivie par G est sa <b>ligne moyenne</b>.</p>
-    <p>Une poutre est <b>droite</b> si sa ligne moyenne est une droite, <b>plane</b> si elle est contenue dans un plan (avec un chargement dans ce plan), <b>gauche</b> sinon. Pour que la théorie s'applique, la pièce doit être <b>élancée</b> : longue devant les dimensions de sa section, comme un spaghetti. En pratique, on vise une longueur au moins 5 à 10 fois plus grande que la hauteur de la section.</p>
-    <p>La récompense est énorme : au lieu de chercher une matrice 3 × 3 en chaque point, on cherche seulement, dans chaque section, <b>une contrainte normale σ et un cisaillement τ</b>. Les « fibres » de la poutre, parallèles à sa ligne moyenne, sont tirées ou cisaillées, mais ne se poussent pas les unes les autres sur les côtés.</p>
-  </div>
+  <p>Prends une surface plane, un disque ou un rectangle : la <b>section droite</b> S. Fais glisser son centre G le long d'une ligne, en gardant la section perpendiculaire à cette ligne : le volume balayé est une <b>poutre</b>, et la ligne suivie par G sa <b>ligne moyenne</b>. Une poutre est droite, plane ou gauche selon sa ligne moyenne. Pour que la théorie s'applique, elle doit être <b>élancée</b>, longue devant sa section comme un spaghetti : en pratique, une longueur au moins 5 à 10 fois la hauteur de la section. La récompense est énorme : au lieu d'une matrice 3 × 3 en chaque point, on cherche dans chaque section <b>une contrainte normale σ et un cisaillement τ</b>.</p>
 
-  <div class="lab" id="w1">
+  <div class="fx"><div class="row big" style="font-size:1.3rem"><span><span class="sig">[σ]</span> = <span class="inlinemat"><span class="sig">σ<sub>xx</sub></span><span class="tau">τ<sub>xy</sub></span><span class="tau">τ<sub>xz</sub></span><span class="tau">τ<sub>xy</sub></span><span>0</span><span>0</span><span class="tau">τ<sub>xz</sub></span><span>0</span><span>0</span></span></span><span>σ = σ<sub>xx</sub> &nbsp; τ = √(τ<sub>xy</sub>² + τ<sub>xz</sub>²)</span></div><p class="cap">x le long de la ligne moyenne. Les « fibres » de la poutre sont tirées ou cisaillées, mais ne se poussent pas sur les côtés. D'où, pour une poutre, les critères √(σ² + 3τ²) (von Mises) et √(σ² + 4τ²) (Tresca) du cours 5.</p></div>
+
+<div class="lab" id="w1">
     <p class="lab-h">Manipulation 1 : poutre ou pas poutre ?</p>
-    <p class="lab-sub">Règle la longueur et la hauteur de la section. Près des appuis et des charges, sur une longueur de l'ordre de la hauteur de la section, les contraintes sont perturbées (zones hachurées) : c'est le principe de Saint-Venant. La théorie des poutres décrit bien la zone du milieu, qui doit être la plus grande possible.</p>
+    <p class="lab-sub">Règle la longueur et la hauteur : près des appuis et des charges (hachures), les contraintes sont perturbées ; la théorie décrit la zone du milieu.<span class="predict">🔮 Prédis d'abord : un bloc trapu, aussi haut que long, est-il une poutre ?</span></p>
     <div class="btns" id="w1pre">
       <button class="btn on" type="button" data-v="6000,300">Poutrelle de 6 m</button>
       <button class="btn" type="button" data-v="500,50">Arbre Ø 50, 0,5 m</button>
@@ -424,12 +440,17 @@ input.r-gam{accent-color:var(--gam)}
     <p class="status" id="w1note"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">Saint-Venant et le tenseur simplifié</span></div>
-    <p><b>Le principe de Saint-Venant</b> (Adhémar Barré de Saint-Venant, ingénieur français, 1855). Énoncé précis : <i>loin de la zone où ils sont appliqués, les efforts ne produisent dans la poutre qu'un état de contrainte qui dépend de leur <b>torseur résultant</b>, et non de la façon dont ils sont répartis.</i> Deux boulons ou une soudure qui transmettent le même effort donnent, un peu plus loin, les mêmes contraintes.</p>
-    <div class="warn">⚠️ <b>Gare aux énoncés trop rapides.</b> Une formulation du type « ne dépend que de l'endroit où sont appliqués ces efforts » omet les deux conditions essentielles : on doit être <b>loin</b> de la zone d'application, et ce qui compte est le <b>torseur résultant</b> des efforts. Près de la zone d'application, la répartition détaillée compte, et c'est justement là que se trouvent les concentrations de contrainte (pied de cordon, trou de boulon).</div>
-    <p><b>Le tenseur simplifié.</b> Dans le repère de la poutre, x le long de la ligne moyenne :</p>
-    <div class="fx" style="max-width:600px"><div class="big" style="font-size:1.3rem"><span class="sig">[σ]</span> = <span class="inlinemat"><span class="sig">σ<sub>xx</sub></span><span class="tau">σ<sub>xy</sub></span><span class="tau">σ<sub>xz</sub></span><span class="tau">σ<sub>xy</sub></span><span>0</span><span>0</span><span class="tau">σ<sub>xz</sub></span><span>0</span><span>0</span></span> &nbsp; ⇒ &nbsp; <span class="sig">σ</span> = σ<sub>xx</sub>, &nbsp; <span class="tau">τ</span> = √(σ<sub>xy</sub>² + σ<sub>xz</sub>²)</div><p class="cap">sur la section droite (normale x⃗) : T⃗ = σ<sub>xx</sub>x⃗ + σ<sub>xy</sub>y⃗ + σ<sub>xz</sub>z⃗ ; σ<sub>xy</sub>, σ<sub>xz</sub> sont les cisaillements, notés aussi τ<sub>xy</sub>, τ<sub>xz</sub></p></div>
-    <p>C'est pour cela que les critères du cours 5 prennent, pour une poutre, la forme simple √(σ² + 3τ²) (von Mises) ou √(σ² + 4τ²) (Tresca) : il n'y a que deux inconnues par point.</p>
+  <p><b>Le principe de Saint-Venant</b> (Adhémar Barré de Saint-Venant, 1855) : <b>loin</b> de la zone où ils sont appliqués, les efforts ne produisent qu'un état de contrainte qui dépend de leur <b>torseur résultant</b>, pas de leur répartition. <b>Exemple</b> : deux boulons ou une soudure qui transmettent le même effort donnent, un peu plus loin, les mêmes contraintes ; une poutrelle de 6 m et de 300 mm de hauteur (rapport 20) est une poutre, un bloc de 300 × 300 mm non.</p>
+
+  <div class="warn"><b>⚠️ Piège : Saint-Venant a deux conditions.</b> Il faut être <b>loin</b> de la zone d'application, et c'est le <b>torseur résultant</b> qui compte. Près de la zone d'application, la répartition détaillée compte : c'est là que se trouvent les concentrations de contrainte (pied de cordon, trou de boulon).</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : le spaghetti</b> : très long devant son épaisseur.</div>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Poutre : une section qui glisse le long d'une ligne moyenne ; élancée (L ≥ 5 à 10 fois la hauteur).</li>
+      <li>Dans une section : seulement σ et τ.</li>
+      <li>Saint-Venant : loin des appuis, seul compte le torseur résultant des efforts.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -442,17 +463,13 @@ input.r-gam{accent-color:var(--gam)}
     <div class="c-img"><span class="ico">🔧</span><span><small>Image à retenir</small>La clé plate : plus le manche est long, plus on serre fort</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">l'effet tournant d'une force</span></div>
-    <p>Une <b>force</b> est une action qui pousse ou tire, avec une intensité (en newtons, N), une direction et un point d'application : c'est un vecteur. Mais une force fait aussi <b>tourner</b>. Pour serrer un écrou, tu pousses au bout de la clé, perpendiculairement au manche : l'effet tournant, le <b>moment</b>, vaut la force multipliée par le <b>bras de levier</b> d, la distance entre l'écrou et la ligne d'action de la force :</p>
-    <div class="fx"><div class="big"><span class="frc">M</span> = <span class="frc">F</span> × <span class="mat">d</span></div><p class="cap">en N·m (newton-mètre) ; d est mesuré perpendiculairement à la ligne d'action de la force</p></div>
-    <p>Si tu pousses dans l'axe du manche, d = 0 : aucun effet tournant, quelle que soit la force. Le moment a un <b>signe</b> : on le compte positif s'il fait tourner dans le sens trigonométrique (le sens inverse des aiguilles d'une montre).</p>
-    <p><b>Un torseur</b> est simplement la paire « résultante + moment » qui résume toutes les actions sur un solide : la somme des forces R⃗, et la somme de leurs moments en un point A, M⃗<sub>A</sub>. On l'écrit {τ} = {R⃗ ; M⃗<sub>A</sub>}<sub>A</sub>. Sa résultante ne dépend pas du point ; son moment, si.</p>
-    <p><b>L'équilibre</b> (le principe fondamental de la statique, PFS) : un solide immobile a un torseur des actions extérieures nul. En plan, cela donne <b>trois équations</b> : somme des forces horizontales = 0, somme des forces verticales = 0, somme des moments en un point = 0.</p>
-  </div>
+  <p>Une <b>force</b> pousse ou tire, avec une intensité (en N), une direction et un point d'application : c'est un vecteur. Mais une force fait aussi <b>tourner</b>. Pour serrer un écrou, tu pousses au bout de la clé : l'effet tournant, le <b>moment</b>, vaut la force multipliée par le <b>bras de levier</b> d, la distance entre l'écrou et la ligne d'action de la force. Si tu pousses dans l'axe du manche, d = 0 : aucun effet tournant. Un <b>torseur</b> résume toutes les actions sur un solide par la paire « somme des forces R⃗, somme des moments M⃗<sub>A</sub> en un point A ». Un solide immobile a un torseur des actions extérieures nul : c'est le <b>principe fondamental de la statique</b> (PFS).</p>
 
-  <div class="lab" id="w2">
+  <div class="fx"><div class="row big" style="font-size:1.3rem"><span>M = F × d</span><span>M⃗<sub>B</sub> = M⃗<sub>A</sub> + BA⃗ ∧ R⃗</span><span>en plan : ΣF<sub>x</sub> = 0, ΣF<sub>y</sub> = 0, ΣM = 0</span></div><p class="cap">M en N·m, d mesuré perpendiculairement à la ligne d'action ; positif dans le sens trigonométrique. La résultante R⃗ ne dépend pas du point, le moment si : on le transporte de A à B par la formule « BABAR ». En 3D, 6 équations d'équilibre.</p></div>
+
+<div class="lab" id="w2">
     <p class="lab-h">Manipulation 2 : la clé et le bras de levier</p>
-    <p class="lab-sub">Une force appliquée au bout d'une clé. Le segment vert est le bras de levier d : la distance de l'écrou A à la ligne d'action (en pointillés). Déplace aussi le point de calcul B le long du manche pour voir le moment changer de valeur.</p>
+    <p class="lab-sub">Une force au bout d'une clé : le segment vert est le bras de levier. Déplace aussi le point de calcul B le long du manche.<span class="predict">🔮 Prédis d'abord : si la force est dans l'axe du manche, que vaut le moment ?</span></p>
     <svg id="w2svg" viewBox="0 0 640 280" role="img" aria-label="Clé, force, bras de levier et moment"></svg>
     <div class="ctrl"><label for="w2F">Force <b class="frc">F</b></label><input id="w2F" class="r-frc" type="range" min="0" max="500" step="10" value="200"><output id="w2Fv"></output></div>
     <div class="ctrl"><label for="w2b">Angle de la force avec le manche</label><input id="w2b" class="r-th" type="range" min="-180" max="180" step="1" value="90"><output id="w2bv"></output></div>
@@ -462,13 +479,17 @@ input.r-gam{accent-color:var(--gam)}
     <p class="status" id="w2note"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">le calcul vectoriel du moment et le transport</span></div>
-    <p><b>Le moment par le calcul.</b> Le moment en A d'une force F⃗ appliquée en P est le <b>produit vectoriel</b> <span class="m">M⃗<sub>A</sub> = AP⃗ ∧ F⃗</span> (le symbole ∧ se lit « vectoriel »). En plan (x, y), il n'a qu'une composante, selon z :</p>
-    <div class="fx"><div class="big" style="font-size:1.5rem">M<sub>A,z</sub> = (x<sub>P</sub> − x<sub>A</sub>)·F<sub>y</sub> − (y<sub>P</sub> − y<sub>A</sub>)·F<sub>x</sub></div><p class="cap">les deux termes sont chacun « force × bras de levier », avec leur signe</p></div>
-    <p><b>Le transport du moment.</b> Pour passer du point A au point B :</p>
-    <div class="fx"><div class="big" style="font-size:1.6rem">M⃗<sub>B</sub> = M⃗<sub>A</sub> + BA⃗ ∧ R⃗</div><p class="cap">moyen mnémotechnique classique : « BABAR » (M<sub>B</sub> = M<sub>A</sub> + BA ∧ R)</p></div>
-    <p><b>En 3D</b>, un torseur a 6 composantes : les trois composantes de R⃗ (souvent notées X, Y, Z dans les tableaux de liaisons) et les trois de M⃗ (notées L, M, N). L'équilibre donne alors 6 équations.</p>
-    <div class="tip">💡 <b>Astuce d'équilibre :</b> écris l'équation des moments au point où agissent le plus d'inconnues. Leurs moments y sont nuls, et l'équation n'en contient souvent plus qu'une.</div>
+  <p><b>Exemple</b> : une clé de 25 cm, 200 N au bout du manche, perpendiculairement : <span class="m">M = 200 × 0,25 = 50 N·m</span>. Inclinée à 30° par rapport au manche, la même force n'a plus qu'un bras de levier de 0,25 × sin 30° = 0,125 m : 25 N·m. En plan, par le calcul : M<sub>A,z</sub> = (x<sub>P</sub> − x<sub>A</sub>)·F<sub>y</sub> − (y<sub>P</sub> − y<sub>A</sub>)·F<sub>x</sub>.</p>
+
+  <div class="warn"><b>⚠️ Piège : le bras de levier se mesure perpendiculairement à la ligne d'action</b>, pas le long de la pièce. Une force inclinée a un bras de levier plus court que la longueur du manche.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « BABAR »</b>, M<sub>B</sub> = M<sub>A</sub> + BA ∧ R ; et pour l'équilibre, écris les moments au point où agissent le plus d'inconnues : leurs moments y sont nuls.</div>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Moment = force × bras de levier (perpendiculaire à la ligne d'action).</li>
+      <li>Torseur = résultante + moment en un point ; transport par BABAR.</li>
+      <li>Équilibre plan : 3 équations (deux de forces, une de moments).</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -481,21 +502,18 @@ input.r-gam{accent-color:var(--gam)}
     <div class="c-img"><span class="ico">⚓</span><span><small>Image à retenir</small>L'ancre : chaque mouvement qu'elle empêche crée un effort qui le retient</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">un mouvement bloqué = une inconnue</span></div>
-    <p>Une <b>liaison</b> relie la poutre à son support. Chaque mouvement qu'elle <b>empêche</b> fait apparaître un effort qui le retient, la <b>réaction</b>, inconnue au départ. La règle est simple : une translation bloquée donne une force, une rotation bloquée donne un moment. En problème plan (x, y), les trois liaisons à connaître :</p>
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>Liaison</th><th>Ce qu'elle bloque</th><th>Inconnues en plan</th></tr>
-      <tr><td><b>Appui simple</b> (sur rouleaux)</td><td>le déplacement perpendiculaire au support</td><td>1 force (Y)</td></tr>
-      <tr><td><b>Articulation</b> (rotule, pivot)</td><td>tous les déplacements, pas la rotation</td><td>2 forces (X, Y)</td></tr>
-      <tr><td><b>Encastrement</b></td><td>tout : déplacements et rotation</td><td>2 forces et 1 moment (X, Y, N)</td></tr>
-    </table></div>
-    <p><b>Isostatique ou hyperstatique ?</b> En plan, la statique fournit 3 équations. Avec exactement 3 inconnues de liaison, le problème est <b>isostatique</b> : la statique suffit. Avec plus, il est <b>hyperstatique</b> : il manque des équations, qu'on trouvera au cours 9 en écrivant des conditions sur les déformations. Le « degré d'hyperstatisme » est le nombre d'inconnues en trop.</p>
-    <div class="mnemo">⚓ <b>Rappel express :</b> « 1, 2, 3 » : l'appui simple retient 1 chose, l'articulation 2, l'encastrement 3. Et une poutre plane est isostatique quand le total fait 3 : articulation + appui simple (2 + 1), ou un seul encastrement (3).</div>
-  </div>
+  <p>Une <b>liaison</b> relie la poutre à son support. Chaque mouvement qu'elle <b>empêche</b> fait apparaître un effort qui le retient, la <b>réaction</b>, inconnue au départ, comme une ancre qui retient un bateau : une translation bloquée donne une force, une rotation bloquée donne un moment. En plan, la statique fournit 3 équations : avec exactement 3 inconnues de liaison, le problème est <b>isostatique</b> et la statique suffit ; avec plus, il est <b>hyperstatique</b>, et il faut ajouter des conditions sur les déformations. Le <b>degré d'hyperstatisme</b> est le nombre d'inconnues en trop.</p>
 
-  <div class="lab" id="w3">
+  <div class="tbl-wrap"><table class="data">
+    <tr><th>Liaison (en plan)</th><th>Ce qu'elle bloque</th><th>Inconnues</th></tr>
+    <tr><td><b>Appui simple</b> (sur rouleaux)</td><td>le déplacement perpendiculaire au support</td><td>1 force (Y)</td></tr>
+    <tr><td><b>Articulation</b> (rotule, pivot)</td><td>tous les déplacements, pas la rotation</td><td>2 forces (X, Y)</td></tr>
+    <tr><td><b>Encastrement</b></td><td>tout : déplacements et rotation</td><td>2 forces et 1 moment</td></tr>
+  </table></div>
+
+<div class="lab" id="w3">
     <p class="lab-h">Manipulation 3 : calculer les réactions</p>
-    <p class="lab-sub">Choisis les appuis, place la charge. Les réactions (en orange) se calculent avec les équations d'équilibre, affichées en dessous.</p>
+    <p class="lab-sub">Choisis les appuis, place la charge : les réactions (en orange) se calculent avec les équations d'équilibre affichées.<span class="predict">🔮 Prédis d'abord : une poutre encastrée à un bout et en appui simple à l'autre est-elle isostatique ?</span></p>
     <div class="btns" id="w3sup">
       <button class="btn on" type="button" data-s="aa">Deux appuis (articulation + appui simple)</button>
       <button class="btn" type="button" data-s="en">Console (encastrement)</button>
@@ -508,12 +526,21 @@ input.r-gam{accent-color:var(--gam)}
     <p class="status" id="w3note"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">compter et résoudre</span></div>
-    <p><b>La méthode, pour une poutre sur deux appuis</b> de longueur L, articulée en A, en appui simple en B, chargée par F vers le bas à la distance a de A :</p>
-    <p><b>1.</b> Isoler la poutre et dessiner toutes les actions : F, et les réactions inconnues X<sub>A</sub>, Y<sub>A</sub>, Y<sub>B</sub>.<br><b>2.</b> Moments en A (le point où agissent deux inconnues) : <span class="m">Y<sub>B</sub>·L − F·a = 0</span>, donc <span class="m">Y<sub>B</sub> = F·a/L</span>.<br><b>3.</b> Forces verticales : <span class="m">Y<sub>A</sub> + Y<sub>B</sub> − F = 0</span>, donc <span class="m">Y<sub>A</sub> = F(L − a)/L</span>.<br><b>4.</b> Forces horizontales : <span class="m">X<sub>A</sub> = 0</span> (aucune charge horizontale).<br><b>5.</b> Vérification : moments en B, <span class="m">−Y<sub>A</sub>·L + F(L − a) = 0</span> ✅.</p>
-    <p><b>Pour une console</b> (encastrée en A, longueur L) chargée à son extrémité : Y<sub>A</sub> = F et un moment d'encastrement M<sub>A</sub> = F·L. C'est ce moment qui « tient » la poutre à l'horizontale, et c'est là que la poutre est la plus sollicitée.</p>
-    <p><b>En 3D</b>, on compte de la même façon avec les colonnes « problème spatial » du tableau (6 équations). Degré d'hyperstatisme = nombre d'inconnues − nombre d'équations indépendantes (en supposant la structure immobile).</p>
-    <div class="warn">⚠️ <b>Un exemple hyperstatique classique</b> (barre articulée en A et C, chargée en B). L'équilibre impose R<sub>A</sub> + R<sub>C</sub> + F = 0 : les deux réactions s'opposent à F et sont <b>toutes deux négatives</b>, R<sub>A</sub> = −bS<sub>a</sub>F/(aS<sub>b</sub> + bS<sub>a</sub>) et R<sub>C</sub> = −aS<sub>b</sub>F/(aS<sub>b</sub> + bS<sub>a</sub>). Vérifie toujours tes signes avec la somme. La méthode (écrire que l'allongement total est nul) est détaillée au cours 9.</div>
+  <p><b>Exemple</b> : poutre de 4 m, articulée en A, en appui simple en B, 10 kN vers le bas à 1 m de A. Moments en A (deux inconnues y disparaissent) : Y<sub>B</sub> × 4 − 10 × 1 = 0, donc <span class="m">Y<sub>B</sub> = 2,5 kN</span>. Forces verticales : <span class="m">Y<sub>A</sub> = 10 − 2,5 = 7,5 kN</span>. Forces horizontales : X<sub>A</sub> = 0. Vérification par les moments en B : −7,5 × 4 + 10 × 3 = 0 ✅. Pour une <b>console</b> encastrée chargée à son extrémité : Y<sub>A</sub> = F et un moment d'encastrement M<sub>A</sub> = F·L.</p>
+
+  <div class="warn"><b>⚠️ Piège : compter avant de calculer.</b> Encastrement + appui simple = 3 + 1 = 4 inconnues pour 3 équations : hyperstatique de degré 1, la statique seule ne donne pas les réactions. Articulation + appui simple (2 + 1) ou un seul encastrement (3) : isostatique.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « 1, 2, 3 »</b> : l'appui simple retient 1 chose, l'articulation 2, l'encastrement 3 ; une poutre plane est isostatique quand le total fait 3.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : un exemple hyperstatique, la 3D</summary>
+    <p>Barre de deux tronçons (longueurs a et b, sections S<sub>a</sub> et S<sub>b</sub>), articulée en A et en C, chargée axialement par F en B. L'équilibre impose R<sub>A</sub> + R<sub>C</sub> + F = 0 ; il manque une équation, fournie en écrivant que l'allongement total de la barre est nul. On obtient R<sub>A</sub> = −bS<sub>a</sub>F/(aS<sub>b</sub> + bS<sub>a</sub>) et R<sub>C</sub> = −aS<sub>b</sub>F/(aS<sub>b</sub> + bS<sub>a</sub>) : les deux s'opposent à F. En 3D, on compte de la même façon avec 6 équations ; les tableaux de liaisons notent souvent X, Y, Z les forces et L, M, N les moments (ce N-là n'est pas l'effort normal).</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Translation bloquée → force ; rotation bloquée → moment.</li>
+      <li>Appui simple 1, articulation 2, encastrement 3 inconnues ; isostatique si le total vaut 3 en plan.</li>
+      <li>Méthode : isoler, moments au point qui élimine le plus d'inconnues, forces, vérification.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -526,17 +553,13 @@ input.r-gam{accent-color:var(--gam)}
     <div class="c-img"><span class="ico">🪵</span><span><small>Image à retenir</small>La bûche sciée : avant le trait de scie, chaque morceau tenait grâce à l'autre</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le geste qui sert partout</span></div>
-    <p>Une poutre en équilibre tient debout parce que, dans chaque section, la matière de gauche et la matière de droite se tiennent l'une l'autre. Pour connaître ces efforts intérieurs, on fait comme au cours 2 avec la facette, mais à l'échelle d'une section entière :</p>
-    <p><b>1. Couper</b> la poutre par la pensée à l'abscisse x (la section 𝒮). Elle se sépare en une partie gauche S<sub>1</sub> et une partie droite S<sub>2</sub>.<br><b>2. Isoler</b> la partie gauche S<sub>1</sub>. Elle reçoit ses propres actions extérieures (charges, réactions)… et les efforts que la partie droite exerce sur elle à travers la coupe.<br><b>3. Équilibrer</b> : S<sub>1</sub> est immobile, donc ces efforts de la droite compensent exactement les actions extérieures sur la gauche.</p>
-    <p>Ces efforts de la droite sur la gauche forment le <b>torseur de cohésion</b> :</p>
-    <div class="fx"><div class="big" style="font-size:1.45rem">{τ}<sub>coh</sub> = {S<sub>2</sub> → S<sub>1</sub>} = −{actions extérieures sur S<sub>1</sub>} = +{actions extérieures sur S<sub>2</sub>}</div><p class="cap">on peut donc le calculer à partir de la gauche (avec un signe moins) ou de la droite (avec un signe plus) : choisis le côté où il y a le moins d'efforts</p></div>
-    <div class="mnemo">🪵 <b>La bûche :</b> imagine la bûche sciée ; pour que le morceau de gauche ne tombe pas, il faudrait le tenir exactement comme le morceau de droite le tenait avant la coupe. Ce « comment le tenir », c'est le torseur de cohésion.</div>
-  </div>
+  <p>Une poutre en équilibre tient parce que, dans chaque section, la matière de gauche et celle de droite se tiennent l'une l'autre. Imagine une bûche sciée : pour que le morceau de gauche ne tombe pas, il faudrait le tenir exactement comme le morceau de droite le tenait avant la coupe. Le geste qui sert partout : <b>1. couper</b> la poutre par la pensée à l'abscisse x ; <b>2. isoler</b> la partie gauche, qui reçoit ses propres actions extérieures et les efforts de la partie droite à travers la coupe ; <b>3. équilibrer</b> : ces efforts compensent exactement les actions extérieures sur la gauche. Ils forment le <b>torseur de cohésion</b>.</p>
 
-  <div class="lab" id="w4">
+  <div class="fx"><div class="big" style="font-size:1.2rem;line-height:1.8">{τ}<sub>coh</sub> = {S<sub>2</sub> → S<sub>1</sub>} = −{actions extérieures sur S<sub>1</sub>} = +{actions extérieures sur S<sub>2</sub>}<br><span class="sig">N</span> = −ΣF<sub>x</sub>(gauche) &nbsp; <span class="tau">T<sub>y</sub></span> = −ΣF<sub>y</sub>(gauche) &nbsp; <span class="sig">Mf<sub>z</sub></span> = −ΣM<sub>G,z</sub>(gauche)</div><p class="cap">S<sub>1</sub> : partie gauche, S<sub>2</sub> : partie droite ; réduit au centre G de la section, x le long de la poutre, y vers le haut. On calcule par la gauche (signe moins) ou par la droite (signe plus) : choisis le côté où il y a le moins d'efforts. N &gt; 0 : <b>traction</b>. Poutre sur deux appuis chargée vers le bas : Mf<sub>z</sub> &gt; 0, fibres du bas tendues.</p></div>
+
+<div class="lab" id="w4">
     <p class="lab-h">Manipulation 4 : la coupe qui glisse</p>
-    <p class="lab-sub">Une poutre de 4 m sur deux appuis, une charge F et une traction H. Fais glisser la coupe : en bas, la partie isolée avec ses efforts extérieurs (orange) et les efforts intérieurs dans la coupe (N et Mf en rouge, T en violet). Compare en gardant la gauche puis la droite : les valeurs sont les mêmes.</p>
+    <p class="lab-sub">Poutre de 4 m sur deux appuis, charge F et traction H : fais glisser la coupe, en gardant la gauche puis la droite.<span class="predict">🔮 Prédis d'abord : en gardant la droite au lieu de la gauche, les efforts intérieurs changent-ils ?</span></p>
     <div class="btns" id="w4side">
       <button class="btn on" type="button" data-s="g">Garder la partie gauche</button>
       <button class="btn" type="button" data-s="d">Garder la partie droite</button>
@@ -549,16 +572,17 @@ input.r-gam{accent-color:var(--gam)}
     <div class="mm-steps" id="w4out"></div>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">les formules et la convention</span></div>
-    <p>Réduit au centre G de la section (repère x⃗ le long de la poutre, y⃗ vers le haut), le torseur de cohésion a pour composantes, en problème plan :</p>
-    <div class="fx" style="max-width:700px"><div class="big" style="font-size:1.25rem;line-height:1.9;text-align:left">
-      <span class="sig">N</span> = −Σ F<sub>x</sub>(gauche) = +Σ F<sub>x</sub>(droite)<br>
-      <span class="tau">T<sub>y</sub></span> = −Σ F<sub>y</sub>(gauche) = +Σ F<sub>y</sub>(droite)<br>
-      <span class="sig">Mf<sub>z</sub></span> = −Σ M<sub>G,z</sub>(gauche) = +Σ M<sub>G,z</sub>(droite)
-    </div><p class="cap">Σ : somme ; M<sub>G,z</sub> : moment au centre G de la section, calculé avec la formule du chapitre 2</p></div>
-    <p><b>Lecture des signes</b> (convention de la série) : N &gt; 0 veut dire <b>traction</b> (la droite tire la gauche vers elle). Pour une poutre sur deux appuis chargée vers le bas, Mf<sub>z</sub> &gt; 0 : la poutre se creuse vers le bas, fibres du bas tendues. C'est cohérent avec la formule σ = −Mf<sub>z</sub>·y/I<sub>Gz</sub> (cours 9) : pour y &lt; 0 (en bas), σ &gt; 0.</p>
-    <p><b>Exemple</b> (manipulation 4, F = 10 kN à a = 1 m, L = 4 m) : Y<sub>A</sub> = 7,5 kN, Y<sub>B</sub> = 2,5 kN. Coupe à x = 2 m, par la gauche : T<sub>y</sub> = −(7,5 − 10) = <b>+2,5 kN</b> ; Mf<sub>z</sub> = 7,5 × 2 − 10 × 1 = <b>5 kN·m</b>. Par la droite : T<sub>y</sub> = +2,5 kN, Mf<sub>z</sub> = 2,5 × 2 = 5 kN·m ✅.</p>
-    <div class="warn">⚠️ <b>Les conventions varient d'un ouvrage à l'autre.</b> Certains définissent le torseur de cohésion comme l'action de la gauche sur la droite : tous les signes s'inversent. Les valeurs absolues, et donc le dimensionnement, ne changent pas, mais ne mélange jamais deux conventions dans un même calcul. Ici, on suit la convention « droite sur gauche ».</div>
+  <p><b>Exemple</b> (F = 10 kN à 1 m de A, L = 4 m, Y<sub>A</sub> = 7,5 kN, Y<sub>B</sub> = 2,5 kN). Coupe à x = 2 m, par la gauche : <span class="m">T<sub>y</sub> = −(7,5 − 10) = +2,5 kN</span> ; <span class="m">Mf<sub>z</sub> = 7,5 × 2 − 10 × 1 = 5 kN·m</span>. Par la droite : T<sub>y</sub> = +2,5 kN, Mf<sub>z</sub> = 2,5 × 2 = 5 kN·m ✅.</p>
+
+  <div class="warn"><b>⚠️ Piège : les conventions varient d'un ouvrage à l'autre.</b> Certains définissent le torseur de cohésion comme l'action de la gauche sur la droite : tous les signes s'inversent. Les valeurs absolues, et donc le dimensionnement, ne changent pas ; mais ne mélange jamais deux conventions dans un même calcul.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : la bûche sciée</b> : « couper, isoler, équilibrer ».</div>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Torseur de cohésion = action de la droite sur la gauche = −(actions sur la gauche) = +(actions sur la droite).</li>
+      <li>N &gt; 0 : traction ; Mf<sub>z</sub> &gt; 0 : fibres du bas tendues (convention de la série).</li>
+      <li>Calculer du côté le plus simple ; les deux côtés donnent le même résultat.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -571,22 +595,20 @@ input.r-gam{accent-color:var(--gam)}
     <div class="c-img"><span class="ico">🎛️</span><span><small>Image à retenir</small>La table de mixage : six curseurs ; un seul monté = sollicitation élémentaire</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">décomposer selon la normale</span></div>
-    <p>En 3D, le torseur de cohésion a une résultante R⃗ et un moment M⃗<sub>G</sub>. On décompose chacun <b>selon la normale n⃗ à la section</b> (l'axe x de la poutre) et <b>dans le plan de la section</b> :</p>
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>Composante</th><th>Direction</th><th>Effet</th><th>Contrainte créée</th></tr>
-      <tr><td><b class="sig">N</b>, effort normal</td><td>force selon n⃗</td><td>tire ou comprime</td><td class="sig">σ = N/S</td></tr>
-      <tr><td><b class="tau">T</b> (T<sub>y</sub>, T<sub>z</sub>), effort tranchant</td><td>force dans la section</td><td>fait glisser une section sur sa voisine</td><td class="tau">τ ≈ T/S (valeur moyenne)</td></tr>
-      <tr><td><b class="tau">Mt</b>, moment de torsion</td><td>moment selon n⃗</td><td>tord la poutre autour de son axe</td><td class="tau">τ = Mt·r/I<sub>G</sub></td></tr>
-      <tr><td><b class="sig">Mf</b> (Mf<sub>y</sub>, Mf<sub>z</sub>), moment de flexion</td><td>moment dans la section</td><td>courbe la poutre</td><td class="sig">σ = −Mf<sub>z</sub>·y/I<sub>Gz</sub></td></tr>
-    </table></div>
-    <p class="mut">Dans la dernière colonne : S est l'aire de la section ; r la distance au centre de la section ; y la hauteur du point dans la section, mesurée depuis G ; I<sub>G</sub> le moment <b>polaire</b> de la section (torsion) et I<sub>Gz</sub> son moment <b>quadratique</b> par rapport à l'axe Gz (flexion). Ces deux grandeurs, aux noms très proches, sont définies et comparées au cours 8.</p>
-    <p>La dernière colonne est le formulaire de base des poutres, que les cours 8 et 9 démontreront. Quand une seule composante est non nulle, la sollicitation est <b>élémentaire</b> et porte son nom : traction (ou compression), cisaillement, torsion, flexion pure. Quand plusieurs coexistent, elle est <b>composée</b>. Les noms à connaître : <b>flexion simple</b> (T + Mf, le cas le plus courant), <b>flexion composée</b> (N + Mf), <b>flexion-torsion</b> (Mt + Mf, les arbres de transmission), <b>flexion déviée</b> (Mf<sub>y</sub> et Mf<sub>z</sub> à la fois).</p>
-  </div>
+  <p>En 3D, le torseur de cohésion a une résultante et un moment, qu'on décompose selon la normale à la section (l'axe x) et dans le plan de la section : six efforts intérieurs, comme six curseurs d'une table de mixage. Quand un seul est non nul, la sollicitation est <b>élémentaire</b> et porte son nom : traction (ou compression), cisaillement, torsion, flexion pure. Quand plusieurs coexistent, elle est <b>composée</b> : <b>flexion simple</b> (T + Mf, le cas le plus courant), <b>flexion composée</b> (N + Mf), <b>flexion-torsion</b> (Mt + Mf, les arbres de transmission), <b>flexion déviée</b> (Mf<sub>y</sub> et Mf<sub>z</sub>).</p>
 
-  <div class="lab" id="w5">
+  <div class="tbl-wrap"><table class="data">
+    <tr><th>Composante</th><th>Direction</th><th>Effet</th><th>Contrainte</th></tr>
+    <tr><td><span class="sig">N</span>, effort normal</td><td>force selon x</td><td>tire ou comprime</td><td>σ = N/S</td></tr>
+    <tr><td><span class="tau">T</span> (T<sub>y</sub>, T<sub>z</sub>), effort tranchant</td><td>force dans la section</td><td>fait glisser une section sur sa voisine</td><td>τ ≈ T/S (moyenne)</td></tr>
+    <tr><td><span class="tau">Mt</span>, moment de torsion</td><td>moment selon x</td><td>tord la poutre</td><td>τ = Mt·r/I<sub>G</sub></td></tr>
+    <tr><td><span class="sig">Mf</span> (Mf<sub>y</sub>, Mf<sub>z</sub>), moment de flexion</td><td>moment dans la section</td><td>courbe la poutre</td><td>σ = −Mf<sub>z</sub>·y/I<sub>Gz</sub></td></tr>
+  </table></div>
+  <p>S : aire de la section ; r : distance au centre ; y : hauteur du point mesurée depuis G ; I<sub>G</sub> : moment <b>polaire</b> (torsion) ; I<sub>Gz</sub> : moment <b>quadratique</b> autour de Gz (flexion), définis au cours 8.</p>
+
+<div class="lab" id="w5">
     <p class="lab-h">Manipulation 5 : le décodeur de sollicitations</p>
-    <p class="lab-sub">Une console de 2 m, encastrée à gauche. À son extrémité libre, règle les forces F<sub>x</sub>, F<sub>y</sub>, F<sub>z</sub> et les couples C<sub>x</sub>, C<sub>z</sub>, puis place la coupe. Le décodeur calcule les six efforts intérieurs et nomme la sollicitation.</p>
+    <p class="lab-sub">Console de 2 m encastrée à gauche : règle les forces et les couples en bout, place la coupe ; le décodeur nomme la sollicitation.<span class="predict">🔮 Prédis d'abord : une force transversale seule crée-t-elle seulement un effort tranchant ?</span></p>
     <div class="btns" id="w5pre">
       <button class="btn on" type="button" data-v="0,-5,0,0,0">Flexion simple</button>
       <button class="btn" type="button" data-v="10,0,0,0,0">Traction</button>
@@ -606,15 +628,20 @@ input.r-gam{accent-color:var(--gam)}
     <p class="status" id="w5note"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">le calcul 3D et les pièges</span></div>
-    <p>Pour la console de la manipulation, garder la partie droite est plus simple : elle ne porte que les efforts de l'extrémité, appliqués au point E situé à la distance d = L − x de la coupe. Avec {τ}<sub>coh</sub> = +{actions sur S<sub>2</sub>} et M⃗<sub>G</sub> = GE⃗ ∧ F⃗ + C⃗ :</p>
-    <div class="fx" style="max-width:640px"><div class="big" style="font-size:1.2rem;line-height:1.9;text-align:left">
-      <span class="sig">N</span> = F<sub>x</sub> &nbsp; <span class="tau">T<sub>y</sub></span> = F<sub>y</sub> &nbsp; <span class="tau">T<sub>z</sub></span> = F<sub>z</sub><br>
-      <span class="tau">Mt</span> = C<sub>x</sub> &nbsp; <span class="sig">Mf<sub>y</sub></span> = −d·F<sub>z</sub> &nbsp; <span class="sig">Mf<sub>z</sub></span> = d·F<sub>y</sub> + C<sub>z</sub>
-    </div><p class="cap">GE⃗ = (d ; 0 ; 0), et (d ; 0 ; 0) ∧ (F<sub>x</sub> ; F<sub>y</sub> ; F<sub>z</sub>) = (0 ; −d·F<sub>z</sub> ; d·F<sub>y</sub>)</p></div>
-    <p><b>Piège 1 : l'effort tranchant est rarement seul.</b> Une force transversale crée un T, mais aussi un moment de flexion qui grandit avec la distance. Le « cisaillement pur » n'existe que dans des zones très courtes (axes de chape, rivets, cordons courts), où le bras de levier est négligeable.</p>
-    <p><b>Piège 2 : le moment de flexion est maximal loin de la charge.</b> Pour une console, Mf est nul sous la charge et maximal à l'encastrement : c'est là qu'on vérifie la poutre, et que la soudure d'une attache en console est la plus sollicitée.</p>
-    <div class="weld"><b>🔥 Retour au cours 5</b><p>Une sollicitation composée produit en un même point un σ (par N et Mf) et un τ (par T et Mt). On les combine avec le critère de von Mises, √(σ² + 3τ²) ≤ R<sub>pe</sub>, ou de Tresca, √(σ² + 4τ²) ≤ R<sub>pe</sub>. C'est la méthode de vérification des arbres en flexion-torsion (cours 10).</p></div>
+  <p><b>Exemple</b> : pour la console, garder la partie droite est plus simple : elle ne porte que les efforts de l'extrémité, à la distance d = L − x de la coupe. Avec F<sub>y</sub> = −3 kN à l'extrémité et une coupe à d = 1,5 m : <span class="m">T<sub>y</sub> = −3 kN</span> et <span class="m">Mf<sub>z</sub> = d·F<sub>y</sub> = −4,5 kN·m</span> (fibres du haut tendues). En général : N = F<sub>x</sub>, T<sub>y</sub> = F<sub>y</sub>, T<sub>z</sub> = F<sub>z</sub>, Mt = C<sub>x</sub>, Mf<sub>y</sub> = −d·F<sub>z</sub>, Mf<sub>z</sub> = d·F<sub>y</sub> + C<sub>z</sub>.</p>
+
+  <div class="warn"><b>⚠️ Piège : l'effort tranchant est rarement seul.</b> Une force transversale crée un T, mais aussi un moment de flexion qui grandit avec la distance : pour une console, Mf est nul sous la charge et maximal à l'encastrement, là où se trouve souvent la soudure d'attache. Le « cisaillement pur » n'existe que sur des zones très courtes (axes, rivets, cordons courts).</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : la table de mixage</b> : six curseurs ; un seul monté, sollicitation élémentaire ; plusieurs, composée.</div>
+  <div class="weld"><b>🔥 Retour au cours 5</b>
+    <p>Une sollicitation composée produit en un même point un σ (par N et Mf) et un τ (par T et Mt). On les combine avec von Mises, √(σ² + 3τ²) ≤ R<sub>pe</sub>, ou Tresca, √(σ² + 4τ²) ≤ R<sub>pe</sub> : c'est ainsi qu'on vérifie un arbre en flexion-torsion, ou le cordon qui attache une console.</p>
+  </div>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Six efforts intérieurs : N, T<sub>y</sub>, T<sub>z</sub>, Mt, Mf<sub>y</sub>, Mf<sub>z</sub>.</li>
+      <li>N et Mf créent σ ; T et Mt créent τ.</li>
+      <li>Flexion simple (T + Mf), composée (N + Mf), flexion-torsion (Mt + Mf), déviée (Mf<sub>y</sub> + Mf<sub>z</sub>).</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -623,79 +650,37 @@ input.r-gam{accent-color:var(--gam)}
 <div class="wrap">
   <div class="cartouche">
     <div class="c-num">✎</div>
-    <div class="c-title"><h2>Exercices corrigés</h2><p>Du bras de levier au décodage d'une sollicitation composée</p></div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Deux exercices, de la console à la sollicitation composée</p></div>
     <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de muscu : on ne progresse qu'en soulevant soi-même</span></div>
   </div>
-  <div class="lv lv1"><div class="lv-h">👁 Mode d'emploi <span class="tag">de tête, puis la fiche, puis le cours</span></div>
-    <p>Pour chaque exercice : fais un schéma, dessine toutes les actions (y compris les réactions inconnues), puis écris les équations. Les manipulations 3, 4 et 5 permettent de vérifier tes résultats.</p>
-  </div>
+
+  <p>Pour chaque exercice : fais un schéma, dessine toutes les actions (y compris les réactions inconnues), puis écris les équations. Le premier exercice se vérifie dans la manipulation 3 (« Console »), le second se rejoue dans la manipulation 5.</p>
 
   <div class="exo">
-    <h4>Exercice 1 : le bras de levier <span class="lvtag">N1 · chapitre 2</span></h4>
-    <p>On serre un écrou avec une clé de 25 cm, en appliquant 200 N au bout du manche.</p>
-    <p><b>a)</b> Quel moment si la force est perpendiculaire au manche ?<br><b>b)</b> Et si elle fait 60° avec le manche ?<br><b>c)</b> Et si elle est dirigée selon le manche ?</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <span class="m">M = F·d = 200 × 0,25 = <b>50 N·m</b></span>.</p>
-      <p><b>b)</b> Le bras de levier devient <span class="m">d = 0,25 × sin 60° = 0,217 m</span>, donc <span class="m">M = <b>43,3 N·m</b></span>.</p>
-      <p><b>c)</b> La ligne d'action passe par l'écrou : d = 0, donc <b>M = 0</b>. On pousse l'écrou sans le tourner.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 2 : la poutre sur deux appuis <span class="lvtag">N1 · chapitre 3</span></h4>
-    <p>Une poutre de 4 m est articulée en A, en appui simple en B, et porte une charge de 10 kN vers le bas à 1 m de A.</p>
-    <p><b>a)</b> Combien d'inconnues de liaison ? Le problème est-il isostatique ?<br><b>b)</b> Calcule les réactions.</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> Articulation : 2 ; appui simple : 1 ; total <b>3 = nombre d'équations</b> : isostatique.</p>
-      <p><b>b)</b> Moments en A : <span class="m">Y<sub>B</sub> × 4 − 10 × 1 = 0</span>, donc <b>Y<sub>B</sub> = 2,5 kN</b>. Forces verticales : <span class="m">Y<sub>A</sub> = 10 − 2,5 = <b>7,5 kN</b></span>. X<sub>A</sub> = 0. L'appui le plus proche de la charge en porte le plus.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 3 : la console <span class="lvtag">N1 · chapitre 3</span></h4>
+    <h4>Exercice 1 : la console <span class="lvtag">★ application · chapitres 3 et 4, à vérifier dans la manipulation 3</span></h4>
     <p>Une console de 2 m, encastrée en A, porte 5 kN vers le bas à son extrémité libre.</p>
-    <p><b>a)</b> Calcule les réactions à l'encastrement.<br><b>b)</b> Où la poutre est-elle la plus sollicitée en flexion ?</p>
+    <p class="q"><b>a)</b> Combien d'inconnues de liaison ? Le problème est-il isostatique ?</p>
+    <p class="q"><b>b)</b> Calcule les réactions à l'encastrement.</p>
+    <p class="q"><b>c)</b> Calcule T<sub>y</sub> et Mf<sub>z</sub> à 0,5 m de l'encastrement. Où la poutre est-elle la plus sollicitée en flexion ?</p>
     <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <b>Y<sub>A</sub> = 5 kN</b> vers le haut, X<sub>A</sub> = 0, et un moment d'encastrement <span class="m">M<sub>A</sub> = 5 × 2 = <b>10 kN·m</b></span>, dans le sens trigonométrique (il empêche la poutre de piquer vers le bas).</p>
-      <p><b>b)</b> À l'encastrement : le moment de flexion y vaut 10 kN·m en valeur absolue, et il décroît jusqu'à 0 sous la charge.</p>
+      <p><b>a)</b> Un encastrement : 3 inconnues (X<sub>A</sub>, Y<sub>A</sub>, M<sub>A</sub>) pour 3 équations : <b>isostatique</b>.</p>
+      <p><b>b)</b> <b>X<sub>A</sub> = 0</b>, <b>Y<sub>A</sub> = 5 kN</b> vers le haut, et un moment d'encastrement M<sub>A</sub> = 5 × 2 = <b>10 kN·m</b>, dans le sens trigonométrique : il empêche la poutre de piquer vers le bas.</p>
+      <p><b>c)</b> Par la droite (seule la charge y agit, à d = 1,5 m) : T<sub>y</sub> = <b>−5 kN</b> ; Mf<sub>z</sub> = d·F<sub>y</sub> = 1,5 × (−5) = <b>−7,5 kN·m</b>, fibres du haut tendues. Le moment vaut 0 sous la charge et croît jusqu'à <b>10 kN·m à l'encastrement</b>, où la poutre (et sa soudure d'attache) est la plus sollicitée.</p>
     </div></details>
   </div>
 
-  <div class="exo">
-    <h4>Exercice 4 : le torseur de cohésion, à gauche et à droite <span class="lvtag">N2 · chapitre 4</span></h4>
-    <p>Poutre de l'exercice 2 (Y<sub>A</sub> = 7,5 kN, Y<sub>B</sub> = 2,5 kN, charge de 10 kN à 1 m de A).</p>
-    <p><b>a)</b> Calcule T<sub>y</sub> et Mf<sub>z</sub> pour une coupe à x = 0,5 m.<br><b>b)</b> Même question à x = 2 m, par la gauche puis par la droite.<br><b>c)</b> Où le moment de flexion est-il maximal, et combien vaut-il ?</p>
+  <div class="exo defi">
+    <h4>Exercice 2 : décoder une sollicitation <span class="lvtag">★★ synthèse · chapitres 4 et 5, à rejouer dans la manipulation 5</span></h4>
+    <p>Console de 2 m selon x, encastrée à gauche. À l'extrémité : F<sub>x</sub> = 2 kN, F<sub>y</sub> = −3 kN, F<sub>z</sub> = 0 et un couple C<sub>x</sub> = 0,5 kN·m. Coupe à 1,5 m de l'extrémité.</p>
+    <p class="q"><b>a)</b> Calcule les six efforts intérieurs.</p>
+    <p class="q"><b>b)</b> Nomme la sollicitation.</p>
+    <p class="q"><b>c)</b> Quelles contraintes apparaissent dans la section, et quelles fibres sont tendues par la flexion ?</p>
+    <p class="q"><b>d)</b> Comment vérifierais-tu la section ?</p>
     <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> Partie gauche : seulement Y<sub>A</sub>. <span class="m">T<sub>y</sub> = −7,5 kN</span> ; <span class="m">Mf<sub>z</sub> = −(−0,5 × 7,5) = <b>3,75 kN·m</b></span>.</p>
-      <p><b>b)</b> Gauche : Y<sub>A</sub> et la charge. <span class="m">T<sub>y</sub> = −(7,5 − 10) = <b>+2,5 kN</b></span> ; <span class="m">Mf<sub>z</sub> = 7,5 × 2 − 10 × 1 = <b>5 kN·m</b></span>. Droite : seulement Y<sub>B</sub>, à 2 m de la coupe. <span class="m">T<sub>y</sub> = +2,5 kN</span> ; <span class="m">Mf<sub>z</sub> = 2 × 2,5 = 5 kN·m</span> ✅ : même résultat.</p>
-      <p><b>c)</b> Mf<sub>z</sub> croît de 0 (en A) jusqu'à la charge, puis décroît jusqu'à 0 (en B). Maximum sous la charge : <span class="m">Mf<sub>max</sub> = 7,5 × 1 = <b>7,5 kN·m</b></span> = F·a(L − a)/L. C'est aussi là que T<sub>y</sub> change de signe : on le démontrera au cours 7.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 5 : décoder une sollicitation <span class="lvtag">N2 · chapitre 5</span></h4>
-    <p>Console de 2 m selon x. À l'extrémité : F<sub>x</sub> = 2 kN, F<sub>y</sub> = −3 kN, F<sub>z</sub> = 0, et un couple C<sub>x</sub> = 0,5 kN·m. Coupe à 1,5 m de l'extrémité.</p>
-    <p><b>a)</b> Calcule les six efforts intérieurs.<br><b>b)</b> Nomme la sollicitation.<br><b>c)</b> Quelles contraintes apparaissent dans la section ?</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> d = 1,5 m : <b>N = 2 kN</b> ; <b>T<sub>y</sub> = −3 kN</b> ; T<sub>z</sub> = 0 ; <b>Mt = 0,5 kN·m</b> ; Mf<sub>y</sub> = 0 ; <span class="m"><b>Mf<sub>z</sub></b> = 1,5 × (−3) = <b>−4,5 kN·m</b></span>.</p>
+      <p><b>a)</b> d = 1,5 m, partie droite : <b>N = 2 kN</b> ; <b>T<sub>y</sub> = −3 kN</b> ; T<sub>z</sub> = 0 ; <b>Mt = 0,5 kN·m</b> ; Mf<sub>y</sub> = −d·F<sub>z</sub> = 0 ; <b>Mf<sub>z</sub></b> = d·F<sub>y</sub> = 1,5 × (−3) = <b>−4,5 kN·m</b>.</p>
       <p><b>b)</b> Quatre composantes non nulles : traction + flexion simple + torsion, une <b>sollicitation composée</b>.</p>
-      <p><b>c)</b> Des contraintes normales σ (par N et Mf<sub>z</sub>) et des cisaillements τ (par T<sub>y</sub> et Mt), à combiner avec un critère du cours 5. Mf<sub>z</sub> &lt; 0 : ce sont les fibres du <b>haut</b> qui sont tendues, comme dans toute console chargée vers le bas.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 6 : compter les inconnues <span class="lvtag">N1 · chapitre 3</span></h4>
-    <p>Pour chaque poutre plane, donne le nombre d'inconnues de liaison et le degré d'hyperstatisme : <b>a)</b> articulation + appui simple ; <b>b)</b> encastrement + appui simple ; <b>c)</b> encastrée aux deux bouts.</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> 2 + 1 = 3 : <b>isostatique</b> (degré 0).<br><b>b)</b> 3 + 1 = 4 : hyperstatique de <b>degré 1</b>.<br><b>c)</b> 3 + 3 = 6 : hyperstatique de <b>degré 3</b>. Une poutre soudée à ses deux extrémités est typiquement hyperstatique : sa dilatation thermique empêchée crée des contraintes (cours 3).</p>
-    </div></details>
-  </div>
-
-  <div class="exo" style="border-left-color:var(--mat)">
-    <h4>Défi : la charge répartie <span class="lvtag">N2 · pour préparer le cours 7</span></h4>
-    <p>Une poutre de 6 m sur deux appuis porte une charge uniformément répartie p = 2 kN/m sur toute sa longueur. Trouve les réactions, puis T<sub>y</sub>(x) et Mf<sub>z</sub>(x), et le moment maximal.</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p>Charge totale 12 kN, au milieu : <b>Y<sub>A</sub> = Y<sub>B</sub> = 6 kN</b>. Coupe à x, partie gauche : Y<sub>A</sub>, et la charge répartie sur [0 ; x], de résultante 2x vers le bas, appliquée à x/2. <span class="m">T<sub>y</sub>(x) = −(6 − 2x) = 2x − 6</span> ; <span class="m">Mf<sub>z</sub>(x) = 6x − 2x·(x/2) = 6x − x²</span>. Maximum au milieu (x = 3 m, où T<sub>y</sub> = 0) : <span class="m">Mf<sub>max</sub> = 18 − 9 = <b>9 kN·m</b></span>, soit pL²/8. T est une droite, Mf une parabole : c'est exactement ce que tracent les diagrammes du cours 7.</p>
+      <p><b>c)</b> Des contraintes normales σ (par N et Mf<sub>z</sub>) et des cisaillements τ (par T<sub>y</sub> et Mt). Mf<sub>z</sub> &lt; 0 : ce sont les fibres du <b>haut</b> qui sont tendues, comme dans toute console chargée vers le bas.</p>
+      <p><b>d)</b> Au point le plus chargé de la section (fibre supérieure, en surface), calculer σ = N/S + σ de flexion et τ de torsion (cours 8 pour les caractéristiques de section), puis appliquer √(σ² + 3τ²) ≤ R<sub>pe</sub> (cours 5).</p>
     </div></details>
   </div>
 </div>
@@ -732,6 +717,7 @@ input.r-gam{accent-color:var(--gam)}
     <div><div class="ic">🎨</div><h4>Rouge ou violet</h4><div class="f"><span class="sig">N, Mf → σ</span> &nbsp; <span class="tau">T, Mt → τ</span></div><p>N &gt; 0 : traction. Mf<sub>z</sub> &gt; 0 : fibres du bas tendues.</p></div>
     <div><div class="ic">🎛️</div><h4>Élémentaire ou composée</h4><div class="f">un curseur / plusieurs</div><p>Flexion simple : T + Mf. Composée : N + Mf. Flexion-torsion : Mt + Mf.</p></div>
   </div>
+  <div class="btns"><button class="btn" id="printFiche" type="button">🖨 Imprimer la fiche mémoire</button></div>
   <div class="fun"><span class="fun-h">🧱 Fun fact : Galilée, la première poutre calculée et une erreur d'un facteur 3</span>En 1638, assigné à résidence après sa condamnation par l'Église, Galilée publie ses <i>Discours concernant deux sciences nouvelles</i>. On y trouve le premier calcul de résistance d'une poutre : une console encastrée dans un mur, chargée à son extrémité. Son raisonnement est celui du <a href="#c4">chapitre 4</a> : il isole la poutre, écrit l'équilibre et trouve que la section la plus sollicitée est celle de l'encastrement, avec un moment F × L, la charge F multipliée par la longueur L de la console. Mais il suppose toutes les fibres de cette section tendues de la même façon, la poutre pivotant autour de son bord inférieur : pour une section rectangulaire, il surestime la résistance d'un facteur 3. Il faudra Mariotte, puis Parent en 1713 et Coulomb en 1773, pour placer correctement l'axe neutre, la ligne de la section ni tendue ni comprimée, au centre de gravité de la section.</div>
 </div>
 </section>
@@ -895,7 +881,7 @@ function support(svg,type,x,y){ // y : niveau de la poutre
     if(lam>=10)n="✅ <b>Élancement L/h = "+nf(lam,1)+"</b> : c'est une poutre. Les zones perturbées ne représentent que "+nf(part*100,0)+" % de la longueur : la théorie des poutres décrit presque toute la pièce.";
     else if(lam>=5)n="⚠️ <b>Élancement L/h = "+nf(lam,1)+"</b> : poutre « épaisse ». La théorie reste utilisable, mais de façon approchée ("+nf(part*100,0)+" % de la longueur est perturbée).";
     else n="❌ <b>Élancement L/h = "+nf(lam,1)+"</b> : ce n'est pas une poutre. Les zones perturbées couvrent toute la pièce : il faut un calcul 3D (par exemple par éléments finis).";
-    $("#w1note").innerHTML=n;
+    $("#w1note").innerHTML=n+"<br><b>À retenir :</b> la théorie des poutres décrit la zone du milieu, loin des appuis et des charges (Saint-Venant).";
   }
   [iL,ih].forEach(i=>i.addEventListener("input",()=>{$$("#w1pre .btn").forEach(b=>b.classList.remove("on"));draw();}));
   $$("#w1pre .btn").forEach(b=>b.addEventListener("click",()=>{const v=b.dataset.v.split(",").map(Number);iL.value=v[0];ih.value=v[1];$$("#w1pre .btn").forEach(o=>o.classList.toggle("on",o===b));draw();}));
@@ -925,7 +911,7 @@ function support(svg,type,x,y){ // y : niveau de la poutre
       const v=[(A[0]-H[0])/Math.hypot(A[0]-H[0],A[1]-H[1]),(A[1]-H[1])/Math.hypot(A[0]-H[0],A[1]-H[1])],q=9;
       el("path",{d:"M"+(H[0]+v[0]*q)+","+(H[1]+v[1]*q)+" l"+(u[0]*q)+","+(u[1]*q)+" l"+(-v[0]*q)+","+(-v[1]*q),fill:"none",style:"stroke:var(--mat);stroke-width:1.4"},svg);
       tx(svg,(A[0]+H[0])/2+8,(A[1]+H[1])/2-6,"d = "+nf(d*1000,0)+" mm","lbl",{style:"fill:var(--mat);font-weight:700"});}
-    if(F>0){const len=20+F*0.22;arrow(svg,P[0],P[1],P[0]+u[0]*len,P[1]+u[1]*len,"frc",3.6,12);tx(svg,P[0]+u[0]*(len+14)-4,P[1]+u[1]*(len+14)+5,"F","mth frc");}
+    if(F>0){const len=20+F*0.22;arrow(svg,P[0],P[1],P[0]+u[0]*len,P[1]+u[1]*len,"frc",3.6,12);tx(svg,Math.min(628,Math.max(8,P[0]+u[0]*(len+14)-4)),Math.max(16,Math.min(274,P[1]+u[1]*(len+14)+5)),"F","mth frc");/* étiquette gardée dans le cadre */}
     // point B
     const B=[A[0]+Lp*px/100,A[1]];el("circle",{cx:B[0],cy:B[1],r:5,style:"fill:var(--tau)"},svg);tx(svg,B[0],B[1]+28,"B","mth tau",{"text-anchor":"middle"});
     const MA=L*F*s,MB=(L-L*px/100)*F*s;
@@ -937,7 +923,7 @@ function support(svg,type,x,y){ // y : niveau de la poutre
     else if(Math.abs(s)<0.02)n="La force est dans l'axe du manche : sa ligne d'action passe par l'écrou, <b>d = 0</b>, aucun effet tournant.";
     else if(Math.abs(Math.abs(be)-90)<1)n="🔧 <b>Force perpendiculaire au manche</b> : le bras de levier est maximal (d = L), l'effet tournant aussi.";
     else n="Seule la composante de la force perpendiculaire au manche fait tourner : M = F·L·sin β. Et le moment dépend du point de calcul : en B, plus près de la force, il est plus petit.";
-    $("#w2note").innerHTML=n;
+    $("#w2note").innerHTML=n+"<br><b>À retenir :</b> moment = force × bras de levier, mesuré perpendiculairement à la ligne d'action.";
   }
   [iF,ib,iL,ix].forEach(i=>i.addEventListener("input",draw));draw();
 })();
@@ -961,18 +947,18 @@ function support(svg,type,x,y){ // y : niveau de la poutre
     else if(sup==="en"){support(svg,"enc",X0,Y);YA=F;MA=F*a;
       L_=["inconnues : X<sub>A</sub>, Y<sub>A</sub>, M<sub>A</sub> → 3 inconnues, 3 équations : <b>isostatique</b>","forces verticales : Y<sub>A</sub> − F = 0 → <b>Y<sub>A</sub> = "+nf(YA,2)+" kN</b>","moments en A : M<sub>A</sub> − F × a = 0 → <b>M<sub>A</sub> = "+nf(MA,2)+" kN·m</b> (moment d'encastrement)"];}
     else{support(svg,"enc",X0,Y);support(svg,"app",X1,Y+4);YB=F*a*a*(3*L-a)/(2*L**3);YA=F-YB;MA=F*a-YB*L;
-      L_=["inconnues : X<sub>A</sub>, Y<sub>A</sub>, M<sub>A</sub>, Y<sub>B</sub> → 4 inconnues, 3 équations : <b>hyperstatique de degré 1</b>","la statique ne suffit pas : il faut écrire que la flèche est nulle en B (méthode du cours 9), ce qui donne Y<sub>B</sub> = F·a²(3L − a)/(2L³) = <b>"+nf(YB,2)+" kN</b>","puis la statique : <b>Y<sub>A</sub> = "+nf(YA,2)+" kN</b> et <b>M<sub>A</sub> = F·a − Y<sub>B</sub>·L = "+nf(MA,2)+" kN·m</b>"];}
+      L_=["inconnues : X<sub>A</sub>, Y<sub>A</sub>, M<sub>A</sub>, Y<sub>B</sub> → 4 inconnues, 3 équations : <b>hyperstatique de degré 1</b>","la statique ne suffit pas : il faut écrire que la flèche est nulle en B (méthode des déformations, hors de ce cours), ce qui donne Y<sub>B</sub> = F·a²(3L − a)/(2L³) = <b>"+nf(YB,2)+" kN</b>","puis la statique : <b>Y<sub>A</sub> = "+nf(YA,2)+" kN</b> et <b>M<sub>A</sub> = F·a − Y<sub>B</sub>·L = "+nf(MA,2)+" kN·m</b>"];}
     // charge
     const xa=X0+a*k;if(F>0){arrow(svg,xa,Y-22-F*3,xa,Y-5,"frc",3.4,11);tx(svg,xa+8,Y-24-F*1.5,"F = "+nf(F,1)+" kN","lbl",{style:"fill:var(--frc);font-weight:700"});}
     // réactions
     const up=(x,v,lab)=>{if(Math.abs(v)<0.01)return;const l=12+Math.abs(v)*4,yb=Y+(sup==="aa"||x===X1?44:30);
       if(v>0)arrow(svg,x+(x===X0?-22:22),yb+l,x+(x===X0?-22:22),yb,"frc",3,10);else arrow(svg,x+(x===X0?-22:22),yb,x+(x===X0?-22:22),yb+l,"frc",3,10);
-      tx(svg,x+(x===X0?-22:22),yb+l+16,lab+" = "+nf(v,2),"lbl",{"text-anchor":"middle",style:"fill:var(--frc);font-weight:700"});};
+      tx(svg,x+(x===X0?-22:22),Math.min(244,yb+l+16),lab+" = "+nf(v,2),"lbl",{"text-anchor":"middle",style:"fill:var(--frc);font-weight:700"});};
     up(X0,YA,"Y_A".replace("_",""));if(sup!=="en")up(X1,YB,"YB");
     if(Math.abs(MA)>0.01){arcArrow(svg,X0,Y,26,MA>0,"frc",2.4);tx(svg,X0+30,Y-30,"MA = "+nf(MA,2)+" kN·m","lbl",{style:"fill:var(--frc);font-weight:700"});}
     $("#w3out").innerHTML=L_.join("<br>");
     const NOTE={aa:"L'appui le plus proche de la charge en porte le plus. Charge au milieu : chaque appui prend la moitié.",en:"Toute la charge remonte à l'encastrement, qui doit aussi fournir un moment : plus la charge est loin, plus ce moment est grand.",ea:"L'appui en B soulage l'encastrement : le moment M<sub>A</sub> est bien plus faible que pour la console seule ("+nf(F*a,2)+" kN·m)."};
-    $("#w3note").innerHTML=NOTE[sup];
+    $("#w3note").innerHTML=NOTE[sup]+"<br><b>À retenir :</b> appui simple 1, articulation 2, encastrement 3 inconnues ; isostatique si le total vaut 3.";
   }
   [iF,ia].forEach(i=>i.addEventListener("input",draw));
   $$("#w3sup .btn").forEach(b=>b.addEventListener("click",()=>{sup=b.dataset.s;$$("#w3sup .btn").forEach(o=>o.classList.toggle("on",o===b));draw();}));
@@ -1005,12 +991,12 @@ function support(svg,type,x,y){ // y : niveau de la poutre
     if(Math.abs(H)>0.01){if(H>0)arrow(svg,X1+6,YT,X1+50,YT,"frc",3,10);else arrow(svg,X1+50,YT,X1+6,YT,"frc",3,10);tx(svg,X1+30,YT-10,"H","mth frc",{"text-anchor":"middle"});}
     const xc=X0+x*k;
     el("line",{x1:xc,y1:YT-70,x2:xc,y2:YT+40,style:"stroke:var(--tau);stroke-width:2;stroke-dasharray:6 4"},svg);
-    tx(svg,xc,YT-74,"✂ coupe à x = "+nf(x,2)+" m","lbl",{"text-anchor":"middle",style:"fill:var(--tau);font-weight:700"});
+    tx(svg,Math.min(608,Math.max(72,xc)),YT-74,"✂ coupe à x = "+nf(x,2)+" m","lbl",{"text-anchor":"middle",style:"fill:var(--tau);font-weight:700"});
     // partie isolée
     const g=side==="g",p0=g?X0:xc,p1=g?xc:X1;
     el("line",{x1:p0,y1:YB,x2:p1,y2:YB,style:"stroke:var(--ink);stroke-width:6;stroke-linecap:round"},svg);
     el("line",{x1:xc,y1:YB-22,x2:xc,y2:YB+22,style:"stroke:var(--tau);stroke-width:2.4"},svg);
-    tx(svg,(p0+p1)/2,YB+58,g?"partie gauche S₁ isolée":"partie droite S₂ isolée","lbl",{"text-anchor":"middle",style:"font-weight:700"});
+    tx(svg,Math.min(606,Math.max(74,(p0+p1)/2)),YB+58,g?"partie gauche S₁ isolée":"partie droite S₂ isolée","lbl",{"text-anchor":"middle",style:"font-weight:700"});
     (g?left:right).forEach(e=>{const X=X0+e[0]*k;
       if(Math.abs(e[2])>0.01){const l=10+Math.abs(e[2])*3;if(e[2]>0)arrow(svg,X,YB+14+l,X,YB+6,"frc",2.6,9);else arrow(svg,X,YB-6-l,X,YB-5,"frc",2.6,9);}
       if(Math.abs(e[1])>0.01){const l=10+Math.abs(e[1])*2.5;if(e[1]>0)arrow(svg,X+(e[0]===0?-l-4:4),YB,X+(e[0]===0?-4:l+4),YB,"frc",2.6,9);else arrow(svg,X+(e[0]===0?-4:l+4),YB,X+(e[0]===0?-l-4:4),YB,"frc",2.6,9);}
@@ -1019,7 +1005,7 @@ function support(svg,type,x,y){ // y : niveau de la poutre
     const N=Ng,T=Tg,M=Mg,sg=g?1:-1,ln=12+Math.abs(N)*3,lt=12+Math.abs(T)*3.2;
     if(Math.abs(N)>0.01){const dir=sg*Math.sign(N);arrow(svg,xc,YB,xc+dir*ln,YB,"sig",3.2,10);tx(svg,xc+dir*(ln+8),YB+4,"N","mth sig",{"text-anchor":dir>0?"start":"end"});}
     if(Math.abs(T)>0.01){const dir=sg*Math.sign(T);arrow(svg,xc+sg*6,YB,xc+sg*6,YB-dir*lt,"tau",3.2,10);tx(svg,xc+sg*14,YB-dir*lt+(dir>0?0:10),"T","mth tau",{"text-anchor":g?"start":"end"});}
-    if(Math.abs(M)>0.01){arcArrow(svg,xc,YB,48,(M>0)===g,"sig",2.6);tx(svg,xc+(g?-50:50),YB-44,"Mf","mth sig",{"text-anchor":g?"end":"start"});}
+    if(Math.abs(M)>0.01){arcArrow(svg,xc,YB,48,(M>0)===g,"sig",2.6);tx(svg,g?Math.max(30,xc-50):Math.min(650,xc+50),YB-44,"Mf","mth sig",{"text-anchor":g?"end":"start"});}
     const f=v=>nf(Math.abs(v)<5e-4?0:v,2);
     const Lg="<b>Par la gauche</b> (−{ext → S₁}) : "+S("sig","N = "+f(Ng))+" kN · "+S("tau","T<sub>y</sub> = "+f(Tg))+" kN · "+S("sig","Mf<sub>z</sub> = "+f(Mg))+" kN·m";
     const Ld="<b>Par la droite</b> (+{ext → S₂}) : "+S("sig","N = "+f(Nd))+" kN · "+S("tau","T<sub>y</sub> = "+f(Td))+" kN · "+S("sig","Mf<sub>z</sub> = "+f(Md))+" kN·m";
@@ -1080,7 +1066,7 @@ function support(svg,type,x,y){ // y : niveau de la poutre
     else if(hN&&hMf&&!hMt)n="🎛️ <b>Sollicitation composée : flexion composée</b> (N + Mf"+(hT?" + T":"")+"). Les deux créent des σ, qui s'additionnent : σ = N/S − Mf·y/I.";
     else if(hMt&&hMf&&!hN)n="🎛️ <b>Sollicitation composée : flexion-torsion</b> (Mt + Mf"+(hT?" + T":"")+"). Le cas des arbres de transmission : σ par la flexion, τ par la torsion, combinés par von Mises ou Tresca.";
     else n="🎛️ <b>Sollicitation composée</b> : "+[hN?"effort normal":"",hT?"effort tranchant":"",hMt?"torsion":"",hMf?"flexion"+(dev?" déviée":""):""].filter(s=>s).join(" + ")+". On calcule σ et τ séparément, puis on les combine avec un critère du cours 5.";
-    $("#w5note").innerHTML=n;
+    $("#w5note").innerHTML=n+"<br><b>À retenir :</b> N et Mf créent σ, T et Mt créent τ ; plusieurs efforts à la fois : sollicitation composée.";
   }
   [...Object.values(I),ix].forEach(i=>i.addEventListener("input",()=>{if(i!==ix)$$("#w5pre .btn").forEach(b=>b.classList.remove("on"));draw();}));
   $$("#w5pre .btn").forEach(b=>b.addEventListener("click",()=>{const q=b.dataset.v.split(",").map(Number);["fx","fy","fz","cx","cz"].forEach((k,i)=>{I[k].value=q[i];});$$("#w5pre .btn").forEach(o=>o.classList.toggle("on",o===b));draw();}));
@@ -1137,6 +1123,13 @@ function support(svg,type,x,y){ // y : niveau de la poutre
     if(tin){const tgt=a.offsetLeft-tin.clientWidth/2+a.offsetWidth/2;try{tin.scrollTo({left:tgt,behavior:RM?"auto":"smooth"});}catch(e){tin.scrollLeft=tgt;}}});},{rootMargin:"-45% 0px -50% 0px"});
   Object.keys(map).forEach(id=>{const s=document.getElementById(id);if(s)obs.observe(s);});
 })();
+})();
+</script>
+<script>
+(function(){/* impression de la fiche mémoire seule */
+  const b=document.getElementById("printFiche");if(!b)return;
+  b.addEventListener("click",()=>{document.body.classList.add("print-fiche");window.print();});
+  window.addEventListener("afterprint",()=>document.body.classList.remove("print-fiche"));
 })();
 </script>
 </body>

@@ -113,13 +113,6 @@ section.chap{padding:46px 0 10px}
 .c-img span{font-size:.95rem;line-height:1.3}
 @media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
 
-/* niveaux */
-.lv{margin:1.2rem 0;padding:6px 22px 14px;border-radius:4px}
-.lv1{background:var(--card);border:2px solid var(--ink)}
-.lv2{background:var(--lv2);border-left:6px solid var(--ink)}
-.lv-h{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;font-family:var(--font-head);font-size:1.35rem;font-weight:600;margin:10px 0 4px}
-.lv-h .tag{font-size:.95rem;font-family:var(--font-body);font-weight:400;color:var(--muted)}
-@media (max-width:520px){.lv{padding:6px 14px 12px}}
 
 /* formules et encadrés */
 .fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:600px;text-align:center;border-radius:3px;overflow-x:auto}
@@ -253,6 +246,28 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
 .btn.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,var(--card))}
 .btn.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--card))}
 .ctrl[hidden]{display:none}
+
+/* gabarit court : approfondissement replié, à retenir, prédiction */
+details.deep{margin:1.2rem 0;padding:0 18px;background:var(--lv2);border-left:6px solid var(--ink);border-radius:4px}
+details.deep>summary{font-family:var(--font-head);font-size:1.2rem;font-weight:600;padding:9px 0}
+details.deep[open]{padding-bottom:10px}
+.retenir{margin:1.4rem 0 .4rem;padding:8px 18px 6px;background:var(--card);border:2px solid var(--ink);border-radius:4px}
+.retenir>b:first-child{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.retenir ul{margin:.3rem 0 .3rem}
+.predict{display:block;margin-top:.35rem;color:var(--ink);font-weight:700}
+@media (max-width:520px){details.deep{padding:0 12px}.retenir{padding:8px 12px 6px}}
+
+/* impression : le cours sur papier clair, ou la fiche mémoire seule sur une page */
+@media print{
+  :root,:root[data-theme]{--paper:#fff!important;--paper-2:#EEF2F6!important;--card:#fff!important;--ink:#111!important;--muted:#444!important;--line:#999!important;--grid:transparent!important;--lv2:#F2F5F8!important;--hl:#FFF3B0!important;color-scheme:light}
+  body{background:#fff;font-size:11pt}
+  .toc,.theme-btn,.btns,.ctrl,#qzReset,.score{display:none!important}
+  section.chap{padding:14px 0 4px}
+  .lab,.fx,.retenir,details.deep,.fiche>div,.exo{break-inside:avoid}
+  body.print-fiche header,body.print-fiche main>section:not(#fiche),body.print-fiche footer{display:none!important}
+  body.print-fiche #fiche .cartouche{margin-bottom:.6rem}
+  body.print-fiche .fiche>div{padding:8px 10px}
+}
 </style>
 </head>
 <body>
@@ -268,7 +283,7 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     </div>
     <div class="tb-cells">
       <div><small>Cours</small><b>3 sur 4 : la carte de Schaeffler et de Bystram, la fissuration à chaud, la fissuration à froid, le grain qui grossit</b></div>
-      <div><small>Durée conseillée</small><b>≈ 3 h avec les exercices</b></div>
+      <div><small>Durée conseillée</small><b>≈ 1 h 15 à 1 h 30 avec les exercices</b></div>
       <div><small>Prérequis</small><b>Cr<sub>eq</sub>, Ni<sub>eq</sub> et familles d'inox (Inox, cours 1 et 2) ; martensite et fissuration à froid (Métallurgie, cours 3) ; solidification et règle du levier (Métallurgie, cours 0)</b></div>
       <div><small>À la fin tu sais</small><b>calculer Cr<sub>eq</sub> et Ni<sub>eq</sub> et placer un métal fondu sur la carte, même en soudage hétérogène ; prévoir le mode de solidification et la ferrite ; expliquer et prévenir la fissuration à chaud, la liquation, la fissuration à froid des martensitiques et le grossissement de grain des ferritiques</b></div>
     </div>
@@ -315,69 +330,34 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
   <h3 style="margin-top:0">Avant de commencer</h3>
   <h4>Ce que tu sais déjà, en trois cases</h4>
   <div class="recall">
-    <div><div class="f">5 familles</div>Ferritiques, martensitiques, durcis par précipitation, austénitiques et duplex : chaque famille a sa structure, ses propriétés et son point faible (Inox, cours 2).</div>
-    <div><div class="f"><span class="mat">Cr<sub>eq</sub></span> · <span class="mat">Ni<sub>eq</sub></span></div>Les éléments alphagènes et gammagènes se résument en deux sommes pondérées, qui placent un acier sur une carte de structures (Inox, cours 1).</div>
-    <div><div class="f">f = (C − C₁)/(C₂ − C₁)</div>Un alliage qui se solidifie traverse un domaine pâteux, mi-liquide mi-solide ; la règle du levier donne les fractions de phases (Métallurgie, cours 0 et 1).</div>
+    <div><div class="f">5 familles</div>Ferritiques, martensitiques, durcis par précipitation, austénitiques et duplex : chacune a sa structure et son point faible.</div>
+    <div><div class="f">Cr<sub>eq</sub> · Ni<sub>eq</sub></div>Alphagènes et gammagènes se résument en deux sommes pondérées, qui placent un acier sur une carte de structures.</div>
+    <div><div class="f">f = (C − C₁)/(C₂ − C₁)</div>Un alliage qui se solidifie traverse un domaine pâteux ; la règle du levier donne les fractions de phases.</div>
   </div>
 
-  <div class="def"><b>📘 Correspondance avec le planning et le référentiel</b>. Ce cours poursuit le sujet <b>2.15 « Aciers inoxydables »</b> du planning de la formation, après les cours 1 et 2 qui posent la métallurgie et les familles. Il sert aussi au sujet <b>2.6 « Fissuration »</b> (chapitres 3 à 6), au sujet <b>2.22 « Soudage hétéro »</b> (chapitre 1) et au sujet <b>2.5 « Structure du joint soudé »</b> (chapitre 2).
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>Chapitre du cours</th><th>Ce qu'il apporte à l'IWE</th></tr>
-      <tr><td>1 La carte des dangers</td><td>équivalents en chrome et en nickel, diagramme de Schaeffler et ses successeurs, dangers de Bystram, assemblages hétérogènes et dilution</td></tr>
-      <tr><td>2 Ferrite ou austénite d'abord ?</td><td>modes de solidification, rôle de la ferrite δ, mesure de la ferrite (FN)</td></tr>
-      <tr><td>3 Le film liquide qui se déchire</td><td>mécanisme de la fissuration à chaud de solidification, ségrégation, plage de fragilité</td></tr>
-      <tr><td>4 Prévenir la fissuration à chaud</td><td>composition, vitesse, forme du cordon, bridage</td></tr>
-      <tr><td>5 La liquation en zone affectée</td><td>fissuration par liquation, nuances stabilisées, soudage multipasse</td></tr>
-      <tr><td>6 La fissuration à froid des martensitiques</td><td>hydrogène, trempabilité, préchauffage, postchauffage, traitement après soudage</td></tr>
-      <tr><td>7 Le grossissement de grain des ferritiques</td><td>croissance de grain en zone affectée, conséquences, nuances stabilisées, énergie de soudage</td></tr>
-    </table></div>
-    Dans le référentiel de l'IIW (<i>International Institute of Welding</i>) pour la formation IWE (<i>International Welding Engineer</i>), ce cours répond aux attendus sur les aciers inoxydables et réfractaires : décrire les familles et leur métallurgie de soudage, prévoir la structure du métal fondu avec un diagramme de constitution, identifier les risques de fissuration et de fragilisation, et choisir les mesures pour les éviter.
-  </div>
-
-  <div class="def"><b>📖 Les sigles et notations de ce cours</b>.
-    <ul>
-      <li><b>ZF</b> : zone fondue (le métal fondu) ; <b>ZAT</b> : zone affectée thermiquement, la bande du métal de base chauffée sans fondre ; <b>MB</b> : métal de base ; <b>MA</b> : métal d'apport (fil, baguette ou électrode).</li>
-      <li><b>Cr<sub>eq</sub></b>, <b>Ni<sub>eq</sub></b> : chrome et nickel équivalents, deux sommes pondérées des teneurs en % massique, définies au chapitre 1 ; <b>D</b> : dilution, part du métal de base dans la zone fondue.</li>
-      <li><b>γ</b> (gamma) : l'austénite, cubique à faces centrées ; <b>δ</b> (delta) : la ferrite qui se forme à haute température, cubique centrée ; <b>α</b> : la ferrite des ferritiques, de même structure ; <b>M</b> : la martensite. Sur les cartes, on écrit simplement A, F et M.</li>
-      <li><b>FN</b> (<i>Ferrite Number</i>) : indice de ferrite mesuré à l'aimant (chapitre 2) ; <b>HV</b> : dureté Vickers ; <b>TTDF</b> : température de transition ductile-fragile.</li>
-      <li>Les apports sont désignés comme dans l'ISO 14343 (fils) et l'ISO 3581 (électrodes) : <b>19 9 L</b> veut dire 19 % de chrome, 9 % de nickel, L pour bas carbone. Leurs équivalents américains (308L, 309L…) sont donnés entre parenthèses. Les nuances de tôles sont désignées par leur numéro EN (1.4404) et leur équivalent AISI (316L).</li>
-    </ul>
-    Les compositions des exemples sont des analyses types ; les modèles des manipulations sont pédagogiques, calés sur des ordres de grandeur publiés.
-  </div>
+  <div class="def"><b>📘 Le sujet du planning</b> : <b>2.15 « Aciers inoxydables »</b> ; ce cours sert aussi les sujets <b>2.6 « Fissuration »</b> (chapitres 3 à 6), <b>2.22 « Soudage hétéro »</b> (chapitre 1) et <b>2.5 « Structure du joint soudé »</b> (chapitre 2). Attendus de l'IWE (<i>International Welding Engineer</i>) selon le référentiel de l'IIW : prévoir la structure du métal fondu avec un diagramme de constitution, identifier les risques de fissuration et choisir les mesures pour les éviter. <b>Sigles</b> : ZF zone fondue, ZAT zone affectée, D dilution, FN indice de ferrite. Apports désignés selon l'ISO 14343 et l'ISO 3581 : <b>19 9 L</b> = 19 % Cr, 9 % Ni, bas carbone (308L) ; 23 12 L (309L) ; 19 12 3 L (316L).</div>
 
   <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage</b>
-    <p>Les inox se soudent bien… à condition de savoir quelle famille on a devant soi. Un austénitique se fissure à chaud si son métal fondu ne contient pas un peu de ferrite ; un martensitique se fissure à froid si on oublie le préchauffage ; un ferritique devient cassant si l'on soude trop chaud. Et quand on assemble un inox à un acier au carbone, le métal fondu est un mélange dont il faut prévoir la structure avant de souder. Le coordinateur en soudage choisit l'apport, l'énergie, le préchauffage et la séquence : tout ce cours sert à justifier ces choix.</p>
+    <p>Les inox se soudent bien… à condition de savoir quelle famille on a devant soi. Un austénitique se fissure à chaud si son métal fondu ne contient pas un peu de ferrite ; un martensitique se fissure à froid si l'on oublie le préchauffage ; un ferritique devient cassant si l'on soude trop chaud. Et quand on assemble un inox à un acier au carbone, il faut prévoir la structure du mélange avant de souder. Ce cours sert à justifier le choix de l'apport, de l'énergie, du préchauffage et de la séquence.</p>
   </div>
-
-  <h4>Les familles d'inox en un coup d'œil</h4>
-  <p>Rappel du cours 2. Un acier est dit inoxydable s'il contient au moins <b>10,5 % de chrome</b> (et au plus 1,2 % de carbone, selon l'EN 10088-1) : le chrome forme en surface une couche d'oxyde de quelques nanomètres, la <b>couche passive</b>, qui se reforme seule si on la raye. Les autres éléments fixent la structure, donc la famille :</p>
-  <div class="tbl-wrap"><table class="data">
-    <tr><th>Famille</th><th>Structure</th><th>Exemples (EN, AISI)</th><th>Atout</th><th>Danger principal au soudage</th></tr>
-    <tr><td>Austénitiques</td><td><span class="gam">γ</span>, cubique à faces centrées</td><td>1.4307 (304L), 1.4404 (316L), 1.4845 (310S)</td><td>ductiles et tenaces jusqu'aux très basses températures</td><td>fissuration à chaud (chapitres 2 à 5) ; phase σ et corrosion intergranulaire (cours 4)</td></tr>
-    <tr><td>Ferritiques</td><td><span class="gam">α</span>, cubique centrée</td><td>1.4016 (430), 1.4510 (439)</td><td>sans nickel, peu sensibles à la corrosion sous tension</td><td>grossissement de grain et fragilité (chapitre 7)</td></tr>
-    <tr><td>Martensitiques</td><td><span class="gam">M</span> après trempe</td><td>1.4006 (410), 1.4021 (420), 1.4313 (13-4)</td><td>durs et résistants</td><td>fissuration à froid (chapitre 6)</td></tr>
-    <tr><td>Austéno-ferritiques (duplex)</td><td><span class="gam">γ + α</span>, environ moitié-moitié</td><td>1.4462 (2205), 1.4410 (2507)</td><td>très résistants, mécaniquement et à la corrosion</td><td>équilibre des phases (chapitres 1 et 2) ; phase σ (cours 4)</td></tr>
-    <tr><td>Durcis par précipitation</td><td>martensite et fins précipités</td><td>1.4542 (17-4PH), 1.4545 (15-5PH)</td><td>très haute résistance</td><td>fragilisation vers 475 °C (cours 4)</td></tr>
-  </table></div>
 
   <h4>La série en quatre cours</h4>
   <div class="series">
     <div><b>1 Ce qui fait un inox</b>Passivité, réseaux du fer, boucle γ, éléments d'alliage, équivalents, désignations.</div>
-    <div><b>2 Les familles d'inox</b>Ferritiques, martensitiques, durcis par précipitation, austénitiques, duplex : propriétés et applications.</div>
-    <div class="here"><b>3 La carte des dangers et les fissurations</b>Schaeffler et Bystram, modes de solidification, fissuration à chaud, liquation, fissuration à froid, gros grains.</div>
-    <div><b>4 Ce qui précipite quand l'inox s'attarde au chaud</b>Diagramme fer-chrome, phase σ, courbes TTP, fragilisation à 475 °C, sensibilisation, rochage.</div>
+    <div><b>2 Les familles d'inox</b>Ferritiques, martensitiques, durcis par précipitation, austénitiques, duplex.</div>
+    <div class="here"><b>3 La carte des dangers et les fissurations</b>Schaeffler et Bystram, solidification, fissuration à chaud, liquation, fissuration à froid, gros grains.</div>
+    <div><b>4 Ce qui précipite au chaud</b>Phase σ, fragilisation à 475 °C, sensibilisation, rochage.</div>
   </div>
-  <p class="mut" style="font-size:.92rem">Déjà vu : fer-carbone, éléments d'addition, martensite et préchauffage (Métallurgie, cours 1 à 3). Voir aussi : la macrographie d'une soudure (Essais, cours 3) ; la transition ductile-fragile (Rupture, cours 2).</p>
 
   <h4>Le plan du cours</h4>
   <ol class="route">
-    <li><span class="dot">1</span><b>La carte des dangers</b><p>Deux nombres, un point, quatre dangers : Schaeffler, Bystram et la dilution.</p></li>
-    <li><span class="dot">2</span><b>Ferrite ou austénite d'abord ?</b><p>Le premier solide qui apparaît décide de tout : les quatre modes de solidification.</p></li>
-    <li><span class="dot">3</span><b>Le film liquide qui se déchire</b><p>Le mécanisme de la fissuration à chaud, au cœur de la zone pâteuse.</p></li>
-    <li><span class="dot">4</span><b>Prévenir la fissuration à chaud</b><p>Composition, vitesse, forme du cordon, bridage : les quatre leviers.</p></li>
-    <li><span class="dot">5</span><b>La liquation en zone affectée</b><p>Quand les joints de grains fondent avant les grains, à côté du bain.</p></li>
-    <li><span class="dot">6</span><b>La fissuration à froid des martensitiques</b><p>Hydrogène, martensite, contraintes : retirer un pied du tabouret.</p></li>
-    <li><span class="dot">7</span><b>Le grossissement de grain des ferritiques</b><p>Des grains qui se mangent et ne reviennent jamais en arrière.</p></li>
+    <li><span class="dot">1</span><b>La carte des dangers</b><p>Le GPS de l'inox.</p></li>
+    <li><span class="dot">2</span><b>Ferrite ou austénite d'abord ?</b><p>Les glaçons dans l'eau salée.</p></li>
+    <li><span class="dot">3</span><b>Le film liquide qui se déchire</b><p>Les tartines au miel.</p></li>
+    <li><span class="dot">4</span><b>Prévenir la fissuration à chaud</b><p>La goutte d'eau.</p></li>
+    <li><span class="dot">5</span><b>La liquation en zone affectée</b><p>Le mortier qui fond.</p></li>
+    <li><span class="dot">6</span><b>La fissuration à froid des martensitiques</b><p>Le tabouret à trois pieds.</p></li>
+    <li><span class="dot">7</span><b>Le grossissement de grain des ferritiques</b><p>La mousse qui vieillit.</p></li>
   </ol>
 </div>
 </section>
@@ -390,26 +370,20 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="c-img"><span class="ico">🗺️</span><span><small>Image à retenir</small>Le GPS de l'inox : le chrome équivalent en longitude, le nickel équivalent en latitude, et les quartiers dangereux coloriés</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le GPS de l'inox</span></div>
-    <p>Un inox contient une dizaine d'éléments. Impossible de prévoir sa structure élément par élément : on les range en <b>deux équipes</b>.</p>
-    <ul>
-      <li>L'équipe de la <b>ferrite</b> (les éléments dits <b>alphagènes</b>) : le chrome, le molybdène, le silicium, le niobium. On additionne leurs teneurs, chacune pesée selon sa force comparée à celle du chrome : c'est le <b>chrome équivalent</b> <span class="mat">Cr<sub>eq</sub></span>.</li>
-      <li>L'équipe de l'<b>austénite</b> (les éléments <b>gammagènes</b>) : le nickel, le carbone, le manganèse, l'azote. Même principe, pesés par rapport au nickel : c'est le <b>nickel équivalent</b> <span class="mat">Ni<sub>eq</sub></span>.</li>
-    </ul>
-    <p>Ces deux nombres sont les coordonnées d'un point sur une carte, comme la longitude et la latitude sur un GPS. En 1949, Anton Schaeffler a dessiné cette carte pour le <b>métal fondu</b> des soudures : à droite, le pays de la ferrite (F) ; en haut, celui de l'austénite (A) ; en bas à gauche, celui de la martensite (M) ; entre les trois, des zones frontières où deux ou trois structures cohabitent. Des lignes obliques donnent le pourcentage de ferrite, de 0 à 100 %.</p>
-    <p>Plus tard, Bystram a colorié sur la même carte les <b>quartiers dangereux</b>, chacun lié à une plage de températures :</p>
-    <ul>
-      <li>🔥 <b>fissuration à chaud</b>, au-dessus d'environ 1 250 °C, dans l'austénite pure (en haut) ;</li>
-      <li>❄️ <b>fissuration à froid</b> par la martensite, au-dessous d'environ 400 °C (en bas à gauche) ;</li>
-      <li>σ <b>fragilisation par la phase sigma</b>, lors de séjours entre environ 500 et 900 °C, quand il y a beaucoup de chrome (à droite) ;</li>
-      <li>🔍 <b>grossissement de grain</b>, au-dessus d'environ 1 150 °C, dans la ferrite (en bas à droite).</li>
-    </ul>
-    <p>Au milieu reste un petit <b>triangle sûr</b> : de l'austénite avec un peu de ferrite. C'est là que visent les métaux d'apport des inox austénitiques, comme le 19 9 L ou le 19 12 3 L.</p>
-  </div>
+  <p>Cr<sub>eq</sub> et Ni<sub>eq</sub> sont les coordonnées d'un point sur une carte, comme la longitude et la latitude d'un GPS. Schaeffler (1949) a dessiné cette carte pour le <b>métal fondu</b> des soudures : ferrite (F) à droite, austénite (A) en haut, martensite (M) en bas à gauche, zones mixtes entre elles, et des lignes obliques de pourcentage de ferrite. Bystram y a colorié les <b>quartiers dangereux</b> :</p>
+  <ul>
+    <li>🔥 <b>fissuration à chaud</b>, au-dessus d'environ 1 250 °C, dans l'austénite pure (en haut) ;</li>
+    <li>❄️ <b>fissuration à froid</b> par la martensite, au-dessous d'environ 400 °C (en bas à gauche) ;</li>
+    <li>σ <b>phase sigma</b>, lors de séjours entre environ 500 et 900 °C, quand il y a beaucoup de chrome (à droite) ;</li>
+    <li>🔍 <b>gros grains</b>, au-dessus d'environ 1 150 °C, dans la ferrite (en bas à droite).</li>
+  </ul>
+  <p>Au milieu reste un petit <b>triangle sûr</b> : de l'austénite avec un peu de ferrite. C'est là que visent les métaux d'apport des austénitiques, comme le 19 9 L ou le 19 12 3 L.</p>
 
-  <div class="lab" id="m1">
+  <div class="fx"><div class="row big" style="font-size:1.35rem"><span>X<sub>ZF</sub> = D·X<sub>MB</sub> + (1 − D)·X<sub>MA</sub></span></div><p class="cap">Dilution D : part du métal de base dans la zone fondue (aire de métal de base fondu sur aire totale, sur une macrographie). Cr<sub>eq</sub> et Ni<sub>eq</sub> suivent la même loi : le point de la zone fondue est sur le segment qui relie le point de l'apport à celui du métal de base, à la distance D de l'apport. Schaeffler : Cr<sub>eq</sub> = Cr + Mo + 1,5 Si + 0,5 Nb ; Ni<sub>eq</sub> = Ni + 30 C + 0,5 Mn.</p></div>
+
+<div class="lab" id="m1">
     <p class="lab-h">Manipulation 1 : le GPS de l'inox</p>
-    <p class="lab-sub">La carte de Schaeffler redessinée, avec les dangers de Bystram en surimpression. Choisis un métal : son point s'affiche avec ses équivalents, sa structure et ses dangers ; touche la carte pour placer un point où tu veux. En mode « Assemblage », une tôle S355 et une tôle 304L sont soudées avec l'apport choisi : fais varier la dilution et regarde le métal fondu glisser sur le segment. En mode « Point mystère », devine le danger avant la réponse. Carte simplifiée d'après Schaeffler (1949) et Bystram. « ▶ Diluer » fait monter la dilution de 0 à 60 % en mode « Assemblage ».</p>
+    <p class="lab-sub">La carte de Schaeffler avec les dangers de Bystram. Mode « Assemblage » : S355 et 304L soudés avec l'apport choisi, fais varier la dilution.<span class="predict">🔮 Prédis d'abord : avec un 19 9 L et 30 % de dilution, la zone fondue reste-t-elle dans le triangle sûr ?</span></p>
     <div class="btns" id="m1m">
       <button class="btn on" data-k="one" type="button">Un métal</button>
       <button class="btn" data-k="mix" type="button">Assemblage S355 + 304L</button>
@@ -442,41 +416,30 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
       <button class="btn" data-k="sure" type="button">✅ Zone sûre</button>
       <button class="btn" data-k="next" type="button">Point suivant</button>
     </div>
-    <div class="btns"><button class="btn play" id="m1play" type="button">▶ Diluer</button></div>
+    <div class="btns"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" id="m1play" type="button">▶ Diluer</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button></div>
     <svg id="m1svg" role="img" aria-label="Carte de Schaeffler avec les zones de danger de Bystram et le point du métal choisi"></svg>
     <div class="readout" id="m1r"></div>
     <p class="status" id="m1msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">équivalents, diagrammes, dilution</span></div>
-    <h4>Les équivalents de Schaeffler</h4>
-    <div class="fx"><div class="row"><span class="big"><span class="mat">Cr<sub>eq</sub></span> = Cr + Mo + 1,5·Si + 0,5·Nb</span><span class="big"><span class="mat">Ni<sub>eq</sub></span> = Ni + 30·C + 0,5·Mn</span></div><p class="cap">Teneurs en % massique. Exemple, 316L (C 0,02 ; Mn 1,5 ; Si 0,4 ; Cr 17,2 ; Ni 10,2 ; Mo 2,1) : Cr<sub>eq</sub> = 17,2 + 2,1 + 0,6 = 19,9 et Ni<sub>eq</sub> = 10,2 + 0,6 + 0,75 = 11,55</p></div>
-    <p>Le <b>coefficient 30 du carbone</b> saute aux yeux : 0,1 % de carbone pèse autant que 3 % de nickel. C'est pourquoi l'acier au carbone S355, presque sans nickel, a un Ni<sub>eq</sub> d'environ 6 et tombe dans la martensite. Les coefficients sont des moyennes tirées d'essais ; ils ne valent que pour le diagramme avec lequel ils ont été établis.</p>
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>Diagramme ou critère</th><th>Cr<sub>eq</sub></th><th>Ni<sub>eq</sub></th><th>Usage</th></tr>
-      <tr><td>Schaeffler (1949)</td><td>Cr + Mo + 1,5·Si + 0,5·Nb</td><td>Ni + 30·C + 0,5·Mn</td><td>structure du métal fondu (A, F, M) ; base de la carte de Bystram</td></tr>
-      <tr><td>DeLong</td><td>comme Schaeffler</td><td>+ 30·N</td><td>ferrite des austénitiques, en tenant compte de l'azote</td></tr>
-      <tr><td>WRC-1992 (Welding Research Council)</td><td>Cr + Mo + 0,7·Nb</td><td>Ni + 35·C + 20·N + 0,25·Cu</td><td>ferrite en FN des austénitiques et des duplex, modes de solidification</td></tr>
-      <tr><td>Hammar et Svensson</td><td>Cr + 1,37·Mo + 1,5·Si + 2·Nb + 3·Ti</td><td>Ni + 0,31·Mn + 22·C + 14,2·N + Cu</td><td>rapport Cr<sub>eq</sub>/Ni<sub>eq</sub> et mode de solidification (chapitre 2)</td></tr>
-    </table></div>
-    <p><b>L'azote compte beaucoup.</b> Le duplex 2205 contient environ 0,17 % d'azote. Sans l'azote, Schaeffler le place à 83 % de ferrite ; en ajoutant 30·N (DeLong), le point monte de 5 unités et la ferrite tombe à 30 %. Un duplex réel soudé en compte entre ces deux valeurs. Vérifie-le avec le bouton « Compter l'azote ».</p>
+  <p><b>Exemple</b> : S355 et 304L fondus à parts égales (point moyen ≈ 9,7 ; 8,2), D = 30 %. Avec un apport <b>23 12 L</b> (309L) : <span class="m">Cr<sub>eq</sub> = 0,3 × 9,7 + 0,7 × 24,2 ≈ 19,9</span>, Ni<sub>eq</sub> ≈ 12,6 : austénite avec environ 3 % de ferrite, <b>zone sûre</b>. Avec un <b>19 9 L</b> (308L) : Cr<sub>eq</sub> ≈ 17,4, Ni<sub>eq</sub> ≈ 10,5 : le point passe sous la frontière de la martensite, <b>risque de fissuration à froid</b>. D'où les apports « surchargés » comme le 23 12 L, qui gardent de la marge quand l'acier au carbone dilue.</p>
 
-    <h4>Assemblage hétérogène : la dilution est un levier</h4>
-    <p>Dans la zone fondue, le métal d'apport se mélange au métal de base fondu. La <b>dilution</b> <span class="mat">D</span> est la part du métal de base dans ce mélange (mesurée sur une macrographie : aire de métal de base fondu divisée par l'aire totale de la zone fondue). Pour chaque élément :</p>
-    <div class="fx"><div class="big">X<sub>ZF</sub> = <span class="mat">D</span>·X<sub>MB</sub> + (1 − <span class="mat">D</span>)·X<sub>MA</sub></div><p class="cap">Si deux métaux de base différents fondent à parts égales, X<sub>MB</sub> est leur moyenne</p></div>
-    <p>Comme Cr<sub>eq</sub> et Ni<sub>eq</sub> sont des sommes pondérées, ils suivent la même loi : <b>le point de la zone fondue est sur le segment qui relie le point de l'apport au point du métal de base, à la distance D de l'apport</b>. C'est la règle du levier, sur la carte. Exemple, S355 et 304L à parts égales (point moyen Cr<sub>eq</sub> ≈ 9,7 ; Ni<sub>eq</sub> ≈ 8,2), D = 30 % :</p>
+  <div class="warn"><b>⚠️ Piège : lire la carte avec un métal de base laminé.</b> Schaeffler a tracé sa carte pour du métal fondu brut de soudage : le 304L laminé est entièrement austénitique, alors que son métal fondu contient quelques % de ferrite. On place les métaux de base pour calculer la dilution, pas pour connaître leur structure. Et l'azote compte : un 2205 tombe vers 83 % de ferrite sans lui, 30 % avec (DeLong).</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « le Chrome court à droite, le Nickel grimpe en haut »</b>, et « 30 fois le carbone, une demi-fois le manganèse ».</div>
+  <div class="weld"><b>🔥 Choisir un apport pour un assemblage hétérogène</b>
+    <p>Pour un inox austénitique sur un acier au carbone, on vise un métal fondu austénitique avec quelques % de ferrite, malgré 20 à 40 % de dilution : 23 12 L (309L) ou 23 12 2 L (309LMo) y parviennent, un 19 9 L risque la martensite. Une passe de racine dilue plus qu'une passe de remplissage. Pour un service à haute température, où l'écart de dilatation devient le premier problème, on choisit souvent un apport base nickel.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : autres jeux d'équivalents</summary>
+    <p>DeLong : comme Schaeffler, Ni<sub>eq</sub> + 30 N, ferrite des austénitiques en FN. WRC-1992 : Cr + Mo + 0,7 Nb et Ni + 35 C + 20 N + 0,25 Cu, ferrite en FN des austénitiques et duplex, modes de solidification. Hammar et Svensson : Cr + 1,37 Mo + 1,5 Si + 2 Nb + 3 Ti et Ni + 0,31 Mn + 22 C + 14,2 N + Cu, pour le mode de solidification (chapitre 2). Toujours calculer avec les formules du diagramme qu'on lit. Exemple 316L avec Schaeffler : Cr<sub>eq</sub> = 19,9 ; Ni<sub>eq</sub> = 11,55. Un acier S355 a Ni<sub>eq</sub> ≈ 6 (son carbone pèse 30 fois) et tombe dans la martensite. Un diagramme de constitution intègre la vitesse de refroidissement typique du soudage à l'arc : ce n'est pas un diagramme d'équilibre.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
     <ul>
-      <li>avec un apport <b>23 12 L</b> (309L) : zone fondue à Cr<sub>eq</sub> = 19,85, Ni<sub>eq</sub> = 12,6, austénite avec environ 3 % de ferrite : <b>zone sûre</b> ;</li>
-      <li>avec un apport <b>19 9 L</b> (308L) : Cr<sub>eq</sub> = 17,4, Ni<sub>eq</sub> = 10,5 : le point passe sous la frontière de la martensite, zone A + M + F : <b>risque de fissuration à froid</b>.</li>
+      <li>Schaeffler place le métal fondu ; Bystram y ajoute quatre dangers : à chaud, à froid, σ, gros grains.</li>
+      <li>Dilution : le point de la zone fondue glisse sur le segment apport–métal de base.</li>
+      <li>Inox sur acier : un apport surchargé (23 12 L) garde la marge contre la martensite.</li>
     </ul>
-    <p>C'est la raison d'être des apports « surchargés » en chrome et en nickel comme le 23 12 L : ils gardent de la marge quand la dilution par l'acier au carbone tire le point vers la martensite.</p>
-    <div class="def"><b>📖 Diagramme de constitution</b> : carte qui donne la structure d'un métal fondu refroidi à la vitesse d'un cordon de soudure, en fonction de deux équivalents. Ce n'est pas un diagramme d'équilibre : il intègre la vitesse de refroidissement typique du soudage à l'arc. <b>Alphagène, gammagène</b> : élément qui stabilise la ferrite (α, δ), l'austénite (γ).</div>
-    <div class="tip">💡 <b>Le bon réflexe</b> : calcule toujours Cr<sub>eq</sub> et Ni<sub>eq</sub> avec les formules du diagramme que tu utilises. Les équivalents de Hammar et Svensson placés sur Schaeffler, ou ceux de Schaeffler sur le WRC-1992, donnent des points faux.</div>
-    <div class="warn"><b>⚠️ Piège : lire la carte avec un métal de base laminé.</b> Schaeffler a tracé sa carte pour du métal fondu brut de soudage. Une tôle laminée et recuite n'a pas la même structure à composition égale : le 304L laminé est entièrement austénitique, alors que son métal fondu contient quelques % de ferrite. Sur la carte, on place les métaux de base pour calculer la dilution, pas pour connaître leur structure.</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique : « le Chrome court à droite, le Nickel grimpe en haut »</b> ; et pour l'équipe du nickel, retiens « 30 fois le carbone, une demi-fois le manganèse ».</div>
-    <div class="weld"><b>🔥 Choisir un apport pour un assemblage hétérogène</b>
-      <p>Pour souder un inox austénitique sur un acier au carbone, on vise un métal fondu austénitique avec quelques % de ferrite, malgré une dilution de 20 à 40 %. Les apports 23 12 L (309L) ou 23 12 2 L (309LMo) y parviennent ; un 19 9 L risque la martensite. La position compte aussi : une passe de racine dilue plus qu'une passe de remplissage. Pour un service à haute température, où la différence de dilatation devient le premier problème, on choisit souvent un apport base nickel.</p>
-    </div>
   </div>
 </div>
 </section>
@@ -489,21 +452,20 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="c-img"><span class="ico">🧊</span><span><small>Image à retenir</small>Les glaçons dans l'eau salée : le premier solide choisit ce qu'il accepte, et repousse le reste dans le liquide</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">qui gèle en premier</span></div>
-    <p>Quand de l'eau salée gèle, les premiers glaçons sont presque purs : ils repoussent le sel dans l'eau restante, de plus en plus salée. Un métal qui se solidifie fait pareil. Les premiers cristaux, en forme d'arbre (les <b>dendrites</b>), repoussent dans le liquide les éléments qu'ils n'aiment pas. Le dernier liquide, coincé entre les dendrites, concentre les impuretés comme le soufre et le phosphore.</p>
-    <p>Dans un inox austénitique, le premier solide peut être de l'<b>austénite</b> γ ou de la <b>ferrite δ</b>. C'est le rapport <span class="mat">Cr<sub>eq</sub>/Ni<sub>eq</sub></span> qui décide. On distingue quatre <b>modes de solidification</b>, du moins au plus chromé :</p>
-    <ul>
-      <li><b>A</b> : tout se solidifie en austénite. Le dernier liquide, très chargé en impuretés, mouille les joints : c'est le mode le plus fragile à chaud.</li>
-      <li><b>AF</b> : l'austénite d'abord, puis un peu de ferrite tout à la fin, entre les dendrites.</li>
-      <li><b>FA</b> : la ferrite d'abord, puis l'austénite se forme autour d'elle à la fin de la solidification. En refroidissant, l'austénite <b>dévore</b> la plus grande partie de la ferrite ; il n'en reste qu'un squelette au cœur des anciennes dendrites, quelques %.</li>
-      <li><b>F</b> : tout se solidifie en ferrite ; l'austénite apparaît ensuite, à l'état solide, en lattes le long des joints.</li>
-    </ul>
-    <p>Pour les austénitiques, le mode <b>FA</b> est l'objectif : la ferrite qui pousse en premier accepte mieux le soufre et le phosphore, et le peu qui en reste à froid protège le métal fondu. Le seuil se situe vers <b>Cr<sub>eq</sub>/Ni<sub>eq</sub> ≈ 1,5 à 1,55</b> avec les équivalents de Hammar et Svensson : au-dessus, la ferrite pousse en premier.</p>
-  </div>
+  <p>Quand de l'eau salée gèle, les premiers glaçons repoussent le sel dans l'eau restante. Un métal fait pareil : les premières <b>dendrites</b> repoussent dans le liquide les éléments qu'elles n'aiment pas, et le dernier liquide concentre le soufre et le phosphore. Dans un inox austénitique, le premier solide peut être de l'<b>austénite</b> ou de la <b>ferrite δ</b>, selon le rapport Cr<sub>eq</sub>/Ni<sub>eq</sub>. Quatre <b>modes de solidification</b>, du moins au plus chromé :</p>
+  <ul>
+    <li><b>A</b> : tout en austénite ; le dernier liquide, chargé d'impuretés, mouille les joints : le plus fragile à chaud ;</li>
+    <li><b>AF</b> : austénite d'abord, un peu de ferrite tout à la fin ;</li>
+    <li><b>FA</b> : ferrite d'abord, puis l'austénite se forme autour et la dévore en refroidissant ; il en reste un squelette de quelques % ;</li>
+    <li><b>F</b> : tout en ferrite, l'austénite apparaît ensuite à l'état solide.</li>
+  </ul>
+  <p>Pour les austénitiques, le mode <b>FA</b> est l'objectif : la ferrite qui pousse en premier accepte mieux le soufre et le phosphore, et le peu qui en reste à froid en est la trace.</p>
 
-  <div class="lab" id="m2">
+  <div class="fx"><div class="big">Cr<sub>eq</sub>/Ni<sub>eq</sub> ≳ 1,5 ⟹ ferrite primaire</div><p class="cap">Avec les équivalents de Hammar et Svensson, la ferrite pousse en premier au-dessus d'environ 1,5 à 1,55. Avec ceux du WRC-1992 : A sous 1,25, AF de 1,25 à 1,48, FA de 1,48 à 1,95, F au-delà.</p></div>
+
+<div class="lab" id="m2">
     <p class="lab-h">Manipulation 2 : le duel des dendrites</p>
-    <p class="lab-sub">Premier schéma : une coupe du diagramme fer-chrome-nickel, en fonction du rapport Cr<sub>eq</sub>/Ni<sub>eq</sub> (équivalents WRC-1992) ; la verticale est le métal choisi, le point sa température. Second schéma : quelques dendrites de la zone pâteuse vues au microscope : liquide (sable), austénite γ (bleu-vert), ferrite δ (bleu). Lance le refroidissement, ou fais glisser la température. La vitesse de refroidissement fixe la température où la transformation de la ferrite se fige. Modèle pédagogique.</p>
+    <p class="lab-sub">Coupe du fer-chrome-nickel selon Cr<sub>eq</sub>/Ni<sub>eq</sub>, et les dendrites de la zone pâteuse : lance le refroidissement.<span class="predict">🔮 Prédis d'abord : un apport 25 20 (310) se solidifie-t-il en ferrite ou en austénite ?</span></p>
     <div class="btns" id="m2g">
       <button class="btn" data-k="25 20" type="button">25 20 (310)</button>
       <button class="btn" data-k="19 12 3 L" type="button">19 12 3 L</button>
@@ -515,38 +477,30 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="ctrl"><label for="m2R">Rapport <span class="mat">Cr<sub>eq</sub>/Ni<sub>eq</sub></span></label><input type="range" id="m2R" class="r-mat" min="1" max="3" step="0.01" value="1.71"><output id="m2Ro"></output></div>
     <div class="ctrl"><label for="m2v">Refroidissement <span class="mat">v</span></label><input type="range" id="m2v" class="r-mat" min="0" max="1" step="0.05" value="0.3"><output id="m2vo"></output></div>
     <div class="ctrl"><label for="m2T">Température <span class="sig">T</span></label><input type="range" id="m2T" class="r-sig" min="1150" max="1520" step="1" value="1150"><output id="m2To"></output></div>
-    <div class="btns"><button class="btn play" id="m2play" type="button">▶ Solidifier et refroidir</button></div>
+    <div class="btns"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" id="m2play" type="button">▶ Solidifier et refroidir</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button></div>
     <svg id="m2svg" role="img" aria-label="Coupe schématique du diagramme fer-chrome-nickel et microstructure de la zone pâteuse qui se solidifie"></svg>
     <div class="readout" id="m2r"></div>
     <p class="status" id="m2msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">coupe à 70 % de fer, ferrite résiduelle, FN</span></div>
-    <h4>La coupe du diagramme ternaire</h4>
-    <p>Les inox austénitiques sont proches d'un ternaire fer-chrome-nickel à environ 70 % de fer. Sur une coupe verticale de ce ternaire (le chrome augmente vers la droite pendant que le nickel diminue), le liquidus a deux branches : à gauche l'austénite se forme en premier, à droite la ferrite. Entre les deux, un petit <b>domaine triangulaire à trois phases</b>, liquide + γ + δ, où la solidification se termine pour les modes AF et FA. Sous le solidus, un domaine γ + δ s'élargit en descendant : la ferrite devient instable et se transforme en austénite à l'état solide.</p>
-    <div class="tbl-wrap"><table class="data">
-      <tr><th>Mode</th><th>Cr<sub>eq</sub>/Ni<sub>eq</sub> (WRC-1992)</th><th>Suite des réactions</th><th>Ferrite à l'ambiante</th></tr>
-      <tr><td>A</td><td class="n">&lt; 1,25</td><td>L → L + γ → γ</td><td>0</td></tr>
-      <tr><td>AF</td><td class="n">1,25 à 1,48</td><td>L → L + γ → L + γ + δ → γ + δ</td><td>traces, entre les dendrites</td></tr>
-      <tr><td>FA</td><td class="n">1,48 à 1,95</td><td>L → L + δ → L + δ + γ → δ + γ → γ + δ résiduelle</td><td>quelques %, squelette vermiculaire</td></tr>
-      <tr><td>F</td><td class="n">&gt; 1,95</td><td>L → L + δ → δ → δ + γ (lattes)</td><td>de 20 % à presque 100 %</td></tr>
-    </table></div>
-    <p>Avec les équivalents de Hammar et Svensson, la frontière entre solidification primaire austénitique (A, AF) et ferritique (FA, F) se situe vers <b>Cr<sub>eq</sub>/Ni<sub>eq</sub> ≈ 1,5 à 1,55</b>. Exemple, l'apport 19 9 L (C 0,02 ; Mn 1,7 ; Si 0,4 ; Cr 20,0 ; Ni 10,0 ; Mo 0,1 ; N 0,05 ; Cu 0,1) : Cr<sub>eq</sub> = 20,74, Ni<sub>eq</sub> = 11,78, rapport 1,76 : ferrite primaire. Ce seuil varie un peu avec la somme Cr<sub>eq</sub> + Ni<sub>eq</sub> et avec la vitesse : un refroidissement très rapide, comme en soudage laser, peut faire basculer un métal FA en mode A.</p>
-    <h4>Une ferrite résiduelle hors d'équilibre</h4>
-    <p>À l'équilibre, un métal FA devrait finir presque entièrement austénitique. Mais la transformation δ → γ demande de la diffusion, et le refroidissement d'un cordon est rapide : elle se fige en route. Plus on refroidit vite, plus elle se fige tôt, et plus il reste de ferrite. Dans le métal déposé des apports austénitiques, on vise en général <b>3 à 8 % de ferrite</b>.</p>
+  <p><b>Exemple</b> : apport 19 9 L (Cr 20,0 ; Ni 10,0 ; Mn 1,7 ; Si 0,4 ; C 0,02 ; N 0,05) : <span class="m">Cr<sub>eq</sub>/Ni<sub>eq</sub> = 20,74/11,78 ≈ 1,76</span> (Hammar et Svensson) : ferrite primaire, mode FA. Dans le métal déposé des apports austénitiques, on vise en général <b>3 à 8 % de ferrite</b> : moins, la protection contre la fissuration à chaud disparaît ; plus, les îlots forment un réseau continu, fragile à froid et plus vite transformé en phase σ ou démixté vers 475 °C (cours 4).</p>
+
+  <div class="warn"><b>⚠️ Piège : confondre ferrite à froid et mode de solidification.</b> Un métal à 3 % de ferrite à l'ambiante a pu se solidifier en ferrite primaire puis la perdre presque entièrement : c'est le mode de solidification qui protège, la ferrite résiduelle n'en est que la trace. Et la ferrite prévue par un diagramme est une estimation à quelques FN près : pour un service exigeant, on la mesure.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « A, AF, FA, F : la ferrite monte d'une lettre à chaque marche »</b>, et « 1,5 : au-dessus, la ferrite part en tête ».</div>
+  <div class="weld"><b>🔥 Les apports austénitiques sont dosés pour le mode FA</b>
+    <p>Les fabricants règlent la composition des 19 9 L, 19 12 3 L ou 23 12 L pour une ferrite primaire et quelques FN, souvent garantis sur le certificat. Pour la cryogénie, on choisit des apports à ferrite basse et contrôlée ; pour les inox entièrement austénitiques (310, 904L), où le mode A est inévitable, une composition très pure et riche en manganèse (chapitre 4).</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : la coupe à 70 % de fer, le FN</summary>
+    <p>Les austénitiques sont proches d'un ternaire fer-chrome-nickel à environ 70 % de fer. Sur la coupe, le liquidus a deux branches (austénite primaire à gauche, ferrite à droite), séparées par un petit domaine à trois phases L + γ + δ ; sous le solidus, le domaine γ + δ s'élargit et la ferrite devient instable. La transformation δ → γ demande de la diffusion et se fige en route : plus on refroidit vite, plus il reste de ferrite ; un refroidissement très rapide (laser) peut même faire basculer un métal FA en mode A. Ferrite vermiculaire (filaments au cœur des dendrites, mode FA), ferrite en lattes (mode F). <b>FN</b> (<i>Ferrite Number</i>) : mesure magnétique étalonnée selon l'ISO 8249, proche du % de ferrite jusqu'à environ 15.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
     <ul>
-      <li><b>Trop peu</b> (moins de 3 % environ) : la protection contre la fissuration à chaud disparaît.</li>
-      <li><b>Trop</b> (au-delà d'environ 8 %) : les îlots de ferrite se touchent et forment un <b>réseau continu</b>. Or la ferrite, cubique centrée, devient fragile à basse température : la ténacité du métal fondu chute pour les services cryogéniques (sa TTDF, température de transition ductile-fragile, remonte). Et la ferrite, où le chrome diffuse beaucoup plus vite que dans l'austénite, se transforme plus vite en phase σ ou se démixte vers 475 °C (cours 4).</li>
+      <li>Quatre modes : A, AF, FA, F ; le rapport Cr<sub>eq</sub>/Ni<sub>eq</sub> décide.</li>
+      <li>Objectif des austénitiques : solidification FA, 3 à 8 % de ferrite dans le métal déposé.</li>
+      <li>La ferrite se mesure en FN, à l'appareil magnétique.</li>
     </ul>
-    <h4>Mesurer la ferrite : le FN</h4>
-    <p>La ferrite est magnétique, l'austénite ne l'est pas : on mesure donc la ferrite avec un appareil magnétique, étalonné selon l'ISO 8249. Le résultat est un indice, le <b>FN</b> (<i>Ferrite Number</i>), proche du pourcentage de ferrite jusqu'à environ 15, puis plus élevé que lui. Les diagrammes récents (DeLong, WRC-1992) sont gradués en FN ; Schaeffler l'était en %.</p>
-    <div class="def"><b>📖 Mode de solidification</b> : nature de la phase qui se forme en premier dans le liquide (primaire) et suite des réactions jusqu'à la fin de la solidification. <b>Ferrite vermiculaire</b> : ferrite résiduelle en filaments au cœur des anciennes dendrites, typique du mode FA. <b>Ferrite en lattes</b> : ferrite découpée par de l'austénite en plaquettes parallèles.</div>
-    <div class="tip">💡 <b>Mesurer, pas seulement calculer</b> : la ferrite prévue par un diagramme est une estimation à quelques FN près. Pour une qualification ou un service exigeant, on la mesure sur le métal déposé, à l'appareil magnétique.</div>
-    <div class="warn"><b>⚠️ Piège : confondre ferrite à froid et mode de solidification.</b> Un métal à 3 % de ferrite à l'ambiante a pu se solidifier en ferrite primaire (FA), puis perdre la quasi-totalité de sa ferrite à l'état solide. Ce qui protège de la fissuration à chaud, c'est le mode de solidification ; la ferrite résiduelle n'en est que la trace.</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique : « A, AF, FA, F : la ferrite monte d'une lettre à chaque marche »</b> ; et « 1,5 : au-dessus, la ferrite part en tête ».</div>
-    <div class="weld"><b>🔥 Les apports austénitiques sont dosés pour le mode FA</b>
-      <p>Les fabricants règlent la composition des apports 19 9 L, 19 12 3 L ou 23 12 L pour qu'ils se solidifient en ferrite primaire et gardent quelques FN, souvent garantis sur le certificat. Pour les services cryogéniques, on choisit des apports à ferrite basse et contrôlée ; pour les inox entièrement austénitiques (310, 904L), où le mode A est inévitable, on compense par une composition très pure et riche en manganèse (chapitre 4).</p>
-    </div>
   </div>
 </div>
 </section>
@@ -559,20 +513,19 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="c-img"><span class="ico">🍯</span><span><small>Image à retenir</small>Deux tartines collées au miel : on les écarte sans effort tant que le miel est liquide, et elles se déchirent net</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">les tartines au miel</span></div>
-    <p>À la fin de la solidification, le bain n'est plus liquide mais pas encore solide : des dendrites presque jointives, séparées par de <b>minces films de liquide</b>. Pendant ce temps, le métal se contracte en refroidissant et la pièce, bridée, tire sur le cordon. Les dendrites, collées par du liquide, ne résistent pas plus que deux tartines collées au miel : elles se séparent. Le film se déchire, et la fissure suit les joints entre dendrites.</p>
-    <p>Trois ingrédients sont réunis dans une fissuration à chaud de solidification :</p>
-    <ol>
-      <li><b>des films liquides</b> qui mouillent les joints entre dendrites, d'autant plus que le liquide est riche en soufre et en phosphore, qui forment des composés fondant bas ;</li>
-      <li><b>un large intervalle de solidification</b> : plus la plage de températures où ces films subsistent est large, plus longtemps le métal reste vulnérable ;</li>
-      <li><b>des contraintes d'ouverture</b> : le retrait du métal, empêché par le bridage.</li>
-    </ol>
-    <p>Les fissures apparaissent à haute température, juste derrière le bain ; elles sont souvent visibles au milieu du cordon, dans son axe, ou dans le cratère de fin de cordon. Leurs faces, oxydées à chaud, ont souvent des teintes de recuit.</p>
-  </div>
+  <p>À la fin de la solidification, des dendrites presque jointives sont séparées par de <b>minces films de liquide</b>. Le métal se contracte en refroidissant et la pièce, bridée, tire sur le cordon : comme deux tartines collées au miel, les dendrites se séparent, et la fissure suit les joints entre elles. Trois ingrédients sont réunis :</p>
+  <ul>
+    <li>des <b>films liquides</b>, d'autant plus mouillants que le liquide est riche en soufre et en phosphore ;</li>
+    <li>un large <b>intervalle de solidification</b>, où ces films subsistent longtemps ;</li>
+    <li>des <b>contraintes d'ouverture</b> : le retrait empêché par le bridage.</li>
+  </ul>
+  <p>Les fissures apparaissent juste derrière le bain, souvent dans l'axe du cordon ou dans le cratère de fin de cordon ; leurs faces, oxydées à chaud, ont souvent des teintes de recuit.</p>
 
-  <div class="lab" id="m3">
+  <div class="fx"><div class="big">C<sub>L</sub> = C<sub>0</sub>·f<sub>L</sub><sup>k − 1</sup></div><p class="cap">Loi de Scheil : teneur du dernier liquide, f<sub>L</sub> fraction de liquide restante, k coefficient de partage (solide/liquide). Soufre à 0,010 %, k ≈ 0,04 dans l'austénite : quand il reste 2 % de liquide, C<sub>L</sub> ≈ 0,43 %, 43 fois plus. Les eutectiques Fe-FeS (988 °C) ou Ni-sulfure de nickel (≈ 640 °C) prolongent les films des centaines de degrés sous le solidus.</p></div>
+
+<div class="lab" id="m3">
     <p class="lab-h">Manipulation 3 : la fenêtre de fragilité</p>
-    <p class="lab-sub">Premier schéma : la zone pâteuse vue en coupe : des dendrites et, entre elles, des films de liquide d'autant plus violets qu'ils sont chargés en soufre et en phosphore ; les flèches orange sont le retrait bridé. Second schéma : la plage de fragilité : la courbe bleue est la ductilité que le métal peut encaisser, la droite rouge la déformation que lui impose le retrait. Si la droite coupe la courbe, une fissure s'ouvre. Modèle pédagogique.</p>
+    <p class="lab-sub">La zone pâteuse et ses films, plus ou moins chargés en soufre et phosphore ; en bas, la ductilité disponible face à la déformation imposée par le retrait.<span class="predict">🔮 Prédis d'abord : en mode FA, faut-il beaucoup plus de soufre et de phosphore pour fissurer qu'en mode A ?</span></p>
     <div class="btns" id="m3m">
       <button class="btn on" data-k="A" type="button">Mode A (austénite primaire)</button>
       <button class="btn" data-k="FA" type="button">Mode FA (ferrite primaire)</button>
@@ -583,34 +536,31 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
       <button class="btn on" data-k="0.004" type="button">Bridage moyen</button>
       <button class="btn" data-k="0.007" type="button">Bridage fort</button>
     </div>
-    <div class="btns"><button class="btn play" id="m3play" type="button">▶ Refroidir la zone pâteuse</button></div>
+    <div class="btns"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" id="m3play" type="button">▶ Refroidir la zone pâteuse</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button></div>
     <svg id="m3svg" role="img" aria-label="Zone pâteuse avec films liquides et courbe de ductilité dans la plage de fragilité"></svg>
     <div class="readout" id="m3r"></div>
     <p class="status" id="m3msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">ségrégation, plage de fragilité, carte P + S</span></div>
-    <h4>La ségrégation : la loi de Scheil</h4>
-    <p>Le <b>coefficient de partage</b> k d'un élément est le rapport de sa teneur dans le solide qui se forme à sa teneur dans le liquide voisin. Si k est petit, le solide refuse l'élément, qui s'accumule dans le liquide restant. Si la diffusion dans le solide est négligeable, la teneur du liquide suit la <b>loi de Scheil</b> :</p>
-    <div class="fx"><div class="big">C<sub>L</sub> = C<sub>0</sub> · f<sub>L</sub><sup>k − 1</sup></div><p class="cap">C₀ : teneur initiale ; f<sub>L</sub> : fraction de liquide restante (de 1 à 0). Exemple : soufre à 0,010 %, k = 0,04 ; quand il ne reste que 2 % de liquide, C<sub>L</sub> = 0,010 × 0,02<sup>−0,96</sup> ≈ 0,43 %, soit 43 fois plus</p></div>
-    <p>Le soufre et le phosphore ont des coefficients de partage très faibles, plus faibles dans l'austénite que dans la ferrite, où ils sont plus solubles. Le dernier liquide d'un métal à solidification austénitique s'enrichit donc énormément, jusqu'à former des composés qui fondent très bas : l'eutectique fer-sulfure de fer fond à 988 °C, l'eutectique fer-phosphure de fer à 1 048 °C, l'eutectique nickel-sulfure de nickel à 637 °C seulement. Les films liquides subsistent ainsi des centaines de degrés sous le solidus nominal de l'alliage.</p>
-    <h4>La plage de fragilité (BTR)</h4>
-    <p>La <b>plage de fragilité</b> (BTR, <i>brittleness temperature range</i>) est l'intervalle de températures, à la fin de la solidification, où le métal a déjà une certaine résistance mais presque pas de ductilité, à cause des films. Le métal fissure si la déformation imposée par le retrait, qui croît pendant qu'il refroidit dans cette plage, dépasse la ductilité disponible. C'est l'idée du modèle de la manipulation 3. On en tire les trois leviers : réduire la plage (moins d'impuretés, solidification ferritique), augmenter la ductilité minimale (films moins continus), réduire la déformation imposée (bridage, forme du cordon, vitesse).</p>
-    <h4>Pourquoi la ferrite primaire protège</h4>
+  <p><b>La ferrite primaire protège</b> : le soufre et le phosphore se dissolvent mieux dans la ferrite (moins de ségrégation), la fin de solidification FA crée des joints δ/γ tortueux et mal mouillés, et la <b>plage de fragilité</b> (BTR, l'intervalle où le métal a une résistance mais presque pas de ductilité) est plus étroite. Les cartes de Suutala le résument : en solidification austénitique primaire, quelques centièmes de % de P + S suffisent à fissurer ; en solidification ferritique, le métal en tolère bien davantage (schéma ci-dessous, deux exemples à P + S = 0,025 %).</p>
+<svg id="f3s" role="img" aria-label="Carte schématique du risque de fissuration à chaud selon la teneur en phosphore et soufre et le rapport des équivalents" style="display:block;width:100%;height:auto;margin:1rem 0"></svg>
+
+  <div class="warn"><b>⚠️ Piège : croire qu'un inox « propre » ne fissure pas.</b> Avec k ≈ 0,04, même 0,010 % de soufre devient 0,4 % dans le dernier liquide. En mode A, c'est l'équilibre entre impuretés et bridage qui décide ; seule la solidification ferritique donne une vraie marge.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « Film, Fourchette, Force »</b> : le film liquide, la fourchette de températures où il survit, la force du retrait. Supprime l'un des trois, la fissure ne naît pas.</div>
+  <div class="weld"><b>🔥 Chercher et classer la fissuration à chaud</b>
+    <p>On la cherche dans l'axe du cordon, dans les cratères et dans les racines très bridées : le ressuage révèle les fissures débouchantes, la macrographie leur trajet entre les dendrites. Pour comparer des métaux ou qualifier un apport, on impose une déformation pendant la solidification : essai Varestraint (une éprouvette pliée brusquement au passage de l'arc) ou essais autobridés.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : plage de fragilité et ségrégation</summary>
+    <p>Le métal fissure si la déformation imposée par le retrait, qui croît pendant qu'il traverse la plage de fragilité, dépasse la ductilité disponible : trois leviers, réduire la plage (moins d'impuretés, solidification ferritique), augmenter la ductilité minimale (films moins continus), réduire la déformation imposée (bridage, forme du cordon, vitesse). Le soufre et le phosphore ont des coefficients de partage très faibles, plus faibles dans l'austénite que dans la ferrite. Eutectique Fe-Fe<sub>3</sub>P : 1 048 °C. Avec k = 0,10 (ferrite), le dernier liquide reste 30 à 40 fois plus soufré : l'avantage de la ferrite tient aussi à sa plus grande solubilité et à la forme de ses joints.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
     <ul>
-      <li>Le soufre et le phosphore se dissolvent mieux dans la ferrite : moins de ségrégation, des films moins nombreux et moins riches.</li>
-      <li>En mode FA, la fin de la solidification se fait par une réaction à trois phases : les joints δ/γ sont tortueux, mal mouillés par le liquide, et une fissure ne peut pas les suivre sur une longue distance.</li>
-      <li>La plage de fragilité est plus étroite.</li>
+      <li>Fissuration à chaud : films liquides + intervalle de solidification + retrait bridé.</li>
+      <li>Le soufre et le phosphore se concentrent énormément dans le dernier liquide (Scheil).</li>
+      <li>La solidification en ferrite primaire (FA) est la meilleure protection.</li>
     </ul>
-    <svg id="f3s" role="img" aria-label="Carte schématique du risque de fissuration à chaud selon la teneur en phosphore et soufre et le rapport des équivalents" style="display:block;width:100%;height:auto;margin:1rem 0"></svg>
-    <p>Ce schéma résume des cartes publiées par Suutala et ses collègues à partir d'essais de fissuration (les deux points sont des exemples à P + S = 0,025 %) : en solidification austénitique primaire (rapport de Hammar et Svensson inférieur à 1,5 environ), quelques centièmes de % de phosphore et de soufre suffisent à fissurer ; en solidification ferritique primaire, le métal tolère bien davantage.</p>
-    <div class="def"><b>📖 Fissuration à chaud de solidification</b> : décohésion intergranulaire ou interdendritique du métal fondu en fin de solidification, par rupture de films liquides sous l'effet du retrait. <b>Coefficient de partage</b> k : rapport des teneurs du solide et du liquide en équilibre. <b>Ségrégation</b> : écart local de composition dû à la solidification.</div>
-    <div class="tip">💡 <b>Où chercher</b> : dans l'axe du cordon, dans les cratères de fin de passe, et dans les passes de racine très bridées. Le ressuage révèle les fissures débouchantes ; la macrographie montre leur trajet, entre les dendrites.</div>
-    <div class="warn"><b>⚠️ Piège : croire qu'un inox « propre » ne fissure pas.</b> Avec k ≈ 0,04, même 0,010 % de soufre devient 0,4 % dans le dernier liquide. En mode A, c'est l'équilibre entre impuretés et bridage qui décide ; seule la solidification ferritique donne une vraie marge.</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique : « Film, Fourchette, Force »</b> : le film liquide, la fourchette de températures où il survit, la force du retrait qui l'ouvre. Supprime l'un des trois, la fissure ne naît pas.</div>
-    <div class="weld"><b>🔥 Les essais de fissuration à chaud</b>
-      <p>Pour classer des métaux ou qualifier un apport, on impose une déformation pendant la solidification et l'on mesure les fissures obtenues. L'essai le plus connu, le Varestraint, plie brusquement une éprouvette au passage de l'arc ; d'autres essais, dits autobridés, utilisent la forme de l'éprouvette pour créer le bridage. Ils donnent des longueurs de fissures, des seuils de déformation et des plages de fragilité, qui permettent de comparer des nuances entre elles.</p>
-    </div>
   </div>
 </div>
 </section>
@@ -623,19 +573,14 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="c-img"><span class="ico">💧</span><span><small>Image à retenir</small>La goutte d'eau : un bain qui file trop vite s'étire en pointe, et ses grains se heurtent de face dans l'axe</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la goutte d'eau</span></div>
-    <p>Les grains du métal fondu poussent depuis les bords du bain vers son centre, toujours perpendiculairement au front de solidification, comme les rangs d'une foule qui avance vers une porte. La forme du bain décide donc du dessin des grains.</p>
-    <ul>
-      <li>À <b>vitesse modérée</b>, le bain est une ellipse : les grains se courbent en route et finissent par pousser dans le sens de la soudure. Le dernier liquide, chargé d'impuretés, se répartit le long de nombreux joints.</li>
-      <li>À <b>grande vitesse</b>, le bain s'étire en <b>goutte d'eau</b> : ses bords deviennent presque droits, les grains poussent tout droit vers l'axe et s'y heurtent de face. Tout le dernier liquide se retrouve dans un seul plan, l'axe du cordon : c'est là que la fissure s'ouvre, sur toute la longueur.</li>
-    </ul>
-    <p>La <b>forme de la section</b> joue de la même façon. Un cordon <b>étroit et profond</b> se solidifie depuis ses deux flancs, qui se rejoignent dans un plan vertical au milieu : un piège à films liquides. On préfère des cordons <b>assez larges</b>, avec un rapport profondeur sur largeur <span class="mat">h/c</span> d'environ 1 au plus, et une surface <b>bombée</b> plutôt que creuse : un cordon concave, plus mince au centre, concentre le retrait sur son axe.</p>
-    <p>Restent la <b>composition</b> (peu de carbone, de soufre, de phosphore et de cuivre, assez de manganèse, une dilution limitée) et le <b>bridage</b> : ne brider que ce qui est nécessaire.</p>
-  </div>
+  <p>Les grains du métal fondu poussent depuis les bords du bain vers son centre, perpendiculairement au front de solidification : la forme du bain décide du dessin des grains. À <b>vitesse modérée</b>, le bain est une ellipse : les grains se courbent et finissent par pousser dans le sens de la soudure, le dernier liquide se répartit sur de nombreux joints. À <b>grande vitesse</b>, le bain s'étire en <b>goutte d'eau</b> : les grains poussent tout droit vers l'axe et s'y heurtent de face, et tout le dernier liquide se retrouve dans le plan axial, où la fissure s'ouvre sur toute la longueur.</p>
+  <p>La <b>section</b> joue de même : un cordon <b>étroit et profond</b> se solidifie depuis ses deux flancs, qui se rejoignent dans un plan vertical, piège à films liquides. On préfère des cordons assez larges (profondeur sur largeur h/c ≤ 1 environ) et <b>bombés</b> : un cordon concave, plus mince au centre, concentre le retrait sur son axe. Restent la <b>composition</b> et le <b>bridage</b> : ne brider que ce qui est nécessaire.</p>
 
-  <div class="lab" id="m4">
+  <div class="fx"><div class="row big" style="font-size:1.35rem"><span>E = <span class="frac"><span>U·I</span><span>v</span></span></span><span>Q = k·E</span></div><p class="cap">Énergie de l'arc E (J/mm) et énergie de soudage Q ; rendement thermique k selon l'EN 1011-1 : 0,6 en TIG (141), 0,8 en électrode enrobée (111) et MIG-MAG (131, 135), 1,0 en arc submergé (121). Pour un austénitique, une énergie modérée et des températures entre passes basses (souvent 150 °C au plus).</p></div>
+
+<div class="lab" id="m4">
     <p class="lab-h">Manipulation 4 : la goutte d'eau et le cordon</p>
-    <p class="lab-sub">Premier schéma : le bain vu de dessus (liquide sable) et les grains du métal solidifié, tracés perpendiculairement au front ; le soudage avance vers la droite. Second schéma : la section du cordon et la zone où se rassemble le dernier liquide. Règle la vitesse, le rapport h/c, la forme de la surface et le bridage, et lis l'indice de risque. Modèle pédagogique. « ▶ Accélérer » fait passer la vitesse de 1 à 12 mm/s : le bain s'étire en goutte d'eau.</p>
+    <p class="lab-sub">Le bain vu de dessus et ses grains, puis la section du cordon : règle vitesse, h/c, forme de surface et bridage.<span class="predict">🔮 Prédis d'abord : en passant de 4 à 10 mm/s, les grains arrivent-ils sur l'axe couchés ou de face ?</span></p>
     <div class="ctrl"><label for="m4v">Vitesse de soudage <span class="mat">v</span></label><input type="range" id="m4v" class="r-mat" min="1" max="12" step="0.5" value="4"><output id="m4vo"></output></div>
     <div class="ctrl"><label for="m4h">Rapport <span class="mat">h/c</span></label><input type="range" id="m4h" class="r-mat" min="0.4" max="2" step="0.05" value="0.8"><output id="m4ho"></output></div>
     <div class="btns" id="m4s">
@@ -647,37 +592,30 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
       <button class="btn on" data-k="0.5" type="button">Bridage moyen</button>
       <button class="btn" data-k="1" type="button">Bridage fort</button>
     </div>
-    <div class="btns"><button class="btn play" id="m4play" type="button">▶ Accélérer</button></div>
+    <div class="btns"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" id="m4play" type="button">▶ Accélérer</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button></div>
     <svg id="m4svg" role="img" aria-label="Bain de fusion vu de dessus avec les trajectoires des grains, et section du cordon"></svg>
     <div class="readout" id="m4r"></div>
     <p class="status" id="m4msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">croissance des grains, énergie, composition</span></div>
-    <h4>La croissance des grains suit le front</h4>
-    <p>Les grains du métal fondu naissent sur les grains du métal de base, à la ligne de fusion, sans germination nouvelle : c'est la <b>croissance épitaxiale</b>. Ils poussent ensuite le long du gradient de température, perpendiculairement au front. En régime établi, la vitesse de croissance en un point du front vaut</p>
-    <div class="fx"><div class="big">R = <span class="mat">v</span> · cos θ</div><p class="cap">v : vitesse de soudage ; θ : angle entre la direction de soudage et la normale au front. R est nul sur les bords du bain (θ = 90°) et maximal, égal à v, sur l'axe en queue de bain</p></div>
-    <p>Dans une goutte d'eau, θ reste grand jusqu'à l'axe : les grains y arrivent presque perpendiculairement et forment un <b>joint axial</b> continu. Dans une ellipse, θ diminue en approchant de l'axe : les grains s'y couchent dans le sens de la soudure.</p>
-    <h4>Vitesse et énergie</h4>
-    <p>Réduire la vitesse augmente l'énergie de soudage. On la calcule comme d'habitude :</p>
-    <div class="fx"><div class="big"><span class="mat">E</span> = <span class="frac"><span>U · I</span><span>v</span></span> &nbsp;et&nbsp; <span class="mat">Q</span> = k · <span class="mat">E</span></div><p class="cap">E : énergie de l'arc (J/mm) ; Q : énergie de soudage ; k, rendement thermique du procédé (EN 1011-1) : 0,6 en TIG (141), 0,8 en électrode enrobée (111) et en MIG-MAG (131, 135), 1,0 en arc submergé (121). Exemple TIG : 12 V, 180 A, 4 mm/s → E = 540 J/mm, Q ≈ 0,32 kJ/mm</p></div>
-    <p>Pour un austénitique, on garde une énergie modérée : assez lente pour éviter la goutte d'eau, pas trop forte pour ne pas élargir la zone affectée ni chauffer la pièce (températures entre passes basses, souvent 150 °C au plus).</p>
-    <h4>La composition du métal fondu</h4>
+  <p><b>Exemple</b> : TIG à 12 V, 180 A, 4 mm/s : <span class="m">E = 12 × 180/4 = 540 J/mm</span>, <span class="m">Q = 0,6 × 540 ≈ 0,32 kJ/mm</span>. <b>Composition</b> : carbone bas, soufre et phosphore minimaux (les nuances de décolletage resoufrées comme le 303 sont pratiquement insoudables par fusion), <b>manganèse</b> qui forme des sulfures de manganèse solides jusque vers 1 600 °C au lieu de sulfures de fer liquides dès 988 °C (d'où la réputation du 18 8 Mn, ou 307), cuivre limité, dilution minimale par un métal de base chargé en carbone ou en soufre.</p>
+
+  <div class="warn"><b>⚠️ Piège : chercher la pénétration à tout prix.</b> Pousser intensité et vitesse donne un cordon étroit et profond (h/c &gt; 1) dans un bain en goutte d'eau : les deux conditions de la fissure axiale réunies. Mieux vaut plusieurs passes bien proportionnées. Et on finit toujours un cordon en remplissant le cratère (remontée ou décroissance progressive de l'intensité).</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « Lent, Large, Bombé, Libre »</b> : vitesse modérée, cordon assez large, surface bombée, bridage limité.</div>
+  <div class="weld"><b>🔥 Sur le mode opératoire</b>
+    <p>Pour un austénitique sensible (mode A, 310 ou 904L) : intensité modérée, vitesse qui évite la goutte d'eau, passes larges et bombées, cratères remplis, apport pur et riche en manganèse, températures entre passes basses. Pour un austénitique courant en mode FA, il suffit en général de respecter la ferrite de l'apport et une dilution raisonnable.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : croissance épitaxiale, silicium</summary>
+    <p>Les grains du métal fondu naissent sur ceux du métal de base, à la ligne de fusion, sans germination nouvelle (<b>croissance épitaxiale</b>), puis poussent le long du gradient de température. La vitesse de croissance en un point du front vaut <span class="m">R = v·cos θ</span>, θ étant l'angle entre la direction de soudage et la normale au front : nulle sur les bords du bain, égale à v sur l'axe en queue de bain. Dans une goutte d'eau, θ reste grand jusqu'à l'axe : joint axial continu. Les apports LSi contiennent un peu plus de silicium pour mieux mouiller, sans risque en mode FA ; dans un métal entièrement austénitique, le silicium, comme le niobium, le titane et le bore, aggrave la fissuration.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
     <ul>
-      <li><b>Carbone bas</b> : il élargit l'intervalle de solidification.</li>
-      <li><b>Soufre et phosphore minimaux</b>, dans les tôles comme dans les apports. Attention aux nuances de décolletage comme le 1.4305 (303), volontairement resoufrées : elles sont pratiquement insoudables par fusion.</li>
-      <li><b>Manganèse</b> : il forme des sulfures de manganèse, qui fondent vers 1 600 °C, au lieu des sulfures de fer, qui donnent un liquide dès 988 °C. Les apports riches en manganèse, comme le 18 8 Mn (307), sont réputés pour leur résistance à la fissuration.</li>
-      <li><b>Cuivre limité</b> : il forme lui aussi des films à bas point de fusion.</li>
-      <li><b>Silicium</b> : les apports dits LSi en contiennent un peu plus, pour mieux mouiller ; c'est sans risque en mode FA, mais dans un métal entièrement austénitique, le silicium, comme le niobium, le titane et le bore, aggrave la fissuration.</li>
-      <li><b>Dilution minimale</b> quand le métal de base est riche en carbone ou en soufre : chanfreins ouverts, passes sur beurrage.</li>
+      <li>Grande vitesse : bain en goutte d'eau, grains de face sur l'axe, fissure axiale.</li>
+      <li>Cordons larges (h/c ≤ 1) et bombés, cratères remplis, bridage limité.</li>
+      <li>Composition : peu de C, S, P, Cu ; du manganèse ; dilution limitée.</li>
     </ul>
-    <div class="def"><b>📖 Croissance épitaxiale</b> : croissance des grains du métal fondu dans le prolongement cristallin des grains du métal de base, à la ligne de fusion. <b>Rapport h/c</b> : profondeur fondue h sur largeur c du cordon. <b>Fissure de cratère</b> : petite fissure en étoile dans le creux de fin de cordon, où le dernier liquide se solidifie sans métal pour compenser le retrait.</div>
-    <div class="tip">💡 <b>Les cratères</b> : finis toujours un cordon en remontant un peu sur lui-même, ou avec une décroissance progressive de l'intensité, pour remplir le cratère ; meule les cratères fissurés avant la passe suivante.</div>
-    <div class="warn"><b>⚠️ Piège : chercher la pénétration à tout prix.</b> Pousser l'intensité et la vitesse donne un cordon étroit et profond (h/c &gt; 1) dans un bain en goutte d'eau : les deux conditions de la fissure axiale réunies. Mieux vaut plusieurs passes bien proportionnées.</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique : « Lent, Large, Bombé, Libre »</b> : une vitesse modérée, un cordon assez large, une surface bombée, un bridage limité.</div>
-    <div class="weld"><b>🔥 Sur le mode opératoire</b>
-      <p>Pour un austénitique sensible (mode A, 310 ou 904L), le mode opératoire fixe une intensité modérée, une vitesse qui évite la goutte d'eau, des passes larges et bombées, un remplissage des cratères, un apport pur et riche en manganèse, et des températures entre passes basses. Pour un austénitique courant en mode FA, il suffit en général de respecter la ferrite de l'apport et une dilution raisonnable.</p>
-    </div>
   </div>
 </div>
 </section>
@@ -690,15 +628,14 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="c-img"><span class="ico">🧱</span><span><small>Image à retenir</small>Le mur dont le mortier fond avant les briques : il tient debout, mais il suffit de le pousser</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le mortier qui fond</span></div>
-    <p>Le métal de base situé juste au bord du bain chauffe presque jusqu'à sa température de fusion, sans fondre. Presque… car ses <b>joints de grains</b> ne sont pas faits du même métal que ses grains : ils concentrent le soufre, le phosphore, le bore, et parfois de petites particules (carbures de niobium ou de titane, phases de Laves Fe₂Nb ou Fe₂Ti) qui, chauffées très vite, réagissent avec le métal voisin et forment un liquide bien avant la fusion du grain.</p>
-    <p>Résultat : une mince bande le long de la ligne de fusion, la <b>zone partiellement fondue</b>, où les joints de grains sont liquides alors que les grains sont solides. Comme un mur dont le mortier aurait fondu, elle tient tant qu'on ne la tire pas ; mais le retrait du cordon tire justement dessus en refroidissant. Les films s'ouvrent : ce sont les <b>fissures de liquation</b>, courtes, intergranulaires, en zone affectée, souvent invisibles en surface.</p>
-    <p>En soudage <b>multipasse</b>, chaque passe réchauffe la précédente. Le métal fondu de la passe d'avant, déjà ségrégé entre ses dendrites, joue alors le rôle du métal de base : ses anciens joints refondent et peuvent fissurer à leur tour.</p>
-  </div>
+  <p>Le métal de base au bord du bain chauffe presque jusqu'à sa fusion, sans fondre. Presque… car ses <b>joints de grains</b> concentrent le soufre, le phosphore, le bore, et parfois des particules (carbures de niobium ou de titane, phases de Laves Fe<sub>2</sub>Nb) qui, chauffées très vite, réagissent avec le métal voisin et forment un liquide bien avant la fusion du grain. Résultat : une mince <b>zone partiellement fondue</b> le long de la ligne de fusion, où les joints sont liquides et les grains solides, comme un mur dont le mortier aurait fondu. Le retrait du cordon tire dessus : ce sont les <b>fissures de liquation</b>, courtes, intergranulaires, en ZAT, souvent invisibles en surface.</p>
+  <p>En <b>multipasse</b>, chaque passe réchauffe la précédente : le métal fondu d'avant, déjà ségrégé, joue le rôle du métal de base et ses anciens joints peuvent refondre et fissurer à leur tour.</p>
 
-  <div class="lab" id="m5">
+  <div class="def"><b>📖 Liquation</b> : fusion localisée d'une zone de composition particulière (joint de grain, particule) à une température inférieure au solidus de l'alliage. Deux origines : la <b>ségrégation</b> aux joints (S, P, B) et la <b>liquation constitutionnelle</b>, une particule (NbC, TiC, Fe<sub>2</sub>Nb) chauffée trop vite pour se dissoudre qui forme un liquide eutectique à son contact. Les austénitiques stabilisés au niobium (347) ou au titane (321) y sont particulièrement exposés.</div>
+
+<div class="lab" id="m5">
     <p class="lab-h">Manipulation 5 : le joint qui fond avant le grain</p>
-    <p class="lab-sub">Premier schéma : la température maximale atteinte en fonction de la distance au centre du cordon : la bande où elle se situe entre la température de liquation des joints et le solidus du grain est la zone partiellement fondue. Second schéma : un joint de grain de cette zone : sa particule fond, s'étale en film, et le film s'ouvre sous le retrait si le risque est trop fort. Modèle pédagogique.</p>
+    <p class="lab-sub">À gauche, la température maximale selon la distance au cordon et la zone partiellement fondue ; à droite, un joint de cette zone dont la particule fond.<span class="predict">🔮 Prédis d'abord : la zone partiellement fondue d'un 347 est-elle plus large ou plus étroite que celle d'un 304L propre ?</span></p>
     <div class="btns" id="m5g">
       <button class="btn" data-k="304L" type="button">304L propre</button>
       <button class="btn" data-k="321" type="button">321 (Ti)</button>
@@ -713,36 +650,30 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
       <button class="btn on" data-k="1" type="button">Bridage moyen</button>
       <button class="btn" data-k="1.5" type="button">Bridage fort</button>
     </div>
-    <div class="btns"><button class="btn play" id="m5play" type="button">▶ Chauffer puis refroidir</button></div>
+    <div class="btns"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" id="m5play" type="button">▶ Chauffer puis refroidir</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button></div>
     <svg id="m5svg" role="img" aria-label="Profil de température maximale près de la ligne de fusion et joint de grain qui fond"></svg>
     <div class="readout" id="m5r"></div>
     <p class="status" id="m5msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">liquation constitutionnelle, largeur de la zone, remèdes</span></div>
-    <h4>Deux origines du liquide aux joints</h4>
+  <p><b>Exemple</b> (modèle de la manipulation, 1,5 kJ/mm) : la zone partiellement fondue mesure environ 40 µm pour un 304L propre, 330 µm pour un 347 dont les joints liquéfient 110 °C sous le solidus. <b>Remèdes</b> : énergie de soudage limitée en passes étroites ; métaux de base propres en soufre, phosphore et bore, à grain fin ; un apport qui se solidifie avec de la ferrite, pour que le métal fondu réchauffé tolère la liquation ; un bridage modéré et une séquence de passes réfléchie.</p>
+
+  <div class="warn"><b>⚠️ Piège : croire que le métal fondu est seul en cause.</b> Un cordon parfaitement sain peut s'accompagner de fissures dans la ZAT, où personne ne les cherche. Sur un austénitique stabilisé ou entièrement austénitique, on prévoit des examens de la ZAT : en micrographie, les fissures partent de la ligne de fusion vers le métal de base, le long des joints, sur quelques dixièmes de millimètre.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « liquation, c'est la liquéfaction du joint »</b> : le grain reste solide, son contour fond.</div>
+  <div class="weld"><b>🔥 Le soudage multipasse des stabilisés</b>
+    <p>Sur un 321 ou un 347 épais, les fissures de liquation se cachent dans la ZAT et dans les passes réchauffées. Le mode opératoire limite l'énergie par passe, impose des températures entre passes basses et un apport à ferrite contrôlée, souvent un 19 9 Nb pour garder la stabilisation. Les contrôles volumiques (ultrasons, radiographie) complètent le ressuage, qui ne voit que ce qui débouche.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : la largeur de la zone partiellement fondue</summary>
+    <p>La température maximale décroît avec la distance r à la source. Dans une tôle épaisse, la solution de Rosenthal donne <span class="m">T<sub>max</sub> − T<sub>0</sub> = 2Q/(π·e·ρc·r²)</span>, avec Q l'énergie de soudage (J/m), ρc la capacité thermique volumique (≈ 3,95 × 10⁶ J/(m³·K) pour un austénitique) et e ≈ 2,718. La zone s'étend entre le rayon où T<sub>max</sub> atteint le solidus du grain et celui où elle atteint la température de liquation des joints : plus l'écart entre ces deux températures est grand et plus l'énergie est forte, plus la bande est large. Phase de Laves : intermétallique AB<sub>2</sub>, comme Fe<sub>2</sub>Nb ou Fe<sub>2</sub>Ti.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
     <ul>
-      <li><b>La ségrégation aux joints</b> : soufre, phosphore et bore abaissent localement la température de début de fusion.</li>
-      <li><b>La liquation constitutionnelle</b> : une particule (NbC, TiC, Fe₂Nb…) chauffée trop vite pour se dissoudre réagit avec la matrice et forme un liquide eutectique à son contact, à une température inférieure au solidus de l'alliage. Les austénitiques stabilisés au niobium (347) ou au titane (321) y sont particulièrement exposés.</li>
+      <li>Liquation : les joints fondent avant les grains dans une mince zone de la ZAT.</li>
+      <li>Stabilisés (321, 347) et austénitiques purs : les plus exposés.</li>
+      <li>Remèdes : énergie limitée, métaux propres, apport à ferrite, contrôles de la ZAT.</li>
     </ul>
-    <h4>La largeur de la zone partiellement fondue</h4>
-    <p>La température maximale atteinte décroît avec la distance r au centre de la source. Dans une tôle épaisse, la solution de Rosenthal (le calcul classique de la température autour d'une source de chaleur ponctuelle qui se déplace) donne</p>
-    <div class="fx"><div class="big"><span class="sig">T<sub>max</sub></span> − T<sub>0</sub> = <span class="frac"><span>2·<span class="mat">Q</span></span><span>π·e·ρc·r²</span></span></div><p class="cap">Q : énergie de soudage (J/m) ; ρc : capacité thermique volumique (≈ 3,95 × 10⁶ J/(m³·K) pour un austénitique) ; e ≈ 2,718. La zone partiellement fondue s'étend entre le rayon où T<sub>max</sub> atteint le solidus du grain et celui où elle atteint la température de liquation des joints</p></div>
-    <p>Plus l'écart entre ces deux températures est grand et plus l'énergie est forte, plus la bande est large. Dans le modèle de la manipulation, à 1,5 kJ/mm, elle mesure environ 40 µm pour un 304L propre et 330 µm pour un 347, dont les joints liquéfient 110 °C sous le solidus.</p>
-    <h4>Les remèdes</h4>
-    <ul>
-      <li>Une <b>énergie de soudage limitée</b>, en passes étroites : la bande est plus mince et les contraintes plus faibles.</li>
-      <li>Des métaux de base <b>propres</b> en soufre, phosphore et bore, à <b>grain fin</b> : les films se répartissent sur plus de joints, plus courts.</li>
-      <li>Un <b>apport qui se solidifie avec de la ferrite</b> : le métal fondu réchauffé par la passe suivante tolère alors la liquation.</li>
-      <li>Un <b>bridage modéré</b>, une séquence de passes réfléchie.</li>
-    </ul>
-    <div class="def"><b>📖 Liquation</b> : fusion localisée d'une zone de composition particulière (joint de grain, particule) à une température inférieure au solidus de l'alliage. <b>Zone partiellement fondue</b> : bande de la zone affectée, contre la ligne de fusion, où des liquides de joints coexistent avec des grains solides. <b>Phase de Laves</b> : composé intermétallique de type AB₂, comme Fe₂Nb ou Fe₂Ti.</div>
-    <div class="tip">💡 <b>Les reconnaître</b> : en micrographie, les fissures de liquation partent de la ligne de fusion vers le métal de base, le long des joints de grains, sur quelques dixièmes de millimètre ; on voit souvent un film resolidifié de couleur différente sur leurs bords.</div>
-    <div class="warn"><b>⚠️ Piège : croire que le métal fondu est seul en cause.</b> Un cordon parfaitement sain peut s'accompagner de fissures dans la zone affectée, où personne ne les cherche. Sur un austénitique stabilisé ou entièrement austénitique, prévois des examens de la zone affectée.</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique : « liquation, c'est la liquéfaction du joint »</b> : le grain reste solide, son contour fond.</div>
-    <div class="weld"><b>🔥 Le soudage multipasse des stabilisés</b>
-      <p>Sur un 321 ou un 347 épais, les fissures de liquation se cachent dans la zone affectée et dans les passes réchauffées. Le mode opératoire limite l'énergie par passe, impose des températures entre passes basses et un apport à ferrite contrôlée, souvent un 19 9 Nb pour garder la stabilisation. Les contrôles volumiques (ultrasons, radiographie) complètent le ressuage, qui ne voit que ce qui débouche.</p>
-    </div>
   </div>
 </div>
 </section>
@@ -755,16 +686,14 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="c-img"><span class="ico">🪑</span><span><small>Image à retenir</small>Le tabouret à trois pieds : il ne tombe que si les trois tiennent ; scie un pied, la fissure ne naît pas</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">le tabouret à trois pieds</span></div>
-    <p>Les inox martensitiques, à 12-13 % de chrome et un peu de carbone, prennent la trempe à l'air : quelle que soit la vitesse de refroidissement, leur zone affectée, et leur métal fondu s'il est de même nature, deviennent de la <b>martensite</b>, dure et peu ductile. C'est le premier pied du tabouret.</p>
-    <p>Le deuxième pied, c'est l'<b>hydrogène</b> : il vient de l'humidité des enrobages et des flux, des graisses, de la peinture, de la calamine humide, de l'air. Dissous dans le bain, il reste piégé dans la martensite, puis migre lentement vers les zones les plus tendues. Le troisième pied, ce sont les <b>contraintes</b> : retrait, dilatations, changement de volume de la transformation martensitique, bridage.</p>
-    <p>Quand les trois sont réunis, une fissure apparaît… plus tard : sous environ 200 °C, parfois <b>plusieurs jours</b> après le soudage, le temps que l'hydrogène diffuse. Fine, souvent dans la zone affectée, parfois sous le cordon où on ne la voit pas, ou transversale dans le métal fondu.</p>
-    <p>Les remèdes scient un pied : moins d'hydrogène (pièces propres, électrodes étuvées, apports bas hydrogène), moins de contraintes (bridage limité, séquence adaptée), et surtout le <b>préchauffage</b> vers 200 °C, maintenu pendant le soudage et prolongé par un <b>postchauffage</b> au-dessus de 200 °C, qui laisse à l'hydrogène le temps de partir.</p>
-  </div>
+  <p>Les inox martensitiques prennent la trempe à l'air : leur ZAT, et leur métal fondu s'il est de même nature, deviennent de la <b>martensite</b>, dure et peu ductile. C'est le premier pied du tabouret. Le deuxième est l'<b>hydrogène</b>, venu de l'humidité des enrobages et des flux, des graisses, de la peinture : piégé dans la martensite, il migre vers les zones les plus tendues. Le troisième, ce sont les <b>contraintes</b> : retrait, changement de volume de la transformation, bridage. Quand les trois tiennent, une fissure apparaît… plus tard, sous environ 200 °C, parfois <b>plusieurs jours</b> après le soudage : fine, souvent en ZAT, parfois sous le cordon.</p>
+  <p>Les remèdes scient un pied : moins d'hydrogène (pièces propres, électrodes étuvées, produits bas hydrogène), moins de contraintes, et surtout le <b>préchauffage</b> vers 200 °C, maintenu pendant le soudage et prolongé par un <b>postchauffage</b> qui laisse à l'hydrogène le temps de partir.</p>
 
-  <div class="lab" id="m6">
+  <div class="fx"><div class="row big" style="font-size:1.35rem"><span>M<sub>s</sub> ≈ 539 − 423C − 30,4Mn − 17,7Ni − 12,1Cr − 7,5Mo</span><span>τ ≈ <span class="frac"><span>e²</span><span>π²·D</span></span></span></div><p class="cap">Andrews (°C, teneurs en %) ; sous M<sub>s</sub>, la fraction de martensite suit Koistinen et Marburger, f = 1 − exp[−0,011(M<sub>s</sub> − T)]. Temps de dégazage τ d'une pièce d'épaisseur e, D coefficient de diffusion de l'hydrogène, très sensible à la température.</p></div>
+
+<div class="lab" id="m6">
     <p class="lab-h">Manipulation 6 : le triangle hydrogène, martensite, contraintes</p>
-    <p class="lab-sub">Premier graphique : le cycle thermique de la soudure : préchauffage, soudage, maintien en postchauffage, puis refroidissement ; les bandes Ms et Mf encadrent la transformation en martensite. Deuxième : l'hydrogène diffusible qui reste dans la zone soudée. Troisième : les trois pieds du tabouret : la fissure apparaît si l'hydrogène restant dépasse la teneur critique fixée par la dureté et les contraintes. Modèle pédagogique.</p>
+    <p class="lab-sub">Le cycle thermique (préchauffage, soudage, postchauffage, refroidissement), l'hydrogène qui reste, et les trois pieds du tabouret.<span class="predict">🔮 Prédis d'abord : un préchauffage sans maintien suffit-il à éviter la fissure sur un 410 de 20 mm ?</span></p>
     <div class="btns" id="m6g">
       <button class="btn" data-k="420" type="button">X20Cr13 (0,20 % C)</button>
       <button class="btn on" data-k="410" type="button">410 (0,10 % C)</button>
@@ -778,31 +707,30 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="ctrl"><label for="m6p">Préchauffage <span class="mat">T<sub>p</sub></span></label><input type="range" id="m6p" class="r-mat" min="20" max="300" step="10" value="20"><output id="m6po"></output></div>
     <div class="ctrl"><label for="m6t">Postchauffage <span class="mat">t<sub>m</sub></span></label><input type="range" id="m6t" class="r-mat" min="0" max="6" step="0.5" value="0"><output id="m6to"></output></div>
     <div class="ctrl"><label for="m6e">Épaisseur <span class="mat">e</span></label><input type="range" id="m6e" class="r-mat" min="5" max="40" step="5" value="20"><output id="m6eo"></output></div>
-    <div class="btns"><button class="btn play" id="m6play" type="button">▶ Dérouler le cycle</button></div>
+    <div class="btns"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" id="m6play" type="button">▶ Dérouler le cycle</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button></div>
     <svg id="m6svg" role="img" aria-label="Cycle thermique, hydrogène diffusible restant et triangle de la fissuration à froid"></svg>
     <div class="readout" id="m6r"></div>
     <p class="status" id="m6msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">Ms, dureté, diffusion, traitement après soudage</span></div>
-    <h4>Quand et combien de martensite</h4>
-    <p>La martensite commence à se former à la température <b>Ms</b> (<i>martensite start</i>) et se termine vers <b>Mf</b> (<i>martensite finish</i>). Une formule empirique classique, due à Andrews, donne Ms (°C) à partir des teneurs en % massique :</p>
-    <div class="fx"><div class="big">Ms = 539 − 423·C − 30,4·Mn − 17,7·Ni − 12,1·Cr − 7,5·Mo</div><p class="cap">410 (C 0,10 ; Mn 0,6 ; Ni 0,3 ; Cr 12,5) : Ms ≈ 322 °C ; X20Cr13 (C 0,20 ; Cr 13) : ≈ 274 °C ; 13-4 (C 0,03 ; Ni 4 ; Cr 12,8 ; Mo 0,5) : ≈ 276 °C</p></div>
-    <p>Sous Ms, la fraction transformée suit la loi de <b>Koistinen et Marburger</b>, f = 1 − exp[−0,011·(Ms − T)] : pour le 410, 74 % à 200 °C, 91 % à 100 °C, 96 % à 20 °C. La dureté de la martensite dépend surtout du carbone ; une formule empirique donne HV ≈ 884·C·(1 − 0,3·C²) + 294, soit environ 470 HV à 0,20 % C, 380 HV à 0,10 % C et 320 HV à 0,03 % C. Plus elle est dure, moins elle tolère d'hydrogène.</p>
-    <h4>Le temps de départ de l'hydrogène</h4>
-    <p>L'hydrogène s'échappe par diffusion. Pour une pièce d'épaisseur e, l'ordre de grandeur du temps de dégazage est</p>
-    <div class="fx"><div class="big">τ ≈ <span class="frac"><span><span class="mat">e</span>²</span><span>π²·D</span></span></div><p class="cap">D : coefficient de diffusion effectif de l'hydrogène, très sensible à la température. Avec les valeurs du modèle (D ≈ 2 × 10⁻¹¹ m²/s à 20 °C, 2,4 × 10⁻⁹ m²/s à 200 °C), pour 20 mm : τ ≈ 23 jours à 20 °C, 4,7 h à 200 °C</p></div>
-    <p>D'où les deux règles : un postchauffage de quelques heures à 200-300 °C évacue l'essentiel de l'hydrogène ; à l'ambiante, il faut des jours, et la fissure a le temps d'apparaître. C'est aussi pourquoi, sur les aciers sensibles, on attend un délai avant le contrôle final.</p>
-    <h4>La suite du cycle : refroidir, puis revenir</h4>
-    <p>Après le postchauffage, on refroidit la pièce sous environ 100 °C pour transformer l'austénite restante en martensite, puis on fait un <b>traitement thermique après soudage</b> (revenu, souvent vers 650-750 °C pendant une à quatre heures) qui adoucit la martensite et lui rend de la ténacité. Revenir sans avoir refroidi laisserait de l'austénite qui deviendrait une martensite fraîche, non revenue, au refroidissement final.</p>
-    <p>Les martensitiques à bas carbone et au nickel, comme le 13-4, sont bien plus tolérants : martensite moins dure, un peu d'austénite résiduelle, préchauffage plus modéré. Quand le traitement après soudage est impossible, on soude parfois avec un apport austénitique (23 12 L, par exemple) : l'austénite dissout l'hydrogène et reste ductile, au prix d'un cordon moins résistant que le métal de base.</p>
-    <div class="def"><b>📖 Hydrogène diffusible</b> : hydrogène qui peut migrer dans le métal à l'ambiante, mesuré en ml pour 100 g de métal déposé (ISO 3690) ; des classes comme H5, H10 ou H15 (ISO 2560, par exemple) garantissent un maximum de 5, 10 ou 15 ml/100 g. <b>Postchauffage</b> : maintien en température juste après le soudage, pour dégazer l'hydrogène.</div>
-    <div class="tip">💡 <b>Le contrôle différé</b> : sur un martensitique, un ressuage fait juste après soudage ne prouve rien ; c'est le contrôle fait un ou deux jours plus tard qui compte.</div>
-    <div class="warn"><b>⚠️ Piège : préchauffer sans maintenir.</b> Un préchauffage suivi d'un refroidissement immédiat réduit les contraintes, mais laisse presque tout l'hydrogène en place : c'est le maintien au-dessus de 200 °C qui le fait sortir.</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique : « Hydrogène, Martensite, Tension : HMT, hâte-toi de préchauffer »</b>.</div>
-    <div class="weld"><b>🔥 Le mode opératoire d'un martensitique</b>
-      <p>Pièces dégraissées et sèches ; électrodes basiques étuvées, ou fils et flux bas hydrogène ; préchauffage vers 200-300 °C, mesuré selon l'ISO 13916 (mesure des températures de préchauffage et entre passes) ; températures entre passes dans la même plage ; postchauffage ; refroidissement sous 100 °C ; revenu après soudage ; contrôle après un délai. Pour les fortes épaisseurs et les cordons tirés, qui refroidissent vite, on ne transige sur aucun de ces points.</p>
-    </div>
+  <p><b>Exemple</b> : 410 (C 0,10 ; Mn 0,6 ; Ni 0,3 ; Cr 12,5) : <span class="m">M<sub>s</sub> ≈ 322 °C</span>, martensite de ≈ 380 HV, 74 % transformés à 200 °C, 91 % à 100 °C. Pour 20 mm, avec D ≈ 2 × 10⁻¹¹ m²/s à 20 °C et 2,4 × 10⁻⁹ m²/s à 200 °C : <span class="m">τ ≈ 23 jours</span> à l'ambiante, <span class="m">4,7 h</span> à 200 °C. D'où les deux règles : quelques heures de postchauffage à 200-300 °C évacuent l'essentiel de l'hydrogène ; à l'ambiante, il faut des jours, et la fissure a le temps d'apparaître.</p>
+
+  <div class="warn"><b>⚠️ Piège : préchauffer sans maintenir.</b> Un préchauffage suivi d'un refroidissement immédiat réduit les contraintes mais laisse presque tout l'hydrogène en place : c'est le maintien au-dessus de 200 °C qui le fait sortir. Et sur un martensitique, un ressuage fait juste après soudage ne prouve rien : c'est le contrôle fait un ou deux jours plus tard qui compte.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « Hydrogène, Martensite, Tension : HMT, hâte-toi de préchauffer »</b>.</div>
+  <div class="weld"><b>🔥 Le mode opératoire d'un martensitique</b>
+    <p>Pièces dégraissées et sèches ; électrodes basiques étuvées ou produits bas hydrogène (classes H5, H10 : au plus 5 ou 10 ml/100 g, ISO 3690) ; préchauffage vers 200-300 °C mesuré selon l'ISO 13916 ; températures entre passes dans la même plage ; postchauffage ; refroidissement sous 100 °C ; revenu après soudage (souvent 650-750 °C, une à quatre heures) ; contrôle après un délai.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : dureté, refroidir avant de revenir, nuances tolérantes</summary>
+    <p>Dureté de la martensite selon le carbone : HV ≈ 884·C·(1 − 0,3·C²) + 294, soit ≈ 470 HV à 0,20 % C, 380 HV à 0,10 %, 320 HV à 0,03 % ; plus elle est dure, moins elle tolère d'hydrogène. Après le postchauffage, on refroidit sous environ 100 °C pour transformer l'austénite restante, puis on revient : revenir trop tôt laisserait une austénite qui deviendrait une martensite fraîche, non revenue, au refroidissement final. Les martensitiques à bas carbone et au nickel (13-4) sont bien plus tolérants. Quand le traitement après soudage est impossible, on soude parfois avec un apport austénitique (23 12 L) : l'austénite dissout l'hydrogène et reste ductile, au prix d'un cordon moins résistant.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Fissuration à froid : martensite + hydrogène + contraintes, avec un retard de plusieurs heures à jours.</li>
+      <li>Préchauffage, maintien et postchauffage au-dessus de 200 °C chassent l'hydrogène.</li>
+      <li>Puis refroidir sous 100 °C, revenir, et contrôler après un délai.</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -815,16 +743,14 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="c-img"><span class="ico">🫧</span><span><small>Image à retenir</small>La mousse qui vieillit : les grosses bulles avalent les petites, et la mousse ne redevient jamais fine</span></div>
   </div>
 
-  <div class="lv lv1"><div class="lv-h">👁 Niveau 1 : voir <span class="tag">la mousse qui vieillit</span></div>
-    <p>Regarde la mousse d'un verre de bière : en quelques minutes, les petites bulles disparaissent au profit des grosses. Chaque paroi coûte de l'énergie ; en réduisant la surface totale des parois, la mousse s'en débarrasse. Les grains d'un métal font pareil : leurs joints sont des parois qui coûtent de l'énergie, et dès que la température est assez haute pour que les atomes bougent, les gros grains <b>mangent</b> les petits. C'est la <b>coalescence</b>, ou grossissement de grain.</p>
-    <p>Les inox ferritiques y sont très sensibles : leur structure cubique centrée laisse les atomes diffuser vite, et surtout <b>ils ne changent pas de phase</b> en chauffant. Un acier au carbone se régénère en repassant par l'austénite : ses grains repartent à zéro. Un ferritique, non : une fois grossis, ses grains le restent, aucun traitement thermique ne les affine.</p>
-    <p>Près de la ligne de fusion, la zone affectée d'un ferritique peut ainsi passer de 25 µm à plusieurs centaines de micromètres. Conséquences : une <b>fragilité</b> accrue (température de transition ductile-fragile qui remonte, impuretés concentrées sur des joints moins nombreux) et un <b>adoucissement</b>.</p>
-    <p>Les remèdes : limiter l'énergie de soudage, la température et le temps de séjour, et donc <b>ne pas préchauffer</b>, au contraire des martensitiques. Et choisir des nuances <b>stabilisées</b> au titane ou au niobium, dont les fines particules épinglent les joints.</p>
-  </div>
+  <p>Dans la mousse d'un verre de bière, les grosses bulles avalent les petites. Les grains d'un métal font pareil dès que la température est assez haute : leurs joints coûtent de l'énergie, et les gros grains <b>mangent</b> les petits. Les inox ferritiques y sont très sensibles : leur réseau cubique centré laisse les atomes diffuser vite, et surtout <b>ils ne changent pas de phase</b> en chauffant. Un acier au carbone se régénère en repassant par l'austénite ; un ferritique, non : une fois grossis, ses grains le restent.</p>
+  <p>Près de la ligne de fusion, la ZAT d'un ferritique peut passer de 25 µm à plusieurs centaines de micromètres : <b>fragilité</b> accrue (transition ductile-fragile qui remonte) et <b>adoucissement</b>. Remèdes : limiter l'énergie, la température et le temps de séjour, donc <b>ne pas préchauffer</b>, au contraire des martensitiques ; choisir des nuances <b>stabilisées</b> au titane ou au niobium, dont les fines particules épinglent les joints.</p>
 
-  <div class="lab" id="m7">
+  <div class="fx"><div class="row big" style="font-size:1.35rem"><span>d<sub>lim</sub> ≈ <span class="frac"><span>4·r</span><span>3·f</span></span></span><span><span class="sig">R</span><sub>e</sub> = R<sub>0</sub> + <span class="frac"><span>k<sub>HP</sub></span><span>√d</span></span></span></div><p class="cap">Ancrage de Zener : taille limite de grain fixée par des particules de rayon r et de fraction volumique f (r = 0,1 µm, f = 0,2 % : ≈ 67 µm). Loi de Hall-Petch : la limite d'élasticité baisse quand le grain grossit.</p></div>
+
+<div class="lab" id="m7">
     <p class="lab-h">Manipulation 7 : les grains qui se mangent</p>
-    <p class="lab-sub">Une tôle ferritique de 3 mm soudée bord à bord. Premier schéma : les grains de la zone affectée à la distance choisie de la ligne de fusion (les points violets sont des particules de nitrure de titane, présentes dans le 439). Second schéma : la taille de grain en fonction de la distance, sans préchauffage (tirets) et avec le préchauffage choisi. Le défi se rejoue ici. Modèle pédagogique. « ▶ Augmenter l'énergie » fait monter l'énergie de soudage de 0,15 à 0,75 kJ/mm.</p>
+    <p class="lab-sub">Une tôle ferritique de 3 mm soudée bord à bord : les grains de la ZAT et leur taille selon la distance, avec ou sans préchauffage.<span class="predict">🔮 Prédis d'abord : un préchauffage à 200 °C fait-il grossir ou affine-t-il le grain du 430 ?</span></p>
     <div class="btns" id="m7g">
       <button class="btn on" data-k="430" type="button">430 (non stabilisé)</button>
       <button class="btn" data-k="439" type="button">439 (stabilisé au titane)</button>
@@ -832,30 +758,30 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div class="ctrl"><label for="m7q">Énergie de soudage <span class="mat">Q</span></label><input type="range" id="m7q" class="r-mat" min="0.15" max="0.75" step="0.05" value="0.45"><output id="m7qo"></output></div>
     <div class="ctrl"><label for="m7p">Préchauffage <span class="mat">T<sub>p</sub></span></label><input type="range" id="m7p" class="r-mat" min="20" max="250" step="10" value="20"><output id="m7po"></output></div>
     <div class="ctrl"><label for="m7x">Distance à la ligne de fusion <span class="mat">x</span></label><input type="range" id="m7x" class="r-mat" min="0.1" max="3" step="0.1" value="1"><output id="m7xo"></output></div>
-    <div class="btns"><button class="btn play" id="m7play" type="button">▶ Augmenter l'énergie</button></div>
+    <div class="btns"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" id="m7play" type="button">▶ Augmenter l'énergie</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button></div>
     <svg id="m7svg" role="img" aria-label="Grains de la zone affectée et profil de taille de grain en fonction de la distance à la ligne de fusion"></svg>
     <div class="readout" id="m7r"></div>
     <p class="status" id="m7msg" aria-live="polite"></p>
   </div>
 
-  <div class="lv lv2"><div class="lv-h">🎓 Niveau 2 : maîtriser <span class="tag">cinétique, Zener, Hall-Petch</span></div>
-    <h4>La cinétique de croissance</h4>
-    <p>La force motrice est l'énergie des joints, proportionnelle à leur surface, donc à 1/d. La taille de grain moyenne d croît selon une loi parabolique, activée thermiquement :</p>
-    <div class="fx"><div class="big"><span class="eps">d</span>² − d<sub>0</sub>² = K<sub>0</sub> · ∫ exp(−<span class="frac"><span>Q<sub>a</sub></span><span>R·T(t)</span></span>) dt</div><p class="cap">d₀ : taille initiale ; K₀ : constante du métal ; Q<sub>a</sub> : énergie d'activation de la mobilité des joints ; R = 8,314 J/(mol·K) ; T(t) : cycle thermique en kelvins. L'intégrale cumule les temps passés à haute température, pondérés par une exponentielle qui privilégie énormément les pics</p></div>
-    <p>Dans la manipulation (Q<sub>a</sub> = 250 kJ/mol, d₀ = 25 µm), à 0,30 kJ/mm et 1 mm de la ligne de fusion, le pic atteint 1 236 °C et le grain passe à 80 µm. Avec un préchauffage de 200 °C, le pic monte à 1 292 °C, le refroidissement s'allonge, et le grain atteint 131 µm.</p>
-    <h4>L'ancrage de Zener</h4>
-    <p>Des particules fines et stables (TiN, Ti(C,N), NbC) épinglent les joints : pour avancer, un joint doit s'en arracher. La croissance s'arrête vers une taille limite, donnée par la relation de Zener :</p>
-    <div class="fx"><div class="big"><span class="eps">d</span><sub>lim</sub> ≈ <span class="frac"><span>4·r</span><span>3·f</span></span></div><p class="cap">r : rayon des particules ; f : leur fraction volumique. Avec r = 0,1 µm et f = 0,2 % : d<sub>lim</sub> ≈ 67 µm. Il faut des particules fines, nombreuses, et qui ne se dissolvent pas à haute température : le nitrure de titane remplit ce rôle</p></div>
-    <h4>Ce que coûtent les gros grains</h4>
-    <p>La limite d'élasticité suit la loi de <b>Hall-Petch</b>, R<sub>e</sub> = R<sub>0</sub> + k<sub>HP</sub>/√d. Avec R<sub>0</sub> = 200 MPa et k<sub>HP</sub> = 0,6 MPa·√m (ordres de grandeur d'un ferritique), R<sub>e</sub> passe de 320 MPa à 25 µm à 245 MPa à 177 µm. À cet adoucissement s'ajoute, après un séjour à haute température, la disparition des dislocations de l'écrouissage (la restauration). La <b>température de transition ductile-fragile</b> remonte quand le grain grossit, d'environ 11,5 °C par unité de d<sup>−1/2</sup> (d en mm) dans les aciers ferritiques : +45 °C de 25 à 177 µm. Un 430, déjà proche de la transition à l'ambiante, devient cassant.</p>
-    <p>Les ferritiques non stabilisés comme le 430 cumulent un autre défaut : leur carbone et leur azote font apparaître un peu d'austénite à haute température, qui devient de la martensite aux joints en refroidissant. Les nuances stabilisées et à bas interstitiels (439, 444) sont faites pour le soudage.</p>
-    <div class="def"><b>📖 Coalescence (des grains)</b> : croissance des gros grains aux dépens des petits, qui réduit la surface totale des joints. <b>Ancrage de Zener</b> : blocage des joints de grains par des particules fines. <b>Loi de Hall-Petch</b> : la limite d'élasticité augmente comme l'inverse de la racine carrée de la taille de grain.</div>
-    <div class="tip">💡 <b>Ferritique ou martensitique ?</b> Les deux familles se ressemblent sur la composition (12 à 18 % de chrome), mais pas sur le mode opératoire : le martensitique veut du préchauffage et du postchauffage, le ferritique veut de la froideur et de la vitesse. Vérifie la famille sur le certificat avant de régler la soudure.</div>
-    <div class="warn"><b>⚠️ Piège : espérer corriger après coup.</b> Un recuit ne fait pas repartir les grains d'un ferritique ; il peut même les faire grossir encore. Le grain se règle pendant le soudage, par l'énergie et la température, ou pas du tout.</div>
-    <div class="mnemo">🧠 <b>Mnémotechnique : « F comme Froid, M comme Maintien »</b> : le Ferritique se soude froid, sans préchauffage ; le Martensitique veut un préchauffage et un Maintien en température.</div>
-    <div class="weld"><b>🔥 Souder un ferritique</b>
-      <p>Procédés à faible énergie (TIG pulsé, MIG pulsé, laser), passes étroites et rapides, pas de préchauffage sauf exception pour des 430 épais, températures entre passes basses, apports adaptés (ferritiques stabilisés, ou austénitiques pour gagner en ténacité dans le cordon). Les tôles ferritiques étant souvent minces, c'est l'énergie par millimètre qui se règle au plus juste.</p>
-    </div>
+  <p><b>Exemple</b> (modèle de la manipulation, 430 de 3 mm, à 1 mm de la ligne de fusion) : à 0,30 kJ/mm, le pic atteint 1 236 °C et le grain passe de 25 à 80 µm ; avec un préchauffage de 200 °C, le pic monte à 1 292 °C et le grain atteint 131 µm. À 0,45 kJ/mm, 177 µm : R<sub>e</sub> passe de 320 à 245 MPa (R<sub>0</sub> = 200 MPa, k<sub>HP</sub> = 0,6 MPa·√m) et la transition ductile-fragile remonte d'environ 45 °C. Un 439 stabilisé plafonne vers 67 µm.</p>
+
+  <div class="warn"><b>⚠️ Piège : espérer corriger après coup.</b> Un recuit ne fait pas repartir les grains d'un ferritique ; il peut même les faire grossir encore. Le grain se règle pendant le soudage, par l'énergie et la température, ou pas du tout. Vérifie la famille sur le certificat : martensitique et ferritique se ressemblent sur la composition, pas sur le mode opératoire.</div>
+  <div class="mnemo">🧠 <b>Mnémotechnique : « F comme Froid, M comme Maintien »</b> : le ferritique se soude froid, sans préchauffage ; le martensitique veut un préchauffage et un maintien en température.</div>
+  <div class="weld"><b>🔥 Souder un ferritique</b>
+    <p>Procédés à faible énergie (TIG pulsé, MIG pulsé, laser), passes étroites et rapides, pas de préchauffage sauf pour des 430 épais, températures entre passes basses, apports ferritiques stabilisés ou austénitiques pour gagner en ténacité dans le cordon. Les tôles ferritiques étant souvent minces, c'est l'énergie par millimètre qui se règle au plus juste.</p>
+  </div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : la cinétique de croissance</summary>
+    <p>La force motrice est l'énergie des joints, proportionnelle à 1/d : la taille de grain croît selon une loi parabolique activée thermiquement, <span class="m">d² − d<sub>0</sub>² = K<sub>0</sub>·∫ exp(−Q<sub>a</sub>/RT(t)) dt</span>, où l'intégrale cumule les temps à haute température pondérés par une exponentielle qui privilégie énormément les pics (modèle : Q<sub>a</sub> = 250 kJ/mol). Les particules d'ancrage doivent être fines, nombreuses et stables à haute température : le nitrure de titane remplit ce rôle. La transition ductile-fragile remonte d'environ 11,5 °C par unité de d<sup>−1/2</sup> (d en mm). Le 430 non stabilisé cumule un autre défaut : de la martensite aux joints (cours 2).</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Ferritique : pas de transformation, donc des grains qui grossissent sans retour en ZAT.</li>
+      <li>Gros grain : moins de R<sub>e</sub>, transition ductile-fragile plus haute.</li>
+      <li>Énergie faible, pas de préchauffage, nuances stabilisées (ancrage de Zener).</li>
+    </ul>
   </div>
 </div>
 </section>
@@ -864,117 +790,41 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
 <div class="wrap">
   <div class="cartouche">
     <div class="c-num">✎</div>
-    <div class="c-title"><h2>Exercices corrigés</h2><p>Six exercices et un défi, de la carte au mode opératoire</p></div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Deux exercices, de la carte au mode opératoire</p></div>
     <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de musculation : on ne progresse qu'en soulevant soi-même</span></div>
   </div>
-  <div class="lv lv1"><div class="lv-h">👁 Mode d'emploi <span class="tag">formule littérale, puis valeurs, puis unités</span></div>
-    <p>Cherche chaque question sur papier avant d'ouvrir la correction. Les compositions sont en % massique. Les exercices 1 et 2 se vérifient dans la manipulation 1, l'exercice 4 dans la manipulation 3, l'exercice 5 dans la manipulation 4, l'exercice 6 dans la manipulation 6, et le défi se rejoue dans la manipulation 7.</p>
-  </div>
+
+  <p>Cherche chaque question sur papier avant d'ouvrir la correction. Le premier exercice se rejoue dans la manipulation 1 (mode « Assemblage »), le second dans la manipulation 6.</p>
 
   <div class="exo">
-    <h4>Exercice 1 : deux points sur la carte <span class="lvtag">N1 · chapitre 1</span></h4>
-    <p>Tôle 316L : C 0,02 ; Mn 1,5 ; Si 0,4 ; Cr 17,2 ; Ni 10,2 ; Mo 2,1 ; N 0,05. Apport 19 12 3 L : C 0,02 ; Mn 1,7 ; Si 0,4 ; Cr 18,5 ; Ni 12,0 ; Mo 2,7 ; N 0,05.</p>
-    <p class="q"><b>a)</b> Calcule Cr<sub>eq</sub> et Ni<sub>eq</sub> de Schaeffler pour la tôle.</p>
-    <p class="q"><b>b)</b> Même calcul pour l'apport.</p>
-    <p class="q"><b>c)</b> Avec la manipulation 1, donne la structure, la ferrite et la zone de Bystram de chacun.</p>
-    <p class="q"><b>d)</b> Ajoute l'azote (+ 30·N). Que devient la ferrite ? Qu'en conclus-tu ?</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <span class="m">Cr<sub>eq</sub> = Cr + Mo + 1,5·Si + 0,5·Nb = 17,2 + 2,1 + 1,5 × 0,4 = 19,9</span> ; <span class="m">Ni<sub>eq</sub> = Ni + 30·C + 0,5·Mn = 10,2 + 0,6 + 0,75 = 11,55</span>.</p>
-      <p><b>b)</b> <span class="m">Cr<sub>eq</sub> = 18,5 + 2,7 + 0,6 = 21,8</span> ; <span class="m">Ni<sub>eq</sub> = 12,0 + 0,6 + 0,85 = 13,45</span>.</p>
-      <p><b>c)</b> Les deux sont en A + F avec environ 6 à 7 % de ferrite, dans le triangle sûr de Bystram.</p>
-      <p><b>d)</b> 30 × 0,05 = 1,5 : Ni<sub>eq</sub> passe à 13,05 et 14,95 ; la ferrite tombe à environ 2 % pour chacun. L'azote, très gammagène, réduit nettement la ferrite : pour les nuances azotées, on utilise les équivalents qui le comptent (DeLong, WRC-1992).</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 2 : un inox sur un acier au carbone <span class="lvtag">N2 · chapitre 1</span></h4>
+    <h4>Exercice 1 : un inox sur un acier au carbone <span class="lvtag">★ application · chapitre 1, à rejouer dans la manipulation 1</span></h4>
     <p>On soude une tôle S355 (C 0,17 ; Mn 1,45 ; Si 0,3 ; Cr 0,05 ; Ni 0,05 ; Mo 0,01) sur une tôle 304L (C 0,02 ; Mn 1,5 ; Si 0,4 ; Cr 18,2 ; Ni 9,2 ; Mo 0,1). Les deux fondent à parts égales ; dilution D = 30 %. Apports : 23 12 L (Cr<sub>eq</sub> = 24,2 ; Ni<sub>eq</sub> = 14,45) ou 19 9 L (Cr<sub>eq</sub> = 20,7 ; Ni<sub>eq</sub> = 11,45).</p>
     <p class="q"><b>a)</b> Calcule les points de Schaeffler des deux tôles, puis du métal de base moyen.</p>
     <p class="q"><b>b)</b> Calcule le point de la zone fondue avec le 23 12 L. Où tombe-t-il ?</p>
     <p class="q"><b>c)</b> Même question avec le 19 9 L.</p>
-    <p class="q"><b>d)</b> Dans la manipulation 1 (mode « Assemblage »), jusqu'à quelle dilution chaque apport reste-t-il dans le triangle sûr ?</p>
+    <p class="q"><b>d)</b> Dans la manipulation 1, jusqu'à quelle dilution chaque apport reste-t-il dans le triangle sûr ?</p>
     <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> S355 : Cr<sub>eq</sub> = 0,05 + 0,01 + 0,45 = 0,51 ; Ni<sub>eq</sub> = 0,05 + 5,1 + 0,725 ≈ 5,88. 304L : Cr<sub>eq</sub> = 18,2 + 0,1 + 0,6 = 18,9 ; Ni<sub>eq</sub> = 9,2 + 0,6 + 0,75 = 10,55. Moyenne : <span class="m">(9,70 ; 8,21)</span>.</p>
-      <p><b>b)</b> <span class="m">X<sub>ZF</sub> = D·X<sub>MB</sub> + (1 − D)·X<sub>MA</sub></span> : Cr<sub>eq</sub> = 0,3 × 9,70 + 0,7 × 24,2 = 19,85 ; Ni<sub>eq</sub> = 0,3 × 8,21 + 0,7 × 14,45 = 12,58. A + F avec environ 3 % de ferrite : <b>zone sûre</b>.</p>
-      <p><b>c)</b> Cr<sub>eq</sub> = 0,3 × 9,70 + 0,7 × 20,7 = 17,40 ; Ni<sub>eq</sub> = 0,3 × 8,21 + 0,7 × 11,45 = 10,48. Le point passe sous la frontière de la martensite (zone A + M + F) : <b>risque de fissuration à froid</b>.</p>
-      <p><b>d)</b> Environ <b>40 %</b> pour le 23 12 L, seulement <b>22 %</b> pour le 19 9 L. Le 23 12 L garde la marge que réclame la dilution par l'acier au carbone, surtout en passe de racine.</p>
+      <p><b>a)</b> S355 : Cr<sub>eq</sub> = 0,05 + 0,01 + 0,45 = 0,51 ; Ni<sub>eq</sub> = 0,05 + 5,1 + 0,725 ≈ 5,88. 304L : 18,9 ; 10,55. Moyenne : <b>(9,70 ; 8,21)</b>.</p>
+      <p><b>b)</b> X<sub>ZF</sub> = D·X<sub>MB</sub> + (1 − D)·X<sub>MA</sub> : Cr<sub>eq</sub> = 0,3 × 9,70 + 0,7 × 24,2 = 19,85 ; Ni<sub>eq</sub> = 0,3 × 8,21 + 0,7 × 14,45 = 12,58 : A + F avec ≈ 3 % de ferrite, <b>zone sûre</b>.</p>
+      <p><b>c)</b> Cr<sub>eq</sub> = 17,40 ; Ni<sub>eq</sub> = 10,48 : sous la frontière de la martensite (A + M + F), <b>risque de fissuration à froid</b>.</p>
+      <p><b>d)</b> Environ <b>40 %</b> pour le 23 12 L, seulement <b>22 %</b> pour le 19 9 L : le 23 12 L garde la marge que réclame la dilution par l'acier au carbone, surtout en racine.</p>
     </div></details>
   </div>
 
-  <div class="exo">
-    <h4>Exercice 3 : qui gèle en premier ? <span class="lvtag">N1 · chapitre 2</span></h4>
-    <p>Utilise les équivalents de Hammar et Svensson et le seuil Cr<sub>eq</sub>/Ni<sub>eq</sub> ≈ 1,55.</p>
-    <p class="q"><b>a)</b> Apport 19 9 L : C 0,02 ; Mn 1,7 ; Si 0,4 ; Cr 20,0 ; Ni 10,0 ; Mo 0,1 ; N 0,05 ; Cu 0,1.</p>
-    <p class="q"><b>b)</b> Apport 25 20 (310) : C 0,10 ; Mn 1,8 ; Si 0,4 ; Cr 25,5 ; Ni 20,5 ; N 0,03 ; Cu 0,1.</p>
-    <p class="q"><b>c)</b> Apport 18 8 Mn (307) : C 0,08 ; Mn 6,5 ; Si 0,8 ; Cr 18,5 ; Ni 8,5 ; N 0,05 ; Cu 0,1.</p>
-    <p class="q"><b>d)</b> Classe-les du plus au moins sensible à la fissuration à chaud, et explique la réputation du 18 8 Mn.</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <span class="m">Cr<sub>eq</sub> = Cr + 1,37·Mo + 1,5·Si + 2·Nb + 3·Ti = 20,0 + 0,137 + 0,6 = 20,74</span> ; <span class="m">Ni<sub>eq</sub> = Ni + 0,31·Mn + 22·C + 14,2·N + Cu = 10,0 + 0,527 + 0,44 + 0,71 + 0,1 = 11,78</span> ; rapport <b>1,76</b> : ferrite primaire, mode FA.</p>
-      <p><b>b)</b> Cr<sub>eq</sub> = 25,5 + 0,6 = 26,1 ; Ni<sub>eq</sub> = 20,5 + 0,558 + 2,2 + 0,426 + 0,1 = 23,78 ; rapport <b>1,10</b> : austénite primaire, mode A.</p>
-      <p><b>c)</b> Cr<sub>eq</sub> = 18,5 + 1,2 = 19,7 ; Ni<sub>eq</sub> = 8,5 + 2,015 + 1,76 + 0,71 + 0,1 = 13,09 ; rapport <b>1,51</b> : juste sous le seuil, austénite primaire.</p>
-      <p><b>d)</b> Le 25 20 est le plus sensible (mode A franc), puis le 18 8 Mn, puis le 19 9 L (mode FA). Le 18 8 Mn compense sa solidification austénitique par son manganèse : le soufre forme des sulfures de manganèse, solides jusque vers 1 600 °C, au lieu de films de sulfure de fer qui restent liquides jusqu'à 988 °C.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 4 : le dernier liquide <span class="lvtag">N2 · chapitre 3</span></h4>
-    <p>Métal à 0,010 % de soufre. Coefficients de partage indicatifs : k = 0,04 si le solide est de l'austénite, k = 0,10 si c'est de la ferrite.</p>
-    <p class="q"><b>a)</b> Avec la loi de Scheil, calcule la teneur en soufre du liquide quand il en reste 10 %, 5 %, puis 2 %, dans les deux cas.</p>
-    <p class="q"><b>b)</b> Que montrent ces chiffres ?</p>
-    <p class="q"><b>c)</b> Dans la manipulation 3, mode A, bridage moyen : quelle teneur maximale en P + S évite la fissure (pas de 0,001 %) ?</p>
-    <p class="q"><b>d)</b> Même question en bridage faible, puis en mode FA avec un bridage fort.</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <span class="m">C<sub>L</sub> = C<sub>0</sub>·f<sub>L</sub><sup>k − 1</sup></span>. Austénite (k = 0,04) : 0,091 % ; 0,177 % ; 0,43 %. Ferrite (k = 0,10) : 0,079 % ; 0,148 % ; 0,34 %.</p>
-      <p><b>b)</b> Dans les deux cas, le dernier liquide est 30 à 40 fois plus soufré que l'alliage : même un métal « propre » forme des films riches en soufre. L'avantage de la ferrite ne tient pas qu'à k : elle dissout davantage de soufre et de phosphore, sa plage de fragilité est plus étroite et ses joints avec l'austénite sont tortueux.</p>
-      <p><b>c)</b> Jusqu'à <b>0,019 %</b> la marge reste positive ; à 0,020 %, la déformation dépasse la ductilité de 0,005 % : la fissure s'ouvre.</p>
-      <p><b>d)</b> En bridage faible, environ <b>0,058 %</b>. En mode FA, aucune fissure jusqu'à 0,060 %, même en bridage fort : la plage de fragilité ne dépasse pas 78 °C et la ductilité minimale est plus grande.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 5 : régler un cordon <span class="lvtag">N1 · chapitre 4</span></h4>
-    <p>Soudage TIG (k = 0,6) d'un austénitique : U = 12 V, I = 180 A.</p>
-    <p class="q"><b>a)</b> Calcule l'énergie de l'arc E et l'énergie de soudage Q à 4 mm/s, puis à 8 mm/s.</p>
-    <p class="q"><b>b)</b> Dans la manipulation 4, relève l'angle des grains sur l'axe à 4, 8 et 10 mm/s.</p>
-    <p class="q"><b>c)</b> Une macrographie montre un cordon de profondeur h = 6 mm pour une largeur c = 4,5 mm. Commente.</p>
-    <p class="q"><b>d)</b> Relève l'indice de risque pour : 8 mm/s, h/c = 1,35, cordon creux, bridage fort ; puis 4 mm/s, h/c = 0,8, cordon bombé, bridage moyen.</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <span class="m">E = U·I/v = 12 × 180/4 = 540 J/mm</span>, <span class="m">Q = k·E = 0,6 × 540 ≈ 0,32 kJ/mm</span> ; à 8 mm/s : E = 270 J/mm, Q ≈ 0,16 kJ/mm.</p>
-      <p><b>b)</b> Environ 5° à 4 mm/s (bain en ellipse, grains couchés), 43° à 8 mm/s, 74° à 10 mm/s (goutte d'eau, grains de face).</p>
-      <p><b>c)</b> h/c = 6/4,5 ≈ 1,33 : cordon trop étroit et profond, le dernier liquide se rassemble dans le plan médian. Il faut une largeur d'au moins 6 mm (h/c ≤ 1), par exemple avec une vitesse plus faible ou un léger balayage, ou plusieurs passes.</p>
-      <p><b>d)</b> Premier cas : indice ≈ 3,6, risque <b>fort</b> (tous les facteurs défavorables réunis). Second cas : indice ≈ 0,7, risque <b>faible</b>.</p>
-    </div></details>
-  </div>
-
-  <div class="exo">
-    <h4>Exercice 6 : le mode opératoire d'un 410 <span class="lvtag">N2 · chapitre 6</span></h4>
+  <div class="exo defi">
+    <h4>Exercice 2 : le mode opératoire d'un 410 <span class="lvtag">★★ synthèse · chapitres 1 et 6, à rejouer dans la manipulation 6</span></h4>
     <p>Tôles 410 de 20 mm : C 0,10 ; Mn 0,6 ; Ni 0,3 ; Cr 12,5. Électrodes de classe H10.</p>
-    <p class="q"><b>a)</b> Calcule Ms (formule d'Andrews) et la dureté de la martensite.</p>
+    <p class="q"><b>a)</b> Calcule M<sub>s</sub> (Andrews) et la dureté de la martensite (HV ≈ 884·C·(1 − 0,3·C²) + 294).</p>
     <p class="q"><b>b)</b> Quelle fraction de martensite à 200 °C, 100 °C et 20 °C (Koistinen et Marburger) ?</p>
     <p class="q"><b>c)</b> Avec D = 2 × 10⁻¹¹ m²/s à 20 °C et 2,4 × 10⁻⁹ m²/s à 200 °C, calcule le temps de dégazage τ dans les deux cas.</p>
     <p class="q"><b>d)</b> Dans la manipulation 6 (410, H10, 20 mm, préchauffage 200 °C), quelle durée minimale de postchauffage évite la fissure (pas de 0,5 h) ? Et avec des électrodes H5 ?</p>
     <p class="q"><b>e)</b> Pourquoi refroidir sous 100 °C avant le revenu ?</p>
     <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> <span class="m">Ms = 539 − 423 × 0,10 − 30,4 × 0,6 − 17,7 × 0,3 − 12,1 × 12,5 ≈ 322 °C</span> ; <span class="m">HV ≈ 884 × 0,10 × (1 − 0,3 × 0,01) + 294 ≈ 382 HV</span>.</p>
-      <p><b>b)</b> <span class="m">f = 1 − exp[−0,011·(322 − T)]</span> : 74 % à 200 °C, 91 % à 100 °C, 96 % à 20 °C.</p>
-      <p><b>c)</b> <span class="m">τ = e²/(π²·D)</span> avec e = 0,020 m : à 20 °C, 4 × 10⁻⁴/(9,87 × 2 × 10⁻¹¹) ≈ 2,0 × 10⁶ s, soit environ <b>23 jours</b> ; à 200 °C, ≈ 1,7 × 10⁴ s, soit <b>4,7 h</b>.</p>
-      <p><b>d)</b> Avec H10 : il faut <b>1,5 h</b> (il reste 7,3 ml/100 g pour une teneur critique de 7,6) ; à 1 h il en reste 8,1, trop. Avec H5, l'hydrogène initial est déjà sous la teneur critique : le préchauffage suffit, le maintien ajoute de la marge.</p>
-      <p><b>e)</b> Pour transformer l'austénite restante (environ 9 % à 100 °C selon b) en martensite avant le revenu ; sinon elle se transformerait après, en martensite fraîche non revenue, dure et fragile.</p>
-    </div></details>
-  </div>
-
-  <div class="exo defi">
-    <h4>🏆 Défi : un ferritique sans gros grains <span class="lvtag">N2 · chapitre 7, à rejouer dans la manipulation 7</span></h4>
-    <p>Une tôle de 430 de 3 mm est soudée bord à bord. On regarde la zone affectée à 1 mm de la ligne de fusion.</p>
-    <p class="q"><b>a)</b> À 0,45 kJ/mm sans préchauffage, relève le pic de température, la taille de grain, R<sub>e</sub> et la remontée de la TTDF.</p>
-    <p class="q"><b>b)</b> Par pas de 0,05 kJ/mm, quelle énergie maximale garde un grain d'au plus 100 µm ?</p>
-    <p class="q"><b>c)</b> À cette énergie, un collègue propose un préchauffage à 200 °C « pour éviter les fissures ». Que se passe-t-il ?</p>
-    <p class="q"><b>d)</b> Passe au 439 à 0,45 kJ/mm sans préchauffage : taille de grain ? Pourquoi ?</p>
-    <details><summary>Voir la correction</summary><div class="sol">
-      <p><b>a)</b> Pic ≈ 1 313 °C, d ≈ 177 µm, <span class="m">R<sub>e</sub> = 200 + 0,6/√(177 × 10⁻⁶) ≈ 245 MPa</span> (75 MPa de moins qu'à 25 µm), TTDF remontée d'environ 45 °C.</p>
-      <p><b>b)</b> <b>0,30 kJ/mm</b> : d ≈ 80 µm ; à 0,35 kJ/mm, d ≈ 109 µm, déjà trop.</p>
-      <p><b>c)</b> Le pic monte à 1 292 °C et le refroidissement s'allonge : d ≈ 131 µm. Le préchauffage, utile pour un martensitique, aggrave ici le défaut à éviter. On soude le ferritique sans préchauffage, à énergie faible.</p>
-      <p><b>d)</b> d ≈ 66 µm : les nitrures de titane épinglent les joints (limite de Zener ≈ 4r/3f ≈ 67 µm). C'est la raison d'être des ferritiques stabilisés pour le soudage.</p>
+      <p><b>a)</b> <span class="m">M<sub>s</sub> = 539 − 42,3 − 18,2 − 5,3 − 151,3 ≈ 322 °C</span> ; HV ≈ 884 × 0,10 × 0,997 + 294 ≈ <b>382 HV</b>.</p>
+      <p><b>b)</b> f = 1 − exp[−0,011(322 − T)] : <b>74 %</b> à 200 °C, <b>91 %</b> à 100 °C, <b>96 %</b> à 20 °C.</p>
+      <p><b>c)</b> τ = e²/(π²·D), e = 0,020 m : à 20 °C, 4 × 10⁻⁴/(9,87 × 2 × 10⁻¹¹) ≈ 2,0 × 10⁶ s, soit ≈ <b>23 jours</b> ; à 200 °C, ≈ 1,7 × 10⁴ s, soit <b>4,7 h</b>.</p>
+      <p><b>d)</b> Avec H10 : <b>1,5 h</b> (il reste 7,3 ml/100 g pour une teneur critique de 7,6 ; à 1 h, 8,1, trop). Avec H5, l'hydrogène initial est déjà sous la teneur critique : le préchauffage suffit, le maintien ajoute de la marge.</p>
+      <p><b>e)</b> Pour transformer l'austénite restante (≈ 9 % à 100 °C) en martensite avant le revenu ; sinon elle se transformerait après, en martensite fraîche non revenue, dure et fragile.</p>
     </div></details>
   </div>
 </div>
@@ -1006,12 +856,13 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <div><div class="ic">⚖️</div><h4>La dilution</h4><div class="f">X<sub>ZF</sub> = <span class="mat">D</span>·X<sub>MB</sub> + (1 − <span class="mat">D</span>)·X<sub>MA</sub></div><p>Le point de la zone fondue glisse sur le segment apport-base ; 23 12 L pour souder un inox sur un acier au carbone.</p></div>
     <div><div class="ic">🧊</div><h4>Les modes</h4><div class="f">A · AF · FA · F ; Cr<sub>eq</sub>/Ni<sub>eq</sub> ≈ 1,5</div><p>Ferrite primaire (FA) : la cible ; 3 à 8 % de ferrite résiduelle, mesurée en FN.</p></div>
     <div><div class="ic">🍯</div><h4>Le film liquide</h4><div class="f">C<sub>L</sub> = C<sub>0</sub>·f<sub>L</sub><sup>k − 1</sup></div><p>Film, fourchette de températures, force du retrait : la fissure à chaud demande les trois.</p></div>
-    <div><div class="ic">💧</div><h4>La goutte d'eau</h4><div class="f">R = v·cos θ · <span class="mat">h/c</span> ≤ 1</div><p>Vitesse modérée, cordon large et bombé, cratères remplis, bridage limité.</p></div>
+    <div><div class="ic">💧</div><h4>La goutte d'eau</h4><div class="f">vitesse modérée · <span class="mat">h/c</span> ≤ 1</div><p>Vitesse modérée, cordon large et bombé, cratères remplis, bridage limité.</p></div>
     <div><div class="ic">🧱</div><h4>Le mortier qui fond</h4><div class="f">T<sub>liquation</sub> &lt; solidus du grain</div><p>Zone partiellement fondue au bord du bain ; énergie faible, métal propre, apport ferritique.</p></div>
     <div><div class="ic">🪑</div><h4>Le tabouret</h4><div class="f"><span class="tau">H</span> + martensite + contraintes ; τ ≈ e²/(π²D)</div><p>Préchauffage vers 200 °C, maintien, refroidir sous 100 °C, revenu, contrôle différé.</p></div>
     <div><div class="ic">🫧</div><h4>La mousse</h4><div class="f"><span class="eps">d</span><sub>lim</sub> ≈ 4r/(3f) · R<sub>e</sub> = R<sub>0</sub> + k/√d</div><p>Ferritique : énergie faible, pas de préchauffage, nuances stabilisées.</p></div>
   </div>
-  <div class="fun"><span class="fun-h">🧲 Fun fact : la ferrite qui se pèse à l'aimant</span>Comment mesurer quelques % de ferrite dans une soudure sans la couper ? Avec un aimant : la ferrite est magnétique, l'austénite ne l'est pas, et plus il y a de ferrite, plus un petit aimant colle au cordon. L'instrument historique, le Magne-Gage, est une balance : on tourne une molette qui tend un ressort jusqu'à arracher l'aimant, et la graduation lue donne la ferrite. Encore fallait-il s'accorder sur l'étalonnage : faute d'étalons communs, les « pourcentages » de ferrite ne voulaient plus dire la même chose d'un laboratoire à l'autre, et le Welding Research Council les a remplacés par un indice conventionnel, le Ferrite Number. Le plus surprenant reste l'étalon de référence, celui du NIST américain : pas un morceau d'inox, mais une plaque d'acier ordinaire couverte d'une couche de cuivre d'épaisseur connue, protégée par un peu de chrome. Ce sont les mêmes étalons que ceux des jauges d'épaisseur de peinture. Plus le cuivre, non magnétique, est épais, moins l'aimant tient : environ 2 mm de cuivre équivalent à 2,5 FN. La ferrite d'une soudure d'inox se mesure donc en « épaisseur de peinture ». Le FN est au <a href="#c2">chapitre 2</a>.</div>
+  <div class="btns"><button class="btn" id="printFiche" type="button">🖨 Imprimer la fiche mémoire</button></div>
+  <div class="fun"><span class="fun-h">🧲 Fun fact : la ferrite qui se pèse à l'aimant</span>Comment mesurer quelques % de ferrite dans une soudure sans la couper ? Avec un aimant : la ferrite est magnétique, l'austénite ne l'est pas, et plus il y a de ferrite, plus un petit aimant colle au cordon. L'instrument historique, le Magne-Gage, est une balance : on tourne une molette qui tend un ressort jusqu'à arracher l'aimant, et la graduation lue donne la ferrite. Faute d'étalons communs, le Welding Research Council a remplacé les « pourcentages » de ferrite par un indice conventionnel, le Ferrite Number. Le plus surprenant reste l'étalon de référence, celui du NIST américain : pas un morceau d'inox, mais une plaque d'acier ordinaire couverte d'une couche de cuivre d'épaisseur connue, protégée par un peu de chrome. Les mêmes que ceux des jauges d'épaisseur de peinture. Plus le cuivre, non magnétique, est épais, moins l'aimant tient : environ 2 mm de cuivre équivalent à 2,5 FN. La ferrite d'une soudure d'inox se mesure donc en « épaisseur de peinture ». Le FN est au <a href="#c2">chapitre 2</a>.</div>
 </div>
 </section>
 
@@ -1206,13 +1057,24 @@ function axes(svg,x0,x1,y0,y1,xmin,xmax,ymin,ymax,xlab,ylab,xstep,ystep,xfmt,yfm
   tx(svg,x0+4,y0-10,ylab,{class:"lbl"});tx(svg,x1,y1+32,xlab,{class:"lbl","text-anchor":"end"});
   return {X:X,Y:Y};
 }
-function animate(btn,label,dur,onStep,onEnd){
-  let raf=null,run=false;
+function animate(btn,label,dur,onStep,onEnd){/* lecteur pilotable : ▶ lecture ou ⏸ pause, qui reprend où elle s'est arrêtée ; les boutons voisins ⏮ début, ◀ pas et pas ▶ (data-a) la mènent à la main ; un pas avance jusqu'à la prochaine image différente (20 pas au plus) */
+  const box=btn.parentNode,lab=btn.closest(".lab")||box,N=20;let raf=null,run=false,t=0;
+  const go=v=>{t=Math.max(0,Math.min(1,v));onStep(t);};
+  const snap=()=>{let s="";lab.querySelectorAll("svg,.readout,.status").forEach(e=>{s+=e.innerHTML;});return s;};
   function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;btn.textContent=label;}
-  function start(){if(run){stop();return;}if(RM){onStep(1);stop();if(onEnd)onEnd();return;}
-    run=true;btn.textContent="⏸ Pause";const t0=performance.now();
-    const step=now=>{const p=Math.min(1,(now-t0)/dur);onStep(p);if(p>=1){stop();if(onEnd)onEnd();return;}raf=requestAnimationFrame(step);};raf=requestAnimationFrame(step);}
-  btn.addEventListener("click",start);return {stop:stop,running:()=>run};
+  function step(d){stop();const s0=snap();let k=Math.round(t*N);for(let i=0;i<N;i++){k+=d;if(k<0||k>N)break;go(k/N);if(snap()!==s0)break;}}
+  btn.addEventListener("click",()=>{if(run){stop();return;}if(t>=0.999)t=0;
+    if(RM){step(1);if(t>=1&&onEnd)onEnd();return;}
+    run=true;btn.textContent="⏸ Pause";const s0=performance.now()-t*dur;
+    const f=now=>{if(!run)return;go((now-s0)/dur);if(t>=1){stop();if(onEnd)onEnd();return;}raf=requestAnimationFrame(f);};raf=requestAnimationFrame(f);});
+  const pb=a=>box.querySelector('[data-a="'+a+'"]');
+  if(pb("start"))pb("start").addEventListener("click",()=>{stop();go(0);});
+  if(pb("back"))pb("back").addEventListener("click",()=>step(-1));
+  if(pb("fwd"))pb("fwd").addEventListener("click",()=>step(1));
+  /* un réglage fait à la main : la prochaine lecture repart du début */
+  lab.addEventListener("input",()=>{if(!run)t=0;});
+  lab.addEventListener("click",e=>{const b=e.target.closest("button");if(b&&b!==btn&&!b.dataset.a&&!run)t=0;});
+  return {stop:stop,running:()=>run};
 }
 
 
@@ -1443,7 +1305,7 @@ const DNGI={sure:"✅",chaud:"🔥",froid:"❄️",sigma:"σ",grain:"🔍"};
     const phTxt=ph.replace(/\+/g," + ");
     if(mode==="quiz"&&answered===null){
       ro.innerHTML="<span>point mystère n° "+(myst%MYS.length+1)+"</span><span>score : <b>"+score[0]+" / "+score[1]+"</b></span>";
-      msg.innerHTML="Quel danger menace un métal fondu placé au point violet ? Réponds avec les boutons, puis passe au point suivant.";return;}
+      msg.innerHTML=("Quel danger menace un métal fondu placé au point violet ? Réponds avec les boutons, puis passe au point suivant.")+"<br><b>À retenir :</b> le point de la zone fondue glisse de l'apport vers le métal de base quand la dilution augmente.";return;}
     ro.innerHTML=nbsp("<span>Cr<sub>eq</sub> = <b class='mat'>"+nf(cr,2)+"</b></span><span>Ni<sub>eq</sub> = <b class='mat'>"+nf(ni,2)+"</b></span><span>structure <b class='gam'>"+phTxt+"</b></span><span>ferrite ≈ <b class='eps'>"+(fe>0&&fe<1?"moins de 1":nf(fe,0))+" %</b></span><span>"+verdictTxt(d)+"</span>");
     let t="";
     if(mode==="one"){
@@ -1465,7 +1327,7 @@ const DNGI={sure:"✅",chaud:"🔥",froid:"❄️",sigma:"σ",grain:"🔍"};
       const ok=d.indexOf(answered)>=0||(answered==="sure"&&d[0]==="sure");
       t="Ta réponse : "+DNGI[answered]+" "+DNG[answered]+". "+(ok?"✅ Exact. ":"❌ Non. ")+"Ce point ("+phTxt+", ferrite ≈ "+nf(fe,0)+" %) est en zone : "+verdictTxt(d)+". Passe au point suivant.";
     }
-    msg.innerHTML=nbsp(t);
+    msg.innerHTML=(nbsp(t))+"<br><b>À retenir :</b> le point de la zone fondue glisse de l'apport vers le métal de base quand la dilution augmente.";
   }
   function showGroups(){qB.style.display=mode==="quiz"?"":"none";dC.hidden=mode!=="mix";}
   function setMode(m){mode=m;answered=null;custom=null;setOn("#m1m",$$("#m1m .btn").find(b=>b.dataset.k===m));
@@ -1618,7 +1480,7 @@ const SOL=(function(){
     else if(st.st==="solF")t+="Solide et entièrement ferritique ; l'austénite n'apparaîtra qu'en dessous de "+nf(1400-(r-1.95)/0.0071875,0)+" °C, en lattes.";
     else t+=T>tg?(st.md==="A"?"Entièrement austénitique : aucune ferrite pour protéger les joints.":"À l'état solide, l'austénite dévore la ferrite"+(st.md==="FA"?", qui ne garde que le cœur des dendrites.":st.md==="AF"?" logée entre les dendrites.":" à partir des joints.")):
       "Sous "+nf(tg,0)+" °C, la transformation est figée : il reste environ "+nf(st.d*100,0)+" % de ferrite."+(st.d>0.12&&st.md==="FA"?" Au-delà d'environ 8 %, les îlots se touchent.":"");
-    msg.innerHTML=nbsp(t);
+    msg.innerHTML=(nbsp(t))+"<br><b>À retenir :</b> au-dessus de Cr<sub>eq</sub>/Ni<sub>eq</sub> ≈ 1,5, la ferrite pousse en premier : le mode FA protège de la fissuration à chaud.";
   }
   const A=animate($("#m2play"),"▶ Solidifier et refroidir",9000,p=>{prog=Math.max(0,p);upd();},()=>{prog=null;sT.value=TMIN;upd();});
   $$("#m2g .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;gk=b.dataset.k;const w=eqW(GR[gk]);sR.value=(w[0]/w[1]).toFixed(2);setOn("#m2g",b);upd();}));
@@ -1693,7 +1555,7 @@ function btrModel(md,PS,r){
     let t=md==="A"?"Solidification en austénite : le soufre et le phosphore saturent les films, la plage de fragilité s'étend sur "+nf(m.W,0)+" °C. ":"Solidification en ferrite primaire : les films sont pauvres et discontinus, la plage ne fait que "+nf(m.W,0)+" °C. ";
     t+=crack?"Vers "+nf(1450-m.W*w.th,0)+" °C, la déformation imposée dépasse la ductilité : la fissure s'ouvre entre deux dendrites.":"La déformation reste partout sous la ductilité disponible.";
     if(md==="A"&&crack)t+=" Essaie moins de P + S, un bridage plus faible, ou le mode FA.";
-    msg.innerHTML=nbsp(t);
+    msg.innerHTML=(nbsp(t))+"<br><b>À retenir :</b> film liquide, plage de fragilité, retrait : sans l'un des trois, pas de fissure à chaud.";
   }
   const A=animate($("#m3play"),"▶ Refroidir la zone pâteuse",7000,p=>{prog=Math.max(0,p);upd();},()=>{prog=null;upd();});
   $$("#m3m .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;md=b.dataset.k;setOn("#m3m",b);upd();}));
@@ -1808,7 +1670,7 @@ const POOL=(function(){
     t+=hc>1?"Cordon étroit et profond : les deux flancs se rejoignent dans un plan vertical, piège à films liquides. ":"Cordon assez large : les grains se rejoignent près de la surface. ";
     if(ccv)t+="La surface creuse concentre le retrait sur l'axe. ";
     t+=lvl==="fort"?"Risque fort de fissure axiale.":lvl==="moyen"?"Risque moyen : soigne la composition et le bridage.":"Risque faible.";
-    msg.innerHTML=nbsp(t);
+    msg.innerHTML=(nbsp(t))+"<br><b>À retenir :</b> un bain en goutte d'eau et un cordon étroit concentrent le dernier liquide dans l'axe.";
   }
   sV.addEventListener("input",upd);sH.addEventListener("input",upd);
   $$("#m4s .btn").forEach(b=>b.addEventListener("click",()=>{ccv=b.dataset.k==="ccv";setOn("#m4s",b);upd();}));
@@ -1880,7 +1742,7 @@ const LIQ=(function(){
     let t=NM[gk].charAt(0).toUpperCase()+NM[gk].slice(1)+" : les joints liquéfient "+nf(c.dT,0)+" °C sous le solidus du grain. ";
     t+="La bande où ils sont liquides mesure environ "+nf(c.w,0)+" µm à "+nf(+sQ.value,1)+" kJ/mm. ";
     t+=lvl==="fort"?"Avec ce bridage, les films s'ouvrent au refroidissement : fissures de liquation probables.":lvl==="moyen"?"Risque moyen : quelques microfissures possibles ; baisse l'énergie ou les impuretés.":"Risque faible : la bande est trop mince pour s'ouvrir.";
-    msg.innerHTML=nbsp(t);
+    msg.innerHTML=(nbsp(t))+"<br><b>À retenir :</b> les joints fondent avant les grains au bord du bain : énergie faible et métal propre.";
   }
   const A=animate($("#m5play"),"▶ Chauffer puis refroidir",6000,p=>{prog=Math.max(0,p);upd();},()=>{prog=null;upd();});
   $$("#m5g .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;gk=b.dataset.k;setOn("#m5g",b);upd();}));
@@ -1962,7 +1824,7 @@ const COLD=(function(){
     if(Tp<100)t+="sans préchauffage efficace, l'hydrogène reste piégé (à 20 °C, il lui faudrait environ "+nf(c.tau20/86400,0)+" jours pour partir) et le retrait est maximal. ";
     else t+="préchauffage à "+nf(Tp,0)+" °C : les contraintes baissent"+(tm>0?" et le maintien de "+nf(tm,1)+" h laisse partir "+nf(100*(1-c.Hres/H0),0)+" % de l'hydrogène. ":", mais sans maintien l'hydrogène reste. ");
     t+=crack?"Les trois pieds tiennent : fissure à froid probable, dans les heures ou les jours qui suivent.":"Un pied est scié : pas de fissure attendue. Ensuite : refroidir sous 100 °C, puis revenu.";
-    msg.innerHTML=nbsp(t);
+    msg.innerHTML=(nbsp(t))+"<br><b>À retenir :</b> le maintien au-dessus de 200 °C chasse l'hydrogène ; le préchauffage seul ne suffit pas.";
   }
   const A=animate($("#m6play"),"▶ Dérouler le cycle",7000,p=>{prog=Math.max(0,p);upd();},()=>{prog=null;upd();});
   $$("#m6g .btn").forEach(b=>b.addEventListener("click",()=>{A.stop();prog=null;gk=b.dataset.k;setOn("#m6g",b);upd();}));
@@ -2041,7 +1903,7 @@ function cellsHex(seed,n,w,h,jit){/* cellules polygonales (grains) : hexagones a
     if(gk==="439")t+="Les nitrures de titane épinglent les joints : le grain plafonne vers "+nf(GGR.DL,0)+" µm. ";
     else if(r.D>100)t+="Trop gros : la transition ductile-fragile remonte de "+nf(dt,0)+" °C. ";
     if(Tp>20)t+="Le préchauffage allonge le séjour à haute température : les grains grossissent davantage. ";
-    msg.innerHTML=nbsp(t);
+    msg.innerHTML=(nbsp(t))+"<br><b>À retenir :</b> un ferritique ne se régénère pas : énergie faible, pas de préchauffage, nuance stabilisée.";
   }
   $$("#m7g .btn").forEach(b=>b.addEventListener("click",()=>{gk=b.dataset.k;setOn("#m7g",b);upd();}));
   [sQ,sP,sX].forEach(s=>s.addEventListener("input",upd));
@@ -2111,6 +1973,13 @@ function cellsHex(seed,n,w,h,jit){/* cellules polygonales (grains) : hexagones a
   b.addEventListener("click",()=>{t=t==="auto"?"light":t==="light"?"dark":"auto";try{localStorage.setItem(KEY,t);}catch(e){}apply();});
   apply();
 })();
+})();
+</script>
+<script>
+(function(){/* impression de la fiche mémoire seule */
+  const b=document.getElementById("printFiche");if(!b)return;
+  b.addEventListener("click",()=>{document.body.classList.add("print-fiche");window.print();});
+  window.addEventListener("afterprint",()=>document.body.classList.remove("print-fiche"));
 })();
 </script>
 </body>
