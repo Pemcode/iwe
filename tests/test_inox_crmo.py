@@ -1,4 +1,4 @@
-"""Intégration des inox réorganisés et des Cr-Mo, avec liens historiques conservés (S35)."""
+"""Intégration des inox réorganisés et des Cr-Mo, avec liens historiques conservés (S35, S44)."""
 import json
 import re
 from pathlib import Path
@@ -14,12 +14,14 @@ EXPECTED = {
     'crmo-01': ('CrMo/01-chaleur-pression-fluage.html', 1, 6),
     'crmo-02': ('CrMo/02-metallurgie-chrome-molybdene-carbures.html', 2, 6),
     'crmo-03': ('CrMo/03-souder-crmo-pieges-joint.html', 3, 6),
+    'crmo-04': ('CrMo/04-souder-crmo-pratique.html', 4, 6),
+    'crmo-05': ('CrMo/05-assemblages-heterogenes.html', 5, 5),
 }
 
 def test_series_are_available_in_order_with_stable_historical_links(tmp_path):
     catalogue = json.loads((REPOSITORY / 'catalogue-cours.json').read_text(encoding='utf-8'))
     courses = {c['id']: c for c in catalogue['cours']}
-    assert EXPECTED.keys() <= courses.keys(), 'Les cinq nouveaux cours doivent être inscrits.'
+    assert EXPECTED.keys() <= courses.keys(), 'Les séries Inox et Cr-Mo doivent être inscrites au complet.'
     data, plan = copy_real_project(tmp_path, planning=True)
     out = build(tmp_path)
     def page(url):
@@ -45,10 +47,15 @@ def test_series_are_available_in_order_with_stable_historical_links(tmp_path):
             assert f'{ident}-c{n}'.upper() in excerpts
         for prerequisite in c['prerequis_conseilles']:
             assert link(url, courses[prerequisite]['url']) in page(url).links
-    for series in [('inox-03','inox-04','inox-01','inox-02'), ('crmo-01','crmo-02','crmo-03')]:
+    for series in [('inox-03','inox-04','inox-01','inox-02'), ('crmo-01','crmo-02','crmo-03','crmo-04','crmo-05')]:
         for a,b in zip(series,series[1:]):
             assert link(courses[a]['url'],courses[b]['url']) in page(courses[a]['url']).links
             assert link(courses[b]['url'],courses[a]['url']) in page(courses[b]['url']).links
     assert {'cours':'fluage-01'} in topics['2-12-acier-resistant-au-fluage']
-    assert not any(r['cours_id'] in ('crmo-04','crmo-05') for r in rows)
+    assert courses['crmo-04']['prerequis_conseilles'] == ['crmo-03', 'met-03']
+    assert courses['crmo-05']['prerequis_conseilles'] == ['crmo-04', 'inox-01']
+    assert topics['2-22-soudage-hetero'][0] == {'cours': 'crmo-05'}
+    assert {'cours': 'inox-01', 'ancre': 'c1'} in topics['2-22-soudage-hetero']
+    assert {'cours': 'crmo-04', 'ancre': 'c5'} in topics['2-8-traitements-thermiques-des-materiaux']
+    assert 'CrMo/04-souder-crmo-pratique.html#c5' in page('planning.html').links
     assert not any(s.get('publier', False) for s in plan['sources'])
