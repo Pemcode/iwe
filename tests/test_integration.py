@@ -52,11 +52,11 @@ def test_cli_context_and_default_validation_are_read_only(planning_project):
     manifest = root / 'livraison.json'
     manifest.write_text(json.dumps(card), encoding='utf-8')
     before = snapshot(root)
-    env = dict(os.environ, PYTHONPATH=str(Path(__file__).resolve().parents[1]))
+    env = dict(os.environ, PYTHONPATH=str(Path(__file__).resolve().parents[1]), PYTHONIOENCODING='cp1252')
     for command in [('contexte', 'th-01'), ('integrer', str(manifest))]:
-        result = subprocess.run([sys.executable, '-X', 'utf8', '-m', 'wiki', *command],
-                                cwd=root, env=env, capture_output=True, text=True, encoding='utf-8')
-        assert result.returncode == 0, result.stderr
+        result = subprocess.run([sys.executable, '-m', 'wiki', *command],
+                                cwd=root, env=env, capture_output=True)
+        assert result.returncode == 0, result.stderr.decode('utf-8', errors='replace')
         if command[0] == 'contexte':
             assert json.loads(result.stdout)['cours']['id'] == 'th-01'
     assert snapshot(root) == before

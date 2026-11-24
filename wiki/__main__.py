@@ -1,4 +1,5 @@
 import argparse
+import sys
 from pathlib import Path
 
 from .build import build
@@ -36,6 +37,11 @@ def main():
     delivery.add_argument("--appliquer", action="store_true", help="Enregistrer les métadonnées après validation")
     delivery.add_argument("--apercu", type=Path, help="Nouveau dossier extérieur au dépôt pour conserver le site candidat")
     args = parser.parse_args()
+    if args.command in {"contexte", "integrer"}:
+        # JSON et comptes rendus lisibles aussi dans les pipes Windows CP1252.
+        for stream in (sys.stdout, sys.stderr):
+            if hasattr(stream, "reconfigure"):
+                stream.reconfigure(encoding="utf-8")
     root = Path.cwd()
     try:
         if args.command == "check":
