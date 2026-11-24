@@ -1,5 +1,6 @@
 """Intégration guidée et publication des seuls contenus déclarés, sans dépendance runtime."""
 from datetime import date
+from contextlib import nullcontext
 from html import escape
 import json
 from pathlib import Path
@@ -79,9 +80,15 @@ def build_inputs(data, plan):
     return files
 
 
-def validate_candidate(root, data, plan, new_files):
+def validate_candidate(root, data, plan, new_files, preview=None):
     # Le build candidat ne touche ni les sources ni l’aperçu courant.
-    with TemporaryDirectory(prefix="iwe-validation-") as directory:
+    if preview is not None:
+        preview = Path(preview).resolve()
+        if preview.exists() or preview.is_relative_to(Path(root).resolve()):
+            raise CatalogueError("L’aperçu demande un nouveau dossier extérieur au dépôt.")
+        preview.mkdir(parents=True)
+    destination = TemporaryDirectory(prefix="iwe-validation-") if preview is None else nullcontext(preview)
+    with destination as directory:
         candidate = Path(directory)
         metadata = {CATALOGUE: json_text(data)}
         if plan is not None:
@@ -100,10 +107,12 @@ def validate_candidate(root, data, plan, new_files):
 
 
 def register(root, source, *, ident, title=None, subject=None, subject_title=None,
-             topics=(), assets=(), keywords=None):
+             topics=(), assets=(), keywords=None, url=None, prerequisites=None,
+             resources=None, subject_description=None, topic_links=(), apply=True, preview=None):
     """Inscrire ou activer un support ; aucun octet source existant n’est modifié."""
     root = Path(root).resolve()
     name = local_path(root, source)
+    source_before = (root / name).read_bytes()
     suffix = Path(name).suffix.lower()
     if suffix not in {".html", *DOCUMENTS}:
         raise CatalogueError("Formats acceptés : HTML, PDF, DOCX, PPTX, XLSX.")
@@ -126,6 +135,10 @@ def register(root, source, *, ident, title=None, subject=None, subject_title=Non
         data["cours"].append(course)
     if not is_new and course["statut"] == "disponible" and not course.get("url"):
         course["url"] = course["fichier"]
+    if url is not None:
+        if course.get("url") and course["url"] != url:
+            raise CatalogueError("L’URL existante doit être conservée ; traiter une migration séparément.")
+        course["url"] = relative_path(url)
     if subject:
         course["matiere"] = subject
     if title:
@@ -133,7 +146,8 @@ def register(root, source, *, ident, title=None, subject=None, subject_title=Non
     if not any(s["id"] == course["matiere"] for s in data["matieres"]):
         if not subject_title:
             raise CatalogueError("Donnez un titre à la nouvelle matière.")
-        data["matieres"].append({"id": course["matiere"], "titre": subject_title, "description": ""})
+        data["matieres"].append({"id": course["matiere"], "titre": subject_title,
+                                "description": subject_description or ""})
     associated = list(dict.fromkeys([*course.get("fichiers_associes", []), *(local_path(root, p) for p in assets)]))
     new_files = {}
     if suffix == ".html":
@@ -164,23 +178,40 @@ def register(root, source, *, ident, title=None, subject=None, subject_title=Non
     course["statut"] = "disponible"
     if keywords is not None:
         course["mots_cles"] = list(keywords)
+    if prerequisites is not None:
+        course["prerequis_conseilles"] = list(prerequisites)
+    if resources is not None:
+        course["ressources"] = list(resources)
     for topic_id in topics:
         topic = next((t for t in plan["sujets"] if t["id"] == topic_id), None) if plan else None
         if topic is None:
             raise CatalogueError(f"Sujet de planning inconnu : {topic_id}")
         if not any(s["cours"] == ident for s in topic["supports"]):
             topic["supports"].append({"cours": ident})
+    for entry in topic_links:
+        topic = next((t for t in plan["sujets"] if t["id"] == entry["id"]), None) if plan else None
+        if topic is None:
+            raise CatalogueError(f"Sujet de planning inconnu : {entry['id']}")
+        support = {"cours": ident}
+        if "ancre" in entry:
+            support["ancre"] = entry["ancre"]
+        if support not in topic["supports"]:
+            topic["supports"].append(support)
     data["date_inventaire"] = date.today().isoformat()
     for target in [CATALOGUE, PLANNING, *new_files]:
         if not (root / target).resolve().is_relative_to(root):
             raise CatalogueError(f"Destination extérieure au projet : {target}")
-    validate_candidate(root, data, plan, new_files)
+    validate_candidate(root, data, plan, new_files, preview=preview)
     writes = {CATALOGUE: json_text(data), **new_files}
     if plan is not None and plan != json.loads(original[PLANNING].decode("utf-8-sig")):
         writes[PLANNING] = json_text(plan)
     # Refuser une modification concurrente plutôt que réécrire un JSON devenu périmé.
     if any((root / p).read_bytes() != value for p, value in original.items()):
         raise CatalogueError("Les métadonnées ont changé pendant la validation. Relancez l’ajout.")
+    if (root / name).read_bytes() != source_before:
+        raise CatalogueError("Le support source a changé pendant la validation. Relancez l’ajout.")
+    if not apply:
+        return course
     written = []
     try:
         for name, text in writes.items():

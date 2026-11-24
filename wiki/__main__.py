@@ -4,8 +4,9 @@ from pathlib import Path
 from .build import build
 from .catalogue import CatalogueError, load_catalogue
 from .planning import load_planning
-from .maintenance import prepare, publish, register, read_json, PLANNING, slug
+from .maintenance import prepare, publish, register, read_json, json_text, PLANNING, slug
 from .routine import menu, add_guided, preview
+from .integration import context, integrate
 
 
 def main():
@@ -28,6 +29,12 @@ def main():
     show.add_argument("--port", type=int, default=8000)
     topics = commands.add_parser("sujets", help="Lister les sujets du planning")
     topics.add_argument("filtre", nargs="?", default="")
+    focused = commands.add_parser("contexte", help="Lire les seules métadonnées et sections utiles à un cours")
+    focused.add_argument("ident")
+    delivery = commands.add_parser("integrer", help="Valider une fiche JSON de cours sans modifier le dépôt")
+    delivery.add_argument("fiche", type=Path)
+    delivery.add_argument("--appliquer", action="store_true", help="Enregistrer les métadonnées après validation")
+    delivery.add_argument("--apercu", type=Path, help="Nouveau dossier extérieur au dépôt pour conserver le site candidat")
     args = parser.parse_args()
     root = Path.cwd()
     try:
@@ -50,6 +57,13 @@ def main():
                 course = register(root, args.fichier, ident=args.ident, title=args.title, subject=args.subject,
                                   subject_title=args.subject_title, topics=args.topics, assets=args.assets, keywords=args.keywords)
                 print(f"Support enregistré et validé : {course['url']}")
+        elif args.command == "contexte":
+            print(json_text(context(root, args.ident)), end="")
+        elif args.command == "integrer":
+            course = integrate(root, read_json(args.fiche), apply=args.appliquer, preview=args.apercu)
+            print(f"{'Enregistré' if args.appliquer else 'Validé sans enregistrement'} : {course['id']} → {course['url']}")
+            if args.apercu:
+                print(f"Aperçu : {args.apercu.resolve() / '_site'}")
         elif args.command == "preparer":
             prepare(root)
         elif args.command == "publier":
