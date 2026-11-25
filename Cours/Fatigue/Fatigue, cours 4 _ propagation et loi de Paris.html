@@ -418,7 +418,7 @@ body.photo-modal-open{overflow:hidden}
     <p class="lab-h">Manipulation 1 : la pointe qui respire</p>
     <p class="lab-sub">Lance les cycles ou avance phase par phase ; ΔK règle la longueur du pas. Zone plastique en bleu-vert, stries en bleu.<span class="predict">🔮 Prédis d'abord : la fissure avance-t-elle pendant la traction ou pendant la compression ?</span></p>
     <div class="ctrl"><label for="m1k">Étendue <span class="sig">ΔK</span></label><input type="range" id="m1k" class="r-sig" min="8" max="40" step="1" value="18"><output id="m1ko"></output></div>
-    <div class="btns"><button class="btn" id="m1play" type="button">▶ Cycler</button><button class="btn" id="m1step" type="button">⏭ Phase suivante</button><button class="btn" id="m1reset" type="button">↺ Recommencer</button></div>
+    <div class="btns" id="m1pl"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" data-a="play" type="button">▶ Cycler</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button></div>
     <svg id="m1svg" role="img" aria-label="Pointe de fissure en traction et en compression, avec la zone plastique et les stries laissées à chaque cycle"></svg>
     <div class="readout" id="m1r"></div>
     <p class="status" id="m1msg" aria-live="polite"></p>
@@ -486,7 +486,7 @@ body.photo-modal-open{overflow:hidden}
     <p class="lab-h">Manipulation 2 : fabrique une cassure</p>
     <p class="lab-sub">Fais grandir la fissure ; « Arrêt » trace une ligne d'arrêt. σ<sub>max</sub> fixe la taille critique.<span class="predict">🔮 Prédis d'abord : sous une contrainte plus forte, la zone de fatigue sera-t-elle plus grande ou plus petite ?</span></p>
     <div class="ctrl"><label for="m2s">Contrainte <span class="sig">σ<sub>max</sub></span></label><input type="range" id="m2s" class="r-sig" min="100" max="400" step="10" value="200"><output id="m2so"></output></div>
-    <div class="btns"><button class="btn" id="m2play" type="button">▶ Faire grandir</button><button class="btn" id="m2stop" type="button">⏸ Arrêt (ligne d'arrêt)</button><button class="btn" id="m2reset" type="button">↺ Nouvelle pièce</button><button class="btn" id="m2zoom" type="button">🔬 Vue au microscope</button></div>
+    <div class="btns" id="m2pl"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" data-a="play" type="button">▶ Faire grandir</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button><button class="btn" id="m2stop" type="button">🌙 Arrêt (ligne d'arrêt)</button><button class="btn" id="m2zoom" type="button">🔬 Vue au microscope</button></div>
     <svg id="m2svg" role="img" aria-label="Surface de rupture par fatigue : origine, lignes d'arrêt, zone de fatigue et zone de rupture brutale"></svg>
     <div class="readout" id="m2r"></div>
     <p class="status" id="m2msg" aria-live="polite"></p>
@@ -1008,19 +1008,12 @@ function mmTxt(a){return a<1e-3?nf(a*1e6,0)+" µm":nf(a*1e3,a<1e-2?2:1)+" mm";}
    ========================================================= */
 (function(){
   const svg=$("#m1svg");if(!svg)return;
-  const sk=$("#m1k"),ro=$("#m1r"),msg=$("#m1msg"),bP=$("#m1play");
-  let xt=null,ph=0,n=0,str=[],run=false,raf=null,last=0;
-  function reset(){xt=null;ph=0;n=0;str=[];}
-  function step(dph){
-    const W=svgW(svg),dK=+sk.value,D=Math.max(0.6,Math.min(14,1.1*Math.pow(dK/15,3)));
-    if(xt===null)xt=W*0.32;
-    const before=ph;ph+=dph;
-    if(ph>=1){ph-=1;n++;str.push(xt);xt+=D;if(xt>W-70){reset();xt=W*0.32;}}
-  }
+  const sk=$("#m1k"),ro=$("#m1r"),msg=$("#m1msg"),NC=6;
+  let ph=0,n=0;/* n cycles achevés, ph : phase du cycle en cours (0 à 1) */
   function draw(){
     const W=svgW(svg),H=260;setVB(svg,W,H);clear(svg);
-    if(xt===null)xt=W*0.32;
     const dK=+sk.value,D=Math.max(0.6,Math.min(14,1.1*Math.pow(dK/15,3)));
+    const xt=W*0.32+n*D,str=Array.from({length:n},(_,k)=>W*0.32+k*D);/* un pas D et une strie par cycle achevé */
     const L=Math.sin(2*Math.PI*ph),yc=H/2,top=40,bot=H-40;
     const adv=ph<0.25?D*Math.sin(Math.PI/2*ph/0.25):D;
     const xtip=xt+(ph<0.5?adv:D);
@@ -1059,12 +1052,9 @@ function mmTxt(a){return a<1e-3?nf(a*1e6,0)+" µm":nf(a*1e3,a<1e-2?2:1)+" mm";}
     const M=["<b>Début :</b> la pointe de la fissure est aiguë. Lance les cycles ou avance phase par phase.","<b>Traction :</b> la matière plastifie devant la pointe (bleu-vert). La pointe s'ouvre, s'arrondit (elle s'émousse) et avance un peu, puis s'arrête : une pointe ronde est moins dangereuse.","<b>Décharge :</b> l'effort retombe, la fissure commence à se refermer.","<b>Compression :</b> la déformation s'inverse ; les lèvres se referment et la pointe s'affûte en laissant un petit repli. Elle est prête pour le cycle suivant. Chaque cycle a laissé une strie."];
     msg.innerHTML=(M[pi]+(dK>=30?" Avec un ΔK élevé, chaque pas est long : les stries sont espacées.":""))+"<br><b>À retenir :</b> la traction émousse la pointe et la fait avancer, la compression l'affûte : un cycle, une strie.";
   }
-  function loop(now){const dt=Math.min(50,now-last);last=now;step(dt*0.0007);draw();if(run)raf=requestAnimationFrame(loop);}
-  bP.addEventListener("click",()=>{run=!run;bP.textContent=run?"⏸ Pause":"▶ Cycler";if(run){last=performance.now();raf=requestAnimationFrame(loop);}else if(raf)cancelAnimationFrame(raf);});
-  $("#m1step").addEventListener("click",()=>{const targets=[0.25,0.5,0.75,1];const nxt=targets.find(t=>t>ph+1e-6)||1;step(nxt-ph);draw();});
-  $("#m1reset").addEventListener("click",()=>{reset();draw();});
+  player("m1pl",{get:()=>(n+ph)/NC,set:t=>{const P=NC*t;n=Math.min(NC,Math.floor(P+1e-9));ph=Math.max(0,P-n);draw();},dur:8000,steps:4*NC});/* un pas = une phase du cycle */
   sk.addEventListener("input",draw);
-  redraws.push(()=>{reset();draw();});draw();
+  redraws.push(draw);draw();
 })();
 
 /* =========================================================
@@ -1072,9 +1062,9 @@ function mmTxt(a){return a<1e-3?nf(a*1e6,0)+" µm":nf(a*1e3,a<1e-2?2:1)+" mm";}
    ========================================================= */
 (function(){
   const svg=$("#m2svg");if(!svg)return;
-  const ss=$("#m2s"),ro=$("#m2r"),msg=$("#m2msg"),bP=$("#m2play");
+  const ss=$("#m2s"),ro=$("#m2r"),msg=$("#m2msg");
   const D=40;
-  let a=0.8,marks=[],broken=false,run=false,raf=null,last=0,zoom=false;
+  let a=0.8,marks=[],broken=false,zoom=false,tt=0,TA=[];/* tt : avancement de 0 à 1 ; TA : profondeur a, échantillonnée dans le temps */
   function ac(){return Math.min(0.95*D,1000*Math.pow(50/(2*(+ss.value)),2));}
   function draw(){
     const W=svgW(svg),H=W<520?250:290;setVB(svg,W,H);clear(svg);
@@ -1107,15 +1097,19 @@ function mmTxt(a){return a<1e-3?nf(a*1e6,0)+" µm":nf(a*1e3,a<1e-2?2:1)+" mm";}
     const fr=inF/tot;
     ro.innerHTML="<span class='eps'>profondeur a = "+nf(aa,1)+" mm</span><span class='eps'>a<sub>C</sub> = "+nf(ac(),1)+" mm</span><span class='sig'>σ<sub>max</sub> = "+ss.value+" MPa</span><span>zone de fatigue : "+nf(fr*100,0)+" % de la section</span><span>lignes d'arrêt : "+marks.length+"</span>";
     if(broken)msg.innerHTML=("💥 <b>Rupture.</b> La fissure a atteint a<sub>C</sub> = "+nf(ac(),1)+" mm : la zone de fatigue couvre "+nf(fr*100,0)+" % de la section. "+(fr<0.25?"Petite zone de fatigue, grande zone brutale : la contrainte maximale était <b>forte</b>.":"Grande zone de fatigue : la contrainte maximale était <b>faible</b> (ou le matériau très tenace).")+" Les "+marks.length+" lignes d'arrêt racontent "+marks.length+" interruptions du chargement, pas un nombre de cycles.")+"<br><b>À retenir :</b> petite zone de fatigue, contrainte forte ; une ligne d'arrêt compte une pause, pas un cycle.";
-    else if(run)msg.innerHTML=("La fissure avance depuis l'origine, en demi-ellipse. Appuie sur « Arrêt » pour simuler une nuit d'arrêt : une ligne d'arrêt se dessine.")+"<br><b>À retenir :</b> petite zone de fatigue, contrainte forte ; une ligne d'arrêt compte une pause, pas un cycle.";
+    else if(tt>0)msg.innerHTML=("La fissure avance depuis l'origine, en demi-ellipse. Appuie sur « Arrêt » pour simuler une nuit d'arrêt : une ligne d'arrêt se dessine.")+"<br><b>À retenir :</b> petite zone de fatigue, contrainte forte ; une ligne d'arrêt compte une pause, pas un cycle.";
     else msg.innerHTML=("Choisis σ<sub>max</sub>, puis fais grandir la fissure. Avec K<sub>IC</sub> = 50 MPa·√m et Y = 2, a<sub>C</sub> = "+nf(ac(),1)+" mm.")+"<br><b>À retenir :</b> petite zone de fatigue, contrainte forte ; une ligne d'arrêt compte une pause, pas un cycle.";
   }
-  function loop(now){const dt=Math.min(50,now-last);last=now;a+=dt*0.00035*Math.pow(a,1.5)+dt*0.0004;if(a>=ac()){a=ac();broken=true;run=false;bP.textContent="▶ Faire grandir";draw();return;}draw();if(run)raf=requestAnimationFrame(loop);}
-  bP.addEventListener("click",()=>{if(broken)return;run=!run;bP.textContent=run?"⏸ Pause":"▶ Faire grandir";if(run){last=performance.now();raf=requestAnimationFrame(loop);}else if(raf)cancelAnimationFrame(raf);draw();});
+  function table(){/* a(temps) : da/dt = 0,00035·a^1,5 + 0,0004 (mm/ms), un point toutes les 2 ms, de 0,8 mm à aC */
+    const T=[0.8],c=ac();let x=0.8;while(x<c&&T.length<1e5){x+=2*(0.00035*Math.pow(x,1.5)+0.0004);T.push(Math.min(x,c));}TA=T;}
+  function aOf(t){const u=t*(TA.length-1),i=Math.floor(u);return i>=TA.length-1?TA[TA.length-1]:TA[i]+(TA[i+1]-TA[i])*(u-i);}
+  function tOf(x){let lo=0,hi=TA.length-1;if(x>=TA[hi])return 1;while(hi-lo>1){const m=(lo+hi)>>1;if(TA[m]<=x)lo=m;else hi=m;}return (lo+(x-TA[lo])/((TA[hi]-TA[lo])||1))/(TA.length-1);}
+  function setT(t){tt=t;a=aOf(t);broken=t>=1-1e-9;marks=t>0?marks.filter(m=>m<=a+1e-9):[];draw();}
+  table();
+  const A=player("m2pl",{get:()=>tt,set:setT,get dur(){return 2*(TA.length-1);},steps:20});/* durée réelle de la croissance : plus courte sous forte contrainte */
   $("#m2stop").addEventListener("click",()=>{if(broken)return;if(!marks.length||a-marks[marks.length-1]>0.3)marks.push(a);draw();});
-  $("#m2reset").addEventListener("click",()=>{run=false;if(raf)cancelAnimationFrame(raf);bP.textContent="▶ Faire grandir";a=0.8;marks=[];broken=false;draw();});
   $("#m2zoom").addEventListener("click",()=>{zoom=!zoom;$("#m2zoom").classList.toggle("on",zoom);draw();});
-  ss.addEventListener("input",()=>{if(!broken)draw();});
+  ss.addEventListener("input",()=>{if(broken)return;A.stop();table();tt=tOf(a);if(tt>=1)setT(1);else draw();});
   redraws.push(draw);draw();
 })();
 

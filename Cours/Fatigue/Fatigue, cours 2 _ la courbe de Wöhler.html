@@ -381,7 +381,7 @@ details .m{white-space:normal}
       <label><input type="radio" name="m1mat" value="alu">alliage d'aluminium (R<sub>m</sub> = 470 MPa)</label>
     </div>
     <div class="ctrl"><label for="m1s">Amplitude <span class="sig">σ<sub>a</sub></span></label><input type="range" id="m1s" class="r-sig" min="150" max="560" step="5" value="350"><output id="m1so"></output></div>
-    <div class="btns"><button class="btn" id="m1go" type="button">▶ Lancer un essai</button><button class="btn" id="m1auto" type="button">⏩ Campagne de 15 essais</button><button class="btn" id="m1clr" type="button">↺ Effacer</button><button class="btn" id="m1curve" type="button">Afficher la courbe médiane</button></div>
+    <div class="btns" id="m1pl"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" data-a="play" type="button">▶ Lancer un essai</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button><button class="btn" id="m1auto" type="button">⏩ Campagne de 15 essais</button><button class="btn" id="m1clr" type="button">↺ Effacer</button><button class="btn" id="m1curve" type="button">Afficher la courbe médiane</button></div>
     <svg id="m1svg" role="img" aria-label="Diagramme de Wöhler : amplitude de contrainte en fonction du nombre de cycles à rupture, avec les points d'essai"></svg>
     <div class="readout" id="m1r"></div>
     <p class="status" id="m1msg" aria-live="polite"></p>
@@ -868,6 +868,20 @@ const NS="http://www.w3.org/2000/svg";
 const $=s=>document.querySelector(s);
 const $$=s=>Array.from(document.querySelectorAll(s));
 const RM=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+function player(id,o){/* lecteur pilotable : ⏮ début, ◀ pas, ▶ lecture ou ⏸ pause (reprend où elle s'est arrêtée), pas ▶ ; o.get() et o.set(t) avec t de 0 à 1, o.dur (ms), o.steps */
+  const box=$("#"+id),bp=box.querySelector('[data-a="play"]'),lab=bp.textContent,n=o.steps||20;let raf=null,run=false;
+  const cl=t=>Math.max(0,Math.min(1,t));
+  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;bp.textContent=lab;}
+  function step(d){stop();o.set(cl(Math.round(o.get()*n+d)/n));}
+  bp.addEventListener("click",()=>{if(run){stop();return;}let t0=o.get();if(t0>=0.999)t0=0;
+    if(RM){o.set(cl(Math.round(t0*n+1)/n));return;}
+    run=true;bp.textContent="⏸ Pause";const s0=performance.now()-t0*o.dur;
+    const f=now=>{if(!run)return;const t=cl((now-s0)/o.dur);o.set(t);if(t>=1){stop();return;}raf=requestAnimationFrame(f);};raf=requestAnimationFrame(f);});
+  box.querySelector('[data-a="start"]').addEventListener("click",()=>{stop();o.set(0);});
+  box.querySelector('[data-a="back"]').addEventListener("click",()=>step(-1));
+  box.querySelector('[data-a="fwd"]').addEventListener("click",()=>step(1));
+  return {stop:stop};
+}
 
 function el(tag,attrs,parent){
   const e=document.createElementNS(NS,tag);
@@ -1001,7 +1015,8 @@ function curvePath(fr,f,n0,n1,steps){let d="";const st=steps||300;for(let i=0;i<
 (function(){
   const svg=$("#m1svg");if(!svg)return;
   const sl=$("#m1s"),ro=$("#m1r"),msg=$("#m1msg");
-  let mat="acier",pts=[],anim=null,showC=false,busy=false;
+  let mat="acier",pts=[],showC=false,ess=null,tt=0;/* ess : essai en cours ; tt : avancement de 0 à 1 */
+  const NS=7,RET="<br><b>À retenir :</b> un essai donne un point ; au même niveau, deux éprouvettes ne cassent jamais au même cycle.";
   function run1(s,m){
     const M=MAT[m],z=gauss();
     let N,ro_=false;
@@ -1035,13 +1050,13 @@ function curvePath(fr,f,n0,n1,steps){let d="";const st=steps||300;for(let i=0;i<
     const mine=pts.filter(p=>p.m===mat);
     ro.innerHTML="<span>matériau : "+M.nom+"</span><span class='sig'>σ<sub>a</sub> = "+s+" MPa</span><span class='eps'>"+(cur?"N = "+bigN(cur)+" cycles…":"essais : "+mine.length+" dont "+mine.filter(p=>p.ro).length+" non rompu(s)")+"</span>";
   }
-  function launch(s,cb,fast){
-    const r=run1(s,mat);busy=true;
-    const T=fast?220:1500,t0=performance.now(),eN=Math.log10(r.N);
-    const step=now=>{const p=Math.min(1,(now-t0)/T),N=Math.pow(10,eN*p);draw(N);
-      if(p<1){anim=requestAnimationFrame(step);}else{pts.push(r);busy=false;draw();cb&&cb(r);}};
-    if(RM){pts.push(r);busy=false;draw();cb&&cb(r);return;}
-    anim=requestAnimationFrame(step);
+  function setT(t){/* N = 10^(7t) : un pas = une décade de cycles ; l'essai s'arrête à la rupture ou à 10⁷ */
+    if(!ess)ess=run1(+sl.value,mat);
+    tt=t;const done=NS*t>=Math.log10(ess.N)-1e-9;
+    if(done&&!ess.done){ess.done=true;pts.push(ess);msg.innerHTML=comment(ess)+RET;A.stop();}
+    else if(!done&&ess.done){ess.done=false;pts.splice(pts.indexOf(ess),1);}
+    if(done)draw();
+    else{draw(Math.pow(10,NS*t));msg.innerHTML="⏳ Essai en cours sous σ<sub>a</sub> = "+ess.s+" MPa : l'éprouvette tient encore. Chaque pas ajoute une décade de cycles."+RET;}
   }
   function comment(r){
     const M=MAT[mat];
@@ -1051,17 +1066,19 @@ function curvePath(fr,f,n0,n1,steps){let d="";const st=steps||300;for(let i=0;i<
     else t+="Sous R<sub>e</sub> : <b>endurance limitée</b>. Refais un essai au même niveau : le résultat ne sera pas identique (dispersion).";
     return t;
   }
-  $("#m1go").addEventListener("click",()=>{if(busy)return;launch(+sl.value,r=>{msg.innerHTML=(comment(r))+"<br><b>À retenir :</b> un essai donne un point ; au même niveau, deux éprouvettes ne cassent jamais au même cycle.";});});
-  $("#m1auto").addEventListener("click",()=>{if(busy)return;
+  /* un essai terminé reste sur le diagramme : ▶, Pas ▶ ou ⏮ en préparent un nouveau */
+  $$('#m1pl [data-a="play"],#m1pl [data-a="fwd"],#m1pl [data-a="start"]').forEach(b=>b.addEventListener("click",()=>{if(ess&&ess.done){ess=null;tt=0;}}));
+  const A=player("m1pl",{get:()=>ess?tt:0,set:setT,dur:2100,steps:NS});
+  function drop(){A.stop();ess=null;tt=0;}/* abandonne l'essai en cours (un essai terminé reste dans pts) */
+  $("#m1auto").addEventListener("click",()=>{drop();
     const L=mat==="acier"?[500,420,380,350,320,300,290,280,275,270,265,260,330,310,285]:[400,350,300,260,230,210,200,190,180,170,165,160,250,220,175];
-    let i=0;const next=()=>{if(i>=L.length){showC=true;$("#m1curve").textContent="Masquer la courbe médiane";draw();
-      msg.innerHTML=("✅ Campagne terminée. La courbe médiane (en vert) passe au milieu du nuage."+(mat==="acier"?" Les flèches s'alignent vers 270 MPa : c'est la <b>limite d'endurance σ<sub>D</sub></b>.":" Les points continuent de descendre : <b>pas de limite d'endurance</b>, il faudra en choisir une conventionnelle."))+"<br><b>À retenir :</b> un essai donne un point ; au même niveau, deux éprouvettes ne cassent jamais au même cycle.";return;}
-      sl.value=L[i++];launch(+sl.value,()=>setTimeout(next,60),true);};
-    msg.innerHTML=("⏳ Campagne de 15 essais en cours…")+"<br><b>À retenir :</b> un essai donne un point ; au même niveau, deux éprouvettes ne cassent jamais au même cycle.";next();});
-  $("#m1clr").addEventListener("click",()=>{pts=pts.filter(p=>p.m!==mat);draw();msg.innerHTML=("Diagramme effacé. Lance un essai.")+"<br><b>À retenir :</b> un essai donne un point ; au même niveau, deux éprouvettes ne cassent jamais au même cycle.";});
+    L.forEach(s=>pts.push(run1(s,mat)));sl.value=L[L.length-1];
+    showC=true;$("#m1curve").textContent="Masquer la courbe médiane";draw();
+    msg.innerHTML=("✅ Campagne terminée. La courbe médiane (en vert) passe au milieu du nuage."+(mat==="acier"?" Les flèches s'alignent vers 270 MPa : c'est la <b>limite d'endurance σ<sub>D</sub></b>.":" Les points continuent de descendre : <b>pas de limite d'endurance</b>, il faudra en choisir une conventionnelle."))+RET;});
+  $("#m1clr").addEventListener("click",()=>{drop();pts=pts.filter(p=>p.m!==mat);draw();msg.innerHTML=("Diagramme effacé. Lance un essai.")+RET;});
   $("#m1curve").addEventListener("click",()=>{showC=!showC;$("#m1curve").textContent=showC?"Masquer la courbe médiane":"Afficher la courbe médiane";draw();});
-  sl.addEventListener("input",()=>{if(!busy)draw();});
-  $$("input[name=m1mat]").forEach(r=>r.addEventListener("change",()=>{if(r.checked&&!busy){mat=r.value;draw();msg.innerHTML=("Matériau : <b>"+MAT[mat].nom+"</b> (R<sub>e</sub> = "+MAT[mat].Re+" MPa, R<sub>m</sub> = "+MAT[mat].Rm+" MPa). Lance des essais à plusieurs niveaux.")+"<br><b>À retenir :</b> un essai donne un point ; au même niveau, deux éprouvettes ne cassent jamais au même cycle.";}}));
+  sl.addEventListener("input",()=>{if(ess)drop();draw();});
+  $$("input[name=m1mat]").forEach(r=>r.addEventListener("change",()=>{if(r.checked){drop();mat=r.value;draw();msg.innerHTML=("Matériau : <b>"+MAT[mat].nom+"</b> (R<sub>e</sub> = "+MAT[mat].Re+" MPa, R<sub>m</sub> = "+MAT[mat].Rm+" MPa). Lance des essais à plusieurs niveaux.")+"<br><b>À retenir :</b> un essai donne un point ; au même niveau, deux éprouvettes ne cassent jamais au même cycle.";}}));
   redraws.push(()=>draw());draw();
   msg.innerHTML=("Lance un premier essai à 350 MPa, puis descends par paliers : 300, 280, 270… Où les éprouvettes cessent-elles de casser ?")+"<br><b>À retenir :</b> un essai donne un point ; au même niveau, deux éprouvettes ne cassent jamais au même cycle.";
 })();

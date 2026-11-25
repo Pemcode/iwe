@@ -517,7 +517,8 @@ body.photo-modal-open{overflow:hidden}
       <div class="ctrl"><label for="m3x">Maximum <span class="sig">σ<sub>max</sub></span></label><input type="range" id="m3x" class="r-sig" min="-300" max="400" step="5" value="250"><output id="m3xo"></output></div>
       <div class="ctrl"><label for="m3n">Minimum <span class="sig">σ<sub>min</sub></span></label><input type="range" id="m3n" class="r-sig" min="-300" max="400" step="5" value="-50"><output id="m3no"></output></div>
     </div>
-    <div class="btns"><button class="btn" id="m3play" type="button">▶ Lecture</button>
+    <div class="btns" id="m3pl"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" data-a="play" type="button">▶ Lecture</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button></div>
+    <div class="btns">
       <button class="btn" data-ex="0,150" type="button">Essieu tournant</button>
       <button class="btn" data-ex="75,75" type="button">Crochet de grue</button>
       <button class="btn" data-ex="220,30" type="button">Boulon précontraint</button>
@@ -629,7 +630,7 @@ body.photo-modal-open{overflow:hidden}
     <div class="ctrl"><label for="m5d">Diamètre <span class="mat">d</span></label><input type="range" id="m5d" class="r-mat" min="20" max="80" step="1" value="40"><output id="m5do"></output></div>
     <div class="ctrl"><label for="m5p">Position de P <span class="mat">ρ</span>/r</label><input type="range" id="m5p" class="r-mat" min="0" max="100" step="5" value="100"><output id="m5po"></output></div>
     <div class="ctrl"><label for="m5n">Vitesse <span class="mat">n</span></label><input type="range" id="m5n" class="r-mat" min="300" max="3000" step="100" value="1500"><output id="m5no"></output></div>
-    <div class="btns"><button class="btn" id="m5play" type="button">▶ Faire tourner</button><button class="btn" id="m5clr" type="button">↺ Effacer la trace</button></div>
+    <div class="btns" id="m5pl"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" data-a="play" type="button">▶ Faire tourner</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button></div>
     <svg id="m5svg" role="img" aria-label="Section d'un arbre en rotation sous flexion et contrainte au point P en fonction de l'angle de rotation"></svg>
     <div class="readout" id="m5r"></div>
     <p class="status" id="m5msg" aria-live="polite"></p>
@@ -1222,8 +1223,8 @@ function Rtxt(smax,smin){if(Math.abs(smax)<1e-9)return "non défini";return nf(s
    ========================================================= */
 (function(){
   const svg=$("#m3svg");if(!svg)return;
-  const sm_=$("#m3m"),sa_=$("#m3a"),sx_=$("#m3x"),sn_=$("#m3n"),ro=$("#m3r"),msg=$("#m3msg"),bP=$("#m3play");
-  let mode="ma",sm=100,sa=150,ph=Math.PI/2,run=false,raf=null,last=0;
+  const sm_=$("#m3m"),sa_=$("#m3a"),sx_=$("#m3x"),sn_=$("#m3n"),ro=$("#m3r"),msg=$("#m3msg");
+  let mode="ma",sm=100,sa=150,ph=Math.PI/2;/* ph : phase de 0 à 4π (deux cycles dessinés) */
   function syncFromSliders(){
     if(mode==="ma"){sm=+sm_.value;sa=+sa_.value;}
     else{let mx=+sx_.value,mn=+sn_.value;if(mn>mx){if(document.activeElement===sn_){mx=mn;sx_.value=mx;}else{mn=mx;sn_.value=mn;}}sm=(mx+mn)/2;sa=(mx-mn)/2;}
@@ -1269,7 +1270,7 @@ function Rtxt(smax,smin){if(Math.abs(smax)<1e-9)return "non défini";return nf(s
       txs(svg,lx+34,Y(smin)+(sa<12?16:5),[["σ",""],["min","sub"],[" = "+nf(smin,0),""]],{fill:"var(--sig)","font-size":"13"});
     }
     /* point mobile */
-    const u=((ph/(2*Math.PI))%2+2)%2/2,xp=xs+(xe-xs)*u,vp=sm+sa*Math.sin(ph);
+    const u=ph/(4*Math.PI),xp=xs+(xe-xs)*u,vp=sm+sa*Math.sin(ph);
     el("circle",{cx:xp,cy:Y(vp),r:6,fill:"var(--sig)",stroke:"var(--card)","stroke-width":2},svg);
     /* éprouvette */
     const k=0.0009;
@@ -1303,8 +1304,7 @@ function Rtxt(smax,smin){if(Math.abs(smax)<1e-9)return "non défini";return nf(s
     if(sa>0&&Math.abs(smax)>1e-9)m+=" Vérifie : Δσ = 2 × σ<sub>a</sub> = "+nf(2*sa,0)+" MPa, et R = ("+nf(sm,0)+" − "+nf(sa,0)+")/("+nf(sm,0)+" + "+nf(sa,0)+") = "+Rtxt(smax,smin)+".";
     msg.innerHTML=(m)+"<br><b>À retenir :</b> deux grandeurs fixent le cycle ; la marée change σ<sub>m</sub>, pas Δσ.";
   }
-  function loop(now){const dt=Math.min(50,now-last);last=now;ph+=dt*0.0032;draw();if(run)raf=requestAnimationFrame(loop);}
-  bP.addEventListener("click",()=>{run=!run;bP.textContent=run?"⏸ Pause":"▶ Lecture";if(run){last=performance.now();raf=requestAnimationFrame(loop);}else if(raf)cancelAnimationFrame(raf);});
+  player("m3pl",{get:()=>ph/(4*Math.PI),set:t=>{ph=4*Math.PI*t;draw();},dur:4000,steps:8});/* un pas = un quart de cycle */
   [sm_,sa_,sx_,sn_].forEach(s=>s.addEventListener("input",()=>{syncFromSliders();draw();}));
   $$("input[name=m3mode]").forEach(r=>r.addEventListener("change",()=>{if(r.checked)setMode(r.value);}));
   $$("#m3 [data-ex]").forEach(b=>b.addEventListener("click",()=>{const [a,c]=b.dataset.ex.split(",").map(Number);
@@ -1384,8 +1384,8 @@ function Rtxt(smax,smin){if(Math.abs(smax)<1e-9)return "non défini";return nf(s
    ========================================================= */
 (function(){
   const svg=$("#m5svg");if(!svg)return;
-  const sM=$("#m5M"),sF=$("#m5F"),sD=$("#m5d"),sP=$("#m5p"),sN=$("#m5n"),ro=$("#m5r"),msg=$("#m5msg"),bP=$("#m5play");
-  let th=Math.PI/2,trace=[],run=false,raf=null,last=0,acc=0;
+  const sM=$("#m5M"),sF=$("#m5F"),sD=$("#m5d"),sP=$("#m5p"),sN=$("#m5n"),ro=$("#m5r"),msg=$("#m5msg");
+  let th=Math.PI/2;/* angle de rotation, de 0 à 4π (deux tours) */
   function vals(){
     const M=+sM.value*1000,F=+sF.value*1000,d=+sD.value,rho=+sP.value/100*d/2;
     const S=Math.PI*d*d/4,I=Math.PI*Math.pow(d,4)/64,Wf=Math.PI*Math.pow(d,3)/32;
@@ -1434,8 +1434,8 @@ function Rtxt(smax,smin){if(Math.abs(smax)<1e-9)return "non défini";return nf(s
     txs(svg,gx1-4,Y(v.sm)-5,[["σ",""],["m","sub"]],{fill:"var(--tau)","text-anchor":"end","font-weight":"700"});
     let d="";for(let k=0;k<=240;k++){const a=4*Math.PI*k/240;d+=(k?"L":"M")+X(a).toFixed(1)+" "+Y(v.sm+v.sa*Math.sin(a)).toFixed(1)+" ";}
     el("path",{d:d,fill:"none",stroke:"var(--sig)","stroke-width":1.6,opacity:.3},svg);
-    if(trace.length>1){let t="";trace.forEach((q,i)=>{t+=(i?"L":"M")+X(q[0]).toFixed(1)+" "+Y(q[1]).toFixed(1)+" ";});el("path",{d:t,fill:"none",stroke:"var(--sig)","stroke-width":3},svg);}
-    const am=((th%(4*Math.PI))+4*Math.PI)%(4*Math.PI);
+    if(th>0){const nk=Math.max(2,Math.ceil(th/0.05));let t="";for(let k=0;k<=nk;k++){const a=th*k/nk;t+=(k?"L":"M")+X(a).toFixed(1)+" "+Y(v.sm+v.sa*Math.sin(a)).toFixed(1)+" ";}el("path",{d:t,fill:"none",stroke:"var(--sig)","stroke-width":3},svg);}
+    const am=th;
     el("circle",{cx:X(am),cy:Y(v.sm+v.sa*Math.sin(th)),r:5.5,fill:"var(--sig)",stroke:"var(--card)","stroke-width":2},svg);
     /* sorties */
     $("#m5Mo").textContent=nf(+sM.value,0)+" N·m";$("#m5Fo").textContent=nf(+sF.value,0)+" kN";$("#m5do").textContent=sD.value+" mm";
@@ -1450,14 +1450,8 @@ function Rtxt(smax,smin){if(Math.abs(smax)<1e-9)return "non défini";return nf(s
     if(v.smax>600)m+=" ⚠️ σ<sub>max</sub> dépasse 600 MPa, la résistance d'un acier de construction courant : l'arbre casserait presque tout de suite. Augmente le diamètre.";
     msg.innerHTML=(m)+"<br><b>À retenir :</b> en flexion rotative, chaque tour fait un cycle R = −1, maximal en surface.";
   }
-  function reset(){trace=[];acc=0;th=Math.PI/2;}
-  function loop(now){const dt=Math.min(50,now-last);last=now;const w=0.0025*dt;th+=w;acc+=w;
-    const v=vals();const a=((th%(4*Math.PI))+4*Math.PI)%(4*Math.PI);
-    if(trace.length&&a<trace[trace.length-1][0])trace=[];
-    trace.push([a,v.sm+v.sa*Math.sin(th)]);draw();if(run)raf=requestAnimationFrame(loop);}
-  bP.addEventListener("click",()=>{run=!run;bP.textContent=run?"⏸ Pause":"▶ Faire tourner";if(run){last=performance.now();raf=requestAnimationFrame(loop);}else if(raf)cancelAnimationFrame(raf);});
-  $("#m5clr").addEventListener("click",()=>{reset();draw();});
-  [sM,sF,sD,sP,sN].forEach(s=>s.addEventListener("input",()=>{trace=[];draw();}));
+  player("m5pl",{get:()=>th/(4*Math.PI),set:t=>{th=4*Math.PI*t;draw();},dur:5000,steps:8});/* un pas = un quart de tour */
+  [sM,sF,sD,sP,sN].forEach(s=>s.addEventListener("input",draw));
   redraws.push(draw);draw();
 })();
 

@@ -467,7 +467,7 @@ details .m{white-space:normal}
       <label><input type="radio" name="m3m" value="rev">réversible</label>
       <label><input type="radio" name="m3m" value="irr" checked>irréversible</label>
     </div>
-    <div class="btns"><button class="btn" id="m3play" type="button">▶ Cycler</button><button class="btn" id="m3reset" type="button">↺ Surface neuve</button></div>
+    <div class="btns" id="m3pl"><button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button><button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button><button class="btn play" data-a="play" type="button">▶ Cycler</button><button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button><button class="btn" id="m3reset" type="button">↺ Surface neuve</button></div>
     <svg id="m3svg" role="img" aria-label="Lamelles de glissement à 45° sous la surface, formation d'intrusions et d'extrusions"></svg>
     <div class="readout" id="m3r"></div>
     <p class="status" id="m3msg" aria-live="polite"></p>
@@ -1044,9 +1044,9 @@ function NrOf(s){if(s>=ST.Rm)return 1;if(s>=ST.Re)return Math.pow(10,4*(ST.Rm-s)
    ========================================================= */
 (function(){
   const svg=$("#m3svg");if(!svg)return;
-  const ro=$("#m3r"),msg=$("#m3msg"),bP=$("#m3play");
-  const NL=10,ACT=[1,2,4,5,7,8];
-  let mode="irr",res=new Array(NL).fill(0),sgn=[],cyc=0,ph=0,run=false,raf=null,last=0;
+  const ro=$("#m3r"),msg=$("#m3msg");
+  const NL=10,ACT=[1,2,4,5,7,8],NC=36;
+  let mode="irr",res=new Array(NL).fill(0),sgn=[],cyc=0,ph=0,tt=0;
   function newSigns(){const r=rng(Math.floor(Math.random()*1e6)+3);sgn=Array.from({length:NL},()=>r()<0.5?-1:1);}
   newSigns();
   function draw(){
@@ -1086,12 +1086,13 @@ function NrOf(s){if(s>=ST.Rm)return 1;if(s>=ST.Re)return Math.pow(10,4*(ST.Rm-s)
     if(mode==="rev")msg.innerHTML=("<b>Cas réversible :</b> les lamelles sortent en traction et rentrent en compression par le même chemin. Après "+cyc+" cycles, la surface est toujours plane : aucun dommage.")+"<br><b>À retenir :</b> un glissement irréversible sculpte intrusions et extrusions, qui deviennent des micro-entailles.";
     else msg.innerHTML=(cyc===0?"Lance les cycles : à chaque aller-retour, les lamelles actives ne reviennent pas tout à fait à leur place.":depth>9?"<b>Microfissure !</b> Au fond de l'intrusion la plus profonde, la contrainte concentrée a ouvert une fissure, le long du plan de glissement à 45° (stade I).":"<b>Cas irréversible :</b> après "+cyc+" cycles, des lamelles dépassent (extrusions) et d'autres se creusent (intrusions). La surface se sculpte, cycle après cycle.")+"<br><b>À retenir :</b> un glissement irréversible sculpte intrusions et extrusions, qui deviennent des micro-entailles.";
   }
-  function step(now){const dt=Math.min(50,now-last);last=now;const before=Math.floor(ph/(2*Math.PI));ph+=dt*0.009;const after=Math.floor(ph/(2*Math.PI));
-    if(after>before){cyc++;if(mode==="irr")ACT.forEach(i=>{res[i]=Math.max(-26,Math.min(18,res[i]+sgn[i]*0.45*(0.6+0.4*((i*7)%3)/2)));});}
-    draw();if(run)raf=requestAnimationFrame(step);}
-  bP.addEventListener("click",()=>{run=!run;bP.textContent=run?"⏸ Pause":"▶ Cycler";if(run){last=performance.now();raf=requestAnimationFrame(step);}else if(raf)cancelAnimationFrame(raf);});
-  $("#m3reset").addEventListener("click",()=>{res=new Array(NL).fill(0);cyc=0;ph=0;newSigns();draw();});
-  $$("input[name=m3m]").forEach(r=>r.addEventListener("change",()=>{if(r.checked){mode=r.value;res=new Array(NL).fill(0);cyc=0;newSigns();draw();}}));
+  function setT(t){/* t de 0 à 1 : NC cycles ; chaque cycle achevé décale une lamelle active de sgn·inc, borné à [−26 ; 18] */
+    tt=t;ph=2*Math.PI*NC*t;cyc=Math.min(NC,Math.floor(NC*t+1e-9));res=new Array(NL).fill(0);
+    if(mode==="irr")ACT.forEach(i=>{res[i]=Math.max(-26,Math.min(18,sgn[i]*0.45*(0.6+0.4*((i*7)%3)/2)*cyc));});
+    draw();}
+  const A=player("m3pl",{get:()=>tt,set:setT,dur:18000,steps:4*NC});/* un pas = un quart de cycle */
+  $("#m3reset").addEventListener("click",()=>{A.stop();newSigns();setT(0);});
+  $$("input[name=m3m]").forEach(r=>r.addEventListener("change",()=>{if(r.checked){A.stop();mode=r.value;newSigns();setT(0);}}));
   redraws.push(draw);draw();
 })();
 
