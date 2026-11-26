@@ -401,7 +401,7 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <tr><td>Ordinaires S235, S275, S355</td><td>ferrite et perlite, carbone et manganèse</td><td>EN 10025-2</td><td>1.1 (R<sub>eH</sub> ≤ 275) ; 1.2 (≤ 360)</td></tr>
     <tr><td>Normalisés à grain fin S275N à S460N, NL</td><td>grain fin, micro-alliage, normalisation</td><td>EN 10025-3</td><td>1.1 ou 1.2 ; 1.3 si R<sub>eH</sub> &gt; 360</td></tr>
     <tr><td>Patinables S355J2W, S355K2W</td><td>comme les ordinaires, avec Cu, Cr, Ni</td><td>EN 10025-5</td><td>1.4</td></tr>
-    <tr><td>Thermomécaniques S275M à S460M, ML</td><td>laminage contrôlé (cours 2)</td><td>EN 10025-4</td><td>1.1 ou 1.2 ; 2.1 si R<sub>eH</sub> &gt; 360</td></tr>
+    <tr><td>Thermomécaniques S275M à S500M, ML</td><td>laminage contrôlé (cours 2)</td><td>EN 10025-4</td><td>1.1 ou 1.2 ; 2.1 si R<sub>eH</sub> &gt; 360</td></tr>
     <tr><td>Trempés et revenus S460Q à S960Q</td><td>martensite et bainite revenues (cours 2)</td><td>EN 10025-6</td><td>3.1 (≤ 690) ; 3.2 au-delà</td></tr>
   </table></div>
 
@@ -445,7 +445,7 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
     <tr><td>M, ML</td><td>laminé thermomécanique ; mêmes garanties que N et NL</td><td>S460ML (EN 10025-4)</td></tr>
     <tr><td>Q, QL, QL1</td><td>trempé et revenu ; garanti à −20, −40, −60 °C</td><td>S690QL (EN 10025-6)</td></tr>
     <tr><td>W, H, C</td><td>patinable ; profil creux ; apte au formage à froid</td><td>S355J2W, S355J2H</td></tr>
-    <tr><td>+AR, +N</td><td>brut de laminage ; normalisé ou laminage normalisant</td><td>S355J2+N</td></tr>
+    <tr><td>+AR, +N, +M</td><td>brut de laminage ; normalisé ou laminage normalisant ; thermomécanique. Au choix de l'aciériste si la commande ne le fixe pas</td><td>S355J2+N</td></tr>
     <tr><td>Z15, Z25, Z35</td><td>striction minimale dans l'épaisseur (EN 10164, chapitre 3)</td><td>S355N + Z25</td></tr>
   </table></div>
 
@@ -598,7 +598,7 @@ hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
 
   <div class="warn"><b>⚠️ Piège : on ne normalise ni un M ni un Q.</b> La résistance d'une tôle thermomécanique ou trempée et revenue vient d'un laminage ou d'une trempe qu'un passage à 900 °C efface : elle perdrait une grande part de sa limite d'élasticité. Formage à chaud et traitements après soudage obéissent à la même règle (cours 2).</div>
   <div class="mnemo">🧠 <b>Ac3 + 50, puis l'air : ni four, ni eau.</b></div>
-  <div class="weld"><b>🔥 L'avantage du N à l'atelier :</b> un acier normalisé supporte un formage à chaud dans le domaine de normalisation, puisqu'il retrouve alors son état de livraison, et un détensionnement après soudage vers 550 à 600 °C sans perdre ses garanties.</div>
+  <div class="weld"><b>🔥 L'avantage du N à l'atelier :</b> un acier normalisé supporte un formage à chaud dans le domaine de normalisation, puisqu'il retrouve alors son état de livraison. Pour un détensionnement après soudage, l'EN 10025-3 demande au plus 560 °C pour une tôle, une heure au plus : au-delà de 580 °C ou d'une heure, ses caractéristiques peuvent se dégrader.</div>
 
   <details class="deep"><summary>🔍 Pour aller plus loin : entre Ac1 et Ac3, et l'échelle des grains</summary>
     <p><b>Entre Ac1 et Ac3</b> (vers 715 et 850 °C pour un S355), seule une partie de la ferrite se change en austénite : à la sortie, de nouveaux grains fins voisinent avec les anciens. Une normalisation trop froide affine mal ; c'est aussi ce que vit la zone intercritique d'une ZAT (chapitre 5).</p>
@@ -1047,17 +1047,17 @@ function legend(svg,x,y,items,xmax){/* items : [couleur, texte, "o" pour un rond
     el("line",{x1:xc,y1:y0-4,x2:xc,y2:y1,stroke:"var(--mat)","stroke-width":2},svg);
     [[RE(c,m),1],[RM(c,m),1],[AL(c,m)*20,1]].forEach(q=>el("circle",{cx:xc,cy:A.Y(q[0]),r:4.5,fill:"var(--eps)",stroke:"var(--card)","stroke-width":1.4},svg));
     /* bande du CEV */
-    const ce=CE(c,m),by=y1+46,bh=16,CX=v=>x0+(x1-x0)*Math.min(v,0.8)/0.8;
-    {const t=tx(svg,x0,by-8,"CEV et plafonds de l'EN 10025-2 (e ≤ 30 mm)",{class:"lbl"});fitSize(t,x1-x0,9);}
+    const ce=CE(c,m),by=y1+56,bh=16,CX=v=>x0+(x1-x0)*Math.min(v,0.8)/0.8;
+    {const t=tx(svg,x0,by-8,n?"CEV et plafonds EN 10025-2 (≤ 30 mm)":"CEV et plafonds de l'EN 10025-2 (e ≤ 30 mm)",{class:"lbl"});fitSize(t,x1-x0,9);}
     el("rect",{x:x0,y:by,width:CX(0.45)-x0,height:bh,fill:mixc("var(--mat)",16),stroke:"var(--line)"},svg);
     el("rect",{x:CX(0.45),y:by,width:x1-CX(0.45),height:bh,fill:mixc("var(--tau)",16),stroke:"var(--line)"},svg);
     LIM.forEach((q,i)=>{const x=CX(q[0]);el("line",{x1:x,y1:by-2,x2:x,y2:by+bh+2,stroke:"var(--mat)","stroke-width":1.6},svg);
-      const t=tx(svg,x,by+bh+13,q[1],{class:"lbl","text-anchor":"middle",fill:"var(--mat)"});t.style.fontSize="10.5px";});
+      const t=tx(svg,x,by+bh+13+(n?(i%2)*12:0),n?q[1].slice(1):q[1],{class:"lbl","text-anchor":"middle",fill:"var(--mat)"});t.style.fontSize="10.5px";});
     {const t=tx(svg,(CX(0.45)+x1)/2,by+bh-4,n?"préchauffage":"préchauffage probable",{class:"lbl","text-anchor":"middle",fill:"var(--tau)"});t.style.fontSize="11px";fitSize(t,x1-CX(0.45)-6,8);}
     const xe=CX(ce);
     el("polygon",{points:pts([[xe,by-1],[xe-6,by-10],[xe+6,by-10]]),fill:"var(--eps)"},svg);
     el("line",{x1:xe,y1:by,x2:xe,y2:by+bh,stroke:"var(--eps)","stroke-width":3},svg);
-    setVB(svg,W,by+bh+20);
+    setVB(svg,W,by+bh+(n?32:20));
     const re=RE(c,m),rm=RM(c,m),a=AL(c,m),t27=T27(c,m),fp=FP(c)*100;
     ro.innerHTML=nbsp("<span>ReH ≈ <b class='eps'>"+nf(re,0)+" MPa</b></span><span>Rm ≈ "+nf(rm,0)+" MPa</span><span>A ≈ "+nf(a,0)+" %</span><span>T27J ≈ "+nf(t27,0)+" °C</span><span>CEV = <b class='eps'>"+nf(ce,2)+"</b></span><span>perlite ≈ "+nf(fp,0)+" %</span>");
     let s;
@@ -1129,7 +1129,7 @@ function legend(svg,x,y,items,xmax){/* items : [couleur, texte, "o" pour un rond
     let s=des+" de "+e+" mm ("+norm+") : ReH ≥ "+re+" MPa"+(re<r?", soit "+pct+" % de moins que le nom ; le calcul prend cette valeur":", la valeur du nom")+". KV ≥ "+kv[0]+" J à "+nf(kv[1],0)+" °C ; CEV ≤ "+nf(cev,2)+" ; groupe "+grp+" de l'ISO/TR 15608.";
     if(isN(q)&&r===355)s+=" Normalisée, mais à 355 MPa : groupe 1.2, pas 1.3.";
     else if(isN(q)&&r>=420)s+=" Normalisée au-dessus de 360 MPa : groupe 1.3, et un CEV qui annonce un préchauffage en forte épaisseur.";
-    else if(!isN(q))s+=" Livraison brute de laminage (+AR) ou normalisée (+N), selon la commande.";
+    else if(!isN(q))s+=" État de livraison +AR ou +N (+M aussi pour les produits longs et les bandes), au choix de l'aciériste si la commande ne le fixe pas ; les garanties mécaniques n'en dépendent pas.";
     msg.innerHTML=nbsp(s)+"<br><b>À retenir :</b> le nombre de la désignation ne vaut que jusqu'à 16 mm ; au-delà, on lit la tranche d'épaisseur.";
   }
   player("m2pl",{get:()=>(+sE.value-3)/97,set:v=>{sE.value=Math.round(3+97*v);draw();},dur:7000,steps:20});
@@ -1224,7 +1224,7 @@ function legend(svg,x,y,items,xmax){/* items : [couleur, texte, "o" pour un rond
     const A=axes(svg,x0,x1,y0,y1,0,1,0,1300,"","T (°C)",2,300,()=>"");
     {const t=tx(svg,x1,y1+14,"temps →",{class:"lbl","text-anchor":"end"});t.style.fontSize="11px";}
     [[AC1,"Ac1"],[AC3,"Ac3"]].forEach(q=>{el("line",{x1:x0,y1:A.Y(q[0]),x2:x1,y2:A.Y(q[0]),stroke:"var(--gam)","stroke-width":1.2,"stroke-dasharray":"5 4"},svg);
-      const t=tx(svg,x1-4,A.Y(q[0])-4,q[1],{class:"lbl","text-anchor":"end",fill:"var(--gam)"});halo(t,svg);});
+      const t=tx(svg,x1-4,A.Y(q[0])+(q[1]==="Ac1"?13:-4),q[1],{class:"lbl","text-anchor":"end",fill:"var(--gam)"});halo(t,svg);});
     el("rect",{x:x0,y:A.Y(AC3+50),width:x1-x0,height:A.Y(AC3+30)-A.Y(AC3+50),fill:mixc("var(--mat)",22)},svg);
     {const t=tx(svg,x0+6,A.Y(AC3+50)-4,"Ac3 + 30 à 50 °C",{class:"lbl",fill:"var(--mat)"});t.style.fontSize="11px";halo(t,svg);}
     let d="";for(let k=0;k<=100;k++){const t=k/100;d+=(d?"L":"M")+A.X(t).toFixed(1)+" "+A.Y(TT(t,TN)).toFixed(1)+" ";}
@@ -1238,7 +1238,7 @@ function legend(svg,x,y,items,xmax){/* items : [couleur, texte, "o" pour un rond
     const vy=y1+44,vh=n?72:92,gap=n?8:14,vw=(x1-x0-2*gap)/3,pxu=vw/120;
     const st=tt<0.15?0:(tt<0.62?1:2),C0=mixc("var(--gam)",6),CP=mixc("var(--gam)",50),CG=mixc("var(--gam)",26);
     const V=[0,1,2].map(i=>({x0:x0+i*(vw+gap),y0:vy,x1:x0+i*(vw+gap)+vw,y1:vy+vh}));
-    const TIT=["laminé : 14 µm, en bandes",TN<AC1?"pas d'austénite":"austénite à "+nf(TN,0)+" °C",tt<0.75?"après refroidissement : …":(R.mart?"martensite et bainite":"après : "+nf(R.d,0)+" µm")];
+    const TIT=n?["laminé, 14 µm",TN<AC1?"sans γ":"γ à "+nf(TN,0)+" °C",tt<0.75?"après : ?":(R.mart?"M + B":"après : "+nf(R.d,0)+" µm")]:["laminé : 14 µm, en bandes",TN<AC1?"pas d'austénite":"austénite à "+nf(TN,0)+" °C",tt<0.75?"après refroidissement : …":(R.mart?"martensite et bainite":"après : "+nf(R.d,0)+" µm")];
     V.forEach((Rv,i)=>{const g=clipG(svg,"m4v"+i,Rv);
       if(i===0)grains(g,Rv,D0*pxu,{sx:2.2,sy:0.5,seed:5,fill:(k,sd,r)=>(Math.floor((sd[1]-Rv.y0)/(vh/4))%2)&&r()<0.85?CP:C0});
       else if(i===1){if(TN<AC1)grains(g,Rv,D0*pxu,{sx:2.2,sy:0.5,seed:5,fill:(k,sd,r)=>(Math.floor((sd[1]-Rv.y0)/(vh/4))%2)&&r()<0.85?CP:C0});
@@ -1249,7 +1249,7 @@ function legend(svg,x,y,items,xmax){/* items : [couleur, texte, "o" pour un rond
         const r=rng(11);for(let k=0;k<Math.round(vw*vh/90);k++){const x=Rv.x0+r()*vw,y=Rv.y0+r()*vh,a=r()*Math.PI;el("line",{x1:x,y1:y,x2:x+7*Math.cos(a),y2:y+7*Math.sin(a),stroke:"var(--card)","stroke-width":0.8,opacity:0.7},g);}}
       else grains(g,Rv,Math.max(4,R.d*pxu),{seed:13,fill:(k,sd,r)=>r()<0.22?CP:C0});
       el("rect",{x:Rv.x0,y:Rv.y0,width:vw,height:vh,fill:"none",stroke:i===st?"var(--sig)":"var(--ink)","stroke-width":i===st?2.6:1},svg);
-      const t=tx(svg,(Rv.x0+Rv.x1)/2,Rv.y0-6,TIT[i],{class:"lbl","text-anchor":"middle","font-weight":i===st?"700":"400"});t.style.fontSize="11px";fitSize(t,vw+gap-2,7.5);});
+      const t=tx(svg,(Rv.x0+Rv.x1)/2,Rv.y0-6,TIT[i],{class:"lbl","text-anchor":"middle","font-weight":i===st?"700":"400"});t.style.fontSize="11px";fitSize(t,vw+gap-2,n?9:7.5);});
     {const t=tx(svg,x1,vy+vh+14,"champ de 120 µm ; foncé : perlite ; teinté : austénite",{class:"lbl","text-anchor":"end"});t.style.fontSize="10.5px";fitSize(t,x1-x0,7.5);}
     setVB(svg,W,vy+vh+22);
     const done=tt>=0.75;
@@ -1291,11 +1291,11 @@ function legend(svg,x,y,items,xmax){/* items : [couleur, texte, "o" pour un rond
     /* zones */
     const Z=[[-2,0,"MF",mixc("var(--frc)",12)],[0,0.25*w,"GG",mixc("var(--tau)",12)],[0.25*w,0.55*w,"GF",mixc("var(--gam)",10)],[0.55*w,0.8*w,"IC",mixc("var(--gam)",6)],[0.8*w,7,"MB",null]];
     Z.forEach(z=>{if(z[3])el("rect",{x:A.X(z[0]),y:y0,width:A.X(z[1])-A.X(z[0]),height:y1-y0,fill:z[3]},svg);
-      const xm=(A.X(z[0])+A.X(z[1]))/2,t=tx(svg,xm,y0+12,z[2],{class:"lbl","text-anchor":"middle","font-weight":"700"});t.style.fontSize="11px";fitSize(t,Math.max(10,A.X(z[1])-A.X(z[0])-2),7);});
+      const zw=A.X(z[1])-A.X(z[0]);if(zw<18)return;const xm=(A.X(z[0])+A.X(z[1]))/2,t=tx(svg,xm,y0+12,z[2],{class:"lbl","text-anchor":"middle","font-weight":"700"});t.style.fontSize="11px";fitSize(t,zw-2,9);});
     el("line",{x1:A.X(0),y1:y0,x2:A.X(0),y2:y1,stroke:"var(--ink)","stroke-width":1.4},svg);
     /* seuils */
     el("line",{x1:x0,y1:A.Y(380),x2:x1,y2:A.Y(380),stroke:"var(--tau)","stroke-width":2},svg);
-    {const t=tx(svg,x1-4,A.Y(380)-5,"380 HV10 : plafond (EN ISO 15614-1)",{class:"lbl","text-anchor":"end",fill:"var(--tau)"});halo(t,svg);fitSize(t,x1-x0-60,8);}
+    {const t=tx(svg,x1-4,A.Y(380)-5,n?"380 HV10 : plafond":"380 HV10 : plafond (EN ISO 15614-1)",{class:"lbl","text-anchor":"end",fill:"var(--tau)"});halo(t,svg);fitSize(t,x1-x0-60,8);}
     el("line",{x1:x0,y1:A.Y(350),x2:x1,y2:A.Y(350),stroke:"var(--tau)","stroke-width":1.2,"stroke-dasharray":"5 4"},svg);
     {const t=tx(svg,x1-4,A.Y(350)+14,"350 HV : vigilance",{class:"lbl","text-anchor":"end",fill:"var(--tau)"});halo(t,svg);}
     /* profil */
