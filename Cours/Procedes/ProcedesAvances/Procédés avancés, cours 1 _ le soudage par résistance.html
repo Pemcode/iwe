@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Procédés avancés, cours 1 : le soudage par résistance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@500;600;700&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+
+
+
+:root{
+  --paper:#F3F6F9; --paper-2:#E6ECF2; --card:#FFFFFF; --ink:#17212B; --muted:#56626F; --line:#C5CFD9;
+  --grid:rgba(40,90,160,.075);
+  --sig:#CF2438; --tau:#8A34B6; --eps:#1B5ED3; --gam:#06849A; --frc:#D46A00; --mat:#26844A; --weld:#9A5B12;
+  --ok:#26844A; --warn:#B86E00; --bad:#C62828;
+  --lv2:#E4EBF2; --hl:#FFF3B0;
+  --font-body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-head:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --font-math:"STIX Two Text","Cambria Math","Cambria","Times New Roman",serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+    --grid:rgba(120,160,220,.07);
+    --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+    --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+  --grid:rgba(120,160,220,.07);
+  --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+  --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+  color-scheme: dark;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0;color:var(--ink);font-family:var(--font-body);font-size:17.5px;line-height:1.62;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;overflow-x:hidden;
+}
+img,svg{max-width:100%}
+.wrap{max-width:800px;margin:0 auto;padding:0 20px}
+.wide{max-width:980px}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.1;margin:0}
+h3{font-size:1.65rem;font-weight:600;margin:2rem 0 .6rem}
+h4{font-size:1.3rem;font-weight:600;margin:1.4rem 0 .4rem}
+p{margin:.7em 0}
+a{color:var(--eps)}
+b,strong{font-weight:700}
+small{font-size:.8em}
+sub{font-size:.72em}
+.m{font-family:var(--font-math);font-size:1.08em;white-space:nowrap}
+.sig{color:var(--sig)} .tau{color:var(--tau)} .eps{color:var(--eps)} .gam{color:var(--gam)} .frc{color:var(--frc)} .mat{color:var(--mat)} .mut{color:var(--muted)} .wcol{color:var(--weld)}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .12em;line-height:1.1}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 .2em .08em}
+.frac>span:last-child{padding:.08em .2em 0}
+ul,ol{padding-left:1.4em}
+li{margin:.25em 0}
+
+/* ---------- en-tête ---------- */
+.hero{padding:34px 0 10px}
+.title-block{border:2.5px solid var(--ink);background:var(--card);display:grid;grid-template-columns:1fr 300px}
+.tb-main{padding:22px 24px;border-right:2.5px solid var(--ink);display:flex;flex-direction:column;justify-content:space-between;gap:14px}
+.tb-series{margin:0 0 .5rem;color:var(--muted);font-size:.95rem}
+.hero h1{font-size:clamp(2.3rem,6vw,4rem);font-weight:700;letter-spacing:-.01em}
+.tb-cells{display:grid;grid-template-rows:repeat(4,auto)}
+.tb-cells>div{padding:9px 16px;border-bottom:1.5px solid var(--ink);display:flex;flex-direction:column;justify-content:center}
+.tb-cells>div:last-child{border-bottom:0}
+.tb-cells small{color:var(--muted);font-size:.78rem}
+.tb-cells b{font-family:var(--font-head);font-size:1.25rem;font-weight:600;line-height:1.15}
+.lede{font-size:1.13rem;max-width:760px;margin:1.2rem 0}
+.theme-btn{align-self:flex-start;font-family:var(--font-body);font-size:.85rem;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
+@media (max-width:760px){.title-block{grid-template-columns:1fr}.tb-main{border-right:0;border-bottom:2.5px solid var(--ink)}.tb-cells{grid-template-rows:none;grid-template-columns:1fr 1fr}.tb-cells>div:nth-child(odd){border-right:1.5px solid var(--ink)}.tb-cells>div:nth-child(3){border-bottom:0}}
+@media (max-width:420px){.tb-cells{grid-template-columns:1fr}.tb-cells>div:nth-child(odd){border-right:0}.tb-cells>div:nth-child(3){border-bottom:1.5px solid var(--ink)}}
+
+/* code couleur */
+.cc{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:stretch;margin:1rem 0 .4rem}
+.cc-box{background:var(--card);border:2px solid var(--line);padding:12px 14px;border-radius:4px}
+.cc-cause{border-color:var(--sig)} .cc-link{border-color:var(--mat)} .cc-eff{border-color:var(--eps)}
+.cc-box small{display:block;color:var(--muted);font-size:.82rem;line-height:1.3}
+.cc-syms{font-family:var(--font-math);font-size:1.7rem;line-height:1.25;display:flex;flex-wrap:wrap;gap:.1em .45em;margin:.2rem 0}
+.cc-box p{margin:0;font-size:.9rem;line-height:1.35}
+.cc-arrow{align-self:center;font-size:1.8rem;color:var(--muted)}
+@media (max-width:700px){.cc{grid-template-columns:1fr}.cc-arrow{transform:rotate(90deg);justify-self:center;line-height:1}}
+.cc-more{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:.5rem 0}
+.cc-more>div{border:2px solid var(--line);background:var(--card);border-radius:4px;padding:6px 10px;font-size:.9rem}
+@media (max-width:640px){.cc-more{grid-template-columns:1fr}}
+
+/* ---------- sommaire ---------- */
+.toc{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-bottom:1.5px solid var(--line);padding-top:env(safe-area-inset-top,0px);margin-top:18px}
+.toc-in{display:flex;gap:6px;overflow-x:auto;padding:9px 20px;max-width:980px;margin:0 auto;scrollbar-width:thin}
+.toc a{flex:none;text-decoration:none;color:var(--ink);font-size:.88rem;padding:4px 11px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);white-space:nowrap}
+.toc a.on{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.toc a:focus-visible,.btn:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--eps);outline-offset:2px}
+
+/* ---------- sections ---------- */
+section.chap{padding:46px 0 10px}
+.cartouche{display:grid;grid-template-columns:86px 1fr 250px;border:2.5px solid var(--ink);background:var(--card);margin-bottom:1.4rem}
+.c-num{font-family:var(--font-head);font-size:3.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;border-right:2.5px solid var(--ink)}
+.c-title{padding:14px 18px;border-right:2.5px solid var(--ink)}
+.c-title h2{font-size:2.1rem;font-weight:700}
+.c-title p{margin:.25rem 0 0;color:var(--muted)}
+.c-img{padding:12px 14px;display:flex;gap:12px;align-items:center;background:var(--paper-2)}
+.c-img .ico{font-size:2.3rem;line-height:1}
+.c-img small{display:block;color:var(--muted);font-size:.78rem}
+.c-img span{font-size:.95rem;line-height:1.3}
+@media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
+
+/* gabarit court : approfondissement replié, à retenir, prédiction */
+details.deep{margin:1.2rem 0;padding:0 18px;background:var(--lv2);border-left:6px solid var(--ink);border-radius:4px}
+details.deep>summary{font-family:var(--font-head);font-size:1.2rem;font-weight:600;padding:9px 0}
+details.deep[open]{padding-bottom:10px}
+.retenir{margin:1.4rem 0 .4rem;padding:8px 18px 6px;background:var(--card);border:2px solid var(--ink);border-radius:4px}
+.retenir>b:first-child{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.retenir ul{margin:.3rem 0 .3rem}
+.predict{display:block;margin-top:.35rem;color:var(--ink);font-weight:700}
+@media (max-width:520px){details.deep{padding:0 12px}.retenir{padding:8px 12px 6px}}
+
+/* formules et encadrés */
+.fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:600px;text-align:center;border-radius:3px;overflow-x:auto}
+.fx .big{font-family:var(--font-math);font-size:1.9rem;line-height:1.4}
+.fx .cap{font-size:.85rem;color:var(--muted);margin:.3rem 0 0}
+.fx .row{display:flex;flex-wrap:wrap;justify-content:center;gap:.2em 1.4em}
+.syms{margin:.6rem 0;display:grid;grid-template-columns:auto 1fr;gap:.35rem 1rem;align-items:baseline}
+.syms dt{font-family:var(--font-math);font-size:1.25rem;text-align:right;white-space:nowrap}
+.syms dd{margin:0}
+.def{margin:.9rem 0;padding:.5rem .9rem;border-left:3px dotted var(--muted);font-size:.96rem;background:color-mix(in srgb,var(--card) 60%,transparent)}
+.def>b:first-child{font-family:var(--font-head);font-size:1.08rem;font-weight:600}
+.tip{margin:1rem 0;padding:.7rem 1rem;border:1.5px dashed var(--mat);border-radius:4px;font-size:.97rem}
+.warn{margin:1rem 0;padding:.7rem 1rem;border:2px solid var(--bad);border-radius:4px;font-size:.97rem;background:color-mix(in srgb,var(--bad) 7%,transparent)}
+.mnemo{margin:1rem 0;padding:.7rem 1rem;background:var(--hl);border-radius:4px;font-size:.98rem}
+.fun{margin:1.2rem 0;padding:.8rem 1rem;border:2px dashed var(--muted);border-radius:10px;background:var(--card);font-size:.98rem}
+.fun-h{display:block;margin-bottom:.35rem;font-family:var(--font-head);font-size:1.15rem;font-weight:600;letter-spacing:.02em}
+.meta{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--frc);border-radius:4px;background:color-mix(in srgb,var(--frc) 6%,transparent)}
+.weld{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--weld);border-radius:4px;background:color-mix(in srgb,var(--weld) 7%,transparent)}
+.weld>b:first-child{font-family:var(--font-head);font-size:1.15rem;font-weight:600;color:var(--weld)}
+.hp{display:inline-block;font-size:.72rem;font-weight:700;padding:1px 7px;border-radius:9px;background:var(--weld);color:var(--card);vertical-align:middle;margin-left:4px;white-space:nowrap}
+.recall{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:1rem 0}
+.recall>div{background:var(--card);border:1.5px solid var(--line);border-radius:4px;padding:8px 12px;font-size:.92rem}
+.recall .f{font-family:var(--font-math);font-size:1.2rem;margin-bottom:.2rem}
+@media (max-width:640px){.recall{grid-template-columns:1fr}}
+.hist{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:1rem 0}
+.hist>div{background:var(--card);border:1.5px solid var(--weld);border-radius:4px;padding:8px 12px;font-size:.93rem}
+.hist .yr{font-family:var(--font-head);font-size:1.6rem;font-weight:700;color:var(--weld);line-height:1}
+@media (max-width:720px){.hist{grid-template-columns:1fr}}
+
+/* manipulations */
+.lab{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:14px 16px 12px;margin:1.4rem 0}
+.lab-h{font-family:var(--font-head);font-size:1.3rem;font-weight:600;margin:0 0 .2rem}
+.lab-sub{margin:0 0 .6rem;color:var(--muted);font-size:.92rem}
+.lab svg{display:block;width:100%;height:auto;color:var(--ink);font-family:var(--font-body);touch-action:pan-y}
+.ctrl{display:grid;grid-template-columns:minmax(110px,auto) 1fr minmax(92px,auto);gap:4px 12px;align-items:center;margin:.5rem 0}
+.ctrl label{font-size:.95rem}
+.ctrl output{font-family:var(--font-math);font-size:1.08rem;text-align:right;white-space:nowrap}
+@media (max-width:520px){.ctrl{grid-template-columns:1fr auto}.ctrl input[type=range]{grid-column:1/-1;grid-row:2}}
+input[type=range]{width:100%;accent-color:var(--ink);height:28px;margin:0}
+input.r-sig{accent-color:var(--sig)} input.r-tau{accent-color:var(--tau)} input.r-frc{accent-color:var(--frc)} input.r-mat{accent-color:var(--mat)} input.r-eps{accent-color:var(--eps)}
+.btns{display:flex;flex-wrap:wrap;gap:6px;margin:.5rem 0}
+.btn{font-family:var(--font-body);font-size:.9rem;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 13px;cursor:pointer;line-height:1.3}
+.btn:hover{background:var(--paper-2)}
+.btn.on{background:var(--ink);color:var(--paper)}
+.btn.play{border-color:var(--eps);color:var(--eps);font-weight:700}
+.btn:disabled{opacity:.45;cursor:default}
+.readout{font-family:var(--font-math);font-size:1.08rem;background:var(--paper-2);border-radius:4px;padding:.5rem .8rem;margin:.5rem 0;overflow-x:auto;display:flex;flex-wrap:wrap;gap:.2em 1.3em}
+.readout>span{white-space:nowrap}
+.status{font-size:.97rem;margin:.5rem 0;padding:.5rem .8rem;border-left:4px solid var(--eps);background:color-mix(in srgb,var(--eps) 6%,transparent);border-radius:0 4px 4px 0;min-height:2.6em}
+.radios{display:flex;flex-wrap:wrap;gap:6px 14px;margin:.4rem 0;font-size:.95rem}
+.radios label{display:inline-block;cursor:pointer}
+.radios input{margin:0 6px 0 0;vertical-align:middle}
+
+/* svg */
+svg text{fill:currentColor;font-size:13px}
+svg .lbl{font-size:12.5px;fill:var(--muted)}
+svg .mth{font-family:var(--font-math);font-size:16px}
+svg .ttl{font-family:var(--font-head);font-size:15px;font-weight:600}
+svg .axis{stroke:var(--ink);stroke-width:1.4;fill:none}
+svg .tick{stroke:var(--muted);stroke-width:1}
+svg .gridbg{stroke:var(--line);stroke-width:1}
+svg .ref{stroke:var(--muted);stroke-width:1.3;stroke-dasharray:4 3;fill:none}
+.arr line{stroke:currentColor}
+.arr polygon{fill:currentColor}
+
+/* tableaux */
+.tbl-wrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch}
+table.data{border-collapse:collapse;width:100%;font-size:.94rem;background:var(--card)}
+table.data th,table.data td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:middle}
+table.data th{font-family:var(--font-head);font-weight:600;font-size:1.05rem;background:var(--paper-2)}
+table.data td.n{font-family:var(--font-math);white-space:nowrap}
+table.data tr.now td{background:var(--hl)}
+
+/* parcours */
+.route{list-style:none;padding:0;margin:1rem 0;position:relative}
+.route::before{content:"";position:absolute;left:17px;top:10px;bottom:10px;width:4px;background:var(--line);border-radius:2px}
+.route li{position:relative;padding:0 0 14px 52px;margin:0}
+.route li .dot{position:absolute;left:4px;top:0;width:30px;height:30px;border-radius:50%;border:3px solid var(--ink);background:var(--card);font-family:var(--font-head);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+.route li b{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.route li p{margin:.1rem 0 0;font-size:.95rem}
+.series{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:.8rem 0}
+.series>div{background:var(--card);border:1.5px solid var(--line);padding:8px 10px;border-radius:4px;font-size:.88rem}
+.series>div.here{border:2.5px solid var(--ink)}
+.series b{display:block;font-family:var(--font-head);font-size:1.05rem}
+@media (max-width:700px){.series{grid-template-columns:1fr 1fr}}
+
+/* exercices et quiz */
+.exo{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--ink);padding:6px 20px 12px;margin:1.2rem 0;border-radius:4px}
+.exo.defi{border-left-color:var(--weld)}
+.exo h4{margin-top:.8rem}
+.exo .lvtag{font-family:var(--font-body);font-size:.85rem;font-weight:400;color:var(--muted);margin-left:.4rem}
+.exo .q{margin:.25rem 0}
+details{margin:.6rem 0}
+summary{cursor:pointer;font-weight:700;padding:4px 0}
+details .sol{padding:.4rem .9rem;border-left:3px solid var(--mat);margin:.4rem 0}
+details .sol p{margin:.45em 0}
+.qz{background:var(--card);border:1.5px solid var(--line);border-radius:6px;padding:10px 16px;margin:.8rem 0}
+.qz-q{margin:.3rem 0 .6rem}
+.qz-o{display:flex;flex-direction:column;gap:6px}
+.qz-b{text-align:left;font-family:var(--font-body);font-size:.97rem;padding:8px 12px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:5px;cursor:pointer}
+.qz-b:hover{border-color:var(--ink)}
+.qz-b.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--card))}
+.qz-b.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--card))}
+.qz-e{font-size:.94rem;margin:.6rem 0 .2rem}
+.score{position:sticky;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);display:inline-block;background:var(--ink);color:var(--paper);padding:6px 14px;border-radius:999px;font-size:.95rem;margin:.6rem 0}
+
+/* fiche mémoire */
+.fiche{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:2.5px solid var(--ink);background:var(--card);margin:1rem 0}
+.fiche>div{padding:12px 14px;border-right:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}
+.fiche>div:nth-child(3n){border-right:0}
+.fiche>div:nth-last-child(-n+3){border-bottom:0}
+.fiche .ic{font-size:1.9rem;line-height:1}
+.fiche h4{margin:.3rem 0 .2rem;font-size:1.15rem}
+.fiche .f{font-family:var(--font-math);font-size:1.1rem;margin:.2rem 0}
+.fiche p{margin:.2rem 0 0;font-size:.88rem;color:var(--muted)}
+@media (max-width:720px){.fiche{grid-template-columns:1fr 1fr}.fiche>div{border-right:1.5px solid var(--ink)!important;border-bottom:1.5px solid var(--ink)!important}.fiche>div:nth-child(2n){border-right:0!important}.fiche>div:last-child{border-bottom:0!important}}
+@media (max-width:440px){.fiche{grid-template-columns:1fr}.fiche>div{border-right:0!important}}
+.gloss{display:grid;grid-template-columns:minmax(150px,230px) 1fr;gap:0;border-top:1.5px solid var(--line);margin:1rem 0}
+.gloss dt,.gloss dd{border-bottom:1.5px solid var(--line);padding:7px 8px;margin:0}
+.gloss dt{font-weight:700}
+.gloss dd{font-size:.95rem}
+@media (max-width:600px){.gloss{grid-template-columns:1fr}.gloss dt{border-bottom:0;padding-bottom:0}}
+.check label{display:flex;gap:10px;align-items:flex-start;padding:5px 0;cursor:pointer}
+.check input{margin-top:.35em;width:18px;height:18px;accent-color:var(--mat);flex:none}
+footer{padding:40px 0 60px;color:var(--muted);font-size:.9rem}
+hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
+@media (max-width:700px){.m{white-space:normal}.fx{padding:12px 10px}.fx .big{font-size:1.4rem}}
+@media (max-width:400px){body{font-size:16.5px}.wrap{padding:0 14px}.lab{padding:12px 10px}}
+
+/* compléments de la série Rupture */
+.btn.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,var(--card))}
+.btn.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--card))}
+.ctrl[hidden]{display:none}
+
+/* impression : le cours sur papier clair, ou la fiche mémoire seule sur une page */
+@media print{
+  :root,:root[data-theme]{--paper:#fff!important;--paper-2:#EEF2F6!important;--card:#fff!important;--ink:#111!important;--muted:#444!important;--line:#999!important;--grid:transparent!important;--lv2:#F2F5F8!important;--hl:#FFF3B0!important;color-scheme:light}
+  body{background:#fff;font-size:11pt}
+  .toc,.theme-btn,.btns,.ctrl,#qzReset,.score{display:none!important}
+  section.chap{padding:14px 0 4px}
+  .lab,.fx,.retenir,details.deep,.fiche>div,.exo{break-inside:avoid}
+  body.print-fiche header,body.print-fiche main>section:not(#fiche),body.print-fiche footer{display:none!important}
+  body.print-fiche #fiche .cartouche{margin-bottom:.6rem}
+  body.print-fiche .fiche>div{padding:8px 10px}
+}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="wrap wide">
+  <div class="title-block">
+    <div class="tb-main">
+      <div>
+        <p class="tb-series">Procédés avancés et automatisation</p>
+        <h1>Le soudage par résistance : souder par effet Joule</h1>
+      </div>
+      <button class="theme-btn" id="themeBtn" type="button" aria-label="Changer de thème">◐ Thème : automatique</button>
+    </div>
+    <div class="tb-cells">
+      <div><small>Cours</small><b>1 sur 6 : points, molette, bossages et soudage en bout</b></div>
+      <div><small>Durée conseillée</small><b>≈ 1 h 25 avec les exercices</b></div>
+      <div><small>Prérequis</small><b>Fondamentaux des procédés, cours 3 (transformateur, redresseur, onduleur) ; notions d'électricité : loi d'Ohm, effet Joule</b></div>
+      <div><small>À la fin tu sais</small><b>expliquer l'effet Joule et le rôle des résistances de contact ; décrire la machine, ses sources AC et MFDC et ses électrodes ; régler un point par l'effort, l'intensité et le temps, et lire un domaine de soudabilité ; concevoir un assemblage par points (diamètre, pas, bords, shunt) et le contrôler ; décrire la molette, les bossages, le soudage en bout et l'étincelage</b></div>
+    </div>
+  </div>
+  <p class="lede">Serrer deux tôles entre deux électrodes de cuivre et y faire passer quelques milliers d'ampères pendant un dixième de seconde : la chaleur naît à l'interface, un noyau fond et se fige sous l'effort. Sans arc, sans gaz, sans métal d'apport, le soudage par résistance assemble chaque carrosserie de voiture en quelques milliers de points. Ce cours explique d'où vient la chaleur, la machine, le réglage d'un point et son contrôle, puis la molette, les bossages et le soudage en bout.</p>
+
+  <h4>Le code couleur de la série</h4>
+  <div class="cc" role="img" aria-label="Code couleur : les causes en rouge et violet, les réglages en vert, les efforts et mouvements en orange, les effets en bleu et bleu-vert">
+    <div class="cc-box cc-cause"><small>Les causes</small><div class="cc-syms"><span class="sig">I</span><span class="sig">P</span><span class="tau">collage</span><span class="tau">porosité</span></div><p><span class="sig">rouge</span> : ce qui apporte l'énergie (courant, faisceau, effet Joule) ; <span class="tau">violet</span> : les défauts (collage, crachement, porosités, manques de fusion)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-link"><small>Les réglages</small><div class="cc-syms"><span class="mat">t</span><span class="mat">v</span><span class="mat">d</span><span class="frc">F</span></div><p>en <span class="mat">vert</span> : ce qu'on choisit (temps, vitesse, focalisation, géométrie) ; en <span class="frc">orange</span> : les efforts et les mouvements</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-eff"><small>Les effets</small><div class="cc-syms"><span class="eps">p</span><span class="eps">q</span><span class="gam">T</span><span class="gam">ZF</span></div><p><span class="eps">bleu</span> : ce qu'on mesure ou calcule (pénétration, densité de puissance, diamètre du point, énergie) ; <span class="gam">bleu-vert</span> : la température, le bain et la zone fondue</p></div>
+  </div>
+  <div class="cc-more">
+    <div><b>Noir</b> : la géométrie dessinée (électrodes, tôles, têtes, canons, outils).</div>
+    <div><b class="wcol">Bronze</b> : le cuivre des électrodes et des optiques, le métal soudé et les encadrés « métier » 🔥.</div>
+  </div>
+</div>
+</header>
+
+<nav class="toc" aria-label="Sommaire">
+  <div class="toc-in">
+    <a href="#avant">Avant de commencer</a>
+    <a href="#c1">1 Joule et les résistances de contact</a>
+    <a href="#c2">2 La machine et les électrodes</a>
+    <a href="#c3">3 Régler un point</a>
+    <a href="#c4">4 Concevoir et contrôler</a>
+    <a href="#c5">5 Molette, bossages et soudage en bout</a>
+    <a href="#exos">Exercices</a>
+    <a href="#quiz-s">Quiz</a>
+    <a href="#fiche">Fiche mémoire</a>
+    <a href="#gloss">Glossaire</a>
+    <a href="#check">Check-list</a>
+  </div>
+</nav>
+
+<main>
+<section class="chap" id="avant">
+<div class="wrap">
+  <h3 style="margin-top:0">Avant de commencer</h3>
+  <h4>Ce qu'il faut avoir en tête, en trois cases</h4>
+  <div class="recall">
+    <div><div class="f">P = R·I²</div>Effet Joule : un conducteur parcouru par un courant chauffe, d'autant plus que sa résistance est grande et que le courant est fort.</div>
+    <div><div class="f">U<sub>1</sub>/U<sub>2</sub> = I<sub>2</sub>/I<sub>1</sub> = N<sub>1</sub>/N<sub>2</sub></div>Un transformateur échange de la tension contre du courant (Fondamentaux des procédés, cours 3).</div>
+    <div><div class="f">μΩ · kA · ms</div>Les unités du chapitre : des microhms, des kiloampères, des millisecondes ; et des daN pour l'effort (1 daN = 10 N).</div>
+  </div>
+
+  <div class="def"><b>📘 Le sujet</b> : <b>1.11 « Soudage par résistance »</b> du planning et du référentiel de l'IIW (<i>International Institute of Welding</i>) : points, molette, bossages, soudage en bout et par étincelage. Attendus de l'IWE (<i>International Welding Engineer</i>, ingénieur international en soudage) : expliquer le principe et l'équipement ; choisir les cycles d'effort et de courant ; décrire la conduite du procédé, sa surveillance et la mesure des paramètres ; connaître les essais propres aux soudures par résistance ; choisir le procédé pour une application.</div>
+
+  <div class="def"><b>📖 Normes et sigles</b>. <b>ISO 4063</b> : 21 points, 22 molette, 23 bossages, 24 étincelage, 25 soudage en bout par résistance pure ; <b>ISO 15609-5</b> : descriptif de mode opératoire ; <b>ISO 15614-12</b> : qualification des modes opératoires par points, molette et bossages ; <b>ISO 10447</b> : essais de pelage et de déboutonnage. <b>MFDC</b> : courant continu moyenne fréquence (<i>medium frequency direct current</i>) ; <b>1~</b> : une période de 20 ms en 50 Hz ; <b>Ø</b> ou <b>d</b> : diamètre du point. Les manipulations sont des modèles pédagogiques : tendances et ordres de grandeur.</div>
+
+  <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage</b>
+    <p>Le soudage par résistance est le procédé le plus répandu en nombre de soudures : automobile, électroménager, mobilier, aéronautique. Ses défauts ne se voient pas : un point collé ressemble à un point sain. L'ingénieur doit savoir régler, surveiller et contrôler un procédé où tout se joue en un dixième de seconde.</p>
+  </div>
+
+  <h4>La série</h4>
+  <div class="series" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">
+    <div class="here"><b>1 Le soudage par résistance</b>Points, molette, bossages, en bout.</div>
+    <div><b>2 Laser et faisceau d'électrons</b>Les faisceaux à haute densité d'énergie.</div>
+    <div><b>3 Le soudage par friction</b>Souder à l'état solide.</div>
+    <div><b>4 Goujons et autres procédés</b>Goujons, électroslag, ultrasons, explosion…</div>
+    <div><b>5 La robotisation</b>Mécaniser, automatiser, programmer.</div>
+    <div><b>6 Plastiques et composites</b>Assembler ce qui n'est pas métallique.</div>
+  </div>
+
+  <h4>Le plan du cours</h4>
+  <ol class="route">
+    <li><span class="dot">1</span><b>Joule et les résistances de contact</b><p>Pourquoi la chaleur naît entre les tôles.</p></li>
+    <li><span class="dot">2</span><b>La machine et les électrodes</b><p>Transformateur, AC ou MFDC, effort, électrodes refroidies.</p></li>
+    <li><span class="dot">3</span><b>Régler un point</b><p>Effort, intensité, temps ; le domaine de soudabilité.</p></li>
+    <li><span class="dot">4</span><b>Concevoir et contrôler</b><p>Diamètre, pas, bords, shunt ; essais et qualification.</p></li>
+    <li><span class="dot">5</span><b>Molette, bossages et soudage en bout</b><p>Les autres procédés du groupe 2.</p></li>
+  </ol>
+</div>
+</section>
+<section class="chap" id="c1">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">1</div>
+    <div class="c-title"><h2>Joule et les résistances de contact</h2><p>Pourquoi la chaleur naît entre les tôles</p></div>
+    <div class="c-img"><span class="ico">🍞</span><span><small>Image à retenir</small>Le grille-pain : le courant chauffe là où il a le plus de mal à passer ; serré entre deux mains froides, le métal fond au cœur et nulle part ailleurs</span></div>
+  </div>
+
+  <p>Deux tôles serrées entre deux électrodes de cuivre forment une chaîne de résistances en série : contact électrode-tôle, tôle, <b>contact tôle-tôle</b>, tôle, contact tôle-électrode. À l'échelle du micromètre, les surfaces ne se touchent que par leurs aspérités, couvertes d'oxyde : le contact entre les tôles est la résistance la plus forte, et c'est là que la chaleur naît. Les électrodes, en cuivre très conducteur et refroidies à l'eau, chauffent peu et évacuent la chaleur des faces : le noyau fondu se forme au cœur, à l'interface, puis grandit dans l'épaisseur.</p>
+
+  <div class="def"><b>📖 Les résistances en série et leur évolution.</b>
+    <ul>
+      <li><b>Résistances de contact</b> : tôle-tôle (la plus forte au départ) et électrode-tôle. Elles baissent quand l'effort monte (aspérités écrasées), quand la surface est propre, et quand la température monte (aspérités qui fluent).</li>
+      <li><b>Résistances des tôles</b> : faibles à froid, elles augmentent avec la température, la résistivité de l'acier étant plusieurs fois plus forte à chaud.</li>
+      <li><b>Résistance dynamique</b> : la somme chute d'abord (contacts écrasés), remonte (tôles qui chauffent), puis redescend quand le noyau grandit. Sa courbe sert à surveiller le soudage.</li>
+    </ul>
+  </div>
+
+  <div class="fx"><div class="row big"><span><span class="eps">W</span> = ∫ <span class="sig">R</span>(t)·<span class="sig">I</span>²·d<span class="mat">t</span> ≈ <span class="sig">R</span>·<span class="sig">I</span>²·<span class="mat">t</span></span></div><p class="cap">W : énergie dégagée (J) ; R : résistance totale entre les électrodes (Ω), qui varie au cours du soudage ; I : courant (A) ; t : temps de soudage (s). Avec 100 μΩ et 9 kA, la puissance vaut <span class="m">10<sup>−4</sup> × 9 000² ≈ 8 kW</span> : en 0,2 s, environ 1,6 kJ, concentrés dans quelques dizaines de millimètres cubes.</p></div>
+
+  <div class="lab" id="m1">
+    <p class="lab-h">Manipulation 1 : la résistance dynamique d'un point</p>
+    <p class="lab-sub">Choisis l'état des tôles et l'effort, puis fais défiler les 200 ms du soudage à 9 kA : les résistances, la chaleur à l'interface et l'énergie évoluent.<span class="predict">🔮 Prédis d'abord : avec des tôles oxydées, la résistance de départ est-elle plus faible ou plus forte ? Et en serrant plus fort ?</span></p>
+    <div class="btns" id="m1b">
+      <button class="btn on" data-s="propre" type="button">Tôles propres</button>
+      <button class="btn" data-s="oxyde" type="button">Tôles oxydées</button>
+      <button class="btn" data-s="galva" type="button">Tôles galvanisées</button>
+    </div>
+    <div class="btns" id="m1pl">
+      <button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button>
+      <button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button>
+      <button class="btn play" data-a="play" type="button">▶ Souder 200 ms</button>
+      <button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button>
+    </div>
+    <div class="ctrl"><label for="m1f">Effort <b class="frc">F</b></label><input type="range" id="m1f" min="150" max="400" step="10" value="250"><output id="m1fo"></output></div>
+    <svg id="m1svg" role="img" aria-label="Empilement électrode, tôles et électrode avec les résistances en série, et courbe de la résistance dynamique au cours du temps"></svg>
+    <div class="readout" id="m1r"></div>
+    <p class="status" id="m1msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> (modèle, deux tôles d'acier propres de 1 mm, 250 daN, 9 kA) : la résistance part d'environ 186 μΩ, dont les deux tiers au contact tôle-tôle, et tombe vers 75 μΩ en 30 à 40 ms quand les aspérités s'écrasent. Elle remonte ensuite vers 90 μΩ à mesure que l'acier chauffe, puis redescend quand le noyau grandit. Sur 200 ms, environ <b>1,4 kJ</b>. Des tôles oxydées partent de 550 μΩ et chauffent trop vite en surface : risque de crachement. Des tôles galvanisées partent de 90 μΩ seulement : il faudra plus de courant.</p>
+
+  <div class="warn"><b>⚠️ Piège : « la chaleur vient des électrodes ».</b> Les électrodes conduisent le courant et l'effort, et refroidissent : elles doivent rester froides. Si elles chauffent (refroidissement coupé, électrodes usées), le point se déplace vers la surface, colle aux électrodes et les use.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « serrer, c'est refroidir l'interface »</b> : plus d'effort, moins de résistance de contact, moins de chaleur au même courant.</div>
+  <div class="weld"><b>🔥 À l'atelier :</b> la propreté des tôles est un paramètre. Huile, calamine, rouille ou peinture changent les résistances de contact d'un point à l'autre : les points varient, crachent ou collent. On soude des tôles propres et régulières, ou l'on règle pour l'état réel de la production.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : chaud au cœur, froid aux faces</summary>
+    <p>Le profil de température dans l'épaisseur est en cloche : maximal à l'interface, où naît la chaleur et où elle a le plus de chemin à faire pour s'évacuer ; minimal contre les électrodes refroidies. Le noyau fondu prend la forme d'une lentille centrée sur l'interface. S'il atteint les faces, il colle aux électrodes ; s'il déborde latéralement de la zone serrée, le métal liquide s'échappe entre les tôles : c'est le crachement.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>W = R·I²·t : la chaleur naît au contact tôle-tôle.</li>
+      <li>Plus d'effort ou de propreté : résistance de contact plus faible.</li>
+      <li>Résistance dynamique : chute, remonte, redescend ; elle sert à surveiller.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c2">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">2</div>
+    <div class="c-title"><h2>La machine et les électrodes</h2><p>Transformateur, AC ou MFDC, effort, électrodes refroidies</p></div>
+    <div class="c-img"><span class="ico">🦀</span><span><small>Image à retenir</small>La pince du crabe : deux bras de cuivre qui serrent fort et qui portent un courant énorme sous une tension minuscule ; plus les bras sont longs, plus le courant alternatif a du mal à faire le tour</span></div>
+  </div>
+
+  <p>Une machine de soudage par résistance réunit quatre organes. Un <b>transformateur</b> abaisse les 400 V du réseau à quelques volts et fournit en échange des dizaines de kiloampères. Un <b>actionneur</b>, vérin pneumatique ou servomoteur électrique, applique l'effort. Une <b>commande</b> règle et enchaîne effort, courant et temps. Les <b>électrodes</b>, en alliage de cuivre et refroidies à l'eau, amènent courant et effort aux tôles. Elles se montent sur une pince (en C ou en X, manuelle ou portée par un robot) ou sur une machine fixe : pointeuse, machine à plateaux pour les bossages et la molette.</p>
+
+  <div class="def"><b>📖 Deux familles de sources.</b>
+    <ul>
+      <li><b>AC 50 Hz</b> : transformateur monophasé, courant réglé par des thyristors qui découpent chaque alternance ; temps compté en périodes (1~ = 20 ms). Simple et robuste, mais gros transformateur, et courant freiné par l'inductance de la boucle des bras.</li>
+      <li><b>MFDC</b> : le réseau est redressé, un onduleur à transistors (IGBT) alimente à 1 000 Hz un transformateur bien plus petit, dont la sortie est redressée par des diodes. Courant continu, réglé à la milliseconde, insensible à la profondeur des bras : la norme des pinces robot.</li>
+    </ul>
+    <b>Électrodes</b> : alliages de cuivre durs et conducteurs (CuCr1Zr pour les aciers, CuCo2Be plus dur), à embouts de tungstène ou de molybdène pour le cuivre ; surface active plate ou bombée, refroidie par un ajutage d'eau au plus près de la face (ISO 5821 pour les capuchons).</div>
+
+  <div class="fx"><div class="row big"><span><span class="eps">I</span> = <span class="sig">U</span><sub>2</sub> / √(<span class="sig">R</span>² + (ω·<span class="mat">L</span>)²)</span></div><p class="cap">En alternatif : U<sub>2</sub> tension secondaire (V) ; R résistance de la boucle (bras, contacts, tôles, Ω) ; ω = 2π·50 rad/s ; L inductance de la boucle, qui croît avec la surface enfermée par les bras (H). En MFDC redressé, seul R limite le courant établi. Le facteur de puissance vaut cos φ = R/√(R² + ω²L²).</p></div>
+
+  <div class="lab" id="m2">
+    <p class="lab-h">Manipulation 2 : AC ou MFDC, bras courts ou longs</p>
+    <p class="lab-sub">Choisis la source, puis allonge les bras de la pince : le courant disponible et sa forme changent.<span class="predict">🔮 Prédis d'abord : en passant de 150 à 600 mm de gorge, le courant alternatif disponible baisse-t-il un peu ou beaucoup ?</span></p>
+    <div class="btns" id="m2b">
+      <button class="btn on" data-s="ac" type="button">AC 50 Hz</button>
+      <button class="btn" data-s="mfdc" type="button">MFDC 1 000 Hz</button>
+    </div>
+    <div class="ctrl"><label for="m2g">Profondeur de gorge <b class="mat">g</b></label><input type="range" id="m2g" min="150" max="800" step="10" value="400"><output id="m2go"></output></div>
+    <svg id="m2svg" role="img" aria-label="Pince de soudage avec sa gorge, et forme du courant de soudage en alternatif ou en continu moyenne fréquence"></svg>
+    <div class="readout" id="m2r"></div>
+    <p class="status" id="m2msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> (modèle : U<sub>2</sub> = 8 V, R = 140 μΩ, L = 4 nH par millimètre de gorge) : à 400 mm, <span class="m">L = 1,6 μH</span>, <span class="m">ωL = 314 × 1,6 × 10<sup>−6</sup> ≈ 503 μΩ</span>, <span class="m">Z ≈ 522 μΩ</span> : <b>15,3 kA</b> au plus en alternatif, avec cos φ ≈ 0,27 ; à 150 mm, 34 kA. En MFDC, la gorge ne compte presque plus : 8 V/140 μΩ, soit environ 57 kA disponibles, que la commande dose. D'où les pinces robot à bras longs en MFDC, avec un transformateur assez léger pour être porté par la pince.</p>
+
+  <div class="warn"><b>⚠️ Piège : glisser une tôle d'acier dans la gorge.</b> En alternatif, une masse magnétique (pièce, gabarit en acier) entre les bras augmente l'inductance : le courant chute sans que rien ne change sur la commande. On règle avec la pièce réelle en place, et l'on préfère des outillages amagnétiques.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « bras longs, AC court »</b>.</div>
+  <div class="weld"><b>🔥 Les électrodes, consommable n° 1 :</b> sur tôle galvanisée, le zinc forme du laiton sur la face des électrodes, qui s'élargit et conduit moins : la densité de courant baisse et les points rétrécissent. On compense par paliers de courant, on rode la face à la fraise, puis on remplace. Sur aluminium, l'alumine pollue plus vite encore : rodage très fréquent.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : pourquoi le MFDC est plus léger</summary>
+    <p>La section du circuit magnétique d'un transformateur est inversement proportionnelle à la fréquence, pour une même tension : en passant de 50 à 1 000 Hz, le noyau devient beaucoup plus petit. Le courant continu en sortie supprime aussi la chute due à l'inductance et le passage par zéro du courant à chaque alternance, qui laisse refroidir le point cent fois par seconde en alternatif. En contrepartie, le continu crée l'effet Peltier (chapitre 4).</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Transformateur : quelques volts, des dizaines de kiloampères.</li>
+      <li>AC : courant réduit par l'inductance des bras ; MFDC : non.</li>
+      <li>Électrodes CuCr1Zr refroidies, à roder et remplacer.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c3">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">3</div>
+    <div class="c-title"><h2>Régler un point</h2><p>Effort, intensité, temps ; le domaine de soudabilité</p></div>
+    <div class="c-img"><span class="ico">🍳</span><span><small>Image à retenir</small>L'œuf au plat sous un couvercle : trop peu de feu, il reste cru (collé) ; trop, il déborde (crachement) ; le couvercle, c'est l'effort, qui retient le liquide et élargit la marge</span></div>
+  </div>
+
+  <p>Un point se règle par trois paramètres liés : l'<b>effort</b>, qu'on fixe en premier, l'<b>intensité</b> et le <b>temps</b>. Trop peu d'énergie, et le noyau reste trop petit ou absent : le point est <b>collé</b>, il tient par adhérence et casse à l'interface. Trop, et le métal liquide sort de la zone serrée : c'est le <b>crachement</b> (expulsion), avec des projections, une forte indentation et des électrodes qui s'usent. Entre les deux s'étend le <b>domaine de soudabilité</b>, que l'on trace par essais avant la production.</p>
+
+  <div class="def"><b>📖 Le cycle et le domaine.</b>
+    <ul>
+      <li><b>Cycle de base</b> : accostage (effort établi, contacts stabilisés) ; soudage (courant) ; forgeage (effort maintenu sans courant, au moins aussi long que le soudage, pendant que le noyau se fige) ; ouverture.</li>
+      <li><b>Cycles enrichis</b> : montée progressive du courant, préchauffage, impulsions séparées par des temps froids (tôles épaisses), recuit après soudage (aciers trempants), paliers d'effort.</li>
+      <li><b>Diamètre du point</b> (règles d'usage, e épaisseur de la tôle la plus mince, en mm) : minimal 3,5√e à 4√e, nominal 5√e.</li>
+      <li><b>Domaine de soudabilité</b> : plage de courant (ou de temps) entre le diamètre minimal et le crachement, pour un effort donné. Plus il est large, plus la production est robuste.</li>
+    </ul>
+  </div>
+
+  <div class="fx"><div class="row big"><span><span class="eps">d</span><sub>min</sub> = 4·√<span class="mat">e</span> · <span class="eps">d</span><sub>nom</sub> = 5·√<span class="mat">e</span></span></div><p class="cap">d : diamètre du point mesuré après déboutonnage (mm) ; e : épaisseur de référence (mm), celle de la tôle la plus mince pour deux tôles. Pour 1 mm : 4 et 5 mm ; pour 2 mm : 5,7 et 7,1 mm.</p></div>
+
+  <div class="lab" id="m3">
+    <p class="lab-h">Manipulation 3 : le domaine de soudabilité</p>
+    <p class="lab-sub">Deux tôles d'acier nu de 1 mm, électrodes de Ø 6 mm : règle l'effort, puis l'intensité et le temps. Le point se place dans le domaine, et le noyau se dessine.<span class="predict">🔮 Prédis d'abord : en passant de 250 à 300 daN, le domaine de courant s'élargit-il ou se rétrécit-il ?</span></p>
+    <div class="btns" id="m3b">
+      <button class="btn" data-i="6.5" data-t="10" type="button">Point collé</button>
+      <button class="btn on" data-i="8" data-t="10" type="button">Point nominal</button>
+      <button class="btn" data-i="10.5" data-t="10" type="button">Crachement</button>
+    </div>
+    <div class="ctrl"><label for="m3f">Effort <b class="frc">F</b></label><input type="range" id="m3f" min="150" max="350" step="10" value="250"><output id="m3fo"></output></div>
+    <div class="ctrl"><label for="m3i">Intensité <b class="sig">I</b></label><input type="range" id="m3i" min="5" max="13" step="0.1" value="8"><output id="m3io"></output></div>
+    <div class="ctrl"><label for="m3t">Temps de soudage <b class="mat">t</b></label><input type="range" id="m3t" min="3" max="20" step="1" value="10"><output id="m3to"></output></div>
+    <svg id="m3svg" role="img" aria-label="Domaine de soudabilité dans le plan intensité-temps, et coupe du point avec son noyau"></svg>
+    <div class="readout" id="m3r"></div>
+    <p class="status" id="m3msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> (modèle) : à 250 daN et 10 périodes (200 ms), le noyau atteint 4 mm vers <b>7,1 kA</b> et crache au-delà de <b>10,0 kA</b> : un domaine de 2,9 kA, réglé au milieu, vers 8 kA, pour un point de 5 mm. À 200 daN, le domaine se resserre à 6,6-8,5 kA (1,8 kA) ; à 300 daN, il s'élargit à 7,5-11,9 kA, car l'effort retient mieux le liquide, mais il faut plus de courant, les contacts étant plus écrasés. Avec un temps plus long, tout le domaine glisse vers les faibles courants.</p>
+
+  <div class="warn"><b>⚠️ Piège : juger le point à l'œil.</b> Un point collé a le même aspect qu'un point sain : même marque d'électrode, même couleur. Seuls un essai destructif (déboutonnage, coupe) ou une surveillance du procédé (courant, résistance dynamique, déplacement des électrodes) le révèlent.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « effort d'abord, courant ensuite, temps pour finir »</b>.</div>
+  <div class="weld"><b>🔥 Régler au milieu du domaine :</b> les électrodes s'usent, les tôles varient, la tension du réseau fluctue ; un réglage au bord bascule en collage ou en crachement. On mesure le domaine, puis on se place au centre, avec une régulation de courant et, sur tôle galvanisée, une compensation d'usure des électrodes.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : la surveillance en ligne</summary>
+    <p>Les commandes actuelles mesurent le courant et le régulent à chaque période ou milliseconde. Elles peuvent aussi suivre la résistance dynamique (chapitre 1) et la comparer à une courbe de référence apprise, ou mesurer le déplacement des électrodes, qui s'écartent quand le noyau se dilate puis s'enfoncent à l'indentation. Les commandes adaptatives corrigent alors le courant ou le temps en cours de point, par exemple pour compenser un shunt ou une variation d'épaisseur, et signalent les points suspects.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Accostage, soudage, forgeage au moins aussi long que le soudage.</li>
+      <li>Domaine : du diamètre minimal (4√e) au crachement.</li>
+      <li>Plus d'effort : domaine plus large, courant plus fort.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c4">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">4</div>
+    <div class="c-title"><h2>Concevoir et contrôler</h2><p>Diamètre, pas, bords, shunt ; essais et qualification</p></div>
+    <div class="c-img"><span class="ico">🚰</span><span><small>Image à retenir</small>La fuite dans le tuyau voisin : un point déjà soudé, trop proche, offre au courant un chemin de traverse ; le point suivant reçoit moins et reste plus petit</span></div>
+  </div>
+
+  <p>Un assemblage par points se dessine comme un assemblage boulonné : un diamètre de point, un pas, une distance au bord, un recouvrement. Le courant ajoute une règle propre : chaque point déjà soudé est un passage conducteur. Trop proche, il dérive une partie du courant du point suivant, qui sort plus petit : c'est l'<b>effet de shunt</b>, d'autant plus fort que le métal est conducteur. Reste à prouver que chaque point a son noyau, ce que l'œil ne voit pas.</p>
+
+  <div class="def"><b>📖 Règles de conception (usage courant) et effets parasites.</b>
+    <ul>
+      <li><b>Épaisseur de référence</b> : la tôle la plus mince ; pour 3 tôles, la plus mince ou la moyenne, selon le cas.</li>
+      <li><b>Distances</b> : centre du point à au moins 1,5·d du bord (sinon crachement au bord) ; recouvrement de 3 à 4·d ; pas d'au moins 4·d en acier, 6·d en aluminium (shunt).</li>
+      <li><b>Effet Peltier</b> : en MFDC, l'électrode positive chauffe davantage ; le noyau se décale vers elle. On en profite pour accrocher une tôle mince extérieure, placée côté +.</li>
+      <li><b>Épaisseurs différentes</b> : le noyau se décale dans la tôle épaisse ; on adapte les surfaces actives des deux électrodes pour le recentrer.</li>
+    </ul>
+  </div>
+
+  <div class="fx"><div class="row big"><span><span class="tau">f</span><sub>s</sub> ≈ c·<span class="eps">d</span> / <span class="mat">p</span></span></div><p class="cap">Modèle du cours : f<sub>s</sub> part du courant dérivée par le point voisin ; d diamètre du point ; p pas entre points ; c = 0,4 pour l'acier, 0,6 pour l'aluminium, plus conducteur. Au pas minimal (4·d en acier, 6·d en aluminium), environ 10 % du courant se perd.</p></div>
+
+  <div class="lab" id="m4">
+    <p class="lab-h">Manipulation 4 : une rangée de points</p>
+    <p class="lab-sub">Choisis le métal, puis règle l'épaisseur, le pas et la distance au bord : les points se dessinent, avec le courant dérivé vers le voisin.<span class="predict">🔮 Prédis d'abord : le pas qui suffit en acier suffit-il en aluminium ?</span></p>
+    <div class="btns" id="m4b">
+      <button class="btn on" data-m="acier" type="button">Acier</button>
+      <button class="btn" data-m="alu" type="button">Aluminium</button>
+    </div>
+    <div class="ctrl"><label for="m4e">Épaisseur <b class="mat">e</b></label><input type="range" id="m4e" min="0.5" max="3" step="0.1" value="1"><output id="m4eo"></output></div>
+    <div class="ctrl"><label for="m4p">Pas <b class="mat">p</b></label><input type="range" id="m4p" min="8" max="60" step="1" value="20"><output id="m4po"></output></div>
+    <div class="ctrl"><label for="m4d">Distance au bord <b class="mat">b</b></label><input type="range" id="m4d" min="3" max="20" step="0.5" value="8"><output id="m4do"></output></div>
+    <svg id="m4svg" role="img" aria-label="Vue de dessus d'un recouvrement de deux tôles avec une rangée de points, les distances et le courant dérivé par le point voisin"></svg>
+    <div class="readout" id="m4r"></div>
+    <p class="status" id="m4msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> : tôles d'acier de 1 mm, <span class="m">d = 5√1 = 5 mm</span> ; pas minimal 20 mm, centre du point à 7,5 mm du bord au moins, recouvrement de 15 à 20 mm. En aluminium de même épaisseur, le pas minimal passe à 30 mm. Au pas de 20 mm en aluminium, le modèle dérive 15 % du courant et le point suivant tombe vers 4,3 mm. Le contrôle se fait par <b>déboutonnage</b> : on arrache une tôle ; un point sain laisse un bouton sur l'une et un trou dans l'autre, dont on mesure le diamètre ; un point collé casse à l'interface.</p>
+
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Contrôle</th><th>Ce qu'il donne</th><th>Usage</th></tr></thead>
+    <tbody>
+      <tr><td>Déboutonnage : pelage, burin (ISO 10447)</td><td>diamètre du bouton, mode de rupture</td><td>réglage, contrôle en production</td></tr>
+      <tr><td>Cisaillement (ISO 14273), traction en croix (ISO 14272)</td><td>charge de rupture</td><td>qualification, études</td></tr>
+      <tr><td>Macrographie, dureté</td><td>noyau, pénétration, indentation, défauts</td><td>qualification, aéronautique</td></tr>
+      <tr><td>Ultrasons, radiographie</td><td>diamètre et défauts sans détruire</td><td>automobile (ultrasons), aéronautique</td></tr>
+      <tr><td>Surveillance du procédé</td><td>courant, effort, résistance dynamique, déplacement</td><td>chaque point, en continu</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="warn"><b>⚠️ Piège : qualifier sur la mauvaise machine.</b> Selon l'ISO 15614-12, la qualification d'un mode opératoire par points, molette ou bossages vaut pour le procédé, le type de courant, le cycle, le matériel (machine, commande, actionneur) et les électrodes (matériau, géométrie, refroidissement, rodage) de l'épreuve. Changer de pince ou de commande demande une nouvelle qualification.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « 5√e, 1,5 d, 4 d (6 d en alu) »</b> : le point, le bord, le pas.</div>
+  <div class="weld"><b>🔥 Ordre de soudage :</b> on soude d'abord des points espacés, puis on comble ; ou l'on augmente le courant des points voisins d'un point existant. Les commandes adaptatives compensent le shunt automatiquement en suivant la résistance dynamique.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : le dossier de qualification</summary>
+    <p>Le descriptif de mode opératoire (ISO 15609-5) fixe matériaux et épaisseurs, électrodes, cycle complet (efforts, courants, temps, impulsions), machine et commande. L'épreuve (ISO 15614-12) soude des éprouvettes ou des pièces réelles en production, puis les contrôle : par exemple, pour des éprouvettes à un point, un contrôle visuel de toutes, trois essais de cisaillement, trois de traction en croix ou de pelage, et deux coupes macrographiques. Les essais retenus se décident avant l'épreuve, selon les exigences du produit.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>d = 5√e ; bord ≥ 1,5·d ; pas ≥ 4·d en acier, 6·d en aluminium.</li>
+      <li>Shunt : un point voisin vole du courant ; Peltier : le + chauffe plus.</li>
+      <li>Déboutonnage pour le diamètre ; ISO 15614-12 pour qualifier.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c5">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">5</div>
+    <div class="c-title"><h2>Molette, bossages et soudage en bout</h2><p>Les autres procédés du groupe 2</p></div>
+    <div class="c-img"><span class="ico">🧵</span><span><small>Image à retenir</small>La machine à coudre : la molette pique des points à intervalles réguliers ; serrés, ils se chevauchent et la couture devient étanche</span></div>
+  </div>
+
+  <p>Le principe reste le même, effet Joule sous effort, mais la façon de concentrer le courant change. À la <b>molette</b>, les électrodes sont des roues qui tournent sans relâcher l'effort et enchaînent les points : espacés, ils forment une couture de pointage ; chevauchés, un cordon étanche. Par <b>bossages</b>, ce sont des saillies de la pièce qui concentrent le courant, plusieurs à la fois. En <b>bout</b>, deux sections sont pressées l'une contre l'autre et chauffées sur toute leur surface.</p>
+
+  <div class="def"><b>📖 Les procédés du groupe 2 (ISO 4063).</b>
+    <ul>
+      <li><b>Molette (22)</b> : roues en alliage de cuivre, l'une au moins motorisée ; mode arrêté (points posés à l'arrêt) ou continu ; temps chaud et temps froid fixent l'espacement. Réservoirs, fûts, radiateurs, tubes soudés.</li>
+      <li><b>Bossages (23)</b> : saillies embouties, usinées ou estampées, ou contact naturel de deux ronds croisés ; plusieurs bossages par cycle, électrodes plates. Écrous et vis à souder, grillages, fers à béton. Trop peu de courant : bossage écrasé sans fusion ; trop : éclatement.</li>
+      <li><b>Soudage en bout par résistance pure (25)</b> : mors de serrage, chauffage du contact, refoulement ; faces bien préparées ; fils, ronds de même section.</li>
+      <li><b>Étincelage (24)</b> : les pièces s'approchent sans se serrer ; les ponts de contact fondent et éclatent en étincelles, qui chauffent les faces et chassent oxydes et impuretés ; puis un refoulement brutal soude et expulse le métal fondu dans un bourrelet, ébavuré ensuite. Rails, chaînes, jantes, tiges, pièces massives.</li>
+    </ul>
+  </div>
+
+  <div class="fx"><div class="row big"><span><span class="eps">p</span> = <span class="mat">v</span>·(<span class="mat">t</span><sub>c</sub> + <span class="mat">t</span><sub>f</sub>)</span></div><p class="cap">Molette en continu : p espacement des points (mm) ; v vitesse de soudage (mm/s) ; t<sub>c</sub> et t<sub>f</sub> temps chaud et temps froid (s ; une période = 20 ms en 50 Hz). Les points se chevauchent si p &lt; d ; on vise environ 30 % de recouvrement ou plus pour un cordon étanche.</p></div>
+
+  <div class="lab" id="m5">
+    <p class="lab-h">Manipulation 5 : de la couture au cordon étanche</p>
+    <p class="lab-sub">Tôles de 1 mm, points de 5 mm : règle la vitesse, le temps chaud et le temps froid. Les points se posent le long de la molette.<span class="predict">🔮 Prédis d'abord : à vitesse doublée, sans toucher aux temps, le cordon reste-t-il étanche ?</span></p>
+    <div class="btns" id="m5b">
+      <button class="btn on" data-v="1.5" data-c="3" data-f="2" type="button">Cordon étanche</button>
+      <button class="btn" data-v="3" data-c="3" data-f="2" type="button">Vitesse doublée</button>
+      <button class="btn" data-v="4" data-c="3" data-f="3" type="button">Points séparés</button>
+    </div>
+    <div class="ctrl"><label for="m5v">Vitesse <b class="mat">v</b></label><input type="range" id="m5v" min="0.5" max="4" step="0.1" value="1.5"><output id="m5vo"></output></div>
+    <div class="ctrl"><label for="m5c">Temps chaud <b class="mat">t<sub>c</sub></b></label><input type="range" id="m5c" min="1" max="5" step="1" value="3"><output id="m5co"></output></div>
+    <div class="ctrl"><label for="m5f">Temps froid <b class="mat">t<sub>f</sub></b></label><input type="range" id="m5f" min="0" max="5" step="1" value="2"><output id="m5fo"></output></div>
+    <svg id="m5svg" role="img" aria-label="Molettes vues de côté et points de soudure vus de dessus, espacés ou chevauchés selon la vitesse et les temps"></svg>
+    <div class="readout" id="m5r"></div>
+    <p class="status" id="m5msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> : à 1,5 m/min, soit 25 mm/s, avec 3 périodes chaudes et 2 froides, <span class="m">p = 25 × (0,06 + 0,04) = 2,5 mm</span> : des points de 5 mm se recouvrent de moitié, le cordon est étanche. À 3 m/min, sans changer les temps, <span class="m">p = 5 mm</span> : les points se touchent à peine, le cordon fuit. Pour aller plus vite en restant étanche, on raccourcit les temps, ce qui demande plus de courant.</p>
+
+  <div class="warn"><b>⚠️ Piège : oublier le champ magnétique.</b> Les kiloampères d'une pince créent un champ magnétique intense : un porteur de stimulateur cardiaque ou d'implant actif ne doit pas s'en approcher sans avis médical. Les autres risques : pincement entre électrodes (commande bimanuelle, carters), projections, brûlures, 400 V au primaire de l'armoire, et rayonnement de l'étincelage.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « 21 point, 22 roue, 23 bosse, 24 étincelle, 25 bout »</b>.</div>
+  <div class="weld"><b>🔥 Bossages et productivité :</b> un seul cycle soude tous les bossages d'un écrou ou d'une pièce, sans toucher l'aspect de la face opposée. La condition : des bossages de hauteur régulière et une machine dont l'effort suit l'effondrement des bossages sans retard, faute de quoi le métal liquide s'échappe.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : l'étincelage, un faux arc</summary>
+    <p>En étincelage, le courant passe par quelques ponts de contact minuscules, où la densité de courant est énorme : ils fondent instantanément par effet Joule et se vaporisent en projetant des gouttes, ce qui ouvre de petits arcs. Le rapprochement continu des pièces crée sans cesse de nouveaux ponts, jusqu'à couvrir les faces d'une couche liquide. Le refoulement final chasse ce liquide et les oxydes dans le bourrelet : la liaison se fait entre métaux propres, à chaud, sur toute la section.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Molette : p = v·(t<sub>c</sub> + t<sub>f</sub>) ; chevauchement pour l'étanchéité.</li>
+      <li>Bossages : la pièce concentre le courant, plusieurs points par cycle.</li>
+      <li>Étincelage : chauffe par étincelles, refoulement, bourrelet ébavuré.</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="exos">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✎</div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Deux exercices : régler un point sur une caisse en blanc, puis concevoir une rangée de points et une soudure à la molette</p></div>
+    <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de musculation : on ne progresse qu'en soulevant soi-même</span></div>
+  </div>
+  <p>Cherche chaque question sur papier avant d'ouvrir la correction : écris la règle ou la relation, puis les valeurs (mm, kA, μΩ, kJ). Le premier exercice se vérifie dans les manipulations 2 et 3 ; le second se rejoue dans les manipulations 4 et 5.</p>
+
+  <div class="exo">
+    <h4>Exercice 1 : un point de caisse en blanc <span class="lvtag">★ application · chapitres 1 à 3</span></h4>
+    <p>Deux tôles d'acier nu de 1 mm, électrodes de Ø 6 mm, effort de 250 daN, modèles du cours.</p>
+    <p class="q"><b>a)</b> Quels diamètres de point minimal et nominal viser ?</p>
+    <p class="q"><b>b)</b> Avec une résistance moyenne de 100 μΩ, 8 kA pendant 10 périodes à 50 Hz : puissance et énergie ?</p>
+    <p class="q"><b>c)</b> Le domaine de soudabilité à 10 périodes s'étend de 7,1 à 10,0 kA. Où régler, et pourquoi ?</p>
+    <p class="q"><b>d)</b> La pince prévue a 600 mm de gorge. En AC 50 Hz (U<sub>2</sub> = 8 V, R = 140 μΩ, L = 4 nH/mm), le courant disponible suffit-il ? Et en MFDC ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">d<sub>min</sub> = 4√1 = 4 mm</span> ; <span class="m">d<sub>nom</sub> = 5√1 = 5 mm</span>, mesurés par déboutonnage.</p>
+      <p><b>b)</b> <span class="m">P = R·I² = 10<sup>−4</sup> × 8 000² = 6,4 kW</span> ; <span class="m">t = 10 × 20 ms = 0,2 s</span> ; <span class="m">W = 6,4 × 0,2 ≈ 1,3 kJ</span>.</p>
+      <p><b>c)</b> Au milieu, vers <b>8 à 8,5 kA</b> : point d'environ 5 mm, marge vers le collage (usure des électrodes, shunt) comme vers le crachement (tôles plus minces, effort qui chute).</p>
+      <p><b>d)</b> <span class="m">L = 2,4 μH</span> ; <span class="m">ωL ≈ 754 μΩ</span> ; <span class="m">Z = √(140² + 754²) ≈ 767 μΩ</span> ; <span class="m">I<sub>max</sub> ≈ 8/767 × 10<sup>6</sup> ≈ 10,4 kA</span>, avec cos φ ≈ 0,18 : trop juste pour régler à 8,5 kA avec de la marge. En MFDC, environ 57 kA disponibles : aucune limite, et un transformateur assez léger pour la pince robot.</p>
+    </div></details>
+  </div>
+
+  <div class="exo defi">
+    <h4>Exercice 2 : une caisse en aluminium et un réservoir <span class="lvtag">★★ synthèse · chapitres 4 et 5 · manipulations 4 et 5</span></h4>
+    <p>Une rangée de points dans des tôles d'aluminium de 1,5 mm, puis un réservoir en acier de 1 mm soudé à la molette, points de 5 mm. Modèles du cours.</p>
+    <p class="q"><b>a)</b> Aluminium : diamètre nominal, pas minimal, distance minimale au bord, recouvrement ?</p>
+    <p class="q"><b>b)</b> Le bureau d'études impose un pas de 25 mm. Part du courant dérivée et diamètre du point suivant ? Est-il acceptable ?</p>
+    <p class="q"><b>c)</b> Molette à 1,2 m/min, 3 périodes chaudes, 2 froides : espacement et recouvrement ? Et à 2,4 m/min ? Comment rester étanche à 2,4 m/min ?</p>
+    <p class="q"><b>d)</b> L'atelier remplace la pince AC par une pince MFDC. Le mode opératoire qualifié reste-t-il valable ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">d = 5√1,5 ≈ 6,1 mm</span> ; pas ≥ <span class="m">6 × 6,1 ≈ 37 mm</span> en aluminium ; bord ≥ <span class="m">1,5 × 6,1 ≈ 9,2 mm</span> ; recouvrement de 18 à 24 mm.</p>
+      <p><b>b)</b> <span class="m">f<sub>s</sub> ≈ 0,6 × 6,1/25 ≈ 15 %</span> ; point suivant <span class="m">≈ 6,1 × 0,85 ≈ 5,2 mm</span>, encore au-dessus de <span class="m">4√1,5 ≈ 4,9 mm</span> mais sans marge : relever le courant des points voisins, souder dans un ordre espacé, ou revoir le pas.</p>
+      <p><b>c)</b> <span class="m">v = 1 200/60 = 20 mm/s</span> ; <span class="m">p = 20 × 0,1 = 2 mm</span> : recouvrement de <b>60 %</b>, étanche. À 2,4 m/min : <span class="m">p = 40 × 0,1 = 4 mm</span>, recouvrement de 20 %, insuffisant. Supprimer le temps froid : <span class="m">p = 40 × 0,06 = 2,4 mm</span>, 52 %, en contrôlant l'échauffement des molettes.</p>
+      <p><b>d)</b> <b>Non</b> : l'ISO 15614-12 lie la qualification au type de courant et au matériel (machine, commande, actionneur). Il faut un nouveau DMOS et une nouvelle épreuve.</p>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="quiz-s">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">?</div>
+    <div class="c-title"><h2>Quiz : 12 questions éclair</h2><p>Chaque réponse est expliquée, même quand tu as juste</p></div>
+    <div class="c-img"><span class="ico">🎯</span><span><small>Image à retenir</small>La cible : vise 10 sur 12 avant le cours 2</span></div>
+  </div>
+  <div id="quiz"></div>
+  <div class="score" id="qzScore" aria-live="polite">Score : 0 / 12</div>
+  <div class="btns"><button class="btn" id="qzReset" type="button">↺ Recommencer le quiz</button></div>
+</div>
+</section>
+
+<section class="chap" id="fiche">
+<div class="wrap wide">
+  <div class="cartouche">
+    <div class="c-num">★</div>
+    <div class="c-title"><h2>Fiche mémoire du cours 1</h2><p>Neuf cases, neuf images : à photographier, puis à redessiner de tête</p></div>
+    <div class="c-img"><span class="ico">⚡</span><span><small>Image à retenir</small>Le grille-pain : le courant chauffe là où il a le plus de mal à passer ; serré entre deux mains froides, le métal fond au cœur et nulle part ailleurs</span></div>
+  </div>
+  <div class="fiche">
+    <div><div class="ic">🍞</div><h4>Effet Joule</h4><div class="f">W = R·I²·t</div><p>La chaleur naît au contact tôle-tôle ; électrodes refroidies, noyau au cœur.</p></div>
+    <div><div class="ic">🤏</div><h4>Contacts</h4><div class="f">F ↑ ⇒ R<sub>c</sub> ↓</div><p>Effort, propreté et chaleur font baisser les résistances de contact.</p></div>
+    <div><div class="ic">📈</div><h4>Résistance dynamique</h4><div class="f">chute · remonte · redescend</div><p>Sa courbe sert à surveiller chaque point en ligne.</p></div>
+    <div><div class="ic">🦀</div><h4>AC ou MFDC</h4><div class="f">I = U₂/√(R² + ω²L²)</div><p>Bras longs : courant AC réduit ; MFDC 1 000 Hz insensible, transformateur léger.</p></div>
+    <div><div class="ic">🔩</div><h4>Électrodes</h4><div class="f">CuCr1Zr · CuCo2Be</div><p>Refroidies à l'eau ; zinc et alumine les polluent : compenser, roder, changer.</p></div>
+    <div><div class="ic">🍳</div><h4>Régler</h4><div class="f">accostage · soudage · forgeage</div><p>Effort d'abord ; domaine entre collage et crachement, réglage au milieu.</p></div>
+    <div><div class="ic">📏</div><h4>Concevoir</h4><div class="f">d = 5√e · bord 1,5 d · pas 4 d</div><p>6 d en aluminium (shunt) ; minimal 4√e ; Peltier : le + chauffe plus en MFDC.</p></div>
+    <div><div class="ic">🔍</div><h4>Contrôler</h4><div class="f">ISO 10447 · 14273 · 15614-12</div><p>Déboutonnage, cisaillement, macro, ultrasons ; qualification liée à la machine.</p></div>
+    <div><div class="ic">🧵</div><h4>Groupe 2</h4><div class="f">21 · 22 · 23 · 24 · 25</div><p>Points, molette (p = v·(t<sub>c</sub> + t<sub>f</sub>)), bossages, étincelage, bout.</p></div>
+  </div>
+  <div class="btns"><button class="btn" id="printFiche" type="button">🖨 Imprimer la fiche mémoire</button></div>
+  <div class="fun"><span class="fun-h">📜 Fun fact : le brevet de 1886</span>Le 10 août 1886, l'Américain Elihu Thomson reçoit deux brevets : le n° 347 140 pour une méthode de soudage électrique et le n° 347 141 pour l'appareil, un dispositif à induction à deux enroulements, l'un de bien plus faible résistance que l'autre. Ses brevets suivants le décrivent comme une source d'électricité « de grand débit mais de faible force électromotrice ». C'est déjà le transformateur de soudage du <a href="#c2">chapitre 2</a>. (Sources : brevets US 347 140 et US 347 141, 10 août 1886 ; leurs citations dans les brevets ultérieurs de Thomson.)</div>
+</div>
+</section>
+
+<section class="chap" id="gloss">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">A–Z</div>
+    <div class="c-title"><h2>Glossaire</h2><p>Les mots, symboles et sigles de ce cours</p></div>
+    <div class="c-img"><span class="ico">📖</span><span><small>Image à retenir</small>Le dictionnaire : un mot flou, un clic</span></div>
+  </div>
+  <dl class="gloss">
+    <dt>Accostage</dt><dd>Phase où les électrodes se ferment et l'effort s'établit, avant le courant.</dd>
+    <dt>Bossage</dt><dd>Saillie d'une pièce qui concentre le courant et l'effort au point de soudure (23).</dd>
+    <dt>Crachement</dt><dd>Expulsion de métal liquide hors de la zone serrée, par excès d'énergie ou manque d'effort.</dd>
+    <dt>Déboutonnage</dt><dd>Essai qui arrache une tôle pour mesurer le bouton laissé par le point (ISO 10447).</dd>
+    <dt>Domaine de soudabilité</dt><dd>Plage de réglages entre le diamètre minimal du point et le crachement.</dd>
+    <dt>Effet de shunt</dt><dd>Dérivation d'une partie du courant par un point voisin déjà soudé.</dd>
+    <dt>Effet Peltier</dt><dd>En courant continu, échauffement plus fort côté électrode positive, qui décale le noyau.</dd>
+    <dt>Étincelage</dt><dd>Soudage en bout où des étincelles chauffent les faces avant un refoulement brutal (24).</dd>
+    <dt>Forgeage</dt><dd>Maintien de l'effort après le courant, pendant la solidification du noyau.</dd>
+    <dt>Gorge</dt><dd>Profondeur entre les bras d'une pince ou d'une machine ; elle fixe l'accès et l'inductance de la boucle.</dd>
+    <dt>MFDC</dt><dd>Courant continu moyenne fréquence : onduleur à 1 000 Hz, transformateur léger, sortie redressée.</dd>
+    <dt>Molette</dt><dd>Électrode en forme de roue qui enchaîne les points sans relâcher l'effort (22).</dd>
+    <dt>Noyau</dt><dd>Lentille de métal fondu puis solidifié au cœur du point.</dd>
+    <dt>Point collé</dt><dd>Point sans noyau suffisant, qui tient par adhérence et casse à l'interface.</dd>
+    <dt>Résistance dynamique</dt><dd>Résistance entre électrodes mesurée pendant le soudage ; sa courbe sert à surveiller le point.</dd>
+    <dt>Rodage</dt><dd>Usinage léger de la face des électrodes pour lui rendre sa forme et retirer la couche polluée.</dd>
+  </dl>
+</div>
+</section>
+
+<section class="chap" id="check">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✓</div>
+    <div class="c-title"><h2>Suis-je prêt pour la suite ?</h2><p>Dix points à cocher de tête</p></div>
+    <div class="c-img"><span class="ico">🚦</span><span><small>Image à retenir</small>Le feu passe au vert quand tout est coché</span></div>
+  </div>
+  <p>Coche seulement ce que tu sais faire <b>sans regarder</b>. Tes coches restent enregistrées dans ce navigateur.</p>
+  <div class="check" id="checklist">
+    <label><input type="checkbox" data-c="1"> <span>Je sais écrire W = R·I²·t et expliquer pourquoi la chaleur naît d'abord à l'interface entre les tôles.</span></label>
+    <label><input type="checkbox" data-c="2"> <span>Je sais dire comment l'effort et l'état de surface changent les résistances de contact.</span></label>
+    <label><input type="checkbox" data-c="3"> <span>Je sais décrire une machine de soudage par résistance : transformateur, effort, commande, électrodes refroidies.</span></label>
+    <label><input type="checkbox" data-c="4"> <span>Je sais comparer les sources AC 50 Hz et MFDC 1000 Hz, et l'effet de la gorge des bras.</span></label>
+    <label><input type="checkbox" data-c="5"> <span>Je sais choisir un matériau d'électrode et expliquer leur pollution sur tôle galvanisée ou en aluminium.</span></label>
+    <label><input type="checkbox" data-c="6"> <span>Je sais décrire le cycle accostage, soudage, forgeage, et lire un domaine de soudabilité (collage, crachement).</span></label>
+    <label><input type="checkbox" data-c="7"> <span>Je sais appliquer les règles de diamètre de point (4√e minimal, 5√e nominal), de pas et de distance au bord.</span></label>
+    <label><input type="checkbox" data-c="8"> <span>Je sais expliquer l'effet de shunt et l'effet Peltier, et adapter un assemblage hétérogène.</span></label>
+    <label><input type="checkbox" data-c="9"> <span>Je sais citer les essais (déboutonnage, cisaillement, macrographie, ultrasons) et la qualification ISO 15614-12.</span></label>
+    <label><input type="checkbox" data-c="10"> <span>Je sais distinguer molette, bossages, soudage en bout et étincelage, et leurs applications.</span></label>
+  </div>
+  <p class="status" id="checkMsg"></p>
+
+  <div class="meta">🔭 <b>Au prochain épisode, cours 2 : laser et faisceau d'électrons.</b> Les faisceaux qui dépassent 10⁶ W/cm² : le capillaire, les sources, le vide, et ce qu'ils exigent de l'accostage.</div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="wrap">
+  <p>Cours 1 de la série « Procédés avancés et automatisation » (sujet 1.11 du planning et du référentiel de l'IIW). Vocabulaire aligné sur l'ISO 4063, l'ISO 15614-12, l'ISO 15609-5 et le référentiel de l'IIW ; pour les notations et les conventions, l'enseignement de ta formation fait foi.</p>
+</div>
+</footer>
+<script>
+(function(){
+"use strict";
+const NS="http://www.w3.org/2000/svg";
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const RM=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function el(tag,attrs,parent){
+  const e=document.createElementNS(NS,tag);
+  if(attrs){for(const k in attrs){const v=attrs[k];if(v===undefined||v===null)continue;
+    if(typeof v==="string"&&v.indexOf("var(")>=0&&k!=="style")e.style.setProperty(k,v);else e.setAttribute(k,v);}}
+  if(parent)parent.appendChild(e);
+  return e;
+}
+function tx(p,x,y,str,attrs){const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);t.textContent=str;return t;}
+function txs(p,x,y,parts,attrs){/* parts: [["σ",""],["max","sub"],[" = 3",""]] */
+  const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);
+  parts.forEach(pt=>{const s=el("tspan",pt[1]==="sub"?{"font-size":"0.72em",dy:"3"}:(pt[2]?{dy:pt[2]}:{}),t);s.textContent=pt[0];
+    if(pt[1]==="sub"){const r=el("tspan",{dy:"-3"},t);r.textContent="\u200b";}});
+  return t;
+}
+function clear(svg){while(svg.firstChild)svg.removeChild(svg.firstChild);}
+function fitText(t,x0,x1,gap){/* garde un texte SVG entre x0 et x1 : il passe de l'autre côté de son repère (écart gap), sinon il glisse */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const a=t.getAttribute("text-anchor")||"start",x=+t.getAttribute("x");
+  if(gap&&a!=="middle"&&(b.x<x0||b.x+b.width>x1)){t.setAttribute("text-anchor",a==="end"?"start":"end");t.setAttribute("x",a==="end"?x+2*gap:x-2*gap);b=t.getBBox();}
+  const nx=+t.getAttribute("x");
+  if(b.x+b.width>x1)t.setAttribute("x",nx-(b.x+b.width-x1));else if(b.x<x0)t.setAttribute("x",nx+(x0-b.x));
+  return t;}
+function arrow(p,x1,y1,x2,y2,color,w,h){
+  w=w||2.4;h=h||10;
+  const g=el("g",{class:"arr"},p);g.style.color=color||"var(--ink)";
+  const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy);
+  if(L<1)return g;
+  const ux=dx/L,uy=dy/L,hh=Math.min(h,L*0.6),bx=x2-ux*hh,by=y2-uy*hh,hw=hh*0.45+w*0.3;
+  el("line",{x1:x1,y1:y1,x2:bx,y2:by,"stroke-width":w,"stroke-linecap":"round"},g);
+  el("polygon",{points:x2+","+y2+" "+(bx-uy*hw)+","+(by+ux*hw)+" "+(bx+uy*hw)+","+(by-ux*hw)},g);
+  return g;
+}
+function darrow(p,x,y1,y2,color,w){/* double flèche verticale */
+  const g=el("g",{},p);const m=(y1+y2)/2;
+  if(Math.abs(y2-y1)<4){el("line",{x1:x-5,y1:y1,x2:x+5,y2:y1,stroke:color,"stroke-width":2},g);return g;}
+  arrow(g,x,m,x,y1,color,w||2,8);arrow(g,x,m,x,y2,color,w||2,8);return g;
+}
+function nf(v,d){
+  if(d===undefined)d=1;
+  if(Math.abs(v)<0.5*Math.pow(10,-d))v=0;
+  return v.toLocaleString("fr-FR",{minimumFractionDigits:d,maximumFractionDigits:d}).replace("-","−").replace(/[\u202f\u2009]/g,"\u00a0");
+}
+const SUP={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function sci(v,d){
+  if(v===0)return "0";
+  if(!isFinite(v))return "∞";
+  let e=Math.floor(Math.log10(Math.abs(v)));
+  let m=v/Math.pow(10,e);
+  const dd=d===undefined?1:d;
+  if(Math.abs(Number(m.toFixed(dd)))>=10){m/=10;e+=1;}
+  return nf(m,dd)+" × 10"+String(e).split("").map(c=>SUP[c]).join("");
+}
+function bigN(v){/* nombre de cycles lisible */
+  if(!isFinite(v))return "∞";
+  if(v===0)return "0";
+  if(v<10)return nf(v,v<1?2:0);
+  if(v<1e5)return nf(Math.round(v),0);
+  return sci(v,1);
+}
+function dur(s){
+  if(!isFinite(s))return "∞";
+  if(s<60)return nf(s,s<10?1:0)+" s";
+  if(s<3600)return nf(s/60,0)+" min";
+  if(s<86400)return nf(s/3600,1)+" h";
+  if(s<86400*365)return nf(s/86400,1)+" jours";
+  return nf(s/(86400*365),1)+" ans";
+}
+function svgW(svg){const r=svg.getBoundingClientRect();return Math.max(290,Math.round(r.width||(svg.parentNode&&svg.parentNode.clientWidth)||600));}
+function setVB(svg,W,H){svg.setAttribute("viewBox","0 0 "+W+" "+H);}
+const redraws=[];
+let rzT=null,lastWW=window.innerWidth;
+window.addEventListener("resize",()=>{if(window.innerWidth===lastWW)return;lastWW=window.innerWidth;clearTimeout(rzT);rzT=setTimeout(()=>redraws.forEach(f=>{try{f();}catch(e){console.error(e);}}),120);});
+
+function niceStep(range,n){const raw=range/(n||5),p=Math.pow(10,Math.floor(Math.log10(raw))),m=raw/p;return (m<1.5?1:m<3?2:m<7?5:10)*p;}
+function setOn(sel,btn){$$(sel+" .btn").forEach(b=>b.classList.toggle("on",b===btn));}
+function fmtmm(mm){return mm<0.1?nf(mm*1000,0)+" µm":mm<10?nf(mm,mm<1?2:1)+" mm":nf(mm,0)+" mm";}
+function axes(svg,x0,x1,y0,y1,xmin,xmax,ymin,ymax,xlab,ylab,xstep,ystep,xfmt,yfmt){
+  const X=v=>x0+(x1-x0)*(v-xmin)/(xmax-xmin),Y=v=>y1-(y1-y0)*(v-ymin)/(ymax-ymin);
+  for(let v=Math.ceil(ymin/ystep-1e-9)*ystep;v<=ymax+1e-9;v+=ystep){el("line",{x1:x0,y1:Y(v),x2:x1,y2:Y(v),class:"gridbg"},svg);tx(svg,x0-5,Y(v)+4,yfmt?yfmt(v):nf(v,ystep<1?1:0),{class:"lbl","text-anchor":"end"});}
+  for(let v=Math.ceil(xmin/xstep-1e-9)*xstep;v<=xmax+1e-9;v+=xstep){el("line",{x1:X(v),y1:y1,x2:X(v),y2:y1+4,class:"tick"},svg);tx(svg,X(v),y1+17,xfmt?xfmt(v):nf(v,xstep<1?1:0),{class:"lbl","text-anchor":"middle"});}
+  el("line",{x1:x0,y1:y1,x2:x1,y2:y1,class:"axis"},svg);el("line",{x1:x0,y1:y0-4,x2:x0,y2:y1,class:"axis"},svg);
+  tx(svg,x0+4,y0-10,ylab,{class:"lbl"});tx(svg,x1,y1+32,xlab,{class:"lbl","text-anchor":"end"});
+  return {X:X,Y:Y};
+}
+function animate(btn,label,dur,onStep,onEnd){/* lecteur pilotable : ▶ lecture ou ⏸ pause, qui reprend où elle s'est arrêtée ; les boutons voisins ⏮ début, ◀ pas et pas ▶ (data-a) la mènent à la main ; un pas avance jusqu'à la prochaine image différente (20 pas au plus) */
+  const box=btn.parentNode,lab=btn.closest(".lab")||box,N=20;let raf=null,run=false,t=0;
+  const go=v=>{t=Math.max(0,Math.min(1,v));onStep(t);};
+  const snap=()=>{let s="";lab.querySelectorAll("svg,.readout,.status").forEach(e=>{s+=e.innerHTML;});return s;};
+  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;btn.textContent=label;}
+  function step(d){stop();const s0=snap();let k=Math.round(t*N);for(let i=0;i<N;i++){k+=d;if(k<0||k>N)break;go(k/N);if(snap()!==s0)break;}}
+  btn.addEventListener("click",()=>{if(run){stop();return;}if(t>=0.999)t=0;
+    if(RM){step(1);if(t>=1&&onEnd)onEnd();return;}
+    run=true;btn.textContent="⏸ Pause";const s0=performance.now()-t*dur;
+    const f=now=>{if(!run)return;go((now-s0)/dur);if(t>=1){stop();if(onEnd)onEnd();return;}raf=requestAnimationFrame(f);};raf=requestAnimationFrame(f);});
+  const pb=a=>box.querySelector('[data-a="'+a+'"]');
+  if(pb("start"))pb("start").addEventListener("click",()=>{stop();go(0);});
+  if(pb("back"))pb("back").addEventListener("click",()=>step(-1));
+  if(pb("fwd"))pb("fwd").addEventListener("click",()=>step(1));
+  /* un réglage fait à la main : la prochaine lecture repart du début */
+  lab.addEventListener("input",()=>{if(!run)t=0;});
+  lab.addEventListener("click",e=>{const b=e.target.closest("button");if(b&&b!==btn&&!b.dataset.a&&!run)t=0;});
+  return {stop:stop,running:()=>run};
+}
+function player(id,o){/* lecteur pilotable : ⏮ début, ◀ pas, ▶ lecture ou ⏸ pause (reprend où elle s'est arrêtée), pas ▶ ; o.get() et o.set(t) avec t de 0 à 1, o.dur (ms), o.steps */
+  const box=$("#"+id),bp=box.querySelector('[data-a="play"]'),lab=bp.textContent,n=o.steps||20;let raf=null,run=false;
+  const cl=t=>Math.max(0,Math.min(1,t));
+  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;bp.textContent=lab;}
+  function step(d){stop();o.set(cl(Math.round(o.get()*n+d)/n));}
+  bp.addEventListener("click",()=>{if(run){stop();return;}let t0=o.get();if(t0>=0.999)t0=0;
+    if(RM){o.set(cl(Math.round(t0*n+1)/n));return;}
+    run=true;bp.textContent="⏸ Pause";const s0=performance.now()-t0*o.dur;
+    const f=now=>{if(!run)return;const t=cl((now-s0)/o.dur);o.set(t);if(t>=1){stop();return;}raf=requestAnimationFrame(f);};raf=requestAnimationFrame(f);});
+  box.querySelector('[data-a="start"]').addEventListener("click",()=>{stop();o.set(0);});
+  box.querySelector('[data-a="back"]').addEventListener("click",()=>step(-1));
+  box.querySelector('[data-a="fwd"]').addEventListener("click",()=>step(1));
+  return {stop:stop};
+}
+
+
+function sig2(v){/* arrondi à deux chiffres significatifs */
+  if(v<=0)return 0;const p=Math.pow(10,Math.floor(Math.log10(v))-1);return Math.round(v/p)*p;}
+function halo(t,svg){/* liseré de fond, puis passage au premier plan */
+  t.setAttribute("paint-order","stroke");t.style.setProperty("stroke","var(--card)");t.setAttribute("stroke-width","4");t.setAttribute("stroke-linejoin","round");if(svg)svg.appendChild(t);return t;}
+function plate(t,svg){/* fond plein derrière une étiquette */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const r=el("rect",{x:b.x-3,y:b.y-1,width:b.width+6,height:b.height+2,fill:"var(--card)",opacity:.92,rx:2});svg.appendChild(r);svg.appendChild(t);return t;}
+function le(n,f){return /^[aeiouyhéèâî]/i.test(n)?"l'"+n:(f?"la ":"le ")+n;}
+function du(n,f){return /^[aeiouyhéèâî]/i.test(n)?"de l'"+n:(f?"de la ":"du ")+n;}
+function fmtG(v){return nf(v,v<0.1?3:2)+" N/m";}
+function fmtPa(p){return p<1000?nf(p,0)+" Pa":p<1e5?nf(p/1000,1)+" kPa":nf(p/1e5,2)+" bar";}
+function fmtLen(m){/* m en mètres */
+  const mm=m*1000;if(mm<1)return nf(mm*1000,0)+" µm";if(mm<10)return nf(mm,1)+" mm";if(mm<1000)return nf(mm,0)+" mm";return nf(m,1)+" m";}
+function fmtT(s){if(!isFinite(s))return "∞";if(s<0.01)return nf(s*1000,1)+" ms";if(s<1)return nf(s,3)+" s";if(s<60)return nf(s,s<10?1:0)+" s";return nf(s/60,s<600?1:0)+" min";}
+
+function spread(items,gap,ymin,ymax){/* écarte verticalement des étiquettes {y} triées */
+  items.sort((a,b)=>a.y-b.y);
+  for(let i=1;i<items.length;i++)if(items[i].y-items[i-1].y<gap)items[i].y=items[i-1].y+gap;
+  if(items.length&&items[items.length-1].y>ymax){items[items.length-1].y=ymax;for(let i=items.length-2;i>=0;i--)if(items[i+1].y-items[i].y<gap)items[i].y=items[i+1].y-gap;}
+  if(items.length&&items[0].y<ymin){items[0].y=ymin;for(let i=1;i<items.length;i++)if(items[i].y-items[i-1].y<gap)items[i].y=items[i-1].y+gap;}
+  return items;}
+function declutter(ts,ymin,ymax){/* décale verticalement les textes qui se chevauchent */
+  const box=t=>{try{return t.getBBox();}catch(e){return null;}};
+  for(let i=1;i<ts.length;i++){const ti=ts[i];if(!ti)continue;
+    for(let pass=0;pass<6;pass++){const bi=box(ti);if(!bi)break;let moved=false;
+      for(let j=0;j<i;j++){const bj=ts[j]&&box(ts[j]);if(!bj)continue;
+        const ix=Math.min(bi.x+bi.width,bj.x+bj.width)-Math.max(bi.x,bj.x),iy=Math.min(bi.y+bi.height,bj.y+bj.height)-Math.max(bi.y,bj.y);
+        if(ix>1&&iy>1){let dy=(bi.y+bi.height/2>=bj.y+bj.height/2)?(bj.y+bj.height-bi.y+1):-(bi.y+bi.height-bj.y+1);
+          if(bi.y+dy<ymin||bi.y+bi.height+dy>ymax)dy=dy>0?-(bi.y+bi.height-bj.y+1):(bj.y+bj.height-bi.y+1);
+          ti.setAttribute("y",+ti.getAttribute("y")+dy);moved=true;break;}}
+      if(!moved)break;}}
+  return ts;}
+const SUPD={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function p10(e){return "10"+String(e).split("").map(c=>SUPD[c]||c).join("");}
+function fmtP(p){/* pression en Pa, lisible */
+  if(p>=1e5)return nf(p/1e5,1)+" bar";if(p>=1000)return nf(p/1000,p<1e4?1:0)+" kPa";if(p>=1)return nf(p,p<10?1:0)+" Pa";return sci(p,1)+" Pa";}
+
+
+
+function rng(seed){/* générateur pseudo-aléatoire reproductible */
+  let a=seed>>>0;return ()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296;};}
+
+
+/* =========================================================
+   Outils communs de la série : formats, couleurs, grains, nuances, modèles
+   ========================================================= */
+const NB=String.fromCharCode(160);
+const nbsp=s=>s.replace(/(\d) (%|°C|mm|µm|nm|MPa|HV|s|ppm|h|J)(?=[\s.,;:)<·/]|$)/g,"$1"+NB+"$2");
+function fitSize(t,maxW,min){/* réduit la police d'un texte SVG trop large (style en ligne, prioritaire sur la feuille de style) */
+  let b;try{b=t.getBBox();}catch(e){return t;}let fs=parseFloat(getComputedStyle(t).fontSize)||13;
+  while(b.width>maxW&&fs>(min||9)){fs-=0.5;t.style.fontSize=fs+"px";b=t.getBBox();}return t;}
+const pts=P=>P.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join(" ");
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const mixc=(c,p,b)=>"color-mix(in srgb,"+c+" "+p+"%,"+(b||"var(--card)")+")";
+const COL={liq:mixc("var(--sig)",24),gam:mixc("var(--gam)",24),alp:mixc("var(--eps)",15),mart:"color-mix(in srgb,var(--eps) 50%,var(--tau))",
+  bain:mixc("var(--gam)",52),fp:mixc("var(--eps)",13),film:mixc("var(--tau)",72)};
+function frame(svg,R){el("rect",{x:R.x0,y:R.y0,width:R.x1-R.x0,height:R.y1-R.y0,fill:"none",stroke:"var(--ink)","stroke-width":1.2},svg);}
+function clipG(svg,id,R){const cp=el("clipPath",{id:id},el("defs",null,svg));el("rect",{x:R.x0,y:R.y0,width:R.x1-R.x0,height:R.y1-R.y0},cp);return el("g",{"clip-path":"url(#"+id+")"},svg);}
+function voronoi(seeds,x0,y0,x1,y1,rmax){/* cellules polygonales ; rmax : distance au-delà de laquelle un voisin est ignoré */
+  const box=[[x0,y0],[x1,y0],[x1,y1],[x0,y1]],r2=rmax?rmax*rmax:Infinity;
+  return seeds.map((s,i)=>{let P=box.slice();
+    for(let j=0;j<seeds.length&&P.length;j++){if(i===j)continue;const q=seeds[j],dx=q[0]-s[0],dy=q[1]-s[1];if(dx*dx+dy*dy>r2)continue;
+      const mx=(s[0]+q[0])/2,my=(s[1]+q[1])/2,out=[];
+      for(let k=0;k<P.length;k++){const a=P[k],b=P[(k+1)%P.length],sa=(a[0]-mx)*dx+(a[1]-my)*dy,sb=(b[0]-mx)*dx+(b[1]-my)*dy;if(sa<=0)out.push(a);
+        if((sa<0&&sb>0)||(sa>0&&sb<0)){const t=sa/(sa-sb);out.push([a[0]+t*(b[0]-a[0]),a[1]+t*(b[1]-a[1])]);}}
+      P=out;}
+    return P;});
+}
+function seedsGrid(x0,y0,x1,y1,s,seed){const r=rng(seed),o=[];for(let y=y0+s/2;y<y1+s/2;y+=s*0.87)for(let x=x0+s/2+((Math.round((y-y0)/(s*0.87))%2)?s/2:0);x<x1+s/2;x+=s)o.push([x+(r()-0.5)*s*0.6,Math.min(y1-1,y+(r()-0.5)*s*0.5)]);return o;}
+function legend(svg,x,y,items,xmax){/* items : [couleur, texte, "o" pour un rond] ; passe à la ligne ; renvoie le bas de la légende */
+  let lx=x,ly=y;
+  items.forEach(q=>{const t=tx(svg,x,y+9.5,q[1],{class:"lbl"});let w=70;try{w=t.getBBox().width;}catch(e){}
+    if(lx>x&&lx+14+w>xmax){lx=x;ly+=16;}
+    t.setAttribute("x",lx+14);t.setAttribute("y",ly+9.5);
+    if(q[2]==="o")el("circle",{cx:lx+5,cy:ly+5,r:4.5,fill:q[0],stroke:"var(--ink)","stroke-width":0.7},svg);
+    else el("rect",{x:lx,y:ly,width:10,height:10,fill:q[0],stroke:"var(--ink)","stroke-width":0.7},svg);
+    lx+=14+w+12;});
+  return ly+12;}
+/* Modèles du cours (tôles d'acier, ordres de grandeur pédagogiques) ; résistances en µΩ, courants en kA */
+/* M1 : résistances en série au cours du temps (I = 9 kA, 200 ms) */
+const SURF={propre:{n:"tôles propres",rc:120},oxyde:{n:"tôles oxydées",rc:400},galva:{n:"tôles galvanisées",rc:45}};
+function resist(s,F,tms){
+  const rc2=SURF[s].rc*Math.pow(250/F,0.8)*Math.exp(-tms/10),rce=0.3*SURF[s].rc*Math.pow(250/F,0.8)*Math.exp(-tms/10);
+  const tf=60,rb=30*(1+2.5*(1-Math.exp(-tms/50)))*(1-0.22*Math.max(0,(tms-tf)/140));
+  return {rc2:rc2,rce:rce,rb:rb,R:rc2+rce+rb};
+}
+function energie(s,F,tms,I){let W=0;for(let t=0;t<tms;t+=0.5)W+=resist(s,F,t+0.25).R*1e-6*I*I*1e6*0.5e-3;return W;}
+
+/* M2 : AC 50 Hz ou MFDC, profondeur de gorge g (mm) */
+function poste(src,g){
+  const U2=8,R=140,L=0.004*g,X=2*Math.PI*50*L,Z=src==="ac"?Math.hypot(R,X):R;
+  return {U2:U2,R:R,X:X,Z:Z,I:U2/Z*1000,cosphi:src==="ac"?R/Math.hypot(R,X):1};
+}
+
+/* M3 : domaine de soudabilité, deux tôles d'acier nu de 1 mm, électrodes Ø 6 mm (I kA, t périodes de 20 ms, F daN) */
+function point(I,t,F){
+  const I0=6.0*Math.pow(10/t,0.25)*Math.pow(F/250,0.3),dmax=7.5,dexp=6.0*Math.pow(F/250,0.3),dmin=4;
+  const d=I>I0?dmax*Math.sqrt(1-Math.pow(I0/I,2)):0;
+  const e=d>dexp?"crache":d>=dmin?"ok":d>0?"petit":"colle";
+  const lo=I0/Math.sqrt(1-Math.pow(dmin/dmax,2)),hi=I0/Math.sqrt(1-Math.pow(dexp/dmax,2));
+  return {I0:I0,d:d,e:e,lo:lo,hi:hi,dexp:dexp};
+}
+
+/* M4 : pas, bord et effet de shunt */
+function rangee(mat,e,p,b){
+  const d=5*Math.sqrt(e),kmin=mat==="alu"?6:4,c=mat==="alu"?0.6:0.4,fs=Math.min(0.6,c*d/p),d2=d*Math.max(0,1-fs);
+  return {d:d,pmin:kmin*d,bmin:1.5*d,fs:fs,d2:d2,okP:p>=kmin*d,okB:b>=1.5*d};
+}
+
+/* M5 : soudage à la molette (v m/min, tc et tf en périodes de 20 ms, tôles de 1 mm) */
+function molette(v,tc,tf){const d=5,p=v*1000/60*(tc+tf)*0.02,r=(d-p)/d;return {d:d,p:p,r:r,etat:r>=0.3?"etanche":p<=d?"jointif":"separe"};}
+
+const fr=s=>nbsp(s).replace(/ ([;:!?])/g,NB+"$1");
+const lbl=(svg,x,y,s,o)=>{const t=tx(svg,x,y,s,Object.assign({class:"lbl"},o||{}));t.style.fontSize=(o&&o.fs?o.fs:11)+"px";return t;};
+const poly=(svg,pts,a)=>el("polygon",Object.assign({points:pts.map(p=>p.join(",")).join(" ")},a),svg);
+
+/* =========================================================
+   M1 : la résistance dynamique d'un point
+   ========================================================= */
+(function(){
+  const svg=$("#m1svg");if(!svg)return;
+  const sF=$("#m1f"),ro=$("#m1r"),msg=$("#m1msg");let s="propre",tt=1;const I=9;
+  function draw(){
+    const W=svgW(svg),n=W<560,F=+sF.value,tms=200*tt,r=resist(s,F,Math.min(tms,199.9)),Wj=energie(s,F,tms,I);clear(svg);
+    $("#m1fo").textContent=nf(F,0)+NB+"daN";
+    /* empilement */
+    const cx=n?72:W*0.15,y0=20,ew=34,sw=n?120:Math.min(150,W*0.22),th=26,lx=cx+sw/2+6;
+    const ys=[y0+44,y0+44+th,y0+44+2*th];
+    poly(svg,[[cx-ew/2,y0],[cx+ew/2,y0],[cx+ew/2-4,ys[0]],[cx-ew/2+4,ys[0]]],{fill:mixc("var(--weld)",65),stroke:"var(--ink)"});
+    poly(svg,[[cx-ew/2+4,ys[2]],[cx+ew/2-4,ys[2]],[cx+ew/2,ys[2]+44],[cx-ew/2,ys[2]+44]],{fill:mixc("var(--weld)",65),stroke:"var(--ink)"});
+    [0,1].forEach(k=>el("rect",{x:cx-sw/2,y:ys[k],width:sw,height:th,fill:mixc("var(--muted)",30),stroke:"var(--ink)"},svg));
+    arrow(svg,cx,y0-2,cx,y0+14,"var(--frc)",2,7);arrow(svg,cx,ys[2]+60,cx,ys[2]+44,"var(--frc)",2,7);
+    /* chaleur : intensité aux interfaces et dans les tôles */
+    const tot=r.R,hI=r.rc2/tot,hE=r.rce/tot,hB=r.rb/tot;
+    el("rect",{x:cx-ew/2,y:ys[1]-3,width:ew,height:6,fill:"var(--sig)","fill-opacity":Math.min(1,0.15+1.2*hI)},svg);
+    [ys[0],ys[2]].forEach(y=>el("rect",{x:cx-ew/2+4,y:y-2,width:ew-8,height:4,fill:"var(--sig)","fill-opacity":Math.min(1,0.1+1.2*hE)},svg));
+    [ys[0],ys[1]].forEach(y=>el("rect",{x:cx-ew/2,y:y+3,width:ew,height:th-6,fill:"var(--sig)","fill-opacity":Math.min(0.8,0.05+0.9*hB*Math.min(1,tms/80))},svg));
+    if(tms>60){const k=Math.min(1,(tms-60)/140),rw=ew*0.55*k+3,rh=th*0.8*k+1;el("ellipse",{cx:cx,cy:ys[1],rx:rw,ry:rh,fill:mixc("var(--gam)",70),stroke:"var(--gam)"},svg);}
+    const L=(x,y,t,c)=>{const q=lbl(svg,x,y,t,{fs:10,fill:c||"var(--ink)"});fitText(q,4,W-4);return q;};
+    L(lx,ys[1]+4,"Rc tôle-tôle "+nf(r.rc2,0)+" μΩ","var(--sig)");
+    L(lx,ys[0]-6,"Rc électrodes "+nf(r.rce,0)+" μΩ","var(--tau)");
+    L(lx,ys[0]+th/2-2,"tôles "+nf(r.rb,0)+" μΩ","var(--muted)");
+    /* courbe R(t) */
+    const gx0=n?44:W*0.48,gx1=W-14,gy0=n?ys[2]+86:22,gy1=gy0+(n?150:170);
+    const rmax=50*Math.ceil(resist(s,F,0).R/50);
+    const A=axes(svg,gx0,gx1,gy0,gy1,0,200,0,rmax,"temps (ms)","R (μΩ)",n?50:40,niceStep(rmax,4));
+    let d="";for(let t=0;t<=200;t+=2){d+=(d?"L":"M")+A.X(t).toFixed(1)+" "+A.Y(resist(s,F,Math.min(t,199.9)).R).toFixed(1)+" ";}
+    el("path",{d:d,fill:"none",stroke:"var(--eps)","stroke-width":2.6},svg);
+    el("line",{x1:A.X(60),y1:gy0,x2:A.X(60),y2:gy1,stroke:"var(--gam)","stroke-width":1,"stroke-dasharray":"4 3"},svg);
+    {const q=lbl(svg,A.X(60)+4,gy0+12,"début de fusion",{fill:"var(--gam)",fs:10});fitText(q,gx0,gx1);}
+    el("circle",{cx:A.X(tms),cy:A.Y(resist(s,F,Math.min(tms,199.9)).R),r:6,fill:"var(--sig)",stroke:"var(--card)","stroke-width":1.5},svg);
+    setVB(svg,W,Math.max(gy1+38,ys[2]+66));
+    ro.innerHTML=fr("<span>t = "+nf(tms,0)+" ms</span><span>R = <b class='eps'>"+nf(r.R,0)+" μΩ</b></span><span>P = "+nf(r.R*1e-6*I*I*1e6/1000,1)+" kW</span><span>W = "+nf(Wj/1000,2)+" kJ</span><span>interface : "+nf(100*hI,0)+" % de la chaleur</span>");
+    let m;
+    if(tms<25)m="Début du courant : le contact tôle-tôle concentre "+nf(100*hI,0)+" % de la chaleur. "+(s==="oxyde"?"Tôles oxydées : résistance très forte, l'interface chauffe trop vite, risque de crachement précoce.":s==="galva"?"Tôles galvanisées : le zinc, mou et conducteur, écrase la résistance de contact ; il faudra plus de courant.":"Plus l'effort est fort, plus ce pic de départ est bas.");
+    else if(tms<60)m="Les aspérités s'écrasent et fluent : les résistances de contact s'effondrent, la résistance totale passe par un minimum. L'acier, en chauffant, prend le relais.";
+    else if(tms<199)m="Le noyau a commencé à fondre à l'interface et grandit : la résistance des tôles chaudes domine, puis la résistance totale redescend quand le noyau s'élargit.";
+    else m="Fin du soudage : environ "+nf(Wj/1000,2)+" kJ dégagés en 200 ms. Le forgeage va maintenir l'effort pendant que le noyau se fige.";
+    msg.innerHTML=fr(m)+"<br><b>À retenir :</b> la chaleur naît au contact tôle-tôle ; serrer, c'est refroidir l'interface.";
+  }
+  player("m1pl",{get:()=>tt,set:v=>{tt=v;draw();},dur:6000,steps:10});
+  $$("#m1b .btn").forEach(b=>b.addEventListener("click",()=>{s=b.dataset.s;setOn("#m1b",b);draw();}));
+  sF.addEventListener("input",draw);
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M2 : AC ou MFDC, bras courts ou longs
+   ========================================================= */
+(function(){
+  const svg=$("#m2svg");if(!svg)return;
+  const sG=$("#m2g"),ro=$("#m2r"),msg=$("#m2msg");let src="ac";
+  function draw(){
+    const W=svgW(svg),n=W<560,g=+sG.value,p=poste(src,g),pa=poste("ac",g);clear(svg);
+    $("#m2go").textContent=nf(g,0)+NB+"mm";
+    /* pince en C */
+    const x0=14,maxw=n?W-28:W*0.46,k=(maxw-70)/800,tw=60,yA=40,yB=110,xT=x0+tw,xE=xT+g*k;
+    el("rect",{x:x0,y:yA-14,width:tw,height:yB-yA+28,rx:6,fill:mixc("var(--muted)",25),stroke:"var(--ink)"},svg);
+    lbl(svg,x0+tw/2,yA+38,src==="ac"?"transfo 50 Hz":"transfo MF",{"text-anchor":"middle",fs:9.5});
+    el("rect",{x:xT,y:yA,width:xE-xT,height:yB-yA,fill:src==="ac"?mixc("var(--tau)",14+Math.min(30,g/30)):mixc("var(--muted)",6),stroke:"none"},svg);
+    [yA,yB].forEach(y=>el("rect",{x:xT,y:y-5,width:xE-xT,height:10,fill:mixc("var(--weld)",65),stroke:"var(--ink)"},svg));
+    el("rect",{x:xE-5,y:yA+5,width:10,height:22,fill:mixc("var(--weld)",80),stroke:"var(--ink)"},svg);
+    el("rect",{x:xE-5,y:yB-27,width:10,height:22,fill:mixc("var(--weld)",80),stroke:"var(--ink)"},svg);
+    el("rect",{x:xE-30,y:(yA+yB)/2-3,width:60,height:6,fill:mixc("var(--muted)",40),stroke:"var(--ink)"},svg);
+    arrow(svg,xT+10,yA-12,xE-14,yA-12,"var(--sig)",1.6,7);arrow(svg,xE-14,yB+12,xT+10,yB+12,"var(--sig)",1.6,7);
+    {const q=lbl(svg,(xT+xE)/2,(yA+yB)/2-8,src==="ac"?"boucle : inductance":"boucle",{"text-anchor":"middle",fs:10,fill:"var(--tau)"});fitText(q,xT,xE+30);}
+    {const q=lbl(svg,(xT+xE)/2,yB+30,"gorge "+nf(g,0)+" mm",{"text-anchor":"middle",fs:10.5,"font-weight":"700",fill:"var(--mat)"});fitText(q,4,W-4);}
+    /* forme du courant */
+    const gx0=n?44:W*0.56,gx1=W-14,gy0=n?yB+60:24,gy1=gy0+(n?130:150),Imax=60;
+    const A=axes(svg,gx0,gx1,gy0,gy1,0,60,src==="ac"?-Imax/2:0,src==="ac"?Imax/2:Imax,"temps (ms)","i (kA)",20,src==="ac"?10:15);
+    let d="";const Ireg=Math.min(p.I,src==="ac"?p.I:12);
+    for(let t=0;t<=60;t+=0.25){let i;
+      if(src==="ac"){const ph=(t%10)/10,sg=Math.floor(t/10)%2?-1:1;i=ph<0.3?0:sg*Math.min(p.I*0.95,p.I*1.2*Math.sin(Math.PI*ph));}
+      else{i=Ireg*(1-Math.exp(-t/3))*(1+0.03*Math.sin(2*Math.PI*t));}
+      d+=(d?"L":"M")+A.X(t).toFixed(1)+" "+A.Y(Math.max(src==="ac"?-Imax/2:0,Math.min(src==="ac"?Imax/2:Imax,i))).toFixed(1)+" ";}
+    el("path",{d:d,fill:"none",stroke:"var(--sig)","stroke-width":2.2},svg);
+    {const q=lbl(svg,gx1-2,gy0+12,src==="ac"?"thyristors : alternances découpées":"courant redressé, réglé à 12 kA",{"text-anchor":"end",fs:10,fill:"var(--sig)"});fitSize(q,gx1-gx0,7);halo(q,svg);}
+    setVB(svg,W,Math.max(gy1+38,yB+42));
+    ro.innerHTML=fr("<span>ωL = "+nf(pa.X,0)+" μΩ"+(src==="ac"?"":" (sans effet en continu)")+"</span><span>Z = "+nf(p.Z,0)+" μΩ</span><span>I disponible ≈ <b class='eps'>"+nf(p.I,1)+" kA</b></span><span>cos φ = "+nf(p.cosphi,2)+"</span>");
+    let m=src==="ac"?"En AC, la boucle des bras ("+nf(g,0)+" mm) ajoute "+nf(pa.X,0)+" μΩ de réactance aux 140 μΩ de résistance : il ne reste qu'environ "+nf(p.I,1)+" kA disponibles, avec un facteur de puissance de "+nf(p.cosphi,2)+". "+(p.I<12?"Trop juste pour souder des tôles d'acier avec de la marge.":"Suffisant, mais chaque centimètre de bras en plus coûte du courant."):"En MFDC, le courant est redressé : l'inductance ne fait que ralentir sa montée, et environ "+nf(p.I,0)+" kA restent disponibles quelle que soit la gorge. La commande en délivre la part voulue, à la milliseconde.";
+    msg.innerHTML=fr(m)+"<br><b>À retenir :</b> bras longs, AC court ; le MFDC s'en affranchit.";
+  }
+  $$("#m2b .btn").forEach(b=>b.addEventListener("click",()=>{src=b.dataset.s;setOn("#m2b",b);draw();}));
+  sG.addEventListener("input",draw);
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M3 : le domaine de soudabilité
+   ========================================================= */
+(function(){
+  const svg=$("#m3svg");if(!svg)return;
+  const sF=$("#m3f"),sI=$("#m3i"),sT=$("#m3t"),ro=$("#m3r"),msg=$("#m3msg");
+  const COL={colle:"var(--muted)",petit:"var(--tau)",ok:"var(--gam)",crache:"var(--sig)"};
+  const NOM={colle:"collé, sans noyau",petit:"noyau trop petit",ok:"point conforme",crache:"crachement"};
+  function draw(){
+    const W=svgW(svg),n=W<560,F=+sF.value,I=+sI.value,t=+sT.value,p=point(I,t,F);clear(svg);
+    $("#m3fo").textContent=nf(F,0)+NB+"daN";$("#m3io").textContent=nf(I,1)+NB+"kA";$("#m3to").textContent=t+NB+"~ ("+t*20+NB+"ms)";
+    setOn("#m3b",$$("#m3b .btn").find(b=>+b.dataset.i===I&&+b.dataset.t===t)||null);
+    const x0=n?44:52,x1=n?W-14:W*0.62,y0=26,y1=n?200:230;
+    const A=axes(svg,x0,x1,y0,y1,5,13,3,20,"intensité I (kA)","temps t (périodes)",1,3);
+    const nx=40,ny=34;
+    for(let a=0;a<nx;a++)for(let b=0;b<ny;b++){const ii=5+(a+0.5)*8/nx,ttt=3+(b+0.5)*17/ny,e=point(ii,ttt,F).e;
+      el("rect",{x:A.X(5+a*8/nx),y:A.Y(3+(b+1)*17/ny),width:(x1-x0)/nx+0.5,height:(y1-y0)/ny+0.5,fill:mixc(COL[e],e==="ok"?45:20),stroke:"none"},svg);}
+    el("circle",{cx:A.X(I),cy:A.Y(t),r:6.5,fill:COL[p.e],stroke:"var(--card)","stroke-width":2},svg);
+    {const q=lbl(svg,A.X(Math.min(12.6,p.hi+0.15)),A.Y(Math.min(19,t+1.5)),"crachement",{fill:"var(--sig)",fs:10,"font-weight":"700"});fitText(q,x0,x1);halo(q,svg);
+     const u=lbl(svg,A.X(5.2),A.Y(4.2),"collage",{fill:"var(--muted)",fs:10,"font-weight":"700"});halo(u,svg);}
+    /* coupe du point */
+    const cx=n?W/2:W*0.82,k=n?14:Math.min(16,(W*0.34)/12),cy=n?y1+90:120,th=1*k;
+    [-1,1].forEach(sg=>el("rect",{x:cx-6*k,y:sg<0?cy-th:cy,width:12*k,height:th,fill:mixc("var(--muted)",30),stroke:"var(--ink)"},svg));
+    el("rect",{x:cx-3*k,y:cy-th-30,width:6*k,height:30,fill:mixc("var(--weld)",65),stroke:"var(--ink)"},svg);
+    el("rect",{x:cx-3*k,y:cy+th,width:6*k,height:30,fill:mixc("var(--weld)",65),stroke:"var(--ink)"},svg);
+    if(p.d>0)el("ellipse",{cx:cx,cy:cy,rx:p.d/2*k,ry:Math.min(0.85,0.25+0.09*p.d)*th,fill:mixc("var(--gam)",75),stroke:"var(--gam)"},svg);
+    if(p.e==="crache")[-1,1].forEach(sg=>{for(let j=0;j<3;j++)el("circle",{cx:cx+sg*(6*k+6+j*7),cy:cy-2+j*3,r:2.2,fill:"var(--sig)"},svg);});
+    [4,p.dexp].forEach((dd,j)=>{[-1,1].forEach(sg=>el("line",{x1:cx+sg*dd/2*k,y1:cy+th+34,x2:cx+sg*dd/2*k,y2:cy+th+42,stroke:j?"var(--sig)":"var(--muted)","stroke-width":1.4},svg));});
+    {const q=lbl(svg,cx,cy+th+56,"d = "+nf(p.d,1)+" mm · "+NOM[p.e],{"text-anchor":"middle",fs:11,"font-weight":"700",fill:COL[p.e]});fitSize(q,n?W-20:W*0.34,7);}
+    setVB(svg,W,Math.max(y1+38,cy+th+66));
+    ro.innerHTML=fr("<span>d ≈ <b class='eps'>"+nf(p.d,1)+" mm</b></span><span>domaine : "+nf(p.lo,1)+" à "+nf(p.hi,1)+" kA</span><span>largeur "+nf(p.hi-p.lo,1)+" kA</span><span>"+NOM[p.e]+"</span>");
+    const M={colle:"Pas assez d'énergie : aucun noyau, les tôles ne tiennent que par adhérence. Monter l'intensité ou le temps.",
+      petit:"Un noyau existe, mais sous 4 mm (4√e) : il cassera à l'interface ou laissera un bouton trop petit. Monter un peu l'intensité.",
+      ok:"Point conforme : noyau de "+nf(p.d,1)+" mm, entre 4 mm et le crachement. Le domaine s'étend de "+nf(p.lo,1)+" à "+nf(p.hi,1)+" kA à ce temps et cet effort"+(Math.abs(I-(p.lo+p.hi)/2)<0.5?", et tu es près du centre.":" : rapproche-toi du centre pour la robustesse."),
+      crache:"Trop d'énergie : le noyau dépasse ce que l'effort retient, le liquide jaillit entre les tôles. Baisser l'intensité ou le temps, ou serrer davantage."};
+    msg.innerHTML=fr(M[p.e])+"<br><b>À retenir :</b> effort d'abord ; domaine du diamètre minimal au crachement ; réglage au milieu.";
+  }
+  $$("#m3b .btn").forEach(b=>b.addEventListener("click",()=>{sI.value=b.dataset.i;sT.value=b.dataset.t;draw();}));
+  [sF,sI,sT].forEach(x=>x.addEventListener("input",draw));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M4 : une rangée de points
+   ========================================================= */
+(function(){
+  const svg=$("#m4svg");if(!svg)return;
+  const sE=$("#m4e"),sP=$("#m4p"),sD=$("#m4d"),ro=$("#m4r"),msg=$("#m4msg");let mat="acier";
+  function draw(){
+    const W=svgW(svg),n=W<560,e=+sE.value,p=+sP.value,b=+sD.value,r=rangee(mat,e,p,b);clear(svg);
+    $("#m4eo").textContent=nf(e,1)+NB+"mm";$("#m4po").textContent=nf(p,0)+NB+"mm";$("#m4do").textContent=nf(b,1)+NB+"mm";
+    const L=2*p+2*b+8,k=Math.min((W-30)/L,n?7:9),x0=(W-L*k)/2,yc=34+b*k,yTop=34,yBot=34+2*b*k;
+    el("rect",{x:x0,y:yTop-18,width:L*k,height:2*b*k+18,fill:mixc("var(--muted)",18),stroke:"var(--ink)"},svg);
+    el("rect",{x:x0,y:yTop,width:L*k,height:2*b*k+18,fill:mixc("var(--muted)",32),stroke:"var(--ink)","stroke-dasharray":"5 3"},svg);
+    lbl(svg,x0+4,yTop-6,"tôle supérieure",{fs:9.5,fill:"var(--muted)"});lbl(svg,x0+4,yBot+14,"tôle inférieure",{fs:9.5,fill:"var(--muted)"});
+    const xs=[x0+(b+4)*k,x0+(b+4+p)*k,x0+(b+4+2*p)*k],ds=[r.d,r.d2,r.d2];
+    xs.forEach((x,i)=>{el("circle",{cx:x,cy:yc,r:ds[i]/2*k,fill:mixc("var(--gam)",i?50:75),stroke:"var(--gam)","stroke-width":1.4},svg);lbl(svg,x,yc+4,String(i+1),{"text-anchor":"middle",fs:10,"font-weight":"700"});});
+    /* courant dérivé */
+    el("path",{d:"M"+(xs[1]-ds[1]/2*k)+" "+(yc-4)+" Q "+((xs[0]+xs[1])/2)+" "+(yc-22)+" "+(xs[0]+ds[0]/2*k)+" "+(yc-4),fill:"none",stroke:"var(--tau)","stroke-width":1.2+8*r.fs,"stroke-dasharray":"5 3"},svg);
+    {const q=lbl(svg,(xs[0]+xs[1])/2,yc-26,"shunt "+nf(100*r.fs,0)+" %",{"text-anchor":"middle",fs:10.5,fill:"var(--tau)","font-weight":"700"});halo(q,svg);}
+    /* cotes */
+    darrow(svg,xs[2]+ds[2]/2*k+10,yc,yTop,r.okB?"var(--mat)":"var(--sig)");
+    {const q=lbl(svg,xs[2]+ds[2]/2*k+16,(yc+yTop)/2+4,"b "+nf(b,1),{fs:10.5,fill:r.okB?"var(--mat)":"var(--sig)","font-weight":"700"});fitText(q,4,W-4);}
+    arrow(svg,(xs[1]+xs[2])/2,yBot+30,xs[1],yBot+30,r.okP?"var(--mat)":"var(--sig)",1.5,6);arrow(svg,(xs[1]+xs[2])/2,yBot+30,xs[2],yBot+30,r.okP?"var(--mat)":"var(--sig)",1.5,6);
+    {const q=lbl(svg,(xs[1]+xs[2])/2,yBot+46,"pas "+nf(p,0)+" mm (min "+nf(r.pmin,0)+")",{"text-anchor":"middle",fs:10.5,fill:r.okP?"var(--mat)":"var(--sig)","font-weight":"700"});fitText(q,4,W-4);}
+    setVB(svg,W,yBot+58);
+    ro.innerHTML=fr("<span>d = 5√e = <b class='eps'>"+nf(r.d,1)+" mm</b></span><span>pas ≥ "+nf(r.pmin,0)+" mm "+(r.okP?"✔":"✘")+"</span><span>bord ≥ "+nf(r.bmin,1)+" mm "+(r.okB?"✔":"✘")+"</span><span>points suivants ≈ "+nf(r.d2,1)+" mm</span>");
+    let m="";
+    if(!r.okB)m+="Le point est trop près du bord ("+nf(b,1)+" mm pour "+nf(r.bmin,1)+" exigés) : le métal liquide, mal retenu, crache par le bord. ";
+    if(!r.okP)m+="Pas trop serré pour "+(mat==="alu"?"l'aluminium":"l'acier")+" : le point voisin dérive "+nf(100*r.fs,0)+" % du courant, et les points suivants tombent vers "+nf(r.d2,1)+" mm"+(r.d2<4*Math.sqrt(e)?", sous le minimal de "+nf(4*Math.sqrt(e),1)+" mm.":".");
+    if(!m)m="Rangée conforme aux règles d'usage : environ "+nf(100*r.fs,0)+" % de courant perdu dans le voisin, points suivants vers "+nf(r.d2,1)+" mm. Une compensation de courant les ramènerait au nominal.";
+    msg.innerHTML=fr(m)+"<br><b>À retenir :</b> 5√e, bord 1,5 d, pas 4 d en acier, 6 d en aluminium.";
+  }
+  $$("#m4b .btn").forEach(b=>b.addEventListener("click",()=>{mat=b.dataset.m;setOn("#m4b",b);draw();}));
+  [sE,sP,sD].forEach(x=>x.addEventListener("input",draw));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M5 : de la couture au cordon étanche
+   ========================================================= */
+(function(){
+  const svg=$("#m5svg");if(!svg)return;
+  const sV=$("#m5v"),sC=$("#m5c"),sFr=$("#m5f"),ro=$("#m5r"),msg=$("#m5msg");
+  const NOM={etanche:"cordon étanche",jointif:"points jointifs, non étanche",separe:"points séparés (pointage)"};
+  const COL={etanche:"var(--gam)",jointif:"var(--tau)",separe:"var(--frc)"};
+  function draw(){
+    const W=svgW(svg),n=W<560,v=+sV.value,tc=+sC.value,tf=+sFr.value,m=molette(v,tc,tf);clear(svg);
+    $("#m5vo").textContent=nf(v,1)+NB+"m/min";$("#m5co").textContent=tc+NB+"~";$("#m5fo").textContent=tf+NB+"~";
+    setOn("#m5b",$$("#m5b .btn").find(b=>+b.dataset.v===v&&+b.dataset.c===tc&&+b.dataset.f===tf)||null);
+    /* molettes */
+    const cx=W/2,R=34,ys=24+R;
+    el("circle",{cx:cx,cy:ys,r:R,fill:mixc("var(--weld)",55),stroke:"var(--ink)"},svg);
+    el("circle",{cx:cx,cy:ys+2*R+10,r:R,fill:mixc("var(--weld)",55),stroke:"var(--ink)"},svg);
+    el("rect",{x:14,y:ys+R,width:W-28,height:10,fill:mixc("var(--muted)",35),stroke:"var(--ink)"},svg);
+    arrow(svg,W-80,ys+3*R+24,W-24,ys+3*R+24,"var(--frc)",1.6,7);lbl(svg,W-84,ys+3*R+28,"v = "+nf(v,1)+" m/min",{"text-anchor":"end",fs:10.5,fill:"var(--frc)"});
+    /* points vus de dessus */
+    const k=Math.min((W-28)/60,n?6:9),y=ys+3*R+44+4*Math.min((W-28)/60,n?6:9),x0=14,L=60;
+    el("rect",{x:x0,y:y-4*k,width:L*k,height:8*k,fill:mixc("var(--muted)",25),stroke:"var(--ink)"},svg);
+    for(let x=m.d/2;x<=L-m.d/2;x+=Math.max(m.p,0.3))el("circle",{cx:x0+x*k,cy:y,r:m.d/2*k,fill:mixc(COL[m.etat],45),stroke:COL[m.etat],"stroke-width":1},svg);
+    {const q=lbl(svg,W/2,y+4*k+18,NOM[m.etat]+" · p = "+nf(m.p,1)+" mm",{"text-anchor":"middle",fs:11.5,"font-weight":"700",fill:COL[m.etat]});fitSize(q,W-20,7);}
+    setVB(svg,W,y+4*k+28);
+    ro.innerHTML=fr("<span>v = "+nf(v*1000/60,1)+" mm/s</span><span>cycle "+(tc+tf)*20+" ms</span><span>p = <b class='eps'>"+nf(m.p,1)+" mm</b></span>"+(m.r>=0?"<span>recouvrement "+nf(100*m.r,0)+" %</span>":"<span>écart entre points "+nf(m.p-m.d,1)+" mm</span>"));
+    const M={etanche:"Les points de "+m.d+" mm se recouvrent de "+nf(100*m.r,0)+" % : le cordon est continu et étanche.",
+      jointif:"Les points se touchent ou se recouvrent à peine ("+nf(Math.max(0,100*m.r),0)+" %) : le cordon a des étranglements, il fuira. Ralentir, ou raccourcir le temps froid.",
+      separe:"Les points sont espacés de "+nf(m.p,1)+" mm : c'est un pointage à la molette, rapide, mais pas étanche."};
+    msg.innerHTML=fr(M[m.etat])+"<br><b>À retenir :</b> p = v·(t<sub>c</sub> + t<sub>f</sub>) ; on chevauche pour l'étanchéité.";
+  }
+  $$("#m5b .btn").forEach(b=>b.addEventListener("click",()=>{sV.value=b.dataset.v;sC.value=b.dataset.c;sFr.value=b.dataset.f;draw();}));
+  [sV,sC,sFr].forEach(x=>x.addEventListener("input",draw));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   Quiz, check-list, sommaire, thème
+   ========================================================= */
+(function(){
+  const box=$("#quiz");if(!box)return;
+  const Q=[
+    {q:"Où naît d'abord la chaleur dans un point de soudure ?",o:["dans les électrodes","au contact entre les deux tôles","dans le métal des tôles, au milieu de leur épaisseur","à l'extérieur des tôles"],c:1,e:"Le contact tôle-tôle est la résistance la plus forte au départ : W = R·I²·t y dégage le plus de chaleur. Les électrodes, refroidies, restent froides."},
+    {q:"Que fait une augmentation de l'effort sur la résistance de contact ?",o:["elle l'augmente","elle la diminue, en écrasant les aspérités","elle ne change rien","elle la rend négative"],c:1,e:"Plus d'effort, plus de surface réellement en contact : résistance plus faible, moins de chaleur à courant égal. D'où un courant plus fort à prévoir."},
+    {q:"Pourquoi les électrodes sont-elles en CuCr1Zr plutôt qu'en cuivre pur ?",o:["pour mieux chauffer","parce que le cuivre pur ne conduit pas","pour souder sans courant","parce que le cuivre pur est trop mou pour supporter l'effort"],c:3,e:"Il faut un alliage à la fois conducteur et dur : CuCr1Zr pour les aciers, CuCo2Be encore plus dur. Le cuivre pur s'écraserait."},
+    {q:"Avec des bras de pince longs, en AC 50 Hz :",o:["l'inductance de la boucle réduit le courant disponible","le courant augmente","rien ne change","le courant devient continu"],c:0,e:"I = U₂/√(R² + ω²L²) : la gorge augmente L. En MFDC, le courant redressé n'est presque plus limité par L."},
+    {q:"Quel est l'ordre du cycle de base ?",o:["soudage, accostage, forgeage","accostage, soudage, forgeage, ouverture","forgeage, soudage, accostage","soudage seul"],c:1,e:"Accostage (effort établi), soudage (courant), forgeage (effort maintenu pendant la solidification, au moins aussi long que le soudage), ouverture."},
+    {q:"Un point dont le noyau est trop petit ou absent est dit :",o:["collé","craché","étanche","forgé"],c:0,e:"Le point collé tient par adhérence et casse à l'interface au déboutonnage. Il a souvent le même aspect qu'un point sain."},
+    {q:"Diamètre nominal d'un point dans deux tôles de 1 mm, selon la règle d'usage ?",o:["1 mm","2,5 mm","10 mm","5 mm"],c:3,e:"d = 5√e = 5 mm ; minimal 3,5√e à 4√e, soit 3,5 à 4 mm."},
+    {q:"En augmentant l'effort, le domaine de soudabilité en courant :",o:["disparaît","se rétrécit vers les faibles courants","s'élargit, en se décalant vers les courants plus forts","ne change pas"],c:2,e:"L'effort retient mieux le liquide (crachement plus tardif) et réduit les résistances de contact (il faut plus de courant pour commencer à fondre)."},
+    {q:"Pourquoi le pas minimal est-il plus grand en aluminium qu'en acier ?",o:["l'aluminium est plus lourd","l'aluminium fond plus haut","pour économiser des électrodes","l'aluminium, plus conducteur, dérive davantage de courant par le point voisin"],c:3,e:"Effet de shunt : environ 4·d en acier, 6·d en aluminium."},
+    {q:"Quel essai mesure directement le diamètre d'un point en atelier ?",o:["le déboutonnage (pelage ou burin)","l'essai de dureté","l'essai Charpy","le ressuage"],c:0,e:"On arrache une tôle : un bouton reste sur l'une, un trou dans l'autre ; on mesure le bouton. ISO 10447."},
+    {q:"Quel procédé soude des rails ou des chaînes en chassant les oxydes dans un bourrelet ?",o:["la molette","le soudage par bossages","le soudage par étincelage (24)","le soudage par points"],c:2,e:"Étincelles aux ponts de contact, puis refoulement brutal : le métal fondu et les oxydes partent dans le bourrelet, ébavuré ensuite."},
+    {q:"À la molette, en continu, l'espacement des points vaut :",o:["d/v","5√e","v·(t_c + t_f)","I·R"],c:2,e:"p = v·(t_c + t_f) : vitesse fois la durée d'un cycle chaud plus froid. Les points doivent se chevaucher pour un cordon étanche."}
+  ];
+  let score=0,done=0;const sc=$("#qzScore");
+  function upd(){let t="Score : "+score+" / "+Q.length;if(done===Q.length)t+=score>=10?"  ·  🎉 prêt pour le cours 2":score>=7?"  ·  relis les explications":"  ·  refais un tour des chapitres";sc.textContent=t;}
+  function render(){box.innerHTML="";score=0;done=0;
+    Q.forEach((it,n)=>{const d=document.createElement("div");d.className="qz";
+      d.innerHTML='<p class="qz-q"><b>'+(n+1)+".</b> "+it.q+'</p><div class="qz-o"></div><div class="qz-e" hidden></div>';
+      const o=d.querySelector(".qz-o"),ex=d.querySelector(".qz-e");let answered=false;
+      it.o.forEach((txt,i)=>{const b=document.createElement("button");b.type="button";b.className="qz-b";b.innerHTML=String.fromCharCode(65+i)+". "+txt;
+        b.addEventListener("click",()=>{if(answered)return;answered=true;done++;const ok=i===it.c;if(ok)score++;b.classList.add(ok?"ok":"ko");o.children[it.c].classList.add("ok");ex.hidden=false;ex.innerHTML=(ok?"✅ <b>Bien joué.</b> ":"❌ <b>Pas tout à fait.</b> ")+it.e;upd();});
+        o.appendChild(b);});
+      box.appendChild(d);});
+    upd();}
+  $("#qzReset").addEventListener("click",render);render();
+})();
+(function(){
+  const boxes=$$("#checklist input[type=checkbox]"),msg=$("#checkMsg"),KEY="procedes-avances-cours1-check";
+  if(!boxes.length)return;
+  let saved=[];try{saved=JSON.parse(localStorage.getItem(KEY)||"[]")||[];}catch(e){saved=[];}
+  boxes.forEach(b=>{b.checked=saved.indexOf(b.dataset.c)>=0;});
+  function upd(){const on=boxes.filter(b=>b.checked).map(b=>b.dataset.c);try{localStorage.setItem(KEY,JSON.stringify(on));}catch(e){}
+    msg.innerHTML=on.length===boxes.length?"🎉 <b>Tout est coché : tu es prêt pour le cours 2 !</b>":on.length+" / "+boxes.length+" : reviens sur les points non cochés (les manipulations sont faites pour ça).";}
+  boxes.forEach(b=>b.addEventListener("change",upd));upd();
+})();
+(function(){/* impression de la fiche mémoire seule */
+  const b=$("#printFiche");if(!b)return;
+  b.addEventListener("click",()=>{document.body.classList.add("print-fiche");window.print();});
+  window.addEventListener("afterprint",()=>document.body.classList.remove("print-fiche"));
+})();
+(function(){
+  const links=$$(".toc a"),tin=$(".toc-in");
+  if(!links.length||!("IntersectionObserver" in window))return;
+  const map={};links.forEach(a=>{map[a.getAttribute("href").slice(1)]=a;});
+  const obs=new IntersectionObserver(ents=>{ents.forEach(en=>{if(!en.isIntersecting)return;const a=map[en.target.id];if(!a)return;
+    links.forEach(l=>l.classList.toggle("on",l===a));
+    if(tin){const tgt=a.offsetLeft-tin.clientWidth/2+a.offsetWidth/2;try{tin.scrollTo({left:tgt,behavior:RM?"auto":"smooth"});}catch(e){tin.scrollLeft=tgt;}}});},{rootMargin:"-45% 0px -50% 0px"});
+  Object.keys(map).forEach(id=>{const s=document.getElementById(id);if(s)obs.observe(s);});
+})();
+(function(){
+  const b=$("#themeBtn");if(!b)return;const KEY="procedes-avances-theme",root=document.documentElement;
+  const lab={auto:"◐ Thème : automatique",light:"☀️ Thème : clair",dark:"🌙 Thème : sombre"};
+  let t="auto";try{t=localStorage.getItem(KEY)||"auto";}catch(e){}
+  function apply(){if(t==="auto")root.removeAttribute("data-theme");else root.setAttribute("data-theme",t);b.textContent=lab[t];}
+  b.addEventListener("click",()=>{t=t==="auto"?"light":t==="light"?"dark":"auto";try{localStorage.setItem(KEY,t);}catch(e){}apply();});
+  apply();
+})();
+
+})();
+</script>
+</body>
+</html>

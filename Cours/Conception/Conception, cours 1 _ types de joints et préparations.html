@@ -1,0 +1,1881 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Conception, cours 1 : types de joints et préparations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@500;600;700&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+
+
+
+:root{
+  --paper:#F3F6F9; --paper-2:#E6ECF2; --card:#FFFFFF; --ink:#17212B; --muted:#56626F; --line:#C5CFD9;
+  --grid:rgba(40,90,160,.075);
+  --sig:#CF2438; --tau:#8A34B6; --eps:#1B5ED3; --gam:#06849A; --frc:#D46A00; --mat:#26844A; --weld:#9A5B12;
+  --ok:#26844A; --warn:#B86E00; --bad:#C62828;
+  --lv2:#E4EBF2; --hl:#FFF3B0;
+  --font-body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-head:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --font-math:"STIX Two Text","Cambria Math","Cambria","Times New Roman",serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+    --grid:rgba(120,160,220,.07);
+    --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+    --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+  --grid:rgba(120,160,220,.07);
+  --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+  --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+  color-scheme: dark;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0;color:var(--ink);font-family:var(--font-body);font-size:17.5px;line-height:1.62;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;overflow-x:hidden;
+}
+img,svg{max-width:100%}
+.wrap{max-width:800px;margin:0 auto;padding:0 20px}
+.wide{max-width:980px}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.1;margin:0}
+h3{font-size:1.65rem;font-weight:600;margin:2rem 0 .6rem}
+h4{font-size:1.3rem;font-weight:600;margin:1.4rem 0 .4rem}
+p{margin:.7em 0}
+a{color:var(--eps)}
+b,strong{font-weight:700}
+small{font-size:.8em}
+sub{font-size:.72em}
+.m{font-family:var(--font-math);font-size:1.08em;white-space:nowrap}
+.sig{color:var(--sig)} .tau{color:var(--tau)} .eps{color:var(--eps)} .gam{color:var(--gam)} .frc{color:var(--frc)} .mat{color:var(--mat)} .mut{color:var(--muted)} .wcol{color:var(--weld)}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .12em;line-height:1.1}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 .2em .08em}
+.frac>span:last-child{padding:.08em .2em 0}
+ul,ol{padding-left:1.4em}
+li{margin:.25em 0}
+
+/* ---------- en-tête ---------- */
+.hero{padding:34px 0 10px}
+.title-block{border:2.5px solid var(--ink);background:var(--card);display:grid;grid-template-columns:1fr 300px}
+.tb-main{padding:22px 24px;border-right:2.5px solid var(--ink);display:flex;flex-direction:column;justify-content:space-between;gap:14px}
+.tb-series{margin:0 0 .5rem;color:var(--muted);font-size:.95rem}
+.hero h1{font-size:clamp(2.3rem,6vw,4rem);font-weight:700;letter-spacing:-.01em}
+.tb-cells{display:grid;grid-template-rows:repeat(4,auto)}
+.tb-cells>div{padding:9px 16px;border-bottom:1.5px solid var(--ink);display:flex;flex-direction:column;justify-content:center}
+.tb-cells>div:last-child{border-bottom:0}
+.tb-cells small{color:var(--muted);font-size:.78rem}
+.tb-cells b{font-family:var(--font-head);font-size:1.25rem;font-weight:600;line-height:1.15}
+.lede{font-size:1.13rem;max-width:760px;margin:1.2rem 0}
+.theme-btn{align-self:flex-start;font-family:var(--font-body);font-size:.85rem;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
+@media (max-width:760px){.title-block{grid-template-columns:1fr}.tb-main{border-right:0;border-bottom:2.5px solid var(--ink)}.tb-cells{grid-template-rows:none;grid-template-columns:1fr 1fr}.tb-cells>div:nth-child(odd){border-right:1.5px solid var(--ink)}.tb-cells>div:nth-child(3){border-bottom:0}}
+@media (max-width:420px){.tb-cells{grid-template-columns:1fr}.tb-cells>div:nth-child(odd){border-right:0}.tb-cells>div:nth-child(3){border-bottom:1.5px solid var(--ink)}}
+
+/* code couleur */
+.cc{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:stretch;margin:1rem 0 .4rem}
+.cc-box{background:var(--card);border:2px solid var(--line);padding:12px 14px;border-radius:4px}
+.cc-cause{border-color:var(--sig)} .cc-link{border-color:var(--mat)} .cc-eff{border-color:var(--eps)}
+.cc-box small{display:block;color:var(--muted);font-size:.82rem;line-height:1.3}
+.cc-syms{font-family:var(--font-math);font-size:1.7rem;line-height:1.25;display:flex;flex-wrap:wrap;gap:.1em .45em;margin:.2rem 0}
+.cc-box p{margin:0;font-size:.9rem;line-height:1.35}
+.cc-arrow{align-self:center;font-size:1.8rem;color:var(--muted)}
+@media (max-width:700px){.cc{grid-template-columns:1fr}.cc-arrow{transform:rotate(90deg);justify-self:center;line-height:1}}
+.cc-more{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:.5rem 0}
+.cc-more>div{border:2px solid var(--line);background:var(--card);border-radius:4px;padding:6px 10px;font-size:.9rem}
+@media (max-width:640px){.cc-more{grid-template-columns:1fr}}
+
+/* ---------- sommaire ---------- */
+.toc{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-bottom:1.5px solid var(--line);padding-top:env(safe-area-inset-top,0px);margin-top:18px}
+.toc-in{display:flex;gap:6px;overflow-x:auto;padding:9px 20px;max-width:980px;margin:0 auto;scrollbar-width:thin}
+.toc a{flex:none;text-decoration:none;color:var(--ink);font-size:.88rem;padding:4px 11px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);white-space:nowrap}
+.toc a.on{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.toc a:focus-visible,.btn:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--eps);outline-offset:2px}
+
+/* ---------- sections ---------- */
+section.chap{padding:46px 0 10px}
+.cartouche{display:grid;grid-template-columns:86px 1fr 250px;border:2.5px solid var(--ink);background:var(--card);margin-bottom:1.4rem}
+.c-num{font-family:var(--font-head);font-size:3.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;border-right:2.5px solid var(--ink)}
+.c-title{padding:14px 18px;border-right:2.5px solid var(--ink)}
+.c-title h2{font-size:2.1rem;font-weight:700}
+.c-title p{margin:.25rem 0 0;color:var(--muted)}
+.c-img{padding:12px 14px;display:flex;gap:12px;align-items:center;background:var(--paper-2)}
+.c-img .ico{font-size:2.3rem;line-height:1}
+.c-img small{display:block;color:var(--muted);font-size:.78rem}
+.c-img span{font-size:.95rem;line-height:1.3}
+@media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
+
+/* gabarit court : approfondissement replié, à retenir, prédiction */
+details.deep{margin:1.2rem 0;padding:0 18px;background:var(--lv2);border-left:6px solid var(--ink);border-radius:4px}
+details.deep>summary{font-family:var(--font-head);font-size:1.2rem;font-weight:600;padding:9px 0}
+details.deep[open]{padding-bottom:10px}
+.retenir{margin:1.4rem 0 .4rem;padding:8px 18px 6px;background:var(--card);border:2px solid var(--ink);border-radius:4px}
+.retenir>b:first-child{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.retenir ul{margin:.3rem 0 .3rem}
+.predict{display:block;margin-top:.35rem;color:var(--ink);font-weight:700}
+@media (max-width:520px){details.deep{padding:0 12px}.retenir{padding:8px 12px 6px}}
+
+/* formules et encadrés */
+.fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:600px;text-align:center;border-radius:3px;overflow-x:auto}
+.fx .big{font-family:var(--font-math);font-size:1.9rem;line-height:1.4}
+.fx .cap{font-size:.85rem;color:var(--muted);margin:.3rem 0 0}
+.fx .row{display:flex;flex-wrap:wrap;justify-content:center;gap:.2em 1.4em}
+.syms{margin:.6rem 0;display:grid;grid-template-columns:auto 1fr;gap:.35rem 1rem;align-items:baseline}
+.syms dt{font-family:var(--font-math);font-size:1.25rem;text-align:right;white-space:nowrap}
+.syms dd{margin:0}
+.def{margin:.9rem 0;padding:.5rem .9rem;border-left:3px dotted var(--muted);font-size:.96rem;background:color-mix(in srgb,var(--card) 60%,transparent)}
+.def>b:first-child{font-family:var(--font-head);font-size:1.08rem;font-weight:600}
+.tip{margin:1rem 0;padding:.7rem 1rem;border:1.5px dashed var(--mat);border-radius:4px;font-size:.97rem}
+.warn{margin:1rem 0;padding:.7rem 1rem;border:2px solid var(--bad);border-radius:4px;font-size:.97rem;background:color-mix(in srgb,var(--bad) 7%,transparent)}
+.mnemo{margin:1rem 0;padding:.7rem 1rem;background:var(--hl);border-radius:4px;font-size:.98rem}
+.fun{margin:1.2rem 0;padding:.8rem 1rem;border:2px dashed var(--muted);border-radius:10px;background:var(--card);font-size:.98rem}
+.fun-h{display:block;margin-bottom:.35rem;font-family:var(--font-head);font-size:1.15rem;font-weight:600;letter-spacing:.02em}
+.meta{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--frc);border-radius:4px;background:color-mix(in srgb,var(--frc) 6%,transparent)}
+.weld{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--weld);border-radius:4px;background:color-mix(in srgb,var(--weld) 7%,transparent)}
+.weld>b:first-child{font-family:var(--font-head);font-size:1.15rem;font-weight:600;color:var(--weld)}
+.hp{display:inline-block;font-size:.72rem;font-weight:700;padding:1px 7px;border-radius:9px;background:var(--weld);color:var(--card);vertical-align:middle;margin-left:4px;white-space:nowrap}
+.recall{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:1rem 0}
+.recall>div{background:var(--card);border:1.5px solid var(--line);border-radius:4px;padding:8px 12px;font-size:.92rem}
+.recall .f{font-family:var(--font-math);font-size:1.2rem;margin-bottom:.2rem}
+@media (max-width:640px){.recall{grid-template-columns:1fr}}
+.hist{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:1rem 0}
+.hist>div{background:var(--card);border:1.5px solid var(--weld);border-radius:4px;padding:8px 12px;font-size:.93rem}
+.hist .yr{font-family:var(--font-head);font-size:1.6rem;font-weight:700;color:var(--weld);line-height:1}
+@media (max-width:720px){.hist{grid-template-columns:1fr}}
+
+/* manipulations */
+.lab{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:14px 16px 12px;margin:1.4rem 0}
+.lab-h{font-family:var(--font-head);font-size:1.3rem;font-weight:600;margin:0 0 .2rem}
+.lab-sub{margin:0 0 .6rem;color:var(--muted);font-size:.92rem}
+.lab svg{display:block;width:100%;height:auto;color:var(--ink);font-family:var(--font-body);touch-action:pan-y}
+.ctrl{display:grid;grid-template-columns:minmax(110px,auto) 1fr minmax(92px,auto);gap:4px 12px;align-items:center;margin:.5rem 0}
+.ctrl label{font-size:.95rem}
+.ctrl output{font-family:var(--font-math);font-size:1.08rem;text-align:right;white-space:nowrap}
+@media (max-width:520px){.ctrl{grid-template-columns:1fr auto}.ctrl input[type=range]{grid-column:1/-1;grid-row:2}}
+input[type=range]{width:100%;accent-color:var(--ink);height:28px;margin:0}
+input.r-sig{accent-color:var(--sig)} input.r-tau{accent-color:var(--tau)} input.r-frc{accent-color:var(--frc)} input.r-mat{accent-color:var(--mat)} input.r-eps{accent-color:var(--eps)}
+.btns{display:flex;flex-wrap:wrap;gap:6px;margin:.5rem 0}
+.btn{font-family:var(--font-body);font-size:.9rem;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 13px;cursor:pointer;line-height:1.3}
+.btn:hover{background:var(--paper-2)}
+.btn.on{background:var(--ink);color:var(--paper)}
+.btn.play{border-color:var(--eps);color:var(--eps);font-weight:700}
+.btn:disabled{opacity:.45;cursor:default}
+.readout{font-family:var(--font-math);font-size:1.08rem;background:var(--paper-2);border-radius:4px;padding:.5rem .8rem;margin:.5rem 0;overflow-x:auto;display:flex;flex-wrap:wrap;gap:.2em 1.3em}
+.readout>span{white-space:nowrap}
+.status{font-size:.97rem;margin:.5rem 0;padding:.5rem .8rem;border-left:4px solid var(--eps);background:color-mix(in srgb,var(--eps) 6%,transparent);border-radius:0 4px 4px 0;min-height:2.6em}
+.radios{display:flex;flex-wrap:wrap;gap:6px 14px;margin:.4rem 0;font-size:.95rem}
+.radios label{display:inline-block;cursor:pointer}
+.radios input{margin:0 6px 0 0;vertical-align:middle}
+
+/* svg */
+svg text{fill:currentColor;font-size:13px}
+svg .lbl{font-size:12.5px;fill:var(--muted)}
+svg .mth{font-family:var(--font-math);font-size:16px}
+svg .ttl{font-family:var(--font-head);font-size:15px;font-weight:600}
+svg .axis{stroke:var(--ink);stroke-width:1.4;fill:none}
+svg .tick{stroke:var(--muted);stroke-width:1}
+svg .gridbg{stroke:var(--line);stroke-width:1}
+svg .ref{stroke:var(--muted);stroke-width:1.3;stroke-dasharray:4 3;fill:none}
+.arr line{stroke:currentColor}
+.arr polygon{fill:currentColor}
+
+/* tableaux */
+.tbl-wrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch}
+table.data{border-collapse:collapse;width:100%;font-size:.94rem;background:var(--card)}
+table.data th,table.data td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:middle}
+table.data th{font-family:var(--font-head);font-weight:600;font-size:1.05rem;background:var(--paper-2)}
+table.data td.n{font-family:var(--font-math);white-space:nowrap}
+table.data tr.now td{background:var(--hl)}
+
+/* parcours */
+.route{list-style:none;padding:0;margin:1rem 0;position:relative}
+.route::before{content:"";position:absolute;left:17px;top:10px;bottom:10px;width:4px;background:var(--line);border-radius:2px}
+.route li{position:relative;padding:0 0 14px 52px;margin:0}
+.route li .dot{position:absolute;left:4px;top:0;width:30px;height:30px;border-radius:50%;border:3px solid var(--ink);background:var(--card);font-family:var(--font-head);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+.route li b{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.route li p{margin:.1rem 0 0;font-size:.95rem}
+.series{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:.8rem 0}
+.series>div{background:var(--card);border:1.5px solid var(--line);padding:8px 10px;border-radius:4px;font-size:.88rem}
+.series>div.here{border:2.5px solid var(--ink)}
+.series b{display:block;font-family:var(--font-head);font-size:1.05rem}
+@media (max-width:700px){.series{grid-template-columns:1fr 1fr}}
+
+/* exercices et quiz */
+.exo{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--ink);padding:6px 20px 12px;margin:1.2rem 0;border-radius:4px}
+.exo.defi{border-left-color:var(--weld)}
+.exo h4{margin-top:.8rem}
+.exo .lvtag{font-family:var(--font-body);font-size:.85rem;font-weight:400;color:var(--muted);margin-left:.4rem}
+.exo .q{margin:.25rem 0}
+details{margin:.6rem 0}
+summary{cursor:pointer;font-weight:700;padding:4px 0}
+details .sol{padding:.4rem .9rem;border-left:3px solid var(--mat);margin:.4rem 0}
+details .sol p{margin:.45em 0}
+.qz{background:var(--card);border:1.5px solid var(--line);border-radius:6px;padding:10px 16px;margin:.8rem 0}
+.qz-q{margin:.3rem 0 .6rem}
+.qz-o{display:flex;flex-direction:column;gap:6px}
+.qz-b{text-align:left;font-family:var(--font-body);font-size:.97rem;padding:8px 12px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:5px;cursor:pointer}
+.qz-b:hover{border-color:var(--ink)}
+.qz-b.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--card))}
+.qz-b.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--card))}
+.qz-e{font-size:.94rem;margin:.6rem 0 .2rem}
+.score{position:sticky;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);display:inline-block;background:var(--ink);color:var(--paper);padding:6px 14px;border-radius:999px;font-size:.95rem;margin:.6rem 0}
+
+/* fiche mémoire */
+.fiche{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:2.5px solid var(--ink);background:var(--card);margin:1rem 0}
+.fiche>div{padding:12px 14px;border-right:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}
+.fiche>div:nth-child(3n){border-right:0}
+.fiche>div:nth-last-child(-n+3){border-bottom:0}
+.fiche .ic{font-size:1.9rem;line-height:1}
+.fiche h4{margin:.3rem 0 .2rem;font-size:1.15rem}
+.fiche .f{font-family:var(--font-math);font-size:1.1rem;margin:.2rem 0}
+.fiche p{margin:.2rem 0 0;font-size:.88rem;color:var(--muted)}
+@media (max-width:720px){.fiche{grid-template-columns:1fr 1fr}.fiche>div{border-right:1.5px solid var(--ink)!important;border-bottom:1.5px solid var(--ink)!important}.fiche>div:nth-child(2n){border-right:0!important}.fiche>div:last-child{border-bottom:0!important}}
+@media (max-width:440px){.fiche{grid-template-columns:1fr}.fiche>div{border-right:0!important}}
+.gloss{display:grid;grid-template-columns:minmax(150px,230px) 1fr;gap:0;border-top:1.5px solid var(--line);margin:1rem 0}
+.gloss dt,.gloss dd{border-bottom:1.5px solid var(--line);padding:7px 8px;margin:0}
+.gloss dt{font-weight:700}
+.gloss dd{font-size:.95rem}
+@media (max-width:600px){.gloss{grid-template-columns:1fr}.gloss dt{border-bottom:0;padding-bottom:0}}
+.check label{display:flex;gap:10px;align-items:flex-start;padding:5px 0;cursor:pointer}
+.check input{margin-top:.35em;width:18px;height:18px;accent-color:var(--mat);flex:none}
+footer{padding:40px 0 60px;color:var(--muted);font-size:.9rem}
+hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
+@media (max-width:700px){.m{white-space:normal}.fx{padding:12px 10px}.fx .big{font-size:1.4rem}}
+@media (max-width:400px){body{font-size:16.5px}.wrap{padding:0 14px}.lab{padding:12px 10px}}
+
+/* compléments de la série Rupture */
+.btn.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,var(--card))}
+.btn.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--card))}
+.ctrl[hidden]{display:none}
+
+/* impression : le cours sur papier clair, ou la fiche mémoire seule sur une page */
+@media print{
+  :root,:root[data-theme]{--paper:#fff!important;--paper-2:#EEF2F6!important;--card:#fff!important;--ink:#111!important;--muted:#444!important;--line:#999!important;--grid:transparent!important;--lv2:#F2F5F8!important;--hl:#FFF3B0!important;color-scheme:light}
+  body{background:#fff;font-size:11pt}
+  .toc,.theme-btn,.btns,.ctrl,#qzReset,.score{display:none!important}
+  section.chap{padding:14px 0 4px}
+  .lab,.fx,.retenir,details.deep,.fiche>div,.exo{break-inside:avoid}
+  body.print-fiche header,body.print-fiche main>section:not(#fiche),body.print-fiche footer{display:none!important}
+  body.print-fiche #fiche .cartouche{margin-bottom:.6rem}
+  body.print-fiche .fiche>div{padding:8px 10px}
+}
+
+/* propre au cours */
+.atlas{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:1rem 0}
+.atlas figure{margin:0;background:var(--card);border:1.5px solid var(--line);border-radius:4px;padding:6px 8px 8px}
+.atlas svg{display:block;width:100%;height:auto;color:var(--ink)}
+.atlas figcaption{font-size:.86rem;line-height:1.3;color:var(--muted)}
+.atlas figcaption b{display:block;font-family:var(--font-head);font-size:1.02rem;font-weight:600;color:var(--ink)}
+details.lis{margin:1rem 0;padding:0 16px;border:1.5px solid var(--mat);border-left-width:6px;border-radius:4px;background:color-mix(in srgb,var(--mat) 6%,var(--card))}
+details.lis>summary{font-weight:700;padding:8px 0;cursor:pointer}
+details.lis[open]{padding-bottom:8px}
+.lab-figs{display:flex;flex-wrap:wrap;gap:12px;margin:.6rem 0;align-items:flex-start}
+.lab-figs>svg{width:auto;flex:3 1 330px;min-width:0}
+.lab-figs>svg.fig-micro{flex:2 1 240px}
+@media print{.atlas{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="wrap wide">
+  <div class="title-block">
+    <div class="tb-main">
+      <div>
+        <p class="tb-series">Conception des assemblages soudés, sujet 3.3 : concevoir, préparer et représenter les joints</p>
+        <h1>Types de joints et préparations : choisir l'assemblage, la gorge et le chanfrein</h1>
+      </div>
+      <button class="theme-btn" id="themeBtn" type="button" aria-label="Changer de thème">◐ Thème : automatique</button>
+    </div>
+    <div class="tb-cells">
+      <div><small>Cours</small><b>1 sur 2 : de l'assemblage au chanfrein</b></div>
+      <div><small>Durée conseillée</small><b>≈ 1 h 25 avec les exercices</b></div>
+      <div><small>Prérequis</small><b>aucun cours obligatoire ; utiles : la section de gorge d'un cordon d'angle (RDM, cours 2), les numéros de procédés de l'ISO 4063 (cours de procédés), la qualité Z des tôles (Aciers de construction, cours 1)</b></div>
+      <div><small>À la fin tu sais</small><b>reconnaître les types d'assemblages et dire si une soudure est à pleine pénétration ; définir et mesurer la gorge d'un cordon d'angle ; lire les cotes d'une préparation (t, α, β, b, c, h) et choisir un chanfrein selon l'épaisseur, l'accès et le procédé ; chiffrer le métal à déposer ; raccorder des épaisseurs différentes ; concevoir un assemblage en T, en croix ou en L sans arrachement lamellaire</b></div>
+    </div>
+  </div>
+  <p class="lede">Avant le premier cordon, quelqu'un a décidé où passerait la soudure, quelle forme auraient les bords et combien de métal il faudrait déposer. Ce choix, la conception du joint, fixe la tenue de l'assemblage, mais aussi le temps de soudage, les déformations, les contrôles possibles et les risques de fissuration. Ce cours parcourt les types d'assemblages, la gorge des cordons d'angle et les préparations de l'ISO 9692-1, puis les cas délicats : épaisseurs différentes, profilés, assemblages en T, en croix et en L. Dans chaque manipulation, tu choisis, et la coupe du joint se dessine et se chiffre.</p>
+
+  <h4>Le code couleur de la série</h4>
+  <div class="cc" role="img" aria-label="Code couleur : les sollicitations et les risques en rouge et violet, les choix du concepteur en vert, ce qu'on calcule ou mesure en bleu et bleu-vert">
+    <div class="cc-box cc-cause"><small>Les causes</small><div class="cc-syms"><span class="sig">σ<sub>z</sub></span><span class="sig">M</span><span class="tau">racine non fondue</span><span class="tau">arrachement</span></div><p><span class="sig">rouge</span> : ce qui sollicite le joint (contrainte, traction dans l'épaisseur, moment secondaire) ; <span class="tau">violet</span> : les ennemis (manque de pénétration, arrachement lamellaire, concentration de contrainte)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-link"><small>Les choix</small><div class="cc-syms"><span class="mat">α</span><span class="mat">b</span><span class="mat">c</span><span class="mat">a</span><span class="mat">1/4</span></div><p>en <span class="mat">vert</span> : ce que décide le concepteur (type de joint, préparation, angle, écartement, talon, gorge, pente de délardage)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-eff"><small>Les effets</small><div class="cc-syms"><span class="eps">S</span><span class="eps">kg/m</span><span class="eps">a<sub>réelle</sub></span><span class="gam">e</span><span class="gam">retrait</span></div><p><span class="eps">bleu</span> : ce qu'on calcule ou mesure (section et masse à déposer, gorge réelle ou efficace) ; <span class="gam">bleu-vert</span> : déformations, retraits et excentricités</p></div>
+  </div>
+  <div class="cc-more">
+    <div><b class="frc">Orange</b> : ce qui agit (efforts, arc, flux de chaleur).</div>
+    <div><b>Noir</b> : la géométrie dessinée (pièces hachurées, épaisseurs, cotes).</div>
+    <div><b class="wcol">Bronze</b> : le métal fondu dans les coupes, et les encadrés « métier » 🔥 tournés vers l'atelier.</div>
+  </div>
+</div>
+</header>
+
+<nav class="toc" aria-label="Sommaire">
+  <div class="toc-in">
+    <a href="#avant">Avant de commencer</a>
+    <a href="#c1">1 Concevoir un assemblage</a>
+    <a href="#c2">2 La gorge</a>
+    <a href="#c3">3 Les chanfreins</a>
+    <a href="#c4">4 Le métal à déposer</a>
+    <a href="#c5">5 Épaisseurs et profilés</a>
+    <a href="#c6">6 En T, en croix, en L</a>
+    <a href="#exos">Exercices</a>
+    <a href="#quiz-s">Quiz</a>
+    <a href="#fiche">Fiche mémoire</a>
+    <a href="#gloss">Glossaire</a>
+    <a href="#check">Check-list</a>
+  </div>
+</nav>
+
+<main>
+<section class="chap" id="avant">
+<div class="wrap">
+  <h3 style="margin-top:0">Avant de commencer</h3>
+  <h4>Ce qu'il faut avoir en tête, en trois cases</h4>
+  <div class="recall">
+    <div><div class="f">111 · 121 · 13 · 141 · 52</div>L'ISO 4063 numérote les procédés : électrode enrobée (111), arc sous flux (121), MIG et MAG (13), TIG (141), laser (52), faisceau d'électrons (51), friction-malaxage (43).</div>
+    <div><div class="f">a · ℓ</div>Un cordon d'angle porte l'effort par sa section de gorge : la gorge a (hauteur du triangle du cordon) fois sa longueur ℓ (RDM, cours 2).</div>
+    <div><div class="f">L · T · <span class="sig">Z</span></div>Une tôle laminée n'est pas la même dans tous les sens : sa résistance et sa ductilité sont plus faibles dans l'épaisseur (sens Z), où la qualité Z de l'EN 10164 garantit une striction minimale (Aciers de construction, cours 1).</div>
+  </div>
+
+  <div class="def"><b>📘 Le sujet du planning</b> : <b>3.3 « Conception des joints »</b> (<i>Joint design for welding and brazing</i> du référentiel de l'IIW). Attendus de l'IWE (<i>International Welding Engineer</i>, ingénieur international en soudage) : décrire les types de joints soudés selon l'ISO 9692 ; interpréter les normes pour fixer la forme et la taille d'une soudure ; choisir le type de joint et sa position dans une structure métallique ou un équipement sous pression. Les joints brasés sont traités dans la série Brasage, cours 4.</div>
+
+  <div class="def"><b>📖 Normes et sigles</b>. <b>ISO 9692-1:2013</b> : préparations de joints pour l'électrode enrobée, le MIG et le MAG, le TIG, le soudage aux gaz et les faisceaux, sur acier ; <b>ISO 9692-2</b> : arc sous flux ; <b>ISO 9692-3:2016</b> : MIG et TIG de l'aluminium ; <b>ISO 9692-4</b> : aciers plaqués ; <b>ISO 17659</b> : vocabulaire des assemblages soudés et des gorges ; <b>ISO 4063:2023</b> : numéros des procédés ; <b>EN 10164:2018</b> : qualité Z ; <b>EN 13445-4:2026</b> : fabrication des appareils à pression. <b>BW</b> (<i>butt weld</i>) : soudure bout à bout ; <b>FW</b> (<i>fillet weld</i>) : soudure d'angle ; <b>MB</b>, <b>MF</b>, <b>ZAT</b> : métal de base, métal fondu, zone affectée thermiquement ; <b>CND</b> : contrôle non destructif ; <b>FE</b> : faisceau d'électrons ; <b>FSW</b> (<i>friction stir welding</i>) : soudage par friction-malaxage ; <b>DMOS</b> : descriptif de mode opératoire de soudage. Les cotes des préparations sont des repères de conception tirés de l'ISO 9692-1 ; le DMOS qualifié fixe les valeurs d'atelier.</div>
+
+  <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage</b>
+    <p>Un joint mal conçu ne se rattrape pas à l'atelier : un T sans chanfrein restera fissuré au cœur, une tôle sollicitée dans son épaisseur peut s'arracher en gradins. À l'inverse, un chanfrein bien choisi divise par deux le métal à déposer et les déformations.</p>
+  </div>
+
+  <h4>La série</h4>
+  <div class="series" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
+    <div class="here"><b>1 Types de joints et préparations</b>Assemblages, pleine pénétration, gorge, chanfreins, métal à déposer, épaisseurs différentes, T, croix et L.</div>
+    <div><b>2 Symboles et tolérances</b>Écrire un joint sur un plan selon l'ISO 2553, puis les tolérances générales de l'ISO 13920.</div>
+  </div>
+
+  <h4>Le plan du cours</h4>
+  <ol class="route">
+    <li><span class="dot">1</span><b>Concevoir un assemblage</b><p>Fonction, fabrication, types d'assemblages et pleine pénétration.</p></li>
+    <li><span class="dot">2</span><b>La gorge d'un cordon d'angle</b><p>Théorique, réelle, efficace : un triangle inscrit, et comment le mesurer.</p></li>
+    <li><span class="dot">3</span><b>Les chanfreins bout à bout</b><p>Les lettres d'une préparation, et le choix selon l'épaisseur et l'accès.</p></li>
+    <li><span class="dot">4</span><b>Le métal à déposer</b><p>V, X, U, double U : la section, le coût, les déformations, les séquences.</p></li>
+    <li><span class="dot">5</span><b>Épaisseurs différentes et profilés</b><p>Délardage, fibres neutres, raboutage de poutres, et quelques procédés à part.</p></li>
+    <li><span class="dot">6</span><b>En T, en croix, en L</b><p>Penser au laminage : l'arrachement lamellaire et ses parades.</p></li>
+  </ol>
+</div>
+</section>
+<section class="chap" id="c1">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">1</div>
+    <div class="c-title"><h2>Concevoir un assemblage</h2><p>Fonction, fabrication, types d'assemblages et pleine pénétration</p></div>
+    <div class="c-img"><span class="ico">🔗</span><span><small>Image à retenir</small>Le chemin de l'effort : il passe d'une pièce à l'autre par le métal fondu ; là où rien n'a fondu, il reste une fente</span></div>
+  </div>
+
+  <p>Un assemblage soudé est un pont : l'effort quitte une pièce, traverse le métal fondu et entre dans l'autre. Bout à bout, il file droit ; en T, il tourne ; à recouvrement, il glisse d'une tôle sur l'autre. Concevoir le joint, c'est tracer ce chemin, puis vérifier que l'atelier saura le souder et le contrôler.</p>
+
+  <div class="def"><b>📖 Deux questions, trois familles.</b> La <b>fonction</b> de l'assemblage fixe ce qu'il doit tenir : effort statique ou variable, géométrie, qualité d'exécution, corrosion, étanchéité, température. Les <b>moyens de fabrication</b> fixent ce qu'on saura faire : soudabilité métallurgique (le matériau), opératoire (l'accès, la position, le procédé) et globale (la tenue de l'ensemble en service), et contrôles possibles. On distingue trois familles :
+    <ul>
+      <li><b>par cordon</b> : les procédés à l'arc et aux gaz déposent un cordon de section à peu près triangulaire ou trapézoïdale ;</li>
+      <li><b>par recouvrement</b> : brasage (9), soudage par points (21) ou à la molette (22) ; la liaison travaille en cisaillement, dans le plan de contact ;</li>
+      <li><b>en bout d'éléments élancés</b> : étincelage (24), friction (42), aluminothermie (71), arc tournant (185) ; on aboute des sections pleines ou creuses, rails, barres, tubes.</li>
+    </ul>
+  </div>
+
+  <p>L'ISO 17659 nomme les <b>types d'assemblages</b> d'après la position des pièces. Les six à reconnaître d'un coup d'œil :</p>
+  <div class="atlas">
+    <figure><svg data-atlas="bout" viewBox="0 0 160 84" role="img" aria-label="Assemblage bout à bout, chanfrein en V soudé"></svg><figcaption><b>Bout à bout</b>pièces dans un même plan : l'effort file droit</figcaption></figure>
+    <figure><svg data-atlas="te" viewBox="0 0 160 84" role="img" aria-label="Assemblage en T, deux cordons d'angle"></svg><figcaption><b>En T</b>pièces à peu près perpendiculaires</figcaption></figure>
+    <figure><svg data-atlas="croix" viewBox="0 0 160 84" role="img" aria-label="Assemblage en croix, quatre cordons d'angle"></svg><figcaption><b>En croix</b>deux pièces alignées de part et d'autre d'une troisième</figcaption></figure>
+    <figure><svg data-atlas="angle" viewBox="0 0 160 84" role="img" aria-label="Assemblage en angle extérieur, en L"></svg><figcaption><b>En angle extérieur (en L)</b>deux pièces jointes par leurs bords</figcaption></figure>
+    <figure><svg data-atlas="recouv" viewBox="0 0 160 84" role="img" aria-label="Assemblage à recouvrement, cordon d'angle"></svg><figcaption><b>À recouvrement</b>plans parallèles qui se chevauchent</figcaption></figure>
+    <figure><svg data-atlas="chant" viewBox="0 0 160 84" role="img" aria-label="Assemblage sur chant, bords relevés fondus"></svg><figcaption><b>Sur chant</b>pièces accolées, soudées sur leurs bords</figcaption></figure>
+  </div>
+  <p>Trois questions complètent le portrait. Dans quel <b>sens de laminage</b> la tôle est-elle sollicitée : dans sa longueur (sa peau) ou dans son épaisseur (son travers-court) ? Dans combien de <b>directions la chaleur s'écoule</b>-t-elle : deux en bout à bout, trois en T, quatre en croix ? Plus il y en a, plus le joint refroidit vite. Et comment le <b>plan du joint</b> est-il orienté par rapport à l'effort ? On reprend ces questions au chapitre 6.</p>
+
+  <div class="def"><b>📖 Pleine pénétration.</b> Une soudure est à <b>pleine pénétration</b> quand le métal fondu traverse toute l'épaisseur de la pièce qui transmet l'effort, sans plan resté non fondu. Sinon, elle est à <b>pénétration partielle</b> : une fente subsiste à la racine, et elle se comporte comme une entaille.</div>
+
+  <div class="lab" id="m1">
+    <p class="lab-h">Manipulation 1 : pleine pénétration ?</p>
+    <p class="lab-sub">Choisis un assemblage, puis une exécution : la coupe se dessine, et la racine non fondue s'allume en rouge.<span class="predict">🔮 Prédis d'abord : deux beaux cordons d'angle de part et d'autre d'un T, est-ce une pleine pénétration ?</span></p>
+    <div class="btns" id="m1t">
+      <button class="btn on" data-t="bw" type="button">Bout à bout</button>
+      <button class="btn" data-t="te" type="button">En T</button>
+      <button class="btn" data-t="rec" type="button">À recouvrement</button>
+    </div>
+    <div class="btns" id="m1x"></div>
+    <svg id="m1svg" role="img" aria-label="Coupe de l'assemblage choisi, métal fondu en bronze, racine non fondue en rouge"></svg>
+    <div class="readout" id="m1r"></div>
+    <p class="status" id="m1msg" aria-live="polite"></p>
+  </div>
+
+  <details class="lis"><summary>🔎 Lis la coupe : un recouvrement à deux cordons d'angle est-il à pleine pénétration ?</summary>
+    <p>Non, et il ne peut pas l'être : les deux tôles restent en contact, sans fusion, sur toute la longueur du recouvrement. L'effort passe d'une tôle à l'autre en cisaillant les cordons. C'est un assemblage de la famille « recouvrement », pas un bout à bout.</p>
+  </details>
+
+  <div class="warn"><b>⚠️ Piège : deux cordons d'angle ne font pas une pleine pénétration.</b> Entre eux, le plan de contact non fondu reste une entaille : tolérable sous effort statique, néfaste en fatigue et dès qu'un effort traverse le T.</div>
+  <div class="mnemo">🧠 <b>Bout à bout, l'effort file ; en T, il tourne ; à recouvrement, il glisse.</b></div>
+  <div class="weld"><b>🔥 À l'atelier :</b> une pleine pénétration se prépare (écartement, talon, chanfrein), s'obtient souvent par un gougeage suivi d'une reprise à l'envers, et se prouve : macrographie sur témoin de fabrication, radiographie ou ultrasons.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : les autres types de l'ISO 17659</summary>
+    <p>L'ISO 17659 définit aussi l'assemblage <b>à recouvrement total</b> (pièces entièrement superposées, comme en placage par explosion), l'assemblage <b>en angle à forte inclinaison</b> (pièces formant un angle aigu, chapitre 6), l'assemblage <b>à joints multiples</b> (trois pièces ou plus) et l'assemblage de <b>ronds en croix</b> (fils ou barres croisés, comme dans un treillis soudé).</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Concevoir, c'est concilier la fonction de l'assemblage et les moyens de fabrication.</li>
+      <li>Six types : bout à bout, en T, en croix, en angle, à recouvrement, sur chant.</li>
+      <li>Pleine pénétration : aucun plan non fondu dans l'épaisseur qui transmet l'effort.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c2">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">2</div>
+    <div class="c-title"><h2>La gorge d'un cordon d'angle</h2><p>Théorique, réelle, efficace : un triangle inscrit, et comment le mesurer</p></div>
+    <div class="c-img"><span class="ico">🔺</span><span><small>Image à retenir</small>Le triangle caché : dans tout cordon d'angle se cache un triangle isocèle ; sa hauteur est la gorge, le reste est du décor</span></div>
+  </div>
+
+  <p>Un cordon d'angle porte l'effort par sa section la plus étroite, celle qui part de la racine et rejoint la surface du cordon. Le bombé qui dépasse ne travaille pas ; un creux, lui, fait perdre de la matière. Pour parler tous de la même chose, l'ISO 17659 ramène chaque cordon à un triangle isocèle inscrit, et mesure sa hauteur.</p>
+
+  <div class="def"><b>📖 Les gorges selon l'ISO 17659.</b>
+    <ul>
+      <li><b>Gorge théorique</b> <span class="mat">a</span> : celle que spécifie le concepteur sur le plan (« a5 »).</li>
+      <li><b>Gorge réelle</b> : la hauteur du plus grand triangle isocèle inscrit dans le cordon terminé. On l'appelle aussi gorge apparente.</li>
+      <li><b>Gorge efficace</b> : la dimension qui transmet l'effort ; elle dépend de la forme du cordon et de sa pénétration au-delà de la racine.</li>
+      <li><b>Côté</b> <span class="mat">z</span> : le côté de ce triangle isocèle, mesuré le long des pièces.</li>
+    </ul>
+  </div>
+
+  <div class="fx"><div class="row big" style="font-size:1.2rem"><span><span class="mat">z</span> = <span class="mat">a</span> · √2 ≈ 1,41 <span class="mat">a</span></span><span>section d'un cordon plat ≈ <span class="mat">a</span>²</span></div><p class="cap">a : gorge (hauteur du triangle rectangle isocèle), z : côté, en mm. L'aire du triangle vaut z²/2 = a² : un cordon a5 dépose environ 25 mm² par millimètre de longueur, sans compter son bombé.</p></div>
+
+  <div class="lab" id="m2">
+    <p class="lab-h">Manipulation 2 : le triangle inscrit</p>
+    <p class="lab-sub">Règle le côté, le bombé et la pénétration du cordon : le plus grand triangle isocèle inscrit se redessine. Le plan demande a5.<span class="predict">🔮 Prédis d'abord : un cordon très bombé a-t-il une gorge réelle plus grande qu'un cordon plat de même côté ?</span></p>
+    <div class="btns" id="m2b">
+      <button class="btn on" data-k="plat" type="button">Plat</button>
+      <button class="btn" data-k="bombe" type="button">Bombé</button>
+      <button class="btn" data-k="creux" type="button">Creux</button>
+      <button class="btn" data-k="inegal" type="button">Côtés inégaux</button>
+      <button class="btn" data-k="penetrant" type="button">Pénétrant</button>
+    </div>
+    <div class="ctrl"><label for="m2z">Côté <b>z</b></label><input type="range" id="m2z" min="3" max="12" step="0.5" value="7"><output id="m2zo"></output></div>
+    <div class="ctrl"><label for="m2s">Bombé <b>s</b> (creux &lt; 0)</label><input type="range" id="m2s" min="-2" max="2" step="0.1" value="0"><output id="m2so"></output></div>
+    <div class="ctrl"><label for="m2p">Pénétration <b>p</b></label><input type="range" id="m2p" min="0" max="3" step="0.1" value="0"><output id="m2po"></output></div>
+    <svg id="m2svg" role="img" aria-label="Cordon d'angle en coupe, triangle isocèle inscrit, gorge réelle et gorge efficace"></svg>
+    <div class="readout" id="m2r"></div>
+    <p class="status" id="m2msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> : le plan demande <span class="m">a = 5 mm</span>. Le soudeur vise un côté <span class="m">z = 5 × √2 ≈ 7,1 mm</span>. Un cordon de côté 7 mm, plat, a une gorge réelle de <span class="m">7/√2 ≈ 4,95 mm</span> : à 0,05 mm près, c'est bon. Le même cordon creusé de 0,6 mm au milieu ne fait plus que <span class="m">4,95 − 0,6 ≈ 4,35 mm</span> : la section de gorge perd 12 %. Avec des côtés inégaux de 6 et 9 mm, c'est le petit côté qui commande : <span class="m">6/√2 ≈ 4,2 mm</span>.</p>
+
+  <p><b>Mesurer une gorge</b> se fait de trois façons :</p>
+  <div class="tbl-wrap"><table>
+    <tr><th>Méthode</th><th>Ce qu'elle voit</th><th>Quand</th></tr>
+    <tr><td>Jauge ou cales de gorge</td><td>la gorge réelle, depuis l'extérieur ; jamais la pénétration</td><td>en production, sur chaque cordon</td></tr>
+    <tr><td>Coupe macrographique attaquée</td><td>la forme complète, la pénétration, donc la gorge efficace</td><td>sur un témoin de fabrication ou de qualification (essai destructif)</td></tr>
+    <tr><td>Ultrasons</td><td>la pénétration et la fusion à la racine, sans couper</td><td>sur fortes épaisseurs, ou si la pénétration est comptée</td></tr>
+  </table></div>
+
+  <details class="lis"><summary>🔎 Lis la coupe : un plan demande « a5 », un autre « z7 ». Lequel demande le plus gros cordon ?</summary>
+    <p>a5 correspond à un côté <span class="m">z = 5 × 1,41 ≈ 7,07 mm</span> ; z7 correspond à une gorge <span class="m">a = 7/1,41 ≈ 4,95 mm</span>. Les deux sont presque identiques, a5 très légèrement plus gros. Le piège, c'est de lire « 7 » comme une gorge : 7 mm de gorge déposerait deux fois plus de métal (49 mm² contre 25).</p>
+  </details>
+
+  <div class="warn"><b>⚠️ Piège : le bombé ne compte pas.</b> La gorge réelle est la hauteur du triangle inscrit : un cordon très convexe n'a pas plus de gorge qu'un cordon plat de même côté, il a seulement plus de métal, plus de temps de soudage et un raccordement plus brutal, mauvais en fatigue.</div>
+  <div class="mnemo">🧠 <b>z, c'est le côté ; a, c'est l'altitude du triangle.</b> Pour passer de l'un à l'autre : × 1,41 ou ÷ 1,41.</div>
+  <div class="weld"><b>🔥 À l'atelier :</b> compter la pénétration dans la gorge efficace suppose de la prouver sur macrographie et de la garantir par un mode opératoire qualifié. Sans cette preuve, on ne compte que la gorge réelle mesurée à la jauge.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : la gorge totale, et la gorge des soudures bout à bout</summary>
+    <p>L'ISO 17659 définit aussi la <b>gorge totale</b> : la distance entre le point le plus bas de la pénétration et le point le plus haut de la surépaisseur, mesurée sur une coupe. Pour une soudure bout à bout, on parle d'<b>épaisseur</b> : théorique, réelle (distance minimale de la surface au fond de la pénétration), efficace et totale.</p>
+    <p>Le calcul de résistance d'un cordon d'angle sur sa section de gorge (méthode directionnelle de l'Eurocode 3) est traité dans RDM, cours 2.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Gorge réelle : hauteur du plus grand triangle isocèle inscrit dans le cordon.</li>
+      <li>z = a·√2 ; un cordon plat de gorge a dépose environ a² mm² par mm.</li>
+      <li>Le bombé ne compte pas ; la pénétration compte si on la prouve.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c3">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">3</div>
+    <div class="c-title"><h2>Les chanfreins bout à bout</h2><p>Les lettres d'une préparation, et le choix selon l'épaisseur et l'accès</p></div>
+    <div class="c-img"><span class="ico">🚪</span><span><small>Image à retenir</small>La porte entrouverte : le chanfrein ouvre le joint juste assez pour que l'arc atteigne la racine, et pas plus, car chaque degré se paie en métal</span></div>
+  </div>
+
+  <p>Sur quelques millimètres, l'arc traverse la tôle : on soude des bords droits. Au-delà, il faut ouvrir le joint pour aller chercher la racine. L'ouverture coûte du métal, l'écartement laisse passer le bain, le talon le retient. L'ISO 9692-1 recueille les préparations validées par la pratique et leurs cotes : des <b>repères de conception</b>, que le mode opératoire qualifié précise ensuite.</p>
+
+  <div class="def"><b>📖 Les lettres d'une préparation (ISO 9692-1)</b>, à savoir par cœur :
+    <ul>
+      <li><b>t</b> : épaisseur de la pièce ;</li>
+      <li><span class="mat">α</span> : angle d'ouverture du chanfrein, entre les deux faces ; <span class="mat">β</span> : angle d'un seul biseau, compté depuis le plan perpendiculaire à la tôle ;</li>
+      <li><span class="mat">b</span> : écartement à la racine, mesuré après pointage ;</li>
+      <li><span class="mat">c</span> : talon, la partie droite laissée au fond du chanfrein ;</li>
+      <li><span class="mat">h</span> : profondeur de préparation ; <span class="mat">R</span> : rayon d'un chanfrein en U ou en J.</li>
+    </ul>
+  </div>
+
+  <div class="atlas">
+    <figure><svg data-atlas="I" viewBox="0 0 160 84" role="img" aria-label="Bords droits"></svg><figcaption><b>I, bords droits</b>minces : t ≤ 4 d'un côté, ≤ 8 des deux</figcaption></figure>
+    <figure><svg data-atlas="V" viewBox="0 0 160 84" role="img" aria-label="Chanfrein en V"></svg><figcaption><b>V</b>α 40 à 60°, la préparation de base</figcaption></figure>
+    <figure><svg data-atlas="Y" viewBox="0 0 160 84" role="img" aria-label="Chanfrein en Y"></svg><figcaption><b>Y</b>un V à grand talon, qui porte un gros bain</figcaption></figure>
+    <figure><svg data-atlas="X" viewBox="0 0 160 84" role="img" aria-label="Chanfrein en X"></svg><figcaption><b>X (double V)</b>deux côtés, t &gt; 10 : moitié moins de métal</figcaption></figure>
+    <figure><svg data-atlas="U" viewBox="0 0 160 84" role="img" aria-label="Chanfrein en U"></svg><figcaption><b>U</b>flancs raides, t &gt; 12 : économe en forte épaisseur</figcaption></figure>
+    <figure><svg data-atlas="UU" viewBox="0 0 160 84" role="img" aria-label="Chanfrein en double U"></svg><figcaption><b>Double U</b>t ≥ 30, deux côtés</figcaption></figure>
+    <figure><svg data-atlas="demiV" viewBox="0 0 160 84" role="img" aria-label="Chanfrein en demi-V"></svg><figcaption><b>Demi-V</b>une seule pièce chanfreinée</figcaption></figure>
+    <figure><svg data-atlas="K" viewBox="0 0 160 84" role="img" aria-label="Chanfrein en K"></svg><figcaption><b>K</b>demi-V des deux côtés, t &gt; 10</figcaption></figure>
+  </div>
+
+  <p><b>D'un seul côté, sans support</b>, le procédé doit garantir une pénétration régulière sur la face qu'on ne voit pas : électrode enrobée (111), MIG et MAG (13), TIG (141), plasma (15). Au-delà de 12 mm, on raidit les flancs pour économiser du métal : V à double pente, U. <b>Avec un support envers</b>, le bain repose sur une latte de cuivre refroidie ou de céramique, un lit de flux (121) ou une tresse réfractaire, que l'on retire ensuite ; ou sur un support permanent : latte subsistante, lèvre usinée dans la pièce (lèvre attenante), bords soyés (une tôle emboutie sous l'autre). Le support permanent gêne les contrôles, crée un interstice sensible à la corrosion et une entaille qui affaiblit la tenue en fatigue ; les bords soyés ajoutent un moment de flexion parasite. <b>Des deux côtés</b>, on soude, on retourne, on gouge la racine jusqu'au métal sain, puis on fait la reprise à l'envers.</p>
+
+  <div class="lab" id="m3">
+    <p class="lab-h">Manipulation 3 : choisir le chanfrein</p>
+    <p class="lab-sub">Règle l'épaisseur et l'accès : les préparations de l'ISO 9692-1 qui conviennent s'affichent ; choisis-en une pour la voir cotée.<span class="predict">🔮 Prédis d'abord : pour 30 mm accessibles des deux côtés, V ou X ?</span></p>
+    <div class="btns" id="m3a">
+      <button class="btn" data-a1="un" type="button">Un côté</button>
+      <button class="btn" data-a1="sup" type="button">Un côté, support envers</button>
+      <button class="btn on" data-a1="deux" type="button">Deux côtés</button>
+    </div>
+    <div class="ctrl"><label for="m3t">Épaisseur <b>t</b></label><input type="range" id="m3t" min="2" max="60" step="1" value="20"><output id="m3to"></output></div>
+    <div class="btns" id="m3c"></div>
+    <svg id="m3svg" role="img" aria-label="Coupe cotée de la préparation choisie"></svg>
+    <div class="readout" id="m3r"></div>
+    <p class="status" id="m3msg" aria-live="polite"></p>
+  </div>
+
+  <details class="lis"><summary>🔎 Lis la coupe : t = 16 mm, α = 60°, b = 2 mm, c = 2 mm, soudé d'un côté puis repris à l'envers. Quelle préparation ? Est-elle dans les repères de la norme ?</summary>
+    <p>Un <b>V avec reprise à l'envers</b> (ISO 9692-1, n° 2.2) : repères 3 ≤ t ≤ 40 mm, α ≈ 60° (40 à 60° en MIG et MAG), b ≤ 3 mm, c ≤ 2 mm. Tout est dans les repères.</p>
+  </details>
+
+  <div class="warn"><b>⚠️ Piège : α ou β ?</b> α est l'angle total du chanfrein, β celui d'un seul biseau. Un V à 60° a deux biseaux de 30° ; un demi-V « à 45° » donne β = 45°. Et les cotes de l'ISO 9692-1 s'entendent sur l'assemblage pointé.</div>
+  <div class="mnemo">🧠 <b>b ouvre, c retient, α coûte.</b></div>
+  <div class="weld"><b>🔥 À l'atelier :</b> ne jamais brancher la masse sur une latte de cuivre ; un arc parasite y fondrait du cuivre qui fissurerait le joint. Sur pièces de révolution, un emboîtement usiné aligne les pièces ; il doit être entièrement fondu.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : la famille ISO 9692, et pourquoi des plages</summary>
+    <p>L'ISO 9692 compte quatre parties : 1 pour les aciers à l'arc, aux gaz et par faisceau ; 2 pour l'arc sous flux (talons plus forts, pour porter un gros bain) ; 3 pour l'aluminium en MIG et TIG ; 4 pour les aciers plaqués. Les plages données sont des limites de conception, pas des tolérances de fabrication : le procédé, la position, le métal de base et le niveau de qualité les resserrent. Des angles plus ouverts ou dissymétriques servent au soudage en corniche (position PC de l'ISO 6947).</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>t, α, β, b, c, h : épaisseur, ouverture, biseau, écartement, talon, profondeur.</li>
+      <li>Un côté : V jusqu'à 10 mm, puis V à double pente ou U.</li>
+      <li>Deux côtés : gougeage et reprise ; X au-delà de 10 mm, double U dès 30.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c4">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">4</div>
+    <div class="c-title"><h2>Le métal à déposer</h2><p>V, X, U, double U : section, coût, déformations et séquences</p></div>
+    <div class="c-img"><span class="ico">⚖️</span><span><small>Image à retenir</small>La balance : d'un côté le métal déposé (fil, heures, chaleur, retrait), de l'autre l'usinage et le retournement ; la bonne préparation équilibre les deux</span></div>
+  </div>
+
+  <p>Chaque millimètre carré de chanfrein se remplit de fil, d'heures de soudeur et de chaleur. Cette chaleur fait retirer le métal en refroidissant, et le joint se déforme. Pour un V, la section croît comme le carré de l'épaisseur : doubler la tôle, c'est presque quadrupler le métal. Les préparations X, U et double U existent pour casser cette courbe, en payant en usinage ce qu'elles font gagner en soudage.</p>
+
+  <div class="def"><b>📖 Section à déposer</b> (hors surépaisseurs), avec t, b, c en mm et α l'angle d'ouverture. Pour un X symétrique, le talon est au milieu de l'épaisseur. La masse par mètre de joint suit : 1 mm² de section sur 1 m de joint pèse 7,85 g d'acier.</div>
+  <div class="fx"><div class="row big" style="font-size:1.12rem"><span>V : <span class="eps">S</span> = (t − <span class="mat">c</span>)² · tan(<span class="mat">α</span>/2) + <span class="mat">b</span> · t</span><span>X : <span class="eps">S</span> = (t − <span class="mat">c</span>)² · tan(<span class="mat">α</span>/2) / 2 + <span class="mat">b</span> · t</span><span><span class="eps">m</span> ≈ 7,85 · <span class="eps">S</span> (g/m)</span></div><p class="cap">S : section en mm² ; m : masse de métal déposé en grammes par mètre de joint. Le premier terme vient des deux biseaux, le second de l'écartement.</p></div>
+
+  <div class="lab" id="m4">
+    <p class="lab-h">Manipulation 4 : combien de métal ?</p>
+    <p class="lab-sub">Règle l'épaisseur et l'angle d'ouverture, choisis la préparation à dessiner : les quatre courbes de section se tracent ensemble.<span class="predict">🔮 Prédis d'abord : à partir de quelle épaisseur le U demande-t-il moins de métal que le V ?</span></p>
+    <div class="btns" id="m4p">
+      <button class="btn on" data-p="V" type="button">V</button>
+      <button class="btn" data-p="X" type="button">X</button>
+      <button class="btn" data-p="U" type="button">U</button>
+      <button class="btn" data-p="UU" type="button">Double U</button>
+    </div>
+    <div class="ctrl"><label for="m4t">Épaisseur <b>t</b></label><input type="range" id="m4t" min="6" max="80" step="1" value="20"><output id="m4to"></output></div>
+    <div class="ctrl"><label for="m4a">Ouverture <b>α</b> (V et X)</label><input type="range" id="m4a" min="40" max="90" step="5" value="60"><output id="m4ao"></output></div>
+    <div class="lab-figs">
+      <svg id="m4svg" class="fig-micro" role="img" aria-label="Coupe de la préparation choisie, métal à déposer en bronze"></svg>
+      <svg id="m4cv" role="img" aria-label="Section à déposer selon l'épaisseur pour les quatre préparations"></svg>
+    </div>
+    <div class="readout" id="m4r"></div>
+    <p class="status" id="m4msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> : tôle de 20 mm, α = 60°, b = 2 mm, c = 2 mm. En V : <span class="m">S = 18² × tan 30° + 2 × 20 ≈ 187 + 40 = 227 mm²</span>, soit <span class="m">7,85 × 227 ≈ 1,8 kg</span> par mètre. En X : <span class="m">S = 187/2 + 40 ≈ 134 mm²</span>, soit 1,05 kg/m : 41 % de métal en moins. Avec les cotes choisies ici (β = 10°, R = 6 mm, c = 3 mm), le U passe sous le V vers 24 mm d'épaisseur, et le double U sous le X vers 48 mm.</p>
+
+  <p><b>Déformations et séquences.</b> Un V se remplit d'un seul côté : le haut du chanfrein, plus large, retire plus que le bas, et les tôles se plient vers lui (déformation angulaire). Le X répartit le métal des deux côtés et la déformation s'équilibre, à condition d'alterner. Dans la séquence symétrique, on fait d'abord une première passe côté envers. On retourne, on gouge la racine, on remplit côté endroit, puis on retourne pour remplir côté envers. Dans la séquence asymétrique, sur un X asymétrique (h ≈ t/3 côté envers), on remplit d'abord le petit chanfrein, par exemple en MAG. On retourne et on gouge, puis on remplit le grand chanfrein à plat avec un procédé à fort dépôt comme l'arc sous flux. Garder un talon ou des bords droits réduit aussi la déformation.</p>
+
+  <details class="lis"><summary>🔎 Lis la coupe : 40 mm en V à 60°, b = 2, c = 2. Combien de kilos par mètre ? Et en X ?</summary>
+    <p>V : <span class="m">38² × 0,577 + 80 ≈ 834 + 80 = 914 mm²</span>, soit <span class="m">7,85 × 914 ≈ 7,2 kg/m</span>. X : <span class="m">834/2 + 80 = 497 mm²</span>, soit 3,9 kg/m. Le X fait gagner 3,3 kg par mètre : sur une virole de 10 m de soudures, plus de 30 kg de métal déposé et des heures de soudage.</p>
+  </details>
+
+  <div class="warn"><b>⚠️ Piège : la section ne suit pas l'épaisseur, elle suit son carré.</b> Passer de 20 à 40 mm en V multiplie le métal par 4 (de 227 à 914 mm²), pas par 2.</div>
+  <div class="mnemo">🧠 <b>V pour le mince, X pour l'épais qu'on peut retourner, U pour l'épais soudé d'un côté, double U pour le très épais.</b></div>
+  <div class="weld"><b>🔥 À l'atelier :</b> le X impose un retournement et un gougeage. Sur une grosse pièce, il faut un pont roulant ou un vireur, et c'est du temps. Le U impose un usinage : chanfreineuse ou machine-outil. Le bon choix se fait sur le coût total, pas sur le seul métal déposé.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : pourquoi le U gagne en forte épaisseur</summary>
+    <p>Les flancs d'un U sont presque parallèles (β de 8 à 12°) : au-delà du fond arrondi, sa largeur croît lentement, et sa section augmente à peu près comme t. Celle d'un V, qui s'ouvre à 60°, augmente comme t². Le fond arrondi de rayon R coûte un peu de métal au départ : le U ne devient rentable qu'au-delà d'une vingtaine de millimètres. Le même raisonnement oppose le double U au X, avec un croisement deux fois plus loin, puisque chacun a deux moitiés.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>S<sub>V</sub> = (t − c)²·tan(α/2) + b·t : doubler t quadruple presque le métal.</li>
+      <li>Le X divise par deux le métal des biseaux et équilibre la déformation.</li>
+      <li>U et double U gagnent en forte épaisseur, au prix de l'usinage.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c5">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">5</div>
+    <div class="c-title"><h2>Épaisseurs différentes et profilés</h2><p>Délardage, fibres neutres, raboutage de poutres, et quelques procédés à part</p></div>
+    <div class="c-img"><span class="ico">🛝</span><span><small>Image à retenir</small>Le toboggan : l'effort descend d'une épaisseur à l'autre par une pente douce ; une marche le ferait trébucher</span></div>
+  </div>
+
+  <p>Abouter une tôle de 30 mm à une tôle de 15 mm crée une marche. Au pied de la marche, les lignes d'effort se resserrent brutalement, comme le courant d'une rivière à un rétrécissement : la contrainte y grimpe, et une fissure de fatigue y naîtra. On adoucit la marche en amincissant progressivement la pièce la plus épaisse : c'est le <b>délardage</b>.</p>
+
+  <div class="def"><b>📖 Délardage et fibres neutres.</b> Le délardage est un amincissement progressif de la pièce épaisse jusqu'à l'épaisseur de la mince. Il est <b>linéaire</b>, de pente 1/4 au plus, soit 1 mm d'épaisseur perdue sur 4 mm de longueur ; c'est la pente qu'impose l'EN 13445-4 aux appareils à pression. Il peut aussi être <b>curviligne</b>, plus doux et plus facile à contrôler. On recommande d'<b>aligner les fibres neutres</b>, c'est-à-dire les plans moyens des deux tôles, en délardant les deux faces. Si une seule face est alignée, les plans moyens sont décalés d'une excentricité <span class="gam">e</span>, et l'effort crée un moment parasite <span class="sig">M</span> = F · <span class="gam">e</span>.</div>
+  <div class="fx"><div class="row big" style="font-size:1.12rem"><span>une face : L = n · (t<sub>1</sub> − t<sub>2</sub>), <span class="gam">e</span> = (t<sub>1</sub> − t<sub>2</sub>)/2</span><span>deux faces : L = n · (t<sub>1</sub> − t<sub>2</sub>)/2, <span class="gam">e</span> = 0</span></div><p class="cap">t<sub>1</sub>, t<sub>2</sub> : épaisseurs (mm) ; pente <span class="mat">1/n</span> (n ≥ 4) ; L : longueur du délardage ; e : décalage des plans moyens.</p></div>
+
+  <div class="lab" id="m5">
+    <p class="lab-h">Manipulation 5 : le délardage</p>
+    <p class="lab-sub">Choisis la pente et la face alignée, règle l'épaisseur de la tôle épaisse : la mince fait 12 mm.<span class="predict">🔮 Prédis d'abord : en délardant les deux faces, la longueur de délardage double-t-elle ou diminue-t-elle ?</span></p>
+    <div class="btns" id="m5n">
+      <button class="btn" data-n="0" type="button">Sans délardage</button>
+      <button class="btn" data-n="2" type="button">Pente 1/2</button>
+      <button class="btn on" data-n="4" type="button">Pente 1/4</button>
+      <button class="btn" data-n="5" type="button">Pente 1/5</button>
+    </div>
+    <div class="btns" id="m5f">
+      <button class="btn on" data-f="1" type="button">Une face alignée</button>
+      <button class="btn" data-f="2" type="button">Fibres neutres alignées</button>
+    </div>
+    <div class="ctrl"><label for="m5t">Tôle épaisse <b>t<sub>1</sub></b></label><input type="range" id="m5t" min="16" max="50" step="1" value="30"><output id="m5to"></output></div>
+    <svg id="m5svg" role="img" aria-label="Raccordement bout à bout de deux épaisseurs, délardage et plans moyens"></svg>
+    <div class="readout" id="m5r"></div>
+    <p class="status" id="m5msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> : t<sub>1</sub> = 30 mm, t<sub>2</sub> = 15 mm, pente 1/4. En délardant une seule face, <span class="m">L = 4 × 15 = 60 mm</span>, et les plans moyens restent décalés de <span class="m">e = 7,5 mm</span>, la moitié de la tôle mince. En délardant les deux faces, chacune perd 7,5 mm sur <span class="m">L = 4 × 7,5 = 30 mm</span>, et <span class="m">e = 0</span>. Le délardage ne doit jamais entamer l'épaisseur <b>mécaniquement utile</b> de la pièce épaisse, celle que demande le calcul hors de la zone du joint.</p>
+
+  <p><b>Profilés.</b> On ne raboute pas une poutre en I sans préparation : le joint manquerait de compacité au croisement de l'âme et des semelles. On chanfreine les semelles (en V ou en X) et l'âme (en X). On découpe dans l'âme un <b>trou de souris</b>, un dégagement arrondi de rayon voisin de l'épaisseur de la semelle, qui laisse passer le cordon de semelle et l'outil de gougeage. On soude ensuite <b>les semelles d'abord, l'âme ensuite</b>. Pour un rond ou un carré plein, on prépare en X et on parachève localement. Un chanfrein conique est déconseillé : la pièce doit tourner vite, et la pointe du cône fond trop tôt.</p>
+
+  <details class="lis"><summary>🔎 Lis la coupe : pourquoi souder les semelles d'une poutre avant son âme ?</summary>
+    <p>Les semelles portent l'essentiel de la flexion : on veut leurs soudures saines, sans bridage. Soudées en premier, elles retirent librement, car l'âme n'est pas encore liée. Le trou de souris permet un cordon de semelle continu, gougé et repris à l'envers, sans croiser la soudure d'âme.</p>
+  </details>
+
+  <div class="warn"><b>⚠️ Piège : délarder ne veut pas dire amincir sans limite.</b> La pente se prend sur la pièce épaisse, jamais en dessous de son épaisseur utile, et c'est la plus raide des pentes admises (1/4) qui donne la longueur minimale.</div>
+  <div class="mnemo">🧠 <b>Un pour quatre : 1 mm d'épaisseur perdue, 4 mm de longueur.</b></div>
+  <div class="weld"><b>🔥 À l'atelier :</b> le délardage se fait par usinage ou meulage avant soudage. Il peut aussi se faire dans la largeur du cordon, en rechargeant la tôle mince, une solution prévue par l'EN 13445-4. Sur un plan, la pente se cote : « 1/4 ».</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : aluminium, faisceaux, friction-malaxage</summary>
+    <p><b>Aluminium</b> (ISO 9692-3:2016). Les chanfreins sont plus ouverts que sur acier (V de 60 à 90° en MIG), car le bain, très fluide et chargé d'oxyde, mouille mal des flancs serrés. Les écartements restent faibles. On abat aussi les arêtes de la racine, on « casse la carre » (l'ISO 9692-3 le recommande pour les bords droits soudés en TIG) : sinon la peau d'oxyde des bords peut rester visible en coupe, comme une ligne non fondue au milieu du joint.</p>
+    <p><b>Laser (52) et faisceau d'électrons (51)</b>. On soude sur bords droits, sans chanfrein : jusqu'à 15 mm au laser et 100 mm au faisceau d'électrons d'un seul côté, d'après l'ISO 9692-1. Mais le jeu doit rester quasi nul, au plus 1 mm au laser avec fil d'apport. Au-delà, on passe à l'hybride laser-MAG. Économiquement, on privilégie toujours la soudure sans préparation.</p>
+    <p><b>Friction-malaxage (43)</b>. Un outil tournant malaxe le métal sans le fondre : bout à bout, à recouvrement ou en T, sans chanfrein, sur des tôles d'aluminium solidement bridées.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Délardage de pente 1/4 au plus, sans entamer l'épaisseur utile.</li>
+      <li>Fibres neutres alignées : pas d'excentricité, pas de moment parasite.</li>
+      <li>Poutre en I : chanfreins, trou de souris, semelles d'abord, âme ensuite.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c6">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">6</div>
+    <div class="c-title"><h2>En T, en croix, en L : penser au laminage</h2><p>Sur peau ou sur tranche, le bon élément à chanfreiner, et l'arrachement lamellaire</p></div>
+    <div class="c-img"><span class="ico">📚</span><span><small>Image à retenir</small>Le millefeuille : une tôle laminée est un feuilleté ; tirée dans son épaisseur, elle se délamine en gradins</span></div>
+  </div>
+
+  <p>Le laminage étire les inclusions de la tôle, surtout les sulfures de manganèse, en feuillets parallèles à sa peau. Tirée dans sa longueur, la tôle est solide. Tirée dans son épaisseur, le sens travers-court, ses feuillets s'ouvrent l'un après l'autre et se relient par des marches : c'est l'<b>arrachement lamellaire</b>, une fissure en gradins sous le cordon. Il naît le plus souvent au refroidissement, quand le retrait d'un gros cordon bridé tire sur la peau de la tôle.</p>
+
+  <div class="def"><b>📖 Concevoir les assemblages en T, en croix, en L.</b>
+    <ul>
+      <li><b>T sur peau</b> : l'âme est posée sur la face de la semelle. La semelle est tirée dans son épaisseur sous le cordon. Deux cordons d'angle laissent une discontinuité à la racine, tolérable en statique. Pour une grosse gorge, un chanfrein en K dépose moins de métal.</li>
+      <li><b>Sur tranche</b> : on coupe l'élément traversant, qu'on soude bout à bout sur l'autre. Aucune tôle n'est tirée dans son épaisseur, donc pas d'arrachement lamellaire. Il faut en revanche une découpe et davantage de métal à déposer.</li>
+      <li><b>En croix</b>, sous charges variables : on chanfreine les éléments minces, qui portent l'effort, et on les aligne de part et d'autre de l'élément épais. La chaleur fuit dans l'élément massif : on prévoit un écartement et un talon un peu plus grands, contre le manque de fusion.</li>
+      <li><b>En L</b> : en préparation naturelle, le cordon extérieur bombé remplit l'angle. Si l'on chanfreine, c'est la tôle épaisse, celle que le cordon tirerait dans son épaisseur : la ligne de fusion coupe alors ses feuillets en biais.</li>
+    </ul>
+  </div>
+
+  <div class="lab" id="m6">
+    <p class="lab-h">Manipulation 6 : l'arrachement lamellaire</p>
+    <p class="lab-sub">Choisis la conception, l'épaisseur de la tôle tirée et sa qualité Z : les feuillets s'ouvrent si le risque devient fort.<span class="predict">🔮 Prédis d'abord : une tôle Z35 suffit-elle sous un K de 80 mm ?</span></p>
+    <div class="btns" id="m6c">
+      <button class="btn on" data-c="ta" type="button">T, cordons d'angle</button>
+      <button class="btn" data-c="tk" type="button">T en K</button>
+      <button class="btn" data-c="tb" type="button">T beurré puis K</button>
+      <button class="btn" data-c="tr" type="button">Sur tranche</button>
+      <button class="btn" data-c="lm" type="button">L, biseau sur l'autre tôle</button>
+      <button class="btn" data-c="le" type="button">L, biseau sur la tôle tirée</button>
+    </div>
+    <div class="btns" id="m6z">
+      <button class="btn on" data-z="0" type="button">Sans qualité Z</button>
+      <button class="btn" data-z="15" type="button">Z15</button>
+      <button class="btn" data-z="25" type="button">Z25</button>
+      <button class="btn" data-z="35" type="button">Z35</button>
+    </div>
+    <div class="ctrl"><label for="m6t">Tôle tirée <b>t</b></label><input type="range" id="m6t" min="10" max="80" step="2" value="40"><output id="m6to"></output></div>
+    <svg id="m6svg" role="img" aria-label="Coupe de l'assemblage, feuillets de laminage de la tôle tirée, retrait du cordon et fissure en gradins"></svg>
+    <div class="readout" id="m6r"></div>
+    <p class="status" id="m6msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> : une âme de 30 mm à souder en T, en pleine résistance. Deux cordons d'angle de gorge a déposent environ <span class="m">2a²</span> : avec a = 15 mm, <span class="m">2 × 225 = 450 mm²</span>. Un K à 45° (b = 2, c = 2) dépose <span class="m">(30 − 2)²/4 + 2 × 30 = 196 + 60 = 256 mm²</span>, soit 43 % de moins. Le K devient avantageux dès que <span class="m">2a² &gt; 256</span>, soit a &gt; 11 mm environ. La règle d'atelier dit la même chose : au-delà d'une quinzaine de millimètres de gorge, on chanfreine.</p>
+
+  <p><b>Les parades contre l'arrachement lamellaire</b>, de la plus efficace à la plus économique :</p>
+  <ul>
+    <li>concevoir <b>sur tranche</b>, ou chanfreiner la tôle tirée pour que la ligne de fusion coupe ses feuillets en biais ;</li>
+    <li>réduire le métal déposé (K plutôt que gros cordons d'angle) et le bridage, et souder d'abord les joints les plus bridés ;</li>
+    <li><b>beurrer</b> la peau de la tôle : on dépose d'abord une couche de métal ductile, qui encaisse le retrait du cordon ;</li>
+    <li>commander une tôle de <b>qualité Z</b> (EN 10164 : Z15, Z25 ou Z35, la striction minimale garantie dans l'épaisseur, en %) ;</li>
+    <li>contrôler aux <b>ultrasons</b> les tôles avant soudage, pour repérer les dédoublures.</li>
+  </ul>
+
+  <details class="lis"><summary>🔎 Lis la coupe : un tube est soudé en demi-V sur une platine de 50 mm. Quelle pièce risque l'arrachement lamellaire, et que faire ?</summary>
+    <p>La <b>platine</b> : le retrait du cordon la tire dans son épaisseur, sous la peau. Parades : platine de qualité Z (Z25 ou Z35 selon le calcul), contrôle aux ultrasons de la platine avant soudage, beurrage de la zone du cordon. Si possible, faire traverser la platine par le tube, ou souder sur une pièce intermédiaire forgée.</p>
+  </details>
+
+  <div class="warn"><b>⚠️ Piège : chanfreiner la mauvaise tôle.</b> Dans un angle en L, biseauter la tôle mince laisse la ligne de fusion parallèle aux feuillets de la tôle épaisse : c'est la configuration la plus exposée.</div>
+  <div class="mnemo">🧠 <b>Peau tirée, tôle déchirée</b> : souder sur tranche, ou couper les feuillets en biais.</div>
+  <div class="weld"><b>🔥 À l'atelier :</b> l'arrachement lamellaire se voit rarement de l'extérieur. Il apparaît au refroidissement ou quelques heures après, sous des cordons épais et bridés, et se trouve aux ultrasons. Une fois là, la réparation coûte cher : il faut couper, beurrer, ressouder.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : éléments obliques, et la qualité Z requise</summary>
+    <p><b>Éléments obliques</b> (assemblage en angle à forte inclinaison). Plus l'angle γ entre les pièces se ferme, plus l'angle aigu devient inaccessible. En dessous d'environ 40°, on ne peut plus reprendre côté envers. Sous des angles encore plus faibles, on revient aux bords droits avec cordons d'angle, ou on délarde. Une discontinuité à la racine dégrade toujours la tenue en fatigue.</p>
+    <p><b>Qualité Z requise.</b> L'EN 1993-1-10 additionne des contributions : profondeur du cordon, forme du joint, épaisseur, bridage, préchauffage. Elle obtient ainsi la qualité Z à exiger de la tôle. La manipulation 6 n'en garde que les tendances, avec un modèle pédagogique.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Tôle tirée dans son épaisseur : risque d'arrachement lamellaire en gradins.</li>
+      <li>Parades : sur tranche, biseau sur la tôle tirée, beurrage, qualité Z, ultrasons.</li>
+      <li>En croix, chanfreiner les éléments minces et les aligner.</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="exos">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✎</div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Deux exercices : lire et chiffrer une préparation, puis choisir le chanfrein d'un raboutage de 30 mm</p></div>
+    <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de musculation : on ne progresse qu'en soulevant soi-même</span></div>
+  </div>
+  <p>Cherche chaque question sur papier avant d'ouvrir la correction : écris la relation, puis les valeurs (épaisseurs et gorges en mm, sections en mm², masses en kg/m). Le premier exercice se vérifie dans les manipulations 2 et 4 ; le second se rejoue dans les manipulations 4 et 5.</p>
+
+  <div class="exo">
+    <h4>Exercice 1 : lire et chiffrer une préparation <span class="lvtag">★ application · chapitres 2, 3 et 4</span></h4>
+    <p>Le plan d'une virole en acier de 16 mm donne, pour ses soudures longitudinales, la coupe suivante : chanfrein en V, α = 60°, b = 2 mm, c = 2 mm, soudé d'un côté puis repris à l'envers. Des raidisseurs sont soudés sur la virole par des cordons d'angle « a4 ».</p>
+    <p class="q"><b>a)</b> Que désignent t, α, b et c ? De quelle préparation de l'ISO 9692-1 s'agit-il, et est-elle dans ses repères ?</p>
+    <p class="q"><b>b)</b> Calcule la section à déposer, hors surépaisseurs, puis la masse de métal déposé par mètre.</p>
+    <p class="q"><b>c)</b> Même calcul pour un X symétrique de mêmes b et c. Quel gain ?</p>
+    <p class="q"><b>d)</b> Pourquoi gouger la racine avant la reprise à l'envers ?</p>
+    <p class="q"><b>e)</b> Quel côté le soudeur doit-il viser pour les cordons a4 ? Un cordon bombé de ce côté est-il « plus solide » ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> t : épaisseur (16 mm) ; α : angle d'ouverture total (60°, deux biseaux de 30°) ; b : écartement à la racine après pointage ; c : talon. C'est un <b>V avec reprise à l'envers</b> (n° 2.2) : repères 3 ≤ t ≤ 40 mm, α ≈ 60°, b ≤ 3 mm, c ≤ 2 mm. Tout est dans les repères.</p>
+      <p><b>b)</b> <span class="m">S = (t − c)² · tan(α/2) + b · t</span> <span class="m">= 14² × tan 30° + 2 × 16</span> <span class="m">= 196 × 0,577 + 32 ≈ 113 + 32 = 145 mm²</span>. Masse : <span class="m">7,85 × 145 ≈ 1 140 g</span>, soit <b>1,14 kg/m</b>.</p>
+      <p><b>c)</b> <span class="m">S = 113/2 + 32 ≈ 89 mm²</span>, soit <b>0,70 kg/m</b> : 39 % de métal en moins. Le X (n° 2.5.1, t &gt; 10 mm) répartit aussi le retrait des deux côtés.</p>
+      <p><b>d)</b> La racine de la première passe contient souvent des manques de fusion, des oxydes ou des inclusions. Le gougeage les enlève jusqu'au métal sain ; sans lui, la reprise les recouvrirait et la soudure ne serait pas à pleine pénétration.</p>
+      <p><b>e)</b> <span class="m">z = a · √2 = 4 × 1,41 ≈ 5,7 mm</span>. Non : la gorge réelle est la hauteur du triangle isocèle inscrit, que le bombé ne change pas. Un cordon bombé dépose plus de métal et se raccorde plus brutalement, ce qui est mauvais en fatigue. Vérifie-le dans la manipulation 2.</p>
+    </div></details>
+  </div>
+
+  <div class="exo defi">
+    <h4>Exercice 2 : le raboutage d'un tirant de 30 mm <span class="lvtag">★★ synthèse · chapitres 3, 4 et 5, à rejouer dans les manipulations 4 et 5</span></h4>
+    <p>Un tirant plat, une membrure tendue en tôle de 30 mm, doit être abouté. La pièce peut être retournée. La racine se soude en MAG (135), le remplissage à l'arc sous flux (121). Plus loin, le tirant passe à une épaisseur de 20 mm. Il travaille en fatigue.</p>
+    <p class="q"><b>a)</b> Quelles préparations de l'ISO 9692-1 conviennent à 30 mm soudés des deux côtés ?</p>
+    <p class="q"><b>b)</b> Calcule la section à déposer d'un V et d'un X à 60° (b = 2 mm, c = 2 mm). Rejoue t = 30 mm dans la manipulation 4 : où se placent le U et le double U ?</p>
+    <p class="q"><b>c)</b> Quelle préparation choisis-tu, et pourquoi ?</p>
+    <p class="q"><b>d)</b> Propose une séquence de soudage.</p>
+    <p class="q"><b>e)</b> Pour le raccord de 30 à 20 mm, quelle longueur de délardage à la pente 1/4, en délardant une face, puis les deux ? Lequel choisis-tu ici ? Vérifie dans la manipulation 5.</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> V avec reprise (3 à 40 mm), Y (t &gt; 10 mm), X symétrique ou asymétrique (t &gt; 10 mm), U avec reprise (t &gt; 12 mm), double U (t ≥ 30 mm).</p>
+      <p><b>b)</b> V : <span class="m">28² × tan 30° + 2 × 30 ≈ 453 + 60 = 513 mm²</span>, soit 4,0 kg/m. X : <span class="m">453/2 + 60 ≈ 286 mm²</span>, soit 2,25 kg/m. La manipulation donne environ 450 mm² pour le U et 376 mm² pour le double U, avec ses cotes (β = 10°, R = 6 mm, c = 3 mm). À 30 mm, le U bat le V, mais le X reste le plus économe : le double U ne passe sous le X que vers 48 mm.</p>
+      <p><b>c)</b> Le <b>X</b> : 44 % de métal en moins que le V, une déformation équilibrée, une pièce qu'on peut retourner. Un X asymétrique (h ≈ t/3 côté envers) va bien avec les deux procédés. Le talon se prendra plus fort pour l'arc sous flux, dont le bain est gros (ISO 9692-2).</p>
+      <p><b>d)</b> On remplit d'abord le petit chanfrein en MAG. On retourne, puis on gouge la racine jusqu'au métal sain. On remplit ensuite le grand chanfrein à plat, à l'arc sous flux. Si la déformation angulaire apparaît, on alterne les côtés.</p>
+      <p><b>e)</b> Δ = 30 − 20 = 10 mm. Une face : <span class="m">L = 4 × 10 = 40 mm</span>, avec une excentricité <span class="m">e = 5 mm</span>. Deux faces : chacune perd 5 mm sur <span class="m">L = 4 × 5 = 20 mm</span>, et e = 0. Le tirant travaille en fatigue : on aligne les fibres neutres en délardant les deux faces, pour supprimer le moment parasite F · e.</p>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="quiz-s">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">?</div>
+    <div class="c-title"><h2>Quiz : 12 questions éclair</h2><p>Chaque réponse est expliquée, même quand tu as juste</p></div>
+    <div class="c-img"><span class="ico">🎯</span><span><small>Image à retenir</small>La cible : vise 10 sur 12 avant le cours 2</span></div>
+  </div>
+  <div id="quiz"></div>
+  <div class="score" id="qzScore" aria-live="polite">Score : 0 / 12</div>
+  <div class="btns"><button class="btn" id="qzReset" type="button">↺ Recommencer le quiz</button></div>
+</div>
+</section>
+
+<section class="chap" id="fiche">
+<div class="wrap wide">
+  <div class="cartouche">
+    <div class="c-num">★</div>
+    <div class="c-title"><h2>Fiche mémoire du cours 1</h2><p>Neuf cases, neuf images : à photographier, puis à redessiner de tête</p></div>
+    <div class="c-img"><span class="ico">📐</span><span><small>Image à retenir</small>La coupe d'abord : un joint se conçoit en coupe transversale, là où se lisent la pénétration, la gorge, le chanfrein et le métal à déposer</span></div>
+  </div>
+  <div class="fiche">
+    <div><div class="ic">🔗</div><h4>Le chemin de l'effort</h4><div class="f">fonction ↔ moyens de fabrication</div><p>Familles : par cordon ; par recouvrement (9, 21, 22) ; en bout d'éléments élancés (24, 42, 71, 185).</p></div>
+    <div><div class="ic">🧩</div><h4>Six types</h4><div class="f">bout à bout · T · croix · angle · recouvrement · chant</div><p>ISO 17659. Sens de laminage, flux de chaleur (2, 3 ou 4 directions) et orientation de l'effort complètent le portrait.</p></div>
+    <div><div class="ic">🟥</div><h4>Pleine pénétration</h4><div class="f">aucun plan non fondu dans l'épaisseur</div><p>T à deux cordons d'angle : non. Recouvrement : jamais. Elle se prépare, se gouge et se prouve (macro, radio, ultrasons).</p></div>
+    <div><div class="ic">🔺</div><h4>Le triangle caché</h4><div class="f"><span class="mat">z</span> = <span class="mat">a</span>·√2 · section ≈ <span class="mat">a</span>²</div><p>Gorge réelle : hauteur du plus grand triangle isocèle inscrit. Le bombé ne compte pas ; la pénétration, si on la prouve.</p></div>
+    <div><div class="ic">🔤</div><h4>Les lettres</h4><div class="f">t · <span class="mat">α</span> · <span class="mat">β</span> · <span class="mat">b</span> · <span class="mat">c</span> · <span class="mat">h</span> · <span class="mat">R</span></div><p>Ouverture totale, angle d'un biseau, écartement après pointage, talon, profondeur, rayon d'un U ou d'un J.</p></div>
+    <div><div class="ic">🚪</div><h4>Choisir (ISO 9692-1)</h4><div class="f">I ≤ 4 (≤ 8) · V 3–10 (3–40) · X &gt; 10 · U &gt; 12 · double U ≥ 30</div><p>Un côté (deux côtés), en mm. Support envers : cuivre, céramique, flux, permanent. Deux côtés : gougeage puis reprise.</p></div>
+    <div><div class="ic">⚖️</div><h4>La balance</h4><div class="f"><span class="eps">S</span><sub>V</sub> = (t − c)²·tan(α/2) + b·t</div><p>X : moitié du métal des biseaux. 1 mm² sur 1 m ≈ 7,85 g. U sous V vers 24 mm, double U sous X vers 48 mm.</p></div>
+    <div><div class="ic">🛝</div><h4>Le toboggan</h4><div class="f">pente ≤ <span class="mat">1/4</span> · <span class="gam">e</span> = (t₁ − t₂)/2</div><p>Délarder les deux faces aligne les fibres neutres. Jamais sous l'épaisseur utile. Poutres : semelles d'abord.</p></div>
+    <div><div class="ic">📚</div><h4>Le millefeuille</h4><div class="f">peau tirée → <span class="tau">arrachement lamellaire</span></div><p>Sur tranche, biseau sur la tôle tirée, beurrage, Z15 à Z35 (EN 10164), ultrasons avant soudage.</p></div>
+  </div>
+  <div class="btns"><button class="btn" id="printFiche" type="button">🖨 Imprimer la fiche mémoire</button></div>
+  <div class="fun"><span class="fun-h">🚢 Fun fact : le premier navire entièrement soudé</span>En 1920, le chantier Cammell Laird de Birkenhead lance le <i>Fullagar</i>, un caboteur de 150 pieds (environ 46 m) présenté comme le premier navire de haute mer à coque entièrement soudée à l'arc. Le Lloyd's Register, qui avait publié en 1918 des règles provisoires pour les navires soudés électriquement, surveille sa construction. Échoué à pleine charge de charbon en 1924, il a la coque déformée, mais aucune soudure ne cède. Il navigue dix-sept ans, rebaptisé <i>Caria</i>, <i>Shean</i> puis <i>Cedros</i>, avant de couler en 1937 après une collision au large de la Basse-Californie (<a href="#c1">chapitre 1</a>). (Source : Lloyd's Register Foundation, Heritage &amp; Education Centre, « First and Famous: Fullagar », 2018.)</div>
+</div>
+</section>
+
+<section class="chap" id="gloss">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">A–Z</div>
+    <div class="c-title"><h2>Glossaire</h2><p>Les mots, symboles et sigles de ce cours</p></div>
+    <div class="c-img"><span class="ico">📖</span><span><small>Image à retenir</small>Le dictionnaire : un mot flou, un clic</span></div>
+  </div>
+  <dl class="gloss">
+    <dt>Angle d'ouverture α, angle de biseau β</dt><dd>α : angle total entre les deux faces d'un chanfrein ; β : angle d'une seule face biseautée, compté depuis le plan perpendiculaire à la tôle. Un V à 60° a deux biseaux de 30°.</dd>
+    <dt>Arrachement lamellaire</dt><dd>Fissure en gradins, parallèle à la peau d'une tôle laminée tirée dans son épaisseur ; elle suit les feuillets d'inclusions étirés par le laminage.</dd>
+    <dt>Assemblage bout à bout, en T, en croix, en angle extérieur, à recouvrement, sur chant</dt><dd>Les types d'assemblages de l'ISO 17659, définis par la position relative des pièces.</dd>
+    <dt>Beurrage</dt><dd>Couche de métal déposée sur une face avant l'assemblage : ici, une couche ductile qui encaisse le retrait du cordon et protège la tôle de l'arrachement lamellaire.</dd>
+    <dt>Bords soyés</dt><dd>Préparation où le bord d'une tôle est embouti pour passer sous l'autre et servir de support envers ; elle crée une excentricité.</dd>
+    <dt>BW, FW</dt><dd><i>Butt weld</i>, <i>fillet weld</i> : soudure bout à bout, soudure d'angle.</dd>
+    <dt>CND</dt><dd>Contrôle non destructif : radiographie, ultrasons, magnétoscopie, ressuage, examen visuel.</dd>
+    <dt>Côté z</dt><dd>Côté du plus grand triangle isocèle inscrit dans un cordon d'angle ; z = a·√2.</dd>
+    <dt>Délardage</dt><dd>Amincissement progressif de la pièce la plus épaisse pour la raccorder à une plus mince, linéaire (pente 1/4 au plus) ou curviligne.</dd>
+    <dt>DMOS</dt><dd>Descriptif de mode opératoire de soudage : il fixe les cotes d'atelier, les procédés et les paramètres.</dd>
+    <dt>Écartement b</dt><dd>Distance entre les bords à la racine, mesurée après pointage.</dd>
+    <dt>Emboîtement</dt><dd>Épaulement usiné qui aligne deux pièces de révolution avant soudage ; il doit être entièrement fondu.</dd>
+    <dt>FE, laser (51, 52)</dt><dd>Soudage par faisceau d'électrons et soudage laser : bords droits, jeu quasi nul, forte pénétration.</dd>
+    <dt>Fibre neutre (plan moyen)</dt><dd>Plan à mi-épaisseur d'une tôle ; deux plans moyens décalés d'une excentricité e créent un moment parasite F·e.</dd>
+    <dt>FSW (43)</dt><dd><i>Friction stir welding</i>, soudage par friction-malaxage : un outil tournant malaxe le métal à l'état solide.</dd>
+    <dt>Gorge théorique, réelle, efficace, totale</dt><dd>Gorge spécifiée par le concepteur ; hauteur du plus grand triangle isocèle inscrit dans le cordon terminé ; dimension qui transmet l'effort, pénétration comprise ; distance du fond de la pénétration au sommet de la surépaisseur (ISO 17659).</dd>
+    <dt>Gougeage</dt><dd>Enlèvement de métal à la racine (à l'arc-air ou à la meule) jusqu'au métal sain, avant la reprise à l'envers.</dd>
+    <dt>Lèvre attenante</dt><dd>Support envers permanent usiné dans l'une des pièces.</dd>
+    <dt>MB, MF, ZAT</dt><dd>Métal de base, métal fondu, zone affectée thermiquement.</dd>
+    <dt>Pleine pénétration, pénétration partielle</dt><dd>Métal fondu traversant toute l'épaisseur qui transmet l'effort ; ou soudure laissant un plan non fondu à la racine.</dd>
+    <dt>Préparation (chanfrein)</dt><dd>Forme donnée aux bords avant soudage : bords droits (I), V, Y, X, U, double U, demi-V, K, J (ISO 9692).</dd>
+    <dt>Profondeur de préparation h, rayon R</dt><dd>Hauteur de la partie chanfreinée ; rayon du fond d'un chanfrein en U ou en J.</dd>
+    <dt>Qualité Z</dt><dd>Garantie de striction minimale en traction dans l'épaisseur : Z15, Z25 ou Z35 (EN 10164).</dd>
+    <dt>Reprise à l'envers</dt><dd>Cordon déposé côté envers, après retournement et gougeage, pour obtenir la pleine pénétration.</dd>
+    <dt>Séquence de soudage</dt><dd>Ordre des passes et des côtés, choisi pour équilibrer les retraits et limiter la déformation.</dd>
+    <dt>Support envers</dt><dd>Ce qui retient le bain à la racine : latte de cuivre refroidie ou de céramique, lit de flux, tresse réfractaire (retirés) ; latte subsistante, lèvre attenante, bords soyés (permanents).</dd>
+    <dt>Talon c</dt><dd>Partie droite laissée au fond d'un chanfrein, qui retient le bain de la passe de racine.</dd>
+    <dt>Travers-court (sens Z)</dt><dd>Direction de l'épaisseur d'une tôle laminée, la plus faible en ductilité.</dd>
+    <dt>Trou de souris</dt><dd>Dégagement arrondi découpé dans l'âme d'une poutre, au droit de la semelle, pour souder celle-ci en continu et la gouger.</dd>
+  </dl>
+</div>
+</section>
+
+<section class="chap" id="check">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✓</div>
+    <div class="c-title"><h2>Suis-je prêt pour la suite ?</h2><p>Dix points à cocher de tête</p></div>
+    <div class="c-img"><span class="ico">🚦</span><span><small>Image à retenir</small>Le feu passe au vert quand tout est coché</span></div>
+  </div>
+  <p>Coche seulement ce que tu sais faire <b>sans regarder</b>. Tes coches restent enregistrées dans ce navigateur.</p>
+  <div class="check" id="checklist">
+    <label><input type="checkbox" data-c="1"> <span>Je sais nommer les six types d'assemblages et les trois familles (cordon, recouvrement, bout d'éléments élancés).</span></label>
+    <label><input type="checkbox" data-c="2"> <span>Je sais dire si une soudure est à pleine pénétration, et pourquoi deux cordons d'angle d'un T ne le sont pas.</span></label>
+    <label><input type="checkbox" data-c="3"> <span>Je sais définir les gorges théorique, réelle et efficace, et passer de a à z par z = a·√2.</span></label>
+    <label><input type="checkbox" data-c="4"> <span>Je sais citer trois façons de mesurer une gorge et ce que chacune voit.</span></label>
+    <label><input type="checkbox" data-c="5"> <span>Je sais lire les lettres d'une préparation : t, α, β, b, c, h, R.</span></label>
+    <label><input type="checkbox" data-c="6"> <span>Je sais proposer une préparation selon l'épaisseur et l'accès (un côté, support envers, deux côtés), avec ses repères de l'ISO 9692-1.</span></label>
+    <label><input type="checkbox" data-c="7"> <span>Je sais calculer la section à déposer d'un V et d'un X, et expliquer pourquoi le U et le double U gagnent aux fortes épaisseurs.</span></label>
+    <label><input type="checkbox" data-c="8"> <span>Je sais choisir une séquence de soudage d'un X pour limiter la déformation.</span></label>
+    <label><input type="checkbox" data-c="9"> <span>Je sais raccorder deux épaisseurs différentes : délardage de pente 1/4 au plus, fibres neutres, épaisseur utile.</span></label>
+    <label><input type="checkbox" data-c="10"> <span>Je sais concevoir un assemblage en T, en croix ou en L en tenant compte du laminage, et citer les parades contre l'arrachement lamellaire.</span></label>
+  </div>
+  <p class="status" id="checkMsg"></p>
+
+  <div class="meta">🔭 <b>Au prochain épisode, cours 2 : les symboles de soudage et les tolérances.</b> Tu sais choisir et coter un joint en coupe ; reste à l'écrire sur un plan sans le dessiner. Au programme : la grammaire de l'ISO 2553 (ligne repère, trait de référence, côté flèche ou côté opposé), les symboles élémentaires et supplémentaires, les cotes et la fourche, puis les tolérances générales de l'ISO 13920.</div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="wrap">
+  <p>Cours 1 sur 2 du sujet 3.3 du planning (« Conception des joints »), premier de la matière « Conception des assemblages soudés ». Vocabulaire aligné sur l'ISO 9692-1, l'ISO 9692-3, l'ISO 17659, l'ISO 4063, l'EN 10164, l'EN 13445-4 et le référentiel de l'IIW ; pour les notations et les conventions, l'enseignement de ta formation fait foi.</p>
+</div>
+</footer>
+<script>
+(function(){
+"use strict";
+const NS="http://www.w3.org/2000/svg";
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const RM=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function el(tag,attrs,parent){
+  const e=document.createElementNS(NS,tag);
+  if(attrs){for(const k in attrs){const v=attrs[k];if(v===undefined||v===null)continue;
+    if(typeof v==="string"&&v.indexOf("var(")>=0&&k!=="style")e.style.setProperty(k,v);else e.setAttribute(k,v);}}
+  if(parent)parent.appendChild(e);
+  return e;
+}
+function tx(p,x,y,str,attrs){const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);t.textContent=str;return t;}
+function txs(p,x,y,parts,attrs){/* parts: [["σ",""],["max","sub"],[" = 3",""]] */
+  const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);
+  parts.forEach(pt=>{const s=el("tspan",pt[1]==="sub"?{"font-size":"0.72em",dy:"3"}:(pt[2]?{dy:pt[2]}:{}),t);s.textContent=pt[0];
+    if(pt[1]==="sub"){const r=el("tspan",{dy:"-3"},t);r.textContent="\u200b";}});
+  return t;
+}
+function clear(svg){while(svg.firstChild)svg.removeChild(svg.firstChild);}
+function fitText(t,x0,x1,gap){/* garde un texte SVG entre x0 et x1 : il passe de l'autre côté de son repère (écart gap), sinon il glisse */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const a=t.getAttribute("text-anchor")||"start",x=+t.getAttribute("x");
+  if(gap&&a!=="middle"&&(b.x<x0||b.x+b.width>x1)){t.setAttribute("text-anchor",a==="end"?"start":"end");t.setAttribute("x",a==="end"?x+2*gap:x-2*gap);b=t.getBBox();}
+  const nx=+t.getAttribute("x");
+  if(b.x+b.width>x1)t.setAttribute("x",nx-(b.x+b.width-x1));else if(b.x<x0)t.setAttribute("x",nx+(x0-b.x));
+  return t;}
+function arrow(p,x1,y1,x2,y2,color,w,h){
+  w=w||2.4;h=h||10;
+  const g=el("g",{class:"arr"},p);g.style.color=color||"var(--ink)";
+  const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy);
+  if(L<1)return g;
+  const ux=dx/L,uy=dy/L,hh=Math.min(h,L*0.6),bx=x2-ux*hh,by=y2-uy*hh,hw=hh*0.45+w*0.3;
+  el("line",{x1:x1,y1:y1,x2:bx,y2:by,"stroke-width":w,"stroke-linecap":"round"},g);
+  el("polygon",{points:x2+","+y2+" "+(bx-uy*hw)+","+(by+ux*hw)+" "+(bx+uy*hw)+","+(by-ux*hw)},g);
+  return g;
+}
+function darrow(p,x,y1,y2,color,w){/* double flèche verticale */
+  const g=el("g",{},p);const m=(y1+y2)/2;
+  if(Math.abs(y2-y1)<4){el("line",{x1:x-5,y1:y1,x2:x+5,y2:y1,stroke:color,"stroke-width":2},g);return g;}
+  arrow(g,x,m,x,y1,color,w||2,8);arrow(g,x,m,x,y2,color,w||2,8);return g;
+}
+function nf(v,d){
+  if(d===undefined)d=1;
+  if(Math.abs(v)<0.5*Math.pow(10,-d))v=0;
+  return v.toLocaleString("fr-FR",{minimumFractionDigits:d,maximumFractionDigits:d}).replace("-","−").replace(/[\u202f\u2009]/g,"\u00a0");
+}
+const SUP={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function sci(v,d){
+  if(v===0)return "0";
+  if(!isFinite(v))return "∞";
+  let e=Math.floor(Math.log10(Math.abs(v)));
+  let m=v/Math.pow(10,e);
+  const dd=d===undefined?1:d;
+  if(Math.abs(Number(m.toFixed(dd)))>=10){m/=10;e+=1;}
+  return nf(m,dd)+" × 10"+String(e).split("").map(c=>SUP[c]).join("");
+}
+function bigN(v){/* nombre de cycles lisible */
+  if(!isFinite(v))return "∞";
+  if(v===0)return "0";
+  if(v<10)return nf(v,v<1?2:0);
+  if(v<1e5)return nf(Math.round(v),0);
+  return sci(v,1);
+}
+function dur(s){
+  if(!isFinite(s))return "∞";
+  if(s<60)return nf(s,s<10?1:0)+" s";
+  if(s<3600)return nf(s/60,0)+" min";
+  if(s<86400)return nf(s/3600,1)+" h";
+  if(s<86400*365)return nf(s/86400,1)+" jours";
+  return nf(s/(86400*365),1)+" ans";
+}
+function svgW(svg){const r=svg.getBoundingClientRect();return Math.max(290,Math.round(r.width||(svg.parentNode&&svg.parentNode.clientWidth)||600));}
+function setVB(svg,W,H){svg.setAttribute("viewBox","0 0 "+W+" "+H);}
+const redraws=[];
+let rzT=null,lastWW=window.innerWidth;
+window.addEventListener("resize",()=>{if(window.innerWidth===lastWW)return;lastWW=window.innerWidth;clearTimeout(rzT);rzT=setTimeout(()=>redraws.forEach(f=>{try{f();}catch(e){console.error(e);}}),120);});
+
+function niceStep(range,n){const raw=range/(n||5),p=Math.pow(10,Math.floor(Math.log10(raw))),m=raw/p;return (m<1.5?1:m<3?2:m<7?5:10)*p;}
+function setOn(sel,btn){$$(sel+" .btn").forEach(b=>b.classList.toggle("on",b===btn));}
+function fmtmm(mm){return mm<0.1?nf(mm*1000,0)+" µm":mm<10?nf(mm,mm<1?2:1)+" mm":nf(mm,0)+" mm";}
+function axes(svg,x0,x1,y0,y1,xmin,xmax,ymin,ymax,xlab,ylab,xstep,ystep,xfmt,yfmt){
+  const X=v=>x0+(x1-x0)*(v-xmin)/(xmax-xmin),Y=v=>y1-(y1-y0)*(v-ymin)/(ymax-ymin);
+  for(let v=Math.ceil(ymin/ystep-1e-9)*ystep;v<=ymax+1e-9;v+=ystep){el("line",{x1:x0,y1:Y(v),x2:x1,y2:Y(v),class:"gridbg"},svg);tx(svg,x0-5,Y(v)+4,yfmt?yfmt(v):nf(v,ystep<1?1:0),{class:"lbl","text-anchor":"end"});}
+  for(let v=Math.ceil(xmin/xstep-1e-9)*xstep;v<=xmax+1e-9;v+=xstep){el("line",{x1:X(v),y1:y1,x2:X(v),y2:y1+4,class:"tick"},svg);tx(svg,X(v),y1+17,xfmt?xfmt(v):nf(v,xstep<1?1:0),{class:"lbl","text-anchor":"middle"});}
+  el("line",{x1:x0,y1:y1,x2:x1,y2:y1,class:"axis"},svg);el("line",{x1:x0,y1:y0-4,x2:x0,y2:y1,class:"axis"},svg);
+  tx(svg,x0+4,y0-10,ylab,{class:"lbl"});tx(svg,x1,y1+32,xlab,{class:"lbl","text-anchor":"end"});
+  return {X:X,Y:Y};
+}
+function animate(btn,label,dur,onStep,onEnd){/* lecteur pilotable : ▶ lecture ou ⏸ pause, qui reprend où elle s'est arrêtée ; les boutons voisins ⏮ début, ◀ pas et pas ▶ (data-a) la mènent à la main ; un pas avance jusqu'à la prochaine image différente (20 pas au plus) */
+  const box=btn.parentNode,lab=btn.closest(".lab")||box,N=20;let raf=null,run=false,t=0;
+  const go=v=>{t=Math.max(0,Math.min(1,v));onStep(t);};
+  const snap=()=>{let s="";lab.querySelectorAll("svg,.readout,.status").forEach(e=>{s+=e.innerHTML;});return s;};
+  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;btn.textContent=label;}
+  function step(d){stop();const s0=snap();let k=Math.round(t*N);for(let i=0;i<N;i++){k+=d;if(k<0||k>N)break;go(k/N);if(snap()!==s0)break;}}
+  btn.addEventListener("click",()=>{if(run){stop();return;}if(t>=0.999)t=0;
+    if(RM){step(1);if(t>=1&&onEnd)onEnd();return;}
+    run=true;btn.textContent="⏸ Pause";const s0=performance.now()-t*dur;
+    const f=now=>{if(!run)return;go((now-s0)/dur);if(t>=1){stop();if(onEnd)onEnd();return;}raf=requestAnimationFrame(f);};raf=requestAnimationFrame(f);});
+  const pb=a=>box.querySelector('[data-a="'+a+'"]');
+  if(pb("start"))pb("start").addEventListener("click",()=>{stop();go(0);});
+  if(pb("back"))pb("back").addEventListener("click",()=>step(-1));
+  if(pb("fwd"))pb("fwd").addEventListener("click",()=>step(1));
+  /* un réglage fait à la main : la prochaine lecture repart du début */
+  lab.addEventListener("input",()=>{if(!run)t=0;});
+  lab.addEventListener("click",e=>{const b=e.target.closest("button");if(b&&b!==btn&&!b.dataset.a&&!run)t=0;});
+  return {stop:stop,running:()=>run};
+}
+function player(id,o){/* lecteur pilotable : ⏮ début, ◀ pas, ▶ lecture ou ⏸ pause (reprend où elle s'est arrêtée), pas ▶ ; o.get() et o.set(t) avec t de 0 à 1, o.dur (ms), o.steps */
+  const box=$("#"+id),bp=box.querySelector('[data-a="play"]'),lab=bp.textContent,n=o.steps||20;let raf=null,run=false;
+  const cl=t=>Math.max(0,Math.min(1,t));
+  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;bp.textContent=lab;}
+  function step(d){stop();o.set(cl(Math.round(o.get()*n+d)/n));}
+  bp.addEventListener("click",()=>{if(run){stop();return;}let t0=o.get();if(t0>=0.999)t0=0;
+    if(RM){o.set(cl(Math.round(t0*n+1)/n));return;}
+    run=true;bp.textContent="⏸ Pause";const s0=performance.now()-t0*o.dur;
+    const f=now=>{if(!run)return;const t=cl((now-s0)/o.dur);o.set(t);if(t>=1){stop();return;}raf=requestAnimationFrame(f);};raf=requestAnimationFrame(f);});
+  box.querySelector('[data-a="start"]').addEventListener("click",()=>{stop();o.set(0);});
+  box.querySelector('[data-a="back"]').addEventListener("click",()=>step(-1));
+  box.querySelector('[data-a="fwd"]').addEventListener("click",()=>step(1));
+  return {stop:stop};
+}
+
+
+function sig2(v){/* arrondi à deux chiffres significatifs */
+  if(v<=0)return 0;const p=Math.pow(10,Math.floor(Math.log10(v))-1);return Math.round(v/p)*p;}
+function halo(t,svg){/* liseré de fond, puis passage au premier plan */
+  t.setAttribute("paint-order","stroke");t.style.setProperty("stroke","var(--card)");t.setAttribute("stroke-width","4");t.setAttribute("stroke-linejoin","round");if(svg)svg.appendChild(t);return t;}
+function plate(t,svg){/* fond plein derrière une étiquette */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const r=el("rect",{x:b.x-3,y:b.y-1,width:b.width+6,height:b.height+2,fill:"var(--card)",opacity:.92,rx:2});svg.appendChild(r);svg.appendChild(t);return t;}
+function le(n,f){return /^[aeiouyhéèâî]/i.test(n)?"l'"+n:(f?"la ":"le ")+n;}
+function du(n,f){return /^[aeiouyhéèâî]/i.test(n)?"de l'"+n:(f?"de la ":"du ")+n;}
+function fmtG(v){return nf(v,v<0.1?3:2)+" N/m";}
+function fmtPa(p){return p<1000?nf(p,0)+" Pa":p<1e5?nf(p/1000,1)+" kPa":nf(p/1e5,2)+" bar";}
+function fmtLen(m){/* m en mètres */
+  const mm=m*1000;if(mm<1)return nf(mm*1000,0)+" µm";if(mm<10)return nf(mm,1)+" mm";if(mm<1000)return nf(mm,0)+" mm";return nf(m,1)+" m";}
+function fmtT(s){if(!isFinite(s))return "∞";if(s<0.01)return nf(s*1000,1)+" ms";if(s<1)return nf(s,3)+" s";if(s<60)return nf(s,s<10?1:0)+" s";return nf(s/60,s<600?1:0)+" min";}
+
+function spread(items,gap,ymin,ymax){/* écarte verticalement des étiquettes {y} triées */
+  items.sort((a,b)=>a.y-b.y);
+  for(let i=1;i<items.length;i++)if(items[i].y-items[i-1].y<gap)items[i].y=items[i-1].y+gap;
+  if(items.length&&items[items.length-1].y>ymax){items[items.length-1].y=ymax;for(let i=items.length-2;i>=0;i--)if(items[i+1].y-items[i].y<gap)items[i].y=items[i+1].y-gap;}
+  if(items.length&&items[0].y<ymin){items[0].y=ymin;for(let i=1;i<items.length;i++)if(items[i].y-items[i-1].y<gap)items[i].y=items[i-1].y+gap;}
+  return items;}
+function declutter(ts,ymin,ymax){/* décale verticalement les textes qui se chevauchent */
+  const box=t=>{try{return t.getBBox();}catch(e){return null;}};
+  for(let i=1;i<ts.length;i++){const ti=ts[i];if(!ti)continue;
+    for(let pass=0;pass<6;pass++){const bi=box(ti);if(!bi)break;let moved=false;
+      for(let j=0;j<i;j++){const bj=ts[j]&&box(ts[j]);if(!bj)continue;
+        const ix=Math.min(bi.x+bi.width,bj.x+bj.width)-Math.max(bi.x,bj.x),iy=Math.min(bi.y+bi.height,bj.y+bj.height)-Math.max(bi.y,bj.y);
+        if(ix>1&&iy>1){let dy=(bi.y+bi.height/2>=bj.y+bj.height/2)?(bj.y+bj.height-bi.y+1):-(bi.y+bi.height-bj.y+1);
+          if(bi.y+dy<ymin||bi.y+bi.height+dy>ymax)dy=dy>0?-(bi.y+bi.height-bj.y+1):(bj.y+bj.height-bi.y+1);
+          ti.setAttribute("y",+ti.getAttribute("y")+dy);moved=true;break;}}
+      if(!moved)break;}}
+  return ts;}
+const SUPD={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function p10(e){return "10"+String(e).split("").map(c=>SUPD[c]||c).join("");}
+function fmtP(p){/* pression en Pa, lisible */
+  if(p>=1e5)return nf(p/1e5,1)+" bar";if(p>=1000)return nf(p/1000,p<1e4?1:0)+" kPa";if(p>=1)return nf(p,p<10?1:0)+" Pa";return sci(p,1)+" Pa";}
+
+
+
+function rng(seed){/* générateur pseudo-aléatoire reproductible */
+  let a=seed>>>0;return ()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296;};}
+
+
+/* =========================================================
+   Outils communs de la série : formats, couleurs, grains, nuances, modèles
+   ========================================================= */
+const NB=String.fromCharCode(160);
+const nbsp=s=>s.replace(/(\d) (%|°C|mm|µm|nm|MPa|HV|s|ppm|h|J)(?=[\s.,;:)<·/]|$)/g,"$1"+NB+"$2");
+function fitSize(t,maxW,min){/* réduit la police d'un texte SVG trop large (style en ligne, prioritaire sur la feuille de style) */
+  let b;try{b=t.getBBox();}catch(e){return t;}let fs=parseFloat(getComputedStyle(t).fontSize)||13;
+  while(b.width>maxW&&fs>(min||9)){fs-=0.5;t.style.fontSize=fs+"px";b=t.getBBox();}return t;}
+const pts=P=>P.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join(" ");
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const mixc=(c,p,b)=>"color-mix(in srgb,"+c+" "+p+"%,"+(b||"var(--card)")+")";
+const COL={liq:mixc("var(--sig)",24),gam:mixc("var(--gam)",24),alp:mixc("var(--eps)",15),mart:"color-mix(in srgb,var(--eps) 50%,var(--tau))",
+  bain:mixc("var(--gam)",52),fp:mixc("var(--eps)",13),film:mixc("var(--tau)",72)};
+function frame(svg,R){el("rect",{x:R.x0,y:R.y0,width:R.x1-R.x0,height:R.y1-R.y0,fill:"none",stroke:"var(--ink)","stroke-width":1.2},svg);}
+function clipG(svg,id,R){const cp=el("clipPath",{id:id},el("defs",null,svg));el("rect",{x:R.x0,y:R.y0,width:R.x1-R.x0,height:R.y1-R.y0},cp);return el("g",{"clip-path":"url(#"+id+")"},svg);}
+function voronoi(seeds,x0,y0,x1,y1,rmax){/* cellules polygonales ; rmax : distance au-delà de laquelle un voisin est ignoré */
+  const box=[[x0,y0],[x1,y0],[x1,y1],[x0,y1]],r2=rmax?rmax*rmax:Infinity;
+  return seeds.map((s,i)=>{let P=box.slice();
+    for(let j=0;j<seeds.length&&P.length;j++){if(i===j)continue;const q=seeds[j],dx=q[0]-s[0],dy=q[1]-s[1];if(dx*dx+dy*dy>r2)continue;
+      const mx=(s[0]+q[0])/2,my=(s[1]+q[1])/2,out=[];
+      for(let k=0;k<P.length;k++){const a=P[k],b=P[(k+1)%P.length],sa=(a[0]-mx)*dx+(a[1]-my)*dy,sb=(b[0]-mx)*dx+(b[1]-my)*dy;if(sa<=0)out.push(a);
+        if((sa<0&&sb>0)||(sa>0&&sb<0)){const t=sa/(sa-sb);out.push([a[0]+t*(b[0]-a[0]),a[1]+t*(b[1]-a[1])]);}}
+      P=out;}
+    return P;});
+}
+function seedsGrid(x0,y0,x1,y1,s,seed){const r=rng(seed),o=[];for(let y=y0+s/2;y<y1+s/2;y+=s*0.87)for(let x=x0+s/2+((Math.round((y-y0)/(s*0.87))%2)?s/2:0);x<x1+s/2;x+=s)o.push([x+(r()-0.5)*s*0.6,Math.min(y1-1,y+(r()-0.5)*s*0.5)]);return o;}
+function legend(svg,x,y,items,xmax){/* items : [couleur, texte, "o" pour un rond] ; passe à la ligne ; renvoie le bas de la légende */
+  let lx=x,ly=y;
+  items.forEach(q=>{const t=tx(svg,x,y+9.5,q[1],{class:"lbl"});let w=70;try{w=t.getBBox().width;}catch(e){}
+    if(lx>x&&lx+14+w>xmax){lx=x;ly+=16;}
+    t.setAttribute("x",lx+14);t.setAttribute("y",ly+9.5);
+    if(q[2]==="o")el("circle",{cx:lx+5,cy:ly+5,r:4.5,fill:q[0],stroke:"var(--ink)","stroke-width":0.7},svg);
+    else el("rect",{x:lx,y:ly,width:10,height:10,fill:q[0],stroke:"var(--ink)","stroke-width":0.7},svg);
+    lx+=14+w+12;});
+  return ly+12;}
+/* Atelier des joints : coupe.js
+   Géométrie des coupes de joints soudés, en millimètres, et leur tracé en SVG.
+   Repère : x horizontal, axe du joint en x = 0 ; y vers le haut ; face endroit en y = t, envers en y = 0.
+   Module UMD : window.Coupe dans le navigateur, require() sous Node (la géométrie se teste sans navigateur).
+   Le même code est recopié dans les manipulations des cours de la matière Conception (pages autonomes). */
+(function (racine, fabrique) {
+  if (typeof module === "object" && module.exports) module.exports = fabrique();
+  else racine.Coupe = fabrique();
+})(typeof self !== "undefined" ? self : this, function () {
+  "use strict";
+  const RAD = Math.PI / 180;
+  const SQ2 = Math.SQRT2;
+
+  /* ---------- outils ---------- */
+  function aire(P) {
+    let s = 0;
+    for (let i = 0; i < P.length; i++) {
+      const a = P[i], b = P[(i + 1) % P.length];
+      s += a[0] * b[1] - b[0] * a[1];
+    }
+    return Math.abs(s) / 2;
+  }
+  const miroir = P => P.map(p => [-p[0], p[1]]);
+  const borne = (v, a, b) => Math.max(a, Math.min(b, v));
+
+  /* ---------- profil du bord d'une pièce ----------
+     Points du bord, de la face endroit (y = t) vers l'envers (y = 0), pour une pièce placée à droite
+     de l'axe ; x0 = demi-écartement. haut et bas : {type:"droit"|"biseau"|"J"|"biseau2", h, beta (°), R, hr, beta2}.
+     Le talon (méplat) occupe ce qui reste entre les deux. */
+  function profil(t, x0, haut, bas) {
+    const P = [];
+    const H = haut || { type: "droit" }, B = bas || { type: "droit" };
+    const hH = H.type === "droit" ? 0 : H.h, hB = B.type === "droit" ? 0 : B.h;
+    if (H.type === "droit") P.push([x0, t]);
+    else if (H.type === "biseau") {
+      const tb = Math.tan(H.beta * RAD);
+      P.push([x0 + hH * tb, t], [x0, t - hH]);
+    } else if (H.type === "biseau2") { /* V à double pente : biseau ouvert à la racine (beta, sur hr), flanc raide au-dessus (beta2) */
+      const hr = Math.min(H.hr, hH), x1 = x0 + hr * Math.tan(H.beta * RAD);
+      P.push([x1 + (hH - hr) * Math.tan(H.beta2 * RAD), t], [x1, t - hH + hr], [x0, t - hH]);
+    } else if (H.type === "J") { /* le rayon ne dépasse pas la profondeur de préparation */
+      const R = Math.min(H.R, hH), b = H.beta * RAD, yc = t - hH + R;
+      const xp = x0 + R * Math.cos(b), yp = yc - R * Math.sin(b);
+      P.push([xp + (t - yp) * Math.tan(b), t]);
+      const n = 16;
+      for (let i = 0; i <= n; i++) {
+        const f = -b - (Math.PI / 2 - b) * i / n;
+        P.push([x0 + R * Math.cos(f), yc + R * Math.sin(f)]);
+      }
+    }
+    if (B.type === "droit") P.push([x0, 0]);
+    else if (B.type === "biseau") P.push([x0, hB], [x0 + hB * Math.tan(B.beta * RAD), 0]);
+    else if (B.type === "J") {
+      const R = Math.min(B.R, hB), b = B.beta * RAD, yc = hB - R;
+      const n = 16;
+      for (let i = 0; i <= n; i++) {
+        const f = Math.PI / 2 - (Math.PI / 2 - b) * i / n;
+        P.push([x0 + R * Math.cos(f), yc + R * Math.sin(f)]);
+      }
+      const xp = x0 + R * Math.cos(b), yp = yc + R * Math.sin(b);
+      P.push([xp + yp * Math.tan(b), 0]);
+    }
+    return P;
+  }
+
+  /* ---------- préparations bout à bout ----------
+     type : I, V (Y si c > 0), V2 (V à double pente), X (h1, h2), U, UU (double U), demiV, K, J.
+     o : t, alpha (angle d'ouverture total, °), beta (angle d'un flanc, °), b (écartement), c (talon),
+         h1, h2 (profondeurs de préparation côté endroit et côté envers), R (rayon d'un U ou d'un J), hr, beta2. */
+  const DEFAUTS = {
+    I: { b: 2 }, V: { alpha: 60, b: 2, c: 2 }, V2: { alpha: 70, beta2: 12, hr: 8, b: 3, c: 2 },
+    X: { alpha: 60, b: 2, c: 2 }, U: { beta: 10, R: 6, b: 2, c: 3 }, UU: { beta: 10, R: 6, b: 2, c: 3 },
+    demiV: { beta: 45, b: 2, c: 2 }, K: { beta: 45, b: 2, c: 2 }, J: { beta: 15, R: 6, b: 2, c: 2 }
+  };
+  function options(type, o) {
+    const d = Object.assign({}, DEFAUTS[type] || {}, o || {});
+    d.t = d.t || 10; d.b = d.b === undefined ? 0 : d.b; d.c = borne(d.c || 0, 0, d.t);
+    return d;
+  }
+  function bords(type, o) {
+    const t = o.t, x0 = o.b / 2, ht = t - o.c;
+    const dr = { type: "droit" };
+    let D = [dr, dr], G = [dr, dr];
+    if (type === "V") { const s = { type: "biseau", h: ht, beta: o.alpha / 2 }; D = G = [s, dr]; }
+    else if (type === "V2") { const s = { type: "biseau2", h: ht, beta: o.alpha / 2, hr: o.hr, beta2: o.beta2 }; D = G = [s, dr]; }
+    else if (type === "X") {
+      const h1 = o.h1 !== undefined ? o.h1 : ht / 2, h2 = o.h2 !== undefined ? o.h2 : ht - h1;
+      const a1 = (o.alpha1 || o.alpha) / 2, a2 = (o.alpha2 || o.alpha) / 2;
+      D = G = [{ type: "biseau", h: h1, beta: a1 }, { type: "biseau", h: h2, beta: a2 }];
+    } else if (type === "U") { const s = { type: "J", h: ht, beta: o.beta, R: o.R }; D = G = [s, dr]; }
+    else if (type === "UU") {
+      const h1 = o.h1 !== undefined ? o.h1 : ht / 2, h2 = ht - h1;
+      D = G = [{ type: "J", h: h1, beta: o.beta, R: o.R }, { type: "J", h: h2, beta: o.beta, R: o.R }];
+    } else if (type === "demiV") D = [{ type: "biseau", h: ht, beta: o.beta }, dr];
+    else if (type === "K") {
+      const h1 = o.h1 !== undefined ? o.h1 : ht / 2, h2 = ht - h1;
+      D = [{ type: "biseau", h: h1, beta: o.beta }, { type: "biseau", h: h2, beta: o.beta }];
+    } else if (type === "J") D = [{ type: "J", h: ht, beta: o.beta, R: o.R }, dr];
+    return { droite: profil(t, x0, D[0], D[1]), gauche: profil(t, x0, G[0], G[1]) };
+  }
+  function chanfrein(type, opts) {
+    const o = options(type, opts);
+    const p = bords(type, o);
+    const pd = p.droite, pg = miroir(p.gauche);
+    const larg = Math.max(...pd.map(q => q[0]), ...p.gauche.map(q => q[0]));
+    const W = larg + Math.max(6, o.t * 0.9);
+    const plaqueD = pd.concat([[W, 0], [W, o.t]]);
+    const plaqueG = pg.concat([[-W, 0], [-W, o.t]]);
+    const vide = pd.concat(pg.slice().reverse());
+    return { type: type, o: o, t: o.t, W: W, plaques: [plaqueG, plaqueD], vide: vide, S: aire(vide),
+      largeurEndroit: [pg[0][0], pd[0][0]], largeurEnvers: [pg[pg.length - 1][0], pd[pd.length - 1][0]] };
+  }
+
+  /* Sections à déposer, formules fermées (hors surépaisseurs), pour vérifier le tracé. */
+  const formules = {
+    V: (t, alpha, b, c) => Math.pow(t - c, 2) * Math.tan(alpha / 2 * RAD) + b * t,
+    X: (t, alpha, b, c) => Math.pow(t - c, 2) * Math.tan(alpha / 2 * RAD) / 2 + b * t,
+    demiV: (t, beta, b, c) => Math.pow(t - c, 2) * Math.tan(beta * RAD) / 2 + b * t,
+    K: (t, beta, b, c) => Math.pow(t - c, 2) * Math.tan(beta * RAD) / 4 + b * t,
+    /* aire entre le plan du talon et un profil en J de profondeur h (une pièce) */
+    J1: (h, beta, R) => {
+      const b = beta * RAD, yp = R - R * Math.sin(b), dx = R * Math.cos(b);
+      return R * R * ((Math.PI / 2 - b) / 2 - Math.sin(2 * b) / 4) + dx * (h - yp) + Math.pow(h - yp, 2) * Math.tan(b) / 2;
+    },
+    U: (t, beta, R, b, c) => 2 * formules.J1(t - c, beta, R) + b * t
+  };
+
+  /* Cordon d'une préparation bout à bout : métal fondu, surépaisseur endroit, pénétration envers. */
+  function cordon(ch, o) {
+    o = o || {};
+    const t = ch.t, e = o.surep === undefined ? Math.min(3, 0.8 + 0.06 * (ch.largeurEndroit[1] - ch.largeurEndroit[0])) : o.surep;
+    const m = o.debord === undefined ? 1 : o.debord;
+    const cap = [], n = 18, xa = ch.largeurEndroit[0] - m, xb = ch.largeurEndroit[1] + m;
+    for (let i = 0; i <= n; i++) { const u = i / n, x = xa + (xb - xa) * u; cap.push([x, t + e * 4 * u * (1 - u)]); }
+    const res = { fondu: ch.vide, endroit: cap, envers: null };
+    if (o.envers !== false) {
+      const er = o.surepEnvers === undefined ? Math.min(1.5, 0.5 + 0.1 * ch.o.b) : o.surepEnvers;
+      const ya = ch.largeurEnvers[0] - m * 0.6, yb = ch.largeurEnvers[1] + m * 0.6, R = [];
+      for (let i = 0; i <= n; i++) { const u = i / n, x = ya + (yb - ya) * u; R.push([x, -er * 4 * u * (1 - u)]); }
+      res.envers = R;
+    }
+    return res;
+  }
+
+  /* ---------- soudure d'angle ----------
+     Repère local : racine (angle des pièces) à l'origine ; pièce 1 le long de +x (y = 0), pièce 2 le long de +y (x = 0).
+     z1, z2 : côtés ; s : bombé de la face (> 0 convexe, < 0 concave), mesuré au milieu, perpendiculairement à la corde ;
+     p : pénétration au-delà de la racine, selon la bissectrice. */
+  function faceAngle(z1, z2, s, n) {
+    n = n || 40;
+    const L = Math.hypot(z1, z2), nx = z2 / L, ny = z1 / L;
+    const cx = z1 / 2 + 2 * s * nx, cy = z2 / 2 + 2 * s * ny;
+    const P = [];
+    for (let i = 0; i <= n; i++) {
+      const u = i / n, a = (1 - u) * (1 - u), b = 2 * u * (1 - u), c = u * u;
+      P.push([a * z1 + b * cx, a * 0 + b * cy + c * z2]);
+    }
+    return P;
+  }
+  function cordonAngle(o) {
+    const z1 = o.z1, z2 = o.z2 === undefined ? o.z1 : o.z2, s = o.s || 0, p = o.p || 0;
+    const face = faceAngle(z1, z2, s);
+    const fondu = [[0, 0]].concat(face);
+    /* Pénétration : un lobe de rayon r = p·√2 autour de la racine. Il fond la pièce 1 sous la racine
+       et le plan de contact sur une largeur r, côté pièce 2. */
+    let pen = null;
+    const r = p * SQ2;
+    if (p > 0) {
+      const w1 = Math.max(r, Math.min(z1 * 0.7, r + 1)), w2 = Math.min(z2 * 0.7, 0.5 * r + 1), n = 16;
+      pen = [[w1, 0]];
+      for (let i = 0; i <= n; i++) { const f = -Math.PI * i / n; pen.push([r * Math.cos(f), r * Math.sin(f)]); }
+      pen.push([-0.6 * r, 0.3 * r], [0, 0.45 * r], [0, w2]);
+    }
+    return { fondu: fondu, penetration: pen, face: face, fondContact: r };
+  }
+  /* Gorges selon l'ISO 17659 : réelle (hauteur du plus grand triangle isocèle inscrit), efficace (avec la pénétration),
+     totale (du fond de la pénétration au point le plus haut de la surépaisseur), côté du triangle inscrit. */
+  function gorges(o) {
+    const z1 = o.z1, z2 = o.z2 === undefined ? o.z1 : o.z2, p = o.p || 0;
+    const face = faceAngle(z1, z2, o.s || 0, 200);
+    let L = Math.min(z1, z2), haut = 0;
+    face.forEach(q => { L = Math.min(L, q[0] + q[1]); haut = Math.max(haut, (q[0] + q[1]) / SQ2); });
+    const a = L / SQ2;
+    return { cote: L, a: a, aEff: a + p, totale: haut + p, z1: z1, z2: z2 };
+  }
+  const zDeA = a => a * SQ2;
+  const aDeZ = z => z / SQ2;
+
+  /* ---------- assemblages complets (scènes) ----------
+     Une scène : plaques (polygones hachurés), cordons (métal fondu), manques (segments non fondus), axes. */
+  function translater(P, dx, dy, sx) { sx = sx || 1; return P.map(q => [sx * q[0] + dx, q[1] + dy]); }
+
+  function sceneBout(type, o) {
+    const ch = chanfrein(type, o);
+    const c = cordon(ch, o);
+    const sc = { plaques: ch.plaques, cordons: [c.fondu, c.endroit], manques: [], ch: ch,
+      boite: [-ch.W, -3, ch.W, ch.t + 4] };
+    if (c.envers && o && o.penetre !== false) sc.cordons.push(c.envers);
+    if (o && o.penetre === false) { /* racine non fondue : le talon et l'écartement restent ouverts */
+      const yr = Math.max(o.manque || ch.o.c || 1.5, 1.2);
+      sc.cordons[0] = coupeSous(ch.vide, yr);
+      sc.manques.push([[0, 0], [0, yr]]);
+    }
+    return sc;
+  }
+  /* garde la partie d'un polygone située au-dessus de y = yc (Sutherland-Hodgman, demi-plan) */
+  function coupeSous(P, yc) {
+    const out = [];
+    for (let i = 0; i < P.length; i++) {
+      const a = P[i], b = P[(i + 1) % P.length], ia = a[1] >= yc, ib = b[1] >= yc;
+      if (ia) out.push(a);
+      if (ia !== ib) { const u = (yc - a[1]) / (b[1] - a[1]); out.push([a[0] + u * (b[0] - a[0]), yc]); }
+    }
+    return out;
+  }
+  /* coupe à hauteur y deux cordons bout à bout faits de chaque côté, sur bords droits, qui se rejoignent ou non */
+  function sceneBoutDeuxCotes(o) {
+    const t = o.t, b = o.b === undefined ? t / 2 : o.b, pe = o.pEndroit, pv = o.pEnvers, W = Math.max(14, t * 1.6);
+    const plaques = [[[-b / 2, 0], [-W, 0], [-W, t], [-b / 2, t]], [[b / 2, t], [W, t], [W, 0], [b / 2, 0]]];
+    const lob = (y0, prof, sens) => {
+      const n = 18, w = b / 2 + Math.max(1, 0.35 * prof), P = [];
+      for (let i = 0; i <= n; i++) { const f = Math.PI * i / n; P.push([-w * Math.cos(f), y0 - sens * prof * Math.sin(f)]); }
+      return P;
+    };
+    const cap = (y, h, sens) => {
+      const n = 16, w = b / 2 + 1.2, P = [];
+      for (let i = 0; i <= n; i++) { const u = i / n; P.push([-w + 2 * w * u, y + sens * h * 4 * u * (1 - u)]); }
+      return P;
+    };
+    const cordons = [lob(t, pe, 1), cap(t, 1.2, 1), lob(0, pv, -1), cap(0, 1, -1)];
+    const manques = pe + pv < t ? [[[0, pv], [0, t - pe]]] : [];
+    return { plaques: plaques, cordons: cordons, manques: manques, boite: [-W, -3, W, t + 3] };
+  }
+  /* Assemblage en T. o : t1 (âme), t2 (semelle), H (hauteur d'âme dessinée), L (demi-largeur de semelle),
+     mode : "angle" (cordons d'angle : gauche et droite = {z, s, p} ou null), "demiV" ou "K" (âme chanfreinée, pleine pénétration). */
+  function sceneTe(o) {
+    const t1 = o.t1, t2 = o.t2, H = o.H || t1 * 2.2, L = o.L || Math.max(t1 * 2.4, 22);
+    const semelle = [[-L, 0], [L, 0], [L, t2], [-L, t2]];
+    const sc = { plaques: [semelle], cordons: [], manques: [], boite: [-L, -2, L, t2 + H] };
+    if (o.mode === "angle") {
+      sc.plaques.push([[-t1 / 2, t2], [t1 / 2, t2], [t1 / 2, t2 + H], [-t1 / 2, t2 + H]]);
+      let fondG = 0, fondD = 0;
+      [["droite", 1], ["gauche", -1]].forEach(([cote, sx]) => {
+        const k = o[cote];
+        if (!k) return;
+        const c = cordonAngle({ z1: k.z, z2: k.z, s: k.s, p: k.p });
+        sc.cordons.push(translater(c.fondu, sx * t1 / 2, t2, sx));
+        if (c.penetration) sc.cordons.push(translater(c.penetration, sx * t1 / 2, t2, sx));
+        if (cote === "droite") fondD = c.fondContact; else fondG = c.fondContact;
+      });
+      const xa = -t1 / 2 + fondG, xb = t1 / 2 - fondD;
+      if (xb > xa + 0.05) sc.manques.push([[xa, t2], [xb, t2]]);
+    } else {
+      /* Âme chanfreinée : la profondeur du biseau se compte dans l'épaisseur de l'âme (horizontale) ;
+         sa hauteur vaut profondeur × tan β. */
+      const c = o.c === undefined ? 2 : o.c, beta = o.beta || 45, b = o.b === undefined ? 2 : o.b;
+      const tb = Math.tan(beta * RAD), yb = t2 + b, m = 1.4;
+      if (o.mode === "K") {
+        const hk = (t1 - c) / 2 * tb;
+        sc.plaques.push([[-c / 2, yb], [c / 2, yb], [t1 / 2, yb + hk], [t1 / 2, t2 + H], [-t1 / 2, t2 + H], [-t1 / 2, yb + hk]]);
+        sc.cordons.push([[-t1 / 2 - m, t2], [t1 / 2 + m, t2], [t1 / 2 + m * 0.7, yb + hk + 0.4], [t1 / 2, yb + hk + m * 0.6],
+          [t1 / 2, yb + hk], [c / 2, yb], [-c / 2, yb], [-t1 / 2, yb + hk], [-t1 / 2, yb + hk + m * 0.6], [-t1 / 2 - m * 0.7, yb + hk + 0.4]]);
+      } else { /* demi-V : biseau côté droit, talon c côté gauche ; reprise par un cordon d'angle à gauche */
+        const xa = -t1 / 2 + c, hb = (t1 - c) * tb;
+        sc.plaques.push([[-t1 / 2, yb], [xa, yb], [t1 / 2, yb + hb], [t1 / 2, t2 + H], [-t1 / 2, t2 + H]]);
+        sc.cordons.push([[-t1 / 2, t2], [t1 / 2 + m, t2], [t1 / 2 + m * 0.7, yb + hb + 0.4], [t1 / 2, yb + hb + m * 0.6],
+          [t1 / 2, yb + hb], [xa, yb], [-t1 / 2, yb]]);
+        const r = cordonAngle({ z1: Math.max(3, t1 * 0.3), s: 0.3 });
+        sc.cordons.push(translater(r.fondu, -t1 / 2, t2, -1));
+      }
+      sc.boite = [-L, -2, L, Math.max(t2 + H, t2 + b + t1 * tb + 2)];
+    }
+    return sc;
+  }
+  /* Assemblage à recouvrement : tôle basse (t), tôle haute (t) décalée ; cordons d'angle en bout de chaque tôle. */
+  function sceneRecouvrement(o) {
+    const t = o.t, R = o.recouvrement || 3 * t, L = R + 2.2 * t;
+    const bas = [[-L, 0], [R / 2, 0], [R / 2, t], [-L, t]];
+    const sc = { plaques: [bas], cordons: [], manques: [], boite: [-L, -2, L, 2 * t + 3] };
+    const z = o.z || t * 0.8, f = cordonAngle({ z1: z, s: 0.3 }).fondu;
+    /* à droite, le bout de la tôle basse sous la tôle haute : axes +x et −y ; à gauche, le bout de la tôle haute sur la basse : axes −x et +y */
+    if (o.droite !== false) sc.cordons.push(f.map(q => [R / 2 + q[0], t - q[1]]));
+    if (o.gauche) sc.cordons.push(f.map(q => [-R / 2 - q[0], t + q[1]]));
+    if (o.bouchon) { /* lumière dans la tôle haute, remplie de métal fondu qui pénètre la tôle basse */
+      const w = Math.max(t, 6), pen = 0.3 * t, d = 0.6;
+      sc.plaques.push([[-R / 2, t], [-w / 2, t], [-w / 2, 2 * t], [-R / 2, 2 * t]], [[w / 2, t], [L, t], [L, 2 * t], [w / 2, 2 * t]]);
+      sc.cordons.push([[-w / 2, t - pen], [w / 2, t - pen], [w / 2, 2 * t], [w / 2 + d, 2 * t + d], [-w / 2 - d, 2 * t + d], [-w / 2, 2 * t]]);
+      sc.manques.push([[-R / 2, t], [-w / 2, t]], [[w / 2, t], [R / 2, t]]);
+    } else {
+      sc.plaques.push([[-R / 2, t], [L, t], [L, 2 * t], [-R / 2, 2 * t]]);
+      sc.manques.push([[-R / 2, t], [R / 2, t]]);
+    }
+    return sc;
+  }
+
+  /* ---------- tracé SVG (navigateur) ----------
+     cadre : {x, y, w, h} en pixels ; boite : [xmin, ymin, xmax, ymax] en mm. Renvoie {P, k} : P(x, y) donne les pixels. */
+  let compteur = 0;
+  function noeud(tag, attrs, parent) {
+    const e = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    for (const k in attrs) {
+      const v = attrs[k];
+      if (v === undefined || v === null) continue;
+      if (typeof v === "string" && v.indexOf("var(") >= 0) e.style.setProperty(k, v); else e.setAttribute(k, v);
+    }
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function hachures(svg) {
+    if (svg.__hach) return svg.__hach;
+    const id = "hach" + (++compteur);
+    let defs = svg.querySelector("defs");
+    if (!defs) defs = noeud("defs", {}, svg);
+    const pat = noeud("pattern", { id: id, width: 7, height: 7, patternUnits: "userSpaceOnUse", patternTransform: "rotate(45)" }, defs);
+    noeud("line", { x1: 0, y1: 0, x2: 0, y2: 7, stroke: "var(--muted)", "stroke-width": 1 }, pat);
+    svg.__hach = id;
+    return id;
+  }
+  function transformation(cadre, boite) {
+    const k = Math.min(cadre.w / (boite[2] - boite[0]), cadre.h / (boite[3] - boite[1]));
+    const ox = cadre.x + (cadre.w - k * (boite[2] - boite[0])) / 2, oy = cadre.y + (cadre.h - k * (boite[3] - boite[1])) / 2;
+    const P = (x, y) => [ox + k * (x - boite[0]), oy + k * (boite[3] - y)];
+    return { P: P, k: k };
+  }
+  const chemin = (P, T) => P.map((q, i) => (i ? "L" : "M") + T.P(q[0], q[1]).map(v => v.toFixed(1)).join(",")).join("") + "Z";
+  function tracer(svg, scene, cadre, opts) {
+    opts = opts || {};
+    const T = transformation(cadre, opts.boite || scene.boite);
+    const g = noeud("g", { class: "coupe" }, svg);
+    if (svg.__hach && !svg.querySelector("#" + svg.__hach)) svg.__hach = null;
+    const h = hachures(svg);
+    scene.plaques.forEach(P => noeud("path", { d: chemin(P, T), fill: "url(#" + h + ")", stroke: "var(--ink)", "stroke-width": 1.3, "stroke-linejoin": "round" }, g));
+    const cw = opts.couleurCordon || "var(--weld)";
+    scene.cordons.forEach(P => noeud("path", { d: chemin(P, T), fill: "color-mix(in srgb," + cw + " 42%,var(--card))", stroke: cw, "stroke-width": 1.1, "stroke-linejoin": "round" }, g));
+    (scene.manques || []).forEach(S => {
+      const a = T.P(S[0][0], S[0][1]), b = T.P(S[1][0], S[1][1]);
+      noeud("line", { x1: a[0], y1: a[1], x2: b[0], y2: b[1], stroke: "var(--sig)", "stroke-width": 3.2, "stroke-linecap": "round" }, g);
+    });
+    return T;
+  }
+
+  return { RAD: RAD, aire: aire, profil: profil, chanfrein: chanfrein, formules: formules, cordon: cordon,
+    faceAngle: faceAngle, cordonAngle: cordonAngle, gorges: gorges, zDeA: zDeA, aDeZ: aDeZ,
+    sceneBout: sceneBout, sceneBoutDeuxCotes: sceneBoutDeuxCotes, sceneTe: sceneTe, sceneRecouvrement: sceneRecouvrement,
+    coupeSous: coupeSous, transformation: transformation, chemin: chemin, tracer: tracer, DEFAUTS: DEFAUTS };
+});
+
+/* =========================================================
+   Atlas : les coupes des cartes (types d'assemblages, préparations)
+   ========================================================= */
+(function(){
+  const A=$$("svg[data-atlas]");if(!A.length)return;
+  const fa=o=>Coupe.cordonAngle(o).fondu;
+  const S={
+    bout:()=>Coupe.sceneBout("V",{t:12,alpha:60,b:2,c:1.5}),
+    te:()=>Coupe.sceneTe({t1:8,t2:8,H:20,L:22,mode:"angle",gauche:{z:5,s:0.3},droite:{z:5,s:0.3}}),
+    croix:()=>{const t1=8,t2=10,H=16,L=22,f=fa({z1:5,s:0.3});
+      const sc={plaques:[[[-L,0],[L,0],[L,t2],[-L,t2]],[[-t1/2,t2],[t1/2,t2],[t1/2,t2+H],[-t1/2,t2+H]],[[-t1/2,0],[t1/2,0],[t1/2,-H],[-t1/2,-H]]],cordons:[],manques:[],boite:[-L,-H,L,t2+H]};
+      [[1,1],[-1,1],[1,-1],[-1,-1]].forEach(([sx,sy])=>sc.cordons.push(f.map(q=>[sx*(t1/2+q[0]),sy>0?t2+q[1]:-q[1]])));
+      return sc;},
+    angle:()=>{const t=8,L=26,H=20,f=fa({z1:t,s:1.2});
+      return {plaques:[[[0,0],[L,0],[L,t],[0,t]],[[-t,t],[0,t],[0,t+H],[-t,t+H]]],cordons:[f.map(q=>[-q[0],t-q[1]])],manques:[],boite:[-t-3,-2,L,t+H]};},
+    recouv:()=>Coupe.sceneRecouvrement({t:6,gauche:true,recouvrement:16}),
+    chant:()=>{const t=5,H=22,e=2.2,cap=[];for(let i=0;i<=16;i++){const u=i/16;cap.push([-t+2*t*u,H+e*4*u*(1-u)]);}
+      return {plaques:[[[-t,0],[0,0],[0,H],[-t,H]],[[0,0],[t,0],[t,H],[0,H]]],cordons:[[[-t,H],[-t*0.35,H-0.8*t],[t*0.35,H-0.8*t],[t,H]].concat(cap.slice().reverse())],manques:[],boite:[-3*t,-1,3*t,H+e+1]};},
+    I:()=>Coupe.sceneBout("I",{t:6,b:3}),
+    V:()=>Coupe.sceneBout("V",{t:12,alpha:60,b:2,c:1.5}),
+    Y:()=>Coupe.sceneBout("V",{t:14,alpha:60,b:2,c:5}),
+    X:()=>Coupe.sceneBout("X",{t:16,alpha:60,b:2,c:2}),
+    U:()=>Coupe.sceneBout("U",{t:16,beta:10,R:5,b:2,c:2}),
+    UU:()=>Coupe.sceneBout("UU",{t:26,beta:10,R:5,b:2,c:2}),
+    demiV:()=>Coupe.sceneBout("demiV",{t:12,beta:45,b:2,c:1.5}),
+    K:()=>Coupe.sceneBout("K",{t:16,beta:45,b:2,c:2})
+  };
+  A.forEach(svg=>{const f=S[svg.dataset.atlas];if(!f)return;const sc=f();sc.manques=[];Coupe.tracer(svg,sc,{x:4,y:4,w:152,h:76});});
+})();
+
+/* =========================================================
+   M1 : pleine pénétration ? (bout à bout, en T, à recouvrement)
+   ========================================================= */
+(function(){
+  const svg=$("#m1svg");if(!svg)return;
+  const ro=$("#m1r"),msg=$("#m1msg"),bx=$("#m1x");
+  const sansEnvers=sc=>{sc.cordons=sc.cordons.slice(0,2);return sc;};
+  const OPT={
+    bw:{chemin:"l'effort file droit",items:[
+      {l:"I d'un côté, t = 3 mm",sc:()=>Coupe.sceneBout("I",{t:3,b:2.5}),m:"Sur 3 mm, l'arc traverse : un écartement voisin de l'épaisseur suffit pour fondre toute la tranche. Au-delà de 4 mm environ, il faut ouvrir le joint ou souder des deux côtés."},
+      {l:"I d'un côté, t = 10 mm",sc:()=>sansEnvers(Coupe.sceneBoutDeuxCotes({t:10,b:2,pEndroit:5,pEnvers:0})),m:"L'arc ne fond que la moitié supérieure : le bas du joint reste une fente. C'est une soudure à pénétration partielle, qui se comporte comme une entaille."},
+      {l:"I des deux côtés, t = 8 mm",sc:()=>Coupe.sceneBoutDeuxCotes({t:8,b:4,pEndroit:5,pEnvers:4}),m:"Les deux cordons se rejoignent au cœur : pleine pénétration. L'ISO 9692-1 retient cette préparation jusqu'à 8 mm, avec un écartement voisin de t/2."},
+      {l:"I des deux côtés, cordons disjoints",sc:()=>Coupe.sceneBoutDeuxCotes({t:12,b:3,pEndroit:4,pEnvers:3.5}),m:"Sur 12 mm, les deux cordons ne se rejoignent pas : une fente reste au milieu, invisible de l'extérieur. Il faut chanfreiner (X) ou gouger plus profond."},
+      {l:"V et reprise à l'envers",sc:()=>Coupe.sceneBout("V",{t:16,alpha:60,b:2,c:2}),m:"Le chanfrein ouvre le joint jusqu'au talon ; après gougeage, la reprise à l'envers fond la racine : pleine pénétration."},
+      {l:"V sans reprise, racine non fondue",sc:()=>Coupe.sceneBout("V",{t:16,alpha:60,b:1,c:3,penetre:false,manque:3}),m:"Talon trop épais, écartement trop faible, pas de reprise : la racine n'a pas fondu. C'est le défaut « manque de pénétration »."}]},
+    te:{chemin:"l'effort tourne",items:[
+      {l:"Deux cordons d'angle",sc:()=>Coupe.sceneTe({t1:12,t2:14,mode:"angle",gauche:{z:8,s:0.4},droite:{z:8,s:0.4}}),m:"Les cordons tiennent l'âme, mais sa face reste posée sur la semelle sans fondre : 12 mm de plan non fondu. Tolérable en statique, pas en fatigue ni sous un effort qui traverse le T."},
+      {l:"Un seul cordon d'angle",sc:()=>Coupe.sceneTe({t1:12,t2:14,mode:"angle",droite:{z:8,s:0.4}}),m:"Un cordon d'un seul côté : toute la face de l'âme reste non fondue, et l'âme peut pivoter autour de la racine du cordon. À proscrire dès que l'effort fléchit le joint."},
+      {l:"Deux cordons pénétrants",sc:()=>Coupe.sceneTe({t1:8,t2:14,mode:"angle",gauche:{z:6,p:3,s:0.3},droite:{z:6,p:3,s:0.3}}),m:"Sur une âme mince, avec un procédé très pénétrant, les deux pénétrations se rejoignent : pleine pénétration. Elle se prouve sur macrographie et se garantit par un mode opératoire qualifié."},
+      {l:"Demi-V et reprise",sc:()=>Coupe.sceneTe({t1:12,t2:14,mode:"demiV",beta:45,b:2,c:2}),m:"L'âme est biseautée d'un côté. On soude le biseau, on gouge la racine, puis on reprend de l'autre côté : pleine pénétration."},
+      {l:"K",sc:()=>Coupe.sceneTe({t1:12,t2:14,mode:"K",beta:45,b:2,c:2}),m:"L'âme est biseautée des deux côtés : pleine pénétration, moins de métal qu'un demi-V, et une déformation équilibrée."}]},
+    rec:{chemin:"l'effort glisse",items:[
+      {l:"Un cordon d'angle",sc:()=>Coupe.sceneRecouvrement({t:6}),m:"Un seul cordon : le plan de contact entre les tôles reste non fondu, et le cordon travaille en cisaillement, avec un moment de flexion parasite."},
+      {l:"Deux cordons d'angle",sc:()=>Coupe.sceneRecouvrement({t:6,gauche:true}),m:"Un cordon en bout de chaque tôle : l'assemblage est symétrique, mais le plan de contact reste non fondu. Un recouvrement n'est jamais à pleine pénétration."},
+      {l:"En bouchon",sc:()=>Coupe.sceneRecouvrement({t:6,bouchon:true,droite:false}),m:"Une lumière dans la tôle haute, remplie de métal fondu : la liaison travaille en cisaillement, et le plan de contact autour du bouchon reste non fondu."}]}
+  };
+  let typ="bw",idx=0;
+  function boutons(){bx.innerHTML="";OPT[typ].items.forEach((it,i)=>{const b=document.createElement("button");b.type="button";b.className="btn"+(i===idx?" on":"");b.textContent=it.l;
+    b.addEventListener("click",()=>{idx=i;setOn("#m1x",b);draw();});bx.appendChild(b);});}
+  function draw(){
+    const W=svgW(svg),n=W<560,H=n?190:220,it=OPT[typ].items[idx],sc=it.sc();clear(svg);
+    const yl=legend(svg,10,6,[[mixc("var(--weld)",42),"métal fondu"],["var(--sig)","plan non fondu"]],W-10);
+    Coupe.tracer(svg,sc,{x:10,y:yl+8,w:W-20,h:H-yl-14});
+    setVB(svg,W,H);
+    const L=(sc.manques||[]).reduce((s,q)=>s+Math.hypot(q[1][0]-q[0][0],q[1][1]-q[0][1]),0),pp=typ!=="rec"&&L<0.05;
+    ro.innerHTML=nbsp("<span>pleine pénétration : <b class='"+(pp?"mat":"tau")+"'>"+(pp?"oui":"non")+"</b></span><span>plan non fondu : "+(L<0.05?"aucun":nf(L,L<10?1:0)+" mm")+"</span><span>"+OPT[typ].chemin+"</span>");
+    msg.innerHTML=nbsp(it.m)+"<br><b>À retenir :</b> pleine pénétration, c'est aucun plan non fondu dans l'épaisseur qui transmet l'effort.";
+  }
+  $$("#m1t .btn").forEach(b=>b.addEventListener("click",()=>{typ=b.dataset.t;idx=0;setOn("#m1t",b);boutons();draw();}));
+  boutons();redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M2 : le triangle inscrit (gorges réelle et efficace, ISO 17659)
+   ========================================================= */
+(function(){
+  const svg=$("#m2svg");if(!svg)return;
+  const sZ=$("#m2z"),sS=$("#m2s"),sP=$("#m2p"),ro=$("#m2r"),msg=$("#m2msg");
+  const A_TH=5;let ratio=1;
+  const PRE={plat:[7,0,0,1],bombe:[7,1.4,0,1],creux:[7,-0.8,0,1],inegal:[6,0.2,0,1.5],penetrant:[6.5,0.3,1.5,1]};
+  function draw(){
+    const W=svgW(svg),n=W<560,H=n?240:270,z1=+sZ.value,z2=z1*ratio,s=+sS.value,p=+sP.value;clear(svg);
+    $("#m2zo").textContent=ratio===1?nf(z1,1)+NB+"mm":nf(z1,1)+" / "+nf(z2,1)+NB+"mm";
+    $("#m2so").textContent=(s>0?"+":"")+nf(s,1)+NB+"mm";$("#m2po").textContent=nf(p,1)+NB+"mm";
+    const c=Coupe.cordonAngle({z1,z2,s,p}),g=Coupe.gorges({z1,z2,s,p});
+    const M=Math.max(z1,z2)+3.5,m=Math.max(3.5,p*1.6+1.5);
+    const sc={plaques:[[[-m,-m],[M,-m],[M,0],[-m,0]],[[-m,0],[0,0],[0,M],[-m,M]]],cordons:(c.penetration?[c.penetration]:[]).concat([c.fondu]),manques:[]};
+    const T=Coupe.tracer(svg,sc,{x:8,y:8,w:W-16,h:H-16},{boite:[-m,-m,M,M]}),P=T.P;
+    const L=g.cote,tri=[P(0,0),P(L,0),P(0,L)];
+    el("polygon",{points:tri.map(q=>q[0].toFixed(1)+","+q[1].toFixed(1)).join(" "),fill:"none",stroke:"var(--mat)","stroke-width":2,"stroke-dasharray":"6 4"},svg);
+    const o=P(0,0),h=P(L/2,L/2);
+    el("line",{x1:o[0],y1:o[1],x2:h[0],y2:h[1],stroke:"var(--eps)","stroke-width":2.8},svg);
+    const ta=tx(svg,h[0]+8,h[1]-6,"a = "+nf(g.a,2)+" mm",{fill:"var(--eps)","font-weight":"700"});halo(ta,svg);fitText(ta,4,W-4);
+    if(p>0){const d=P(-p/Math.SQRT2,-p/Math.SQRT2);el("line",{x1:d[0],y1:d[1],x2:o[0],y2:o[1],stroke:"var(--gam)","stroke-width":2.8,"stroke-dasharray":"4 3"},svg);
+      const te=tx(svg,d[0]-8,d[1]+5,"+ p = "+nf(p,1)+" mm",{fill:"var(--gam)","font-weight":"700","text-anchor":"end"});plate(te,svg);fitText(te,4,W-4);}
+    [[P(z1,0),P(z1,0)],[P(0,z2),P(0,z2)]].forEach(([q],i)=>{el("line",i?{x1:q[0]-7,y1:q[1],x2:q[0]+7,y2:q[1],stroke:"var(--ink)","stroke-width":1.6}:{x1:q[0],y1:q[1]-7,x2:q[0],y2:q[1]+7,stroke:"var(--ink)","stroke-width":1.6},svg);});
+    const lz=tx(svg,P(Math.max(z1/2,m*0.6),0)[0],P(0,-m)[1]-7,"z"+(ratio>1?"₁":"")+" = "+nf(z1,1)+" mm",{"text-anchor":"middle","font-weight":"700"});plate(lz,svg);fitText(lz,4,W-4);
+    if(ratio>1){const l2=tx(svg,P(-0.6,0)[0]-6,P(0,z2/2)[1],"z₂ = "+nf(z2,1),{"text-anchor":"end","font-weight":"700"});plate(l2,svg);fitText(l2,4,W-4);}
+    const lt=tx(svg,P(L*0.55,L*0.55)[0]+10,P(L*0.55,L*0.55)[1]+22,"triangle inscrit",{class:"lbl",fill:"var(--mat)"});halo(lt,svg);fitText(lt,4,W-4);
+    setVB(svg,W,H);
+    const v=g.a>=A_TH-1e-9?"conforme":g.a>=A_TH-0.1?"limite (−"+nf(A_TH-g.a,2)+" mm)":g.aEff>=A_TH?"conforme si p prouvée":"insuffisant";
+    ro.innerHTML=nbsp("<span>gorge réelle a = <b class='eps'>"+nf(g.a,2)+" mm</b></span><span>gorge efficace = "+nf(g.aEff,2)+" mm</span><span>z/√2 = "+nf(Math.min(z1,z2)/Math.SQRT2,2)+" mm</span><span>a5 demandé : "+v+"</span>");
+    const t=[];
+    if(ratio>1)t.push("Côtés inégaux : le plus petit côté fixe le triangle inscrit, a = "+nf(Math.min(z1,z2),1)+"/√2 = "+nf(Math.min(z1,z2)/Math.SQRT2,2)+" mm ; le grand côté n'ajoute rien à la gorge.");
+    if(s<-0.05)t.push("Le creux mord dans le triangle : la gorge réelle tombe à "+nf(g.a,2)+" mm, "+nf(Math.min(z1,z2)/Math.SQRT2-g.a,2)+" mm de moins que pour un cordon plat.");
+    else if(s>0.05)t.push("Le bombé dépasse le triangle sans l'agrandir : a reste "+nf(g.a,2)+" mm. Ce métal en plus coûte du temps et durcit le raccordement.");
+    else if(ratio===1)t.push("Cordon plat de côté "+nf(z1,1)+" mm : a = z/√2 = "+nf(g.a,2)+" mm.");
+    if(p>0)t.push("La pénétration ajoute p à la gorge efficace ("+nf(g.aEff,2)+" mm), à condition de la prouver sur macrographie et de la garantir par un mode opératoire qualifié ; la jauge, elle, ne voit que la gorge réelle."+(g.a<A_TH-0.1&&g.aEff>=A_TH?" Ici, le cordon paraît trop petit à la jauge, mais il est conforme si la pénétration est prouvée.":""));
+    msg.innerHTML=nbsp(t.join(" "))+"<br><b>À retenir :</b> le bombé ne compte pas, le creux se retranche, la pénétration compte si on la prouve.";
+  }
+  $$("#m2b .btn").forEach(b=>b.addEventListener("click",()=>{const q=PRE[b.dataset.k];sZ.value=q[0];sS.value=q[1];sP.value=q[2];ratio=q[3];setOn("#m2b",b);draw();}));
+  [sZ,sS,sP].forEach(s=>s.addEventListener("input",()=>{setOn("#m2b",null);draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M3 : choisir le chanfrein (repères de l'ISO 9692-1:2013)
+   ========================================================= */
+(function(){
+  const svg=$("#m3svg");if(!svg)return;
+  const sT=$("#m3t"),bc=$("#m3c"),ro=$("#m3r"),msg=$("#m3msg");
+  const C=[
+    {a:"un",ty:"I",n:"Bords droits",ref:"1.2.1",ok:t=>t<=4,rep:"b ≈ t",o:t=>({t,b:t})},
+    {a:"un",ty:"V",n:"V",ref:"1.3",ok:t=>t>3&&t<=10,rep:"α de 40 à 60°, b ≤ 4 mm, c ≤ 2 mm",o:t=>({t,alpha:60,b:2,c:1.5})},
+    {a:"un",ty:"V",n:"Y",ref:"1.5",ok:t=>t>=5&&t<=40,rep:"α ≈ 60°, b de 1 à 4 mm, c de 2 à 4 mm",o:t=>({t,alpha:60,b:2,c:3})},
+    {a:"un",ty:"V2",n:"V à double pente",ref:"1.7",ok:t=>t>12,rep:"α de 60 à 90° à la racine, β de 10 à 15° au-dessus, b de 2 à 4 mm, c ≤ 2 mm",o:t=>({t,alpha:70,beta2:12,hr:Math.min(8,t*0.35),b:3,c:2})},
+    {a:"un",ty:"U",n:"U",ref:"1.8",ok:t=>t>12,rep:"β de 8 à 12°, b ≤ 4 mm, c ≤ 3 mm",o:t=>({t,beta:10,R:6,b:2,c:3})},
+    {a:"sup",ty:"I",n:"Bords droits",ref:"1.2.2",ok:t=>t>3&&t<=8,rep:"b ≈ t, en MIG, MAG ou TIG",o:t=>({t,b:t})},
+    {a:"sup",ty:"V",n:"V",ref:"1.3",ok:t=>t>3&&t<=10,rep:"α de 40 à 60°, b ≤ 4 mm, c ≤ 2 mm",o:t=>({t,alpha:60,b:3,c:1})},
+    {a:"sup",ty:"V",n:"V à angle fermé",ref:"1.4",ok:t=>t>16,rep:"β de 5 à 20°, b de 5 à 15 mm, sur latte",o:t=>({t,alpha:20,b:8,c:0})},
+    {a:"deux",ty:"I",n:"Bords droits",ref:"2.1",ok:t=>t<=8,rep:"b ≈ t/2",o:t=>({t,b:t/2})},
+    {a:"deux",ty:"V",n:"V et reprise",ref:"2.2",ok:t=>t>=3&&t<=40,rep:"α ≈ 60°, b ≤ 3 mm, c ≤ 2 mm",o:t=>({t,alpha:60,b:2,c:2})},
+    {a:"deux",ty:"V",n:"Y et reprise",ref:"2.3",ok:t=>t>10,rep:"α ≈ 60°, b de 1 à 3 mm, c de 2 à 4 mm",o:t=>({t,alpha:60,b:2,c:3})},
+    {a:"deux",ty:"X",n:"X",ref:"2.5.1",ok:t=>t>10,rep:"α ≈ 60°, b de 1 à 3 mm, c ≤ 2 mm, h ≈ t/2",o:t=>({t,alpha:60,b:2,c:2})},
+    {a:"deux",ty:"U",n:"U et reprise",ref:"2.6",ok:t=>t>12,rep:"β de 8 à 12°, b de 1 à 3 mm, c ≈ 5 mm",o:t=>({t,beta:10,R:6,b:2,c:5})},
+    {a:"deux",ty:"UU",n:"Double U",ref:"2.7",ok:t=>t>=30,rep:"β de 8 à 12°, b ≤ 3 mm, c ≈ 3 mm",o:t=>({t,beta:10,R:6,b:2,c:3})}
+  ];
+  const ACC={un:"D'un seul côté, sans support, le procédé doit assurer seul une pénétration régulière à la racine.",
+    sup:"Le support retient le bain : on soude d'un seul côté, puis on retire la latte (cuivre, céramique) ou on la laisse (latte subsistante).",
+    deux:"On soude, on retourne, on gouge la racine jusqu'au métal sain, puis on fait la reprise à l'envers."};
+  let acc="deux",sel=null;
+  const valides=t=>C.filter(c=>c.a===acc&&c.ok(t)).map(c=>Object.assign({S:Coupe.chanfrein(c.ty,c.o(t)).S},c));
+  function boutons(V){bc.innerHTML="";V.forEach(c=>{const b=document.createElement("button");b.type="button";b.className="btn"+(sel&&c.n===sel.n?" on":"");
+    b.textContent=c.n+" · "+nf(c.S,0)+" mm²";b.addEventListener("click",()=>{sel=c;draw();});bc.appendChild(b);});}
+  function draw(){
+    const t=+sT.value,W=svgW(svg),n=W<560;clear(svg);$("#m3to").textContent=t+NB+"mm";
+    const V=valides(t);
+    if(!V.length){sel=null;boutons(V);setVB(svg,W,70);
+      const e=tx(svg,W/2,38,"aucune préparation propre à cet accès",{"text-anchor":"middle",class:"lbl"});fitSize(e,W-12,9);
+      ro.innerHTML=nbsp("<span>t = "+t+" mm</span><span>aucune préparation de l'ISO 9692-1</span>");
+      msg.innerHTML=nbsp(acc==="sup"&&t<=3?"Sous 3 mm, inutile de chanfreiner : on soude sur bords droits, avec ou sans support.":"Entre 10 et 16 mm, l'ISO 9692-1 ne prévoit pas de préparation propre au support envers : on garde un Y, un V à double pente ou un U, soudés d'un côté.")+"<br><b>À retenir :</b> un côté, V jusqu'à 10 mm puis V à double pente ou U ; deux côtés, X au-delà de 10 mm, double U dès 30 mm.";
+      return;}
+    const best=V.reduce((a,b)=>b.S<a.S?b:a);
+    if(!sel||!V.some(c=>c.n===sel.n))sel=best;else sel=V.find(c=>c.n===sel.n);
+    boutons(V);
+    const o=sel.o(t),sc=Coupe.sceneBout(sel.ty,o),H=n?210:240;
+    if(acc==="sup"){sc.cordons=sc.cordons.slice(0,2);const w=o.b/2+Math.max(7,t*0.45),e=Math.max(2.5,t*0.15);
+      sc.plaques.push([[-w,-e],[w,-e],[w,0],[-w,0]]);sc.boite=[sc.boite[0],-e-2,sc.boite[2],sc.boite[3]];}
+    const titre=tx(svg,10,18,sel.n+" (ISO 9692-1, n° "+sel.ref+")",{"font-weight":"700"});fitSize(titre,W-20,9);
+    const T=Coupe.tracer(svg,sc,{x:10,y:30,w:W-20-(n?30:40),h:H-58}),P=T.P;
+    const xr=P(sc.boite[2],0)[0]+12,ya=P(0,t)[1],yb=P(0,0)[1];
+    darrow(svg,xr,ya,yb,"var(--ink)",1.4);const lt=tx(svg,xr+6,(ya+yb)/2+4,"t");lt.style.fontWeight="700";
+    const ang=sel.ty==="V"||sel.ty==="X"||sel.ty==="V2"?"α = "+o.alpha+"°":sel.ty==="I"?"":"β = "+(o.beta||45)+"°";
+    if(ang){const la=tx(svg,P(0,t)[0],ya-6,ang,{"text-anchor":"middle",fill:"var(--mat)","font-weight":"700"});halo(la,svg);fitText(la,4,W-4);}
+    const lb=tx(svg,P(0,0)[0],yb+(acc==="sup"?24:18),"b = "+nf(o.b,1)+(o.c?" · c = "+nf(o.c,1):""),{"text-anchor":"middle",fill:"var(--mat)"});halo(lb,svg);fitText(lb,4,W-4);
+    setVB(svg,W,H+(acc==="sup"?8:0));
+    const kg=sel.S*7.85e-3;
+    ro.innerHTML=nbsp("<span>n° "+sel.ref+"</span><span>S ≈ <b class='eps'>"+nf(sel.S,0)+" mm²</b></span><span>≈ "+nf(kg,kg<1?2:1)+" kg/m</span><span>"+V.length+" possible"+(V.length>1?"s":"")+"</span>");
+    const le=c=>c.n==="Bords droits"?["Les bords droits","demanderaient"]:["Le "+c.n.replace("Double U","double U").replace(" et reprise",""),"demanderait"],lb2=le(best);
+    const cmp=sel.n===best.n?(V.length>1?" Parmi les préparations possibles, c'est celle qui demande le moins de métal.":""):" "+lb2[0]+" "+lb2[1]+" moins de métal ("+nf(best.S,0)+" mm²).";
+    msg.innerHTML=nbsp("Repères de l'ISO 9692-1 : "+sel.rep+"."+cmp+" "+ACC[acc])+"<br><b>À retenir :</b> un côté, V jusqu'à 10 mm puis V à double pente ou U ; deux côtés, X au-delà de 10 mm, double U dès 30 mm.";
+  }
+  $$("#m3a .btn").forEach(b=>b.addEventListener("click",()=>{acc=b.dataset.a1;sel=null;setOn("#m3a",b);draw();}));
+  sT.addEventListener("input",draw);
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M4 : combien de métal ? (section à déposer selon l'épaisseur)
+   ========================================================= */
+(function(){
+  const svg=$("#m4svg"),cv=$("#m4cv");if(!svg)return;
+  const sT=$("#m4t"),sA=$("#m4a"),ro=$("#m4r"),msg=$("#m4msg");
+  const PR={V:{n:"V",d:null,o:(t,a)=>({t,alpha:a,b:2,c:2}),t0:6},X:{n:"X",d:"7 4",o:(t,a)=>({t,alpha:a,b:2,c:2}),t0:10},
+    U:{n:"U",d:"2 3",o:t=>({t,beta:10,R:6,b:2,c:3}),t0:12},UU:{n:"double U",d:"9 3 2 3",o:t=>({t,beta:10,R:6,b:2,c:3}),t0:30}};
+  const REP={V:"V : jusqu'à 10 mm d'un côté, 40 mm avec reprise",X:"X : t > 10 mm",U:"U : t > 12 mm",UU:"double U : t ≥ 30 mm"};
+  let pr="V";
+  const S=(k,t,a)=>Coupe.chanfrein(k,PR[k].o(t,a)).S;
+  function draw(){
+    const t=+sT.value,a=+sA.value;$("#m4to").textContent=t+NB+"mm";$("#m4ao").textContent=a+"°";
+    /* coupe */
+    {clear(svg);const W=svgW(svg),H=W<420?200:230,sc=Coupe.sceneBout(pr,PR[pr].o(t,a));
+      const ti=tx(svg,10,18,PR[pr].n+", t = "+t+" mm",{"font-weight":"700"});fitSize(ti,W-20,9);
+      Coupe.tracer(svg,sc,{x:8,y:28,w:W-16,h:H-36});setVB(svg,W,H);}
+    /* courbes */
+    {clear(cv);const W=svgW(cv),n=W<420,H=n?220:240,x0=n?46:54,x1=W-(n?58:70),y0=26,y1=H-36;
+      const ymax=S("V",80,a)*1.05,ys=niceStep(ymax,4);
+      const ax=axes(cv,x0,x1,y0,y1,6,80,0,Math.ceil(ymax/ys)*ys,"t (mm)","S (mm²)",n?20:10,ys,v=>nf(v,0),v=>nf(v,0));
+      const lab=[];
+      Object.keys(PR).forEach(k=>{const pts=[];for(let u=PR[k].t0;u<=80;u+=1)pts.push(ax.X(u).toFixed(1)+","+ax.Y(S(k,u,a)).toFixed(1));
+        el("polyline",{points:pts.join(" "),fill:"none",stroke:"var(--eps)","stroke-width":k===pr?3.2:1.6,"stroke-dasharray":PR[k].d||null,opacity:k===pr?1:0.75},cv);
+        lab.push({k,y:ax.Y(S(k,80,a))});});
+      spread(lab,15,y0,y1).forEach(q=>{const l=tx(cv,x1+5,q.y+4,PR[q.k].n,{fill:"var(--eps)","font-weight":q.k===pr?"700":"400"});l.style.fontSize="12px";});
+      const xt=ax.X(t);el("line",{x1:xt,y1:y0,x2:xt,y2:y1,stroke:"var(--mat)","stroke-width":1.4,"stroke-dasharray":"4 3"},cv);
+      Object.keys(PR).forEach(k=>{if(t>=PR[k].t0)el("circle",{cx:xt,cy:ax.Y(S(k,t,a)),r:k===pr?5:3.5,fill:k===pr?"var(--eps)":"var(--card)",stroke:"var(--eps)","stroke-width":1.6},cv);});
+      setVB(cv,W,H);}
+    const v=S("V",t,a),x=S("X",t,a),s=S(pr,t,a);
+    ro.innerHTML=nbsp("<span>"+PR[pr].n+" : <b class='eps'>"+nf(s,0)+" mm²</b></span><span>≈ "+nf(s*7.85e-3,s<130?2:1)+" kg/m</span><span>V "+nf(v,0)+" · X "+nf(x,0)+" mm²</span>");
+    const hors=t<PR[pr].t0?" Attention : à "+t+" mm, cette préparation sort des repères de l'ISO 9692-1 ("+REP[pr]+").":"";
+    let m;
+    if(pr==="V")m="En V, la section croît comme le carré de l'épaisseur : à "+t+" mm et "+a+"°, "+nf(v,0)+" mm². Ouvrir l'angle coûte cher : chaque dizaine de degrés ajoute environ un cinquième de métal.";
+    else if(pr==="X")m="Le X met un demi-V de chaque côté : "+nf(x,0)+" mm² contre "+nf(v,0)+" en V, soit "+nf(100*(1-x/v),0)+" % de moins, et un retrait équilibré si l'on alterne les côtés.";
+    else if(pr==="U")m="Le U a des flancs presque parallèles : sa section croît à peu près comme t. Avec ces cotes, il passe sous le V vers 24 mm ; à "+t+" mm, il demande "+nf(s,0)+" mm² contre "+nf(v,0)+" en V.";
+    else m="Le double U est l'économie des très fortes épaisseurs : il ne passe sous le X que vers 48 mm. À "+t+" mm : "+nf(s,0)+" mm² contre "+nf(x,0)+" en X.";
+    msg.innerHTML=nbsp(m+hors)+"<br><b>À retenir :</b> le V croît comme t², le X divise par deux le métal des biseaux, U et double U gagnent en forte épaisseur.";
+  }
+  $$("#m4p .btn").forEach(b=>b.addEventListener("click",()=>{pr=b.dataset.p;setOn("#m4p",b);draw();}));
+  [sT,sA].forEach(s=>s.addEventListener("input",draw));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M5 : le délardage (pente, fibres neutres, excentricité)
+   ========================================================= */
+(function(){
+  const svg=$("#m5svg");if(!svg)return;
+  const sT=$("#m5t"),ro=$("#m5r"),msg=$("#m5msg"),t2=12,g=1;
+  let nP=4,f=1;
+  function draw(){
+    const W=svgW(svg),nn=W<560,H=nn?190:220,t1=+sT.value,D=t1-t2;clear(svg);$("#m5to").textContent=t1+NB+"mm";
+    const L=nP?nP*D/(f===2?2:1):0,Lg=L+26,Ld=42;
+    const yb1=f===2?-t1/2:0,yt1=f===2?t1/2:t1,yb2=f===2?-t2/2:0,yt2=f===2?t2/2:t2;
+    let ep;
+    if(!nP)ep=[[-Lg,yb1],[-g,yb1],[-g,yt1],[-Lg,yt1]];
+    else if(f===1)ep=[[-Lg,0],[-g,0],[-g,t2],[-g-L,t1],[-Lg,t1]];
+    else ep=[[-Lg,yb1],[-g-L,yb1],[-g,yb2],[-g,yt2],[-g-L,yt1],[-Lg,yt1]];
+    const mi=[[g,yb2],[Ld,yb2],[Ld,yt2],[g,yt2]];
+    const w=0.45*t2,co=[[-g,yb2-0.7],[g,yb2-0.7],[g+w,yt2],[g+w,yt2+1],[-g-w,yt2+1],[-g-w,yt2]];
+    const sc={plaques:[ep,mi],cordons:[co],manques:[]};
+    const ymin=Math.min(yb1,yb2),ymax=Math.max(yt1,yt2);
+    const T=Coupe.tracer(svg,sc,{x:12,y:30,w:W-24,h:H-52},{boite:[-Lg-6,ymin-3,Ld+6,ymax+3]}),P=T.P;
+    const m1=(yb1+yt1)/2,m2=(yb2+yt2)/2,e=Math.abs(m1-m2);
+    el("line",{x1:P(-Lg,m1)[0],y1:P(0,m1)[1],x2:P(-g,m1)[0],y2:P(0,m1)[1],stroke:"var(--gam)","stroke-width":1.5,"stroke-dasharray":"9 3 2 3"},svg);
+    el("line",{x1:P(g,m2)[0],y1:P(0,m2)[1],x2:P(Ld,m2)[0],y2:P(0,m2)[1],stroke:"var(--gam)","stroke-width":1.5,"stroke-dasharray":"9 3 2 3"},svg);
+    arrow(svg,P(-Lg+10,0)[0],P(0,m1)[1],P(-Lg,0)[0]-6,P(0,m1)[1],"var(--frc)",2.4,9);
+    arrow(svg,P(Ld-10,0)[0],P(0,m2)[1],P(Ld,0)[0]+6,P(0,m2)[1],"var(--frc)",2.4,9);
+    const lf=tx(svg,P(-Lg,0)[0],18,"F",{fill:"var(--frc)","font-weight":"700"});lf.style.fontSize="14px";
+    const lf2=tx(svg,P(Ld,0)[0],18,"F",{fill:"var(--frc)","font-weight":"700","text-anchor":"end"});lf2.style.fontSize="14px";
+    if(e>0.05){const xe=P(g+8,0)[0];darrow(svg,xe,P(0,m1)[1],P(0,m2)[1],"var(--gam)",1.4);
+      const le=tx(svg,xe+6,(P(0,m1)[1]+P(0,m2)[1])/2+4,"e = "+nf(e,1)+" mm",{fill:"var(--gam)","font-weight":"700"});halo(le,svg);fitText(le,4,W-4);}
+    if(!nP){[[ -g,yt2],[-g,yb2]].forEach(q=>{if((f===1&&q[1]===0))return;const c=P(q[0],q[1]);el("circle",{cx:c[0],cy:c[1],r:9,fill:"none",stroke:"var(--tau)","stroke-width":2.2},svg);});
+      const lm=tx(svg,P(-g,0)[0]-12,P(0,yt1)[1]-8,"marche",{fill:"var(--tau)","font-weight":"700","text-anchor":"end"});halo(lm,svg);fitText(lm,4,W-4);}
+    else{const lp=tx(svg,P(-g-L/2,0)[0],P(0,yt1)[1]-8,"pente 1/"+nP,{fill:"var(--mat)","font-weight":"700","text-anchor":"middle"});halo(lp,svg);fitText(lp,4,W-4);}
+    setVB(svg,W,H);
+    const ok=nP>=4;
+    ro.innerHTML=nbsp("<span>Δ = t₁ − t₂ = "+D+" mm</span><span>"+(nP?"L = "+nf(L,0)+" mm":"marche de "+nf(f===2?D/2:D,1)+" mm")+"</span><span>e = "+nf(e,1)+" mm</span><span>pente : <b class='"+(ok?"mat":"tau")+"'>"+(nP?(ok?"conforme":"trop raide"):"aucune")+"</b></span>");
+    let m;
+    if(!nP)m="Sans délardage, l'effort bute sur une marche de "+nf(f===2?D/2:D,1)+" mm"+(f===2?" sur chaque face":"")+" : les lignes d'effort se resserrent au pied de la marche, où la contrainte grimpe et où naîtra la fissure de fatigue.";
+    else if(nP<4)m="Une pente de 1/"+nP+" est plus raide que la limite usuelle de 1/4 : la concentration de contrainte reste forte. Il faut "+nf(4*D/(f===2?2:1),0)+" mm de délardage au minimum.";
+    else m="Pente 1/"+nP+" : "+nf(L,0)+" mm de délardage"+(f===2?" sur chaque face, deux fois plus court qu'en délardant une seule face":"")+". La transition est assez douce.";
+    m+=e>0.05?" Une seule face est alignée : les plans moyens sont décalés de "+nf(e,1)+" mm, et l'effort crée un moment parasite F · e qui fléchit le joint.":" Les fibres neutres sont alignées : pas d'excentricité, pas de moment parasite.";
+    msg.innerHTML=nbsp(m)+"<br><b>À retenir :</b> pente 1/4 au plus ; délarder les deux faces aligne les fibres neutres (e = 0).";
+  }
+  $$("#m5n .btn").forEach(b=>b.addEventListener("click",()=>{nP=+b.dataset.n;setOn("#m5n",b);draw();}));
+  $$("#m5f .btn").forEach(b=>b.addEventListener("click",()=>{f=+b.dataset.f;setOn("#m5f",b);draw();}));
+  sT.addEventListener("input",draw);
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M6 : l'arrachement lamellaire (modèle pédagogique de tendance)
+   ========================================================= */
+(function(){
+  const svg=$("#m6svg");if(!svg)return;
+  const sT=$("#m6t"),ro=$("#m6r"),msg=$("#m6msg");
+  const K={ta:1.0,tk:1.4,tb:0.6,tr:0.15,lm:1.3,le:0.5},CAP={0:1.2,15:1.7,25:2.3,35:3.0};
+  const TXT={ta:"Les deux cordons tirent la peau de la tôle en refroidissant. Plus la tôle est épaisse et les cordons gros, plus la traction dans l'épaisseur monte.",
+    tk:"La pleine pénétration en K apporte plus de métal, donc plus de retrait : c'est la solution en T qui tire le plus dans l'épaisseur.",
+    tb:"La couche de beurrage, ductile, encaisse le retrait du K avant qu'il n'atteigne les feuillets de la tôle : le risque baisse nettement.",
+    tr:"Sur tranche, la tôle est coupée et soudée bout à bout au-dessus de l'âme : elle travaille dans sa longueur, l'âme sur sa tranche. Plus aucune tôle n'est tirée dans son épaisseur.",
+    lm:"Le biseau est sur la tôle verticale : la ligne de fusion reste parallèle aux feuillets de la tôle horizontale, et le retrait la tire droit dans son épaisseur. C'est la configuration la plus exposée.",
+    le:"Le biseau est sur la tôle tirée : la ligne de fusion coupe ses feuillets en biais, et une partie du retrait la tire dans sa longueur. Le risque baisse fortement."};
+  let cf="ta",zq=0;
+  function scene(t){
+    const w=clamp(0.5*t,10,24),H=Math.max(24,0.75*t);
+    if(cf==="ta"||cf==="tk"||cf==="tb"){
+      const beurre=cf==="tb"?3:0,sc=Coupe.sceneTe(cf==="ta"?{t1:w,t2:t,H,L:Math.max(1.6*t,30),mode:"angle",gauche:{z:0.6*w,s:0.4},droite:{z:0.6*w,s:0.4}}:{t1:w,t2:t+beurre,H,L:Math.max(1.6*t,30),mode:"K",beta:45,b:2,c:2});
+      if(beurre){sc.plaques[0]=[[-sc.boite[2],0],[sc.boite[2],0],[sc.boite[2],t],[-sc.boite[2],t]];sc.cordons.unshift([[-w/2-7,t],[w/2+7,t],[w/2+7,t+beurre],[-w/2-7,t+beurre]]);}
+      const zf=cf==="ta"?0.6*w:1.4;
+      return {sc,tiree:[sc.plaques[0]],fusion:[-w/2-zf,w/2+zf],y:t,bx:sc.boite};}
+    if(cf==="tr"){
+      const ch=Coupe.chanfrein("V",{t,alpha:50,b:Math.max(2,w-3),c:0}),cap=Coupe.cordon(ch,{envers:false}),Wd=ch.W;
+      const sc={plaques:ch.plaques.concat([[[-w/2,-H],[w/2,-H],[w/2,0],[-w/2,0]]]),cordons:[ch.vide,cap.endroit,[[-ch.o.b/2,0],[ch.o.b/2,0],[ch.o.b/2,-1.5],[-ch.o.b/2,-1.5]]],manques:[]};
+      return {sc,tiree:ch.plaques,fusion:null,y:t,bx:[-Wd,-H,Wd,t+4]};}
+    const Lh=Math.max(2.2*t,44),d=0.8*w;
+    if(cf==="lm"){
+      const sc={plaques:[[[0,0],[Lh,0],[Lh,t],[0,t]],[[0,t+d],[d,t],[w,t],[w,t+H],[0,t+H]]],cordons:[[[0,t],[d,t],[0,t+d]],[[0,t],[0,t+d],[-2.2,t+d*0.55],[-2.2,t+d*0.2]]],manques:[]};
+      return {sc,tiree:[sc.plaques[0]],fusion:[0,d],y:t,bx:[-6,-2,Lh,t+H]};}
+    const sc={plaques:[[[0,0],[Lh,0],[Lh,t],[d,t],[0,t-d]],[[0,t],[w,t],[w,t+H],[0,t+H]]],cordons:[[[0,t-d],[d,t],[0,t],[-2.2,t-d*0.25],[-2.2,t-d*0.75]]],manques:[]};
+    return {sc,tiree:[sc.plaques[0]],fusion:null,biais:[[0,t-d],[d,t]],y:t,bx:[-6,-2,Lh,t+H]};
+  }
+  function draw(){
+    const W=svgW(svg),n=W<560,H=n?220:250,t=+sT.value;clear(svg);$("#m6to").textContent=t+NB+"mm";
+    const G=scene(t),T=Coupe.tracer(svg,G.sc,{x:10,y:10,w:W-20,h:H-20},{boite:G.bx}),P=T.P;
+    /* feuillets de laminage, limités à la tôle tirée */
+    const id="m6clip",cp=el("clipPath",{id},el("defs",null,svg));G.tiree.forEach(Q=>el("path",{d:Coupe.chemin(Q,T)},cp));
+    const gl=el("g",{"clip-path":"url(#"+id+")"},svg);
+    for(let k=1;k<=5;k++){const y=P(0,t*k/6)[1];el("line",{x1:P(G.bx[0],0)[0],y1:y,x2:P(G.bx[2],0)[0],y2:y,stroke:"var(--muted)","stroke-width":1.1,"stroke-dasharray":"14 5"},gl);}
+    const kk=K[cf],dem=kk*(0.5+t/50),r=dem/CAP[zq];
+    /* retrait du cordon (orange) */
+    if(G.fusion){const xs=[0.25,0.5,0.75].map(u=>G.fusion[0]+(G.fusion[1]-G.fusion[0])*u),ln=Math.min(0.35*t,10)*Math.min(1.4,kk);
+      xs.forEach(x=>arrow(svg,P(x,0)[0],P(0,t-ln)[1],P(x,0)[0],P(0,t)[1]-2,"var(--frc)",2.2,8));}
+    else if(G.biais){const a=P(...G.biais[0]),b=P(...G.biais[1]);arrow(svg,(a[0]+b[0])/2+14,(a[1]+b[1])/2+14,(a[0]+b[0])/2+3,(a[1]+b[1])/2+3,"var(--frc)",2,7);}
+    else{const y=P(0,t/2)[1];arrow(svg,P(-8,0)[0],y,P(-24,0)[0],y,"var(--frc)",2,8);arrow(svg,P(8,0)[0],y,P(24,0)[0],y,"var(--frc)",2,8);}
+    /* fissure en gradins si le risque est fort */
+    if(G.fusion&&r>=0.6){const x0=G.fusion[0],x1=G.fusion[1],l1=t*5/6,l2=t*4/6,pts=[[x0,l1],[x0+(x1-x0)*0.4,l1],[x0+(x1-x0)*0.4,l2],[x1,l2]];
+      el("polyline",{points:pts.map(q=>P(q[0],q[1]).map(v=>v.toFixed(1)).join(",")).join(" "),fill:"none",stroke:"var(--tau)","stroke-width":r>=1?3:1.8,"stroke-dasharray":r>=1?null:"5 4","stroke-linejoin":"round"},svg);
+      const lc=tx(svg,P(x1,0)[0]+8,P(0,l2)[1]+4,r>=1?"arrachement en gradins":"amorces possibles",{fill:"var(--tau)","font-weight":"700"});halo(lc,svg);fitText(lc,4,W-4);}
+    setVB(svg,W,H);
+    const niv=r>=1?["élevé","sig"]:r>=0.6?["modéré","frc"]:["faible","mat"],tr=kk>=1.2?"forte":kk>=0.8?"moyenne":kk>=0.4?"réduite":"quasi nulle";
+    ro.innerHTML=nbsp("<span>traction dans l'épaisseur : "+tr+"</span><span>"+(zq?"Z"+zq+" (striction ≥ "+zq+" %)":"sans qualité Z")+"</span><span>risque : <b class='"+niv[1]+"'>"+niv[0]+"</b></span>");
+    let m=TXT[cf];
+    if(zq===0&&r>=0.6)m+=" Une qualité Z (EN 10164) relèverait la ductilité dans l'épaisseur.";
+    if(zq>0&&r>=1)m+=" Même en Z"+zq+", le risque reste fort : il faut changer la conception.";
+    msg.innerHTML=nbsp(m+" (Modèle pédagogique : tendances seulement.)")+"<br><b>À retenir :</b> une tôle tirée dans son épaisseur s'arrache en gradins ; la conception passe avant la qualité Z.";
+  }
+  $$("#m6c .btn").forEach(b=>b.addEventListener("click",()=>{cf=b.dataset.c;setOn("#m6c",b);draw();}));
+  $$("#m6z .btn").forEach(b=>b.addEventListener("click",()=>{zq=+b.dataset.z;setOn("#m6z",b);draw();}));
+  sT.addEventListener("input",draw);
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   Quiz, check-list, sommaire, thème
+   ========================================================= */
+(function(){
+  const box=$("#quiz");if(!box)return;
+  const Q=[
+    {q:"<svg viewBox=\"0 0 240 110\" role=\"img\" aria-label=\"Assemblage en T soudé par deux cordons d'angle\" style=\"display:block;width:100%;max-width:300px;height:auto;margin:.45rem 0\"><path d=\"M50.0,99.3L190.0,99.3L190.0,66.7L50.0,66.7Z\" style=\"fill:color-mix(in srgb,var(--muted) 20%,var(--card));stroke:var(--ink);stroke-width:1.2\"/><path d=\"M106.0,66.7L134.0,66.7L134.0,6.0L106.0,6.0Z\" style=\"fill:color-mix(in srgb,var(--muted) 20%,var(--card));stroke:var(--ink);stroke-width:1.2\"/><path d=\"M134.0,66.7L152.7,66.7L152.3,66.1L151.9,65.6L151.4,65.1L151.0,64.6L150.6,64.0L150.2,63.5L149.8,63.0L149.4,62.5L148.9,62.0L148.5,61.5L148.1,61.0L147.6,60.5L147.2,60.0L146.7,59.5L146.3,59.0L145.8,58.6L145.4,58.1L144.9,57.6L144.5,57.1L144.0,56.7L143.5,56.2L143.1,55.7L142.6,55.3L142.1,54.8L141.6,54.4L141.1,53.9L140.6,53.5L140.2,53.0L139.7,52.6L139.2,52.2L138.7,51.7L138.2,51.3L137.6,50.9L137.1,50.5L136.6,50.0L136.1,49.6L135.6,49.2L135.1,48.8L134.5,48.4L134.0,48.0Z\" style=\"fill:color-mix(in srgb,var(--weld) 45%,var(--card));stroke:var(--weld);stroke-width:1\"/><path d=\"M106.0,66.7L87.3,66.7L87.7,66.1L88.1,65.6L88.6,65.1L89.0,64.6L89.4,64.0L89.8,63.5L90.2,63.0L90.6,62.5L91.1,62.0L91.5,61.5L91.9,61.0L92.4,60.5L92.8,60.0L93.3,59.5L93.7,59.0L94.2,58.6L94.6,58.1L95.1,57.6L95.5,57.1L96.0,56.7L96.5,56.2L96.9,55.7L97.4,55.3L97.9,54.8L98.4,54.4L98.9,53.9L99.4,53.5L99.8,53.0L100.3,52.6L100.8,52.2L101.3,51.7L101.8,51.3L102.4,50.9L102.9,50.5L103.4,50.0L103.9,49.6L104.4,49.2L104.9,48.8L105.5,48.4L106.0,48.0Z\" style=\"fill:color-mix(in srgb,var(--weld) 45%,var(--card));stroke:var(--weld);stroke-width:1\"/></svg>Cet assemblage en T, soudé par deux cordons d'angle, est-il à pleine pénétration ?",o:["oui, puisqu'il y a un cordon de chaque côté","oui, si chaque gorge dépasse la moitié de l'épaisseur de l'âme","on ne peut pas savoir sans connaître le procédé","non : le plan de contact sous l'âme reste non fondu"],c:3,e:"Entre les deux cordons, la face de l'âme posée sur la semelle n'a pas fondu : c'est une <b>discontinuité à la racine</b>. Pour une pleine pénétration, il faut chanfreiner l'âme (demi-V, K) ou un procédé très pénétrant prouvé sur macrographie."},
+    {q:"<svg viewBox=\"0 0 240 116\" role=\"img\" aria-label=\"Chanfrein en V avec trois repères : alpha en haut du chanfrein, b sous l'écartement à la racine, c relié par une ligne au talon\" style=\"display:block;width:100%;max-width:300px;height:auto;margin:.45rem 0\"><path d=\"M81.3,22.6L113.6,78.5L113.6,91.4L19.4,91.4L19.4,22.6Z\" style=\"fill:color-mix(in srgb,var(--muted) 20%,var(--card));stroke:var(--ink);stroke-width:1.2\"/><path d=\"M158.7,22.6L126.5,78.5L126.5,91.4L220.6,91.4L220.6,22.6Z\" style=\"fill:color-mix(in srgb,var(--muted) 20%,var(--card));stroke:var(--ink);stroke-width:1.2\"/><text x=\"120.0\" y=\"18.6\" style=\"font-size:13px;fill:var(--ink);text-anchor:middle;font-weight:700\">α</text><text x=\"120.0\" y=\"110.0\" style=\"font-size:13px;fill:var(--ink);text-anchor:middle;font-weight:700\">b</text><line x1=\"126.5\" y1=\"85.0\" x2=\"158.7\" y2=\"104.0\" style=\"stroke:var(--muted);stroke-width:1\"/><text x=\"161.7\" y=\"110.0\" style=\"font-size:13px;fill:var(--ink);font-weight:700\">c</text></svg>Sur cette coupe, la lettre <b>c</b> désigne :",o:["l'écartement à la racine","le talon, la partie droite au fond du chanfrein","l'angle d'un biseau","la profondeur de préparation"],c:1,e:"Lettres de l'ISO 9692-1 : <b>b</b> l'écartement, <b>c</b> le talon, <b>α</b> l'angle d'ouverture, <b>β</b> l'angle d'un biseau, <b>h</b> la profondeur de préparation."},
+    {q:"Un plan demande un cordon d'angle « a5 ». Le côté z à viser vaut environ :",o:["3,5 mm","5 mm","7,1 mm","10 mm"],c:2,e:"<b>z = a · √2 = 5 × 1,41 ≈ 7,1 mm</b>. Lire a5 comme un côté de 5 mm donnerait une gorge de 3,5 mm seulement."},
+    {q:"<svg viewBox=\"0 0 244 108\" role=\"img\" aria-label=\"Trois cordons d'angle de même côté : A plat, B bombé, C creux\" style=\"display:block;width:100%;max-width:305px;height:auto;margin:.45rem 0\"><path d=\"M10.0,78.0L80.0,78.0L80.0,67.2L10.0,67.2Z\" style=\"fill:color-mix(in srgb,var(--muted) 20%,var(--card));stroke:var(--ink);stroke-width:1.2\"/><path d=\"M10.0,67.2L26.2,67.2L26.2,8.0L10.0,8.0Z\" style=\"fill:color-mix(in srgb,var(--muted) 20%,var(--card));stroke:var(--ink);stroke-width:1.2\"/><path d=\"M26.2,67.2L63.8,67.2L62.9,66.3L62.0,65.3L61.0,64.4L60.1,63.5L59.1,62.5L58.2,61.6L57.2,60.6L56.3,59.7L55.4,58.8L54.4,57.8L53.5,56.9L52.5,55.9L51.6,55.0L50.7,54.0L49.7,53.1L48.8,52.2L47.8,51.2L46.9,50.3L45.9,49.3L45.0,48.4L44.1,47.4L43.1,46.5L42.2,45.6L41.2,44.6L40.3,43.7L39.3,42.7L38.4,41.8L37.5,40.8L36.5,39.9L35.6,39.0L34.6,38.0L33.7,37.1L32.8,36.1L31.8,35.2L30.9,34.3L29.9,33.3L29.0,32.4L28.0,31.4L27.1,30.5L26.2,29.5Z\" style=\"fill:color-mix(in srgb,var(--weld) 45%,var(--card));stroke:var(--weld);stroke-width:1\"/><text x=\"40.0\" y=\"100.0\" style=\"font-size:13px;fill:var(--ink);font-weight:700\">A</text><path d=\"M88.0,78.0L158.0,78.0L158.0,67.2L88.0,67.2Z\" style=\"fill:color-mix(in srgb,var(--muted) 20%,var(--card));stroke:var(--ink);stroke-width:1.2\"/><path d=\"M88.0,67.2L104.2,67.2L104.2,8.0L88.0,8.0Z\" style=\"fill:color-mix(in srgb,var(--muted) 20%,var(--card));stroke:var(--ink);stroke-width:1.2\"/><path d=\"M104.2,67.2L141.8,67.2L141.4,65.8L141.0,64.3L140.5,62.9L140.0,61.5L139.5,60.2L138.9,58.9L138.3,57.6L137.7,56.3L137.1,55.0L136.4,53.8L135.7,52.6L135.0,51.4L134.3,50.3L133.5,49.2L132.7,48.1L131.9,47.0L131.0,46.0L130.2,45.0L129.3,44.0L128.3,43.1L127.4,42.1L126.4,41.2L125.4,40.3L124.3,39.5L123.3,38.7L122.2,37.9L121.1,37.1L119.9,36.4L118.8,35.7L117.6,35.0L116.4,34.3L115.1,33.7L113.8,33.1L112.5,32.5L111.2,31.9L109.8,31.4L108.5,30.9L107.1,30.4L105.6,30.0L104.2,29.5Z\" style=\"fill:color-mix(in srgb,var(--weld) 45%,var(--card));stroke:var(--weld);stroke-width:1\"/><text x=\"118.0\" y=\"100.0\" style=\"font-size:13px;fill:var(--ink);font-weight:700\">B</text><path d=\"M166.0,78.0L236.0,78.0L236.0,67.2L166.0,67.2Z\" style=\"fill:color-mix(in srgb,var(--muted) 20%,var(--card));stroke:var(--ink);stroke-width:1.2\"/><path d=\"M166.0,67.2L182.2,67.2L182.2,8.0L166.0,8.0Z\" style=\"fill:color-mix(in srgb,var(--muted) 20%,var(--card));stroke:var(--ink);stroke-width:1.2\"/><path d=\"M182.2,67.2L219.8,67.2L218.5,66.7L217.2,66.1L216.0,65.5L214.7,64.8L213.5,64.2L212.3,63.5L211.1,62.8L209.9,62.1L208.7,61.4L207.6,60.7L206.4,59.9L205.3,59.1L204.3,58.3L203.2,57.5L202.1,56.7L201.1,55.8L200.1,54.9L199.1,54.0L198.1,53.1L197.2,52.2L196.3,51.2L195.3,50.3L194.5,49.3L193.6,48.3L192.7,47.2L191.9,46.2L191.1,45.1L190.3,44.0L189.5,42.9L188.7,41.8L188.0,40.7L187.3,39.5L186.6,38.3L185.9,37.1L185.2,35.9L184.6,34.7L183.9,33.4L183.3,32.1L182.7,30.9L182.2,29.5Z\" style=\"fill:color-mix(in srgb,var(--weld) 45%,var(--card));stroke:var(--weld);stroke-width:1\"/><text x=\"196.0\" y=\"100.0\" style=\"font-size:13px;fill:var(--ink);font-weight:700\">C</text></svg>Ces trois cordons ont le même côté z = 7 mm. Lequel a la plus petite gorge réelle ?",o:["A, le plat","B, le bombé","ils ont tous la même gorge réelle","C, le creux"],c:3,e:"La gorge réelle est la hauteur du plus grand triangle isocèle inscrit : <b>le creux</b> la réduit ; le bombé ne l'augmente pas (A et B ont la même gorge, 4,95 mm)."},
+    {q:"Une tôle de 30 mm, accessible des deux côtés, est soudée bout à bout. Laquelle de ces préparations demande le moins de métal ?",o:["X à 60°","V à 60°","U (β = 10°)","bords droits"],c:0,e:"V ≈ 513 mm² et <b>X ≈ 286 mm²</b> (b = c = 2 mm) ; U ≈ 450 mm² (β = 10°, R = 6 mm, c = 3 mm). Les bords droits ne conviennent pas au-delà de 8 mm environ, même des deux côtés."},
+    {q:"<svg viewBox=\"0 0 240 100\" role=\"img\" aria-label=\"Préparation bout à bout : la pièce de droite est biseautée des deux côtés, celle de gauche a un bord droit\" style=\"display:block;width:100%;max-width:300px;height:auto;margin:.45rem 0\"><path d=\"M116.5,15.0L116.5,85.0L22.0,85.0L22.0,15.0Z\" style=\"fill:color-mix(in srgb,var(--muted) 20%,var(--card));stroke:var(--ink);stroke-width:1.2\"/><path d=\"M155.0,15.0L123.5,46.5L123.5,53.5L155.0,85.0L218.0,85.0L218.0,15.0Z\" style=\"fill:color-mix(in srgb,var(--muted) 20%,var(--card));stroke:var(--ink);stroke-width:1.2\"/></svg>Dans cette préparation, une seule pièce est biseautée, des deux côtés. Elle s'appelle :",o:["un X","un K","un double U","un demi-V"],c:1,e:"Le <b>K</b> est un demi-V fait des deux côtés de la même pièce (ISO 9692-1, n° 2.9, t &gt; 10 mm). Il sert quand une seule pièce peut être usinée, par exemple l'âme d'un T."},
+    {q:"En V à 60°, passer d'une tôle de 20 mm à une tôle de 40 mm multiplie la section à déposer par environ :",o:["2","3","4","8"],c:2,e:"La section d'un V croît comme le carré de l'épaisseur : de 227 à 914 mm² (b = c = 2 mm), soit <b>× 4</b>."},
+    {q:"Pour raccorder bout à bout deux épaisseurs différentes, la pente de délardage ne doit pas dépasser :",o:["1/1","1/2","1/4","1/10"],c:2,e:"Règle usuelle, reprise par l'EN 13445-4 : <b>1/4</b>, soit 1 mm d'épaisseur perdue sur 4 mm de longueur. Une pente plus douce est permise, pas plus raide."},
+    {q:"<svg viewBox=\"0 0 240 98\" role=\"img\" aria-label=\"Raccordement d'une tôle épaisse délardée sur une face et d'une tôle mince, plans moyens décalés\" style=\"display:block;width:100%;max-width:300px;height:auto;margin:.45rem 0\"><path d=\"M11.9,72.6L127.9,72.6L127.9,49.0L33.5,25.4L11.9,25.4Z\" style=\"fill:color-mix(in srgb,var(--muted) 20%,var(--card));stroke:var(--ink);stroke-width:1.2\"/><path d=\"M131.8,72.6L228.1,72.6L228.1,49.0L131.8,49.0Z\" style=\"fill:color-mix(in srgb,var(--muted) 20%,var(--card));stroke:var(--ink);stroke-width:1.2\"/><path d=\"M125.9,72.6L133.8,72.6L134.5,47.4L125.1,47.4Z\" style=\"fill:color-mix(in srgb,var(--weld) 45%,var(--card));stroke:var(--weld);stroke-width:1\"/><line x1=\"11.9\" y1=\"49.0\" x2=\"110.2\" y2=\"49.0\" style=\"stroke:var(--gam);stroke-width:1.4;stroke-dasharray:7 3 2 3\"/><line x1=\"125.9\" y1=\"60.8\" x2=\"228.1\" y2=\"60.8\" style=\"stroke:var(--gam);stroke-width:1.4;stroke-dasharray:7 3 2 3\"/><text x=\"15.9\" y=\"21.4\" style=\"font-size:13px;fill:var(--ink);fill:var(--frc);font-weight:700\">F ←</text><text x=\"208.4\" y=\"21.4\" style=\"font-size:13px;fill:var(--ink);fill:var(--frc);font-weight:700\">→ F</text></svg>Dans ce raccordement, où une seule face est alignée, l'effort F crée :",o:["un moment parasite F · e, car les plans moyens sont décalés","aucun effet, puisque le délardage est fait","une torsion de la tôle mince","une compression dans le cordon"],c:0,e:"Les plans moyens (traits mixtes) sont décalés de <b>e = (t₁ − t₂)/2</b> : l'effort crée un moment F · e qui fléchit le joint. On l'évite en délardant les deux faces pour aligner les fibres neutres."},
+    {q:"<svg viewBox=\"0 0 240 110\" role=\"img\" aria-label=\"Âme soudée en K sur la peau d'une semelle laminée, feuillets de laminage dessinés dans la semelle\" style=\"display:block;width:100%;max-width:300px;height:auto;margin:.45rem 0\"><path d=\"M51.8,99.7L188.2,99.7L188.2,57.1L51.8,57.1Z\" style=\"fill:color-mix(in srgb,var(--muted) 20%,var(--card));stroke:var(--ink);stroke-width:1.2\"/><path d=\"M117.9,52.9L122.1,52.9L134.9,40.1L134.9,6.0L105.1,6.0L105.1,40.1Z\" style=\"fill:color-mix(in srgb,var(--muted) 20%,var(--card));stroke:var(--ink);stroke-width:1.2\"/><path d=\"M102.1,57.1L137.9,57.1L137.0,39.2L134.9,38.3L134.9,40.1L122.1,52.9L117.9,52.9L105.1,40.1L105.1,38.3L103.0,39.2Z\" style=\"fill:color-mix(in srgb,var(--weld) 45%,var(--card));stroke:var(--weld);stroke-width:1\"/><line x1=\"56.1\" y1=\"91.2\" x2=\"183.9\" y2=\"91.2\" style=\"stroke:var(--muted);stroke-width:0.8;stroke-dasharray:10 4\"/><line x1=\"56.1\" y1=\"82.7\" x2=\"183.9\" y2=\"82.7\" style=\"stroke:var(--muted);stroke-width:0.8;stroke-dasharray:10 4\"/><line x1=\"56.1\" y1=\"74.2\" x2=\"183.9\" y2=\"74.2\" style=\"stroke:var(--muted);stroke-width:0.8;stroke-dasharray:10 4\"/><line x1=\"56.1\" y1=\"65.7\" x2=\"183.9\" y2=\"65.7\" style=\"stroke:var(--muted);stroke-width:0.8;stroke-dasharray:10 4\"/></svg>Une âme est soudée en K sur la peau d'une semelle laminée. Quelle pièce risque l'arrachement lamellaire ?",o:["la semelle, tirée dans son épaisseur par le retrait","l'âme","le cordon","aucune : le K supprime ce risque"],c:0,e:"Le retrait du cordon tire la <b>semelle dans son épaisseur</b>, perpendiculairement à ses feuillets de laminage. Parades : conception sur tranche, beurrage, qualité Z, ultrasons avant soudage."},
+    {q:"La qualité Z25 de l'EN 10164 garantit :",o:["une énergie de rupture de 25 J","une striction moyenne d'au moins 25 % en traction dans l'épaisseur","une limite d'élasticité de 250 MPa","un allongement de 25 % dans le sens du laminage"],c:1,e:"Z15, Z25, Z35 : <b>striction moyenne minimale</b> de 15, 25 ou 35 % sur éprouvettes prélevées dans l'épaisseur. Elle relève la résistance à l'arrachement lamellaire sans dispenser d'une bonne conception."},
+    {q:"<svg viewBox=\"0 0 240 110\" role=\"img\" aria-label=\"Assemblage en croix : deux éléments minces de part et d'autre d'un élément épais\" style=\"display:block;width:100%;max-width:300px;height:auto;margin:.45rem 0\"><path d=\"M75.0,73.0L165.0,73.0L165.0,37.0L75.0,37.0Z\" style=\"fill:color-mix(in srgb,var(--muted) 20%,var(--card));stroke:var(--ink);stroke-width:1.2\"/><path d=\"M111.0,37.0L129.0,37.0L129.0,4.0L111.0,4.0Z\" style=\"fill:color-mix(in srgb,var(--muted) 20%,var(--card));stroke:var(--ink);stroke-width:1.2\"/><path d=\"M111.0,73.0L129.0,73.0L129.0,106.0L111.0,106.0Z\" style=\"fill:color-mix(in srgb,var(--muted) 20%,var(--card));stroke:var(--ink);stroke-width:1.2\"/><path d=\"M129.0,37.0L138.0,37.0L137.8,36.7L137.6,36.5L137.4,36.2L137.2,36.0L137.0,35.7L136.8,35.5L136.6,35.2L136.4,35.0L136.2,34.8L136.0,34.5L135.8,34.3L135.6,34.0L135.4,33.8L135.1,33.6L134.9,33.3L134.7,33.1L134.5,32.9L134.3,32.6L134.0,32.4L133.8,32.2L133.6,32.0L133.4,31.7L133.1,31.5L132.9,31.3L132.7,31.1L132.4,30.9L132.2,30.6L132.0,30.4L131.7,30.2L131.5,30.0L131.2,29.8L131.0,29.6L130.8,29.4L130.5,29.2L130.3,29.0L130.0,28.8L129.8,28.6L129.5,28.4L129.3,28.2L129.0,28.0Z\" style=\"fill:color-mix(in srgb,var(--weld) 45%,var(--card));stroke:var(--weld);stroke-width:1\"/><path d=\"M111.0,37.0L102.0,37.0L102.2,36.7L102.4,36.5L102.6,36.2L102.8,36.0L103.0,35.7L103.2,35.5L103.4,35.2L103.6,35.0L103.8,34.8L104.0,34.5L104.2,34.3L104.4,34.0L104.6,33.8L104.9,33.6L105.1,33.3L105.3,33.1L105.5,32.9L105.7,32.6L106.0,32.4L106.2,32.2L106.4,32.0L106.6,31.7L106.9,31.5L107.1,31.3L107.3,31.1L107.6,30.9L107.8,30.6L108.0,30.4L108.3,30.2L108.5,30.0L108.8,29.8L109.0,29.6L109.2,29.4L109.5,29.2L109.7,29.0L110.0,28.8L110.2,28.6L110.5,28.4L110.7,28.2L111.0,28.0Z\" style=\"fill:color-mix(in srgb,var(--weld) 45%,var(--card));stroke:var(--weld);stroke-width:1\"/><path d=\"M129.0,73.0L138.0,73.0L137.8,73.3L137.6,73.5L137.4,73.8L137.2,74.0L137.0,74.3L136.8,74.5L136.6,74.8L136.4,75.0L136.2,75.2L136.0,75.5L135.8,75.7L135.6,76.0L135.4,76.2L135.1,76.4L134.9,76.7L134.7,76.9L134.5,77.1L134.3,77.4L134.0,77.6L133.8,77.8L133.6,78.0L133.4,78.3L133.1,78.5L132.9,78.7L132.7,78.9L132.4,79.1L132.2,79.4L132.0,79.6L131.7,79.8L131.5,80.0L131.2,80.2L131.0,80.4L130.8,80.6L130.5,80.8L130.3,81.0L130.0,81.2L129.8,81.4L129.5,81.6L129.3,81.8L129.0,82.0Z\" style=\"fill:color-mix(in srgb,var(--weld) 45%,var(--card));stroke:var(--weld);stroke-width:1\"/><path d=\"M111.0,73.0L102.0,73.0L102.2,73.3L102.4,73.5L102.6,73.8L102.8,74.0L103.0,74.3L103.2,74.5L103.4,74.8L103.6,75.0L103.8,75.2L104.0,75.5L104.2,75.7L104.4,76.0L104.6,76.2L104.9,76.4L105.1,76.7L105.3,76.9L105.5,77.1L105.7,77.4L106.0,77.6L106.2,77.8L106.4,78.0L106.6,78.3L106.9,78.5L107.1,78.7L107.3,78.9L107.6,79.1L107.8,79.4L108.0,79.6L108.3,79.8L108.5,80.0L108.8,80.2L109.0,80.4L109.2,80.6L109.5,80.8L109.7,81.0L110.0,81.2L110.2,81.4L110.5,81.6L110.7,81.8L111.0,82.0Z\" style=\"fill:color-mix(in srgb,var(--weld) 45%,var(--card));stroke:var(--weld);stroke-width:1\"/></svg>Dans cet assemblage en croix soumis à des charges variables, on chanfreine de préférence :",o:["l'élément épais traversant","aucun : les cordons d'angle suffisent","seulement l'élément du dessus","les éléments minces, alignés de part et d'autre"],c:3,e:"On chanfreine <b>les éléments minces</b>, qui portent l'effort, et on les aligne pour assurer la continuité à travers l'élément épais. Ce dernier pompe la chaleur : on prévoit un écartement et un talon un peu plus grands contre le manque de fusion."}
+  ];
+  let score=0,done=0;const sc=$("#qzScore");
+  function upd(){let t="Score : "+score+" / "+Q.length;if(done===Q.length)t+=score>=10?"  ·  🎉 prêt pour le cours 2":score>=7?"  ·  relis les explications":"  ·  refais un tour des chapitres";sc.textContent=t;}
+  function render(){box.innerHTML="";score=0;done=0;
+    Q.forEach((it,n)=>{const d=document.createElement("div");d.className="qz";
+      d.innerHTML='<p class="qz-q"><b>'+(n+1)+".</b> "+it.q+'</p><div class="qz-o"></div><div class="qz-e" hidden></div>';
+      const o=d.querySelector(".qz-o"),ex=d.querySelector(".qz-e");let answered=false;
+      it.o.forEach((txt,i)=>{const b=document.createElement("button");b.type="button";b.className="qz-b";b.innerHTML=String.fromCharCode(65+i)+". "+txt;
+        b.addEventListener("click",()=>{if(answered)return;answered=true;done++;const ok=i===it.c;if(ok)score++;b.classList.add(ok?"ok":"ko");o.children[it.c].classList.add("ok");ex.hidden=false;ex.innerHTML=(ok?"✅ <b>Bien joué.</b> ":"❌ <b>Pas tout à fait.</b> ")+it.e;upd();});
+        o.appendChild(b);});
+      box.appendChild(d);});
+    upd();}
+  $("#qzReset").addEventListener("click",render);render();
+})();
+(function(){
+  const boxes=$$("#checklist input[type=checkbox]"),msg=$("#checkMsg"),KEY="conception-cours1-check";
+  if(!boxes.length)return;
+  let saved=[];try{saved=JSON.parse(localStorage.getItem(KEY)||"[]")||[];}catch(e){saved=[];}
+  boxes.forEach(b=>{b.checked=saved.indexOf(b.dataset.c)>=0;});
+  function upd(){const on=boxes.filter(b=>b.checked).map(b=>b.dataset.c);try{localStorage.setItem(KEY,JSON.stringify(on));}catch(e){}
+    msg.innerHTML=on.length===boxes.length?"🎉 <b>Tout est coché : tu es prêt pour le cours 2 !</b>":on.length+" / "+boxes.length+" : reviens sur les points non cochés (les manipulations sont faites pour ça).";}
+  boxes.forEach(b=>b.addEventListener("change",upd));upd();
+})();
+(function(){/* impression de la fiche mémoire seule */
+  const b=$("#printFiche");if(!b)return;
+  b.addEventListener("click",()=>{document.body.classList.add("print-fiche");window.print();});
+  window.addEventListener("afterprint",()=>document.body.classList.remove("print-fiche"));
+})();
+(function(){
+  const links=$$(".toc a"),tin=$(".toc-in");
+  if(!links.length||!("IntersectionObserver" in window))return;
+  const map={};links.forEach(a=>{map[a.getAttribute("href").slice(1)]=a;});
+  const obs=new IntersectionObserver(ents=>{ents.forEach(en=>{if(!en.isIntersecting)return;const a=map[en.target.id];if(!a)return;
+    links.forEach(l=>l.classList.toggle("on",l===a));
+    if(tin){const tgt=a.offsetLeft-tin.clientWidth/2+a.offsetWidth/2;try{tin.scrollTo({left:tgt,behavior:RM?"auto":"smooth"});}catch(e){tin.scrollLeft=tgt;}}});},{rootMargin:"-45% 0px -50% 0px"});
+  Object.keys(map).forEach(id=>{const s=document.getElementById(id);if(s)obs.observe(s);});
+})();
+(function(){
+  const b=$("#themeBtn");if(!b)return;const KEY="conception-theme",root=document.documentElement;
+  const lab={auto:"◐ Thème : automatique",light:"☀️ Thème : clair",dark:"🌙 Thème : sombre"};
+  let t="auto";try{t=localStorage.getItem(KEY)||"auto";}catch(e){}
+  function apply(){if(t==="auto")root.removeAttribute("data-theme");else root.setAttribute("data-theme",t);b.textContent=lab[t];}
+  b.addEventListener("click",()=>{t=t==="auto"?"light":t==="light"?"dark":"auto";try{localStorage.setItem(KEY,t);}catch(e){}apply();});
+  apply();
+})();
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Procédés avancés, cours 3 : le soudage par friction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@500;600;700&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+
+
+
+:root{
+  --paper:#F3F6F9; --paper-2:#E6ECF2; --card:#FFFFFF; --ink:#17212B; --muted:#56626F; --line:#C5CFD9;
+  --grid:rgba(40,90,160,.075);
+  --sig:#CF2438; --tau:#8A34B6; --eps:#1B5ED3; --gam:#06849A; --frc:#D46A00; --mat:#26844A; --weld:#9A5B12;
+  --ok:#26844A; --warn:#B86E00; --bad:#C62828;
+  --lv2:#E4EBF2; --hl:#FFF3B0;
+  --font-body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-head:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --font-math:"STIX Two Text","Cambria Math","Cambria","Times New Roman",serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+    --grid:rgba(120,160,220,.07);
+    --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+    --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+  --grid:rgba(120,160,220,.07);
+  --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+  --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+  color-scheme: dark;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0;color:var(--ink);font-family:var(--font-body);font-size:17.5px;line-height:1.62;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;overflow-x:hidden;
+}
+img,svg{max-width:100%}
+.wrap{max-width:800px;margin:0 auto;padding:0 20px}
+.wide{max-width:980px}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.1;margin:0}
+h3{font-size:1.65rem;font-weight:600;margin:2rem 0 .6rem}
+h4{font-size:1.3rem;font-weight:600;margin:1.4rem 0 .4rem}
+p{margin:.7em 0}
+a{color:var(--eps)}
+b,strong{font-weight:700}
+small{font-size:.8em}
+sub{font-size:.72em}
+.m{font-family:var(--font-math);font-size:1.08em;white-space:nowrap}
+.sig{color:var(--sig)} .tau{color:var(--tau)} .eps{color:var(--eps)} .gam{color:var(--gam)} .frc{color:var(--frc)} .mat{color:var(--mat)} .mut{color:var(--muted)} .wcol{color:var(--weld)}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .12em;line-height:1.1}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 .2em .08em}
+.frac>span:last-child{padding:.08em .2em 0}
+ul,ol{padding-left:1.4em}
+li{margin:.25em 0}
+
+/* ---------- en-tête ---------- */
+.hero{padding:34px 0 10px}
+.title-block{border:2.5px solid var(--ink);background:var(--card);display:grid;grid-template-columns:1fr 300px}
+.tb-main{padding:22px 24px;border-right:2.5px solid var(--ink);display:flex;flex-direction:column;justify-content:space-between;gap:14px}
+.tb-series{margin:0 0 .5rem;color:var(--muted);font-size:.95rem}
+.hero h1{font-size:clamp(2.3rem,6vw,4rem);font-weight:700;letter-spacing:-.01em}
+.tb-cells{display:grid;grid-template-rows:repeat(4,auto)}
+.tb-cells>div{padding:9px 16px;border-bottom:1.5px solid var(--ink);display:flex;flex-direction:column;justify-content:center}
+.tb-cells>div:last-child{border-bottom:0}
+.tb-cells small{color:var(--muted);font-size:.78rem}
+.tb-cells b{font-family:var(--font-head);font-size:1.25rem;font-weight:600;line-height:1.15}
+.lede{font-size:1.13rem;max-width:760px;margin:1.2rem 0}
+.theme-btn{align-self:flex-start;font-family:var(--font-body);font-size:.85rem;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
+@media (max-width:760px){.title-block{grid-template-columns:1fr}.tb-main{border-right:0;border-bottom:2.5px solid var(--ink)}.tb-cells{grid-template-rows:none;grid-template-columns:1fr 1fr}.tb-cells>div:nth-child(odd){border-right:1.5px solid var(--ink)}.tb-cells>div:nth-child(3){border-bottom:0}}
+@media (max-width:420px){.tb-cells{grid-template-columns:1fr}.tb-cells>div:nth-child(odd){border-right:0}.tb-cells>div:nth-child(3){border-bottom:1.5px solid var(--ink)}}
+
+/* code couleur */
+.cc{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:stretch;margin:1rem 0 .4rem}
+.cc-box{background:var(--card);border:2px solid var(--line);padding:12px 14px;border-radius:4px}
+.cc-cause{border-color:var(--sig)} .cc-link{border-color:var(--mat)} .cc-eff{border-color:var(--eps)}
+.cc-box small{display:block;color:var(--muted);font-size:.82rem;line-height:1.3}
+.cc-syms{font-family:var(--font-math);font-size:1.7rem;line-height:1.25;display:flex;flex-wrap:wrap;gap:.1em .45em;margin:.2rem 0}
+.cc-box p{margin:0;font-size:.9rem;line-height:1.35}
+.cc-arrow{align-self:center;font-size:1.8rem;color:var(--muted)}
+@media (max-width:700px){.cc{grid-template-columns:1fr}.cc-arrow{transform:rotate(90deg);justify-self:center;line-height:1}}
+.cc-more{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:.5rem 0}
+.cc-more>div{border:2px solid var(--line);background:var(--card);border-radius:4px;padding:6px 10px;font-size:.9rem}
+@media (max-width:640px){.cc-more{grid-template-columns:1fr}}
+
+/* ---------- sommaire ---------- */
+.toc{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-bottom:1.5px solid var(--line);padding-top:env(safe-area-inset-top,0px);margin-top:18px}
+.toc-in{display:flex;gap:6px;overflow-x:auto;padding:9px 20px;max-width:980px;margin:0 auto;scrollbar-width:thin}
+.toc a{flex:none;text-decoration:none;color:var(--ink);font-size:.88rem;padding:4px 11px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);white-space:nowrap}
+.toc a.on{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.toc a:focus-visible,.btn:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--eps);outline-offset:2px}
+
+/* ---------- sections ---------- */
+section.chap{padding:46px 0 10px}
+.cartouche{display:grid;grid-template-columns:86px 1fr 250px;border:2.5px solid var(--ink);background:var(--card);margin-bottom:1.4rem}
+.c-num{font-family:var(--font-head);font-size:3.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;border-right:2.5px solid var(--ink)}
+.c-title{padding:14px 18px;border-right:2.5px solid var(--ink)}
+.c-title h2{font-size:2.1rem;font-weight:700}
+.c-title p{margin:.25rem 0 0;color:var(--muted)}
+.c-img{padding:12px 14px;display:flex;gap:12px;align-items:center;background:var(--paper-2)}
+.c-img .ico{font-size:2.3rem;line-height:1}
+.c-img small{display:block;color:var(--muted);font-size:.78rem}
+.c-img span{font-size:.95rem;line-height:1.3}
+@media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
+
+/* gabarit court : approfondissement replié, à retenir, prédiction */
+details.deep{margin:1.2rem 0;padding:0 18px;background:var(--lv2);border-left:6px solid var(--ink);border-radius:4px}
+details.deep>summary{font-family:var(--font-head);font-size:1.2rem;font-weight:600;padding:9px 0}
+details.deep[open]{padding-bottom:10px}
+.retenir{margin:1.4rem 0 .4rem;padding:8px 18px 6px;background:var(--card);border:2px solid var(--ink);border-radius:4px}
+.retenir>b:first-child{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.retenir ul{margin:.3rem 0 .3rem}
+.predict{display:block;margin-top:.35rem;color:var(--ink);font-weight:700}
+@media (max-width:520px){details.deep{padding:0 12px}.retenir{padding:8px 12px 6px}}
+
+/* formules et encadrés */
+.fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:600px;text-align:center;border-radius:3px;overflow-x:auto}
+.fx .big{font-family:var(--font-math);font-size:1.9rem;line-height:1.4}
+.fx .cap{font-size:.85rem;color:var(--muted);margin:.3rem 0 0}
+.fx .row{display:flex;flex-wrap:wrap;justify-content:center;gap:.2em 1.4em}
+.syms{margin:.6rem 0;display:grid;grid-template-columns:auto 1fr;gap:.35rem 1rem;align-items:baseline}
+.syms dt{font-family:var(--font-math);font-size:1.25rem;text-align:right;white-space:nowrap}
+.syms dd{margin:0}
+.def{margin:.9rem 0;padding:.5rem .9rem;border-left:3px dotted var(--muted);font-size:.96rem;background:color-mix(in srgb,var(--card) 60%,transparent)}
+.def>b:first-child{font-family:var(--font-head);font-size:1.08rem;font-weight:600}
+.tip{margin:1rem 0;padding:.7rem 1rem;border:1.5px dashed var(--mat);border-radius:4px;font-size:.97rem}
+.warn{margin:1rem 0;padding:.7rem 1rem;border:2px solid var(--bad);border-radius:4px;font-size:.97rem;background:color-mix(in srgb,var(--bad) 7%,transparent)}
+.mnemo{margin:1rem 0;padding:.7rem 1rem;background:var(--hl);border-radius:4px;font-size:.98rem}
+.fun{margin:1.2rem 0;padding:.8rem 1rem;border:2px dashed var(--muted);border-radius:10px;background:var(--card);font-size:.98rem}
+.fun-h{display:block;margin-bottom:.35rem;font-family:var(--font-head);font-size:1.15rem;font-weight:600;letter-spacing:.02em}
+.meta{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--frc);border-radius:4px;background:color-mix(in srgb,var(--frc) 6%,transparent)}
+.weld{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--weld);border-radius:4px;background:color-mix(in srgb,var(--weld) 7%,transparent)}
+.weld>b:first-child{font-family:var(--font-head);font-size:1.15rem;font-weight:600;color:var(--weld)}
+.hp{display:inline-block;font-size:.72rem;font-weight:700;padding:1px 7px;border-radius:9px;background:var(--weld);color:var(--card);vertical-align:middle;margin-left:4px;white-space:nowrap}
+.recall{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:1rem 0}
+.recall>div{background:var(--card);border:1.5px solid var(--line);border-radius:4px;padding:8px 12px;font-size:.92rem}
+.recall .f{font-family:var(--font-math);font-size:1.2rem;margin-bottom:.2rem}
+@media (max-width:640px){.recall{grid-template-columns:1fr}}
+.hist{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:1rem 0}
+.hist>div{background:var(--card);border:1.5px solid var(--weld);border-radius:4px;padding:8px 12px;font-size:.93rem}
+.hist .yr{font-family:var(--font-head);font-size:1.6rem;font-weight:700;color:var(--weld);line-height:1}
+@media (max-width:720px){.hist{grid-template-columns:1fr}}
+
+/* manipulations */
+.lab{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:14px 16px 12px;margin:1.4rem 0}
+.lab-h{font-family:var(--font-head);font-size:1.3rem;font-weight:600;margin:0 0 .2rem}
+.lab-sub{margin:0 0 .6rem;color:var(--muted);font-size:.92rem}
+.lab svg{display:block;width:100%;height:auto;color:var(--ink);font-family:var(--font-body);touch-action:pan-y}
+.ctrl{display:grid;grid-template-columns:minmax(110px,auto) 1fr minmax(92px,auto);gap:4px 12px;align-items:center;margin:.5rem 0}
+.ctrl label{font-size:.95rem}
+.ctrl output{font-family:var(--font-math);font-size:1.08rem;text-align:right;white-space:nowrap}
+@media (max-width:520px){.ctrl{grid-template-columns:1fr auto}.ctrl input[type=range]{grid-column:1/-1;grid-row:2}}
+input[type=range]{width:100%;accent-color:var(--ink);height:28px;margin:0}
+input.r-sig{accent-color:var(--sig)} input.r-tau{accent-color:var(--tau)} input.r-frc{accent-color:var(--frc)} input.r-mat{accent-color:var(--mat)} input.r-eps{accent-color:var(--eps)}
+.btns{display:flex;flex-wrap:wrap;gap:6px;margin:.5rem 0}
+.btn{font-family:var(--font-body);font-size:.9rem;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 13px;cursor:pointer;line-height:1.3}
+.btn:hover{background:var(--paper-2)}
+.btn.on{background:var(--ink);color:var(--paper)}
+.btn.play{border-color:var(--eps);color:var(--eps);font-weight:700}
+.btn:disabled{opacity:.45;cursor:default}
+.readout{font-family:var(--font-math);font-size:1.08rem;background:var(--paper-2);border-radius:4px;padding:.5rem .8rem;margin:.5rem 0;overflow-x:auto;display:flex;flex-wrap:wrap;gap:.2em 1.3em}
+.readout>span{white-space:nowrap}
+.status{font-size:.97rem;margin:.5rem 0;padding:.5rem .8rem;border-left:4px solid var(--eps);background:color-mix(in srgb,var(--eps) 6%,transparent);border-radius:0 4px 4px 0;min-height:2.6em}
+.radios{display:flex;flex-wrap:wrap;gap:6px 14px;margin:.4rem 0;font-size:.95rem}
+.radios label{display:inline-block;cursor:pointer}
+.radios input{margin:0 6px 0 0;vertical-align:middle}
+
+/* svg */
+svg text{fill:currentColor;font-size:13px}
+svg .lbl{font-size:12.5px;fill:var(--muted)}
+svg .mth{font-family:var(--font-math);font-size:16px}
+svg .ttl{font-family:var(--font-head);font-size:15px;font-weight:600}
+svg .axis{stroke:var(--ink);stroke-width:1.4;fill:none}
+svg .tick{stroke:var(--muted);stroke-width:1}
+svg .gridbg{stroke:var(--line);stroke-width:1}
+svg .ref{stroke:var(--muted);stroke-width:1.3;stroke-dasharray:4 3;fill:none}
+.arr line{stroke:currentColor}
+.arr polygon{fill:currentColor}
+
+/* tableaux */
+.tbl-wrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch}
+table.data{border-collapse:collapse;width:100%;font-size:.94rem;background:var(--card)}
+table.data th,table.data td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:middle}
+table.data th{font-family:var(--font-head);font-weight:600;font-size:1.05rem;background:var(--paper-2)}
+table.data td.n{font-family:var(--font-math);white-space:nowrap}
+table.data tr.now td{background:var(--hl)}
+
+/* parcours */
+.route{list-style:none;padding:0;margin:1rem 0;position:relative}
+.route::before{content:"";position:absolute;left:17px;top:10px;bottom:10px;width:4px;background:var(--line);border-radius:2px}
+.route li{position:relative;padding:0 0 14px 52px;margin:0}
+.route li .dot{position:absolute;left:4px;top:0;width:30px;height:30px;border-radius:50%;border:3px solid var(--ink);background:var(--card);font-family:var(--font-head);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+.route li b{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.route li p{margin:.1rem 0 0;font-size:.95rem}
+.series{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:.8rem 0}
+.series>div{background:var(--card);border:1.5px solid var(--line);padding:8px 10px;border-radius:4px;font-size:.88rem}
+.series>div.here{border:2.5px solid var(--ink)}
+.series b{display:block;font-family:var(--font-head);font-size:1.05rem}
+@media (max-width:700px){.series{grid-template-columns:1fr 1fr}}
+
+/* exercices et quiz */
+.exo{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--ink);padding:6px 20px 12px;margin:1.2rem 0;border-radius:4px}
+.exo.defi{border-left-color:var(--weld)}
+.exo h4{margin-top:.8rem}
+.exo .lvtag{font-family:var(--font-body);font-size:.85rem;font-weight:400;color:var(--muted);margin-left:.4rem}
+.exo .q{margin:.25rem 0}
+details{margin:.6rem 0}
+summary{cursor:pointer;font-weight:700;padding:4px 0}
+details .sol{padding:.4rem .9rem;border-left:3px solid var(--mat);margin:.4rem 0}
+details .sol p{margin:.45em 0}
+.qz{background:var(--card);border:1.5px solid var(--line);border-radius:6px;padding:10px 16px;margin:.8rem 0}
+.qz-q{margin:.3rem 0 .6rem}
+.qz-o{display:flex;flex-direction:column;gap:6px}
+.qz-b{text-align:left;font-family:var(--font-body);font-size:.97rem;padding:8px 12px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:5px;cursor:pointer}
+.qz-b:hover{border-color:var(--ink)}
+.qz-b.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--card))}
+.qz-b.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--card))}
+.qz-e{font-size:.94rem;margin:.6rem 0 .2rem}
+.score{position:sticky;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);display:inline-block;background:var(--ink);color:var(--paper);padding:6px 14px;border-radius:999px;font-size:.95rem;margin:.6rem 0}
+
+/* fiche mémoire */
+.fiche{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:2.5px solid var(--ink);background:var(--card);margin:1rem 0}
+.fiche>div{padding:12px 14px;border-right:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}
+.fiche>div:nth-child(3n){border-right:0}
+.fiche>div:nth-last-child(-n+3){border-bottom:0}
+.fiche .ic{font-size:1.9rem;line-height:1}
+.fiche h4{margin:.3rem 0 .2rem;font-size:1.15rem}
+.fiche .f{font-family:var(--font-math);font-size:1.1rem;margin:.2rem 0}
+.fiche p{margin:.2rem 0 0;font-size:.88rem;color:var(--muted)}
+@media (max-width:720px){.fiche{grid-template-columns:1fr 1fr}.fiche>div{border-right:1.5px solid var(--ink)!important;border-bottom:1.5px solid var(--ink)!important}.fiche>div:nth-child(2n){border-right:0!important}.fiche>div:last-child{border-bottom:0!important}}
+@media (max-width:440px){.fiche{grid-template-columns:1fr}.fiche>div{border-right:0!important}}
+.gloss{display:grid;grid-template-columns:minmax(150px,230px) 1fr;gap:0;border-top:1.5px solid var(--line);margin:1rem 0}
+.gloss dt,.gloss dd{border-bottom:1.5px solid var(--line);padding:7px 8px;margin:0}
+.gloss dt{font-weight:700}
+.gloss dd{font-size:.95rem}
+@media (max-width:600px){.gloss{grid-template-columns:1fr}.gloss dt{border-bottom:0;padding-bottom:0}}
+.check label{display:flex;gap:10px;align-items:flex-start;padding:5px 0;cursor:pointer}
+.check input{margin-top:.35em;width:18px;height:18px;accent-color:var(--mat);flex:none}
+footer{padding:40px 0 60px;color:var(--muted);font-size:.9rem}
+hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
+@media (max-width:700px){.m{white-space:normal}.fx{padding:12px 10px}.fx .big{font-size:1.4rem}}
+@media (max-width:400px){body{font-size:16.5px}.wrap{padding:0 14px}.lab{padding:12px 10px}}
+
+/* compléments de la série Rupture */
+.btn.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,var(--card))}
+.btn.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--card))}
+.ctrl[hidden]{display:none}
+
+/* impression : le cours sur papier clair, ou la fiche mémoire seule sur une page */
+@media print{
+  :root,:root[data-theme]{--paper:#fff!important;--paper-2:#EEF2F6!important;--card:#fff!important;--ink:#111!important;--muted:#444!important;--line:#999!important;--grid:transparent!important;--lv2:#F2F5F8!important;--hl:#FFF3B0!important;color-scheme:light}
+  body{background:#fff;font-size:11pt}
+  .toc,.theme-btn,.btns,.ctrl,#qzReset,.score{display:none!important}
+  section.chap{padding:14px 0 4px}
+  .lab,.fx,.retenir,details.deep,.fiche>div,.exo{break-inside:avoid}
+  body.print-fiche header,body.print-fiche main>section:not(#fiche),body.print-fiche footer{display:none!important}
+  body.print-fiche #fiche .cartouche{margin-bottom:.6rem}
+  body.print-fiche .fiche>div{padding:8px 10px}
+}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="wrap wide">
+  <div class="title-block">
+    <div class="tb-main">
+      <div>
+        <p class="tb-series">Procédés avancés et automatisation</p>
+        <h1>Le soudage par friction : souder sans fondre</h1>
+      </div>
+      <button class="theme-btn" id="themeBtn" type="button" aria-label="Changer de thème">◐ Thème : automatique</button>
+    </div>
+    <div class="tb-cells">
+      <div><small>Cours</small><b>3 sur 6 : friction rotative, friction-malaxage et friction linéaire</b></div>
+      <div><small>Durée conseillée</small><b>≈ 1 h 20 avec les exercices</b></div>
+      <div><small>Prérequis</small><b>Procédés avancés, cours 1 (cycle effort-temps, surveillance du procédé) ; notions de déformation plastique (Essais, cours 1)</b></div>
+      <div><small>À la fin tu sais</small><b>expliquer la production de chaleur par frottement et le soudage à l'état solide ; décrire le cycle de friction rotative, pilotée ou inertielle, et ses paramètres ; décrire le joint de friction et choisir des couples de matériaux, y compris hétérogènes ; expliquer le soudage par friction-malaxage (outil, côtés avançant et reculant, zones, défauts) et régler sa fenêtre ; citer la friction linéaire, les applications, la surveillance et les normes</b></div>
+    </div>
+  </div>
+  <p class="lede">Frotter deux pièces l'une contre l'autre sous un fort effort, jusqu'à ce que leur métal devienne pâteux, puis les forger ensemble : la soudure se fait sans fusion, sans métal d'apport, sans gaz. Le soudage par friction assemble des arbres, des soupapes, des jantes, des panneaux d'aluminium de navires et même des aciers avec de l'aluminium. Ce cours explique la chaleur de frottement, le cycle de friction rotative, le joint obtenu, puis la friction-malaxage et la friction linéaire.</p>
+
+  <h4>Le code couleur de la série</h4>
+  <div class="cc" role="img" aria-label="Code couleur : les causes en rouge et violet, les réglages en vert, les efforts et mouvements en orange, les effets en bleu et bleu-vert">
+    <div class="cc-box cc-cause"><small>Les causes</small><div class="cc-syms"><span class="sig">I</span><span class="sig">P</span><span class="tau">collage</span><span class="tau">porosité</span></div><p><span class="sig">rouge</span> : ce qui apporte l'énergie (courant, faisceau, effet Joule) ; <span class="tau">violet</span> : les défauts (collage, crachement, porosités, manques de fusion)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-link"><small>Les réglages</small><div class="cc-syms"><span class="mat">t</span><span class="mat">v</span><span class="mat">d</span><span class="frc">F</span></div><p>en <span class="mat">vert</span> : ce qu'on choisit (temps, vitesse, focalisation, géométrie) ; en <span class="frc">orange</span> : les efforts et les mouvements</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-eff"><small>Les effets</small><div class="cc-syms"><span class="eps">p</span><span class="eps">q</span><span class="gam">T</span><span class="gam">ZF</span></div><p><span class="eps">bleu</span> : ce qu'on mesure ou calcule (pénétration, densité de puissance, diamètre du point, énergie) ; <span class="gam">bleu-vert</span> : la température, le bain et la zone fondue</p></div>
+  </div>
+  <div class="cc-more">
+    <div><b>Noir</b> : la géométrie dessinée (électrodes, tôles, têtes, canons, outils).</div>
+    <div><b class="wcol">Bronze</b> : le cuivre des électrodes et des optiques, le métal soudé et les encadrés « métier » 🔥.</div>
+  </div>
+</div>
+</header>
+
+<nav class="toc" aria-label="Sommaire">
+  <div class="toc-in">
+    <a href="#avant">Avant de commencer</a>
+    <a href="#c1">1 Souder sans fondre</a>
+    <a href="#c2">2 Le cycle : pilotée ou inertielle</a>
+    <a href="#c3">3 Le joint de friction</a>
+    <a href="#c4">4 La friction-malaxage</a>
+    <a href="#c5">5 Variantes et surveillance</a>
+    <a href="#exos">Exercices</a>
+    <a href="#quiz-s">Quiz</a>
+    <a href="#fiche">Fiche mémoire</a>
+    <a href="#gloss">Glossaire</a>
+    <a href="#check">Check-list</a>
+  </div>
+</nav>
+
+<main>
+<section class="chap" id="avant">
+<div class="wrap">
+  <h3 style="margin-top:0">Avant de commencer</h3>
+  <h4>Ce qu'il faut avoir en tête, en trois cases</h4>
+  <div class="recall">
+    <div><div class="f">P = μ·F·v</div>La puissance dissipée par frottement : coefficient de frottement, effort normal, vitesse de glissement.</div>
+    <div><div class="f">soudage par pression</div>Une liaison métallique peut naître sans fusion, si deux surfaces propres sont mises en contact à chaud sous un fort effort.</div>
+    <div><div class="f">tr/min · bar · t</div>Les unités du chapitre : vitesses de rotation en tours par minute, pressions en bars ou en MPa, efforts en tonnes ou en kN.</div>
+  </div>
+
+  <div class="def"><b>📘 Le sujet</b> : <b>1.12.2 « Autres procédés de soudage »</b> du planning et du référentiel de l'IIW (<i>International Institute of Welding</i>), partie friction ; les goujons, l'électroslag, les ultrasons et les autres procédés font l'objet du cours 4. Attendus de l'IWE (<i>International Welding Engineer</i>, ingénieur international en soudage) : expliquer le principe et l'équipement ; décrire les paramètres et leur influence sur le joint ; citer les applications, les avantages et les limites ; connaître les moyens de surveillance et les essais.</div>
+
+  <div class="def"><b>📖 Normes et sigles</b>. <b>ISO 4063</b> : 42 soudage par friction (421 à entraînement direct, 422 par inertie, 423 des goujons, 424 linéaire, 426 orbitale) ; 43 friction-malaxage (431 par points). <b>ISO 15620</b> : soudage par friction des matériaux métalliques, mode opératoire et qualification ; <b>ISO 25239</b> (5 parties) : friction-malaxage de l'aluminium. <b>FSW</b> : friction-malaxage (<i>friction stir welding</i>) ; <b>FSSW</b> : friction-malaxage par points ; <b>LFW</b> : friction linéaire (<i>linear friction welding</i>) ; <b>ZATM</b> : zone affectée thermomécaniquement. Les manipulations sont des modèles pédagogiques : tendances et ordres de grandeur.</div>
+
+  <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage</b>
+    <p>Sans fusion, pas de fissuration à chaud, pas de porosités, pas de soufflures : la friction soude des alliages d'aluminium réputés insoudables et des couples de métaux qu'aucun arc n'assemble. Elle est rapide, automatique et surveillée pièce par pièce. L'ingénieur doit savoir quand elle remplace avantageusement un procédé par fusion.</p>
+  </div>
+
+  <h4>La série</h4>
+  <div class="series" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">
+    <div><b>1 Le soudage par résistance</b>Points, molette, bossages, en bout.</div>
+    <div><b>2 Laser et faisceau d'électrons</b>Les faisceaux à haute densité d'énergie.</div>
+    <div class="here"><b>3 Le soudage par friction</b>Souder à l'état solide.</div>
+    <div><b>4 Goujons et autres procédés</b>Goujons, électroslag, ultrasons, explosion…</div>
+    <div><b>5 La robotisation</b>Mécaniser, automatiser, programmer.</div>
+    <div><b>6 Plastiques et composites</b>Assembler ce qui n'est pas métallique.</div>
+  </div>
+
+  <h4>Le plan du cours</h4>
+  <ol class="route">
+    <li><span class="dot">1</span><b>Souder sans fondre</b><p>La chaleur du frottement, maximale à la périphérie.</p></li>
+    <li><span class="dot">2</span><b>Le cycle : pilotée ou inertielle</b><p>Accostage, friction, forge ; moteur ou volant.</p></li>
+    <li><span class="dot">3</span><b>Le joint de friction</b><p>Grains fins, bourrelet, couples hétérogènes.</p></li>
+    <li><span class="dot">4</span><b>La friction-malaxage</b><p>Outil, côtés avançant et reculant, fenêtre de réglage.</p></li>
+    <li><span class="dot">5</span><b>Variantes et surveillance</b><p>Friction linéaire, FSW par points, enveloppes, normes.</p></li>
+  </ol>
+</div>
+</section>
+<section class="chap" id="c1">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">1</div>
+    <div class="c-title"><h2>Souder sans fondre</h2><p>La chaleur du frottement, maximale à la périphérie</p></div>
+    <div class="c-img"><span class="ico">🤲</span><span><small>Image à retenir</small>Les mains frottées en hiver : le frottement chauffe sans flamme ; serré fort, le métal devient pâte, puis on le forge et il ne fait plus qu'un</span></div>
+  </div>
+
+  <p>En friction rotative, une pièce tourne, l'autre est fixe, et un vérin les presse l'une contre l'autre. Le frottement dissipe de la chaleur à l'interface ; les oxydes se brisent, les aspérités s'écrasent, puis le métal chaud devient pâteux et s'écoule vers l'extérieur en un <b>bourrelet</b>, emportant les impuretés. On arrête alors la rotation et l'on <b>forge</b> : sous un effort accru, les deux surfaces propres et chaudes se lient atome à atome. Il n'y a jamais de métal fondu : c'est un soudage à l'<b>état solide</b>, par pression à chaud.</p>
+
+  <div class="def"><b>📖 La chaleur de frottement.</b>
+    <ul>
+      <li><b>Locale</b> : la vitesse de glissement d'un point de la face vaut ω·r ; elle est nulle au centre et maximale à la périphérie. Le flux de chaleur suit : le bord chauffe d'abord, le centre est chauffé par conduction.</li>
+      <li><b>Totale</b> : pour une face pleine de rayon R sous une pression p, la puissance croît comme R³ : doubler le diamètre multiplie la puissance par huit, et l'effort par quatre. C'est ce qui limite la section soudable par une machine.</li>
+      <li><b>Température</b> : le métal reste sous sa température de fusion, dans le domaine où il se déforme plastiquement très facilement.</li>
+    </ul>
+  </div>
+
+  <div class="fx"><div class="row big"><span><span class="eps">P</span> = (2π/3)·<span class="mat">μ</span>·<span class="frc">p</span>·<span class="mat">ω</span>·<span class="mat">R</span>³</span></div><p class="cap">P puissance dissipée (W) ; μ coefficient de frottement (environ 0,1 une fois le métal plastifié dans le modèle) ; p pression de friction (Pa) ; ω vitesse angulaire (rad/s) ; R rayon de la face (m). Flux local : μ·p·ω·r ; flux moyen : P/(π·R²).</p></div>
+
+  <div class="lab" id="m1">
+    <p class="lab-h">Manipulation 1 : la puissance de friction</p>
+    <p class="lab-sub">Règle le diamètre de la barre, la vitesse de rotation et la pression de friction : la puissance, l'effort et la répartition de la chaleur sur la face s'affichent.<span class="predict">🔮 Prédis d'abord : en passant d'une barre de 60 à 120 mm, la puissance double-t-elle ?</span></p>
+    <div class="btns" id="m1b">
+      <button class="btn on" data-d="60" data-n="1500" data-p="70" type="button">Barre de 60 mm</button>
+      <button class="btn" data-d="120" data-n="1500" data-p="70" type="button">Barre de 120 mm</button>
+      <button class="btn" data-d="20" data-n="3000" data-p="100" type="button">Soupape de 20 mm</button>
+    </div>
+    <div class="ctrl"><label for="m1d">Diamètre <b class="mat">D</b></label><input type="range" id="m1d" min="10" max="150" step="5" value="60"><output id="m1do"></output></div>
+    <div class="ctrl"><label for="m1n">Rotation <b class="mat">n</b></label><input type="range" id="m1n" min="300" max="4000" step="100" value="1500"><output id="m1no"></output></div>
+    <div class="ctrl"><label for="m1p">Pression <b class="frc">p</b></label><input type="range" id="m1p" min="20" max="150" step="5" value="70"><output id="m1po"></output></div>
+    <svg id="m1svg" role="img" aria-label="Face de la barre colorée selon le flux de chaleur, du centre à la périphérie, et puissance selon le diamètre"></svg>
+    <div class="readout" id="m1r"></div>
+    <p class="status" id="m1msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> (modèle) : barre d'acier de 60 mm, 70 MPa, 1 500 tr/min (157 rad/s) : effort d'environ <span class="m">70 × 2 827 mm² ≈ 198 kN</span>, soit 20 t ; <span class="m">P = 2,09 × 0,1 × 70·10<sup>6</sup> × 157 × 0,03³ ≈ 62 kW</span>, environ 2 200 W/cm² en moyenne, 3 300 W/cm² au bord. À 120 mm, avec la même pression et la même rotation : 80 t d'effort et près de 500 kW. Les grosses sections demandent des machines énormes, ou des vitesses plus basses.</p>
+
+  <div class="warn"><b>⚠️ Piège : croire que la friction fait fondre l'interface.</b> L'interface ne fond pas : la chaleur ramollit le métal, qui s'écoule et chasse les oxydes dans le bourrelet. C'est pourquoi on n'y trouve ni retassure, ni soufflure, ni fissure de solidification, et pourquoi des métaux incompatibles en fusion peuvent s'y lier.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « tourner, chauffer, pousser, forger »</b>.</div>
+  <div class="weld"><b>🔥 Les pièces types :</b> arbres et axes, soupapes bimétalliques (tête en acier réfractaire, tige en acier trempant), arbres de transmission, tiges de vérin, raccords tube-bride, pièces de forage. Une condition : au moins une des pièces doit pouvoir tourner, et les sections doivent être voisines.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : d'où vient le R³</summary>
+    <p>Un anneau de rayon r et de largeur dr reçoit l'effort p·2πr·dr et glisse à la vitesse ω·r : il dissipe μ·p·ω·2π·r²·dr. En intégrant de 0 à R, on obtient (2π/3)·μ·p·ω·R³. Les sept huitièmes de la puissance sont dissipés dans la moitié extérieure du rayon : le centre s'échauffe surtout par conduction, d'où un temps de friction suffisant pour que toute la face soit plastifiée.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Frottement sous effort, sans fusion : soudage à l'état solide.</li>
+      <li>Chaleur maximale à la périphérie ; P ∝ R³.</li>
+      <li>Le bourrelet chasse oxydes et impuretés.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c2">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">2</div>
+    <div class="c-title"><h2>Le cycle : pilotée ou inertielle</h2><p>Accostage, friction, forge ; moteur ou volant</p></div>
+    <div class="c-img"><span class="ico">🎡</span><span><small>Image à retenir</small>La toupie lancée : en friction inertielle, un volant lancé à pleine vitesse rend toute son énergie à la soudure en ralentissant, et la soudure est finie quand il s'arrête</span></div>
+  </div>
+
+  <p>Un cycle de friction rotative enchaîne trois phases. À l'<b>accostage</b>, les pièces entrent en contact en tournant : frottement sec, oxydes brisés, couple maximal pour le moteur. Pendant la <b>friction</b>, le métal plastifié s'écoule vers le bourrelet, le couple baisse, la température s'équilibre, et les pièces raccourcissent régulièrement. Au <b>forgeage</b>, la rotation s'arrête et l'effort augmente : les faces chaudes se soudent, et le raccourcissement final s'ajoute. Deux familles de machines conduisent ce cycle différemment.</p>
+
+  <div class="def"><b>📖 Pilotée ou inertielle.</b>
+    <ul>
+      <li><b>Pilotée</b>, à entraînement direct (421) : un moteur maintient la vitesse pendant la friction ; un frein arrête la rotation ; effort de friction puis effort de forge. Paramètres : vitesse, pressions et temps d'accostage, de friction et de forge, ou raccourcissement de friction comme critère d'arrêt.</li>
+      <li><b>Inertielle</b> (422) : un volant est lancé à une vitesse donnée, puis découplé du moteur ; son énergie cinétique, <span class="m">E = ½·I·ω²</span>, est dissipée par la friction jusqu'à l'arrêt. Paramètres : inertie du volant, vitesse initiale, effort. Cycle très court et reproductible.</li>
+      <li><b>Raccourcissement</b> (consommation de matière) : grandeur clé, mesurée à chaque soudure ; trop faible, les oxydes ne sont pas chassés.</li>
+    </ul>
+  </div>
+
+  <div class="fx"><div class="row big"><span>Δ<span class="eps">L</span> = Δ<span class="eps">L</span><sub>friction</sub> + Δ<span class="eps">L</span><sub>forge</sub></span></div><p class="cap">Modèle du cours, friction pilotée : ΔL<sub>friction</sub> ≈ 0,8 mm/s × (t<sub>f</sub> − 1,5 s), le premier 1,5 s servant à chauffer ; ΔL<sub>forge</sub> ≈ 2 mm × √(F<sub>forge</sub>/F<sub>friction</sub>). On vise au moins 2 mm de raccourcissement de friction pour chasser les oxydes.</p></div>
+
+  <div class="lab" id="m2">
+    <p class="lab-h">Manipulation 2 : le cycle de friction rotative</p>
+    <p class="lab-sub">Choisis la machine, règle le temps de friction et le rapport des efforts, puis fais défiler le cycle : vitesse, effort, couple et raccourcissement s'enregistrent.<span class="predict">🔮 Prédis d'abord : en friction pilotée, que se passe-t-il si l'on arrête la friction après 2 s ?</span></p>
+    <div class="btns" id="m2b">
+      <button class="btn on" data-m="pilotee" type="button">Friction pilotée (421)</button>
+      <button class="btn" data-m="inertielle" type="button">Friction inertielle (422)</button>
+    </div>
+    <div class="btns" id="m2pl">
+      <button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button>
+      <button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button>
+      <button class="btn play" data-a="play" type="button">▶ Souder</button>
+      <button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button>
+    </div>
+    <div class="ctrl"><label for="m2t">Temps de friction <b class="mat">t<sub>f</sub></b></label><input type="range" id="m2t" min="1" max="12" step="0.5" value="5"><output id="m2to"></output></div>
+    <div class="ctrl"><label for="m2f">Rapport forge/friction <b class="frc">F<sub>g</sub>/F<sub>f</sub></b></label><input type="range" id="m2f" min="1" max="3" step="0.1" value="2.5"><output id="m2fo"></output></div>
+    <svg id="m2svg" role="img" aria-label="Enregistrement du cycle : vitesse de rotation, effort, couple et raccourcissement en fonction du temps, et pièces avec leur bourrelet"></svg>
+    <div class="readout" id="m2r"></div>
+    <p class="status" id="m2msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> (modèle, friction pilotée) : 5 s de friction et une forge à 2,5 fois l'effort de friction donnent <span class="m">0,8 × 3,5 = 2,8 mm</span> en friction et <span class="m">2 × √2,5 ≈ 3,2 mm</span> en forge, soit environ <b>6 mm</b> de raccourcissement total. Avec 2 s seulement, 0,4 mm de friction : les oxydes restent à l'interface, la liaison est douteuse même si le bourrelet semble correct.</p>
+
+  <div class="warn"><b>⚠️ Piège : juger la soudure au bourrelet.</b> Un bourrelet régulier ne prouve pas la qualité : les défauts de friction (faces oxydées ou grasses, pression ou raccourcissement insuffisants) ne se voient pas et ne se détectent guère après coup. La qualité se garantit par la préparation des faces et par l'enregistrement de chaque cycle.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « pilotée, le moteur tient ; inertielle, le volant rend »</b>.</div>
+  <div class="weld"><b>🔥 Ordres de grandeur :</b> pour une barre d'acier de 60 mm, environ 20 t d'effort de friction et 50 t de forge, jusqu'à 1 500 tr/min ; un cycle dure quelques secondes à quelques dizaines de secondes. Le bourrelet est souvent retiré à chaud, sur la machine.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : choisir l'énergie d'un volant</summary>
+    <p>En friction inertielle, toute l'énergie du volant finit dans la soudure : on la règle par la vitesse initiale, puisque E croît comme ω², et par l'inertie, qu'on change en ajoutant ou retirant des disques. Une vitesse plus haute donne un cycle plus chaud et plus long, avec une zone affectée plus large ; un effort plus fort donne un cycle plus court. Le procédé est apprécié pour les pièces aéronautiques et les couples de métaux délicats, grâce à sa reproductibilité.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Accostage, friction, forge ; le raccourcissement est la grandeur clé.</li>
+      <li>Pilotée : moteur, frein, deux efforts ; inertielle : volant, E = ½·I·ω².</li>
+      <li>Qualité : faces propres et cycle enregistré, pas l'aspect du bourrelet.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c3">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">3</div>
+    <div class="c-title"><h2>Le joint de friction</h2><p>Grains fins, bourrelet, couples hétérogènes</p></div>
+    <div class="c-img"><span class="ico">🥐</span><span><small>Image à retenir</small>Le feuilletage : les fibres du métal, d'abord alignées le long de la barre, se couchent vers l'extérieur près du plan de joint et s'enroulent dans le bourrelet</span></div>
+  </div>
+
+  <p>Le joint de friction ne ressemble à aucun joint de fusion. Au centre, une zone très mince, fortement déformée à chaud, a recristallisé en <b>grains souvent plus fins que le métal de base</b>. De part et d'autre, les fibres de laminage passent progressivement de la direction de la barre à une direction radiale, et s'enroulent dans le bourrelet. La zone affectée est étroite, le cycle thermique court, et la liaison se fait entre surfaces propres : les caractéristiques du joint égalent souvent celles du métal de base, y compris en fatigue.</p>
+
+  <div class="def"><b>📖 Soudabilité par friction.</b>
+    <ul>
+      <li><b>Bien soudables</b> : presque tous les aciers, y compris des aciers de mécanique trempants (cycle thermique favorable), les inox, les alliages légers, le titane.</li>
+      <li><b>Difficiles</b> : les matériaux qui frottent mal (fontes, où le graphite lubrifie ; bronzes au plomb) ; les aciers resulfurés ou au plomb, dont les inclusions s'étalent en plans de faiblesse dans la zone radiale ; les faces oxydées ou souillées.</li>
+      <li><b>Hétérogènes</b> : aluminium-cuivre, aluminium-acier, aluminium-titane, cuivre-acier… La couche de composés intermétalliques fragiles reste très mince, car il n'y a ni fusion ni long maintien à chaud. Ces couples sont impossibles ou très difficiles en fusion.</li>
+      <li><b>Essais de qualification</b> (ISO 15620) : macrographie, micrographie, dureté, pliage, souvent avec le bourrelet ; le procédé étant automatique, ce sont les opérateurs et le mode opératoire qui se qualifient, pas un soudeur.</li>
+    </ul>
+  </div>
+
+  <div class="fx"><div class="row big"><span>liaison = faces propres + plastification + forge</span></div><p class="cap">Les trois conditions de la liaison à l'état solide : des faces débarrassées de leurs oxydes (chassés dans le bourrelet), un métal assez chaud pour s'écouler, et un effort de forge qui met les surfaces en contact intime. Il n'y a pas de dilution : chaque métal garde sa composition jusqu'à l'interface.</p></div>
+
+  <div class="lab" id="m3">
+    <p class="lab-h">Manipulation 3 : quels couples de métaux ?</p>
+    <p class="lab-sub">Choisis les deux métaux à assembler : leur soudabilité par friction se compare à celle des procédés par fusion.<span class="predict">🔮 Prédis d'abord : l'aluminium sur l'acier se soude-t-il mieux par friction ou à l'arc ?</span></p>
+    <div class="btns" id="m3a">
+      <button class="btn on" data-k="acier" type="button">Acier</button>
+      <button class="btn" data-k="inox" type="button">Inox</button>
+      <button class="btn" data-k="alu" type="button">Aluminium</button>
+      <button class="btn" data-k="cuivre" type="button">Cuivre</button>
+      <button class="btn" data-k="titane" type="button">Titane</button>
+      <button class="btn" data-k="fonte" type="button">Fonte</button>
+    </div>
+    <div class="btns" id="m3b">
+      <button class="btn" data-k="acier" type="button">Acier</button>
+      <button class="btn" data-k="inox" type="button">Inox</button>
+      <button class="btn on" data-k="alu" type="button">Aluminium</button>
+      <button class="btn" data-k="cuivre" type="button">Cuivre</button>
+      <button class="btn" data-k="titane" type="button">Titane</button>
+      <button class="btn" data-k="fonte" type="button">Fonte</button>
+    </div>
+    <svg id="m3svg" role="img" aria-label="Deux barres de métaux différents soudées par friction, avec le bourrelet, et la soudabilité du couple par friction et par fusion"></svg>
+    <div class="readout" id="m3r"></div>
+    <p class="status" id="m3msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> : une pièce de transition aluminium-acier, pour souder ensuite chaque côté à son propre métal, se réalise par friction rotative : la couche intermétallique Fe-Al reste mince et la liaison résiste. À l'arc, les deux métaux fondus formeraient des composés intermétalliques massifs et fragiles. À l'inverse, une fonte grise frotte mal sur l'acier : le graphite lubrifie l'interface, la chaleur ne monte pas et la liaison est médiocre.</p>
+
+  <div class="warn"><b>⚠️ Piège : les aciers de décolletage.</b> Les aciers resulfurés ou au plomb, choisis pour leur usinabilité, contiennent des inclusions que la friction étale radialement près du plan de joint : elles deviennent des plans de faiblesse, invisibles et non détectables après soudage. Vérifier la nuance avant d'accepter une pièce en friction.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « ce qui glisse ne soude pas »</b> : fontes, bronzes au plomb, faces grasses.</div>
+  <div class="weld"><b>🔥 Les soupapes bimétalliques :</b> une tête en acier réfractaire résistant à la chaleur, une tige en acier de construction trempable, soudées par friction en quelques secondes, à des millions d'exemplaires. Le joint n'a ni porosité ni dilution, et la machine enregistre chaque cycle.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : pourquoi les grains sont fins</summary>
+    <p>Le métal de la zone centrale subit une très forte déformation plastique à haute température : il recristallise dynamiquement en grains très fins pendant le frottement. Le refroidissement est rapide, car la zone chaude est mince et adossée à de gros volumes froids. Sur les aciers trempants, cela peut durcir le joint : on contrôle la dureté et, si besoin, on prévoit un revenu après soudage.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Pas de fusion ni de dilution ; ZAT étroite, grains fins.</li>
+      <li>Hétérogènes possibles : Al-Cu, Al-acier, Al-Ti.</li>
+      <li>À éviter : fontes, aciers au soufre ou au plomb, faces sales.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c4">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">4</div>
+    <div class="c-title"><h2>La friction-malaxage</h2><p>Outil, côtés avançant et reculant, fenêtre de réglage</p></div>
+    <div class="c-img"><span class="ico">🥄</span><span><small>Image à retenir</small>La cuillère dans le miel figé : un outil qui tourne en avançant réchauffe la matière, la fait tourner autour de lui et la dépose derrière, mêlée des deux bords</span></div>
+  </div>
+
+  <p>En friction-malaxage (FSW, 43), née au début des années 1990, ce ne sont plus les pièces qui frottent : un <b>outil</b> tournant, fait d'un <b>épaulement</b> et d'un <b>pion</b> fileté, plonge dans le plan de joint de deux tôles bridées bord à bord, puis avance le long du joint. L'épaulement frotte sur la surface et chauffe ; le pion entraîne le métal pâteux autour de lui, de l'avant vers l'arrière, et le dépose derrière, malaxé, où il se lie à l'état solide. Pas de métal d'apport, pas de gaz : seul l'outil s'use, lentement.</p>
+
+  <div class="def"><b>📖 L'outil, les côtés et les zones.</b>
+    <ul>
+      <li><b>Côté avançant</b> : la vitesse de rotation de l'outil et sa vitesse d'avance s'ajoutent ; le métal y est le plus cisaillé, et c'est là que naissent les défauts. <b>Côté reculant</b> : elles se retranchent. Le joint est donc dissymétrique.</li>
+      <li><b>Zones</b> : le <b>noyau</b> malaxé, recristallisé à grains fins, souvent en « oignon » ; la <b>ZATM</b>, déformée et chauffée sans recristalliser ; la <b>ZAT</b>, seulement chauffée, où les alliages durcis par précipitation s'adoucissent.</li>
+      <li><b>Paramètres</b> : vitesse de rotation, vitesse d'avance, effort axial, inclinaison de l'outil (1 à 3°), longueur du pion par rapport à l'épaisseur.</li>
+      <li><b>Défauts</b> : tunnel ou cavité côté avançant (trop froid : avance trop rapide pour la rotation) ; manque de pénétration à la racine et liaison faible (« kissing bond ») si le pion est court ; bavures et adoucissement excessif si c'est trop chaud.</li>
+    </ul>
+  </div>
+
+  <div class="fx"><div class="row big"><span>pas d'avance = <span class="mat">v</span> / <span class="mat">n</span></span></div><p class="cap">v vitesse d'avance (mm/min) ; n vitesse de rotation (tr/min) ; le pas, en mm par tour, mesure combien l'outil avance à chaque tour : grand pas, soudure « froide » ; petit pas, soudure « chaude ». Un indice de chaleur courant est n²/v. Modèle du cours, alliage 6082 de 5 mm : soudure saine pour un pas de 0,08 à 0,6 mm/tr, entre 350 et 2 200 tr/min.</p></div>
+
+  <div class="lab" id="m4">
+    <p class="lab-h">Manipulation 4 : la fenêtre de friction-malaxage</p>
+    <p class="lab-sub">Aluminium 6082 de 5 mm, outil à épaulement de 15 mm : règle la rotation et l'avance. Le point se place dans la fenêtre, et la coupe montre le joint.<span class="predict">🔮 Prédis d'abord : en doublant la vitesse d'avance sans toucher à la rotation, où apparaît le défaut ?</span></p>
+    <div class="btns" id="m4b">
+      <button class="btn on" data-n="1000" data-v="400" type="button">1 000 tr/min, 400 mm/min</button>
+      <button class="btn" data-n="1000" data-v="800" type="button">Avance doublée</button>
+      <button class="btn" data-n="2400" data-v="300" type="button">Trop chaud</button>
+    </div>
+    <div class="ctrl"><label for="m4n">Rotation <b class="mat">n</b></label><input type="range" id="m4n" min="200" max="2600" step="50" value="1000"><output id="m4no"></output></div>
+    <div class="ctrl"><label for="m4v">Avance <b class="mat">v</b></label><input type="range" id="m4v" min="50" max="1500" step="25" value="400"><output id="m4vo"></output></div>
+    <svg id="m4svg" role="img" aria-label="Fenêtre de réglage rotation-avance, outil vu de dessus avec les côtés avançant et reculant, et coupe du joint avec ses zones et ses défauts"></svg>
+    <div class="readout" id="m4r"></div>
+    <p class="status" id="m4msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> (modèle) : 1 000 tr/min et 400 mm/min donnent un pas de 0,4 mm/tr : soudure saine. À 800 mm/min sans toucher à la rotation, le pas passe à 0,8 mm/tr : le métal n'a plus le temps d'être assez chauffé et malaxé, un <b>tunnel</b> s'ouvre côté avançant, à mi-épaisseur. En montant la rotation à 1 500 tr/min, le pas revient à 0,53 mm/tr : le joint redevient sain, à la vitesse doublée.</p>
+
+  <div class="warn"><b>⚠️ Piège : chercher le défaut au milieu du cordon.</b> Le tunnel du FSW se forme du côté avançant, sous la surface, et le manque de liaison à la racine se cache sous un endroit parfait. Le contrôle vise ces deux endroits : macrographies côté avançant, pliage envers, ultrasons ou radiographie selon l'épaisseur.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « avançant, là où ça casse »</b>.</div>
+  <div class="weld"><b>🔥 Bridage et effort :</b> l'outil appuie de plusieurs kilonewtons à plusieurs tonnes et tend à écarter les tôles : il faut un bridage rigide et un envers d'appui sous le joint. D'où des machines dédiées, des fraiseuses à commande numérique renforcées, ou des robots lourds à effort contrôlé.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : le FSW au-delà de l'aluminium</summary>
+    <p>L'aluminium, le magnésium et le cuivre, assez mous à chaud, se soudent avec des outils en acier à outils. Les aciers et le titane demandent des outils en céramique (nitrure de bore cubique polycristallin) ou en alliages réfractaires, chers et usés plus vite : le FSW de l'acier reste une niche. Le procédé soude aussi l'aluminium sur l'acier par transparence, la couche intermétallique restant mince.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Épaulement qui chauffe, pion qui malaxe ; pas de fusion, pas d'apport.</li>
+      <li>Côté avançant : vitesses additionnées, tunnel si trop froid.</li>
+      <li>Pas v/n : grand, froid ; petit, chaud.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c5">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">5</div>
+    <div class="c-title"><h2>Variantes et surveillance</h2><p>Friction linéaire, FSW par points, enveloppes, normes</p></div>
+    <div class="c-img"><span class="ico">📉</span><span><small>Image à retenir</small>Le couloir de l'autoroute : chaque soudure trace sa courbe ; tant qu'elle reste entre les glissières, la pièce passe ; dès qu'elle les touche, l'alarme arrête la ligne</span></div>
+  </div>
+
+  <p>La friction se décline selon le mouvement. En <b>friction linéaire</b> (424), une pièce oscille contre l'autre en va-et-vient, sous effort : les pièces n'ont plus besoin d'être de révolution, ce qui permet de souder des aubes sur un disque de turbine. En <b>friction orbitale</b> (426), une pièce décrit un petit cercle sans tourner sur elle-même. En <b>FSW par points</b> (431), l'outil plonge, tourne et se retire, sans avancer : il remplace des points de résistance ou des rivets sur l'aluminium. Toutes ces variantes ont un point commun précieux : elles sont automatiques et se surveillent cycle par cycle.</p>
+
+  <div class="def"><b>📖 Variantes et production.</b>
+    <ul>
+      <li><b>Friction linéaire</b> : fréquence de quelques dizaines de hertz, amplitude de 1 à 4 mm environ, forte pression de forge ; aubes de soufflantes et disques aubagés monoblocs en titane, pièces de section non circulaire.</li>
+      <li><b>FSW en production</b> : panneaux et profilés d'aluminium pour navires et voitures de trains, réservoirs de lanceurs en aluminium-lithium, bacs de batteries, flans raboutés d'épaisseurs différentes ; cordons de 1 à 75 mm d'épaisseur environ, à quelques centaines de mm/min.</li>
+      <li><b>Surveillance</b> : chaque cycle enregistre vitesse, pressions, couple, temps et raccourcissement ; des limites validées autour de la courbe de référence déclenchent une alarme et écartent la pièce présumée non conforme.</li>
+      <li><b>Normes</b> : ISO 15620 (friction des métaux : mode opératoire, qualification) ; ISO 25239, en cinq parties (FSW de l'aluminium : vocabulaire, conception, qualification des opérateurs, mode opératoire, exigences de qualité) ; ISO 17662 (vérification des machines).</li>
+    </ul>
+  </div>
+
+  <div class="fx"><div class="row big"><span>alarme si |<span class="eps">x</span> − <span class="eps">x</span><sub>réf</sub>| &gt; <span class="mat">tolérance</span></span></div><p class="cap">Pour chaque grandeur surveillée x (pression, raccourcissement…) : écart à la valeur de référence comparé à la tolérance. Une tolérance trop serrée déclenche des alarmes sur le bruit normal du procédé ; trop large, elle laisse passer les vrais défauts. On la règle entre les deux, à partir d'essais.</p></div>
+
+  <div class="lab" id="m5">
+    <p class="lab-h">Manipulation 5 : surveiller une série</p>
+    <p class="lab-sub">Douze soudures de friction rotative passent sur la ligne ; trois cachent un défaut. Règle les tolérances sur la pression de friction et le raccourcissement, puis fais défiler la série.<span class="predict">🔮 Prédis d'abord : avec une tolérance de ± 8 bar, la soudure à pression basse est-elle détectée ?</span></p>
+    <div class="btns" id="m5b">
+      <button class="btn on" data-p="4" data-l="1" type="button">Tolérances bien réglées</button>
+      <button class="btn" data-p="2" data-l="0.3" type="button">Trop serrées</button>
+      <button class="btn" data-p="8" data-l="3" type="button">Trop larges</button>
+    </div>
+    <div class="btns" id="m5pl">
+      <button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button>
+      <button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button>
+      <button class="btn play" data-a="play" type="button">▶ Lancer la série</button>
+      <button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button>
+    </div>
+    <div class="ctrl"><label for="m5p">Tolérance pression <b class="mat">± Δp</b></label><input type="range" id="m5p" min="1" max="10" step="0.5" value="4"><output id="m5po"></output></div>
+    <div class="ctrl"><label for="m5l">Tolérance raccourcissement <b class="mat">± ΔL</b></label><input type="range" id="m5l" min="0.2" max="4" step="0.1" value="1"><output id="m5lo"></output></div>
+    <svg id="m5svg" role="img" aria-label="Courbe de pression de la soudure en cours dans son enveloppe, et tableau des douze soudures avec alarmes et défauts"></svg>
+    <div class="readout" id="m5r"></div>
+    <p class="status" id="m5msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> (série du modèle) : le bruit normal du procédé atteint ± 2,4 bar sur la pression de friction (consigne 53 bar) et ± 0,35 mm sur le raccourcissement (6 mm). Avec ± 4 bar et ± 1 mm, les trois défauts sont arrêtés (pression basse de 7,5 bar, raccourcissement court de 2,6 mm, pression haute de 6,2 bar) et aucune pièce saine n'est rejetée. À ± 2 bar et ± 0,3 mm, trois pièces saines déclenchent aussi l'alarme ; à ± 8 bar et ± 3 mm, aucun défaut n'est vu.</p>
+
+  <div class="warn"><b>⚠️ Piège : élargir les tolérances pour faire taire les alarmes.</b> Une ligne qui s'arrête souvent agace la production, mais desserrer les limites sans comprendre l'origine des écarts revient à ne plus surveiller. On cherche la cause (usure, dérive hydraulique, matière), puis on revalide les limites par des essais.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « entre le bruit et le défaut »</b> : la tolérance se place au-dessus du bruit, en dessous des défauts.</div>
+  <div class="weld"><b>🔥 Le bilan de la friction :</b> joints sains, sans fumées ni projections, répétables, faciles à surveiller, y compris sur des métaux délicats ou hétérogènes ; en échange, des machines coûteuses et dédiées, des pièces à concevoir pour le procédé et un fort bridage. Du très grand volume à bas coût à la pièce unique de haute qualité.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : la friction linéaire des aubes</summary>
+    <p>Une aube de soufflante en titane est pressée contre un moignon usiné sur le disque et animée d'un va-et-vient rapide ; la chaleur de frottement plastifie l'interface, le métal chassé forme un bourrelet sur les quatre côtés, puis le mouvement s'arrête net, aube alignée, et la forge termine la liaison. On obtient un disque aubagé monobloc, plus léger qu'un disque à aubes rapportées, avec des joints qui gardent les propriétés du titane.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Linéaire (424) : pièces non circulaires, aubes en titane.</li>
+      <li>FSW par points (431) : remplace résistance et rivets sur l'aluminium.</li>
+      <li>Surveillance : enveloppes entre bruit et défaut ; ISO 15620, 25239.</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="exos">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✎</div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Deux exercices : régler la friction rotative d'un arbre, puis souder un panneau d'aluminium en friction-malaxage</p></div>
+    <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de musculation : on ne progresse qu'en soulevant soi-même</span></div>
+  </div>
+  <p>Cherche chaque question sur papier avant d'ouvrir la correction : écris la relation, puis les valeurs (kW, t, mm, tr/min, mm/min). Le premier exercice se vérifie dans les manipulations 1 à 3 ; le second se rejoue dans les manipulations 4 et 5.</p>
+
+  <div class="exo">
+    <h4>Exercice 1 : un arbre soudé par friction <span class="lvtag">★ application · chapitres 1 à 3</span></h4>
+    <p>Un arbre d'acier de 90 mm de diamètre est soudé par friction rotative pilotée sur une fourche de même section. Modèles du cours (μ = 0,1).</p>
+    <p class="q"><b>a)</b> À 70 MPa et 1 000 tr/min, quels effort et puissance de friction ?</p>
+    <p class="q"><b>b)</b> La même machine soude des barres de 60 mm à 1 500 tr/min. Pourquoi la puissance demandée par l'arbre est-elle plus du double ?</p>
+    <p class="q"><b>c)</b> Avec 4 s de friction et une forge à deux fois l'effort de friction, quels raccourcissements ? Et avec 3 s de friction ?</p>
+    <p class="q"><b>d)</b> Le bureau d'études propose un acier de décolletage au plomb pour la fourche. Avis ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> Section <span class="m">π × 45² ≈ 6 362 mm²</span> ; effort <span class="m">70 × 6 362 ≈ 445 kN</span>, soit environ <b>45 t</b>. <span class="m">ω = 1 000 × 2π/60 ≈ 104,7 rad/s</span> ; <span class="m">P = 2,09 × 0,1 × 70·10<sup>6</sup> × 104,7 × 0,045³ ≈ 140 kW</span>.</p>
+      <p><b>b)</b> Pour 60 mm à 1 500 tr/min : environ 62 kW. La puissance croît comme R³ : <span class="m">(90/60)³ ≈ 3,4</span>, atténué par la rotation plus lente (× 2/3) : rapport d'environ 2,25. Les grosses sections réclament des machines plus puissantes et plus rigides.</p>
+      <p><b>c)</b> <span class="m">ΔL<sub>friction</sub> = 0,8 × (4 − 1,5) = 2,0 mm</span>, juste au seuil ; <span class="m">ΔL<sub>forge</sub> = 2 × √2 ≈ 2,8 mm</span> ; total ≈ <b>4,8 mm</b>. Avec 3 s : 1,2 mm en friction, sous le seuil de 2 mm : oxydes mal chassés, liaison douteuse.</p>
+      <p><b>d)</b> À refuser : les inclusions de plomb (et de soufre) s'étalent radialement près du plan de joint en plans de faiblesse, indétectables après soudage. Choisir une nuance non resulfurée.</p>
+    </div></details>
+  </div>
+
+  <div class="exo defi">
+    <h4>Exercice 2 : un panneau en friction-malaxage <span class="lvtag">★★ synthèse · chapitres 4 et 5 · manipulations 4 et 5</span></h4>
+    <p>Des profilés d'aluminium 6082 de 5 mm sont raboutés en friction-malaxage. Fenêtre du modèle : pas d'avance de 0,08 à 0,6 mm/tr, rotation de 350 à 2 200 tr/min.</p>
+    <p class="q"><b>a)</b> Réglage initial : 800 tr/min, 300 mm/min. Pas d'avance, indice n²/v, état du joint ?</p>
+    <p class="q"><b>b)</b> La production veut 600 mm/min. Que se passe-t-il à 800 tr/min, où, et comment corriger ?</p>
+    <p class="q"><b>c)</b> Où faut-il chercher les défauts sur les coupes de qualification ?</p>
+    <p class="q"><b>d)</b> La ligne de friction rotative voisine a un bruit de ± 2,4 bar sur la pression et de ± 0,35 mm sur le raccourcissement. Quelles tolérances de surveillance proposer ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">p = 300/800 ≈ 0,38 mm/tr</span> ; <span class="m">n²/v = 640 000/300 ≈ 2 130</span> ; dans la fenêtre : <b>joint sain</b>.</p>
+      <p><b>b)</b> <span class="m">p = 600/800 = 0,75 mm/tr</span> &gt; 0,6 : trop froid, <b>tunnel côté avançant</b>, sous la surface. Monter la rotation : à 1 200 tr/min, <span class="m">p = 0,5 mm/tr</span>, joint sain à la vitesse voulue (n²/v = 2 400).</p>
+      <p><b>c)</b> Côté avançant, à mi-épaisseur (tunnel), et à la racine (manque de pénétration, liaison faible) : macrographies transversales, pliage envers, et contrôle volumique selon l'épaisseur.</p>
+      <p><b>d)</b> Au-dessus du bruit et sous les défauts à détecter : par exemple <b>± 4 bar</b> et <b>± 1 mm</b>. Plus serré, des pièces saines déclenchent l'alarme ; plus large, une chute de pression de 7 bar ou un raccourcissement court de 2,6 mm passeraient inaperçus.</p>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="quiz-s">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">?</div>
+    <div class="c-title"><h2>Quiz : 12 questions éclair</h2><p>Chaque réponse est expliquée, même quand tu as juste</p></div>
+    <div class="c-img"><span class="ico">🎯</span><span><small>Image à retenir</small>La cible : vise 10 sur 12 avant le cours 4</span></div>
+  </div>
+  <div id="quiz"></div>
+  <div class="score" id="qzScore" aria-live="polite">Score : 0 / 12</div>
+  <div class="btns"><button class="btn" id="qzReset" type="button">↺ Recommencer le quiz</button></div>
+</div>
+</section>
+
+<section class="chap" id="fiche">
+<div class="wrap wide">
+  <div class="cartouche">
+    <div class="c-num">★</div>
+    <div class="c-title"><h2>Fiche mémoire du cours 3</h2><p>Neuf cases, neuf images : à photographier, puis à redessiner de tête</p></div>
+    <div class="c-img"><span class="ico">🔥</span><span><small>Image à retenir</small>Les mains frottées en hiver : le frottement chauffe sans flamme ; serré fort, le métal devient pâte, puis on le forge et il ne fait plus qu'un</span></div>
+  </div>
+  <div class="fiche">
+    <div><div class="ic">🤲</div><h4>État solide</h4><div class="f">frotter · plastifier · forger</div><p>Pas de fusion, pas d'apport, pas de gaz : ni porosités ni fissuration à chaud.</p></div>
+    <div><div class="ic">⭕</div><h4>Puissance</h4><div class="f">P = (2π/3)·μ·p·ω·R³</div><p>Chaleur maximale au bord ; Ø 60 mm, 70 MPa, 1 500 tr/min : ≈ 20 t, 62 kW.</p></div>
+    <div><div class="ic">⏱️</div><h4>Le cycle</h4><div class="f">accostage · friction · forge</div><p>Raccourcissement de friction suffisant pour chasser les oxydes dans le bourrelet.</p></div>
+    <div><div class="ic">🎡</div><h4>Deux machines</h4><div class="f">421 pilotée · 422 inertielle</div><p>Moteur et frein, deux efforts ; ou volant lancé, E = ½·I·ω².</p></div>
+    <div><div class="ic">🥐</div><h4>Le joint</h4><div class="f">grains fins · fibres radiales</div><p>ZAT étroite, propriétés proches du métal de base ; qualification ISO 15620.</p></div>
+    <div><div class="ic">🔗</div><h4>Couples</h4><div class="f">Al-Cu · Al-acier · Al-Ti</div><p>Hétérogènes possibles ; à éviter : fontes, aciers au plomb ou au soufre.</p></div>
+    <div><div class="ic">🥄</div><h4>FSW (43)</h4><div class="f">épaulement · pion · noyau · ZATM · ZAT</div><p>Côté avançant : vitesses additionnées, défauts ; ISO 25239.</p></div>
+    <div><div class="ic">🎚️</div><h4>Fenêtre FSW</h4><div class="f">pas = v/n</div><p>Grand pas : froid, tunnel ; petit pas ou rotation excessive : chaud, bavures.</p></div>
+    <div><div class="ic">📉</div><h4>Variantes, surveillance</h4><div class="f">424 linéaire · 431 points</div><p>Aubes en titane ; tolérances entre le bruit et le défaut.</p></div>
+  </div>
+  <div class="btns"><button class="btn" id="printFiche" type="button">🖨 Imprimer la fiche mémoire</button></div>
+  <div class="fun"><span class="fun-h">📄 Fun fact : un brevet partagé</span>Le brevet de base de la friction-malaxage a été déposé au Royaume-Uni en décembre 1991 par le TWI, où Wayne Thomas et son équipe l'avaient inventée ; il a été délivré en Europe sous le numéro EP 0 615 480. Plutôt que de le garder, le TWI l'a concédé en licences non exclusives : 67 organismes en 2002, 172 en 2007, qui ont eux-mêmes déposé des centaines de brevets de perfectionnement. C'est en partie ce qui explique la diffusion rapide du procédé (<a href="#c4">chapitre 4</a>). (Sources : TWI, « Friction stir welding – invention, innovations and industrialisation », 2002 ; TWI, « Friction stir welding patents: a stirring story ».)</div>
+</div>
+</section>
+
+<section class="chap" id="gloss">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">A–Z</div>
+    <div class="c-title"><h2>Glossaire</h2><p>Les mots, symboles et sigles de ce cours</p></div>
+    <div class="c-img"><span class="ico">📖</span><span><small>Image à retenir</small>Le dictionnaire : un mot flou, un clic</span></div>
+  </div>
+  <dl class="gloss">
+    <dt>Accostage</dt><dd>Mise en contact des pièces en rotation, au début du cycle de friction.</dd>
+    <dt>Bourrelet</dt><dd>Collerette de métal chassé de l'interface pendant la friction et la forge, qui emporte oxydes et impuretés.</dd>
+    <dt>Côté avançant</dt><dd>En FSW, côté du joint où vitesse de rotation de l'outil et vitesse d'avance s'ajoutent.</dd>
+    <dt>Côté reculant</dt><dd>En FSW, côté où ces vitesses se retranchent.</dd>
+    <dt>Épaulement</dt><dd>Partie large de l'outil de FSW, qui frotte sur la surface et produit l'essentiel de la chaleur.</dd>
+    <dt>Forge</dt><dd>Phase finale où l'effort augmente, rotation arrêtée, pour lier les faces chaudes.</dd>
+    <dt>Friction inertielle</dt><dd>Friction rotative alimentée par l'énergie d'un volant lancé (422).</dd>
+    <dt>Friction linéaire</dt><dd>Friction par va-et-vient d'une pièce contre l'autre (424).</dd>
+    <dt>Friction pilotée</dt><dd>Friction rotative à vitesse maintenue par un moteur, puis freinée (421).</dd>
+    <dt>FSW</dt><dd>Soudage par friction-malaxage (43) : un outil tournant malaxe le joint à l'état solide.</dd>
+    <dt>Noyau</dt><dd>Zone centrale malaxée et recristallisée d'un joint FSW.</dd>
+    <dt>Pas d'avance</dt><dd>Avance de l'outil par tour (v/n, mm/tr) ; il règle la chaleur apportée en FSW.</dd>
+    <dt>Pion</dt><dd>Partie centrale, souvent filetée, de l'outil de FSW, qui plonge dans le joint et entraîne le métal.</dd>
+    <dt>Raccourcissement</dt><dd>Diminution de longueur des pièces pendant la friction et la forge ; consommation de matière.</dd>
+    <dt>Tunnel</dt><dd>Cavité allongée côté avançant d'un joint FSW soudé trop froid.</dd>
+    <dt>ZATM</dt><dd>Zone affectée thermomécaniquement : chauffée et déformée, sans recristalliser.</dd>
+  </dl>
+</div>
+</section>
+
+<section class="chap" id="check">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✓</div>
+    <div class="c-title"><h2>Suis-je prêt pour la suite ?</h2><p>Dix points à cocher de tête</p></div>
+    <div class="c-img"><span class="ico">🚦</span><span><small>Image à retenir</small>Le feu passe au vert quand tout est coché</span></div>
+  </div>
+  <p>Coche seulement ce que tu sais faire <b>sans regarder</b>. Tes coches restent enregistrées dans ce navigateur.</p>
+  <div class="check" id="checklist">
+    <label><input type="checkbox" data-c="1"> <span>Je sais expliquer comment le frottement chauffe et pourquoi la soudure se fait à l'état solide.</span></label>
+    <label><input type="checkbox" data-c="2"> <span>Je sais pourquoi la chaleur est maximale à la périphérie en friction rotative et ce qui limite la section soudable.</span></label>
+    <label><input type="checkbox" data-c="3"> <span>Je sais décrire le cycle accostage, friction, forge, et le rôle du raccourcissement et du bourrelet.</span></label>
+    <label><input type="checkbox" data-c="4"> <span>Je sais distinguer friction pilotée (421) et inertielle (422).</span></label>
+    <label><input type="checkbox" data-c="5"> <span>Je sais décrire le joint de friction et les matériaux à éviter (fontes, aciers au soufre ou au plomb, faces oxydées).</span></label>
+    <label><input type="checkbox" data-c="6"> <span>Je sais citer des couples hétérogènes soudables par friction et impossibles en fusion.</span></label>
+    <label><input type="checkbox" data-c="7"> <span>Je sais décrire le FSW : épaulement, pion, côtés avançant et reculant, noyau, ZATM, ZAT.</span></label>
+    <label><input type="checkbox" data-c="8"> <span>Je sais relier vitesse de rotation et d'avance aux défauts du FSW (tunnel, bavures).</span></label>
+    <label><input type="checkbox" data-c="9"> <span>Je sais décrire la friction linéaire et le FSW par points, et leurs applications.</span></label>
+    <label><input type="checkbox" data-c="10"> <span>Je sais expliquer la surveillance par enveloppes et citer les normes ISO 15620 et ISO 25239.</span></label>
+  </div>
+  <p class="status" id="checkMsg"></p>
+
+  <div class="meta">🔭 <b>Au prochain épisode, cours 4 : goujons et autres procédés.</b> Soudage des goujons, électroslag et électrogaz, ultrasons, explosion, diffusion et aluminothermie.</div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="wrap">
+  <p>Cours 3 de la série « Procédés avancés et automatisation » (sujet 1.12.2 du planning et du référentiel de l'IIW, soudage par friction). Vocabulaire aligné sur l'ISO 4063, l'ISO 15620, l'ISO 25239 et le référentiel de l'IIW ; pour les notations et les conventions, l'enseignement de ta formation fait foi.</p>
+</div>
+</footer>
+<script>
+(function(){
+"use strict";
+const NS="http://www.w3.org/2000/svg";
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const RM=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function el(tag,attrs,parent){
+  const e=document.createElementNS(NS,tag);
+  if(attrs){for(const k in attrs){const v=attrs[k];if(v===undefined||v===null)continue;
+    if(typeof v==="string"&&v.indexOf("var(")>=0&&k!=="style")e.style.setProperty(k,v);else e.setAttribute(k,v);}}
+  if(parent)parent.appendChild(e);
+  return e;
+}
+function tx(p,x,y,str,attrs){const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);t.textContent=str;return t;}
+function txs(p,x,y,parts,attrs){/* parts: [["σ",""],["max","sub"],[" = 3",""]] */
+  const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);
+  parts.forEach(pt=>{const s=el("tspan",pt[1]==="sub"?{"font-size":"0.72em",dy:"3"}:(pt[2]?{dy:pt[2]}:{}),t);s.textContent=pt[0];
+    if(pt[1]==="sub"){const r=el("tspan",{dy:"-3"},t);r.textContent="\u200b";}});
+  return t;
+}
+function clear(svg){while(svg.firstChild)svg.removeChild(svg.firstChild);}
+function fitText(t,x0,x1,gap){/* garde un texte SVG entre x0 et x1 : il passe de l'autre côté de son repère (écart gap), sinon il glisse */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const a=t.getAttribute("text-anchor")||"start",x=+t.getAttribute("x");
+  if(gap&&a!=="middle"&&(b.x<x0||b.x+b.width>x1)){t.setAttribute("text-anchor",a==="end"?"start":"end");t.setAttribute("x",a==="end"?x+2*gap:x-2*gap);b=t.getBBox();}
+  const nx=+t.getAttribute("x");
+  if(b.x+b.width>x1)t.setAttribute("x",nx-(b.x+b.width-x1));else if(b.x<x0)t.setAttribute("x",nx+(x0-b.x));
+  return t;}
+function arrow(p,x1,y1,x2,y2,color,w,h){
+  w=w||2.4;h=h||10;
+  const g=el("g",{class:"arr"},p);g.style.color=color||"var(--ink)";
+  const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy);
+  if(L<1)return g;
+  const ux=dx/L,uy=dy/L,hh=Math.min(h,L*0.6),bx=x2-ux*hh,by=y2-uy*hh,hw=hh*0.45+w*0.3;
+  el("line",{x1:x1,y1:y1,x2:bx,y2:by,"stroke-width":w,"stroke-linecap":"round"},g);
+  el("polygon",{points:x2+","+y2+" "+(bx-uy*hw)+","+(by+ux*hw)+" "+(bx+uy*hw)+","+(by-ux*hw)},g);
+  return g;
+}
+function darrow(p,x,y1,y2,color,w){/* double flèche verticale */
+  const g=el("g",{},p);const m=(y1+y2)/2;
+  if(Math.abs(y2-y1)<4){el("line",{x1:x-5,y1:y1,x2:x+5,y2:y1,stroke:color,"stroke-width":2},g);return g;}
+  arrow(g,x,m,x,y1,color,w||2,8);arrow(g,x,m,x,y2,color,w||2,8);return g;
+}
+function nf(v,d){
+  if(d===undefined)d=1;
+  if(Math.abs(v)<0.5*Math.pow(10,-d))v=0;
+  return v.toLocaleString("fr-FR",{minimumFractionDigits:d,maximumFractionDigits:d}).replace("-","−").replace(/[\u202f\u2009]/g,"\u00a0");
+}
+const SUP={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function sci(v,d){
+  if(v===0)return "0";
+  if(!isFinite(v))return "∞";
+  let e=Math.floor(Math.log10(Math.abs(v)));
+  let m=v/Math.pow(10,e);
+  const dd=d===undefined?1:d;
+  if(Math.abs(Number(m.toFixed(dd)))>=10){m/=10;e+=1;}
+  return nf(m,dd)+" × 10"+String(e).split("").map(c=>SUP[c]).join("");
+}
+function bigN(v){/* nombre de cycles lisible */
+  if(!isFinite(v))return "∞";
+  if(v===0)return "0";
+  if(v<10)return nf(v,v<1?2:0);
+  if(v<1e5)return nf(Math.round(v),0);
+  return sci(v,1);
+}
+function dur(s){
+  if(!isFinite(s))return "∞";
+  if(s<60)return nf(s,s<10?1:0)+" s";
+  if(s<3600)return nf(s/60,0)+" min";
+  if(s<86400)return nf(s/3600,1)+" h";
+  if(s<86400*365)return nf(s/86400,1)+" jours";
+  return nf(s/(86400*365),1)+" ans";
+}
+function svgW(svg){const r=svg.getBoundingClientRect();return Math.max(290,Math.round(r.width||(svg.parentNode&&svg.parentNode.clientWidth)||600));}
+function setVB(svg,W,H){svg.setAttribute("viewBox","0 0 "+W+" "+H);}
+const redraws=[];
+let rzT=null,lastWW=window.innerWidth;
+window.addEventListener("resize",()=>{if(window.innerWidth===lastWW)return;lastWW=window.innerWidth;clearTimeout(rzT);rzT=setTimeout(()=>redraws.forEach(f=>{try{f();}catch(e){console.error(e);}}),120);});
+
+function niceStep(range,n){const raw=range/(n||5),p=Math.pow(10,Math.floor(Math.log10(raw))),m=raw/p;return (m<1.5?1:m<3?2:m<7?5:10)*p;}
+function setOn(sel,btn){$$(sel+" .btn").forEach(b=>b.classList.toggle("on",b===btn));}
+function fmtmm(mm){return mm<0.1?nf(mm*1000,0)+" µm":mm<10?nf(mm,mm<1?2:1)+" mm":nf(mm,0)+" mm";}
+function axes(svg,x0,x1,y0,y1,xmin,xmax,ymin,ymax,xlab,ylab,xstep,ystep,xfmt,yfmt){
+  const X=v=>x0+(x1-x0)*(v-xmin)/(xmax-xmin),Y=v=>y1-(y1-y0)*(v-ymin)/(ymax-ymin);
+  for(let v=Math.ceil(ymin/ystep-1e-9)*ystep;v<=ymax+1e-9;v+=ystep){el("line",{x1:x0,y1:Y(v),x2:x1,y2:Y(v),class:"gridbg"},svg);tx(svg,x0-5,Y(v)+4,yfmt?yfmt(v):nf(v,ystep<1?1:0),{class:"lbl","text-anchor":"end"});}
+  for(let v=Math.ceil(xmin/xstep-1e-9)*xstep;v<=xmax+1e-9;v+=xstep){el("line",{x1:X(v),y1:y1,x2:X(v),y2:y1+4,class:"tick"},svg);tx(svg,X(v),y1+17,xfmt?xfmt(v):nf(v,xstep<1?1:0),{class:"lbl","text-anchor":"middle"});}
+  el("line",{x1:x0,y1:y1,x2:x1,y2:y1,class:"axis"},svg);el("line",{x1:x0,y1:y0-4,x2:x0,y2:y1,class:"axis"},svg);
+  tx(svg,x0+4,y0-10,ylab,{class:"lbl"});tx(svg,x1,y1+32,xlab,{class:"lbl","text-anchor":"end"});
+  return {X:X,Y:Y};
+}
+function animate(btn,label,dur,onStep,onEnd){/* lecteur pilotable : ▶ lecture ou ⏸ pause, qui reprend où elle s'est arrêtée ; les boutons voisins ⏮ début, ◀ pas et pas ▶ (data-a) la mènent à la main ; un pas avance jusqu'à la prochaine image différente (20 pas au plus) */
+  const box=btn.parentNode,lab=btn.closest(".lab")||box,N=20;let raf=null,run=false,t=0;
+  const go=v=>{t=Math.max(0,Math.min(1,v));onStep(t);};
+  const snap=()=>{let s="";lab.querySelectorAll("svg,.readout,.status").forEach(e=>{s+=e.innerHTML;});return s;};
+  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;btn.textContent=label;}
+  function step(d){stop();const s0=snap();let k=Math.round(t*N);for(let i=0;i<N;i++){k+=d;if(k<0||k>N)break;go(k/N);if(snap()!==s0)break;}}
+  btn.addEventListener("click",()=>{if(run){stop();return;}if(t>=0.999)t=0;
+    if(RM){step(1);if(t>=1&&onEnd)onEnd();return;}
+    run=true;btn.textContent="⏸ Pause";const s0=performance.now()-t*dur;
+    const f=now=>{if(!run)return;go((now-s0)/dur);if(t>=1){stop();if(onEnd)onEnd();return;}raf=requestAnimationFrame(f);};raf=requestAnimationFrame(f);});
+  const pb=a=>box.querySelector('[data-a="'+a+'"]');
+  if(pb("start"))pb("start").addEventListener("click",()=>{stop();go(0);});
+  if(pb("back"))pb("back").addEventListener("click",()=>step(-1));
+  if(pb("fwd"))pb("fwd").addEventListener("click",()=>step(1));
+  /* un réglage fait à la main : la prochaine lecture repart du début */
+  lab.addEventListener("input",()=>{if(!run)t=0;});
+  lab.addEventListener("click",e=>{const b=e.target.closest("button");if(b&&b!==btn&&!b.dataset.a&&!run)t=0;});
+  return {stop:stop,running:()=>run};
+}
+function player(id,o){/* lecteur pilotable : ⏮ début, ◀ pas, ▶ lecture ou ⏸ pause (reprend où elle s'est arrêtée), pas ▶ ; o.get() et o.set(t) avec t de 0 à 1, o.dur (ms), o.steps */
+  const box=$("#"+id),bp=box.querySelector('[data-a="play"]'),lab=bp.textContent,n=o.steps||20;let raf=null,run=false;
+  const cl=t=>Math.max(0,Math.min(1,t));
+  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;bp.textContent=lab;}
+  function step(d){stop();o.set(cl(Math.round(o.get()*n+d)/n));}
+  bp.addEventListener("click",()=>{if(run){stop();return;}let t0=o.get();if(t0>=0.999)t0=0;
+    if(RM){o.set(cl(Math.round(t0*n+1)/n));return;}
+    run=true;bp.textContent="⏸ Pause";const s0=performance.now()-t0*o.dur;
+    const f=now=>{if(!run)return;const t=cl((now-s0)/o.dur);o.set(t);if(t>=1){stop();return;}raf=requestAnimationFrame(f);};raf=requestAnimationFrame(f);});
+  box.querySelector('[data-a="start"]').addEventListener("click",()=>{stop();o.set(0);});
+  box.querySelector('[data-a="back"]').addEventListener("click",()=>step(-1));
+  box.querySelector('[data-a="fwd"]').addEventListener("click",()=>step(1));
+  return {stop:stop};
+}
+
+
+function sig2(v){/* arrondi à deux chiffres significatifs */
+  if(v<=0)return 0;const p=Math.pow(10,Math.floor(Math.log10(v))-1);return Math.round(v/p)*p;}
+function halo(t,svg){/* liseré de fond, puis passage au premier plan */
+  t.setAttribute("paint-order","stroke");t.style.setProperty("stroke","var(--card)");t.setAttribute("stroke-width","4");t.setAttribute("stroke-linejoin","round");if(svg)svg.appendChild(t);return t;}
+function plate(t,svg){/* fond plein derrière une étiquette */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const r=el("rect",{x:b.x-3,y:b.y-1,width:b.width+6,height:b.height+2,fill:"var(--card)",opacity:.92,rx:2});svg.appendChild(r);svg.appendChild(t);return t;}
+function le(n,f){return /^[aeiouyhéèâî]/i.test(n)?"l'"+n:(f?"la ":"le ")+n;}
+function du(n,f){return /^[aeiouyhéèâî]/i.test(n)?"de l'"+n:(f?"de la ":"du ")+n;}
+function fmtG(v){return nf(v,v<0.1?3:2)+" N/m";}
+function fmtPa(p){return p<1000?nf(p,0)+" Pa":p<1e5?nf(p/1000,1)+" kPa":nf(p/1e5,2)+" bar";}
+function fmtLen(m){/* m en mètres */
+  const mm=m*1000;if(mm<1)return nf(mm*1000,0)+" µm";if(mm<10)return nf(mm,1)+" mm";if(mm<1000)return nf(mm,0)+" mm";return nf(m,1)+" m";}
+function fmtT(s){if(!isFinite(s))return "∞";if(s<0.01)return nf(s*1000,1)+" ms";if(s<1)return nf(s,3)+" s";if(s<60)return nf(s,s<10?1:0)+" s";return nf(s/60,s<600?1:0)+" min";}
+
+function spread(items,gap,ymin,ymax){/* écarte verticalement des étiquettes {y} triées */
+  items.sort((a,b)=>a.y-b.y);
+  for(let i=1;i<items.length;i++)if(items[i].y-items[i-1].y<gap)items[i].y=items[i-1].y+gap;
+  if(items.length&&items[items.length-1].y>ymax){items[items.length-1].y=ymax;for(let i=items.length-2;i>=0;i--)if(items[i+1].y-items[i].y<gap)items[i].y=items[i+1].y-gap;}
+  if(items.length&&items[0].y<ymin){items[0].y=ymin;for(let i=1;i<items.length;i++)if(items[i].y-items[i-1].y<gap)items[i].y=items[i-1].y+gap;}
+  return items;}
+function declutter(ts,ymin,ymax){/* décale verticalement les textes qui se chevauchent */
+  const box=t=>{try{return t.getBBox();}catch(e){return null;}};
+  for(let i=1;i<ts.length;i++){const ti=ts[i];if(!ti)continue;
+    for(let pass=0;pass<6;pass++){const bi=box(ti);if(!bi)break;let moved=false;
+      for(let j=0;j<i;j++){const bj=ts[j]&&box(ts[j]);if(!bj)continue;
+        const ix=Math.min(bi.x+bi.width,bj.x+bj.width)-Math.max(bi.x,bj.x),iy=Math.min(bi.y+bi.height,bj.y+bj.height)-Math.max(bi.y,bj.y);
+        if(ix>1&&iy>1){let dy=(bi.y+bi.height/2>=bj.y+bj.height/2)?(bj.y+bj.height-bi.y+1):-(bi.y+bi.height-bj.y+1);
+          if(bi.y+dy<ymin||bi.y+bi.height+dy>ymax)dy=dy>0?-(bi.y+bi.height-bj.y+1):(bj.y+bj.height-bi.y+1);
+          ti.setAttribute("y",+ti.getAttribute("y")+dy);moved=true;break;}}
+      if(!moved)break;}}
+  return ts;}
+const SUPD={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function p10(e){return "10"+String(e).split("").map(c=>SUPD[c]||c).join("");}
+function fmtP(p){/* pression en Pa, lisible */
+  if(p>=1e5)return nf(p/1e5,1)+" bar";if(p>=1000)return nf(p/1000,p<1e4?1:0)+" kPa";if(p>=1)return nf(p,p<10?1:0)+" Pa";return sci(p,1)+" Pa";}
+
+
+
+function rng(seed){/* générateur pseudo-aléatoire reproductible */
+  let a=seed>>>0;return ()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296;};}
+
+
+/* =========================================================
+   Outils communs de la série : formats, couleurs, grains, nuances, modèles
+   ========================================================= */
+const NB=String.fromCharCode(160);
+const nbsp=s=>s.replace(/(\d) (%|°C|mm|µm|nm|MPa|HV|s|ppm|h|J)(?=[\s.,;:)<·/]|$)/g,"$1"+NB+"$2");
+function fitSize(t,maxW,min){/* réduit la police d'un texte SVG trop large (style en ligne, prioritaire sur la feuille de style) */
+  let b;try{b=t.getBBox();}catch(e){return t;}let fs=parseFloat(getComputedStyle(t).fontSize)||13;
+  while(b.width>maxW&&fs>(min||9)){fs-=0.5;t.style.fontSize=fs+"px";b=t.getBBox();}return t;}
+const pts=P=>P.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join(" ");
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const mixc=(c,p,b)=>"color-mix(in srgb,"+c+" "+p+"%,"+(b||"var(--card)")+")";
+const COL={liq:mixc("var(--sig)",24),gam:mixc("var(--gam)",24),alp:mixc("var(--eps)",15),mart:"color-mix(in srgb,var(--eps) 50%,var(--tau))",
+  bain:mixc("var(--gam)",52),fp:mixc("var(--eps)",13),film:mixc("var(--tau)",72)};
+function frame(svg,R){el("rect",{x:R.x0,y:R.y0,width:R.x1-R.x0,height:R.y1-R.y0,fill:"none",stroke:"var(--ink)","stroke-width":1.2},svg);}
+function clipG(svg,id,R){const cp=el("clipPath",{id:id},el("defs",null,svg));el("rect",{x:R.x0,y:R.y0,width:R.x1-R.x0,height:R.y1-R.y0},cp);return el("g",{"clip-path":"url(#"+id+")"},svg);}
+function voronoi(seeds,x0,y0,x1,y1,rmax){/* cellules polygonales ; rmax : distance au-delà de laquelle un voisin est ignoré */
+  const box=[[x0,y0],[x1,y0],[x1,y1],[x0,y1]],r2=rmax?rmax*rmax:Infinity;
+  return seeds.map((s,i)=>{let P=box.slice();
+    for(let j=0;j<seeds.length&&P.length;j++){if(i===j)continue;const q=seeds[j],dx=q[0]-s[0],dy=q[1]-s[1];if(dx*dx+dy*dy>r2)continue;
+      const mx=(s[0]+q[0])/2,my=(s[1]+q[1])/2,out=[];
+      for(let k=0;k<P.length;k++){const a=P[k],b=P[(k+1)%P.length],sa=(a[0]-mx)*dx+(a[1]-my)*dy,sb=(b[0]-mx)*dx+(b[1]-my)*dy;if(sa<=0)out.push(a);
+        if((sa<0&&sb>0)||(sa>0&&sb<0)){const t=sa/(sa-sb);out.push([a[0]+t*(b[0]-a[0]),a[1]+t*(b[1]-a[1])]);}}
+      P=out;}
+    return P;});
+}
+function seedsGrid(x0,y0,x1,y1,s,seed){const r=rng(seed),o=[];for(let y=y0+s/2;y<y1+s/2;y+=s*0.87)for(let x=x0+s/2+((Math.round((y-y0)/(s*0.87))%2)?s/2:0);x<x1+s/2;x+=s)o.push([x+(r()-0.5)*s*0.6,Math.min(y1-1,y+(r()-0.5)*s*0.5)]);return o;}
+function legend(svg,x,y,items,xmax){/* items : [couleur, texte, "o" pour un rond] ; passe à la ligne ; renvoie le bas de la légende */
+  let lx=x,ly=y;
+  items.forEach(q=>{const t=tx(svg,x,y+9.5,q[1],{class:"lbl"});let w=70;try{w=t.getBBox().width;}catch(e){}
+    if(lx>x&&lx+14+w>xmax){lx=x;ly+=16;}
+    t.setAttribute("x",lx+14);t.setAttribute("y",ly+9.5);
+    if(q[2]==="o")el("circle",{cx:lx+5,cy:ly+5,r:4.5,fill:q[0],stroke:"var(--ink)","stroke-width":0.7},svg);
+    else el("rect",{x:lx,y:ly,width:10,height:10,fill:q[0],stroke:"var(--ink)","stroke-width":0.7},svg);
+    lx+=14+w+12;});
+  return ly+12;}
+/* Modèles du cours (ordres de grandeur pédagogiques) */
+/* M1 : puissance de friction d'une face pleine (D mm, n tr/min, p MPa), mu = 0,1 en régime plastifié */
+function puissance(D,n,p){const R=D/2000,w=n*2*Math.PI/60,mu=0.1,P=2*Math.PI/3*mu*p*1e6*w*Math.pow(R,3),A=Math.PI*R*R;
+  return {P:P/1000,qm:P/A/1e4,qb:mu*p*1e6*w*R/1e4,F:p*A*1e6/9810};} /* P kW, flux W/cm², F en tonnes */
+/* M2 : cycle de friction rotative (tf s, rapport forge/friction) */
+function cycle(mode,tf,rf){
+  const Ff=1,Fg=rf;
+  if(mode==="pilotee"){const tb=tf+0.3,tend=tf+3;
+    const w=t=>t<tf?1:t<tb?1-(t-tf)/0.3:0;
+    const F=t=>t<tf?Ff:t<tb?Ff+(Fg-Ff)*(t-tf)/0.3:Fg;
+    const df=0.8*Math.max(0,tf-1.5),dg=2*Math.sqrt(rf);
+    const L=t=>Math.min(df,0.8*Math.max(0,Math.min(t,tf)-1.5))+(t>tb?dg*Math.min(1,(t-tb)/0.5):0);
+    const C=t=>t<tf?0.4+0.6*Math.exp(-Math.pow((t-0.5)/0.35,2)):t<tb?0.9:0;
+    return {tend:tend,w:w,F:F,L:L,C:C,df:df,dt:df+dg};}
+  const ti=1+0.6*tf,tend=ti+2;
+  const w=t=>Math.max(0,1-t/ti),F=()=>Fg,dtot=1.0*tf+1.2*Math.sqrt(rf);
+  const L=t=>dtot*Math.min(1,Math.pow(Math.min(t,ti)/ti,1.5)),C=t=>t<ti?0.3+0.7*Math.exp(-Math.pow((t-0.4)/0.3,2))+0.5*(t/ti):0;
+  return {tend:tend,w:w,F:F,L:L,C:C,df:dtot*0.6,dt:dtot};
+}
+/* M3 : compatibilité des couples de matériaux */
+const MAT=["acier","inox","alu","cuivre","titane","fonte"];
+function couple(a,b){const k=[a,b].sort().join("-");
+  const T={"acier-acier":["c","c"],"acier-inox":["c","c"],"inox-inox":["c","c"],"alu-alu":["c","c"],"cuivre-cuivre":["c","p"],"titane-titane":["c","c"],
+    "alu-cuivre":["p","x"],"acier-alu":["p","x"],"alu-inox":["p","x"],"alu-titane":["p","x"],"acier-cuivre":["p","p"],"cuivre-inox":["p","p"],
+    "acier-titane":["x","x"],"inox-titane":["x","x"],"cuivre-titane":["x","x"]};
+  if(a==="fonte"||b==="fonte")return ["x",a===b?"p":(a==="acier"||b==="acier"||a==="inox"||b==="inox")?"p":"x"];
+  return T[k]||["x","x"];}
+/* M4 : fenêtre FSW, alliage 6082 de 5 mm (n tr/min, v mm/min) */
+function fsw(n,v){const p=v/n,HI=n*n/v;const e=(n<350||p>0.6)?"froid":(p<0.08||n>2200)?"chaud":"sain";return {p:p,HI:HI,e:e};}
+/* M5 : surveillance de 12 soudures (bandes de tolérance en bar et en mm) */
+const SERIE=(()=>{const r=rng(5),S=[];for(let i=0;i<12;i++){const bruitP=(r()*2-1)*2.4,bruitL=(r()*2-1)*0.35;
+  let dp=bruitP,dl=bruitL,cause="";
+  if(i===3){dp=-7.5;cause="pression de friction basse (fuite hydraulique)";}
+  if(i===7){dl=-2.6;cause="raccourcissement trop court (faces oxydées, matière insuffisante)";}
+  if(i===10){dp=6.2;cause="pression de friction haute (régulation déréglée)";}
+  S.push({dp:dp,dl:dl,cause:cause,seed:r()});}return S;})();
+function controle(bp,bl){return SERIE.map((s,i)=>{const alarme=Math.abs(s.dp)>bp||Math.abs(s.dl)>bl;return {i:i,alarme:alarme,defaut:!!s.cause,cause:s.cause};});}
+
+const fr=s=>nbsp(s).replace(/ ([;:!?])/g,NB+"$1");
+const lbl=(svg,x,y,s,o)=>{const t=tx(svg,x,y,s,Object.assign({class:"lbl"},o||{}));t.style.fontSize=(o&&o.fs?o.fs:11)+"px";return t;};
+const poly=(svg,pts,a)=>el("polygon",Object.assign({points:pts.map(p=>p.join(",")).join(" ")},a),svg);
+
+/* =========================================================
+   M1 : la puissance de friction
+   ========================================================= */
+(function(){
+  const svg=$("#m1svg");if(!svg)return;
+  const sD=$("#m1d"),sN=$("#m1n"),sP=$("#m1p"),ro=$("#m1r"),msg=$("#m1msg");
+  function draw(){
+    const W=svgW(svg),n=W<560,D=+sD.value,N=+sN.value,p=+sP.value,r=puissance(D,N,p);clear(svg);
+    $("#m1do").textContent=nf(D,0)+NB+"mm";$("#m1no").textContent=nf(N,0)+NB+"tr/min";$("#m1po").textContent=nf(p,0)+NB+"MPa";
+    setOn("#m1b",$$("#m1b .btn").find(b=>+b.dataset.d===D&&+b.dataset.n===N&&+b.dataset.p===p)||null);
+    /* face en anneaux colorés */
+    const cx=n?W/2:W*0.22,cy=n?100:110,Rmax=n?80:90,R=Rmax*D/150;
+    lbl(svg,cx,18,"Flux de chaleur sur la face",{"text-anchor":"middle","font-weight":"700",fs:11});
+    for(let i=12;i>=1;i--){const ri=R*i/12;el("circle",{cx:cx,cy:cy,r:ri,fill:mixc("var(--sig)",Math.round(10+75*i/12)),stroke:"none"},svg);}
+    el("circle",{cx:cx,cy:cy,r:R,fill:"none",stroke:"var(--ink)"},svg);
+    arrow(svg,cx+R*0.7,cy-R*0.7,cx+R*0.95,cy-R*0.2,"var(--frc)",1.6,6);
+    {const t=lbl(svg,cx,cy+R+16,"Ø "+D+" mm · bord "+nf(r.qb,0)+" W/cm²",{"text-anchor":"middle",fs:10.5,fill:"var(--sig)"});fitSize(t,n?W-20:W*0.42,7);}
+    /* puissance en fonction du diamètre */
+    const gx0=n?48:W*0.48,gx1=W-14,gy0=n?cy+Rmax+46:26,gy1=gy0+(n?140:170);
+    const Pmax=Math.max(100,100*Math.ceil(puissance(150,N,p).P/100));
+    const A=axes(svg,gx0,gx1,gy0,gy1,10,150,0,Pmax,"diamètre D (mm)","P (kW)",n?40:20,niceStep(Pmax,4));
+    let d="";for(let dd=10;dd<=150;dd+=2)d+=(d?"L":"M")+A.X(dd).toFixed(1)+" "+A.Y(puissance(dd,N,p).P).toFixed(1)+" ";
+    el("path",{d:d,fill:"none",stroke:"var(--eps)","stroke-width":2.6},svg);
+    el("circle",{cx:A.X(D),cy:A.Y(r.P),r:6,fill:"var(--eps)",stroke:"var(--card)","stroke-width":1.5},svg);
+    setVB(svg,W,Math.max(gy1+38,cy+Rmax+30));
+    ro.innerHTML=fr("<span>effort ≈ <b class='frc'>"+nf(r.F,1)+" t</b></span><span>P ≈ <b class='eps'>"+nf(r.P,1)+" kW</b></span><span>flux moyen "+nf(r.qm,0)+" W/cm²</span><span>au bord "+nf(r.qb,0)+" W/cm²</span>");
+    let m="Barre de "+D+" mm à "+nf(N,0)+" tr/min sous "+p+" MPa : environ "+nf(r.F,1)+" t d'effort et "+nf(r.P,0)+" kW dissipés, une fois et demie plus au bord qu'en moyenne. ";
+    m+=r.P>300?"Puissance considérable : il faut une machine très lourde, ou baisser la vitesse.":r.P<10?"Petite section : machine compacte, cycle très court.":"Ordre de grandeur d'une machine industrielle courante.";
+    msg.innerHTML=fr(m)+"<br><b>À retenir :</b> chaleur maximale au bord ; puissance en R³.";
+  }
+  $$("#m1b .btn").forEach(b=>b.addEventListener("click",()=>{sD.value=b.dataset.d;sN.value=b.dataset.n;sP.value=b.dataset.p;draw();}));
+  [sD,sN,sP].forEach(x=>x.addEventListener("input",draw));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M2 : le cycle de friction rotative
+   ========================================================= */
+(function(){
+  const svg=$("#m2svg");if(!svg)return;
+  const sT=$("#m2t"),sF=$("#m2f"),ro=$("#m2r"),msg=$("#m2msg");let mode="pilotee",tt=1;
+  function draw(){
+    const W=svgW(svg),n=W<560,tf=+sT.value,rf=+sF.value,c=cycle(mode,tf,rf),T=c.tend,t=tt*T;clear(svg);
+    $("#m2to").textContent=nf(tf,1)+NB+"s";$("#m2fo").textContent=nf(rf,1);
+    /* pièces */
+    const px=n?W/2:W*0.2,py=60,dl=c.L(t)*4,bour=Math.min(14,c.L(t)*2.2);
+    el("rect",{x:px-70+dl/2,y:py-18,width:66-dl/2,height:36,fill:mixc("var(--muted)",35),stroke:"var(--ink)"},svg);
+    el("rect",{x:px+4-dl/2,y:py-18,width:66-dl/2,height:36,fill:mixc("var(--muted)",50),stroke:"var(--ink)"},svg);
+    if(bour>0.5){[-1,1].forEach(sg=>el("ellipse",{cx:px,cy:py+sg*(18+bour/2),rx:4+bour*0.5,ry:bour/2+1,fill:mixc("var(--weld)",70),stroke:"var(--weld)"},svg));}
+    if(c.w(t)>0.01)el("path",{d:"M"+(px+60)+" "+(py-26)+" a 10 6 0 1 1 -1 0",fill:"none",stroke:"var(--frc)","stroke-width":1.6},svg);
+    arrow(svg,px-100,py,px-74+dl/2,py,"var(--frc)",1.5+c.F(t),7);
+    lbl(svg,px,py+50,"raccourcissement "+nf(c.L(t),1)+" mm",{"text-anchor":"middle",fs:10.5,fill:"var(--eps)","font-weight":"700"});
+    /* enregistrement */
+    const gx0=n?44:W*0.44,gx1=W-14,gy0=n?py+70:22,gy1=gy0+(n?160:190);
+    const A=axes(svg,gx0,gx1,gy0,gy1,0,15,0,1.1,"temps (s)","valeurs normées",n?5:3,0.5);
+    const Lm=Math.max(c.dt,1);
+    const S=[["vitesse",tt0=>c.w(tt0),"var(--frc)"],["effort",tt0=>c.F(tt0)/Math.max(rf,1),"var(--mat)"],["couple",tt0=>c.C(tt0),"var(--tau)"],["raccourcissement",tt0=>c.L(tt0)/Lm,"var(--eps)"]];
+    S.forEach((s,i)=>{let d="";for(let x=0;x<=Math.min(T,15);x+=0.05)d+=(d?"L":"M")+A.X(x).toFixed(1)+" "+A.Y(Math.min(1.1,s[1](x))).toFixed(1)+" ";el("path",{d:d,fill:"none",stroke:s[2],"stroke-width":2,"stroke-opacity":0.9},svg);
+      const q=lbl(svg,gx1-2,gy0+12+i*13,s[0],{"text-anchor":"end",fs:10,fill:s[2],"font-weight":"700"});halo(q,svg);});
+    if(tt<1)el("line",{x1:A.X(Math.min(t,15)),y1:gy0,x2:A.X(Math.min(t,15)),y2:gy1,stroke:"var(--ink)","stroke-width":1,"stroke-dasharray":"3 2"},svg);
+    setVB(svg,W,Math.max(gy1+38,py+60));
+    const phase=mode==="pilotee"?(t<1?"accostage":t<tf?"friction":t<tf+0.3?"freinage":"forge"):(t<0.8?"accostage":c.w(t)>0?"friction, le volant ralentit":"forge, volant arrêté");
+    ro.innerHTML=fr("<span>t = "+nf(t,1)+" s : "+phase+"</span><span>ΔL friction "+nf(c.df,1)+" mm</span><span>ΔL total <b class='eps'>"+nf(c.dt,1)+" mm</b></span>");
+    let m;
+    if(tt<1)m={accostage:"Accostage : frottement sec, oxydes brisés, couple maximal.",friction:"Friction : le métal plastifié s'écoule vers le bourrelet, le couple baisse, les pièces raccourcissent.",freinage:"Freinage : la rotation s'arrête en quelques dixièmes de seconde, l'effort monte.",forge:"Forge : sous l'effort accru, les faces chaudes et propres se lient.","friction, le volant ralentit":"Le volant rend son énergie : la vitesse baisse, le raccourcissement continue.","forge, volant arrêté":"Le volant est à l'arrêt : l'effort, maintenu, forge la liaison."}[phase];
+    else if(c.df<2)m="Raccourcissement de friction de "+nf(c.df,1)+" mm seulement : les oxydes ne sont pas tous chassés, la liaison est douteuse même si le bourrelet paraît correct. Allonger la friction.";
+    else if(c.dt>12)m="Raccourcissement total de "+nf(c.dt,1)+" mm : liaison correcte, mais beaucoup de matière consommée et un gros bourrelet à enlever.";
+    else m=(mode==="pilotee"?"Cycle piloté":"Cycle inertiel")+" correct : "+nf(c.df,1)+" mm consommés en friction, "+nf(c.dt,1)+" mm au total ; les oxydes sont partis dans le bourrelet.";
+    msg.innerHTML=fr(m)+"<br><b>À retenir :</b> accostage, friction, forge ; le raccourcissement prouve le nettoyage de l'interface.";
+  }
+  player("m2pl",{get:()=>tt,set:v=>{tt=v;draw();},dur:6000,steps:12});
+  $$("#m2b .btn").forEach(b=>b.addEventListener("click",()=>{mode=b.dataset.m;setOn("#m2b",b);tt=1;draw();}));
+  [sT,sF].forEach(x=>x.addEventListener("input",()=>{tt=1;draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M3 : quels couples de métaux ?
+   ========================================================= */
+(function(){
+  const svg=$("#m3svg");if(!svg)return;
+  const ro=$("#m3r"),msg=$("#m3msg");let a="acier",b="alu";
+  const NOMS={acier:"acier",inox:"inox",alu:"aluminium",cuivre:"cuivre",titane:"titane",fonte:"fonte"};
+  const COLM={acier:"var(--muted)",inox:"var(--gam)",alu:"var(--eps)",cuivre:"var(--weld)",titane:"var(--tau)",fonte:"var(--ink)"};
+  const LV={c:["courant","var(--gam)"],p:["possible avec précautions","var(--frc)"],x:["déconseillé","var(--sig)"]};
+  function draw(){
+    const W=svgW(svg),n=W<560,r=couple(a,b);clear(svg);
+    const cx=W/2,y=40,L=n?110:150;
+    el("rect",{x:cx-L-2,y:y,width:L,height:44,fill:mixc(COLM[a],a==="fonte"?55:45),stroke:"var(--ink)"},svg);
+    el("rect",{x:cx+2,y:y,width:L,height:44,fill:mixc(COLM[b],b==="fonte"?55:45),stroke:"var(--ink)"},svg);
+    [-1,1].forEach(sg=>el("ellipse",{cx:cx,cy:y+(sg<0?-6:50),rx:12,ry:7,fill:mixc("var(--weld)",70),stroke:"var(--weld)"},svg));
+    el("line",{x1:cx,y1:y,x2:cx,y2:y+44,stroke:r[0]==="x"?"var(--sig)":"var(--ink)","stroke-width":2,"stroke-dasharray":r[0]==="c"?"":"4 2"},svg);
+    lbl(svg,cx-L/2-2,y+27,NOMS[a],{"text-anchor":"middle",fs:12,"font-weight":"700"});lbl(svg,cx+L/2+2,y+27,NOMS[b],{"text-anchor":"middle",fs:12,"font-weight":"700"});
+    const row=(yy,t,lv)=>{lbl(svg,20,yy,t,{fs:11.5,"font-weight":"700"});el("rect",{x:n?150:200,y:yy-13,width:n?W-170:W-220,height:18,rx:5,fill:mixc(LV[lv][1],30),stroke:LV[lv][1]},svg);const q=lbl(svg,(n?150:200)+8,yy,LV[lv][0],{fs:11,fill:LV[lv][1],"font-weight":"700"});fitSize(q,n?W-186:W-236,7);};
+    row(y+90,"Par friction",r[0]);row(y+118,"Par fusion (arc)",r[1]);
+    setVB(svg,W,y+134);
+    ro.innerHTML=fr("<span>"+NOMS[a]+" / "+NOMS[b]+"</span><span>friction : <b>"+LV[r[0]][0]+"</b></span><span>fusion : "+LV[r[1]][0]+"</span>");
+    let m;
+    if(a==="fonte"||b==="fonte")m="La fonte frotte mal : son graphite lubrifie l'interface, la chaleur ne monte pas et la liaison reste médiocre. On la soude plutôt à l'arc, avec les précautions propres aux fontes.";
+    else if(r[0]==="p"&&r[1]==="x")m="Couple impossible ou très difficile en fusion (composés intermétalliques massifs et fragiles), mais réalisable par friction : sans fusion ni long maintien à chaud, la couche intermétallique reste mince. Mise au point et essais indispensables.";
+    else if(r[0]==="x")m="Couple à éviter : les composés intermétalliques formés sont trop fragiles, même par friction ; on passe par une pièce de transition ou un autre assemblage.";
+    else if(a===b)m="Métaux identiques : la friction donne un joint sans fusion, à grains fins, proche du métal de base.";
+    else m="Couple courant ou faisable en friction comme en fusion ; la friction apporte rapidité, absence de dilution et ZAT étroite.";
+    msg.innerHTML=fr(m)+"<br><b>À retenir :</b> la friction soude Al-Cu, Al-acier, Al-Ti ; ce qui glisse ne soude pas.";
+  }
+  $$("#m3a .btn").forEach(x=>x.addEventListener("click",()=>{a=x.dataset.k;setOn("#m3a",x);draw();}));
+  $$("#m3b .btn").forEach(x=>x.addEventListener("click",()=>{b=x.dataset.k;setOn("#m3b",x);draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M4 : la fenêtre de friction-malaxage
+   ========================================================= */
+(function(){
+  const svg=$("#m4svg");if(!svg)return;
+  const sN=$("#m4n"),sV=$("#m4v"),ro=$("#m4r"),msg=$("#m4msg");
+  const COL={froid:"var(--eps)",sain:"var(--gam)",chaud:"var(--sig)"},NOM={froid:"trop froid : tunnel",sain:"joint sain",chaud:"trop chaud : bavures"};
+  function draw(){
+    const W=svgW(svg),n=W<560,N=+sN.value,v=+sV.value,f=fsw(N,v);clear(svg);
+    $("#m4no").textContent=nf(N,0)+NB+"tr/min";$("#m4vo").textContent=nf(v,0)+NB+"mm/min";
+    setOn("#m4b",$$("#m4b .btn").find(b=>+b.dataset.n===N&&+b.dataset.v===v)||null);
+    const x0=n?48:56,x1=n?W-28:W*0.56,y0=24,y1=n?190:220;
+    const A=axes(svg,x0,x1,y0,y1,50,1500,200,2600,"avance v (mm/min)","rotation n (tr/min)",n?500:250,400);
+    const nx=36,ny=30;
+    for(let i=0;i<nx;i++)for(let j=0;j<ny;j++){const vv=50+(i+0.5)*1450/nx,nn=200+(j+0.5)*2400/ny,e=fsw(nn,vv).e;
+      el("rect",{x:A.X(50+i*1450/nx),y:A.Y(200+(j+1)*2400/ny),width:(x1-x0)/nx+0.5,height:(y1-y0)/ny+0.5,fill:mixc(COL[e],e==="sain"?45:20),stroke:"none"},svg);}
+    el("circle",{cx:A.X(v),cy:A.Y(N),r:6.5,fill:COL[f.e],stroke:"var(--card)","stroke-width":2},svg);
+    /* coupe du joint */
+    const cx=n?W/2:W*0.8,yT=n?y1+80:70,k=n?12:Math.min(14,W*0.034),Wp=n?W-40:W*0.36,T=5*k;
+    lbl(svg,cx,yT-30,"Coupe : côté avançant à gauche",{"text-anchor":"middle",fs:10.5,"font-weight":"700"});
+    el("rect",{x:cx-Wp/2,y:yT,width:Wp,height:T,fill:mixc("var(--muted)",28),stroke:"var(--ink)"},svg);
+    el("path",{d:"M"+(cx-4*k)+" "+yT+" Q "+(cx-3*k)+" "+(yT+T*0.9)+" "+cx+" "+(yT+T*0.95)+" Q "+(cx+3*k)+" "+(yT+T*0.9)+" "+(cx+4*k)+" "+yT+" Z",fill:mixc("var(--gam)",25),stroke:"var(--gam)","stroke-dasharray":"3 2"},svg);
+    el("path",{d:"M"+(cx-2.6*k)+" "+yT+" Q "+(cx-2*k)+" "+(yT+T*0.8)+" "+cx+" "+(yT+T*0.85)+" Q "+(cx+2*k)+" "+(yT+T*0.8)+" "+(cx+2.6*k)+" "+yT+" Z",fill:mixc("var(--gam)",65),stroke:"var(--gam)"},svg);
+    if(f.e==="froid")el("ellipse",{cx:cx-1.6*k,cy:yT+T*0.55,rx:0.6*k,ry:0.35*k,fill:"var(--card)",stroke:"var(--tau)","stroke-width":1.5},svg);
+    if(f.e==="chaud")[-1,1].forEach(sg=>el("path",{d:"M"+(cx+sg*3*k)+" "+yT+" q "+(sg*6)+" -8 "+(sg*14)+" -4",fill:"none",stroke:"var(--sig)","stroke-width":3},svg));
+    lbl(svg,cx-Wp/2+4,yT+T+14,"avançant",{fs:9.5,fill:"var(--frc)"});lbl(svg,cx+Wp/2-4,yT+T+14,"reculant",{"text-anchor":"end",fs:9.5,fill:"var(--muted)"});
+    {const t=lbl(svg,cx,yT+T+30,NOM[f.e],{"text-anchor":"middle",fs:11.5,"font-weight":"700",fill:COL[f.e]});fitSize(t,Wp,7);}
+    setVB(svg,W,Math.max(y1+38,yT+T+40));
+    ro.innerHTML=fr("<span>pas = <b class='eps'>"+nf(f.p,2)+" mm/tr</b></span><span>n²/v = "+nf(f.HI,0)+"</span><span>"+NOM[f.e]+"</span>");
+    const M={froid:N<350?"Rotation trop lente : l'outil ne chauffe pas assez le métal, qui reste trop dur pour être malaxé. Un tunnel s'ouvre côté avançant.":"Pas de "+nf(f.p,2)+" mm/tr, trop grand : à chaque tour l'outil avance trop pour malaxer le métal à fond. Un tunnel s'ouvre côté avançant, sous la surface. Monter la rotation ou ralentir.",
+      sain:"Pas de "+nf(f.p,2)+" mm/tr : le métal est assez chaud et malaxé, le noyau est sain, côté avançant compris.",
+      chaud:"Soudure trop chaude ("+(N>2200?"rotation excessive":"pas de "+nf(f.p,2)+" mm/tr")+") : métal trop mou, bavures sur les bords, épaulement qui s'enfonce, ZAT très adoucie."};
+    msg.innerHTML=fr(M[f.e])+"<br><b>À retenir :</b> grand pas, froid et tunnel ; petit pas, chaud et bavures.";
+  }
+  $$("#m4b .btn").forEach(b=>b.addEventListener("click",()=>{sN.value=b.dataset.n;sV.value=b.dataset.v;draw();}));
+  [sN,sV].forEach(x=>x.addEventListener("input",draw));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M5 : surveiller une série
+   ========================================================= */
+(function(){
+  const svg=$("#m5svg");if(!svg)return;
+  const sP=$("#m5p"),sL=$("#m5l"),ro=$("#m5r"),msg=$("#m5msg");let tt=1;
+  function draw(){
+    const W=svgW(svg),n=W<560,bp=+sP.value,bl=+sL.value,C=controle(bp,bl),k=Math.min(11,Math.round(tt*11)),s=SERIE[k];clear(svg);
+    $("#m5po").textContent="± "+nf(bp,1)+NB+"bar";$("#m5lo").textContent="± "+nf(bl,1)+NB+"mm";
+    setOn("#m5b",$$("#m5b .btn").find(b=>+b.dataset.p===bp&&+b.dataset.l===bl)||null);
+    /* courbe de la soudure en cours */
+    const gx0=n?44:52,gx1=n?W-14:W*0.56,gy0=24,gy1=n?170:200;
+    const A=axes(svg,gx0,gx1,gy0,gy1,0,6,0,120,"temps (s)","pression (bar)",1,20);
+    el("rect",{x:A.X(1),y:A.Y(53+bp),width:A.X(5)-A.X(1),height:A.Y(53-bp)-A.Y(53+bp),fill:mixc("var(--gam)",20),stroke:"var(--gam)","stroke-dasharray":"4 3"},svg);
+    const rr=rng(Math.floor(s.seed*1e6)+1);let d="";
+    for(let t=0;t<=6;t+=0.05){const base=t<0.6?65*(t/0.6):t<1?65-12*(t-0.6)/0.4:t<5?53:t<5.3?53+(110-53)*(t-5)/0.3:110;const pv=t>=1&&t<5?base+s.dp+(rr()-0.5)*1.2:base;d+=(d?"L":"M")+A.X(t).toFixed(1)+" "+A.Y(Math.min(120,pv)).toFixed(1)+" ";}
+    el("path",{d:d,fill:"none",stroke:C[k].alarme?"var(--sig)":"var(--eps)","stroke-width":2.2},svg);
+    {const t=lbl(svg,gx1-2,gy0+12,"soudure n° "+(k+1)+(C[k].alarme?" : ALARME":""),{"text-anchor":"end",fs:11,"font-weight":"700",fill:C[k].alarme?"var(--sig)":"var(--eps)"});halo(t,svg);}
+    /* tableau des 12 soudures */
+    const tx0=n?14:W*0.62,ty0=n?gy1+50:30,cw=n?(W-28)/6:(W*0.36)/4,ch=34;
+    for(let i=0;i<12;i++){const c=C[i],col=i%(n?6:4),row=Math.floor(i/(n?6:4)),x=tx0+col*cw,y=ty0+row*ch,vu=i<=k;
+      const fill=!vu?mixc("var(--muted)",10):c.alarme&&c.defaut?mixc("var(--gam)",40):c.alarme?mixc("var(--frc)",40):c.defaut?mixc("var(--sig)",45):mixc("var(--muted)",22);
+      el("rect",{x:x+2,y:y,width:cw-4,height:ch-6,rx:5,fill:fill,stroke:i===k?"var(--ink)":"var(--line)","stroke-width":i===k?2:1},svg);
+      lbl(svg,x+cw/2,y+12,"n° "+(i+1),{"text-anchor":"middle",fs:9.5,"font-weight":"700"});
+      if(vu)lbl(svg,x+cw/2,y+24,c.alarme?(c.defaut?"arrêtée":"fausse alarme"):(c.defaut?"défaut manqué":"conforme"),{"text-anchor":"middle",fs:8.5});}
+    const rows=Math.ceil(12/(n?6:4));
+    setVB(svg,W,Math.max(gy1+38,ty0+rows*ch+6));
+    const vus=C.slice(0,k+1),det=vus.filter(c=>c.alarme&&c.defaut).length,fa=vus.filter(c=>c.alarme&&!c.defaut).length,man=vus.filter(c=>!c.alarme&&c.defaut).length;
+    ro.innerHTML=fr("<span>soudures vues : "+(k+1)+"/12</span><span>défauts arrêtés : <b class='eps'>"+det+"</b></span><span>fausses alarmes : "+fa+"</span><span>défauts manqués : <b class='sig'>"+man+"</b></span>");
+    let m;
+    if(tt<1)m="Soudure n° "+(k+1)+" : écart de pression "+nf(s.dp,1)+" bar, de raccourcissement "+nf(s.dl,2)+" mm"+(s.cause?" ("+s.cause+")":"")+". "+(C[k].alarme?"Alarme : pièce écartée.":"Dans les tolérances.");
+    else if(man>0)m="Tolérances trop larges : "+man+" défaut"+(man>1?"s":"")+" passe"+(man>1?"nt":"")+" sans alarme. Un défaut de friction ne se voit pas après coup : il est perdu.";
+    else if(fa>0)m="Tous les défauts sont arrêtés, mais "+fa+" pièce"+(fa>1?"s":"")+" saine"+(fa>1?"s":"")+" aussi : les tolérances sont sous le bruit normal du procédé (± 2,4 bar, ± 0,35 mm).";
+    else m="Réglage juste : les trois défauts sont arrêtés et aucune pièce saine n'est écartée.";
+    msg.innerHTML=fr(m)+"<br><b>À retenir :</b> la tolérance se place entre le bruit et le défaut.";
+  }
+  player("m5pl",{get:()=>tt,set:v=>{tt=v;draw();},dur:6000,steps:11});
+  $$("#m5b .btn").forEach(b=>b.addEventListener("click",()=>{sP.value=b.dataset.p;sL.value=b.dataset.l;tt=1;draw();}));
+  [sP,sL].forEach(x=>x.addEventListener("input",()=>{tt=1;draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   Quiz, check-list, sommaire, thème
+   ========================================================= */
+(function(){
+  const box=$("#quiz");if(!box)return;
+  const Q=[
+    {q:"En soudage par friction, l'interface entre les pièces :",o:["fond puis se solidifie","reçoit un métal d'apport","ne fond pas : le métal plastifié s'écoule et se forge","est protégée par un gaz"],c:2,e:"Soudage à l'état solide : chauffage par frottement, écoulement du métal pâteux dans le bourrelet, puis forge."},
+    {q:"En friction rotative, où la chaleur est-elle produite en premier ?",o:["au centre de la face","à la périphérie de la face","dans le mandrin","dans le bourrelet seulement"],c:1,e:"La vitesse de glissement vaut ω·r : nulle au centre, maximale au bord. Le centre chauffe par conduction."},
+    {q:"Si l'on double le diamètre d'une barre, à pression et rotation égales, la puissance de friction :",o:["double","quadruple","est multipliée par huit","ne change pas"],c:2,e:"P = (2π/3)·μ·p·ω·R³ : × 8. L'effort, lui, est multiplié par quatre."},
+    {q:"Quelles sont les trois phases d'un cycle de friction rotative ?",o:["amorçage, fusion, solidification","préchauffage, soudage, revenu","pointage, soudage, meulage","accostage, friction, forge"],c:3,e:"Accostage (contact en rotation), friction (échauffement, raccourcissement), forge (arrêt de la rotation, effort accru)."},
+    {q:"En friction inertielle (422), l'énergie de soudage vient :",o:["d'un arc électrique","d'un moteur à vitesse constante pendant toute la soudure","d'un laser","d'un volant lancé, qui ralentit jusqu'à l'arrêt"],c:3,e:"E = ½·I·ω² : le volant découplé du moteur rend son énergie ; la soudure se termine à l'arrêt."},
+    {q:"Pourquoi surveille-t-on le raccourcissement ?",o:["pour économiser de la matière seulement","parce qu'il prouve que les oxydes ont été chassés dans le bourrelet","pour mesurer la dureté","parce qu'il remplace le contrôle des dimensions"],c:1,e:"Un raccourcissement de friction insuffisant laisse oxydes et impuretés à l'interface : liaison douteuse, invisible."},
+    {q:"Quel matériau se soude mal par friction ?",o:["l'acier non allié","la fonte grise","l'aluminium","le titane"],c:1,e:"Le graphite de la fonte lubrifie l'interface : le frottement chauffe mal. Même difficulté avec les bronzes au plomb."},
+    {q:"Pourquoi la friction soude-t-elle l'aluminium sur l'acier, contrairement à l'arc ?",o:["parce que la couche intermétallique reste très mince, sans fusion ni long maintien à chaud","parce qu'elle fond les deux métaux","parce qu'elle utilise un fil d'apport spécial","parce que l'aluminium devient de l'acier"],c:0,e:"En fusion, Fe et Al forment des intermétalliques massifs et fragiles ; à l'état solide, la couche reste mince."},
+    {q:"En FSW, le côté avançant est celui où :",o:["la vitesse de rotation de l'outil et sa vitesse d'avance s'ajoutent","l'outil recule","il n'y a pas de métal","le joint est toujours parfait"],c:0,e:"Les vitesses s'additionnent côté avançant : cisaillement maximal, et c'est là que naissent tunnels et cavités."},
+    {q:"En FSW, que provoque une avance trop rapide pour la rotation ?",o:["des bavures","une fusion du joint","un tunnel côté avançant","une soudure plus large"],c:2,e:"Grand pas d'avance (v/n), soudure froide : le métal n'est pas assez malaxé, une cavité s'ouvre côté avançant."},
+    {q:"La friction linéaire (424) sert notamment à :",o:["souder des tubes en continu","braser le cuivre","souder des tôles galvanisées par points","souder des aubes en titane sur des disques de turbine"],c:3,e:"Le va-et-vient permet des pièces non circulaires : disques aubagés monoblocs en titane."},
+    {q:"Une tolérance de surveillance trop large :",o:["laisse passer les défauts réels","arrête la ligne trop souvent","améliore la qualité","supprime le bruit du procédé"],c:0,e:"Il faut la placer entre le bruit normal (pas de fausses alarmes) et l'écart des défauts (tous détectés)."}
+  ];
+  let score=0,done=0;const sc=$("#qzScore");
+  function upd(){let t="Score : "+score+" / "+Q.length;if(done===Q.length)t+=score>=10?"  ·  🎉 prêt pour le cours 4":score>=7?"  ·  relis les explications":"  ·  refais un tour des chapitres";sc.textContent=t;}
+  function render(){box.innerHTML="";score=0;done=0;
+    Q.forEach((it,n)=>{const d=document.createElement("div");d.className="qz";
+      d.innerHTML='<p class="qz-q"><b>'+(n+1)+".</b> "+it.q+'</p><div class="qz-o"></div><div class="qz-e" hidden></div>';
+      const o=d.querySelector(".qz-o"),ex=d.querySelector(".qz-e");let answered=false;
+      it.o.forEach((txt,i)=>{const b=document.createElement("button");b.type="button";b.className="qz-b";b.innerHTML=String.fromCharCode(65+i)+". "+txt;
+        b.addEventListener("click",()=>{if(answered)return;answered=true;done++;const ok=i===it.c;if(ok)score++;b.classList.add(ok?"ok":"ko");o.children[it.c].classList.add("ok");ex.hidden=false;ex.innerHTML=(ok?"✅ <b>Bien joué.</b> ":"❌ <b>Pas tout à fait.</b> ")+it.e;upd();});
+        o.appendChild(b);});
+      box.appendChild(d);});
+    upd();}
+  $("#qzReset").addEventListener("click",render);render();
+})();
+(function(){
+  const boxes=$$("#checklist input[type=checkbox]"),msg=$("#checkMsg"),KEY="procedes-avances-cours3-check";
+  if(!boxes.length)return;
+  let saved=[];try{saved=JSON.parse(localStorage.getItem(KEY)||"[]")||[];}catch(e){saved=[];}
+  boxes.forEach(b=>{b.checked=saved.indexOf(b.dataset.c)>=0;});
+  function upd(){const on=boxes.filter(b=>b.checked).map(b=>b.dataset.c);try{localStorage.setItem(KEY,JSON.stringify(on));}catch(e){}
+    msg.innerHTML=on.length===boxes.length?"🎉 <b>Tout est coché : tu es prêt pour le cours 4 !</b>":on.length+" / "+boxes.length+" : reviens sur les points non cochés (les manipulations sont faites pour ça).";}
+  boxes.forEach(b=>b.addEventListener("change",upd));upd();
+})();
+(function(){/* impression de la fiche mémoire seule */
+  const b=$("#printFiche");if(!b)return;
+  b.addEventListener("click",()=>{document.body.classList.add("print-fiche");window.print();});
+  window.addEventListener("afterprint",()=>document.body.classList.remove("print-fiche"));
+})();
+(function(){
+  const links=$$(".toc a"),tin=$(".toc-in");
+  if(!links.length||!("IntersectionObserver" in window))return;
+  const map={};links.forEach(a=>{map[a.getAttribute("href").slice(1)]=a;});
+  const obs=new IntersectionObserver(ents=>{ents.forEach(en=>{if(!en.isIntersecting)return;const a=map[en.target.id];if(!a)return;
+    links.forEach(l=>l.classList.toggle("on",l===a));
+    if(tin){const tgt=a.offsetLeft-tin.clientWidth/2+a.offsetWidth/2;try{tin.scrollTo({left:tgt,behavior:RM?"auto":"smooth"});}catch(e){tin.scrollLeft=tgt;}}});},{rootMargin:"-45% 0px -50% 0px"});
+  Object.keys(map).forEach(id=>{const s=document.getElementById(id);if(s)obs.observe(s);});
+})();
+(function(){
+  const b=$("#themeBtn");if(!b)return;const KEY="procedes-avances-theme",root=document.documentElement;
+  const lab={auto:"◐ Thème : automatique",light:"☀️ Thème : clair",dark:"🌙 Thème : sombre"};
+  let t="auto";try{t=localStorage.getItem(KEY)||"auto";}catch(e){}
+  function apply(){if(t==="auto")root.removeAttribute("data-theme");else root.setAttribute("data-theme",t);b.textContent=lab[t];}
+  b.addEventListener("click",()=>{t=t==="auto"?"light":t==="light"?"dark":"auto";try{localStorage.setItem(KEY,t);}catch(e){}apply();});
+  apply();
+})();
+
+})();
+</script>
+</body>
+</html>

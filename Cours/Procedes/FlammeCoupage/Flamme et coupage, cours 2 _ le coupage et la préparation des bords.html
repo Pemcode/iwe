@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flamme et coupage, cours 2 : le coupage et la préparation des bords</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@500;600;700&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+
+
+
+:root{
+  --paper:#F3F6F9; --paper-2:#E6ECF2; --card:#FFFFFF; --ink:#17212B; --muted:#56626F; --line:#C5CFD9;
+  --grid:rgba(40,90,160,.075);
+  --sig:#CF2438; --tau:#8A34B6; --eps:#1B5ED3; --gam:#06849A; --frc:#D46A00; --mat:#26844A; --weld:#9A5B12;
+  --ok:#26844A; --warn:#B86E00; --bad:#C62828;
+  --lv2:#E4EBF2; --hl:#FFF3B0;
+  --font-body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-head:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --font-math:"STIX Two Text","Cambria Math","Cambria","Times New Roman",serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+    --grid:rgba(120,160,220,.07);
+    --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+    --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+  --grid:rgba(120,160,220,.07);
+  --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+  --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+  color-scheme: dark;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0;color:var(--ink);font-family:var(--font-body);font-size:17.5px;line-height:1.62;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;overflow-x:hidden;
+}
+img,svg{max-width:100%}
+.wrap{max-width:800px;margin:0 auto;padding:0 20px}
+.wide{max-width:980px}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.1;margin:0}
+h3{font-size:1.65rem;font-weight:600;margin:2rem 0 .6rem}
+h4{font-size:1.3rem;font-weight:600;margin:1.4rem 0 .4rem}
+p{margin:.7em 0}
+a{color:var(--eps)}
+b,strong{font-weight:700}
+small{font-size:.8em}
+sub{font-size:.72em}
+.m{font-family:var(--font-math);font-size:1.08em;white-space:nowrap}
+.sig{color:var(--sig)} .tau{color:var(--tau)} .eps{color:var(--eps)} .gam{color:var(--gam)} .frc{color:var(--frc)} .mat{color:var(--mat)} .mut{color:var(--muted)} .wcol{color:var(--weld)}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .12em;line-height:1.1}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 .2em .08em}
+.frac>span:last-child{padding:.08em .2em 0}
+ul,ol{padding-left:1.4em}
+li{margin:.25em 0}
+
+/* ---------- en-tête ---------- */
+.hero{padding:34px 0 10px}
+.title-block{border:2.5px solid var(--ink);background:var(--card);display:grid;grid-template-columns:1fr 300px}
+.tb-main{padding:22px 24px;border-right:2.5px solid var(--ink);display:flex;flex-direction:column;justify-content:space-between;gap:14px}
+.tb-series{margin:0 0 .5rem;color:var(--muted);font-size:.95rem}
+.hero h1{font-size:clamp(2.3rem,6vw,4rem);font-weight:700;letter-spacing:-.01em}
+.tb-cells{display:grid;grid-template-rows:repeat(4,auto)}
+.tb-cells>div{padding:9px 16px;border-bottom:1.5px solid var(--ink);display:flex;flex-direction:column;justify-content:center}
+.tb-cells>div:last-child{border-bottom:0}
+.tb-cells small{color:var(--muted);font-size:.78rem}
+.tb-cells b{font-family:var(--font-head);font-size:1.25rem;font-weight:600;line-height:1.15}
+.lede{font-size:1.13rem;max-width:760px;margin:1.2rem 0}
+.theme-btn{align-self:flex-start;font-family:var(--font-body);font-size:.85rem;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
+@media (max-width:760px){.title-block{grid-template-columns:1fr}.tb-main{border-right:0;border-bottom:2.5px solid var(--ink)}.tb-cells{grid-template-rows:none;grid-template-columns:1fr 1fr}.tb-cells>div:nth-child(odd){border-right:1.5px solid var(--ink)}.tb-cells>div:nth-child(3){border-bottom:0}}
+@media (max-width:420px){.tb-cells{grid-template-columns:1fr}.tb-cells>div:nth-child(odd){border-right:0}.tb-cells>div:nth-child(3){border-bottom:1.5px solid var(--ink)}}
+
+/* code couleur */
+.cc{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:stretch;margin:1rem 0 .4rem}
+.cc-box{background:var(--card);border:2px solid var(--line);padding:12px 14px;border-radius:4px}
+.cc-cause{border-color:var(--sig)} .cc-link{border-color:var(--mat)} .cc-eff{border-color:var(--eps)}
+.cc-box small{display:block;color:var(--muted);font-size:.82rem;line-height:1.3}
+.cc-syms{font-family:var(--font-math);font-size:1.7rem;line-height:1.25;display:flex;flex-wrap:wrap;gap:.1em .45em;margin:.2rem 0}
+.cc-box p{margin:0;font-size:.9rem;line-height:1.35}
+.cc-arrow{align-self:center;font-size:1.8rem;color:var(--muted)}
+@media (max-width:700px){.cc{grid-template-columns:1fr}.cc-arrow{transform:rotate(90deg);justify-self:center;line-height:1}}
+.cc-more{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:.5rem 0}
+.cc-more>div{border:2px solid var(--line);background:var(--card);border-radius:4px;padding:6px 10px;font-size:.9rem}
+@media (max-width:640px){.cc-more{grid-template-columns:1fr}}
+
+/* ---------- sommaire ---------- */
+.toc{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-bottom:1.5px solid var(--line);padding-top:env(safe-area-inset-top,0px);margin-top:18px}
+.toc-in{display:flex;gap:6px;overflow-x:auto;padding:9px 20px;max-width:980px;margin:0 auto;scrollbar-width:thin}
+.toc a{flex:none;text-decoration:none;color:var(--ink);font-size:.88rem;padding:4px 11px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);white-space:nowrap}
+.toc a.on{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.toc a:focus-visible,.btn:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--eps);outline-offset:2px}
+
+/* ---------- sections ---------- */
+section.chap{padding:46px 0 10px}
+.cartouche{display:grid;grid-template-columns:86px 1fr 250px;border:2.5px solid var(--ink);background:var(--card);margin-bottom:1.4rem}
+.c-num{font-family:var(--font-head);font-size:3.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;border-right:2.5px solid var(--ink)}
+.c-title{padding:14px 18px;border-right:2.5px solid var(--ink)}
+.c-title h2{font-size:2.1rem;font-weight:700}
+.c-title p{margin:.25rem 0 0;color:var(--muted)}
+.c-img{padding:12px 14px;display:flex;gap:12px;align-items:center;background:var(--paper-2)}
+.c-img .ico{font-size:2.3rem;line-height:1}
+.c-img small{display:block;color:var(--muted);font-size:.78rem}
+.c-img span{font-size:.95rem;line-height:1.3}
+@media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
+
+/* gabarit court : approfondissement replié, à retenir, prédiction */
+details.deep{margin:1.2rem 0;padding:0 18px;background:var(--lv2);border-left:6px solid var(--ink);border-radius:4px}
+details.deep>summary{font-family:var(--font-head);font-size:1.2rem;font-weight:600;padding:9px 0}
+details.deep[open]{padding-bottom:10px}
+.retenir{margin:1.4rem 0 .4rem;padding:8px 18px 6px;background:var(--card);border:2px solid var(--ink);border-radius:4px}
+.retenir>b:first-child{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.retenir ul{margin:.3rem 0 .3rem}
+.predict{display:block;margin-top:.35rem;color:var(--ink);font-weight:700}
+@media (max-width:520px){details.deep{padding:0 12px}.retenir{padding:8px 12px 6px}}
+
+/* formules et encadrés */
+.fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:600px;text-align:center;border-radius:3px;overflow-x:auto}
+.fx .big{font-family:var(--font-math);font-size:1.9rem;line-height:1.4}
+.fx .cap{font-size:.85rem;color:var(--muted);margin:.3rem 0 0}
+.fx .row{display:flex;flex-wrap:wrap;justify-content:center;gap:.2em 1.4em}
+.syms{margin:.6rem 0;display:grid;grid-template-columns:auto 1fr;gap:.35rem 1rem;align-items:baseline}
+.syms dt{font-family:var(--font-math);font-size:1.25rem;text-align:right;white-space:nowrap}
+.syms dd{margin:0}
+.def{margin:.9rem 0;padding:.5rem .9rem;border-left:3px dotted var(--muted);font-size:.96rem;background:color-mix(in srgb,var(--card) 60%,transparent)}
+.def>b:first-child{font-family:var(--font-head);font-size:1.08rem;font-weight:600}
+.tip{margin:1rem 0;padding:.7rem 1rem;border:1.5px dashed var(--mat);border-radius:4px;font-size:.97rem}
+.warn{margin:1rem 0;padding:.7rem 1rem;border:2px solid var(--bad);border-radius:4px;font-size:.97rem;background:color-mix(in srgb,var(--bad) 7%,transparent)}
+.mnemo{margin:1rem 0;padding:.7rem 1rem;background:var(--hl);border-radius:4px;font-size:.98rem}
+.fun{margin:1.2rem 0;padding:.8rem 1rem;border:2px dashed var(--muted);border-radius:10px;background:var(--card);font-size:.98rem}
+.fun-h{display:block;margin-bottom:.35rem;font-family:var(--font-head);font-size:1.15rem;font-weight:600;letter-spacing:.02em}
+.meta{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--frc);border-radius:4px;background:color-mix(in srgb,var(--frc) 6%,transparent)}
+.weld{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--weld);border-radius:4px;background:color-mix(in srgb,var(--weld) 7%,transparent)}
+.weld>b:first-child{font-family:var(--font-head);font-size:1.15rem;font-weight:600;color:var(--weld)}
+.hp{display:inline-block;font-size:.72rem;font-weight:700;padding:1px 7px;border-radius:9px;background:var(--weld);color:var(--card);vertical-align:middle;margin-left:4px;white-space:nowrap}
+.recall{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:1rem 0}
+.recall>div{background:var(--card);border:1.5px solid var(--line);border-radius:4px;padding:8px 12px;font-size:.92rem}
+.recall .f{font-family:var(--font-math);font-size:1.2rem;margin-bottom:.2rem}
+@media (max-width:640px){.recall{grid-template-columns:1fr}}
+.hist{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:1rem 0}
+.hist>div{background:var(--card);border:1.5px solid var(--weld);border-radius:4px;padding:8px 12px;font-size:.93rem}
+.hist .yr{font-family:var(--font-head);font-size:1.6rem;font-weight:700;color:var(--weld);line-height:1}
+@media (max-width:720px){.hist{grid-template-columns:1fr}}
+
+/* manipulations */
+.lab{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:14px 16px 12px;margin:1.4rem 0}
+.lab-h{font-family:var(--font-head);font-size:1.3rem;font-weight:600;margin:0 0 .2rem}
+.lab-sub{margin:0 0 .6rem;color:var(--muted);font-size:.92rem}
+.lab svg{display:block;width:100%;height:auto;color:var(--ink);font-family:var(--font-body);touch-action:pan-y}
+.ctrl{display:grid;grid-template-columns:minmax(110px,auto) 1fr minmax(92px,auto);gap:4px 12px;align-items:center;margin:.5rem 0}
+.ctrl label{font-size:.95rem}
+.ctrl output{font-family:var(--font-math);font-size:1.08rem;text-align:right;white-space:nowrap}
+@media (max-width:520px){.ctrl{grid-template-columns:1fr auto}.ctrl input[type=range]{grid-column:1/-1;grid-row:2}}
+input[type=range]{width:100%;accent-color:var(--ink);height:28px;margin:0}
+input.r-sig{accent-color:var(--sig)} input.r-tau{accent-color:var(--tau)} input.r-frc{accent-color:var(--frc)} input.r-mat{accent-color:var(--mat)} input.r-eps{accent-color:var(--eps)}
+.btns{display:flex;flex-wrap:wrap;gap:6px;margin:.5rem 0}
+.btn{font-family:var(--font-body);font-size:.9rem;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 13px;cursor:pointer;line-height:1.3}
+.btn:hover{background:var(--paper-2)}
+.btn.on{background:var(--ink);color:var(--paper)}
+.btn.play{border-color:var(--eps);color:var(--eps);font-weight:700}
+.btn:disabled{opacity:.45;cursor:default}
+.readout{font-family:var(--font-math);font-size:1.08rem;background:var(--paper-2);border-radius:4px;padding:.5rem .8rem;margin:.5rem 0;overflow-x:auto;display:flex;flex-wrap:wrap;gap:.2em 1.3em}
+.readout>span{white-space:nowrap}
+.status{font-size:.97rem;margin:.5rem 0;padding:.5rem .8rem;border-left:4px solid var(--eps);background:color-mix(in srgb,var(--eps) 6%,transparent);border-radius:0 4px 4px 0;min-height:2.6em}
+.radios{display:flex;flex-wrap:wrap;gap:6px 14px;margin:.4rem 0;font-size:.95rem}
+.radios label{display:inline-block;cursor:pointer}
+.radios input{margin:0 6px 0 0;vertical-align:middle}
+
+/* svg */
+svg text{fill:currentColor;font-size:13px}
+svg .lbl{font-size:12.5px;fill:var(--muted)}
+svg .mth{font-family:var(--font-math);font-size:16px}
+svg .ttl{font-family:var(--font-head);font-size:15px;font-weight:600}
+svg .axis{stroke:var(--ink);stroke-width:1.4;fill:none}
+svg .tick{stroke:var(--muted);stroke-width:1}
+svg .gridbg{stroke:var(--line);stroke-width:1}
+svg .ref{stroke:var(--muted);stroke-width:1.3;stroke-dasharray:4 3;fill:none}
+.arr line{stroke:currentColor}
+.arr polygon{fill:currentColor}
+
+/* tableaux */
+.tbl-wrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch}
+table.data{border-collapse:collapse;width:100%;font-size:.94rem;background:var(--card)}
+table.data th,table.data td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:middle}
+table.data th{font-family:var(--font-head);font-weight:600;font-size:1.05rem;background:var(--paper-2)}
+table.data td.n{font-family:var(--font-math);white-space:nowrap}
+table.data tr.now td{background:var(--hl)}
+
+/* parcours */
+.route{list-style:none;padding:0;margin:1rem 0;position:relative}
+.route::before{content:"";position:absolute;left:17px;top:10px;bottom:10px;width:4px;background:var(--line);border-radius:2px}
+.route li{position:relative;padding:0 0 14px 52px;margin:0}
+.route li .dot{position:absolute;left:4px;top:0;width:30px;height:30px;border-radius:50%;border:3px solid var(--ink);background:var(--card);font-family:var(--font-head);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+.route li b{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.route li p{margin:.1rem 0 0;font-size:.95rem}
+.series{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:.8rem 0}
+.series>div{background:var(--card);border:1.5px solid var(--line);padding:8px 10px;border-radius:4px;font-size:.88rem}
+.series>div.here{border:2.5px solid var(--ink)}
+.series b{display:block;font-family:var(--font-head);font-size:1.05rem}
+@media (max-width:700px){.series{grid-template-columns:1fr 1fr}}
+
+/* exercices et quiz */
+.exo{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--ink);padding:6px 20px 12px;margin:1.2rem 0;border-radius:4px}
+.exo.defi{border-left-color:var(--weld)}
+.exo h4{margin-top:.8rem}
+.exo .lvtag{font-family:var(--font-body);font-size:.85rem;font-weight:400;color:var(--muted);margin-left:.4rem}
+.exo .q{margin:.25rem 0}
+details{margin:.6rem 0}
+summary{cursor:pointer;font-weight:700;padding:4px 0}
+details .sol{padding:.4rem .9rem;border-left:3px solid var(--mat);margin:.4rem 0}
+details .sol p{margin:.45em 0}
+.qz{background:var(--card);border:1.5px solid var(--line);border-radius:6px;padding:10px 16px;margin:.8rem 0}
+.qz-q{margin:.3rem 0 .6rem}
+.qz-o{display:flex;flex-direction:column;gap:6px}
+.qz-b{text-align:left;font-family:var(--font-body);font-size:.97rem;padding:8px 12px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:5px;cursor:pointer}
+.qz-b:hover{border-color:var(--ink)}
+.qz-b.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--card))}
+.qz-b.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--card))}
+.qz-e{font-size:.94rem;margin:.6rem 0 .2rem}
+.score{position:sticky;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);display:inline-block;background:var(--ink);color:var(--paper);padding:6px 14px;border-radius:999px;font-size:.95rem;margin:.6rem 0}
+
+/* fiche mémoire */
+.fiche{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:2.5px solid var(--ink);background:var(--card);margin:1rem 0}
+.fiche>div{padding:12px 14px;border-right:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}
+.fiche>div:nth-child(3n){border-right:0}
+.fiche>div:nth-last-child(-n+3){border-bottom:0}
+.fiche .ic{font-size:1.9rem;line-height:1}
+.fiche h4{margin:.3rem 0 .2rem;font-size:1.15rem}
+.fiche .f{font-family:var(--font-math);font-size:1.1rem;margin:.2rem 0}
+.fiche p{margin:.2rem 0 0;font-size:.88rem;color:var(--muted)}
+@media (max-width:720px){.fiche{grid-template-columns:1fr 1fr}.fiche>div{border-right:1.5px solid var(--ink)!important;border-bottom:1.5px solid var(--ink)!important}.fiche>div:nth-child(2n){border-right:0!important}.fiche>div:last-child{border-bottom:0!important}}
+@media (max-width:440px){.fiche{grid-template-columns:1fr}.fiche>div{border-right:0!important}}
+.gloss{display:grid;grid-template-columns:minmax(150px,230px) 1fr;gap:0;border-top:1.5px solid var(--line);margin:1rem 0}
+.gloss dt,.gloss dd{border-bottom:1.5px solid var(--line);padding:7px 8px;margin:0}
+.gloss dt{font-weight:700}
+.gloss dd{font-size:.95rem}
+@media (max-width:600px){.gloss{grid-template-columns:1fr}.gloss dt{border-bottom:0;padding-bottom:0}}
+.check label{display:flex;gap:10px;align-items:flex-start;padding:5px 0;cursor:pointer}
+.check input{margin-top:.35em;width:18px;height:18px;accent-color:var(--mat);flex:none}
+footer{padding:40px 0 60px;color:var(--muted);font-size:.9rem}
+hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
+@media (max-width:700px){.m{white-space:normal}.fx{padding:12px 10px}.fx .big{font-size:1.4rem}}
+@media (max-width:400px){body{font-size:16.5px}.wrap{padding:0 14px}.lab{padding:12px 10px}}
+
+/* compléments de la série Rupture */
+.btn.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,var(--card))}
+.btn.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--card))}
+.ctrl[hidden]{display:none}
+
+/* impression : le cours sur papier clair, ou la fiche mémoire seule sur une page */
+@media print{
+  :root,:root[data-theme]{--paper:#fff!important;--paper-2:#EEF2F6!important;--card:#fff!important;--ink:#111!important;--muted:#444!important;--line:#999!important;--grid:transparent!important;--lv2:#F2F5F8!important;--hl:#FFF3B0!important;color-scheme:light}
+  body{background:#fff;font-size:11pt}
+  .toc,.theme-btn,.btns,.ctrl,#qzReset,.score{display:none!important}
+  section.chap{padding:14px 0 4px}
+  .lab,.fx,.retenir,details.deep,.fiche>div,.exo{break-inside:avoid}
+  body.print-fiche header,body.print-fiche main>section:not(#fiche),body.print-fiche footer{display:none!important}
+  body.print-fiche #fiche .cartouche{margin-bottom:.6rem}
+  body.print-fiche .fiche>div{padding:8px 10px}
+}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="wrap wide">
+  <div class="title-block">
+    <div class="tb-main">
+      <div>
+        <p class="tb-series">Flamme et coupage</p>
+        <h1>Le coupage : préparer les bords</h1>
+      </div>
+      <button class="theme-btn" id="themeBtn" type="button" aria-label="Changer de thème">◐ Thème : automatique</button>
+    </div>
+    <div class="tb-cells">
+      <div><small>Cours</small><b>2 sur 2 : oxycoupage, plasma, laser, gougeage et qualité des coupes</b></div>
+      <div><small>Durée conseillée</small><b>≈ 1 h 25 avec les exercices</b></div>
+      <div><small>Prérequis</small><b>Arc sous gaz, cours 5 (arc plasma) ; Procédés avancés, cours 2 (faisceau laser) ; Construction, cours 1 (carbone équivalent)</b></div>
+      <div><small>À la fin tu sais</small><b>classer les procédés de coupage et qualifier une coupe selon l'ISO 9013 ; énoncer les trois conditions de l'oxycoupage et en déduire les métaux oxycoupables ; régler un préchauffage selon le carbone équivalent et l'épaisseur ; régler un oxycoupage et diagnostiquer une face de coupe ; choisir entre oxycoupage, plasma, laser, jet d'eau et gougeage air-arc ; citer les risques</b></div>
+    </div>
+  </div>
+  <p class="lede">Avant de souder, il faut couper : débiter les tôles, préparer les chanfreins, gouger l'envers ou éliminer un défaut. La qualité de ces bords conditionne celle de la soudure, et la norme ISO 9013 permet de l'exiger sur plan. Ce cours explique l'oxycoupage, qui brûle l'acier dans un jet d'oxygène, ses conditions et ses réglages, puis le plasma, le laser, le gougeage air-arc et le choix du procédé.</p>
+
+  <h4>Le code couleur de la série</h4>
+  <div class="cc" role="img" aria-label="Code couleur : les causes en rouge et violet, les réglages en vert, les jets en orange, les effets en bleu et bleu-vert">
+    <div class="cc-box cc-cause"><small>Les causes</small><div class="cc-syms"><span class="sig">flamme</span><span class="sig">O₂</span><span class="tau">scorie</span><span class="tau">affouillement</span></div><p><span class="sig">rouge</span> : ce qui apporte la chaleur (flamme, combustion du fer, arc, faisceau) ; <span class="tau">violet</span> : les défauts de coupe</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-link"><small>Les réglages</small><div class="cc-syms"><span class="mat">v</span><span class="mat">p</span><span class="mat">e</span><span class="frc">jet</span></div><p>en <span class="mat">vert</span> : ce qu'on choisit (vitesse, pression, buse, épaisseur, préchauffage) ; en <span class="frc">orange</span> : les jets et ce qui s'écoule (oxygène de coupe, gaz plasmagène, oxydes chassés)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-eff"><small>Les effets</small><div class="cc-syms"><span class="eps">u</span><span class="eps">Rz5</span><span class="eps">n</span><span class="gam">ZAT</span></div><p><span class="eps">bleu</span> : ce qu'on mesure (perpendicularité, rugosité, retard) ; <span class="gam">bleu-vert</span> : la température, le métal et l'oxyde fondus, la zone affectée</p></div>
+  </div>
+  <div class="cc-more">
+    <div><b>Noir</b> : la géométrie dessinée (chalumeau, buse, tôle, saignée).</div>
+    <div><b class="wcol">Bronze</b> : les encadrés « métier » 🔥.</div>
+  </div>
+</div>
+</header>
+
+<nav class="toc" aria-label="Sommaire">
+  <div class="toc-in">
+    <a href="#avant">Avant de commencer</a>
+    <a href="#c1">1 Couper et qualifier la coupe</a>
+    <a href="#c2">2 Les trois conditions de l'oxycoupage</a>
+    <a href="#c3">3 Alliage, épaisseur et préchauffage</a>
+    <a href="#c4">4 Régler et lire une coupe</a>
+    <a href="#c5">5 Plasma, laser, gougeage et choix</a>
+    <a href="#exos">Exercices</a>
+    <a href="#quiz-s">Quiz</a>
+    <a href="#fiche">Fiche mémoire</a>
+    <a href="#gloss">Glossaire</a>
+    <a href="#check">Check-list</a>
+  </div>
+</nav>
+
+<main>
+<section class="chap" id="avant">
+<div class="wrap">
+  <h3 style="margin-top:0">Avant de commencer</h3>
+  <h4>Ce qu'il faut avoir en tête, en trois cases</h4>
+  <div class="recall">
+    <div><div class="f">Fe + O₂ → oxyde + chaleur</div>La combustion du fer dans l'oxygène pur est fortement exothermique : c'est elle, plus que la flamme, qui fournit l'énergie de l'oxycoupage.</div>
+    <div><div class="f">CE = C + Mn/6 + …</div>Le carbone équivalent mesure la trempabilité d'un acier : plus il est élevé, plus un refroidissement rapide durcit le métal (Construction, cours 1).</div>
+    <div><div class="f">arc étranglé, faisceau</div>Le plasma et le laser concentrent l'énergie au point de fondre et de chasser le métal (Arc sous gaz, cours 5 ; Procédés avancés, cours 2).</div>
+  </div>
+
+  <div class="def"><b>📘 Le sujet</b> : <b>1.13 « Coupage et autres procédés de préparation des bords »</b> du planning et du référentiel de l'IIW (<i>International Institute of Welding</i>). Attendus de l'IWE (<i>International Welding Engineer</i>, ingénieur international en soudage) : expliquer le principe des procédés de coupage et de gougeage (flamme, plasma, laser, arc-air) ; décrire l'équipement ; relier les paramètres à la qualité de la face de coupe ; choisir un procédé pour un matériau et une épaisseur ; reconnaître les risques.</div>
+
+  <div class="def"><b>📖 Normes et sigles</b>. <b>ISO 4063</b> : 81 coupage à la flamme (oxycoupage), 821 coupage air-arc, 83 coupage plasma (831 avec gaz oxydant, 832 sans gaz oxydant, 833 à l'air), 84 coupage laser, 86 gougeage à la flamme, 871 gougeage air-arc, 88 gougeage plasma. <b>ISO 9013</b> (2017, amendement 1 de 2024) : qualité géométrique des coupes thermiques ; <b>ISO 17658</b> : défauts des coupes. <b>u</b> : tolérance de perpendicularité ou d'angularité ; <b>Rz5</b> : hauteur moyenne du profil de la face de coupe ; <b>n</b> : retard des stries ; <b>CE</b> : carbone équivalent. Les manipulations sont des modèles pédagogiques, sauf les limites de l'ISO 9013.</div>
+
+  <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage</b>
+    <p>Un chanfrein mal coupé fait une soudure difficile : talon irrégulier, angle faux, oxydes et scories dans le joint, bord durci qui fissure. L'ingénieur spécifie la qualité de coupe sur plan, choisit le procédé et vérifie que la préparation n'altère pas le métal à souder.</p>
+  </div>
+
+  <h4>La série</h4>
+  <div class="series" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">
+    <div><b>1 Le soudage et le chauffage aux gaz</b>Flamme oxyacétylénique, réglages, soudage, brasage, chauffage (à venir).</div>
+    <div class="here"><b>2 Le coupage et la préparation des bords</b>Oxycoupage, plasma, laser, gougeage, qualité des coupes.</div>
+  </div>
+
+  <h4>Le plan du cours</h4>
+  <ol class="route">
+    <li><span class="dot">1</span><b>Couper et qualifier la coupe</b><p>Familles de procédés ; perpendicularité et rugosité selon l'ISO 9013.</p></li>
+    <li><span class="dot">2</span><b>Les trois conditions de l'oxycoupage</b><p>Pourquoi l'acier brûle et pourquoi l'inox ne brûle pas.</p></li>
+    <li><span class="dot">3</span><b>Alliage, épaisseur et préchauffage</b><p>Carbone équivalent, bord durci, zone affectée.</p></li>
+    <li><span class="dot">4</span><b>Régler et lire une coupe</b><p>Buse, pression, vitesse, chauffe ; diagnostic de la face.</p></li>
+    <li><span class="dot">5</span><b>Plasma, laser, gougeage et choix</b><p>Le bon procédé pour le métal, l'épaisseur et la qualité.</p></li>
+  </ol>
+</div>
+</section>
+<section class="chap" id="c1">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">1</div>
+    <div class="c-title"><h2>Couper et qualifier la coupe</h2><p>Familles de procédés ; perpendicularité et rugosité selon l'ISO 9013</p></div>
+    <div class="c-img"><span class="ico">📐</span><span><small>Image à retenir</small>L'équerre et le peigne : on pose l'équerre sur la face de coupe pour voir de combien elle penche, on passe le peigne pour sentir la profondeur des stries</span></div>
+  </div>
+
+  <p>On coupe un métal de deux façons. Le <b>coupage mécanique</b> le sépare par cisaillement, sciage, usinage ou érosion (jet d'eau abrasif) : peu ou pas de chaleur, mais des épaisseurs et des formes limitées. Le <b>coupage thermique</b> le chauffe localement et chasse la matière de la saignée : par <b>oxydation</b> (oxycoupage : l'acier brûle dans l'oxygène), ou par <b>fusion</b> (plasma, laser, arc : le métal fondu est soufflé). La face de coupe obtenue n'est jamais parfaite : elle penche un peu, porte des stries, parfois une arête fondue ou des gouttes collées. L'ISO 9013 permet de mesurer et d'exiger cette qualité.</p>
+
+  <div class="def"><b>📖 Les grandeurs de l'ISO 9013.</b>
+    <ul>
+      <li><b>u</b>, tolérance de perpendicularité ou d'angularité : distance entre deux droites parallèles qui encadrent le profil de la face de coupe, mesurée en retrait des arêtes ; cinq champs, de 1 (le plus serré) à 5.</li>
+      <li><b>Rz5</b>, hauteur moyenne du profil : profondeur moyenne des stries, mesurée sur 15 mm de coupe ; quatre champs, de 1 à 4.</li>
+      <li><b>Valeurs complémentaires</b> : retard des stries n, fusion de l'arête supérieure r, gouttes ou scories à l'arête inférieure ; et une classe de tolérance dimensionnelle (1 ou 2).</li>
+      <li><b>Désignation</b> : « Coupe thermique ISO 9013-uRc », par exemple ISO 9013-342 : champ 3 pour u, champ 4 pour Rz5, classe 2.</li>
+    </ul>
+  </div>
+
+  <div class="fx"><div class="row big"><span><span class="eps">u</span><sub>champ 3</sub> = 0,4 + 0,01·<span class="mat">a</span> · <span class="eps">Rz5</span><sub>champ 3</sub> = 70 + 1,2·<span class="mat">a</span></span></div><p class="cap">a épaisseur de coupe (mm) ; u en mm, Rz5 en μm. Chaque champ a sa droite : u de 0,05 + 0,003·a (champ 1) à 1,2 + 0,035·a (champ 5) ; Rz5 de 10 + 0,6·a (champ 1) à 110 + 1,8·a (champ 4), d'après les tableaux 4 et 5 de l'ISO 9013:2017.</p></div>
+
+  <div class="lab" id="m1">
+    <p class="lab-h">Manipulation 1 : classer une face de coupe</p>
+    <p class="lab-sub">Règle l'épaisseur coupée, puis la perpendicularité et la rugosité mesurées : les champs de l'ISO 9013 et la désignation s'affichent.<span class="predict">🔮 Prédis d'abord : sur 20 mm, une face qui penche de 0,5 mm entre-t-elle dans le champ 2 ?</span></p>
+    <div class="btns" id="m1b">
+      <button class="btn on" data-k="1" type="button">Classe 1</button>
+      <button class="btn" data-k="2" type="button">Classe 2</button>
+    </div>
+    <div class="ctrl"><label for="m1a">Épaisseur <b class="mat">a</b></label><input type="range" id="m1a" min="2" max="150" step="1" value="20"><output id="m1ao"></output></div>
+    <div class="ctrl"><label for="m1u">Perpendicularité mesurée <b class="eps">u</b></label><input type="range" id="m1u" min="0.02" max="5" step="0.01" value="0.5"><output id="m1uo"></output></div>
+    <div class="ctrl"><label for="m1z">Rugosité mesurée <b class="eps">Rz5</b></label><input type="range" id="m1z" min="5" max="400" step="1" value="80"><output id="m1zo"></output></div>
+    <svg id="m1svg" role="img" aria-label="Droites des champs de perpendicularité de l'ISO 9013 en fonction de l'épaisseur, avec le point mesuré, et coupe de la face avec ses stries"></svg>
+    <div class="readout" id="m1r"></div>
+    <p class="status" id="m1msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> : coupe d'une tôle de 20 mm, u mesuré 0,5 mm, Rz5 mesuré 80 μm. Champ 2 pour u : <span class="m">0,15 + 0,007 × 20 = 0,29 mm</span>, dépassé ; champ 3 : <span class="m">0,4 + 0,01 × 20 = 0,60 mm</span>, respecté. Champ 2 pour Rz5 : <span class="m">40 + 0,8 × 20 = 56 μm</span>, dépassé ; champ 3 : <span class="m">70 + 1,2 × 20 = 94 μm</span>, respecté. La coupe est donc de qualité 33 : avec la classe 2, <b>ISO 9013-332</b>.</p>
+
+  <div class="warn"><b>⚠️ Piège : lire « 342 » comme un numéro de série.</b> Les trois chiffres se lisent séparément et dans l'ordre : champ de u, champ de Rz5, classe de tolérance. Un plus petit chiffre est plus exigeant. Si une valeur n'est pas exigée, on écrit 0 à sa place.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « u, puis R, puis la classe »</b> : l'équerre, le peigne, le mètre.</div>
+  <div class="weld"><b>🔥 Pour un chanfrein :</b> chaque face d'un chanfrein en Y, X ou K s'évalue séparément. La qualité de coupe se spécifie selon le besoin : une face qui sera fondue par la soudure tolère des stries que ne tolérerait pas une face d'appui ou d'aspect. Exiger plus que nécessaire coûte cher.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : ce que dit l'annexe A</summary>
+    <p>L'ISO 9013 décrit la qualité indépendamment du procédé, mais tous les procédés n'atteignent pas toutes les qualités. Son annexe informative indique des classes de tolérance types : classe 1 en coupage laser jusqu'à 32 mm, classe 2 à la flamme et au plasma. Sur l'aluminium, le titane ou le laiton, les faces sont granuleuses et la mesure de Rz5 devient délicate. Les tolérances ne s'appliquent ni au point d'amorçage, ni à la fin de coupe, ni aux petits rayons.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Coupage thermique : par oxydation (oxycoupage) ou par fusion (plasma, laser).</li>
+      <li>ISO 9013 : u (5 champs), Rz5 (4 champs), classe (1 ou 2).</li>
+      <li>ISO 9013-342 : u champ 3, Rz5 champ 4, classe 2.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c2">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">2</div>
+    <div class="c-title"><h2>Les trois conditions de l'oxycoupage</h2><p>Pourquoi l'acier brûle et pourquoi l'inox ne brûle pas</p></div>
+    <div class="c-img"><span class="ico">🪵</span><span><small>Image à retenir</small>Le fer qui brûle : chauffé au rouge, l'acier brûle dans l'oxygène pur comme une bûche ; le jet chasse les cendres fondues et ouvre la saignée</span></div>
+  </div>
+
+  <p>L'oxycoupage (81) n'est pas une fusion. La flamme de chauffe porte une petite zone d'acier à sa température d'amorçage, vers 1 150 °C, rouge vif ; on ouvre alors le jet d'<b>oxygène de coupe</b>, pur et rapide. Le fer brûle : la réaction dégage beaucoup de chaleur, qui entretient la combustion de proche en proche dans l'épaisseur ; l'oxyde formé, fondu et fluide, est chassé par le jet, et la saignée avance. Pour les fortes épaisseurs, la combustion du fer fournit l'essentiel de la chaleur, la flamme ne faisant qu'entretenir le départ et la surface.</p>
+
+  <div class="def"><b>📖 Les trois conditions pour qu'un métal s'oxycoupe.</b>
+    <ol>
+      <li>La combustion du métal dans l'oxygène est fortement <b>exothermique</b>, et le métal ne conduit pas la chaleur trop vite.</li>
+      <li>La <b>température d'amorçage</b> de la combustion est <b>inférieure à la température de fusion</b> du métal : il brûle avant de fondre.</li>
+      <li>La <b>température de fusion de l'oxyde</b> est <b>inférieure à celle du métal</b> : l'oxyde, liquide et fluide, est chassé par le jet sans que le métal fonde.</li>
+    </ol>
+    Seuls le fer, les aciers non alliés et faiblement alliés, et quelques aciers particuliers les remplissent. L'inox, l'aluminium et ses alliages, le cuivre et ses alliages, la fonte et les aciers fortement alliés ne s'oxycoupent pas sans artifice (poudre de fer injectée).</div>
+
+  <div class="fx"><div class="row big"><span><span class="sig">T</span><sub>amorçage</sub> &lt; <span class="sig">T</span><sub>fusion métal</sub> · <span class="gam">T</span><sub>fusion oxyde</sub> &lt; <span class="sig">T</span><sub>fusion métal</sub></span></div><p class="cap">Ordres de grandeur pour l'acier doux : amorçage vers 1 150 °C, fusion vers 1 500 °C, oxyde de fer (FeO) fondu vers 1 370 °C. Les trois inégalités sont satisfaites, et la combustion fournit la chaleur.</p></div>
+
+  <div class="lab" id="m2">
+    <p class="lab-h">Manipulation 2 : ce métal s'oxycoupe-t-il ?</p>
+    <p class="lab-sub">Choisis un métal : ses températures d'amorçage, de fusion et de fusion de l'oxyde se placent sur l'échelle, et les trois conditions se vérifient.<span class="predict">🔮 Prédis d'abord : quelle condition l'inox 18-10 ne remplit-il pas ?</span></p>
+    <div class="btns" id="m2b">
+      <button class="btn on" data-k="acier" type="button">Acier doux</button>
+      <button class="btn" data-k="inox" type="button">Inox 18-10</button>
+      <button class="btn" data-k="fonte" type="button">Fonte grise</button>
+      <button class="btn" data-k="alu" type="button">Aluminium</button>
+      <button class="btn" data-k="cuivre" type="button">Cuivre</button>
+    </div>
+    <svg id="m2svg" role="img" aria-label="Échelle des températures d'amorçage, de fusion du métal et de fusion de l'oxyde, et vérification des trois conditions de l'oxycoupage"></svg>
+    <div class="readout" id="m2r"></div>
+    <p class="status" id="m2msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> : sur un inox 18-10, le chrome forme un oxyde Cr<sub>2</sub>O<sub>3</sub> qui ne fond que vers 2 400 °C, bien au-dessus du métal : une croûte réfractaire bloque la combustion, la troisième condition tombe. Sur l'aluminium, l'alumine fond vers 2 070 °C et le métal à 660 °C : il fond avant de brûler. On coupe ces métaux au plasma, au laser ou au jet d'eau. La fonte fond vers 1 150-1 200 °C, avant que son oxyde soit fluide, et son graphite et son silicium gênent la combustion.</p>
+
+  <div class="warn"><b>⚠️ Piège : couper l'inox au chalumeau « en insistant ».</b> On obtient une saignée fondue, irrégulière, chargée d'oxydes de chrome, avec une zone affectée large et un métal appauvri en chrome au bord : la résistance à la corrosion est perdue. L'inox se coupe au plasma, au laser, au jet d'eau ou mécaniquement.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « brûler avant de fondre, l'oxyde fond avant le métal »</b>.</div>
+  <div class="weld"><b>🔥 La pureté de l'oxygène :</b> c'est le premier facteur de productivité. Avec 1 % d'impuretés en plus, la vitesse de coupe baisse de 15 à 30 % ; sous environ 98 %, la coupe devient difficile et sale. L'oxygène industriel titre au moins 99,5 %.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : les gaz de chauffe</summary>
+    <p>La flamme de chauffe brûle un combustible avec de l'oxygène : acétylène (flamme la plus chaude, vers 3 100 °C, amorçage rapide, idéal en manuel et sur tôles minces), propane ou gaz naturel (moins chers, plus stables à stocker, mais plus lents à l'amorçage et plus gourmands en oxygène), mélanges à base de propylène. Pour l'oxycoupage machine des fortes épaisseurs, où la combustion du fer fait l'essentiel, le propane ou le gaz naturel suffisent.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Réaction exothermique, amorçage avant fusion, oxyde fondant avant le métal.</li>
+      <li>Oxycoupables : aciers non alliés et faiblement alliés.</li>
+      <li>Inox, aluminium, cuivre, fonte : plasma, laser ou jet d'eau.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c3">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">3</div>
+    <div class="c-title"><h2>Alliage, épaisseur et préchauffage</h2><p>Carbone équivalent, bord durci, zone affectée</p></div>
+    <div class="c-img"><span class="ico">🍮</span><span><small>Image à retenir</small>La croûte de crème brûlée : la coupe laisse au bord une fine pellicule chauffée puis refroidie brutalement ; sur un acier trempant, elle durcit et casse comme du caramel</span></div>
+  </div>
+
+  <p>Même parmi les aciers oxycoupables, tous ne se coupent pas aussi bien. Les éléments d'alliage changent la combustion : le chrome et le molybdène forment des oxydes réfractaires qui la freinent, le carbone en excès gêne, le manganèse plutôt l'aide. Surtout, le bord coupé subit un cycle thermique violent : chauffé au-delà de la transformation, puis refroidi très vite par la masse froide de la tôle. Sur un acier trempant, ce bord devient une mince couche dure, parfois fissurée, qu'il faudra prévenir par un <b>préchauffage</b> ou éliminer par <b>meulage</b> avant de souder.</p>
+
+  <div class="def"><b>📖 Ce qui change avec l'alliage et l'épaisseur.</b>
+    <ul>
+      <li><b>Éléments d'alliage</b> : au-delà de quelques pour cent de chrome, l'oxycoupage devient très difficile ; le carbone élevé impose une chauffe plus forte et un préchauffage ; au-delà d'environ 1,7 % de carbone (fontes), on change de procédé.</li>
+      <li><b>Carbone équivalent</b> : il résume la trempabilité, donc le risque de bord durci et fissuré ; plus il est élevé et plus la pièce est épaisse, plus le préchauffage doit être chaud.</li>
+      <li><b>Zone affectée</b> : de moins d'un millimètre en tôle mince à quelques millimètres en forte épaisseur ; la couche réellement durcie est bien plus mince.</li>
+      <li><b>Épaisseur</b> : au chalumeau manuel, quelques dizaines de millimètres ; en machine, des centaines de millimètres, avec une buse de calibre adapté et de l'oxygène pur.</li>
+    </ul>
+  </div>
+
+  <div class="fx"><div class="row big"><span><span class="mat">CE</span> = C + Mn/6 + (Cr + Mo + V)/5 + (Ni + Cu)/15</span></div><p class="cap">Carbone équivalent de l'IIW (teneurs en %). Les barèmes d'oxycoupage utilisent des formules voisines. Modèle du cours : aucun préchauffage sous CE = 0,35 ; au-dessus, T<sub>p</sub> ≈ 700 × (CE − 0,35) en °C, majoré de 40 % au-delà de 50 mm d'épaisseur, plafonné à 500 °C.</p></div>
+
+  <div class="lab" id="m3">
+    <p class="lab-h">Manipulation 3 : préchauffer avant de couper</p>
+    <p class="lab-sub">Choisis un acier type ou règle son carbone équivalent, puis l'épaisseur : le préchauffage du modèle, la zone affectée et le risque de bord durci s'affichent.<span class="predict">🔮 Prédis d'abord : un S355 de 20 mm (CE ≈ 0,42) demande-t-il un préchauffage pour l'oxycoupage ?</span></p>
+    <div class="btns" id="m3b">
+      <button class="btn" data-ce="0.30" type="button">S235 (CE 0,30)</button>
+      <button class="btn on" data-ce="0.42" type="button">S355 (CE 0,42)</button>
+      <button class="btn" data-ce="0.55" type="button">Acier de mécanique (0,55)</button>
+      <button class="btn" data-ce="0.75" type="button">42CrMo4 (0,75)</button>
+    </div>
+    <div class="ctrl"><label for="m3c">Carbone équivalent <b class="mat">CE</b></label><input type="range" id="m3c" min="0.2" max="0.9" step="0.01" value="0.42"><output id="m3co"></output></div>
+    <div class="ctrl"><label for="m3e">Épaisseur <b class="mat">e</b></label><input type="range" id="m3e" min="5" max="150" step="1" value="20"><output id="m3eo"></output></div>
+    <svg id="m3svg" role="img" aria-label="Préchauffage en fonction du carbone équivalent pour deux gammes d'épaisseur, et coupe du bord avec sa zone affectée et sa couche durcie"></svg>
+    <div class="readout" id="m3r"></div>
+    <p class="status" id="m3msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> (modèle) : S355 de 20 mm, CE ≈ 0,42 : <span class="m">700 × (0,42 − 0,35) ≈ 49 °C</span>, un préchauffage léger, utile surtout par temps froid. Un acier de mécanique à CE 0,55 de 80 mm : <span class="m">700 × 0,20 × 1,4 ≈ 196 °C</span>. Un 42CrMo4 de 80 mm, CE ≈ 0,75 : environ 390 °C, et un meulage du bord avant soudage.</p>
+
+  <div class="warn"><b>⚠️ Piège : souder sur un bord oxycoupé dur.</b> La couche trempée du bord, si elle reste dans le chanfrein, se retrouve dans la zone affectée de la soudure, déjà durcie : risque de fissuration à froid. Sur les aciers à CE élevé, on préchauffe la coupe ou l'on meule le bord sur 1 à 2 mm, puis on contrôle la dureté si la spécification l'exige.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « CE haut, bord dur : chauffe avant, meule après »</b>.</div>
+  <div class="weld"><b>🔥 La pièce chaude n'aide pas la coupe :</b> préchauffer sert à ralentir le refroidissement du bord, pas à couper plus vite. Même sur une pièce à plusieurs centaines de degrés, la flamme de chauffe reste nécessaire au départ. Le préchauffage se règle sur le métal, pas sur la machine.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : les déformations de coupe</summary>
+    <p>La chaleur de coupe dilate le bord, qui se rétracte ensuite : la pièce se cintre, les découpes étroites se ferment, les chutes bougent. On garde la pièce solidaire de la tôle le plus longtemps possible, on coupe simultanément deux bords parallèles, on supporte la pièce et non la chute, on laisse des attaches que l'on coupe en dernier, ou l'on corrige le gabarit de découpe. Les mêmes principes s'appliquent au plasma.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Cr, Mo, C élevé gênent l'oxycoupage ; Mn l'aide.</li>
+      <li>CE et épaisseur élevés : préchauffage, sinon bord durci.</li>
+      <li>Bord dur : meuler avant de souder.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c4">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">4</div>
+    <div class="c-title"><h2>Régler et lire une coupe</h2><p>Buse, pression, vitesse, chauffe ; diagnostic de la face</p></div>
+    <div class="c-img"><span class="ico">🔍</span><span><small>Image à retenir</small>La face de coupe est un enregistrement : l'inclinaison des stries raconte la vitesse, l'arête du haut raconte la chauffe, le bas raconte l'oxygène</span></div>
+  </div>
+
+  <p>Un oxycoupage se règle avec quatre paramètres : la <b>buse</b>, dont le calibre suit l'épaisseur ; la <b>pression d'oxygène de coupe</b> ; la <b>vitesse d'avance</b> ; la <b>flamme de chauffe</b>, neutre, et sa distance à la tôle. Au bon réglage, l'oxyde s'écoule en pluie régulière sous la tôle, avec un bruit de pulvérisation continu, et la face est lisse, à stries fines et presque verticales. Les stries s'inclinent vers l'arrière : leur décalage entre le haut et le bas s'appelle le <b>retard</b>, d'environ 10 % de l'épaisseur en coupe normale.</p>
+
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Ce qu'on voit (ISO 17658)</th><th>Cause probable</th></tr></thead>
+    <tbody>
+      <tr><td>Arête supérieure fondue, scories collées en bas</td><td>vitesse trop faible</td></tr>
+      <tr><td>Retard excessif, stries très inclinées, fin de coupe incomplète</td><td>vitesse trop forte ou pression d'oxygène trop faible</td></tr>
+      <tr><td>Arête supérieure arrondie, gouttes, face creusée en haut</td><td>flamme de chauffe trop forte ou buse trop près</td></tr>
+      <tr><td>Affouillements dans le bas de la face</td><td>chauffe insuffisante, vitesse irrégulière</td></tr>
+      <tr><td>Stries irrégulières, face non plane</td><td>pression d'oxygène trop forte, buse encrassée</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="fx"><div class="row big"><span><span class="eps">n</span> ≈ 0,10·<span class="mat">e</span> (coupe) · 0,15 à 0,20·<span class="mat">e</span> (refendage)</span></div><p class="cap">n retard des stries (mm) ; e épaisseur (mm). Modèle du cours, tôle de 25 mm : n ≈ 0,1·e·(v/v<sub>0</sub>)²/(p/p<sub>0</sub>), avec v et p la vitesse et la pression rapportées au réglage nominal.</p></div>
+
+  <div class="lab" id="m4">
+    <p class="lab-h">Manipulation 4 : lire une face d'oxycoupage</p>
+    <p class="lab-sub">Tôle de 25 mm : écarte la vitesse, la chauffe et la pression d'oxygène du réglage nominal. La face de coupe se dessine, avec ses défauts et sa qualité ISO 9013.<span class="predict">🔮 Prédis d'abord : quelle trace laisse une vitesse trop faible ?</span></p>
+    <div class="btns" id="m4b">
+      <button class="btn on" data-v="1" data-h="1" data-p="1" type="button">Réglage nominal</button>
+      <button class="btn" data-v="0.7" data-h="1" data-p="1" type="button">Trop lent</button>
+      <button class="btn" data-v="1.4" data-h="1" data-p="1" type="button">Trop rapide</button>
+      <button class="btn" data-v="1" data-h="1.4" data-p="1" type="button">Chauffe trop forte</button>
+    </div>
+    <div class="ctrl"><label for="m4v">Vitesse <b class="mat">v/v₀</b></label><input type="range" id="m4v" min="0.5" max="1.6" step="0.05" value="1"><output id="m4vo"></output></div>
+    <div class="ctrl"><label for="m4h">Chauffe <b class="sig">h/h₀</b></label><input type="range" id="m4h" min="0.5" max="1.6" step="0.05" value="1"><output id="m4ho"></output></div>
+    <div class="ctrl"><label for="m4p">Pression d'oxygène <b class="frc">p/p₀</b></label><input type="range" id="m4p" min="0.5" max="1.6" step="0.05" value="1"><output id="m4po"></output></div>
+    <svg id="m4svg" role="img" aria-label="Face de coupe vue de côté avec ses stries, son retard, l'arête supérieure et les scories, et qualité ISO 9013 estimée"></svg>
+    <div class="readout" id="m4r"></div>
+    <p class="status" id="m4msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> (modèle, 25 mm) : au réglage nominal, retard de 2,5 mm (10 %), qualité 33 environ. Trop lent (70 %), le retard tombe à 1,2 mm, mais l'arête supérieure fond et les scories collent dessous. Trop rapide (140 %), le retard monte à près de 5 mm et la coupe se désamorce dans le bas : la pièce ne tombe pas. Une chauffe trop forte arrondit l'arête du haut sans gagner de vitesse.</p>
+
+  <div class="warn"><b>⚠️ Piège : forcer la pression pour aller plus vite.</b> Trop d'oxygène refroidit la saignée et la perturbe : stries irrégulières, face ondulée, consommation inutile. La vitesse se gagne par le bon calibre de buse et un oxygène pur, pas par la pression.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « le haut dit la chauffe, la pente dit la vitesse, le bas dit l'oxygène »</b>.</div>
+  <div class="weld"><b>🔥 Mécaniser et chanfreiner :</b> chariots sur rails, machines de reproduction, bancs à commande numérique multi-têtes. Un bloc de deux ou trois chalumeaux inclinés prépare en un passage un chanfrein en V avec talon, en X ou en K. Plus de régularité, donc une qualité ISO 9013 meilleure qu'à la main.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : l'écoulement des scories</summary>
+    <p>Le meilleur indicateur en atelier est l'écoulement sous la tôle. Un jet de scories qui part dans l'axe, en pluie fine, avec un bruit régulier, signale un bon équilibre entre vitesse et oxygène. Un jet qui part vers l'arrière annonce un retard excessif ; des gouttes qui collent sous la tôle annoncent une vitesse trop faible ou un oxygène impur. Les opérateurs règlent souvent à l'oreille autant qu'à l'œil.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Buse selon l'épaisseur, flamme neutre, oxygène pur, vitesse réglée sur l'écoulement.</li>
+      <li>Retard ≈ 10 % de l'épaisseur en coupe normale.</li>
+      <li>Trop lent : arête fondue, scories ; trop vite : retard, coupe désamorcée.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c5">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">5</div>
+    <div class="c-title"><h2>Plasma, laser, gougeage et choix</h2><p>Le bon procédé pour le métal, l'épaisseur et la qualité</p></div>
+    <div class="c-img"><span class="ico">🧰</span><span><small>Image à retenir</small>Le couteau, le cutter et la scie : la flamme pour les grosses épaisseurs d'acier, le plasma pour tout ce qui conduit, le laser pour la finesse, le jet d'eau pour ce que la chaleur abîme</span></div>
+  </div>
+
+  <p>Là où l'oxycoupage échoue, on coupe par fusion. Le <b>coupage plasma</b> (83) utilise un arc étranglé, beaucoup plus raide et chaud qu'en soudage, dont le jet fond et chasse le métal : il coupe tout métal conducteur, vite, en épaisseur faible à moyenne. Le <b>coupage laser</b> (84) concentre un faisceau sur une tache fine : saignée étroite, précision, classe 1 de l'ISO 9013, surtout en tôle mince. Le <b>jet d'eau abrasif</b> coupe sans chaleur. Pour creuser plutôt que couper, le <b>gougeage air-arc</b> (871) fond le métal à l'arc d'une électrode de carbone et le chasse par un jet d'air comprimé.</p>
+
+  <div class="def"><b>📖 Plasma, laser, air-arc.</b>
+    <ul>
+      <li><b>Plasma</b> : gaz plasmagène air (économique), oxygène (aciers, coupe nette et soudable), azote ou argon-hydrogène (inox, aluminium) ; injection d'eau en vortex pour une coupe plus droite, moins de fumées et de bruit. La saignée est un peu oblique : on choisit le sens de coupe pour que le bord droit soit du côté de la pièce.</li>
+      <li><b>Laser</b> : oxygène d'assistance sur l'acier (la combustion aide, mais la face s'oxyde), azote sur l'inox et l'aluminium (coupe par fusion, face nette et soudable sans reprise).</li>
+      <li><b>Gougeage air-arc</b> : électrode de carbone cuivrée, courant continu électrode positive, air comprimé ; reprise à l'envers, élimination de défauts. Le carbone peut recarburer la surface : on meule avant de souder.</li>
+      <li><b>Risques</b> : fumées et oxydes d'azote, bruit fort (plasma, air-arc), UV, haute tension en plasma, retours de flamme en oxycoupage (clapets et dispositifs anti-retour), rayonnement laser de classe 4.</li>
+    </ul>
+  </div>
+
+  <div class="fx"><div class="row big"><span>choix = <span class="mat">métal</span> × <span class="mat">épaisseur</span> × qualité exigée × coût</span></div><p class="cap">L'oxycoupage règne sur l'acier épais ; le plasma sur l'acier mince à moyen et sur tous les métaux non oxycoupables ; le laser sur la tôle fine et précise ; le jet d'eau sur les épaisseurs et matériaux sensibles à la chaleur.</p></div>
+
+  <div class="lab" id="m5">
+    <p class="lab-h">Manipulation 5 : quel procédé de coupe ?</p>
+    <p class="lab-sub">Choisis le métal et la priorité, puis règle l'épaisseur : les domaines types de chaque procédé s'affichent, et le procédé conseillé s'allume.<span class="predict">🔮 Prédis d'abord : pour de l'inox de 30 mm, en production, quel procédé ?</span></p>
+    <div class="btns" id="m5m">
+      <button class="btn on" data-m="acier" type="button">Acier</button>
+      <button class="btn" data-m="inox" type="button">Inox</button>
+      <button class="btn" data-m="alu" type="button">Aluminium</button>
+    </div>
+    <div class="btns" id="m5q">
+      <button class="btn on" data-q="cout" type="button">Productivité, coût</button>
+      <button class="btn" data-q="precision" type="button">Précision</button>
+    </div>
+    <div class="ctrl"><label for="m5e">Épaisseur <b class="mat">e</b></label><input type="range" id="m5e" min="1" max="300" step="1" value="10"><output id="m5eo"></output></div>
+    <svg id="m5svg" role="img" aria-label="Domaines d'épaisseur typiques des procédés de coupage pour le métal choisi, avec l'épaisseur et le procédé conseillé"></svg>
+    <div class="readout" id="m5r"></div>
+    <p class="status" id="m5msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> : acier de 10 mm en production : plasma à l'oxygène, rapide et soudable ; si la précision prime, laser. Acier de 80 mm : oxycoupage, le plasma n'y va plus de façon économique. Inox de 30 mm : plasma argon-hydrogène ou azote ; au-delà de 150 mm environ, jet d'eau abrasif ou usinage. Aluminium de 8 mm précis : laser à l'azote.</p>
+
+  <div class="warn"><b>⚠️ Piège : souder directement sur une coupe plasma à l'air ou au laser sous oxygène.</b> La face peut porter des nitrures (coupe à l'air ou à l'azote sur acier) ou une couche d'oxyde, sources de porosités dans la soudure. Selon l'exigence, on choisit le gaz de coupe en pensant au soudage, ou l'on meule la face avant de souder.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « épais et noir : flamme ; tout ce qui conduit : plasma ; fin et précis : laser ; froid : jet d'eau »</b>.</div>
+  <div class="weld"><b>🔥 Préparer l'envers :</b> pour une soudure à pleine pénétration soudée des deux côtés, on gouge la racine à l'envers jusqu'au métal sain, à l'air-arc, au plasma ou à la meule, puis on contrôle (ressuage, magnétoscopie) avant la reprise.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : pourquoi la saignée plasma penche</summary>
+    <p>Le jet de plasma tourbillonne, guidé par la tuyère : il fond davantage d'un côté de la saignée que de l'autre. Une face sort presque droite, l'autre légèrement inclinée. Sur une machine, on coupe les contours extérieurs dans un sens et les trous dans l'autre, pour que le bon côté soit toujours celui de la pièce. Les torches à haute définition (834) réduisent cet angle et la largeur de saignée.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Plasma (83) : tout métal conducteur ; laser (84) : mince et précis.</li>
+      <li>Gougeage air-arc (871) : carbone, CC+, air ; meuler avant de souder.</li>
+      <li>Choisir selon métal, épaisseur, qualité ; penser au soudage qui suit.</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="exos">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✎</div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Deux exercices : spécifier et préparer la coupe d'une tôle de charpente, puis diagnostiquer et choisir un procédé</p></div>
+    <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de musculation : on ne progresse qu'en soulevant soi-même</span></div>
+  </div>
+  <p>Cherche chaque question sur papier avant d'ouvrir la correction : écris la relation ou la règle, puis les valeurs (mm, μm, °C). Le premier exercice se vérifie dans les manipulations 1 à 3 ; le second se rejoue dans les manipulations 4 et 5.</p>
+
+  <div class="exo">
+    <h4>Exercice 1 : le chanfrein d'une tôle de charpente <span class="lvtag">★ application · chapitres 1 à 3</span></h4>
+    <p>Une tôle de S355J2 de 30 mm (CE ≈ 0,42) est chanfreinée en V par oxycoupage. Le plan exige « Coupe thermique ISO 9013-342 ».</p>
+    <p class="q"><b>a)</b> Que signifie cette désignation ? Quelles limites de u et de Rz5 pour 30 mm ?</p>
+    <p class="q"><b>b)</b> On mesure u = 0,55 mm et Rz5 = 120 μm sur la face du chanfrein. Conforme ?</p>
+    <p class="q"><b>c)</b> Préchauffage selon le modèle du cours ? Et pour le même chanfrein dans une tôle de 80 mm d'un acier à CE 0,55 ?</p>
+    <p class="q"><b>d)</b> Le même chanfrein est demandé dans de l'inox 316L. Peut-on l'oxycouper ? Pourquoi ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> Champ 3 pour u, champ 4 pour Rz5, classe 2 de tolérance dimensionnelle. Pour a = 30 mm : <span class="m">u ≤ 0,4 + 0,01 × 30 = 0,70 mm</span> ; <span class="m">Rz5 ≤ 110 + 1,8 × 30 = 164 μm</span>.</p>
+      <p><b>b)</b> <span class="m">0,55 ≤ 0,70</span> et <span class="m">120 ≤ 164</span> : <b>conforme</b>. (Rz5 dépasse la limite du champ 3, 70 + 1,2 × 30 = 106 μm : la face est de qualité 34, ce que le plan accepte.)</p>
+      <p><b>c)</b> <span class="m">700 × (0,42 − 0,35) ≈ 49 °C</span> : préchauffage léger. Pour CE 0,55 et 80 mm : <span class="m">700 × 0,20 × 1,4 ≈ 196 °C</span>, et un meulage du bord si une couche dure subsiste.</p>
+      <p><b>d)</b> Non : le chrome forme un oxyde réfractaire (vers 2 400 °C) qui ne fond pas avant le métal ; la troisième condition n'est pas remplie, la combustion s'étouffe. On coupe au plasma (argon-hydrogène ou azote), au laser ou au jet d'eau.</p>
+    </div></details>
+  </div>
+
+  <div class="exo defi">
+    <h4>Exercice 2 : diagnostiquer et choisir <span class="lvtag">★★ synthèse · chapitres 4 et 5 · manipulations 4 et 5</span></h4>
+    <p>Un atelier oxycoupe des tôles de 25 mm et prépare de nouvelles pièces.</p>
+    <p class="q"><b>a)</b> Une face présente une arête supérieure fondue et des scories collées en bas. Cause et correction ?</p>
+    <p class="q"><b>b)</b> Une autre a des stries très inclinées, un retard d'environ 5 mm, et la pièce ne s'est pas détachée en fin de coupe. Cause ? Quel retard viser ?</p>
+    <p class="q"><b>c)</b> Quel procédé pour : acier de 8 mm très précis ; acier de 120 mm ; aluminium de 20 mm en production ?</p>
+    <p class="q"><b>d)</b> Une soudure en X de 40 mm doit être reprise à l'envers. Comment préparer la racine ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> Vitesse trop faible : la chaleur s'accumule, l'arête fond, l'oxyde n'est plus chassé proprement. Augmenter la vitesse jusqu'à un écoulement en pluie fine.</p>
+      <p><b>b)</b> Vitesse trop forte (ou pression d'oxygène trop faible) : le jet n'a pas le temps de traverser, la coupe se désamorce dans le bas. Viser un retard d'environ 10 % de l'épaisseur, soit 2,5 mm sur 25 mm.</p>
+      <p><b>c)</b> Acier de 8 mm précis : <b>laser</b> (classe 1 de l'ISO 9013). Acier de 120 mm : <b>oxycoupage</b> machine. Aluminium de 20 mm : <b>plasma</b> argon-hydrogène ou azote (l'aluminium ne s'oxycoupe pas).</p>
+      <p><b>d)</b> Gouger à l'air-arc (871) ou au plasma jusqu'au métal sain, meuler la gorge pour retirer la couche recarburée et régulariser le profil, contrôler l'absence de défaut (ressuage ou magnétoscopie), puis souder la reprise.</p>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="quiz-s">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">?</div>
+    <div class="c-title"><h2>Quiz : 12 questions éclair</h2><p>Chaque réponse est expliquée, même quand tu as juste</p></div>
+    <div class="c-img"><span class="ico">🎯</span><span><small>Image à retenir</small>La cible : vise 10 sur 12 avant la suite</span></div>
+  </div>
+  <div id="quiz"></div>
+  <div class="score" id="qzScore" aria-live="polite">Score : 0 / 12</div>
+  <div class="btns"><button class="btn" id="qzReset" type="button">↺ Recommencer le quiz</button></div>
+</div>
+</section>
+
+<section class="chap" id="fiche">
+<div class="wrap wide">
+  <div class="cartouche">
+    <div class="c-num">★</div>
+    <div class="c-title"><h2>Fiche mémoire du cours 2</h2><p>Neuf cases, neuf images : à photographier, puis à redessiner de tête</p></div>
+    <div class="c-img"><span class="ico">✂️</span><span><small>Image à retenir</small>Le fer qui brûle : chauffé au rouge, l'acier brûle dans l'oxygène pur comme une bûche ; le jet chasse les cendres fondues et ouvre la saignée</span></div>
+  </div>
+  <div class="fiche">
+    <div><div class="ic">📐</div><h4>ISO 9013</h4><div class="f">ISO 9013-uRc</div><p>u : 5 champs ; Rz5 : 4 champs ; classe 1 ou 2. Champ 3 : u ≤ 0,4 + 0,01·a.</p></div>
+    <div><div class="ic">✂️</div><h4>Familles</h4><div class="f">oxydation · fusion · mécanique</div><p>Oxycoupage ; plasma, laser, arc ; cisaillage, sciage, jet d'eau.</p></div>
+    <div><div class="ic">🪵</div><h4>Trois conditions</h4><div class="f">exothermique · T<sub>a</sub> &lt; T<sub>f</sub> · T<sub>f oxyde</sub> &lt; T<sub>f</sub></div><p>Acier doux : amorçage vers 1 150 °C, FeO vers 1 370 °C, fusion vers 1 500 °C.</p></div>
+    <div><div class="ic">🚫</div><h4>Non oxycoupables</h4><div class="f">inox · alu · cuivre · fonte</div><p>Oxydes réfractaires, fusion trop basse ou trop de conduction.</p></div>
+    <div><div class="ic">💨</div><h4>Oxygène</h4><div class="f">−1 % de pureté : −15 à 30 % de vitesse</div><p>Industriel ≥ 99,5 % ; flamme de chauffe neutre.</p></div>
+    <div><div class="ic">🍮</div><h4>Préchauffage</h4><div class="f">CE ↑ · e ↑ ⇒ T<sub>p</sub> ↑</div><p>Sinon bord trempé, fissuré : meuler avant de souder.</p></div>
+    <div><div class="ic">🔍</div><h4>Lire la face</h4><div class="f">retard n ≈ 10 % de e</div><p>Lent : arête fondue, scories ; rapide : retard, coupe désamorcée.</p></div>
+    <div><div class="ic">⚡</div><h4>Plasma, laser</h4><div class="f">83 · 84</div><p>Plasma : tout métal conducteur ; laser : mince, précis, classe 1.</p></div>
+    <div><div class="ic">🧰</div><h4>Gougeage et choix</h4><div class="f">871 air-arc : C, CC+, air</div><p>Épais : flamme ; conducteur : plasma ; fin : laser ; froid : jet d'eau.</p></div>
+  </div>
+  <div class="btns"><button class="btn" id="printFiche" type="button">🖨 Imprimer la fiche mémoire</button></div>
+  <div class="fun"><span class="fun-h">⚡ Fun fact : l'arc qu'on a étranglé</span>Le coupage plasma est né au milieu des années 1950 chez Union Carbide. Robert M. Gage, qui travaillait sur la torche TIG, eut l'idée de faire passer l'arc dans un orifice étroit d'une tuyère de cuivre refroidie : l'arc étranglé, beaucoup plus chaud et rapide, chassait le métal fondu. Le brevet date de 1957, et la même idée a donné le soudage plasma. C'est elle qui coupe aujourd'hui l'inox et l'aluminium que la flamme ne sait pas couper (<a href="#c5">chapitre 5</a>). (Sources : <i>The Fabricator</i>, histoire du coupage plasma ; brevet US 3 619 549 de Union Carbide, qui rappelle les travaux de Gage.)</div>
+</div>
+</section>
+
+<section class="chap" id="gloss">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">A–Z</div>
+    <div class="c-title"><h2>Glossaire</h2><p>Les mots, symboles et sigles de ce cours</p></div>
+    <div class="c-img"><span class="ico">📖</span><span><small>Image à retenir</small>Le dictionnaire : un mot flou, un clic</span></div>
+  </div>
+  <dl class="gloss">
+    <dt>Affouillement</dt><dd>Arrachement irrégulier de la face de coupe, plus large et plus profond que les stries.</dd>
+    <dt>Buse (de coupe)</dt><dd>Pièce du chalumeau qui délivre la flamme de chauffe et le jet d'oxygène ; son calibre suit l'épaisseur.</dd>
+    <dt>Carbone équivalent</dt><dd>Indice de trempabilité calculé à partir de la composition (C + Mn/6 + …).</dd>
+    <dt>Gougeage air-arc</dt><dd>Creusement d'une gorge par un arc sur électrode de carbone et un jet d'air comprimé (871).</dd>
+    <dt>Oxycoupage</dt><dd>Coupage par combustion du fer dans un jet d'oxygène pur, après chauffe par une flamme (81).</dd>
+    <dt>Oxygène de coupe</dt><dd>Jet d'oxygène pur qui brûle le métal et chasse l'oxyde fondu.</dd>
+    <dt>Perpendicularité (u)</dt><dd>Écart de la face de coupe à l'angle théorique, en mm (ISO 9013).</dd>
+    <dt>Refendage</dt><dd>Coupe d'une tôle sur toute sa longueur, à retard plus fort qu'en coupe normale.</dd>
+    <dt>Retard (n)</dt><dd>Décalage des stries entre le haut et le bas de la face, dans le sens de la coupe.</dd>
+    <dt>Rz5</dt><dd>Hauteur moyenne du profil de la face de coupe, en μm (ISO 9013).</dd>
+    <dt>Saignée</dt><dd>Fente ouverte par la coupe, entre les deux faces.</dd>
+    <dt>Scorie adhérente</dt><dd>Oxyde ou métal resolidifié collé à l'arête inférieure ou à la face de coupe.</dd>
+    <dt>Stries</dt><dd>Rainures laissées sur la face de coupe par l'avance du jet.</dd>
+    <dt>Vortex d'eau</dt><dd>Injection d'eau en tourbillon autour de l'arc plasma, pour une coupe plus droite et moins de fumées.</dd>
+  </dl>
+</div>
+</section>
+
+<section class="chap" id="check">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✓</div>
+    <div class="c-title"><h2>Suis-je prêt pour la suite ?</h2><p>Dix points à cocher de tête</p></div>
+    <div class="c-img"><span class="ico">🚦</span><span><small>Image à retenir</small>Le feu passe au vert quand tout est coché</span></div>
+  </div>
+  <p>Coche seulement ce que tu sais faire <b>sans regarder</b>. Tes coches restent enregistrées dans ce navigateur.</p>
+  <div class="check" id="checklist">
+    <label><input type="checkbox" data-c="1"> <span>Je sais distinguer coupage mécanique et thermique, par oxydation ou par fusion.</span></label>
+    <label><input type="checkbox" data-c="2"> <span>Je sais lire et écrire une désignation ISO 9013 (champs u et Rz5, classe de tolérance).</span></label>
+    <label><input type="checkbox" data-c="3"> <span>Je sais énoncer les trois conditions de l'oxycoupage.</span></label>
+    <label><input type="checkbox" data-c="4"> <span>Je sais expliquer pourquoi l'inox, la fonte, l'aluminium et le cuivre ne s'oxycoupent pas.</span></label>
+    <label><input type="checkbox" data-c="5"> <span>Je sais l'effet de la pureté de l'oxygène et du gaz de chauffe.</span></label>
+    <label><input type="checkbox" data-c="6"> <span>Je sais relier carbone équivalent, épaisseur et préchauffage, et le risque de bord durci.</span></label>
+    <label><input type="checkbox" data-c="7"> <span>Je sais régler un oxycoupage (buse, pression, vitesse, chauffe) et définir le retard.</span></label>
+    <label><input type="checkbox" data-c="8"> <span>Je sais diagnostiquer une face de coupe : fusion de l'arête, scories, affouillements, stries, retard.</span></label>
+    <label><input type="checkbox" data-c="9"> <span>Je sais choisir entre oxycoupage, plasma, laser et jet d'eau selon le matériau, l'épaisseur et la qualité.</span></label>
+    <label><input type="checkbox" data-c="10"> <span>Je sais décrire le gougeage air-arc et les risques du coupage (fumées, bruit, rentrée de flamme).</span></label>
+  </div>
+  <p class="status" id="checkMsg"></p>
+
+  <div class="meta">🏁 <b>Fin de la série « Flamme et coupage ».</b> Le cours 1, sur le soudage et le chauffage aux gaz, complétera la série. Pour réviser le coupage, rejoue la carte de l'ISO 9013, les trois conditions et le diagnostic d'une face de coupe.</div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="wrap">
+  <p>Cours 2 de la série « Flamme et coupage » (sujet 1.13 du planning et du référentiel de l'IIW). Vocabulaire aligné sur l'ISO 4063, l'ISO 9013:2017 (amendement 1:2024), l'ISO 17658 et le référentiel de l'IIW ; pour les notations et les conventions, l'enseignement de ta formation fait foi.</p>
+</div>
+</footer>
+<script>
+(function(){
+"use strict";
+const NS="http://www.w3.org/2000/svg";
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const RM=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function el(tag,attrs,parent){
+  const e=document.createElementNS(NS,tag);
+  if(attrs){for(const k in attrs){const v=attrs[k];if(v===undefined||v===null)continue;
+    if(typeof v==="string"&&v.indexOf("var(")>=0&&k!=="style")e.style.setProperty(k,v);else e.setAttribute(k,v);}}
+  if(parent)parent.appendChild(e);
+  return e;
+}
+function tx(p,x,y,str,attrs){const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);t.textContent=str;return t;}
+function txs(p,x,y,parts,attrs){/* parts: [["σ",""],["max","sub"],[" = 3",""]] */
+  const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);
+  parts.forEach(pt=>{const s=el("tspan",pt[1]==="sub"?{"font-size":"0.72em",dy:"3"}:(pt[2]?{dy:pt[2]}:{}),t);s.textContent=pt[0];
+    if(pt[1]==="sub"){const r=el("tspan",{dy:"-3"},t);r.textContent="\u200b";}});
+  return t;
+}
+function clear(svg){while(svg.firstChild)svg.removeChild(svg.firstChild);}
+function fitText(t,x0,x1,gap){/* garde un texte SVG entre x0 et x1 : il passe de l'autre côté de son repère (écart gap), sinon il glisse */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const a=t.getAttribute("text-anchor")||"start",x=+t.getAttribute("x");
+  if(gap&&a!=="middle"&&(b.x<x0||b.x+b.width>x1)){t.setAttribute("text-anchor",a==="end"?"start":"end");t.setAttribute("x",a==="end"?x+2*gap:x-2*gap);b=t.getBBox();}
+  const nx=+t.getAttribute("x");
+  if(b.x+b.width>x1)t.setAttribute("x",nx-(b.x+b.width-x1));else if(b.x<x0)t.setAttribute("x",nx+(x0-b.x));
+  return t;}
+function arrow(p,x1,y1,x2,y2,color,w,h){
+  w=w||2.4;h=h||10;
+  const g=el("g",{class:"arr"},p);g.style.color=color||"var(--ink)";
+  const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy);
+  if(L<1)return g;
+  const ux=dx/L,uy=dy/L,hh=Math.min(h,L*0.6),bx=x2-ux*hh,by=y2-uy*hh,hw=hh*0.45+w*0.3;
+  el("line",{x1:x1,y1:y1,x2:bx,y2:by,"stroke-width":w,"stroke-linecap":"round"},g);
+  el("polygon",{points:x2+","+y2+" "+(bx-uy*hw)+","+(by+ux*hw)+" "+(bx+uy*hw)+","+(by-ux*hw)},g);
+  return g;
+}
+function darrow(p,x,y1,y2,color,w){/* double flèche verticale */
+  const g=el("g",{},p);const m=(y1+y2)/2;
+  if(Math.abs(y2-y1)<4){el("line",{x1:x-5,y1:y1,x2:x+5,y2:y1,stroke:color,"stroke-width":2},g);return g;}
+  arrow(g,x,m,x,y1,color,w||2,8);arrow(g,x,m,x,y2,color,w||2,8);return g;
+}
+function nf(v,d){
+  if(d===undefined)d=1;
+  if(Math.abs(v)<0.5*Math.pow(10,-d))v=0;
+  return v.toLocaleString("fr-FR",{minimumFractionDigits:d,maximumFractionDigits:d}).replace("-","−").replace(/[\u202f\u2009]/g,"\u00a0");
+}
+const SUP={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function sci(v,d){
+  if(v===0)return "0";
+  if(!isFinite(v))return "∞";
+  let e=Math.floor(Math.log10(Math.abs(v)));
+  let m=v/Math.pow(10,e);
+  const dd=d===undefined?1:d;
+  if(Math.abs(Number(m.toFixed(dd)))>=10){m/=10;e+=1;}
+  return nf(m,dd)+" × 10"+String(e).split("").map(c=>SUP[c]).join("");
+}
+function bigN(v){/* nombre de cycles lisible */
+  if(!isFinite(v))return "∞";
+  if(v===0)return "0";
+  if(v<10)return nf(v,v<1?2:0);
+  if(v<1e5)return nf(Math.round(v),0);
+  return sci(v,1);
+}
+function dur(s){
+  if(!isFinite(s))return "∞";
+  if(s<60)return nf(s,s<10?1:0)+" s";
+  if(s<3600)return nf(s/60,0)+" min";
+  if(s<86400)return nf(s/3600,1)+" h";
+  if(s<86400*365)return nf(s/86400,1)+" jours";
+  return nf(s/(86400*365),1)+" ans";
+}
+function svgW(svg){const r=svg.getBoundingClientRect();return Math.max(290,Math.round(r.width||(svg.parentNode&&svg.parentNode.clientWidth)||600));}
+function setVB(svg,W,H){svg.setAttribute("viewBox","0 0 "+W+" "+H);}
+const redraws=[];
+let rzT=null,lastWW=window.innerWidth;
+window.addEventListener("resize",()=>{if(window.innerWidth===lastWW)return;lastWW=window.innerWidth;clearTimeout(rzT);rzT=setTimeout(()=>redraws.forEach(f=>{try{f();}catch(e){console.error(e);}}),120);});
+
+function niceStep(range,n){const raw=range/(n||5),p=Math.pow(10,Math.floor(Math.log10(raw))),m=raw/p;return (m<1.5?1:m<3?2:m<7?5:10)*p;}
+function setOn(sel,btn){$$(sel+" .btn").forEach(b=>b.classList.toggle("on",b===btn));}
+function fmtmm(mm){return mm<0.1?nf(mm*1000,0)+" µm":mm<10?nf(mm,mm<1?2:1)+" mm":nf(mm,0)+" mm";}
+function axes(svg,x0,x1,y0,y1,xmin,xmax,ymin,ymax,xlab,ylab,xstep,ystep,xfmt,yfmt){
+  const X=v=>x0+(x1-x0)*(v-xmin)/(xmax-xmin),Y=v=>y1-(y1-y0)*(v-ymin)/(ymax-ymin);
+  for(let v=Math.ceil(ymin/ystep-1e-9)*ystep;v<=ymax+1e-9;v+=ystep){el("line",{x1:x0,y1:Y(v),x2:x1,y2:Y(v),class:"gridbg"},svg);tx(svg,x0-5,Y(v)+4,yfmt?yfmt(v):nf(v,ystep<1?1:0),{class:"lbl","text-anchor":"end"});}
+  for(let v=Math.ceil(xmin/xstep-1e-9)*xstep;v<=xmax+1e-9;v+=xstep){el("line",{x1:X(v),y1:y1,x2:X(v),y2:y1+4,class:"tick"},svg);tx(svg,X(v),y1+17,xfmt?xfmt(v):nf(v,xstep<1?1:0),{class:"lbl","text-anchor":"middle"});}
+  el("line",{x1:x0,y1:y1,x2:x1,y2:y1,class:"axis"},svg);el("line",{x1:x0,y1:y0-4,x2:x0,y2:y1,class:"axis"},svg);
+  tx(svg,x0+4,y0-10,ylab,{class:"lbl"});tx(svg,x1,y1+32,xlab,{class:"lbl","text-anchor":"end"});
+  return {X:X,Y:Y};
+}
+function animate(btn,label,dur,onStep,onEnd){/* lecteur pilotable : ▶ lecture ou ⏸ pause, qui reprend où elle s'est arrêtée ; les boutons voisins ⏮ début, ◀ pas et pas ▶ (data-a) la mènent à la main ; un pas avance jusqu'à la prochaine image différente (20 pas au plus) */
+  const box=btn.parentNode,lab=btn.closest(".lab")||box,N=20;let raf=null,run=false,t=0;
+  const go=v=>{t=Math.max(0,Math.min(1,v));onStep(t);};
+  const snap=()=>{let s="";lab.querySelectorAll("svg,.readout,.status").forEach(e=>{s+=e.innerHTML;});return s;};
+  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;btn.textContent=label;}
+  function step(d){stop();const s0=snap();let k=Math.round(t*N);for(let i=0;i<N;i++){k+=d;if(k<0||k>N)break;go(k/N);if(snap()!==s0)break;}}
+  btn.addEventListener("click",()=>{if(run){stop();return;}if(t>=0.999)t=0;
+    if(RM){step(1);if(t>=1&&onEnd)onEnd();return;}
+    run=true;btn.textContent="⏸ Pause";const s0=performance.now()-t*dur;
+    const f=now=>{if(!run)return;go((now-s0)/dur);if(t>=1){stop();if(onEnd)onEnd();return;}raf=requestAnimationFrame(f);};raf=requestAnimationFrame(f);});
+  const pb=a=>box.querySelector('[data-a="'+a+'"]');
+  if(pb("start"))pb("start").addEventListener("click",()=>{stop();go(0);});
+  if(pb("back"))pb("back").addEventListener("click",()=>step(-1));
+  if(pb("fwd"))pb("fwd").addEventListener("click",()=>step(1));
+  /* un réglage fait à la main : la prochaine lecture repart du début */
+  lab.addEventListener("input",()=>{if(!run)t=0;});
+  lab.addEventListener("click",e=>{const b=e.target.closest("button");if(b&&b!==btn&&!b.dataset.a&&!run)t=0;});
+  return {stop:stop,running:()=>run};
+}
+function player(id,o){/* lecteur pilotable : ⏮ début, ◀ pas, ▶ lecture ou ⏸ pause (reprend où elle s'est arrêtée), pas ▶ ; o.get() et o.set(t) avec t de 0 à 1, o.dur (ms), o.steps */
+  const box=$("#"+id),bp=box.querySelector('[data-a="play"]'),lab=bp.textContent,n=o.steps||20;let raf=null,run=false;
+  const cl=t=>Math.max(0,Math.min(1,t));
+  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;bp.textContent=lab;}
+  function step(d){stop();o.set(cl(Math.round(o.get()*n+d)/n));}
+  bp.addEventListener("click",()=>{if(run){stop();return;}let t0=o.get();if(t0>=0.999)t0=0;
+    if(RM){o.set(cl(Math.round(t0*n+1)/n));return;}
+    run=true;bp.textContent="⏸ Pause";const s0=performance.now()-t0*o.dur;
+    const f=now=>{if(!run)return;const t=cl((now-s0)/o.dur);o.set(t);if(t>=1){stop();return;}raf=requestAnimationFrame(f);};raf=requestAnimationFrame(f);});
+  box.querySelector('[data-a="start"]').addEventListener("click",()=>{stop();o.set(0);});
+  box.querySelector('[data-a="back"]').addEventListener("click",()=>step(-1));
+  box.querySelector('[data-a="fwd"]').addEventListener("click",()=>step(1));
+  return {stop:stop};
+}
+
+
+function sig2(v){/* arrondi à deux chiffres significatifs */
+  if(v<=0)return 0;const p=Math.pow(10,Math.floor(Math.log10(v))-1);return Math.round(v/p)*p;}
+function halo(t,svg){/* liseré de fond, puis passage au premier plan */
+  t.setAttribute("paint-order","stroke");t.style.setProperty("stroke","var(--card)");t.setAttribute("stroke-width","4");t.setAttribute("stroke-linejoin","round");if(svg)svg.appendChild(t);return t;}
+function plate(t,svg){/* fond plein derrière une étiquette */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const r=el("rect",{x:b.x-3,y:b.y-1,width:b.width+6,height:b.height+2,fill:"var(--card)",opacity:.92,rx:2});svg.appendChild(r);svg.appendChild(t);return t;}
+function le(n,f){return /^[aeiouyhéèâî]/i.test(n)?"l'"+n:(f?"la ":"le ")+n;}
+function du(n,f){return /^[aeiouyhéèâî]/i.test(n)?"de l'"+n:(f?"de la ":"du ")+n;}
+function fmtG(v){return nf(v,v<0.1?3:2)+" N/m";}
+function fmtPa(p){return p<1000?nf(p,0)+" Pa":p<1e5?nf(p/1000,1)+" kPa":nf(p/1e5,2)+" bar";}
+function fmtLen(m){/* m en mètres */
+  const mm=m*1000;if(mm<1)return nf(mm*1000,0)+" µm";if(mm<10)return nf(mm,1)+" mm";if(mm<1000)return nf(mm,0)+" mm";return nf(m,1)+" m";}
+function fmtT(s){if(!isFinite(s))return "∞";if(s<0.01)return nf(s*1000,1)+" ms";if(s<1)return nf(s,3)+" s";if(s<60)return nf(s,s<10?1:0)+" s";return nf(s/60,s<600?1:0)+" min";}
+
+function spread(items,gap,ymin,ymax){/* écarte verticalement des étiquettes {y} triées */
+  items.sort((a,b)=>a.y-b.y);
+  for(let i=1;i<items.length;i++)if(items[i].y-items[i-1].y<gap)items[i].y=items[i-1].y+gap;
+  if(items.length&&items[items.length-1].y>ymax){items[items.length-1].y=ymax;for(let i=items.length-2;i>=0;i--)if(items[i+1].y-items[i].y<gap)items[i].y=items[i+1].y-gap;}
+  if(items.length&&items[0].y<ymin){items[0].y=ymin;for(let i=1;i<items.length;i++)if(items[i].y-items[i-1].y<gap)items[i].y=items[i-1].y+gap;}
+  return items;}
+function declutter(ts,ymin,ymax){/* décale verticalement les textes qui se chevauchent */
+  const box=t=>{try{return t.getBBox();}catch(e){return null;}};
+  for(let i=1;i<ts.length;i++){const ti=ts[i];if(!ti)continue;
+    for(let pass=0;pass<6;pass++){const bi=box(ti);if(!bi)break;let moved=false;
+      for(let j=0;j<i;j++){const bj=ts[j]&&box(ts[j]);if(!bj)continue;
+        const ix=Math.min(bi.x+bi.width,bj.x+bj.width)-Math.max(bi.x,bj.x),iy=Math.min(bi.y+bi.height,bj.y+bj.height)-Math.max(bi.y,bj.y);
+        if(ix>1&&iy>1){let dy=(bi.y+bi.height/2>=bj.y+bj.height/2)?(bj.y+bj.height-bi.y+1):-(bi.y+bi.height-bj.y+1);
+          if(bi.y+dy<ymin||bi.y+bi.height+dy>ymax)dy=dy>0?-(bi.y+bi.height-bj.y+1):(bj.y+bj.height-bi.y+1);
+          ti.setAttribute("y",+ti.getAttribute("y")+dy);moved=true;break;}}
+      if(!moved)break;}}
+  return ts;}
+const SUPD={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function p10(e){return "10"+String(e).split("").map(c=>SUPD[c]||c).join("");}
+function fmtP(p){/* pression en Pa, lisible */
+  if(p>=1e5)return nf(p/1e5,1)+" bar";if(p>=1000)return nf(p/1000,p<1e4?1:0)+" kPa";if(p>=1)return nf(p,p<10?1:0)+" Pa";return sci(p,1)+" Pa";}
+
+
+
+function rng(seed){/* générateur pseudo-aléatoire reproductible */
+  let a=seed>>>0;return ()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296;};}
+
+
+/* =========================================================
+   Outils communs de la série : formats, couleurs, grains, nuances, modèles
+   ========================================================= */
+const NB=String.fromCharCode(160);
+const nbsp=s=>s.replace(/(\d) (%|°C|mm|µm|nm|MPa|HV|s|ppm|h|J)(?=[\s.,;:)<·/]|$)/g,"$1"+NB+"$2");
+function fitSize(t,maxW,min){/* réduit la police d'un texte SVG trop large (style en ligne, prioritaire sur la feuille de style) */
+  let b;try{b=t.getBBox();}catch(e){return t;}let fs=parseFloat(getComputedStyle(t).fontSize)||13;
+  while(b.width>maxW&&fs>(min||9)){fs-=0.5;t.style.fontSize=fs+"px";b=t.getBBox();}return t;}
+const pts=P=>P.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join(" ");
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const mixc=(c,p,b)=>"color-mix(in srgb,"+c+" "+p+"%,"+(b||"var(--card)")+")";
+const COL={liq:mixc("var(--sig)",24),gam:mixc("var(--gam)",24),alp:mixc("var(--eps)",15),mart:"color-mix(in srgb,var(--eps) 50%,var(--tau))",
+  bain:mixc("var(--gam)",52),fp:mixc("var(--eps)",13),film:mixc("var(--tau)",72)};
+function frame(svg,R){el("rect",{x:R.x0,y:R.y0,width:R.x1-R.x0,height:R.y1-R.y0,fill:"none",stroke:"var(--ink)","stroke-width":1.2},svg);}
+function clipG(svg,id,R){const cp=el("clipPath",{id:id},el("defs",null,svg));el("rect",{x:R.x0,y:R.y0,width:R.x1-R.x0,height:R.y1-R.y0},cp);return el("g",{"clip-path":"url(#"+id+")"},svg);}
+function voronoi(seeds,x0,y0,x1,y1,rmax){/* cellules polygonales ; rmax : distance au-delà de laquelle un voisin est ignoré */
+  const box=[[x0,y0],[x1,y0],[x1,y1],[x0,y1]],r2=rmax?rmax*rmax:Infinity;
+  return seeds.map((s,i)=>{let P=box.slice();
+    for(let j=0;j<seeds.length&&P.length;j++){if(i===j)continue;const q=seeds[j],dx=q[0]-s[0],dy=q[1]-s[1];if(dx*dx+dy*dy>r2)continue;
+      const mx=(s[0]+q[0])/2,my=(s[1]+q[1])/2,out=[];
+      for(let k=0;k<P.length;k++){const a=P[k],b=P[(k+1)%P.length],sa=(a[0]-mx)*dx+(a[1]-my)*dy,sb=(b[0]-mx)*dx+(b[1]-my)*dy;if(sa<=0)out.push(a);
+        if((sa<0&&sb>0)||(sa>0&&sb<0)){const t=sa/(sa-sb);out.push([a[0]+t*(b[0]-a[0]),a[1]+t*(b[1]-a[1])]);}}
+      P=out;}
+    return P;});
+}
+function seedsGrid(x0,y0,x1,y1,s,seed){const r=rng(seed),o=[];for(let y=y0+s/2;y<y1+s/2;y+=s*0.87)for(let x=x0+s/2+((Math.round((y-y0)/(s*0.87))%2)?s/2:0);x<x1+s/2;x+=s)o.push([x+(r()-0.5)*s*0.6,Math.min(y1-1,y+(r()-0.5)*s*0.5)]);return o;}
+function legend(svg,x,y,items,xmax){/* items : [couleur, texte, "o" pour un rond] ; passe à la ligne ; renvoie le bas de la légende */
+  let lx=x,ly=y;
+  items.forEach(q=>{const t=tx(svg,x,y+9.5,q[1],{class:"lbl"});let w=70;try{w=t.getBBox().width;}catch(e){}
+    if(lx>x&&lx+14+w>xmax){lx=x;ly+=16;}
+    t.setAttribute("x",lx+14);t.setAttribute("y",ly+9.5);
+    if(q[2]==="o")el("circle",{cx:lx+5,cy:ly+5,r:4.5,fill:q[0],stroke:"var(--ink)","stroke-width":0.7},svg);
+    else el("rect",{x:lx,y:ly,width:10,height:10,fill:q[0],stroke:"var(--ink)","stroke-width":0.7},svg);
+    lx+=14+w+12;});
+  return ly+12;}
+/* Modèles du cours */
+/* M1 : ISO 9013 (a épaisseur mm, u mm, rz µm) : tableaux 4 et 5 */
+const U9013=a=>[0.05+0.003*a,0.15+0.007*a,0.4+0.01*a,0.8+0.02*a,1.2+0.035*a];
+const RZ9013=a=>[10+0.6*a,40+0.8*a,70+1.2*a,110+1.8*a];
+function champ(lim,x){for(let i=0;i<lim.length;i++)if(x<=lim[i])return i+1;return 0;}
+/* M2 : conditions de l'oxycoupage (températures en °C, ordres de grandeur) */
+const METAUX={
+  acier:{n:"acier doux",ta:1150,tm:1500,to:1370,exo:true,note:"oxyde de fer fluide (FeO, vers 1 370 °C)"},
+  inox:{n:"inox 18-10",ta:1150,tm:1450,to:2400,exo:true,note:"oxyde de chrome réfractaire (Cr₂O₃, vers 2 400 °C)"},
+  fonte:{n:"fonte grise",ta:1150,tm:1180,to:1370,exo:true,note:"fond avant de s'enflammer ; graphite et silice gênent"},
+  alu:{n:"aluminium",ta:1000,tm:660,to:2070,exo:true,note:"alumine réfractaire (Al₂O₃, vers 2 070 °C)"},
+  cuivre:{n:"cuivre",ta:1000,tm:1085,to:1235,exo:false,note:"oxydation trop peu exothermique, chaleur évacuée par conduction"}};
+function oxy(k){const m=METAUX[k];const c1=m.exo,c2=m.ta<m.tm,c3=m.to<m.tm;return {m:m,c1:c1,c2:c2,c3:c3,ok:c1&&c2&&c3};}
+/* M3 : préchauffage d'oxycoupage (modèle pédagogique) et dureté maximale de bord (Yurioka) */
+function prechauffe(ce,e){const k=e>50?1.4:1;return Math.min(500,Math.max(0,700*(ce-0.35)*k));}
+const hvmax=c=>884*c*(1-0.3*c*c)+294;
+/* M4 : face de coupe en oxycoupage, tôle de 25 mm (v, h, p relatifs au réglage nominal) */
+function face(v,h,p){
+  const e=25,n=0.1*e*v*v/p,def=[];
+  if(v>1.35||v/p>1.45)def.push("desamorce");
+  if(n>0.15*e&&!(v>1.35||v/p>1.45))def.push("retard");
+  if(v<0.8)def.push("fusion");
+  if(h>1.25)def.push("arrondi");
+  if(v<0.8||p<0.75)def.push("scories");
+  if(h<0.75)def.push("affouillements");
+  if(p>1.3)def.push("stries");
+  const u=0.4+0.01*e+0.5*Math.abs(v-1)+0.6*Math.max(0,p-1.2)+0.4*Math.max(0,h-1.2),rz=70+1.2*e+90*Math.abs(v-1)+120*Math.max(0,p-1.2)+60*Math.max(0,1-h);
+  return {n:n,def:def,u:u,rz:rz,cu:champ(U9013(e),u),cr:champ(RZ9013(e),rz)};
+}
+/* M5 : domaines d'épaisseur typiques (mm) par procédé et matériau */
+const PROC=[
+  {k:"oxy",n:"oxycoupage (81)",m:{acier:[3,300]}},
+  {k:"plair",n:"plasma air (833)",m:{acier:[0.5,30],inox:[0.5,25],alu:[0.5,25]}},
+  {k:"plo2",n:"plasma oxygène (831)",m:{acier:[0.5,50]}},
+  {k:"plarh",n:"plasma Ar-H₂ ou N₂ (832)",m:{inox:[5,150],alu:[5,150]}},
+  {k:"laser",n:"laser (84)",m:{acier:[0.5,25],inox:[0.5,20],alu:[0.5,15]}},
+  {k:"jet",n:"jet d'eau abrasif",m:{acier:[0.5,200],inox:[0.5,200],alu:[0.5,200]}}];
+function choixCoupe(mat,e,q){
+  const ok=PROC.filter(p=>p.m[mat]&&e>=p.m[mat][0]&&e<=p.m[mat][1]).map(p=>p.k);
+  let best;
+  if(q==="precision")best=ok.includes("laser")?"laser":ok.includes("jet")?"jet":ok[0];
+  else best=mat==="acier"?(e>40&&ok.includes("oxy")?"oxy":ok.includes("plo2")?"plo2":ok.includes("oxy")?"oxy":ok[0]):(ok.includes("plarh")&&e>=5?"plarh":ok.includes("plair")?"plair":ok[0]);
+  return {ok:ok,best:best};
+}
+
+const fr=s=>nbsp(s).replace(/ ([;:!?])/g,NB+"$1");
+const lbl=(svg,x,y,s,o)=>{const t=tx(svg,x,y,s,Object.assign({class:"lbl"},o||{}));t.style.fontSize=(o&&o.fs?o.fs:11)+"px";return t;};
+const poly=(svg,pts,a)=>el("polygon",Object.assign({points:pts.map(p=>p.join(",")).join(" ")},a),svg);
+
+/* =========================================================
+   M1 : classer une face de coupe (ISO 9013)
+   ========================================================= */
+(function(){
+  const svg=$("#m1svg");if(!svg)return;
+  const sA=$("#m1a"),sU=$("#m1u"),sZ=$("#m1z"),ro=$("#m1r"),msg=$("#m1msg");let cl=1;
+  const COLS=["var(--gam)","var(--eps)","var(--mat)","var(--frc)","var(--tau)"];
+  function draw(){
+    const W=svgW(svg),n=W<560,a=+sA.value,u=+sU.value,z=+sZ.value,lu=U9013(a),lz=RZ9013(a),cu=champ(lu,u),cz=champ(lz,z);clear(svg);
+    $("#m1ao").textContent=nf(a,0)+NB+"mm";$("#m1uo").textContent=nf(u,2)+NB+"mm";$("#m1zo").textContent=nf(z,0)+NB+"μm";
+    const x0=n?44:52,x1=n?W-14:W*0.6,y0=24,y1=n?180:210;
+    const A=axes(svg,x0,x1,y0,y1,0,150,0,6,"épaisseur a (mm)","u (mm)",n?50:25,1);
+    for(let i=0;i<5;i++){let d="";for(let aa=0;aa<=150;aa+=5){const v=U9013(aa)[i];if(v>6)break;d+=(d?"L":"M")+A.X(aa).toFixed(1)+" "+A.Y(v).toFixed(1)+" ";}
+      el("path",{d:d,fill:"none",stroke:COLS[i],"stroke-width":i+1===cu?3:1.4},svg);
+      const ae=Math.min(150,(6-[0.05,0.15,0.4,0.8,1.2][i])/[0.003,0.007,0.01,0.02,0.035][i]),t=lbl(svg,A.X(Math.min(146,ae))-2,A.Y(Math.min(5.9,U9013(Math.min(146,ae))[i]))-4,"champ "+(i+1),{"text-anchor":"end",fs:9.5,fill:COLS[i]});halo(t,svg);}
+    el("circle",{cx:A.X(a),cy:A.Y(Math.min(6,u)),r:6,fill:cu?COLS[cu-1]:"var(--sig)",stroke:"var(--card)","stroke-width":1.5},svg);
+    /* face de coupe schématique */
+    const fx=n?W/2:W*0.8,fy=n?y1+60:50,H=n?80:110,ww=n?120:Math.min(140,W*0.3),tilt=Math.min(1,u/3)*30,amp=Math.min(1,z/300)*8;
+    poly(svg,[[fx-ww/2,fy],[fx+ww/2-tilt,fy],[fx+ww/2,fy+H],[fx-ww/2,fy+H]],{fill:mixc("var(--muted)",30),stroke:"var(--ink)"});
+    for(let k=1;k<9;k++){const x=fx-ww/2+k*ww/9;el("path",{d:"M"+x+" "+fy+" q "+(-amp)+" "+(H/2)+" "+(-amp*0.5)+" "+H,fill:"none",stroke:"var(--eps)","stroke-width":1,"stroke-opacity":0.7},svg);}
+    {const t=lbl(svg,fx,fy+H+16,"face de coupe (agrandie)",{"text-anchor":"middle",fs:10,fill:"var(--muted)"});fitText(t,4,W-4);}
+    setVB(svg,W,Math.max(y1+38,fy+H+26));
+    const des=(cu?cu:"–")+""+(cz?cz:"–")+cl;
+    ro.innerHTML=fr("<span>u : champ <b class='eps'>"+(cu||"hors champs")+"</b> (≤ "+nf(cu?lu[cu-1]:lu[4],2)+" mm)</span><span>Rz5 : champ <b class='eps'>"+(cz||"hors champs")+"</b> (≤ "+nf(cz?lz[cz-1]:lz[3],0)+" μm)</span><span>ISO 9013-"+des+"</span>");
+    let m;
+    if(!cu||!cz)m="Hors des champs de l'ISO 9013 "+(!cu?"pour la perpendicularité":"pour la rugosité")+" : la coupe ne peut pas être désignée ; il faut revoir le procédé ou le réglage.";
+    else m="Sur "+nf(a,0)+" mm, u = "+nf(u,2)+" mm tient dans le champ "+cu+" ("+nf(lu[cu-1],2)+" mm) et Rz5 = "+nf(z,0)+" μm dans le champ "+cz+" ("+nf(lz[cz-1],0)+" μm) : « Coupe thermique ISO 9013-"+des+" ». Elle satisfait toute exigence de champs égaux ou plus larges.";
+    msg.innerHTML=fr(m)+"<br><b>À retenir :</b> u, puis Rz5, puis la classe ; plus le chiffre est petit, plus c'est exigeant.";
+  }
+  $$("#m1b .btn").forEach(b=>b.addEventListener("click",()=>{cl=+b.dataset.k;setOn("#m1b",b);draw();}));
+  [sA,sU,sZ].forEach(x=>x.addEventListener("input",draw));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M2 : ce métal s'oxycoupe-t-il ?
+   ========================================================= */
+(function(){
+  const svg=$("#m2svg");if(!svg)return;
+  const ro=$("#m2r"),msg=$("#m2msg");let k="acier";
+  function draw(){
+    const W=svgW(svg),n=W<560,o=oxy(k),m=o.m;clear(svg);
+    const x0=20,x1=W-20,X=t=>x0+(x1-x0)*(t-500)/2100,y=66;
+    lbl(svg,x0,18,"Températures (°C) : "+m.n,{"font-weight":"700",fs:11.5});
+    el("line",{x1:x0,y1:y,x2:x1,y2:y,stroke:"var(--ink)","stroke-width":1.5},svg);
+    for(let t=500;t<=2600;t+=500){el("line",{x1:X(t),y1:y-4,x2:X(t),y2:y+4,stroke:"var(--ink)"},svg);lbl(svg,X(t),y+18,nf(t,0),{"text-anchor":"middle",fs:9.5,fill:"var(--muted)"});}
+    const marks=[[m.ta,"amorçage","var(--sig)",-1],[m.tm,"fusion du métal","var(--ink)",1],[m.to,"fusion de l'oxyde","var(--gam)",-1]];
+    const lev=[0,0,0];marks.forEach((p,i)=>{marks.forEach((q,j)=>{if(j<i&&Math.abs(X(p[0])-X(q[0]))<70&&p[3]===q[3])lev[i]=lev[j]+1;});});
+    marks.forEach((p,i)=>{const yy=p[3]<0?y-12-lev[i]*13:y+32+lev[i]*13;el("circle",{cx:X(p[0]),cy:y,r:5,fill:p[2]},svg);const t=lbl(svg,X(p[0]),yy,p[1]+" "+nf(p[0],0),{"text-anchor":"middle",fs:9.5,fill:p[2],"font-weight":"700"});fitText(t,x0,x1);halo(t,svg);});
+    const rows=[["1. Réaction exothermique",o.c1],["2. Amorçage avant fusion",o.c2],["3. Oxyde fondu avant le métal",o.c3]];
+    rows.forEach((r,i)=>{const yy=y+78+i*24;lbl(svg,x0,yy,r[0],{fs:11});const t=lbl(svg,n?x1:x0+260,yy,r[1]?"✔ oui":"✘ non",{fs:12,"font-weight":"700",fill:r[1]?"var(--gam)":"var(--sig)","text-anchor":n?"end":"start"});});
+    {const t=lbl(svg,x0,y+156,o.ok?"Oxycoupable":"Non oxycoupable sans artifice",{fs:12.5,"font-weight":"700",fill:o.ok?"var(--gam)":"var(--sig)"});}
+    setVB(svg,W,y+166);
+    ro.innerHTML=fr("<span>amorçage ≈ "+nf(m.ta,0)+" °C</span><span>fusion ≈ "+nf(m.tm,0)+" °C</span><span>oxyde ≈ "+nf(m.to,0)+" °C</span><span><b class='"+(o.ok?"gam":"sig")+"'>"+(o.ok?"oxycoupable":"non oxycoupable")+"</b></span>");
+    const M={acier:"Les trois conditions sont remplies : le fer brûle à 1 150 °C bien avant de fondre, son oxyde fond avant lui et la combustion dégage la chaleur qui entretient la coupe.",
+      inox:"Le chrome forme un oxyde réfractaire qui ne fond que vers 2 400 °C : une croûte bloque la combustion. Plasma, laser ou jet d'eau.",
+      fonte:"La fonte fond vers 1 150-1 200 °C, quasiment à la température d'amorçage, avant que l'oxyde de fer ne fonde ; graphite et silicium gênent encore. On ne l'oxycoupe pas proprement.",
+      alu:"L'aluminium fond à 660 °C, bien avant de s'enflammer, et l'alumine ne fond que vers 2 070 °C : aucune des deux dernières conditions. Plasma, laser ou jet d'eau.",
+      cuivre:"Le cuivre conduit la chaleur si vite et s'oxyde si peu exothermiquement que la combustion ne s'entretient pas ; son oxyde fond en outre au-dessus du métal. Plasma ou jet d'eau."};
+    msg.innerHTML=fr(M[k])+"<br><b>À retenir :</b> brûler avant de fondre, l'oxyde fond avant le métal.";
+  }
+  $$("#m2b .btn").forEach(b=>b.addEventListener("click",()=>{k=b.dataset.k;setOn("#m2b",b);draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M3 : préchauffer avant de couper
+   ========================================================= */
+(function(){
+  const svg=$("#m3svg");if(!svg)return;
+  const sC=$("#m3c"),sE=$("#m3e"),ro=$("#m3r"),msg=$("#m3msg");
+  function draw(){
+    const W=svgW(svg),n=W<560,ce=+sC.value,e=+sE.value,T=prechauffe(ce,e),zat=Math.min(5,0.4+0.03*e),risque=ce<0.4?"faible":ce<0.55?"modéré":"fort";clear(svg);
+    $("#m3co").textContent=nf(ce,2);$("#m3eo").textContent=nf(e,0)+NB+"mm";
+    setOn("#m3b",$$("#m3b .btn").find(b=>+b.dataset.ce===ce)||null);
+    const x0=n?48:56,x1=n?W-14:W*0.6,y0=24,y1=n?180:210;
+    const A=axes(svg,x0,x1,y0,y1,0.2,0.9,0,500,"carbone équivalent CE","préchauffage (°C)",0.1,100,v=>nf(v,1));
+    [[30,"var(--mat)","e ≤ 50 mm"],[80,"var(--frc)","e > 50 mm"]].forEach(p=>{let d="";for(let c=0.2;c<=0.9001;c+=0.01)d+=(d?"L":"M")+A.X(c).toFixed(1)+" "+A.Y(prechauffe(c,p[0])).toFixed(1)+" ";el("path",{d:d,fill:"none",stroke:p[1],"stroke-width":(e>50)===(p[0]>50)?3:1.4},svg);
+      const t=lbl(svg,A.X(0.88),A.Y(prechauffe(0.88,p[0]))+(p[0]>50?-6:14),p[2],{"text-anchor":"end",fs:10,fill:p[1]});halo(t,svg);});
+    el("circle",{cx:A.X(ce),cy:A.Y(T),r:6,fill:"var(--sig)",stroke:"var(--card)","stroke-width":1.5},svg);
+    /* bord coupé */
+    const bx=n?W/2:W*0.8,by=n?y1+56:50,H=n?90:120,bw=n?W*0.6:W*0.3,k=Math.min(10,bw/12);
+    el("rect",{x:bx-bw/2,y:by,width:bw,height:H,fill:mixc("var(--muted)",28),stroke:"var(--ink)"},svg);
+    el("rect",{x:bx+bw/2-zat*k,y:by,width:zat*k,height:H,fill:mixc("var(--gam)",40)},svg);
+    const dur=Math.min(zat,(ce<0.4?0.1:ce<0.55?0.4:0.9))*(T>0?0.6:1);
+    el("rect",{x:bx+bw/2-dur*k,y:by,width:Math.max(1.5,dur*k),height:H,fill:risque==="fort"&&T<150?"var(--sig)":mixc("var(--tau)",60)},svg);
+    lbl(svg,bx+bw/2,by-8,"bord coupé →",{"text-anchor":"end",fs:10});
+    {const t=lbl(svg,bx,by+H+16,"ZAT ≈ "+nf(zat,1)+" mm, couche dure ≈ "+nf(dur,1)+" mm",{"text-anchor":"middle",fs:10,fill:"var(--gam)"});fitSize(t,n?W-20:W*0.36,7);}
+    setVB(svg,W,Math.max(y1+38,by+H+26));
+    ro.innerHTML=fr("<span>préchauffage ≈ <b class='eps'>"+(T<5?"aucun":nf(T,0)+" °C")+"</b></span><span>ZAT ≈ "+nf(zat,1)+" mm</span><span>risque de bord durci : "+risque+"</span>");
+    let m=T<5?"CE de "+nf(ce,2)+" : acier peu trempant, pas de préchauffage nécessaire pour l'oxycoupage.":"CE de "+nf(ce,2)+" et "+nf(e,0)+" mm : le modèle demande environ "+nf(T,0)+" °C pour ralentir le refroidissement du bord.";
+    if(risque==="fort")m+=" Acier très trempant : préchauffer, puis meuler le bord sur 1 à 2 mm avant de souder et contrôler la dureté si la spécification l'exige.";
+    msg.innerHTML=fr(m)+"<br><b>À retenir :</b> CE haut, bord dur : chauffe avant, meule après.";
+  }
+  $$("#m3b .btn").forEach(b=>b.addEventListener("click",()=>{sC.value=b.dataset.ce;draw();}));
+  [sC,sE].forEach(x=>x.addEventListener("input",draw));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M4 : lire une face d'oxycoupage
+   ========================================================= */
+(function(){
+  const svg=$("#m4svg");if(!svg)return;
+  const sV=$("#m4v"),sH=$("#m4h"),sP=$("#m4p"),ro=$("#m4r"),msg=$("#m4msg");
+  const NOM={desamorce:"coupe désamorcée",retard:"retard excessif",fusion:"arête supérieure fondue",arrondi:"arête arrondie",scories:"scories adhérentes",affouillements:"affouillements",stries:"stries irrégulières"};
+  function draw(){
+    const W=svgW(svg),n=W<560,v=+sV.value,h=+sH.value,p=+sP.value,r=face(v,h,p);clear(svg);
+    $("#m4vo").textContent=nf(100*v,0)+NB+"%";$("#m4ho").textContent=nf(100*h,0)+NB+"%";$("#m4po").textContent=nf(100*p,0)+NB+"%";
+    setOn("#m4b",$$("#m4b .btn").find(b=>+b.dataset.v===v&&+b.dataset.h===h&&+b.dataset.p===p)||null);
+    const e=25,x0=20,x1=W-20,H=n?140:170,y0=34,k=H/e,len=x1-x0;
+    lbl(svg,x0,18,"Face de coupe, tôle de 25 mm (sens de coupe →)",{"font-weight":"700",fs:n?10:11});
+    el("rect",{x:x0,y:y0,width:len,height:H,fill:mixc("var(--muted)",30),stroke:"var(--ink)"},svg);
+    const nn=r.n*k,irr=r.def.includes("stries")?7:0,cut=r.def.includes("desamorce");
+    for(let s=0;s<Math.floor(len/12);s++){const xs=x0+10+s*12;if(xs-nn<x0)continue;const jit=irr?((s*37)%7-3)*irr/3:0;
+      el("path",{d:"M"+xs+" "+y0+" Q "+(xs-nn*0.3+jit)+" "+(y0+H*0.6)+" "+(xs-nn+jit)+" "+(y0+(cut?H*0.75:H)),fill:"none",stroke:"var(--eps)","stroke-width":1,"stroke-opacity":0.75},svg);}
+    if(cut)el("rect",{x:x0,y:y0+H*0.75,width:len,height:H*0.25,fill:mixc("var(--sig)",25)},svg);
+    if(r.def.includes("fusion")||r.def.includes("arrondi"))el("rect",{x:x0,y:y0,width:len,height:Math.max(3,(r.def.includes("fusion")?0.08:0.05)*H),fill:mixc("var(--sig)",55)},svg);
+    if(r.def.includes("scories"))for(let s=0;s<len/18;s++)el("circle",{cx:x0+8+s*18,cy:y0+H+3,r:3.5,fill:"var(--tau)"},svg);
+    if(r.def.includes("affouillements"))for(let s=0;s<4;s++)el("ellipse",{cx:x0+len*(0.15+0.22*s),cy:y0+H*0.82,rx:7,ry:4,fill:"var(--card)",stroke:"var(--tau)"},svg);
+    /* retard */
+    const xr=x0+len*0.55;el("line",{x1:xr,y1:y0,x2:xr,y2:y0+H,stroke:"var(--ink)","stroke-dasharray":"3 3"},svg);
+    if(!cut&&nn>2){arrow(svg,xr,y0+H+14,xr-nn,y0+H+14,"var(--eps)",1.4,6);const t=lbl(svg,xr+4,y0+H+18,"retard n ≈ "+nf(r.n,1)+" mm",{fs:10.5,fill:"var(--eps)","font-weight":"700"});fitText(t,x0,x1);}
+    setVB(svg,W,y0+H+30);
+    const des=(r.cu||"–")+""+(r.cr||"–");
+    ro.innerHTML=fr("<span>retard ≈ <b class='eps'>"+nf(r.n,1)+" mm</b> ("+nf(100*r.n/e,0)+" %)</span><span>u ≈ "+nf(r.u,2)+" mm</span><span>Rz5 ≈ "+nf(r.rz,0)+" μm</span><span>qualité ≈ "+des+"</span>");
+    let m=r.def.length?"Défauts : "+r.def.map(d=>NOM[d]).join(", ")+". ":"Coupe correcte : stries fines et peu inclinées, arêtes nettes, pas de scories collées. ";
+    if(r.def.includes("fusion"))m+="La vitesse est trop faible : accélérer. ";
+    if(r.def.includes("desamorce")||r.def.includes("retard"))m+="Vitesse trop forte pour l'oxygène disponible : ralentir ou revoir la buse. ";
+    if(r.def.includes("arrondi"))m+="Chauffe trop forte : réduire la flamme ou éloigner la buse. ";
+    if(r.def.includes("affouillements"))m+="Chauffe insuffisante : renforcer la flamme. ";
+    if(r.def.includes("stries"))m+="Pression d'oxygène trop forte : la baisser.";
+    msg.innerHTML=fr(m)+"<br><b>À retenir :</b> le haut dit la chauffe, la pente dit la vitesse, le bas dit l'oxygène.";
+  }
+  $$("#m4b .btn").forEach(b=>b.addEventListener("click",()=>{sV.value=b.dataset.v;sH.value=b.dataset.h;sP.value=b.dataset.p;draw();}));
+  [sV,sH,sP].forEach(x=>x.addEventListener("input",draw));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M5 : quel procédé de coupe ?
+   ========================================================= */
+(function(){
+  const svg=$("#m5svg");if(!svg)return;
+  const sE=$("#m5e"),ro=$("#m5r"),msg=$("#m5msg");let mat="acier",q="cout";
+  function draw(){
+    const W=svgW(svg),n=W<560,e=+sE.value,c=choixCoupe(mat,e,q);clear(svg);
+    $("#m5eo").textContent=nf(e,0)+NB+"mm";
+    const x0=n?120:180,x1=W-16,X=v=>x0+(x1-x0)*Math.log10(v/0.5)/Math.log10(300/0.5),y0=26,rh=n?24:26;
+    PROC.forEach((p,i)=>{const r=p.m[mat],y=y0+i*rh,on=p.k===c.best;
+      const t=lbl(svg,x0-6,y+rh/2,p.n,{"text-anchor":"end",fs:n?9.5:11,fill:r?(on?"var(--eps)":"var(--ink)"):"var(--muted)","font-weight":on?"700":"400"});fitSize(t,x0-10,7);
+      if(r)el("rect",{x:X(r[0]),y:y+5,width:X(r[1])-X(r[0]),height:rh-10,rx:4,fill:on?mixc("var(--eps)",70):c.ok.includes(p.k)?mixc("var(--gam)",35):mixc("var(--muted)",22),stroke:on?"var(--eps)":"none"},svg);
+      else lbl(svg,x0+6,y+rh/2+1,"non applicable",{fs:9.5,fill:"var(--muted)"});});
+    const yb=y0+PROC.length*rh+4;el("line",{x1:x0,y1:yb,x2:x1,y2:yb,class:"axis"},svg);
+    [0.5,1,3,10,30,100,300].forEach(v=>{el("line",{x1:X(v),y1:yb,x2:X(v),y2:yb+4,class:"tick"},svg);lbl(svg,X(v),yb+16,nf(v,v<1?1:0),{"text-anchor":"middle",fs:9.5,fill:"var(--muted)"});});
+    lbl(svg,x1,yb+30,"épaisseur (mm, échelle log)",{"text-anchor":"end",fs:10,fill:"var(--muted)"});
+    el("line",{x1:X(e),y1:y0,x2:X(e),y2:yb,stroke:"var(--frc)","stroke-width":2},svg);
+    setVB(svg,W,yb+36);
+    const best=PROC.find(p=>p.k===c.best);
+    ro.innerHTML=fr("<span>"+{acier:"acier",inox:"inox",alu:"aluminium"}[mat]+", "+nf(e,0)+" mm</span><span>possibles : "+(c.ok.length?c.ok.map(k=>PROC.find(p=>p.k===k).n.split(" (")[0]).join(", "):"aucun")+"</span><span>conseillé : <b class='eps'>"+(best?best.n:"usinage")+"</b></span>");
+    let m=best?"Pour "+nf(e,0)+" mm d'"+(mat==="alu"?"aluminium":mat)+(q==="precision"?", en privilégiant la précision":", en privilégiant la productivité")+" : "+best.n+". ":"Aucun procédé thermique courant à cette épaisseur : usinage ou sciage. ";
+    if(mat!=="acier")m+="L'oxycoupage est exclu : ce métal ne remplit pas les conditions. ";
+    if(c.best==="laser")m+="Saignée fine, classe 1 de l'ISO 9013, peu de reprise.";
+    else if(c.best==="oxy")m+="Économique sur l'acier épais ; prévoir le préchauffage si le CE est élevé.";
+    else if(c.best==="plo2"||c.best==="plair")m+="Rapide et économique ; choisir le gaz en pensant au soudage qui suit.";
+    else if(c.best==="plarh")m+="Gaz non oxydant : coupe propre sur métal non oxycoupable.";
+    else if(c.best==="jet")m+="Pas de zone affectée, mais lent et coûteux.";
+    msg.innerHTML=fr(m)+"<br><b>À retenir :</b> épais et noir : flamme ; tout ce qui conduit : plasma ; fin et précis : laser ; froid : jet d'eau.";
+  }
+  $$("#m5m .btn").forEach(b=>b.addEventListener("click",()=>{mat=b.dataset.m;setOn("#m5m",b);draw();}));
+  $$("#m5q .btn").forEach(b=>b.addEventListener("click",()=>{q=b.dataset.q;setOn("#m5q",b);draw();}));
+  sE.addEventListener("input",draw);
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   Quiz, check-list, sommaire, thème
+   ========================================================= */
+(function(){
+  const box=$("#quiz");if(!box)return;
+  const Q=[
+    {q:"Dans « Coupe thermique ISO 9013-342 », que désigne le « 4 » ?",o:["l'épaisseur en mm","le champ de perpendicularité u","le champ de rugosité Rz5","la classe de tolérance"],c:2,e:"Ordre : champ de u (3), champ de Rz5 (4), classe de tolérance (2)."},
+    {q:"Le coupage plasma et le coupage laser sont des coupages thermiques :",o:["par oxydation","mécaniques","par érosion","par fusion"],c:3,e:"Le métal est fondu et chassé de la saignée. L'oxycoupage, lui, est un coupage par oxydation : le fer brûle."},
+    {q:"Laquelle n'est PAS une condition de l'oxycoupage ?",o:["métal bon conducteur de l'électricité","réaction métal-oxygène exothermique","température d'amorçage inférieure à la température de fusion du métal","oxyde fondant avant le métal"],c:0,e:"Les trois conditions : exothermique, amorçage avant fusion, oxyde fondant avant le métal. La conductibilité électrique concerne le plasma."},
+    {q:"Pourquoi l'inox 18-10 ne s'oxycoupe-t-il pas ?",o:["il ne brûle pas du tout dans l'oxygène","il est trop mou","il est magnétique","son oxyde de chrome fond bien au-dessus du métal"],c:3,e:"Cr₂O₃ fond vers 2 400 °C : une croûte réfractaire bloque la combustion. Plasma, laser ou jet d'eau."},
+    {q:"La pureté de l'oxygène de coupe baisse de 1 %. Conséquence ?",o:["la vitesse de coupe baisse de 15 à 30 % environ","aucune","la coupe devient plus nette","la flamme devient carburante"],c:0,e:"La pureté est le premier facteur de productivité ; sous environ 98 %, la coupe devient difficile."},
+    {q:"Pourquoi préchauffer un acier à carbone équivalent élevé avant oxycoupage ?",o:["pour couper plus vite","pour ralentir le refroidissement du bord et éviter une couche trempée fissurée","pour économiser l'oxygène","pour ramollir la buse"],c:1,e:"Le bord est chauffé puis refroidi brutalement : sur un acier trempant, il durcit. Préchauffer, ou meuler le bord avant soudage."},
+    {q:"Quel retard des stries vise-t-on environ en oxycoupage de coupe normale ?",o:["0 %","10 % de l'épaisseur","50 % de l'épaisseur","l'épaisseur entière"],c:1,e:"Environ 10 % de l'épaisseur ; 15 à 20 % en refendage."},
+    {q:"Arête supérieure fondue et scories collées en bas de la face : cause probable ?",o:["vitesse trop faible","vitesse trop forte","oxygène trop pur","buse trop grosse pour une tôle fine, sans effet"],c:0,e:"La chaleur s'accumule : l'arête fond, l'oxyde est mal chassé. Augmenter la vitesse."},
+    {q:"Retard excessif et coupe désamorcée dans le bas : cause probable ?",o:["chauffe trop forte","vitesse trop faible","tôle préchauffée","vitesse trop forte ou oxygène insuffisant"],c:3,e:"Le jet n'a pas le temps de traverser toute l'épaisseur : stries très inclinées, pièce non détachée."},
+    {q:"Quel gaz plasmagène choisir pour couper de l'inox de 30 mm de bonne qualité ?",o:["oxygène","air comprimé","argon-hydrogène ou azote","acétylène"],c:2,e:"Argon-hydrogène ou azote pour l'inox et l'aluminium ; oxygène pour les aciers."},
+    {q:"En gougeage air-arc (871), que faut-il faire avant de souder la gorge ?",o:["rien","meuler pour retirer la couche recarburée et régulariser la gorge","la préchauffer à 600 °C","la peindre"],c:1,e:"L'électrode de carbone peut recarburer la surface : on meule, puis on contrôle avant la reprise."},
+    {q:"Quel procédé pour couper une tôle d'acier de 150 mm ?",o:["laser","plasma à l'air","oxycoupage","jet d'eau sans abrasif"],c:2,e:"L'oxycoupage machine coupe les fortes épaisseurs d'acier, jusqu'à plusieurs centaines de mm."}
+  ];
+  let score=0,done=0;const sc=$("#qzScore");
+  function upd(){let t="Score : "+score+" / "+Q.length;if(done===Q.length)t+=score>=10?"  ·  🎉 prêt pour la suite":score>=7?"  ·  relis les explications":"  ·  refais un tour des chapitres";sc.textContent=t;}
+  function render(){box.innerHTML="";score=0;done=0;
+    Q.forEach((it,n)=>{const d=document.createElement("div");d.className="qz";
+      d.innerHTML='<p class="qz-q"><b>'+(n+1)+".</b> "+it.q+'</p><div class="qz-o"></div><div class="qz-e" hidden></div>';
+      const o=d.querySelector(".qz-o"),ex=d.querySelector(".qz-e");let answered=false;
+      it.o.forEach((txt,i)=>{const b=document.createElement("button");b.type="button";b.className="qz-b";b.innerHTML=String.fromCharCode(65+i)+". "+txt;
+        b.addEventListener("click",()=>{if(answered)return;answered=true;done++;const ok=i===it.c;if(ok)score++;b.classList.add(ok?"ok":"ko");o.children[it.c].classList.add("ok");ex.hidden=false;ex.innerHTML=(ok?"✅ <b>Bien joué.</b> ":"❌ <b>Pas tout à fait.</b> ")+it.e;upd();});
+        o.appendChild(b);});
+      box.appendChild(d);});
+    upd();}
+  $("#qzReset").addEventListener("click",render);render();
+})();
+(function(){
+  const boxes=$$("#checklist input[type=checkbox]"),msg=$("#checkMsg"),KEY="flamme-coupage-cours2-check";
+  if(!boxes.length)return;
+  let saved=[];try{saved=JSON.parse(localStorage.getItem(KEY)||"[]")||[];}catch(e){saved=[];}
+  boxes.forEach(b=>{b.checked=saved.indexOf(b.dataset.c)>=0;});
+  function upd(){const on=boxes.filter(b=>b.checked).map(b=>b.dataset.c);try{localStorage.setItem(KEY,JSON.stringify(on));}catch(e){}
+    msg.innerHTML=on.length===boxes.length?"🎉 <b>Tout est coché : tu es prêt pour la suite !</b>":on.length+" / "+boxes.length+" : reviens sur les points non cochés (les manipulations sont faites pour ça).";}
+  boxes.forEach(b=>b.addEventListener("change",upd));upd();
+})();
+(function(){/* impression de la fiche mémoire seule */
+  const b=$("#printFiche");if(!b)return;
+  b.addEventListener("click",()=>{document.body.classList.add("print-fiche");window.print();});
+  window.addEventListener("afterprint",()=>document.body.classList.remove("print-fiche"));
+})();
+(function(){
+  const links=$$(".toc a"),tin=$(".toc-in");
+  if(!links.length||!("IntersectionObserver" in window))return;
+  const map={};links.forEach(a=>{map[a.getAttribute("href").slice(1)]=a;});
+  const obs=new IntersectionObserver(ents=>{ents.forEach(en=>{if(!en.isIntersecting)return;const a=map[en.target.id];if(!a)return;
+    links.forEach(l=>l.classList.toggle("on",l===a));
+    if(tin){const tgt=a.offsetLeft-tin.clientWidth/2+a.offsetWidth/2;try{tin.scrollTo({left:tgt,behavior:RM?"auto":"smooth"});}catch(e){tin.scrollLeft=tgt;}}});},{rootMargin:"-45% 0px -50% 0px"});
+  Object.keys(map).forEach(id=>{const s=document.getElementById(id);if(s)obs.observe(s);});
+})();
+(function(){
+  const b=$("#themeBtn");if(!b)return;const KEY="flamme-coupage-theme",root=document.documentElement;
+  const lab={auto:"◐ Thème : automatique",light:"☀️ Thème : clair",dark:"🌙 Thème : sombre"};
+  let t="auto";try{t=localStorage.getItem(KEY)||"auto";}catch(e){}
+  function apply(){if(t==="auto")root.removeAttribute("data-theme");else root.setAttribute("data-theme",t);b.textContent=lab[t];}
+  b.addEventListener("click",()=>{t=t==="auto"?"light":t==="light"?"dark":"auto";try{localStorage.setItem(KEY,t);}catch(e){}apply();});
+  apply();
+})();
+
+})();
+</script>
+</body>
+</html>

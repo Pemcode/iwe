@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Arc sous gaz, cours 3 : MIG-MAG, le procédé et ses transferts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@500;600;700&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+
+
+
+:root{
+  --paper:#F3F6F9; --paper-2:#E6ECF2; --card:#FFFFFF; --ink:#17212B; --muted:#56626F; --line:#C5CFD9;
+  --grid:rgba(40,90,160,.075);
+  --sig:#CF2438; --tau:#8A34B6; --eps:#1B5ED3; --gam:#06849A; --frc:#D46A00; --mat:#26844A; --weld:#9A5B12;
+  --ok:#26844A; --warn:#B86E00; --bad:#C62828;
+  --lv2:#E4EBF2; --hl:#FFF3B0;
+  --font-body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-head:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --font-math:"STIX Two Text","Cambria Math","Cambria","Times New Roman",serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+    --grid:rgba(120,160,220,.07);
+    --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+    --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+  --grid:rgba(120,160,220,.07);
+  --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+  --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+  color-scheme: dark;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0;color:var(--ink);font-family:var(--font-body);font-size:17.5px;line-height:1.62;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;overflow-x:hidden;
+}
+img,svg{max-width:100%}
+.wrap{max-width:800px;margin:0 auto;padding:0 20px}
+.wide{max-width:980px}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.1;margin:0}
+h3{font-size:1.65rem;font-weight:600;margin:2rem 0 .6rem}
+h4{font-size:1.3rem;font-weight:600;margin:1.4rem 0 .4rem}
+p{margin:.7em 0}
+a{color:var(--eps)}
+b,strong{font-weight:700}
+small{font-size:.8em}
+sub{font-size:.72em}
+.m{font-family:var(--font-math);font-size:1.08em;white-space:nowrap}
+.sig{color:var(--sig)} .tau{color:var(--tau)} .eps{color:var(--eps)} .gam{color:var(--gam)} .frc{color:var(--frc)} .mat{color:var(--mat)} .mut{color:var(--muted)} .wcol{color:var(--weld)}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .12em;line-height:1.1}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 .2em .08em}
+.frac>span:last-child{padding:.08em .2em 0}
+ul,ol{padding-left:1.4em}
+li{margin:.25em 0}
+
+/* ---------- en-tête ---------- */
+.hero{padding:34px 0 10px}
+.title-block{border:2.5px solid var(--ink);background:var(--card);display:grid;grid-template-columns:1fr 300px}
+.tb-main{padding:22px 24px;border-right:2.5px solid var(--ink);display:flex;flex-direction:column;justify-content:space-between;gap:14px}
+.tb-series{margin:0 0 .5rem;color:var(--muted);font-size:.95rem}
+.hero h1{font-size:clamp(2.3rem,6vw,4rem);font-weight:700;letter-spacing:-.01em}
+.tb-cells{display:grid;grid-template-rows:repeat(4,auto)}
+.tb-cells>div{padding:9px 16px;border-bottom:1.5px solid var(--ink);display:flex;flex-direction:column;justify-content:center}
+.tb-cells>div:last-child{border-bottom:0}
+.tb-cells small{color:var(--muted);font-size:.78rem}
+.tb-cells b{font-family:var(--font-head);font-size:1.25rem;font-weight:600;line-height:1.15}
+.lede{font-size:1.13rem;max-width:760px;margin:1.2rem 0}
+.theme-btn{align-self:flex-start;font-family:var(--font-body);font-size:.85rem;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
+@media (max-width:760px){.title-block{grid-template-columns:1fr}.tb-main{border-right:0;border-bottom:2.5px solid var(--ink)}.tb-cells{grid-template-rows:none;grid-template-columns:1fr 1fr}.tb-cells>div:nth-child(odd){border-right:1.5px solid var(--ink)}.tb-cells>div:nth-child(3){border-bottom:0}}
+@media (max-width:420px){.tb-cells{grid-template-columns:1fr}.tb-cells>div:nth-child(odd){border-right:0}.tb-cells>div:nth-child(3){border-bottom:1.5px solid var(--ink)}}
+
+/* code couleur */
+.cc{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:stretch;margin:1rem 0 .4rem}
+.cc-box{background:var(--card);border:2px solid var(--line);padding:12px 14px;border-radius:4px}
+.cc-cause{border-color:var(--sig)} .cc-link{border-color:var(--mat)} .cc-eff{border-color:var(--eps)}
+.cc-box small{display:block;color:var(--muted);font-size:.82rem;line-height:1.3}
+.cc-syms{font-family:var(--font-math);font-size:1.7rem;line-height:1.25;display:flex;flex-wrap:wrap;gap:.1em .45em;margin:.2rem 0}
+.cc-box p{margin:0;font-size:.9rem;line-height:1.35}
+.cc-arrow{align-self:center;font-size:1.8rem;color:var(--muted)}
+@media (max-width:700px){.cc{grid-template-columns:1fr}.cc-arrow{transform:rotate(90deg);justify-self:center;line-height:1}}
+.cc-more{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:.5rem 0}
+.cc-more>div{border:2px solid var(--line);background:var(--card);border-radius:4px;padding:6px 10px;font-size:.9rem}
+@media (max-width:640px){.cc-more{grid-template-columns:1fr}}
+
+/* ---------- sommaire ---------- */
+.toc{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-bottom:1.5px solid var(--line);padding-top:env(safe-area-inset-top,0px);margin-top:18px}
+.toc-in{display:flex;gap:6px;overflow-x:auto;padding:9px 20px;max-width:980px;margin:0 auto;scrollbar-width:thin}
+.toc a{flex:none;text-decoration:none;color:var(--ink);font-size:.88rem;padding:4px 11px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);white-space:nowrap}
+.toc a.on{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.toc a:focus-visible,.btn:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--eps);outline-offset:2px}
+
+/* ---------- sections ---------- */
+section.chap{padding:46px 0 10px}
+.cartouche{display:grid;grid-template-columns:86px 1fr 250px;border:2.5px solid var(--ink);background:var(--card);margin-bottom:1.4rem}
+.c-num{font-family:var(--font-head);font-size:3.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;border-right:2.5px solid var(--ink)}
+.c-title{padding:14px 18px;border-right:2.5px solid var(--ink)}
+.c-title h2{font-size:2.1rem;font-weight:700}
+.c-title p{margin:.25rem 0 0;color:var(--muted)}
+.c-img{padding:12px 14px;display:flex;gap:12px;align-items:center;background:var(--paper-2)}
+.c-img .ico{font-size:2.3rem;line-height:1}
+.c-img small{display:block;color:var(--muted);font-size:.78rem}
+.c-img span{font-size:.95rem;line-height:1.3}
+@media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
+
+/* gabarit court : approfondissement replié, à retenir, prédiction */
+details.deep{margin:1.2rem 0;padding:0 18px;background:var(--lv2);border-left:6px solid var(--ink);border-radius:4px}
+details.deep>summary{font-family:var(--font-head);font-size:1.2rem;font-weight:600;padding:9px 0}
+details.deep[open]{padding-bottom:10px}
+.retenir{margin:1.4rem 0 .4rem;padding:8px 18px 6px;background:var(--card);border:2px solid var(--ink);border-radius:4px}
+.retenir>b:first-child{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.retenir ul{margin:.3rem 0 .3rem}
+.predict{display:block;margin-top:.35rem;color:var(--ink);font-weight:700}
+@media (max-width:520px){details.deep{padding:0 12px}.retenir{padding:8px 12px 6px}}
+
+/* formules et encadrés */
+.fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:600px;text-align:center;border-radius:3px;overflow-x:auto}
+.fx .big{font-family:var(--font-math);font-size:1.9rem;line-height:1.4}
+.fx .cap{font-size:.85rem;color:var(--muted);margin:.3rem 0 0}
+.fx .row{display:flex;flex-wrap:wrap;justify-content:center;gap:.2em 1.4em}
+.syms{margin:.6rem 0;display:grid;grid-template-columns:auto 1fr;gap:.35rem 1rem;align-items:baseline}
+.syms dt{font-family:var(--font-math);font-size:1.25rem;text-align:right;white-space:nowrap}
+.syms dd{margin:0}
+.def{margin:.9rem 0;padding:.5rem .9rem;border-left:3px dotted var(--muted);font-size:.96rem;background:color-mix(in srgb,var(--card) 60%,transparent)}
+.def>b:first-child{font-family:var(--font-head);font-size:1.08rem;font-weight:600}
+.tip{margin:1rem 0;padding:.7rem 1rem;border:1.5px dashed var(--mat);border-radius:4px;font-size:.97rem}
+.warn{margin:1rem 0;padding:.7rem 1rem;border:2px solid var(--bad);border-radius:4px;font-size:.97rem;background:color-mix(in srgb,var(--bad) 7%,transparent)}
+.mnemo{margin:1rem 0;padding:.7rem 1rem;background:var(--hl);border-radius:4px;font-size:.98rem}
+.fun{margin:1.2rem 0;padding:.8rem 1rem;border:2px dashed var(--muted);border-radius:10px;background:var(--card);font-size:.98rem}
+.fun-h{display:block;margin-bottom:.35rem;font-family:var(--font-head);font-size:1.15rem;font-weight:600;letter-spacing:.02em}
+.meta{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--frc);border-radius:4px;background:color-mix(in srgb,var(--frc) 6%,transparent)}
+.weld{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--weld);border-radius:4px;background:color-mix(in srgb,var(--weld) 7%,transparent)}
+.weld>b:first-child{font-family:var(--font-head);font-size:1.15rem;font-weight:600;color:var(--weld)}
+.hp{display:inline-block;font-size:.72rem;font-weight:700;padding:1px 7px;border-radius:9px;background:var(--weld);color:var(--card);vertical-align:middle;margin-left:4px;white-space:nowrap}
+.recall{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:1rem 0}
+.recall>div{background:var(--card);border:1.5px solid var(--line);border-radius:4px;padding:8px 12px;font-size:.92rem}
+.recall .f{font-family:var(--font-math);font-size:1.2rem;margin-bottom:.2rem}
+@media (max-width:640px){.recall{grid-template-columns:1fr}}
+.hist{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:1rem 0}
+.hist>div{background:var(--card);border:1.5px solid var(--weld);border-radius:4px;padding:8px 12px;font-size:.93rem}
+.hist .yr{font-family:var(--font-head);font-size:1.6rem;font-weight:700;color:var(--weld);line-height:1}
+@media (max-width:720px){.hist{grid-template-columns:1fr}}
+
+/* manipulations */
+.lab{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:14px 16px 12px;margin:1.4rem 0}
+.lab-h{font-family:var(--font-head);font-size:1.3rem;font-weight:600;margin:0 0 .2rem}
+.lab-sub{margin:0 0 .6rem;color:var(--muted);font-size:.92rem}
+.lab svg{display:block;width:100%;height:auto;color:var(--ink);font-family:var(--font-body);touch-action:pan-y}
+.ctrl{display:grid;grid-template-columns:minmax(110px,auto) 1fr minmax(92px,auto);gap:4px 12px;align-items:center;margin:.5rem 0}
+.ctrl label{font-size:.95rem}
+.ctrl output{font-family:var(--font-math);font-size:1.08rem;text-align:right;white-space:nowrap}
+@media (max-width:520px){.ctrl{grid-template-columns:1fr auto}.ctrl input[type=range]{grid-column:1/-1;grid-row:2}}
+input[type=range]{width:100%;accent-color:var(--ink);height:28px;margin:0}
+input.r-sig{accent-color:var(--sig)} input.r-tau{accent-color:var(--tau)} input.r-frc{accent-color:var(--frc)} input.r-mat{accent-color:var(--mat)} input.r-eps{accent-color:var(--eps)}
+.btns{display:flex;flex-wrap:wrap;gap:6px;margin:.5rem 0}
+.btn{font-family:var(--font-body);font-size:.9rem;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 13px;cursor:pointer;line-height:1.3}
+.btn:hover{background:var(--paper-2)}
+.btn.on{background:var(--ink);color:var(--paper)}
+.btn.play{border-color:var(--eps);color:var(--eps);font-weight:700}
+.btn:disabled{opacity:.45;cursor:default}
+.readout{font-family:var(--font-math);font-size:1.08rem;background:var(--paper-2);border-radius:4px;padding:.5rem .8rem;margin:.5rem 0;overflow-x:auto;display:flex;flex-wrap:wrap;gap:.2em 1.3em}
+.readout>span{white-space:nowrap}
+.status{font-size:.97rem;margin:.5rem 0;padding:.5rem .8rem;border-left:4px solid var(--eps);background:color-mix(in srgb,var(--eps) 6%,transparent);border-radius:0 4px 4px 0;min-height:2.6em}
+.radios{display:flex;flex-wrap:wrap;gap:6px 14px;margin:.4rem 0;font-size:.95rem}
+.radios label{display:inline-block;cursor:pointer}
+.radios input{margin:0 6px 0 0;vertical-align:middle}
+
+/* svg */
+svg text{fill:currentColor;font-size:13px}
+svg .lbl{font-size:12.5px;fill:var(--muted)}
+svg .mth{font-family:var(--font-math);font-size:16px}
+svg .ttl{font-family:var(--font-head);font-size:15px;font-weight:600}
+svg .axis{stroke:var(--ink);stroke-width:1.4;fill:none}
+svg .tick{stroke:var(--muted);stroke-width:1}
+svg .gridbg{stroke:var(--line);stroke-width:1}
+svg .ref{stroke:var(--muted);stroke-width:1.3;stroke-dasharray:4 3;fill:none}
+.arr line{stroke:currentColor}
+.arr polygon{fill:currentColor}
+
+/* tableaux */
+.tbl-wrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch}
+table.data{border-collapse:collapse;width:100%;font-size:.94rem;background:var(--card)}
+table.data th,table.data td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:middle}
+table.data th{font-family:var(--font-head);font-weight:600;font-size:1.05rem;background:var(--paper-2)}
+table.data td.n{font-family:var(--font-math);white-space:nowrap}
+table.data tr.now td{background:var(--hl)}
+
+/* parcours */
+.route{list-style:none;padding:0;margin:1rem 0;position:relative}
+.route::before{content:"";position:absolute;left:17px;top:10px;bottom:10px;width:4px;background:var(--line);border-radius:2px}
+.route li{position:relative;padding:0 0 14px 52px;margin:0}
+.route li .dot{position:absolute;left:4px;top:0;width:30px;height:30px;border-radius:50%;border:3px solid var(--ink);background:var(--card);font-family:var(--font-head);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+.route li b{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.route li p{margin:.1rem 0 0;font-size:.95rem}
+.series{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:.8rem 0}
+.series>div{background:var(--card);border:1.5px solid var(--line);padding:8px 10px;border-radius:4px;font-size:.88rem}
+.series>div.here{border:2.5px solid var(--ink)}
+.series b{display:block;font-family:var(--font-head);font-size:1.05rem}
+@media (max-width:700px){.series{grid-template-columns:1fr 1fr}}
+
+/* exercices et quiz */
+.exo{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--ink);padding:6px 20px 12px;margin:1.2rem 0;border-radius:4px}
+.exo.defi{border-left-color:var(--weld)}
+.exo h4{margin-top:.8rem}
+.exo .lvtag{font-family:var(--font-body);font-size:.85rem;font-weight:400;color:var(--muted);margin-left:.4rem}
+.exo .q{margin:.25rem 0}
+details{margin:.6rem 0}
+summary{cursor:pointer;font-weight:700;padding:4px 0}
+details .sol{padding:.4rem .9rem;border-left:3px solid var(--mat);margin:.4rem 0}
+details .sol p{margin:.45em 0}
+.qz{background:var(--card);border:1.5px solid var(--line);border-radius:6px;padding:10px 16px;margin:.8rem 0}
+.qz-q{margin:.3rem 0 .6rem}
+.qz-o{display:flex;flex-direction:column;gap:6px}
+.qz-b{text-align:left;font-family:var(--font-body);font-size:.97rem;padding:8px 12px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:5px;cursor:pointer}
+.qz-b:hover{border-color:var(--ink)}
+.qz-b.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--card))}
+.qz-b.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--card))}
+.qz-e{font-size:.94rem;margin:.6rem 0 .2rem}
+.score{position:sticky;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);display:inline-block;background:var(--ink);color:var(--paper);padding:6px 14px;border-radius:999px;font-size:.95rem;margin:.6rem 0}
+
+/* fiche mémoire */
+.fiche{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:2.5px solid var(--ink);background:var(--card);margin:1rem 0}
+.fiche>div{padding:12px 14px;border-right:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}
+.fiche>div:nth-child(3n){border-right:0}
+.fiche>div:nth-last-child(-n+3){border-bottom:0}
+.fiche .ic{font-size:1.9rem;line-height:1}
+.fiche h4{margin:.3rem 0 .2rem;font-size:1.15rem}
+.fiche .f{font-family:var(--font-math);font-size:1.1rem;margin:.2rem 0}
+.fiche p{margin:.2rem 0 0;font-size:.88rem;color:var(--muted)}
+@media (max-width:720px){.fiche{grid-template-columns:1fr 1fr}.fiche>div{border-right:1.5px solid var(--ink)!important;border-bottom:1.5px solid var(--ink)!important}.fiche>div:nth-child(2n){border-right:0!important}.fiche>div:last-child{border-bottom:0!important}}
+@media (max-width:440px){.fiche{grid-template-columns:1fr}.fiche>div{border-right:0!important}}
+.gloss{display:grid;grid-template-columns:minmax(150px,230px) 1fr;gap:0;border-top:1.5px solid var(--line);margin:1rem 0}
+.gloss dt,.gloss dd{border-bottom:1.5px solid var(--line);padding:7px 8px;margin:0}
+.gloss dt{font-weight:700}
+.gloss dd{font-size:.95rem}
+@media (max-width:600px){.gloss{grid-template-columns:1fr}.gloss dt{border-bottom:0;padding-bottom:0}}
+.check label{display:flex;gap:10px;align-items:flex-start;padding:5px 0;cursor:pointer}
+.check input{margin-top:.35em;width:18px;height:18px;accent-color:var(--mat);flex:none}
+footer{padding:40px 0 60px;color:var(--muted);font-size:.9rem}
+hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
+@media (max-width:700px){.m{white-space:normal}.fx{padding:12px 10px}.fx .big{font-size:1.4rem}}
+@media (max-width:400px){body{font-size:16.5px}.wrap{padding:0 14px}.lab{padding:12px 10px}}
+
+/* compléments de la série Rupture */
+.btn.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,var(--card))}
+.btn.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--card))}
+.ctrl[hidden]{display:none}
+
+/* impression : le cours sur papier clair, ou la fiche mémoire seule sur une page */
+@media print{
+  :root,:root[data-theme]{--paper:#fff!important;--paper-2:#EEF2F6!important;--card:#fff!important;--ink:#111!important;--muted:#444!important;--line:#999!important;--grid:transparent!important;--lv2:#F2F5F8!important;--hl:#FFF3B0!important;color-scheme:light}
+  body{background:#fff;font-size:11pt}
+  .toc,.theme-btn,.btns,.ctrl,#qzReset,.score{display:none!important}
+  section.chap{padding:14px 0 4px}
+  .lab,.fx,.retenir,details.deep,.fiche>div,.exo{break-inside:avoid}
+  body.print-fiche header,body.print-fiche main>section:not(#fiche),body.print-fiche footer{display:none!important}
+  body.print-fiche #fiche .cartouche{margin-bottom:.6rem}
+  body.print-fiche .fiche>div{padding:8px 10px}
+}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="wrap wide">
+  <div class="title-block">
+    <div class="tb-main">
+      <div>
+        <p class="tb-series">Soudage sous protection gazeuse : TIG, MIG-MAG et plasma</p>
+        <h1>MIG-MAG : le fil qui fond aussi vite qu'il arrive</h1>
+      </div>
+      <button class="theme-btn" id="themeBtn" type="button" aria-label="Changer de thème">◐ Thème : automatique</button>
+    </div>
+    <div class="tb-cells">
+      <div><small>Cours</small><b>3 sur 5 : le procédé 13x et ses régimes de transfert</b></div>
+      <div><small>Durée conseillée</small><b>≈ 1 h 20 avec les exercices</b></div>
+      <div><small>Prérequis</small><b>cours 1 de la série (gaz MIG et MAG, CO<sub>2</sub> et pulvérisation) ; Fondamentaux des procédés, cours 2 et 3 (striction et gouttes, self, caractéristique plate, autorégulation, pulsé)</b></div>
+      <div><small>À la fin tu sais</small><b>décrire le procédé 13x et sa famille ISO 4063 ; relier vitesse de fil, fil sorti et courant par l'équation de fusion du fil ; décrire le court-circuit et régler la self ; distinguer globulaire et pulvérisation axiale, et situer le courant de transition ; expliquer le pulsé « une goutte par impulsion », la synergie et les transferts pilotés ; choisir galets, gaine et dévidoir</b></div>
+    </div>
+  </div>
+  <p class="lede">En MIG-MAG, le fil est à la fois l'électrode et le métal d'apport : un dévidoir le pousse sans fin dans l'arc, et la source à tension constante règle le courant pour qu'il fonde exactement aussi vite qu'il arrive. Selon le courant et la tension, le métal passe au bain par courts-circuits, par grosses gouttes ou en pluie fine, et chaque régime a son domaine. Ce cours relie vitesse de fil et courant, explique les régimes de transfert, le pulsé et les transferts pilotés, puis le matériel qui amène le fil.</p>
+
+  <h4>Le code couleur de la série</h4>
+  <div class="cc" role="img" aria-label="Code couleur : les causes en rouge et violet, les paramètres en vert, les effets en bleu et bleu-vert">
+    <div class="cc-box cc-cause"><small>Les causes</small><div class="cc-syms"><span class="sig">air</span><span class="sig">vent</span><span class="tau">porosité</span><span class="tau">oxydation</span></div><p><span class="sig">rouge</span> : ce qui menace le bain (air, vent, humidité) ; <span class="tau">violet</span> : les défauts (porosités, oxydes, projections, fissures)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-link"><small>Les paramètres</small><div class="cc-syms"><span class="mat">Ar</span><span class="mat">He</span><span class="mat">CO<sub>2</sub></span><span class="mat">Q</span></div><p>en <span class="mat">vert</span> : ce qu'on choisit (composition du gaz, débit, buse)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-eff"><small>Les effets</small><div class="cc-syms"><span class="eps">U</span><span class="eps">p</span><span class="eps">S</span><span class="gam">arc</span><span class="gam">[H]</span></div><p><span class="eps">bleu</span> : ce qu'on mesure ou calcule (tension d'arc, pénétration, solubilité, indice d'oxydation) ; <span class="gam">bleu-vert</span> : l'arc et ce qui se dissout dans le métal</p></div>
+  </div>
+  <div class="cc-more">
+    <div><b class="frc">Orange</b> : ce qui s'écoule et se déplace (jet de gaz, gouttes, courant d'air).</div>
+    <div><b>Noir</b> : la géométrie dessinée (torche, buse, pièce, cordon).</div>
+    <div><b class="wcol">Bronze</b> : le métal fondu et les encadrés « métier » 🔥.</div>
+  </div>
+</div>
+</header>
+
+<nav class="toc" aria-label="Sommaire">
+  <div class="toc-in">
+    <a href="#avant">Avant de commencer</a>
+    <a href="#c1">1 Le procédé 13x</a>
+    <a href="#c2">2 Court-circuit</a>
+    <a href="#c3">3 Pulvérisation</a>
+    <a href="#c4">4 Pulsé et piloté</a>
+    <a href="#c5">5 Le matériel</a>
+    <a href="#exos">Exercices</a>
+    <a href="#quiz-s">Quiz</a>
+    <a href="#fiche">Fiche mémoire</a>
+    <a href="#gloss">Glossaire</a>
+    <a href="#check">Check-list</a>
+  </div>
+</nav>
+
+<main>
+<section class="chap" id="avant">
+<div class="wrap">
+  <h3 style="margin-top:0">Avant de commencer</h3>
+  <h4>Ce qu'il faut avoir en tête, en trois cases</h4>
+  <div class="recall">
+    <div><div class="f">source plate ⇒ autorégulation</div>Arc plus court, courant qui bondit, fil qui fond plus vite : l'arc retrouve sa longueur (Fondamentaux des procédés, cours 3).</div>
+    <div><div class="f">striction ∝ I²</div>Plus de courant pince plus fort la goutte : elle part plus tôt et plus petite (Fondamentaux, cours 2).</div>
+    <div><div class="f">M21 : Ar + 18 % CO<sub>2</sub></div>Au-delà d'environ 20 à 25 % de CO<sub>2</sub>, plus de pulvérisation axiale (cours 1 de la série).</div>
+  </div>
+
+  <div class="def"><b>📘 Le sujet</b> : <b>1.8 « Soudage MIG-MAG et soudage avec fils fourrés »</b> du planning et du référentiel de l'IIW (<i>International Institute of Welding</i>). Attendus de l'IWE (<i>International Welding Engineer</i>, ingénieur international en soudage) : expliquer le principe du procédé, de son générateur et de son dévidoir ; décrire les régimes de transfert et leurs domaines ; prévoir l'influence des paramètres et du gaz sur le cordon ; choisir le procédé et ses variantes pour une application.</div>
+
+  <div class="def"><b>📖 Normes et sigles</b>. <b>ISO 4063</b> : 131 MIG (fil plein, gaz inerte), 135 MAG (fil plein, gaz actif), 132 et 136 avec fil fourré de flux, 133 et 138 avec fil fourré de poudre métallique, 114 fil fourré autoprotecteur ; <b>ISO 14175</b> : gaz ; <b>EN 1011-1</b> : énergie de soudage (k = 0,8). <b>GMAW</b>, <b>FCAW</b> : sigles anglais du MIG-MAG à fil plein et à fil fourré ; <b>WFS</b> : vitesse de fil (<i>wire feed speed</i>) ; <b>CC+</b> : fil au pôle +. Les manipulations sont des modèles pédagogiques : tendances et ordres de grandeur.</div>
+
+  <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage</b>
+    <p>Le MIG-MAG est le procédé le plus employé dans l'industrie, à la main comme sur robot. Ses défauts les plus graves, collages et manques de fusion, viennent presque toujours d'un régime de transfert mal choisi : savoir lire le transfert, c'est savoir qualifier et surveiller un mode opératoire MIG-MAG.</p>
+  </div>
+
+  <h4>La série</h4>
+  <div class="series" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">
+    <div><b>1 Les gaz de protection</b>Protéger, ioniser, façonner : argon, hélium, gaz actifs, métallurgie, ISO 14175.</div>
+    <div><b>2 Le soudage TIG</b>L'électrode infusible, la polarité, les réglages et les variantes.</div>
+    <div class="here"><b>3 MIG-MAG : le procédé</b>Fil fusible, autorégulation et régimes de transfert.</div>
+    <div><b>4 MIG-MAG : fils et soudabilité</b>Fils pleins et fourrés, hydrogène, réglages et défauts.</div>
+    <div><b>5 Le soudage plasma</b>L'arc étranglé et le trou de serrure.</div>
+  </div>
+
+  <h4>Le plan du cours</h4>
+  <ol class="route">
+    <li><span class="dot">1</span><b>Le procédé 13x</b><p>La vitesse de fil fait le courant ; le fil sorti le module.</p></li>
+    <li><span class="dot">2</span><b>Le court-circuit</b><p>Petite énergie, toutes positions, et la self qui dose le pincement.</p></li>
+    <li><span class="dot">3</span><b>Globulaire et pulvérisation axiale</b><p>Le seuil où la pluie fine remplace les grosses gouttes.</p></li>
+    <li><span class="dot">4</span><b>Pulsé et transferts pilotés</b><p>Une goutte par impulsion, synergie, basse énergie, forte pénétration.</p></li>
+    <li><span class="dot">5</span><b>Le matériel</b><p>Torche, dévidoir, galets et gaine.</p></li>
+  </ol>
+</div>
+</section>
+<section class="chap" id="c1">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">1</div>
+    <div class="c-title"><h2>Le procédé 13x</h2><p>La vitesse de fil fait le courant ; le fil sorti le module</p></div>
+    <div class="c-img"><span class="ico">🧵</span><span><small>Image à retenir</small>La machine à coudre : le fil avance tout seul ; le courant suit la vitesse du fil</span></div>
+  </div>
+
+  <p>En MIG-MAG, un fil de 0,8 à 1,6 mm, dévidé en continu, traverse un tube contact qui lui amène le courant, puis fond dans l'arc : il est à la fois électrode et métal d'apport. Le gaz arrive par la même torche. La source est à <b>tension constante</b> : le soudeur règle la tension, qui fixe la longueur d'arc, et la <b>vitesse de fil</b>. Le courant n'a pas de bouton : il s'établit tout seul à la valeur qui fond le fil exactement aussi vite qu'il arrive. Plus de fil, plus de courant.</p>
+
+  <div class="def"><b>📖 Carte d'identité du procédé 13x (ISO 4063).</b>
+    <ul>
+      <li><b>Énergie</b> : arc entre fil fusible et pièce, source à tension constante, fil au pôle +.</li>
+      <li><b>Protection</b> : gaz inerte (131 MIG) ou actif (135 MAG) ; fils fourrés de flux (136), de poudre métallique (138), autoprotecteurs sans gaz (114).</li>
+      <li><b>Courants</b> : de 60 à 500 A environ. <b>Dépôt</b> : 1 à 8 kg/h environ.</li>
+      <li><b>Mise en œuvre</b> : semi-automatique, automatique, robot. <b>Positions</b> : toutes, selon le régime.</li>
+      <li><b>Métaux</b> : aciers, inox, aluminium, cuivreux, nickel.</li>
+      <li><b>Atouts</b> : productivité, pas de laitier en fil plein, automatisation aisée.</li>
+      <li><b>Limites</b> : sensible au vent, risque de collages en court-circuit, torche encombrante.</li>
+    </ul>
+  </div>
+
+  <div class="fx"><div class="row big"><span><span class="mat">WFS</span> = α·<span class="eps">I</span> + β·<span class="mat">ℓ</span>·<span class="eps">I</span>²</span></div><p class="cap">Équation de fusion du fil : WFS vitesse de fil (m/min) ; I courant (A) ; ℓ fil sorti (mm), du tube contact à l'arc. Le premier terme est la fusion par l'arc, le second le préchauffage du fil sorti par effet Joule. Modèle du cours, fil d'acier de 1,2 mm : α = 0,0199 m/(min·A), β = 3,72 × 10<sup>−6</sup> m/(min·mm·A²).</p></div>
+
+  <div class="lab" id="m1">
+    <p class="lab-h">Manipulation 1 : le fil fond aussi vite qu'il arrive</p>
+    <p class="lab-sub">Règle la vitesse de fil et le fil sorti : le courant d'équilibre, le métal déposé et la part du préchauffage Joule s'affichent.<span class="predict">🔮 Prédis d'abord : à vitesse de fil égale, allonger le fil sorti de 15 à 25 mm fait-il monter ou baisser le courant ?</span></p>
+    <div class="btns" id="m1b">
+      <button class="btn" data-w="3" data-l="12" type="button">Tôle mince : 3 m/min</button>
+      <button class="btn on" data-w="8" data-l="15" type="button">8 m/min, 15 mm</button>
+      <button class="btn" data-w="8" data-l="25" type="button">8 m/min, 25 mm</button>
+    </div>
+    <div class="ctrl"><label for="m1w">Vitesse de fil <b class="mat">WFS</b></label><input type="range" id="m1w" min="2" max="14" step="0.5" value="8"><output id="m1wo"></output></div>
+    <div class="ctrl"><label for="m1l">Fil sorti <b class="mat">ℓ</b></label><input type="range" id="m1l" min="8" max="30" step="1" value="15"><output id="m1lo"></output></div>
+    <svg id="m1svg" role="img" aria-label="Torche, fil sorti et arc ; courbes de fusion du fil et courant d'équilibre"></svg>
+    <div class="readout" id="m1r"></div>
+    <p class="status" id="m1msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> (modèle) : à 8 m/min et 15 mm de fil sorti, il faut résoudre <span class="m">3,72 × 10<sup>−6</sup> × 15 × I² + 0,0199 × I = 8</span> : <b>I ≈ 240 A</b>. Le métal déposé ne dépend que du fil : <span class="m">8 m/min × 8,88 g/m ≈ 4,3 kg/h</span> (fil de 1,2 mm : 1,13 mm² × 7,85 g/cm³). Si le soudeur éloigne la torche jusqu'à 25 mm de fil sorti, le préchauffage Joule fait une plus grande part du travail : le courant tombe vers <b>205 A</b> pour le même dépôt, la pénétration baisse et le risque de collage monte.</p>
+
+  <div class="warn"><b>⚠️ Piège : « monter la tension pour avoir plus de courant ».</b> En MIG-MAG, la tension règle la longueur d'arc ; le courant vient de la vitesse de fil. Plus de tension sans plus de fil donne un arc long, large, plus projetant.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « le fil fait l'ampère, la tension fait la longueur »</b>.</div>
+  <div class="weld"><b>🔥 Le fil sorti à l'atelier :</b> 10 à 15 mm en court-circuit, 15 à 25 mm en pulvérisation. Un soudeur qui « recule » pour mieux voir perd de la pénétration sans s'en rendre compte : c'est une variable à tenir dans le mode opératoire.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : l'énergie de soudage en MIG-MAG</summary>
+    <p>L'EN 1011-1 donne k = 0,8 pour le MIG-MAG à fil plein et à fil fourré, et pour le fil fourré autoprotecteur (131, 135, 136, 114…) : <span class="m">Q = 0,8·U·I/v</span>. À 240 A, 28 V et 6 mm/s, <span class="m">Q ≈ 0,8 × 28 × 240/6 × 10<sup>−3</sup> ≈ 0,90 kJ/mm</span>. En pulsé, la puissance se calcule comme la moyenne de la puissance instantanée, que les postes modernes affichent.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Tension constante : la vitesse de fil fixe le courant.</li>
+      <li>WFS = α·I + β·ℓ·I² : fil sorti plus long, courant plus faible.</li>
+      <li>Le dépôt ne dépend que de la vitesse et du diamètre du fil.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c2">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">2</div>
+    <div class="c-title"><h2>Le court-circuit</h2><p>Petite énergie, toutes positions, et la self qui dose le pincement</p></div>
+    <div class="c-img"><span class="ico">💧</span><span><small>Image à retenir</small>Le robinet qui goutte sur une assiette : la goutte touche, s'étire, se détache, et l'arc se rallume ; cent fois par seconde</span></div>
+  </div>
+
+  <p>À faible courant et tension basse, l'arc est si court que la goutte qui grossit au bout du fil touche le bain avant de se détacher. L'arc s'éteint : c'est un <b>court-circuit</b>. Le courant monte alors, la striction pince le pont liquide, il se rompt, l'arc se rallume, et le cycle recommence des dizaines de fois par seconde. Le bain reçoit peu d'énergie et se fige vite : c'est le régime de la tôle mince, des positions et des racines. Tout se joue à l'instant de la rupture.</p>
+
+  <div class="def"><b>📖 Régime court-circuit.</b> Faibles courants (environ 60 à 180 A selon le fil) et tensions basses (environ 15 à 21 V), arc de 1 à 2 mm, 30 à 200 courts-circuits par seconde. La <b>self</b> de la source fixe la vitesse de montée du courant pendant le court-circuit : trop peu de self, le courant grimpe d'un coup, le pont explose en <span class="tau">projections</span> ; trop de self, il monte lentement, le fil s'enfonce dans le bain et colle, avec des <span class="tau">manques de fusion</span>. En pulvérisation, le courant ne varie presque pas : la self sert peu.</div>
+
+  <div class="fx"><div class="row big"><span><span class="eps">di/dt</span> = (U − R·i)/<span class="mat">L</span></span></div><p class="cap">di/dt : vitesse de montée du courant pendant le court-circuit (A/ms) ; U : tension de la source (V) ; R : résistance du circuit et du pont liquide (Ω) ; L : self (H).</p></div>
+
+  <div class="lab" id="m2">
+    <p class="lab-h">Manipulation 2 : l'oscillogramme d'un court-circuit</p>
+    <p class="lab-sub">Règle la self et fais défiler deux cycles : la tension et le courant, la goutte qui touche puis se détache, et le bilan en projections et en collages.<span class="predict">🔮 Prédis d'abord : avec une self très faible, la rupture du pont est-elle douce ou violente ?</span></p>
+    <div class="btns" id="m2b">
+      <button class="btn" data-l="0.05" type="button">Self faible</button>
+      <button class="btn on" data-l="0.25" type="button">Self bien réglée</button>
+      <button class="btn" data-l="0.8" type="button">Self forte</button>
+    </div>
+    <div class="btns" id="m2pl">
+      <button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button>
+      <button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button>
+      <button class="btn play" data-a="play" type="button">▶ Faire défiler 20 ms</button>
+      <button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button>
+    </div>
+    <div class="ctrl"><label for="m2l">Self <b class="mat">L</b></label><input type="range" id="m2l" min="0.05" max="1" step="0.05" value="0.25"><output id="m2lo"></output></div>
+    <svg id="m2svg" role="img" aria-label="Oscillogramme de tension et de courant sur deux cycles de court-circuit, avec la goutte au bout du fil"></svg>
+    <div class="readout" id="m2r"></div>
+    <p class="status" id="m2msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>En pratique</b> (modèle de la manipulation) : la self se règle pour que le courant atteigne le seuil de pincement en un à deux millisecondes. Les postes électroniques remplacent la self physique par une commande de la montée du courant, et les transferts pilotés vont plus loin (chapitre 4). Le court-circuit sert la tôle mince, les passes de racine, la soudure en montante et au plafond ; on le réserve aux épaisseurs modestes, car son faible apport de chaleur expose au <b>collage</b> sur une tôle épaisse.</p>
+
+  <div class="warn"><b>⚠️ Piège : le beau cordon collé.</b> En court-circuit, un cordon peut avoir un bel aspect et ne pas être fondu à la tôle : le manque de fusion ne se voit pas. C'est pourquoi les codes encadrent le court-circuit sur fortes épaisseurs, et qu'une QMOS en court-circuit ne vaut pas pour la pulvérisation.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « self courte, ça crache ; self longue, ça colle »</b>.</div>
+  <div class="weld"><b>🔥 Reconnaître le court-circuit à l'oreille :</b> un crépitement régulier, comme une friture. Irrégulier, avec des claquements et des projections, il signale une self ou une tension mal réglées.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : pourquoi le courant doit monter, puis vite redescendre</summary>
+    <p>Pendant le court-circuit, la tension s'effondre et le courant monte : la striction, qui croît comme I², pince le pont jusqu'à le rompre. Mais si le courant est encore très fort à l'instant de la rupture, l'énergie libérée fait exploser le pont et projette du métal. Les procédés à court-circuit contrôlé (STT, CMT, etc.) mesurent l'instant où le pont va céder et baissent le courant juste avant : la goutte se détache doucement.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Court-circuit : faible courant, arc court, toutes positions, tôle mince.</li>
+      <li>Self faible : projections ; self forte : collages.</li>
+      <li>Danger : le manque de fusion invisible sur tôle épaisse.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c3">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">3</div>
+    <div class="c-title"><h2>Globulaire et pulvérisation axiale</h2><p>Le seuil où la pluie fine remplace les grosses gouttes</p></div>
+    <div class="c-img"><span class="ico">🌧️</span><span><small>Image à retenir</small>La pluie fine et les grêlons : au-dessus du seuil, le fil s'effile et lâche une pluie de gouttelettes dans l'axe ; au-dessous, des grêlons tombent de travers</span></div>
+  </div>
+
+  <p>Montons le courant et la tension. L'arc s'allonge, les courts-circuits disparaissent, mais la goutte grossit au bout du fil jusqu'à plusieurs fois son diamètre, oscille et tombe de travers : c'est le régime <b>globulaire</b>, irrégulier, projetant, que l'on évite. Plus haut encore, au-delà d'un <b>courant de transition</b>, la striction effile la pointe du fil et la fait partir en une pluie de gouttelettes plus fines que le fil, projetées dans l'axe : c'est la <b>pulvérisation axiale</b>, stable et sans projections. Elle exige un gaz riche en argon.</p>
+
+  <div class="def"><b>📖 Les trois régimes du fil plein.</b>
+    <ul>
+      <li><b>Court-circuit</b> : faibles courant et tension (chapitre 2).</li>
+      <li><b>Globulaire</b> : courant moyen (environ 150 à 250 A pour 1,2 mm) ; grosses gouttes, projections ; c'est aussi le régime du CO<sub>2</sub> pur à fort courant.</li>
+      <li><b>Pulvérisation axiale</b> (<i>spray arc</i>) : au-delà du courant de transition et sous une tension assez haute (souvent 28 à 35 V), avec un gaz contenant au moins 80 % d'argon environ ; fort dépôt, pénétration profonde en « doigt de gant », bain gros et fluide, réservé à plat et en angle à plat.</li>
+    </ul>
+    Courant de transition d'un fil d'acier sous argon riche, en ordre de grandeur : 150 A pour 0,8 mm, 190 A pour 1,0 mm, 230 A pour 1,2 mm, 280 A pour 1,6 mm ; plus bas sous argon-oxygène, plus haut quand le CO<sub>2</sub> augmente.</div>
+
+  <div class="fx"><div class="row big"><span>pulvérisation : <span class="eps">I</span> ≥ I<sub>t</sub>(Ø, gaz) et arc assez long</span></div><p class="cap">I<sub>t</sub> : courant de transition, qui croît avec le diamètre du fil et la teneur en CO<sub>2</sub> ; au-delà d'environ 20 à 25 % de CO<sub>2</sub>, il n'existe plus (cours 1). Le critère des pressions du cours 2 des Fondamentaux en donne l'ordre de grandeur.</p></div>
+
+  <div class="lab" id="m3">
+    <p class="lab-h">Manipulation 3 : la carte des régimes d'un fil de 1,2 mm</p>
+    <p class="lab-sub">Choisis le gaz, puis règle courant et tension : le point se place dans la carte des régimes.<span class="predict">🔮 Prédis d'abord : sous CO<sub>2</sub> pur, à 300 A et 32 V, obtient-on la pulvérisation axiale ?</span></p>
+    <div class="btns" id="m3g">
+      <button class="btn" data-g="M20" type="button">Ar + 8 % CO₂ (M20)</button>
+      <button class="btn on" data-g="M21" type="button">Ar + 18 % CO₂ (M21)</button>
+      <button class="btn" data-g="C1" type="button">CO₂ pur (C1)</button>
+    </div>
+    <div class="ctrl"><label for="m3i">Courant <b class="eps">I</b></label><input type="range" id="m3i" min="60" max="400" step="5" value="150"><output id="m3io"></output></div>
+    <div class="ctrl"><label for="m3u">Tension <b class="mat">U</b></label><input type="range" id="m3u" min="14" max="38" step="0.5" value="19"><output id="m3uo"></output></div>
+    <svg id="m3svg" role="img" aria-label="Carte des régimes de transfert dans le plan courant-tension, avec le point de réglage et la goutte correspondante"></svg>
+    <div class="readout" id="m3r"></div>
+    <p class="status" id="m3msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> (carte du modèle, fil de 1,2 mm) : sous M21, 280 A et 30 V tombent en pulvérisation axiale : dépôt fort et cordon lisse. À 200 A et 25 V, on est en globulaire : il faut soit descendre en court-circuit, soit monter au-dessus de 230 A, soit passer au pulsé (chapitre 4). Sous CO<sub>2</sub> pur, aucune tension ne donne la pulvérisation : au-delà du court-circuit, le transfert reste globulaire, et à fort courant l'arc s'« enterre » dans un bain creusé, avec des projections.</p>
+
+  <div class="warn"><b>⚠️ Piège : la pulvérisation en position.</b> Son bain gros et fluide coule en montante ou au plafond. En position, on soude en court-circuit ou en pulsé, jamais en pulvérisation axiale pure.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « 150, 190, 230, 280 »</b> : les courants de transition approximatifs de 0,8 ; 1,0 ; 1,2 et 1,6 mm sous argon riche.</div>
+  <div class="weld"><b>🔥 Choisir le régime :</b> tôle mince et positions, court-circuit ou pulsé ; fortes épaisseurs à plat et angles à plat, pulvérisation ; racine ouverte, court-circuit contrôlé. Le globulaire n'est pas un choix, c'est une zone à traverser.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : la pulvérisation tournante</summary>
+    <p>À des courants encore plus élevés, avec de grands fils sortis, la pointe effilée du fil se met à tourner sous l'effet des forces électromagnétiques : le jet de gouttelettes décrit un cône. Ce régime de pulvérisation tournante, très productif, s'emploie avec des gaz spéciaux en soudage mécanisé, mais il devient instable et projetant s'il est mal maîtrisé.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Globulaire : grosses gouttes, projections, à éviter.</li>
+      <li>Pulvérisation : au-delà du courant de transition, sous argon riche, à plat.</li>
+      <li>Fil de 1,2 mm : transition vers 230 A ; sous CO<sub>2</sub> pur, jamais.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c4">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">4</div>
+    <div class="c-title"><h2>Pulsé et transferts pilotés</h2><p>Une goutte par impulsion, la synergie, la basse énergie et la forte pénétration</p></div>
+    <div class="c-img"><span class="ico">⏱️</span><span><small>Image à retenir</small>Le compte-gouttes : à chaque pression, une goutte et une seule ; entre deux pressions, le bain se repose</span></div>
+  </div>
+
+  <p>La pulvérisation est belle mais trop chaude pour la tôle mince et les positions ; le court-circuit est froid mais projette et colle. Le <b>pulsé</b> réconcilie les deux. Sur un courant de base faible, qui entretient l'arc sans fondre beaucoup, la source envoie des impulsions au-dessus du courant de transition : chaque impulsion détache une goutte, une seule, dans l'axe. Le courant moyen peut rester bas, celui du court-circuit, avec la qualité de la pulvérisation. Comme il faut accorder pic, durée, fréquence et vitesse de fil, la source le fait seule : c'est la <b>synergie</b>.</p>
+
+  <div class="def"><b>📖 Pulsé et transferts pilotés.</b> Une impulsion de courant I<sub>p</sub> pendant t<sub>p</sub> détache une goutte si elle apporte assez de striction : en première approche, I<sub>p</sub>²·t<sub>p</sub> ≈ constante pour un fil et un gaz. La fréquence f des impulsions fixe le volume de chaque goutte, qu'on veut proche du diamètre du fil. En <b>synergie</b>, le soudeur règle la vitesse de fil ; la source en déduit fréquence, pic et base. Les <b>transferts pilotés</b> modernes surveillent le court-circuit pour baisser le courant au moment de la rupture, ou rétractent le fil (basse énergie : tôle mince, racine, acier galvanisé, brasage MIG), ou au contraire raidissent l'arc pour une pénétration forte et étroite.</div>
+
+  <div class="fx"><div class="row big"><span><span class="eps">I<sub>moy</sub></span> = I<sub>b</sub> + (I<sub>p</sub> − I<sub>b</sub>)·t<sub>p</sub>·<span class="mat">f</span></span><span>V<sub>goutte</sub> = WFS·S<sub>fil</sub>/<span class="mat">f</span></span></div><p class="cap">I<sub>b</sub> : courant de base ; S<sub>fil</sub> : section du fil ; une goutte par impulsion si I<sub>p</sub>²·t<sub>p</sub> est proche de la constante du fil (modèle : 320 A²·s pour l'acier de 1,2 mm sous argon riche).</p></div>
+
+  <div class="lab" id="m4">
+    <p class="lab-h">Manipulation 4 : une goutte par impulsion</p>
+    <p class="lab-sub">Base de 60 A, fil de 1,2 mm : règle le pic, sa durée et la fréquence. La forme du courant, le courant moyen, la vitesse de fil et la taille des gouttes se calculent.<span class="predict">🔮 Prédis d'abord : peut-on souder en « pulvérisation » avec un courant moyen de 160 A, sous le courant de transition ?</span></p>
+    <div class="btns" id="m4b">
+      <button class="btn on" data-p="400" data-t="2" data-f="150" type="button">Réglage synergique</button>
+      <button class="btn" data-p="300" data-t="1.5" data-f="150" type="button">Pic trop faible</button>
+      <button class="btn" data-p="500" data-t="3" data-f="150" type="button">Impulsion trop forte</button>
+    </div>
+    <div class="ctrl"><label for="m4p">Courant de pic <b class="eps">I<sub>p</sub></b></label><input type="range" id="m4p" min="250" max="550" step="10" value="400"><output id="m4po"></output></div>
+    <div class="ctrl"><label for="m4t">Durée du pic <b class="mat">t<sub>p</sub></b></label><input type="range" id="m4t" min="0.5" max="4" step="0.1" value="2"><output id="m4to"></output></div>
+    <div class="ctrl"><label for="m4f">Fréquence <b class="mat">f</b></label><input type="range" id="m4f" min="50" max="300" step="10" value="150"><output id="m4fo"></output></div>
+    <svg id="m4svg" role="img" aria-label="Forme du courant pulsé sur deux périodes, gouttes détachées et taille des gouttes"></svg>
+    <div class="readout" id="m4r"></div>
+    <p class="status" id="m4msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> (modèle) : pic de 400 A pendant 2 ms, 150 Hz, base 60 A : <span class="m">I<sub>moy</sub> = 60 + 340 × 0,002 × 150 = 162 A</span>, sous le courant de transition de 230 A. Le pic apporte <span class="m">400² × 0,002 = 320 A²·s</span> : une goutte par impulsion. L'équation du chapitre 1 donne une vitesse de fil d'environ 4,7 m/min, soit des gouttes d'un peu plus de 1 mm, le diamètre du fil. Le soudeur pousse la vitesse de fil, la synergie relève la fréquence : chaque goutte garde la même taille.</p>
+
+  <div class="warn"><b>⚠️ Piège : comparer un pulsé à un lisse au courant affiché.</b> Le poste affiche un courant moyen ; l'énergie se calcule avec la puissance instantanée moyenne, plus élevée que le produit des moyennes. Les modes opératoires pulsés s'appuient sur l'énergie mesurée par le poste (ISO/TR 18491).</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « un pic, une goutte »</b>, et « plus de fil, plus de fréquence ».</div>
+  <div class="weld"><b>🔥 Où le pulsé gagne :</b> l'aluminium (pas de court-circuit propre, pulvérisation trop chaude sur mince), les inox (moins de projections et d'oxydation), l'acier en position et en tôles moyennes. Les transferts à basse énergie soudent les tôles galvanisées et les racines ouvertes ; ceux à forte pénétration réduisent le nombre de passes en angle, avec un risque de fissuration à chaud dans un bain profond et étroit.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : pourquoi I<sub>p</sub>²·t<sub>p</sub></summary>
+    <p>La striction croît comme I² et doit agir assez longtemps pour étirer et rompre le pont liquide : l'impulsion utile se mesure par l'intégrale du carré du courant, d'où I<sub>p</sub><sup>n</sup>·t<sub>p</sub> = D, avec n voisin de 2 dans les études expérimentales. Sous cette valeur, la goutte ne part pas et grossit d'une impulsion à l'autre : on retombe dans le globulaire. Au-dessus, plusieurs gouttes partent par impulsion, avec des projections.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Pulsé : pulvérisation à courant moyen bas, tôle mince et positions.</li>
+      <li>Une goutte par impulsion : I<sub>p</sub>²·t<sub>p</sub> ≈ constante ; f suit la vitesse de fil.</li>
+      <li>Transferts pilotés : basse énergie ou forte pénétration.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c5">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">5</div>
+    <div class="c-title"><h2>Le matériel</h2><p>Torche, dévidoir, galets et gaine : amener le fil sans à-coups</p></div>
+    <div class="c-img"><span class="ico">🚂</span><span><small>Image à retenir</small>Le train dans son tunnel : poussé par les galets, guidé par la gaine, il doit arriver à l'heure au tube contact ; un à-coup, et l'arc saute</span></div>
+  </div>
+
+  <p>Le meilleur réglage ne sert à rien si le fil arrive par saccades. Un poste MIG-MAG, c'est une source, mais aussi une chaîne mécanique : le <b>dévidoir</b>, avec son moteur et ses galets, pousse le fil depuis la bobine ; la <b>gaine</b>, dans le faisceau, le guide jusqu'à la torche ; le <b>tube contact</b>, en cuivre, lui transmet le courant juste avant l'arc ; la <b>buse</b> dirige le gaz. Beaucoup de défauts réputés « de soudage » sont des défauts de dévidage : arc qui saute, fil qui brûle dans le tube, porosités par buse encrassée.</p>
+
+  <div class="def"><b>📖 La chaîne d'amenée du fil.</b>
+    <ul>
+      <li><b>Dévidoir</b> : poussé (le plus courant), tiré (fils mous ou fins, moteur dans la torche), ou poussé-tiré pour les grandes longueurs et l'aluminium ; quatre galets entraînent mieux que deux.</li>
+      <li><b>Galets</b> : gorge en V lisse pour l'acier plein ; en U pour l'aluminium, qui se marquerait ; en V crantée, ou molletée, pour les fils fourrés, avec un serrage modéré pour ne pas les écraser.</li>
+      <li><b>Gaine</b> : spirale d'acier pour l'acier ; plastique (PTFE, polyamide, graphite) pour l'aluminium et souvent l'inox, qui accrocheraient.</li>
+      <li><b>Torche</b> : tube contact adapté au diamètre (un peu plus large pour l'aluminium, qui se dilate), diffuseur, buse, col de cygne ; refroidissement par gaz ou par eau ; torche aspirante pour capter les fumées.</li>
+    </ul>
+  </div>
+
+  <div class="fx"><div class="row big"><span>résistance au dévidage ∝ <span class="mat">ℓ</span><sub>faisceau</sub> × frottement × courbures</span></div><p class="cap">Plus le faisceau est long et coudé, plus la gaine freine le fil : au-delà de quelques mètres, un fil mou ou fourré demande un dévidage poussé-tiré ou un dévidoir intermédiaire.</p></div>
+
+  <div class="lab" id="m5">
+    <p class="lab-h">Manipulation 5 : équiper un poste pour un fil</p>
+    <p class="lab-sub">Choisis le fil et la longueur du faisceau : galets, gaine, dévidoir et tube contact se choisissent, avec le profil de la gorge des galets.<span class="predict">🔮 Prédis d'abord : un fil d'aluminium de 1,2 mm passe-t-il dans un faisceau de 8 m en simple dévidage poussé ?</span></p>
+    <div class="btns" id="m5b">
+      <button class="btn on" data-w="acier" type="button">Acier plein</button>
+      <button class="btn" data-w="inox" type="button">Inox plein</button>
+      <button class="btn" data-w="alu" type="button">Aluminium</button>
+      <button class="btn" data-w="fourre" type="button">Fil fourré</button>
+    </div>
+    <div class="ctrl"><label for="m5l">Longueur du faisceau <b class="mat">ℓ</b></label><input type="range" id="m5l" min="2" max="10" step="0.5" value="3"><output id="m5lo"></output></div>
+    <svg id="m5svg" role="img" aria-label="Dévidoir, galets et gaine, avec le profil de gorge et la torche, choisis selon le fil et la longueur du faisceau"></svg>
+    <div class="readout" id="m5r"></div>
+    <p class="status" id="m5msg" aria-live="polite"></p>
+  </div>
+
+  <div class="warn"><b>⚠️ Piège : serrer les galets pour « que ça passe ».</b> Un fil fourré écrasé laisse fuir son flux et s'ovalise ; un fil d'aluminium marqué s'accroche dans la gaine. On choisit le bon galet et la bonne gaine, on règle un serrage juste suffisant, et l'on garde le faisceau le plus droit possible.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « V pour l'acier, U pour l'alu, crans pour le fourré »</b>.</div>
+  <div class="weld"><b>🔥 L'entretien qui évite les défauts :</b> souffler la gaine à chaque bobine, changer le tube contact usé (trou ovalisé, contact électrique irrégulier), nettoyer la buse des projections (porosités), vérifier le serrage des connecteurs et la prise de masse.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : le fil cuivré</summary>
+    <p>La plupart des fils pleins en acier sont revêtus d'une fine couche de cuivre, qui protège de l'oxydation, améliore le contact électrique dans le tube et facilite le glissement. Mal adhérente, elle s'écaille et bouche la gaine. Des fils non cuivrés, traités en surface, existent pour limiter les fumées et l'usure des tubes contact.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Dévidage régulier d'abord : galets, gaine et tube contact adaptés au fil.</li>
+      <li>Galets en V pour l'acier, en U pour l'aluminium, crantés pour le fourré.</li>
+      <li>Aluminium et grandes longueurs : gaine plastique et poussé-tiré.</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="exos">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✎</div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Deux exercices : régler un MAG pour une charpente, puis régler un MIG pulsé</p></div>
+    <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de musculation : on ne progresse qu'en soulevant soi-même</span></div>
+  </div>
+  <p>Cherche chaque question sur papier avant d'ouvrir la correction : écris la relation, puis les valeurs (vitesses de fil en m/min, courants en A, longueurs en mm, énergies en kJ/mm). Le premier exercice se vérifie dans les manipulations 1 et 3 ; le second se rejoue dans la manipulation 4.</p>
+
+  <div class="exo">
+    <h4>Exercice 1 : un MAG de charpente <span class="lvtag">★ application · chapitres 1 et 3</span></h4>
+    <p>Un atelier soude des angles à plat en MAG, fil d'acier de 1,2 mm, gaz M21, avec le modèle de fusion du chapitre 1 (α = 0,0199 ; β = 3,72 × 10<sup>−6</sup>).</p>
+    <p class="q"><b>a)</b> Pour souder en pulvérisation axiale, quel courant minimal viser ? Vérifie que 8 m/min et 15 mm de fil sorti y suffisent.</p>
+    <p class="q"><b>b)</b> Quel métal déposé par heure d'arc ? Combien d'heures d'arc pour déposer 10 kg ?</p>
+    <p class="q"><b>c)</b> Un soudeur tient sa torche à 25 mm de fil sorti. Que devient le courant, et le régime ?</p>
+    <p class="q"><b>d)</b> À 240 A, 30 V et 6 mm/s, quelle énergie de soudage (EN 1011-1) ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> Au-dessus du courant de transition, environ <b>230 A</b> pour un fil de 1,2 mm sous argon riche. À 8 m/min et 15 mm : <span class="m">5,58 × 10<sup>−5</sup>·I² + 0,0199·I − 8 = 0</span>, soit <b>I ≈ 240 A</b>, juste au-dessus, avec une tension d'environ 28 à 32 V.</p>
+      <p><b>b)</b> Le fil pèse <span class="m">1,131 mm² × 7,85 g/cm³ ≈ 8,88 g/m</span> : <span class="m">8 × 60 × 8,88 ≈ 4,3 kg/h</span>. Pour 10 kg : <span class="m">10/4,26 ≈ 2,3 h d'arc</span>.</p>
+      <p><b>c)</b> <span class="m">9,3 × 10<sup>−5</sup>·I² + 0,0199·I − 8 = 0</span> donne <b>I ≈ 205 A</b> : sous le courant de transition, le transfert redevient <b>globulaire</b>, avec projections et pénétration réduite. Le fil sorti doit être tenu, et inscrit au mode opératoire.</p>
+      <p><b>d)</b> <span class="m">Q = 0,8 × 30 × 240/6 × 10<sup>−3</sup> ≈ 0,96 kJ/mm</span>.</p>
+    </div></details>
+  </div>
+
+  <div class="exo defi">
+    <h4>Exercice 2 : un MAG pulsé en montante <span class="lvtag">★★ synthèse · chapitres 2 à 4 · manipulation 4</span></h4>
+    <p>Une tôle de 4 mm doit être soudée en montante, fil d'acier de 1,2 mm, base 60 A. Constante de détachement du modèle : 320 A²·s.</p>
+    <p class="q"><b>a)</b> Pourquoi ni le globulaire, ni la pulvérisation lisse, et quels choix restent ?</p>
+    <p class="q"><b>b)</b> Pic de 400 A pendant 2 ms à 150 Hz : courant moyen ? Une goutte par impulsion ?</p>
+    <p class="q"><b>c)</b> Le soudeur accélère le fil ; la synergie passe à 200 Hz sans changer le pic. Nouveau courant moyen ? Les gouttes changent-elles de taille ?</p>
+    <p class="q"><b>d)</b> Un réglage manuel met le pic à 300 A pendant 1,5 ms. Que se passe-t-il ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> Le globulaire projette et colle ; la pulvérisation lisse, au-delà de 230 A, donne un bain trop gros et fluide qui coule en montante. Restent le <b>court-circuit</b> (froid, risque de collage) et le <b>pulsé</b>, qui détache les gouttes en pulvérisation avec un courant moyen bas.</p>
+      <p><b>b)</b> <span class="m">I<sub>moy</sub> = 60 + 340 × 0,002 × 150 = 162 A</span>. <span class="m">I<sub>p</sub>²·t<sub>p</sub> = 400² × 0,002 = 320 A²·s</span> : une goutte par impulsion, d'environ 1,04 mm dans le modèle.</p>
+      <p><b>c)</b> <span class="m">I<sub>moy</sub> = 60 + 340 × 0,002 × 200 = 196 A</span> ; vitesse de fil d'environ 6,0 m/min, gouttes d'environ 1,03 mm : la fréquence a suivi le fil, les gouttes gardent la taille du fil. C'est le rôle de la synergie.</p>
+      <p><b>d)</b> <span class="m">300² × 0,0015 = 135 A²·s</span>, bien sous 320 : l'impulsion ne détache pas la goutte, qui grossit d'une impulsion à l'autre. Le transfert redevient globulaire, projetant.</p>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="quiz-s">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">?</div>
+    <div class="c-title"><h2>Quiz : 12 questions éclair</h2><p>Chaque réponse est expliquée, même quand tu as juste</p></div>
+    <div class="c-img"><span class="ico">🎯</span><span><small>Image à retenir</small>La cible : vise 10 sur 12 avant le cours 4</span></div>
+  </div>
+  <div id="quiz"></div>
+  <div class="score" id="qzScore" aria-live="polite">Score : 0 / 12</div>
+  <div class="btns"><button class="btn" id="qzReset" type="button">↺ Recommencer le quiz</button></div>
+</div>
+</section>
+
+<section class="chap" id="fiche">
+<div class="wrap wide">
+  <div class="cartouche">
+    <div class="c-num">★</div>
+    <div class="c-title"><h2>Fiche mémoire du cours 3</h2><p>Neuf cases, neuf images : à photographier, puis à redessiner de tête</p></div>
+    <div class="c-img"><span class="ico">🧵</span><span><small>Image à retenir</small>La machine à coudre : le fil avance tout seul ; le courant suit la vitesse du fil, et la façon dont la goutte quitte le fil décide de tout le reste</span></div>
+  </div>
+  <div class="fiche">
+    <div><div class="ic">🧵</div><h4>Le procédé</h4><div class="f">131 · 135 · 136 · 138 · 114</div><p>Fil fusible au pôle +, gaz, source à tension constante ; 60 à 500 A, 1 à 8 kg/h.</p></div>
+    <div><div class="ic">⚖️</div><h4>Fusion du fil</h4><div class="f">WFS = α·I + β·ℓ·I²</div><p>La vitesse de fil fait le courant : 8 m/min, 15 mm : 240 A ; 25 mm : 205 A.</p></div>
+    <div><div class="ic">📦</div><h4>Le dépôt</h4><div class="f">dépôt = WFS × masse linéique</div><p>Fil de 1,2 mm : 8,88 g/m ; 8 m/min ≈ 4,3 kg/h. Q = 0,8·U·I/v.</p></div>
+    <div><div class="ic">💧</div><h4>Court-circuit</h4><div class="f">60 à 180 A · 15 à 21 V · 30 à 200 /s</div><p>Tôle mince, positions, racines ; risque de collage invisible sur tôle épaisse.</p></div>
+    <div><div class="ic">🎚️</div><h4>La self</h4><div class="f">di/dt = (U − R·i)/L</div><p>Faible : projections ; forte : collages. Inutile ou presque en pulvérisation.</p></div>
+    <div><div class="ic">🌧️</div><h4>Pulvérisation</h4><div class="f">I ≥ I<sub>t</sub> · ≥ 80 % Ar · 28 à 35 V</div><p>I<sub>t</sub> ≈ 150, 190, 230, 280 A pour 0,8 ; 1,0 ; 1,2 ; 1,6 mm. À plat seulement ; jamais sous CO<sub>2</sub> pur.</p></div>
+    <div><div class="ic">⏱️</div><h4>Pulsé</h4><div class="f">I<sub>moy</sub> = I<sub>b</sub> + (I<sub>p</sub> − I<sub>b</sub>)·t<sub>p</sub>·f</div><p>Une goutte par impulsion si I<sub>p</sub>²·t<sub>p</sub> ≈ constante ; la synergie lie f à la vitesse de fil.</p></div>
+    <div><div class="ic">🛠️</div><h4>Pilotés</h4><div class="f">basse énergie · forte pénétration</div><p>Court-circuit contrôlé ou fil rétracté : tôle mince, galvanisé ; arc raidi : angles profonds.</p></div>
+    <div><div class="ic">🚂</div><h4>Le dévidage</h4><div class="f">V acier · U alu · crans fourré</div><p>Gaine acier ou plastique, poussé-tiré pour l'aluminium long ; tube contact et buse entretenus.</p></div>
+  </div>
+  <div class="btns"><button class="btn" id="printFiche" type="button">🖨 Imprimer la fiche mémoire</button></div>
+  <div class="fun"><span class="fun-h">❄️ Fun fact : le CO₂ venu du froid</span>Le MAG sous CO<sub>2</sub>, aujourd'hui banal, a été annoncé en 1953 par deux ingénieurs soviétiques, K. V. Lioubavski et N. M. Novojilov, dans la revue <i>Avtogennoe Delo</i>. Jusque-là, le soudage à fil fusible sous gaz ne se pratiquait que sous argon, coûteux ; le CO<sub>2</sub> a ouvert le procédé à l'acier courant (<a href="#c3">chapitre 3</a>). (Sources : Miller Electric, « The History of Welding » ; <i>The Paton Welding Journal</i>, histoire du soudage sous gaz actifs.)</div>
+</div>
+</section>
+
+<section class="chap" id="gloss">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">A–Z</div>
+    <div class="c-title"><h2>Glossaire</h2><p>Les mots, symboles et sigles de ce cours</p></div>
+    <div class="c-img"><span class="ico">📖</span><span><small>Image à retenir</small>Le dictionnaire : un mot flou, un clic</span></div>
+  </div>
+  <dl class="gloss">
+    <dt>Autorégulation</dt><dd>Retour spontané de l'arc à sa longueur, grâce au courant qui varie avec une source à tension constante.</dd>
+    <dt>Collage</dt><dd>Manque de fusion entre le cordon et la tôle, typique d'un court-circuit trop froid.</dd>
+    <dt>Court-circuit</dt><dd>Régime où la goutte touche le bain avant de se détacher, des dizaines de fois par seconde.</dd>
+    <dt>Courant de transition</dt><dd>Courant au-delà duquel le transfert passe en pulvérisation axiale (environ 230 A pour un fil d'acier de 1,2 mm sous argon riche).</dd>
+    <dt>Dévidoir</dt><dd>Mécanisme qui pousse ou tire le fil à vitesse constante : moteur, galets, réglage de pression.</dd>
+    <dt>Fil sorti</dt><dd>Longueur de fil entre le tube contact et l'arc ; elle préchauffe le fil par effet Joule.</dd>
+    <dt>Gaine</dt><dd>Conduit qui guide le fil dans le faisceau : spirale d'acier ou plastique.</dd>
+    <dt>Globulaire</dt><dd>Régime à grosses gouttes, plus grandes que le fil, qui tombent de travers avec des projections.</dd>
+    <dt>Pulsé</dt><dd>Courant alternant une base et des impulsions qui détachent chacune une goutte.</dd>
+    <dt>Pulvérisation axiale</dt><dd>Transfert en fines gouttes projetées dans l'axe du fil, au-delà du courant de transition.</dd>
+    <dt>Self</dt><dd>Inductance de la source, qui règle la montée du courant pendant les courts-circuits.</dd>
+    <dt>Synergie</dt><dd>Commande où la source déduit tension et paramètres de pulsation de la seule vitesse de fil.</dd>
+    <dt>Transfert piloté</dt><dd>Court-circuit ou arc commandé électroniquement (montée du courant, rétraction du fil) pour moins d'énergie ou plus de pénétration.</dd>
+    <dt>Tube contact</dt><dd>Pièce de cuivre de la torche qui transmet le courant au fil.</dd>
+    <dt>WFS</dt><dd>Vitesse de fil (<i>wire feed speed</i>), en m/min.</dd>
+  </dl>
+</div>
+</section>
+
+<section class="chap" id="check">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✓</div>
+    <div class="c-title"><h2>Suis-je prêt pour la suite ?</h2><p>Dix points à cocher de tête</p></div>
+    <div class="c-img"><span class="ico">🚦</span><span><small>Image à retenir</small>Le feu passe au vert quand tout est coché</span></div>
+  </div>
+  <p>Coche seulement ce que tu sais faire <b>sans regarder</b>. Tes coches restent enregistrées dans ce navigateur.</p>
+  <div class="check" id="checklist">
+    <label><input type="checkbox" data-c="1"> <span>Je sais décrire le procédé 13x et distinguer 131, 135, 136, 138 et 114.</span></label>
+    <label><input type="checkbox" data-c="2"> <span>Je sais expliquer pourquoi, en MIG-MAG, c'est la vitesse de fil qui règle le courant.</span></label>
+    <label><input type="checkbox" data-c="3"> <span>Je sais dire ce que fait un fil sorti plus long au courant, à la pénétration et au métal déposé.</span></label>
+    <label><input type="checkbox" data-c="4"> <span>Je sais décrire un cycle de court-circuit, ses domaines (tôle mince, positions) et ses défauts (projections, collages).</span></label>
+    <label><input type="checkbox" data-c="5"> <span>Je sais régler la self en court-circuit et dire pourquoi elle est inutile en pulvérisation.</span></label>
+    <label><input type="checkbox" data-c="6"> <span>Je sais pourquoi le globulaire est évité et ce qu'il faut pour obtenir la pulvérisation axiale (courant, tension, gaz riche en argon).</span></label>
+    <label><input type="checkbox" data-c="7"> <span>Je sais situer l'ordre de grandeur du courant de transition pour un fil d'acier de 1,2 mm.</span></label>
+    <label><input type="checkbox" data-c="8"> <span>Je sais expliquer le pulsé « une goutte par impulsion » et ce que règle la synergie.</span></label>
+    <label><input type="checkbox" data-c="9"> <span>Je sais citer des transferts pilotés à basse énergie et à forte pénétration, et leurs usages.</span></label>
+    <label><input type="checkbox" data-c="10"> <span>Je sais choisir galets, gaine et dévidoir pour un fil d'acier, d'aluminium ou fourré.</span></label>
+  </div>
+  <p class="status" id="checkMsg"></p>
+
+  <div class="meta">🔭 <b>Au prochain épisode, cours 4 : MIG-MAG, fils, gaz et soudabilité opératoire.</b> Fils pleins et fils fourrés, rutiles, basiques et à poudre métallique, autoprotégés, leurs désignations, l'hydrogène diffusible, puis la pénétration, les réglages et les défauts types du MIG-MAG.</div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="wrap">
+  <p>Cours 3 sur 5 de la série « Soudage sous protection gazeuse : TIG, MIG-MAG et plasma » (sujet 1.8 du planning et du référentiel de l'IIW). Vocabulaire aligné sur l'ISO 4063, l'ISO 14175, l'EN 1011-1 et le référentiel de l'IIW ; pour les notations et les conventions, l'enseignement de ta formation fait foi.</p>
+</div>
+</footer>
+<script>
+(function(){
+"use strict";
+const NS="http://www.w3.org/2000/svg";
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const RM=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function el(tag,attrs,parent){
+  const e=document.createElementNS(NS,tag);
+  if(attrs){for(const k in attrs){const v=attrs[k];if(v===undefined||v===null)continue;
+    if(typeof v==="string"&&v.indexOf("var(")>=0&&k!=="style")e.style.setProperty(k,v);else e.setAttribute(k,v);}}
+  if(parent)parent.appendChild(e);
+  return e;
+}
+function tx(p,x,y,str,attrs){const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);t.textContent=str;return t;}
+function txs(p,x,y,parts,attrs){/* parts: [["σ",""],["max","sub"],[" = 3",""]] */
+  const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);
+  parts.forEach(pt=>{const s=el("tspan",pt[1]==="sub"?{"font-size":"0.72em",dy:"3"}:(pt[2]?{dy:pt[2]}:{}),t);s.textContent=pt[0];
+    if(pt[1]==="sub"){const r=el("tspan",{dy:"-3"},t);r.textContent="\u200b";}});
+  return t;
+}
+function clear(svg){while(svg.firstChild)svg.removeChild(svg.firstChild);}
+function fitText(t,x0,x1,gap){/* garde un texte SVG entre x0 et x1 : il passe de l'autre côté de son repère (écart gap), sinon il glisse */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const a=t.getAttribute("text-anchor")||"start",x=+t.getAttribute("x");
+  if(gap&&a!=="middle"&&(b.x<x0||b.x+b.width>x1)){t.setAttribute("text-anchor",a==="end"?"start":"end");t.setAttribute("x",a==="end"?x+2*gap:x-2*gap);b=t.getBBox();}
+  const nx=+t.getAttribute("x");
+  if(b.x+b.width>x1)t.setAttribute("x",nx-(b.x+b.width-x1));else if(b.x<x0)t.setAttribute("x",nx+(x0-b.x));
+  return t;}
+function arrow(p,x1,y1,x2,y2,color,w,h){
+  w=w||2.4;h=h||10;
+  const g=el("g",{class:"arr"},p);g.style.color=color||"var(--ink)";
+  const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy);
+  if(L<1)return g;
+  const ux=dx/L,uy=dy/L,hh=Math.min(h,L*0.6),bx=x2-ux*hh,by=y2-uy*hh,hw=hh*0.45+w*0.3;
+  el("line",{x1:x1,y1:y1,x2:bx,y2:by,"stroke-width":w,"stroke-linecap":"round"},g);
+  el("polygon",{points:x2+","+y2+" "+(bx-uy*hw)+","+(by+ux*hw)+" "+(bx+uy*hw)+","+(by-ux*hw)},g);
+  return g;
+}
+function darrow(p,x,y1,y2,color,w){/* double flèche verticale */
+  const g=el("g",{},p);const m=(y1+y2)/2;
+  if(Math.abs(y2-y1)<4){el("line",{x1:x-5,y1:y1,x2:x+5,y2:y1,stroke:color,"stroke-width":2},g);return g;}
+  arrow(g,x,m,x,y1,color,w||2,8);arrow(g,x,m,x,y2,color,w||2,8);return g;
+}
+function nf(v,d){
+  if(d===undefined)d=1;
+  if(Math.abs(v)<0.5*Math.pow(10,-d))v=0;
+  return v.toLocaleString("fr-FR",{minimumFractionDigits:d,maximumFractionDigits:d}).replace("-","−").replace(/[\u202f\u2009]/g,"\u00a0");
+}
+const SUP={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function sci(v,d){
+  if(v===0)return "0";
+  if(!isFinite(v))return "∞";
+  let e=Math.floor(Math.log10(Math.abs(v)));
+  let m=v/Math.pow(10,e);
+  const dd=d===undefined?1:d;
+  if(Math.abs(Number(m.toFixed(dd)))>=10){m/=10;e+=1;}
+  return nf(m,dd)+" × 10"+String(e).split("").map(c=>SUP[c]).join("");
+}
+function bigN(v){/* nombre de cycles lisible */
+  if(!isFinite(v))return "∞";
+  if(v===0)return "0";
+  if(v<10)return nf(v,v<1?2:0);
+  if(v<1e5)return nf(Math.round(v),0);
+  return sci(v,1);
+}
+function dur(s){
+  if(!isFinite(s))return "∞";
+  if(s<60)return nf(s,s<10?1:0)+" s";
+  if(s<3600)return nf(s/60,0)+" min";
+  if(s<86400)return nf(s/3600,1)+" h";
+  if(s<86400*365)return nf(s/86400,1)+" jours";
+  return nf(s/(86400*365),1)+" ans";
+}
+function svgW(svg){const r=svg.getBoundingClientRect();return Math.max(290,Math.round(r.width||(svg.parentNode&&svg.parentNode.clientWidth)||600));}
+function setVB(svg,W,H){svg.setAttribute("viewBox","0 0 "+W+" "+H);}
+const redraws=[];
+let rzT=null,lastWW=window.innerWidth;
+window.addEventListener("resize",()=>{if(window.innerWidth===lastWW)return;lastWW=window.innerWidth;clearTimeout(rzT);rzT=setTimeout(()=>redraws.forEach(f=>{try{f();}catch(e){console.error(e);}}),120);});
+
+function niceStep(range,n){const raw=range/(n||5),p=Math.pow(10,Math.floor(Math.log10(raw))),m=raw/p;return (m<1.5?1:m<3?2:m<7?5:10)*p;}
+function setOn(sel,btn){$$(sel+" .btn").forEach(b=>b.classList.toggle("on",b===btn));}
+function fmtmm(mm){return mm<0.1?nf(mm*1000,0)+" µm":mm<10?nf(mm,mm<1?2:1)+" mm":nf(mm,0)+" mm";}
+function axes(svg,x0,x1,y0,y1,xmin,xmax,ymin,ymax,xlab,ylab,xstep,ystep,xfmt,yfmt){
+  const X=v=>x0+(x1-x0)*(v-xmin)/(xmax-xmin),Y=v=>y1-(y1-y0)*(v-ymin)/(ymax-ymin);
+  for(let v=Math.ceil(ymin/ystep-1e-9)*ystep;v<=ymax+1e-9;v+=ystep){el("line",{x1:x0,y1:Y(v),x2:x1,y2:Y(v),class:"gridbg"},svg);tx(svg,x0-5,Y(v)+4,yfmt?yfmt(v):nf(v,ystep<1?1:0),{class:"lbl","text-anchor":"end"});}
+  for(let v=Math.ceil(xmin/xstep-1e-9)*xstep;v<=xmax+1e-9;v+=xstep){el("line",{x1:X(v),y1:y1,x2:X(v),y2:y1+4,class:"tick"},svg);tx(svg,X(v),y1+17,xfmt?xfmt(v):nf(v,xstep<1?1:0),{class:"lbl","text-anchor":"middle"});}
+  el("line",{x1:x0,y1:y1,x2:x1,y2:y1,class:"axis"},svg);el("line",{x1:x0,y1:y0-4,x2:x0,y2:y1,class:"axis"},svg);
+  tx(svg,x0+4,y0-10,ylab,{class:"lbl"});tx(svg,x1,y1+32,xlab,{class:"lbl","text-anchor":"end"});
+  return {X:X,Y:Y};
+}
+function animate(btn,label,dur,onStep,onEnd){/* lecteur pilotable : ▶ lecture ou ⏸ pause, qui reprend où elle s'est arrêtée ; les boutons voisins ⏮ début, ◀ pas et pas ▶ (data-a) la mènent à la main ; un pas avance jusqu'à la prochaine image différente (20 pas au plus) */
+  const box=btn.parentNode,lab=btn.closest(".lab")||box,N=20;let raf=null,run=false,t=0;
+  const go=v=>{t=Math.max(0,Math.min(1,v));onStep(t);};
+  const snap=()=>{let s="";lab.querySelectorAll("svg,.readout,.status").forEach(e=>{s+=e.innerHTML;});return s;};
+  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;btn.textContent=label;}
+  function step(d){stop();const s0=snap();let k=Math.round(t*N);for(let i=0;i<N;i++){k+=d;if(k<0||k>N)break;go(k/N);if(snap()!==s0)break;}}
+  btn.addEventListener("click",()=>{if(run){stop();return;}if(t>=0.999)t=0;
+    if(RM){step(1);if(t>=1&&onEnd)onEnd();return;}
+    run=true;btn.textContent="⏸ Pause";const s0=performance.now()-t*dur;
+    const f=now=>{if(!run)return;go((now-s0)/dur);if(t>=1){stop();if(onEnd)onEnd();return;}raf=requestAnimationFrame(f);};raf=requestAnimationFrame(f);});
+  const pb=a=>box.querySelector('[data-a="'+a+'"]');
+  if(pb("start"))pb("start").addEventListener("click",()=>{stop();go(0);});
+  if(pb("back"))pb("back").addEventListener("click",()=>step(-1));
+  if(pb("fwd"))pb("fwd").addEventListener("click",()=>step(1));
+  /* un réglage fait à la main : la prochaine lecture repart du début */
+  lab.addEventListener("input",()=>{if(!run)t=0;});
+  lab.addEventListener("click",e=>{const b=e.target.closest("button");if(b&&b!==btn&&!b.dataset.a&&!run)t=0;});
+  return {stop:stop,running:()=>run};
+}
+function player(id,o){/* lecteur pilotable : ⏮ début, ◀ pas, ▶ lecture ou ⏸ pause (reprend où elle s'est arrêtée), pas ▶ ; o.get() et o.set(t) avec t de 0 à 1, o.dur (ms), o.steps */
+  const box=$("#"+id),bp=box.querySelector('[data-a="play"]'),lab=bp.textContent,n=o.steps||20;let raf=null,run=false;
+  const cl=t=>Math.max(0,Math.min(1,t));
+  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;bp.textContent=lab;}
+  function step(d){stop();o.set(cl(Math.round(o.get()*n+d)/n));}
+  bp.addEventListener("click",()=>{if(run){stop();return;}let t0=o.get();if(t0>=0.999)t0=0;
+    if(RM){o.set(cl(Math.round(t0*n+1)/n));return;}
+    run=true;bp.textContent="⏸ Pause";const s0=performance.now()-t0*o.dur;
+    const f=now=>{if(!run)return;const t=cl((now-s0)/o.dur);o.set(t);if(t>=1){stop();return;}raf=requestAnimationFrame(f);};raf=requestAnimationFrame(f);});
+  box.querySelector('[data-a="start"]').addEventListener("click",()=>{stop();o.set(0);});
+  box.querySelector('[data-a="back"]').addEventListener("click",()=>step(-1));
+  box.querySelector('[data-a="fwd"]').addEventListener("click",()=>step(1));
+  return {stop:stop};
+}
+
+
+function sig2(v){/* arrondi à deux chiffres significatifs */
+  if(v<=0)return 0;const p=Math.pow(10,Math.floor(Math.log10(v))-1);return Math.round(v/p)*p;}
+function halo(t,svg){/* liseré de fond, puis passage au premier plan */
+  t.setAttribute("paint-order","stroke");t.style.setProperty("stroke","var(--card)");t.setAttribute("stroke-width","4");t.setAttribute("stroke-linejoin","round");if(svg)svg.appendChild(t);return t;}
+function plate(t,svg){/* fond plein derrière une étiquette */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const r=el("rect",{x:b.x-3,y:b.y-1,width:b.width+6,height:b.height+2,fill:"var(--card)",opacity:.92,rx:2});svg.appendChild(r);svg.appendChild(t);return t;}
+function le(n,f){return /^[aeiouyhéèâî]/i.test(n)?"l'"+n:(f?"la ":"le ")+n;}
+function du(n,f){return /^[aeiouyhéèâî]/i.test(n)?"de l'"+n:(f?"de la ":"du ")+n;}
+function fmtG(v){return nf(v,v<0.1?3:2)+" N/m";}
+function fmtPa(p){return p<1000?nf(p,0)+" Pa":p<1e5?nf(p/1000,1)+" kPa":nf(p/1e5,2)+" bar";}
+function fmtLen(m){/* m en mètres */
+  const mm=m*1000;if(mm<1)return nf(mm*1000,0)+" µm";if(mm<10)return nf(mm,1)+" mm";if(mm<1000)return nf(mm,0)+" mm";return nf(m,1)+" m";}
+function fmtT(s){if(!isFinite(s))return "∞";if(s<0.01)return nf(s*1000,1)+" ms";if(s<1)return nf(s,3)+" s";if(s<60)return nf(s,s<10?1:0)+" s";return nf(s/60,s<600?1:0)+" min";}
+
+function spread(items,gap,ymin,ymax){/* écarte verticalement des étiquettes {y} triées */
+  items.sort((a,b)=>a.y-b.y);
+  for(let i=1;i<items.length;i++)if(items[i].y-items[i-1].y<gap)items[i].y=items[i-1].y+gap;
+  if(items.length&&items[items.length-1].y>ymax){items[items.length-1].y=ymax;for(let i=items.length-2;i>=0;i--)if(items[i+1].y-items[i].y<gap)items[i].y=items[i+1].y-gap;}
+  if(items.length&&items[0].y<ymin){items[0].y=ymin;for(let i=1;i<items.length;i++)if(items[i].y-items[i-1].y<gap)items[i].y=items[i-1].y+gap;}
+  return items;}
+function declutter(ts,ymin,ymax){/* décale verticalement les textes qui se chevauchent */
+  const box=t=>{try{return t.getBBox();}catch(e){return null;}};
+  for(let i=1;i<ts.length;i++){const ti=ts[i];if(!ti)continue;
+    for(let pass=0;pass<6;pass++){const bi=box(ti);if(!bi)break;let moved=false;
+      for(let j=0;j<i;j++){const bj=ts[j]&&box(ts[j]);if(!bj)continue;
+        const ix=Math.min(bi.x+bi.width,bj.x+bj.width)-Math.max(bi.x,bj.x),iy=Math.min(bi.y+bi.height,bj.y+bj.height)-Math.max(bi.y,bj.y);
+        if(ix>1&&iy>1){let dy=(bi.y+bi.height/2>=bj.y+bj.height/2)?(bj.y+bj.height-bi.y+1):-(bi.y+bi.height-bj.y+1);
+          if(bi.y+dy<ymin||bi.y+bi.height+dy>ymax)dy=dy>0?-(bi.y+bi.height-bj.y+1):(bj.y+bj.height-bi.y+1);
+          ti.setAttribute("y",+ti.getAttribute("y")+dy);moved=true;break;}}
+      if(!moved)break;}}
+  return ts;}
+const SUPD={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function p10(e){return "10"+String(e).split("").map(c=>SUPD[c]||c).join("");}
+function fmtP(p){/* pression en Pa, lisible */
+  if(p>=1e5)return nf(p/1e5,1)+" bar";if(p>=1000)return nf(p/1000,p<1e4?1:0)+" kPa";if(p>=1)return nf(p,p<10?1:0)+" Pa";return sci(p,1)+" Pa";}
+
+
+
+function rng(seed){/* générateur pseudo-aléatoire reproductible */
+  let a=seed>>>0;return ()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296;};}
+
+
+/* =========================================================
+   Outils communs de la série : formats, couleurs, grains, nuances, modèles
+   ========================================================= */
+const NB=String.fromCharCode(160);
+const nbsp=s=>s.replace(/(\d) (%|°C|mm|µm|nm|MPa|HV|s|ppm|h|J)(?=[\s.,;:)<·/]|$)/g,"$1"+NB+"$2");
+function fitSize(t,maxW,min){/* réduit la police d'un texte SVG trop large (style en ligne, prioritaire sur la feuille de style) */
+  let b;try{b=t.getBBox();}catch(e){return t;}let fs=parseFloat(getComputedStyle(t).fontSize)||13;
+  while(b.width>maxW&&fs>(min||9)){fs-=0.5;t.style.fontSize=fs+"px";b=t.getBBox();}return t;}
+const pts=P=>P.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join(" ");
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const mixc=(c,p,b)=>"color-mix(in srgb,"+c+" "+p+"%,"+(b||"var(--card)")+")";
+const COL={liq:mixc("var(--sig)",24),gam:mixc("var(--gam)",24),alp:mixc("var(--eps)",15),mart:"color-mix(in srgb,var(--eps) 50%,var(--tau))",
+  bain:mixc("var(--gam)",52),fp:mixc("var(--eps)",13),film:mixc("var(--tau)",72)};
+function frame(svg,R){el("rect",{x:R.x0,y:R.y0,width:R.x1-R.x0,height:R.y1-R.y0,fill:"none",stroke:"var(--ink)","stroke-width":1.2},svg);}
+function clipG(svg,id,R){const cp=el("clipPath",{id:id},el("defs",null,svg));el("rect",{x:R.x0,y:R.y0,width:R.x1-R.x0,height:R.y1-R.y0},cp);return el("g",{"clip-path":"url(#"+id+")"},svg);}
+function voronoi(seeds,x0,y0,x1,y1,rmax){/* cellules polygonales ; rmax : distance au-delà de laquelle un voisin est ignoré */
+  const box=[[x0,y0],[x1,y0],[x1,y1],[x0,y1]],r2=rmax?rmax*rmax:Infinity;
+  return seeds.map((s,i)=>{let P=box.slice();
+    for(let j=0;j<seeds.length&&P.length;j++){if(i===j)continue;const q=seeds[j],dx=q[0]-s[0],dy=q[1]-s[1];if(dx*dx+dy*dy>r2)continue;
+      const mx=(s[0]+q[0])/2,my=(s[1]+q[1])/2,out=[];
+      for(let k=0;k<P.length;k++){const a=P[k],b=P[(k+1)%P.length],sa=(a[0]-mx)*dx+(a[1]-my)*dy,sb=(b[0]-mx)*dx+(b[1]-my)*dy;if(sa<=0)out.push(a);
+        if((sa<0&&sb>0)||(sa>0&&sb<0)){const t=sa/(sa-sb);out.push([a[0]+t*(b[0]-a[0]),a[1]+t*(b[1]-a[1])]);}}
+      P=out;}
+    return P;});
+}
+function seedsGrid(x0,y0,x1,y1,s,seed){const r=rng(seed),o=[];for(let y=y0+s/2;y<y1+s/2;y+=s*0.87)for(let x=x0+s/2+((Math.round((y-y0)/(s*0.87))%2)?s/2:0);x<x1+s/2;x+=s)o.push([x+(r()-0.5)*s*0.6,Math.min(y1-1,y+(r()-0.5)*s*0.5)]);return o;}
+function legend(svg,x,y,items,xmax){/* items : [couleur, texte, "o" pour un rond] ; passe à la ligne ; renvoie le bas de la légende */
+  let lx=x,ly=y;
+  items.forEach(q=>{const t=tx(svg,x,y+9.5,q[1],{class:"lbl"});let w=70;try{w=t.getBBox().width;}catch(e){}
+    if(lx>x&&lx+14+w>xmax){lx=x;ly+=16;}
+    t.setAttribute("x",lx+14);t.setAttribute("y",ly+9.5);
+    if(q[2]==="o")el("circle",{cx:lx+5,cy:ly+5,r:4.5,fill:q[0],stroke:"var(--ink)","stroke-width":0.7},svg);
+    else el("rect",{x:lx,y:ly,width:10,height:10,fill:q[0],stroke:"var(--ink)","stroke-width":0.7},svg);
+    lx+=14+w+12;});
+  return ly+12;}
+/* Modèle de fusion du fil d'acier de 1,2 mm (partagé) */
+const BA=0.0199,BB=3.72e-6,GM12=1.131*7.85;
+const wfsOf=(I,l)=>BA*I+BB*l*I*I;
+const iOf=(w,l)=>{const A=BB*l;return (-BA+Math.sqrt(BA*BA+4*A*w))/(2*A);};
+
+/* =========================================================
+   M1 : le fil fond aussi vite qu'il arrive
+   ========================================================= */
+(function(){
+  const svg=$("#m1svg");if(!svg)return;
+  const sW=$("#m1w"),sL=$("#m1l"),ro=$("#m1r"),msg=$("#m1msg");
+  function draw(){
+    const W=svgW(svg),n=W<560,w=+sW.value,l=+sL.value,I=iOf(w,l),dep=w*60*GM12/1000,joule=BB*l*I*I/w;clear(svg);
+    $("#m1wo").textContent=nf(w,1)+NB+"m/min";$("#m1lo").textContent=nf(l,0)+NB+"mm";
+    setOn("#m1b",$$("#m1b .btn").find(b=>+b.dataset.w===w&&+b.dataset.l===l)||null);
+    const x0=n?42:52,x1=W-16,y0=26,y1=n?190:220;
+    const A=axes(svg,x0,x1,y0,y1,50,400,0,15,"courant I (A)","vitesse de fil (m/min)",n?100:50,3);
+    [10,20,30].forEach(ll=>{let d="";for(let i=50;i<=400;i+=5){const v=wfsOf(i,ll);if(v>15)break;d+=(d?"L":"M")+A.X(i).toFixed(1)+" "+A.Y(v).toFixed(1)+" ";}
+      el("path",{d:d,fill:"none",stroke:mixc("var(--eps)",35),"stroke-width":1.2,"stroke-dasharray":"4 3"},svg);
+      const ie=Math.min(400,iOf(14.5,ll));const t=tx(svg,A.X(ie)+3,A.Y(Math.min(14.5,wfsOf(ie,ll)))+12,ll+" mm",{class:"lbl",fill:"var(--muted)"});t.style.fontSize="10px";fitText(t,x0,x1);});
+    let d="";for(let i=50;i<=400;i+=5){const v=wfsOf(i,l);if(v>15)break;d+=(d?"L":"M")+A.X(i).toFixed(1)+" "+A.Y(v).toFixed(1)+" ";}
+    el("path",{d:d,fill:"none",stroke:"var(--eps)","stroke-width":3},svg);
+    el("line",{x1:x0,y1:A.Y(w),x2:A.X(I),y2:A.Y(w),stroke:"var(--mat)","stroke-width":1.6,"stroke-dasharray":"6 4"},svg);
+    el("line",{x1:A.X(I),y1:A.Y(w),x2:A.X(I),y2:y1,stroke:"var(--mat)","stroke-width":1.6,"stroke-dasharray":"6 4"},svg);
+    el("circle",{cx:A.X(I),cy:A.Y(w),r:6,fill:"var(--eps)",stroke:"var(--card)","stroke-width":1.5},svg);
+    if(I>=230){el("rect",{x:A.X(230),y:y0,width:x1-A.X(230),height:y1-y0,fill:mixc("var(--gam)",8)},svg);}
+    {const t=tx(svg,A.X(230)+3,y0+12,"pulvérisation possible",{class:"lbl",fill:"var(--gam)"});t.style.fontSize="10.5px";fitText(t,x0,x1);}
+    el("line",{x1:A.X(230),y1:y0,x2:A.X(230),y2:y1,stroke:"var(--gam)","stroke-width":1,"stroke-dasharray":"3 3"},svg);
+    setVB(svg,W,y1+38);
+    ro.innerHTML=nbsp("<span>I ≈ <b class='eps'>"+nf(I,0)+" A</b></span><span>dépôt "+nf(dep,1)+" kg/h</span><span>part Joule "+nf(100*joule,0)+" %</span>");
+    let s="À "+nf(w,1)+" m/min et "+nf(l,0)+" mm de fil sorti, le fil fond aussi vite qu'il arrive sous environ "+nf(I,0)+" A ; "+nf(100*joule,0)+" % de la fusion vient du préchauffage Joule du fil sorti. ";
+    s+=l>=22?"Fil sorti long : moins de courant pour le même dépôt, donc moins de pénétration et un risque de collage.":l<=10?"Fil sorti court : plus de courant, plus de pénétration, mais la buse s'encrasse vite.":"Fil sorti courant.";
+    if(I<230&&I>200)s+=" Sous 230 A, la pulvérisation axiale n'est plus assurée.";
+    msg.innerHTML=nbsp(s)+"<br><b>À retenir :</b> le fil fait le courant ; plus de fil sorti, moins de courant.";
+  }
+  $$("#m1b .btn").forEach(b=>b.addEventListener("click",()=>{sW.value=b.dataset.w;sL.value=b.dataset.l;draw();}));
+  [sW,sL].forEach(x=>x.addEventListener("input",draw));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M2 : l'oscillogramme d'un court-circuit (self)
+   ========================================================= */
+(function(){
+  const svg=$("#m2svg");if(!svg)return;
+  const sL=$("#m2l"),ro=$("#m2r"),msg=$("#m2msg");
+  const ISS=450,IPI=300,I0=100,TA=6;let tt=1;
+  function cyc(L){const tau=5*L,ts=-tau*Math.log((ISS-IPI)/(ISS-I0));return {tau:tau,ts:ts,T:TA+ts,didt:(ISS-IPI)/tau};}
+  function at(t,c){const ph=t%c.T;
+    if(ph<TA){const i=I0+(IPI-I0)*Math.exp(-ph/1.5),u=ph<0.3?32-10*ph/0.3:21+3*Math.exp(-ph/1.5);return {i:i,u:u,s:"arc",g:ph/TA};}
+    const q=ph-TA,i=ISS-(ISS-I0)*Math.exp(-q/c.tau);return {i:i,u:3+0.004*i,s:"court",g:q/c.ts};}
+  function draw(){
+    const W=svgW(svg),n=W<560,L=+sL.value,c=cyc(L);clear(svg);
+    $("#m2lo").textContent=nf(L,2);
+    setOn("#m2b",$$("#m2b .btn").find(b=>+b.dataset.l===L)||null);
+    const x0=n?42:52,x1=n?W-14:W*0.74,ya0=24,ya1=ya0+70,yb0=ya1+44,yb1=yb0+90,tm=20;
+    const A=axes(svg,x0,x1,ya0,ya1,0,tm,0,40,"","u (V)",n?10:5,20);
+    const B=axes(svg,x0,x1,yb0,yb1,0,tm,0,500,"temps (ms)","i (A)",n?10:5,250);
+    let du="",di="";for(let k=0;k<=600;k++){const t=tm*k/600,p=at(t,c);du+=(du?"L":"M")+A.X(t).toFixed(1)+" "+A.Y(p.u).toFixed(1)+" ";di+=(di?"L":"M")+B.X(t).toFixed(1)+" "+B.Y(p.i).toFixed(1)+" ";}
+    el("path",{d:du,fill:"none",stroke:"var(--sig)","stroke-width":2},svg);
+    el("path",{d:di,fill:"none",stroke:"var(--eps)","stroke-width":2.4},svg);
+    el("line",{x1:x0,y1:B.Y(IPI),x2:x1,y2:B.Y(IPI),stroke:"var(--tau)","stroke-width":1,"stroke-dasharray":"4 3"},svg);
+    {const t=tx(svg,x1-2,B.Y(IPI)-4,"rupture du pont",{class:"lbl","text-anchor":"end",fill:"var(--tau)"});t.style.fontSize="10.5px";halo(t,svg);}
+    const t=tm*tt,p=at(Math.min(tm-1e-6,t),c);
+    if(tt<1){el("line",{x1:A.X(t),y1:ya0,x2:A.X(t),y2:yb1,stroke:"var(--frc)","stroke-width":1.4},svg);}
+    /* goutte */
+    const gx=n?W/2:W*0.87,gy=n?yb1+76:40;
+    el("rect",{x:gx-5,y:gy-30,width:10,height:40,fill:mixc("var(--muted)",50),stroke:"var(--ink)"},svg);
+    el("rect",{x:gx-40,y:gy+60,width:80,height:14,fill:mixc("var(--weld)",55),stroke:"var(--ink)"},svg);
+    if(p.s==="arc"){const r=4+8*p.g;el("circle",{cx:gx,cy:gy+10+r,r:r,fill:mixc("var(--weld)",70),stroke:"var(--ink)"},svg);
+      el("path",{d:"M"+(gx-4)+" "+(gy+10+2*r)+" L "+(gx-14)+" "+(gy+60)+" L "+(gx+14)+" "+(gy+60)+" L "+(gx+4)+" "+(gy+10+2*r)+" Z",fill:"var(--gam)","fill-opacity":0.35},svg);}
+    else{const neck=Math.max(1,6*(1-p.g));el("path",{d:"M"+(gx-6)+" "+(gy+10)+" Q "+(gx-neck)+" "+(gy+35)+" "+(gx-12)+" "+(gy+60)+" L "+(gx+12)+" "+(gy+60)+" Q "+(gx+neck)+" "+(gy+35)+" "+(gx+6)+" "+(gy+10)+" Z",fill:mixc("var(--weld)",70),stroke:"var(--ink)"},svg);}
+    {const lt=tx(svg,gx,gy+92,p.s==="arc"?"arc : la goutte grossit":"court-circuit : pincement",{class:"lbl","text-anchor":"middle"});lt.style.fontSize="10.5px";fitSize(lt,n?W-20:W*0.24,7);}
+    setVB(svg,W,n?gy+100:yb1+38);
+    const verd=c.didt>300?"projections":c.ts>2.5?"collages":"transfert doux";
+    ro.innerHTML=nbsp("<span>di/dt à la rupture ≈ <b class='eps'>"+nf(c.didt,0)+" A/ms</b></span><span>court-circuit "+nf(c.ts,1)+" ms</span><span>"+nf(1000/c.T,0)+" cycles/s</span><span>"+verd+"</span>");
+    let s="Self "+nf(L,2)+" (constante de temps "+nf(c.tau,2)+" ms) : le courant atteint le seuil de rupture en "+nf(c.ts,1)+" ms et monte encore de "+nf(c.didt,0)+" A/ms à cet instant. ";
+    s+=verd==="projections"?"Montée trop brutale : le pont explose, le métal part en projections.":verd==="collages"?"Montée trop lente : le fil s'enfonce dans le bain avant que le pont cède ; le cordon colle, les manques de fusion menacent.":"La goutte se détache sans violence : peu de projections, fusion correcte.";
+    msg.innerHTML=nbsp(s)+"<br><b>À retenir :</b> self faible, projections ; self forte, collages.";
+  }
+  player("m2pl",{get:()=>tt,set:v=>{tt=v;draw();},dur:6000,steps:20});
+  $$("#m2b .btn").forEach(b=>b.addEventListener("click",()=>{sL.value=b.dataset.l;tt=1;draw();}));
+  sL.addEventListener("input",()=>{tt=1;draw();});
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M3 : la carte des régimes d'un fil de 1,2 mm
+   ========================================================= */
+(function(){
+  const svg=$("#m3svg");if(!svg)return;
+  const sI=$("#m3i"),sU=$("#m3u"),ro=$("#m3r"),msg=$("#m3msg");
+  const G={M20:{n:"Ar + 8 % CO₂",it:215},M21:{n:"Ar + 18 % CO₂",it:230},C1:{n:"CO₂ pur",it:null}};
+  let g="M21";
+  const usc=I=>14+0.04*I,usp=I=>14+0.045*I+3;
+  function regime(I,U){const q=G[g];if(U<usc(I))return "cc";if(U>37)return "long";if(q.it&&I>=q.it&&U>=usp(I))return "spray";if(!q.it&&I>280&&U<usp(I))return "enterre";return "glob";}
+  const COL={cc:"var(--eps)",glob:"var(--tau)",spray:"var(--gam)",long:"var(--muted)",enterre:"var(--sig)"};
+  const NAME={cc:"court-circuit",glob:"globulaire",spray:"pulvérisation axiale",long:"arc trop long",enterre:"arc enterré, globulaire"};
+  function draw(){
+    const W=svgW(svg),n=W<560,I=+sI.value,U=+sU.value,q=G[g],r=regime(I,U);clear(svg);
+    $("#m3io").textContent=nf(I,0)+NB+"A";$("#m3uo").textContent=nf(U,1)+NB+"V";
+    const x0=n?42:52,x1=n?W-14:W*0.72,y0=26,y1=n?200:230;
+    const A=axes(svg,x0,x1,y0,y1,60,400,14,38,"courant I (A)","tension U (V)",n?100:50,4);
+    const nx=40,ny=24;
+    for(let a=0;a<nx;a++)for(let b=0;b<ny;b++){const Ii=60+(a+0.5)*340/nx,Uu=14+(b+0.5)*24/ny,rr=regime(Ii,Uu);
+      el("rect",{x:A.X(60+a*340/nx),y:A.Y(14+(b+1)*24/ny),width:(x1-x0)/nx+0.5,height:(y1-y0)/ny+0.5,fill:mixc(COL[rr],22),stroke:"none"},svg);}
+    const lab=(Ii,Uu,s,c)=>{const t=tx(svg,A.X(Ii),A.Y(Uu),s,{class:"lbl","text-anchor":"middle",fill:c,"font-weight":"700"});t.style.fontSize="10.5px";halo(t,svg);fitText(t,x0,x1);};
+    lab(110,16,"court-circuit","var(--eps)");lab(q.it?200:250,30,"globulaire","var(--tau)");
+    if(q.it)lab(340,33,"pulvérisation","var(--gam)");else lab(345,22,"enterré","var(--sig)");
+    el("circle",{cx:A.X(I),cy:A.Y(U),r:6.5,fill:COL[r],stroke:"var(--card)","stroke-width":2},svg);
+    /* goutte */
+    if(!n){const gx=W*0.87,gy=50;el("rect",{x:gx-5,y:gy-20,width:10,height:36,fill:mixc("var(--muted)",50),stroke:"var(--ink)"},svg);
+      if(r==="spray"){el("polygon",{points:[[gx-5,gy+16],[gx+5,gy+16],[gx,gy+30]].map(p=>p.join(",")).join(" "),fill:mixc("var(--weld)",70)},svg);for(let k=0;k<6;k++)el("circle",{cx:gx,cy:gy+38+k*10,r:2.5,fill:mixc("var(--weld)",80)},svg);}
+      else if(r==="cc"){el("path",{d:"M"+(gx-6)+" "+(gy+16)+" Q "+gx+" "+(gy+40)+" "+(gx-12)+" "+(gy+70)+" L "+(gx+12)+" "+(gy+70)+" Q "+gx+" "+(gy+40)+" "+(gx+6)+" "+(gy+16)+" Z",fill:mixc("var(--weld)",70),stroke:"var(--ink)"},svg);}
+      else{el("circle",{cx:gx+4,cy:gy+30,r:12,fill:mixc("var(--weld)",70),stroke:"var(--ink)"},svg);for(let k=0;k<3;k++)el("circle",{cx:gx+24+k*8,cy:gy+50+k*12,r:2.5,fill:"var(--tau)"},svg);}
+      el("rect",{x:gx-40,y:gy+70,width:80,height:12,fill:mixc("var(--weld)",55),stroke:"var(--ink)"},svg);
+      const t=tx(svg,gx,gy+100,NAME[r],{class:"lbl","text-anchor":"middle","font-weight":"700",fill:COL[r]});t.style.fontSize="11px";fitSize(t,W*0.24,7);}
+    setVB(svg,W,y1+38);
+    ro.innerHTML=nbsp("<span>"+q.n+"</span><span>"+nf(I,0)+" A · "+nf(U,1)+" V</span><span>régime : <b class='eps'>"+NAME[r]+"</b></span><span>I<sub>t</sub> "+(q.it?"≈ "+q.it+" A":"aucun")+"</span>");
+    const M={cc:"Arc court, la goutte touche le bain : court-circuit. Bon pour la tôle mince et les positions.",glob:"Entre deux mondes : grosses gouttes de travers, projections. On descend en court-circuit, on monte au-dessus du courant de transition, ou l'on passe au pulsé.",spray:"Au-dessus du courant de transition et sous une tension assez haute, avec un gaz riche en argon : pluie de fines gouttes, cordon lisse, à plat.",long:"Arc trop long : instable, mal protégé, projections et porosités.",enterre:"Sous CO₂ pur à fort courant, l'arc creuse le bain et s'y enfonce : transfert globulaire, projections, mais forte pénétration."};
+    msg.innerHTML=nbsp(M[r]+(g==="C1"?" Sous CO₂ pur, la pulvérisation axiale n'existe pas.":""))+"<br><b>À retenir :</b> la pulvérisation demande du courant, de la tension et de l'argon.";
+  }
+  $$("#m3g .btn").forEach(b=>b.addEventListener("click",()=>{g=b.dataset.g;setOn("#m3g",b);draw();}));
+  [sI,sU].forEach(x=>x.addEventListener("input",draw));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M4 : une goutte par impulsion (MAG pulsé)
+   ========================================================= */
+(function(){
+  const svg=$("#m4svg");if(!svg)return;
+  const sP=$("#m4p"),sT=$("#m4t"),sF=$("#m4f"),ro=$("#m4r"),msg=$("#m4msg");
+  const IB=60,DC=320;
+  function draw(){
+    const W=svgW(svg),n=W<560,Ip=+sP.value,tp=+sT.value/1000,f=+sF.value,T=1/f,tpe=Math.min(tp,0.9*T);clear(svg);
+    $("#m4po").textContent=nf(Ip,0)+NB+"A";$("#m4to").textContent=nf(tp*1000,1)+NB+"ms";$("#m4fo").textContent=nf(f,0)+NB+"Hz";
+    setOn("#m4b",$$("#m4b .btn").find(b=>+b.dataset.p===Ip&&+b.dataset.t===+sT.value&&+b.dataset.f===f)||null);
+    const Im=IB+(Ip-IB)*tpe*f,w=wfsOf(Im,15),V=w/60*1000*1.131/f,dd=Math.cbrt(6*V/Math.PI),C=Ip*Ip*tpe,ratio=C/DC;
+    const mode=ratio<0.75?"none":ratio>1.4?"many":"one";
+    const x0=n?42:52,x1=W-16,y0=26,y1=n?160:180;
+    const A=axes(svg,x0,x1,y0,y1,0,2*T*1000,0,600,"temps (ms)","i (A)",niceStep(2*T*1000,4),200);
+    let d="";const pts=[[0,Ip]];for(let k=0;k<2;k++){const t0=k*T;pts.push([t0,Ip],[t0+tpe,Ip],[t0+tpe,IB],[t0+T,IB]);}
+    d=pts.slice(1).map((p,i)=>(i?"L":"M")+A.X(p[0]*1000).toFixed(1)+" "+A.Y(p[1]).toFixed(1)).join(" ");
+    el("path",{d:d,fill:"none",stroke:"var(--eps)","stroke-width":2.6},svg);
+    el("line",{x1:x0,y1:A.Y(Im),x2:x1,y2:A.Y(Im),stroke:"var(--frc)","stroke-width":1.4,"stroke-dasharray":"6 4"},svg);
+    el("line",{x1:x0,y1:A.Y(230),x2:x1,y2:A.Y(230),stroke:"var(--gam)","stroke-width":1,"stroke-dasharray":"3 3"},svg);
+    {const t=tx(svg,x1-2,A.Y(Im)-4,"moyenne "+nf(Im,0)+" A",{class:"lbl","text-anchor":"end",fill:"var(--frc)"});t.style.fontSize="10.5px";halo(t,svg);
+     const u=tx(svg,x1-2,A.Y(230)+12,"transition 230 A",{class:"lbl","text-anchor":"end",fill:"var(--gam)"});u.style.fontSize="10.5px";halo(u,svg);}
+    /* gouttes détachées par impulsion */
+    for(let k=0;k<2;k++){const xc=A.X((k*T+tpe/2)*1000),yc=A.Y(Ip)-14;
+      if(mode==="one")el("circle",{cx:xc,cy:yc,r:Math.max(3,4*dd),fill:mixc("var(--weld)",75),stroke:"var(--ink)"},svg);
+      else if(mode==="many")for(let j=0;j<3;j++)el("circle",{cx:xc-8+8*j,cy:yc-(j%2)*6,r:3,fill:"var(--tau)"},svg);
+      else{const t=tx(svg,xc,yc,"—",{"text-anchor":"middle",fill:"var(--tau)"});t.style.fontSize="13px";}}
+    /* jauge du critère */
+    const gy=y1+48,gx0=x0,gx1=x1;
+    {const t=tx(svg,gx0,gy-6,"Ip²·tp = "+nf(C,0)+" A²·s (cible ≈ 320)",{class:"lbl"});t.style.fontSize="11px";fitSize(t,gx1-gx0,8);}
+    el("rect",{x:gx0,y:gy,width:gx1-gx0,height:14,fill:mixc("var(--muted)",15),stroke:"var(--line)"},svg);
+    el("rect",{x:gx0+(gx1-gx0)*0.75*DC/800,y:gy,width:(gx1-gx0)*0.65*DC/800,height:14,fill:mixc("var(--gam)",35)},svg);
+    el("line",{x1:gx0+(gx1-gx0)*Math.min(1,C/800),y1:gy-4,x2:gx0+(gx1-gx0)*Math.min(1,C/800),y2:gy+18,stroke:"var(--eps)","stroke-width":3},svg);
+    setVB(svg,W,gy+26);
+    ro.innerHTML=nbsp("<span>I<sub>moy</sub> ≈ <b class='eps'>"+nf(Im,0)+" A</b></span><span>fil ≈ "+nf(w,1)+" m/min</span><span>goutte ≈ "+nf(dd,2)+" mm</span><span>"+(mode==="one"?"une goutte par impulsion":mode==="many"?"plusieurs gouttes":"pas de détachement")+"</span>");
+    let s;
+    if(mode==="one")s="Chaque impulsion apporte "+nf(C,0)+" A²·s, proche de la constante du fil : une goutte d'environ "+nf(dd,2)+" mm part à chaque pic, avec un courant moyen de "+nf(Im,0)+" A"+(Im<230?", sous le courant de transition.":".");
+    else if(mode==="none")s="L'impulsion est trop faible ("+nf(C,0)+" A²·s) : la goutte ne part pas, grossit d'une impulsion à l'autre et tombe en globulaire.";
+    else s="L'impulsion est trop forte ("+nf(C,0)+" A²·s) : plusieurs gouttes et des projections à chaque pic, et un arc plus dur.";
+    if(mode==="one"&&(dd>1.5||dd<0.8))s+=" Mais la goutte n'a pas la taille du fil : la fréquence ne suit pas la vitesse de fil.";
+    msg.innerHTML=nbsp(s)+"<br><b>À retenir :</b> un pic, une goutte ; la fréquence suit la vitesse de fil.";
+  }
+  $$("#m4b .btn").forEach(b=>b.addEventListener("click",()=>{sP.value=b.dataset.p;sT.value=b.dataset.t;sF.value=b.dataset.f;draw();}));
+  [sP,sT,sF].forEach(x=>x.addEventListener("input",draw));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M5 : équiper un poste pour un fil
+   ========================================================= */
+(function(){
+  const svg=$("#m5svg");if(!svg)return;
+  const sL=$("#m5l"),ro=$("#m5r"),msg=$("#m5msg");
+  const F={acier:{n:"acier plein",g:"V",gn:"V lisses",gaine:"spirale d'acier",soft:false,tube:"au diamètre du fil"},
+    inox:{n:"inox plein",g:"V",gn:"V lisses",gaine:"plastique (PTFE) ou acier",soft:false,tube:"au diamètre du fil"},
+    alu:{n:"aluminium",g:"U",gn:"en U",gaine:"plastique (PTFE, graphite)",soft:true,tube:"un cran au-dessus du fil"},
+    fourre:{n:"fourré",g:"K",gn:"V crantés, serrage modéré",gaine:"spirale d'acier",soft:false,tube:"au diamètre du fil"}};
+  let k="acier";
+  function draw(){
+    const W=svgW(svg),n=W<560,L=+sL.value,q=F[k];clear(svg);
+    $("#m5lo").textContent=nf(L,1)+NB+"m";
+    const pp=(q.soft&&L>3)||(k==="fourre"&&L>6),rollers=(k==="fourre"||q.soft||L>5)?4:2;
+    /* bobine, dévidoir, gaine, torche */
+    const y=70,bx=n?30:50;
+    el("circle",{cx:bx,cy:y,r:26,fill:mixc("var(--muted)",30),stroke:"var(--ink)","stroke-width":1.2},svg);el("circle",{cx:bx,cy:y,r:8,fill:"var(--card)",stroke:"var(--ink)"},svg);
+    const dx=bx+60;el("rect",{x:dx-6,y:y-30,width:rollers===4?92:56,height:60,rx:6,fill:mixc("var(--frc)",12),stroke:"var(--frc)"},svg);
+    for(let r=0;r<rollers/2;r++){[y-13,y+13].forEach(yy=>el("circle",{cx:dx+18+r*36,cy:yy,r:11,fill:mixc("var(--muted)",45),stroke:"var(--ink)"},svg));}
+    el("line",{x1:bx+26,y1:y,x2:dx-6,y2:y,stroke:"var(--weld)","stroke-width":2.5},svg);
+    const ex=dx+(rollers===4?86:50),tx0=W-(n?50:70);
+    el("path",{d:"M"+ex+" "+y+" C "+(ex+60)+" "+(y-40)+" "+(tx0-80)+" "+(y+40)+" "+tx0+" "+y,fill:"none",stroke:q.gaine.startsWith("plastique")?"var(--mat)":"var(--ink)","stroke-width":5,"stroke-opacity":0.7},svg);
+    el("path",{d:"M"+ex+" "+y+" C "+(ex+60)+" "+(y-40)+" "+(tx0-80)+" "+(y+40)+" "+tx0+" "+y,fill:"none",stroke:"var(--weld)","stroke-width":1.6},svg);
+    el("rect",{x:tx0,y:y-12,width:34,height:24,rx:5,fill:mixc("var(--muted)",35),stroke:"var(--ink)"},svg);
+    if(pp){el("circle",{cx:tx0+17,cy:y,r:7,fill:mixc("var(--frc)",40),stroke:"var(--frc)"},svg);const t=tx(svg,tx0+17,y+30,"moteur tireur",{class:"lbl","text-anchor":"middle",fill:"var(--frc)"});t.style.fontSize="10.5px";fitText(t,0,W-2);}
+    {const t=tx(svg,(ex+tx0)/2,y-30,"faisceau "+nf(L,1)+" m",{class:"lbl","text-anchor":"middle"});t.style.fontSize="11px";}
+    /* profil de gorge */
+    const py=y+70,px=n?W/2:W*0.3;
+    {const t=tx(svg,px,py-10,"gorge des galets : "+q.gn,{class:"lbl","text-anchor":"middle"});t.style.fontSize="11px";fitSize(t,W-20,7);}
+    el("rect",{x:px-40,y:py,width:80,height:30,fill:mixc("var(--muted)",45),stroke:"var(--ink)"},svg);
+    if(q.g==="U")el("path",{d:"M"+(px-9)+" "+py+" Q "+px+" "+(py+20)+" "+(px+9)+" "+py+" Z",fill:"var(--card)",stroke:"var(--ink)"},svg);
+    else{el("polygon",{points:[[px-12,py],[px+12,py],[px,py+15]].map(p=>p.join(",")).join(" "),fill:"var(--card)",stroke:"var(--ink)"},svg);
+      if(q.g==="K")for(let j=-2;j<=2;j++)el("line",{x1:px+j*4,y1:py+2,x2:px+j*4,y2:py+9,stroke:"var(--ink)","stroke-width":1},svg);}
+    el("circle",{cx:px,cy:py+(q.g==="U"?7:8),r:5,fill:mixc("var(--weld)",70),stroke:"var(--ink)"},svg);
+    setVB(svg,W,py+44);
+    ro.innerHTML=nbsp("<span>galets "+q.gn+"</span><span>gaine "+q.gaine+"</span><span>"+(pp?"poussé-tiré":"poussé")+", "+rollers+" galets</span><span>tube contact "+q.tube+"</span>");
+    let s="Fil "+q.n+" : galets "+q.gn+", gaine "+q.gaine+", tube contact "+q.tube+". ";
+    s+=pp?"Sur "+nf(L,1)+" m, le fil "+(q.soft?"mou":"fourré")+" flamberait dans la gaine : un moteur tireur dans la torche ou un dévidoir intermédiaire s'impose.":"Un dévidage poussé suffit sur "+nf(L,1)+" m"+(L>5?", avec quatre galets pour bien entraîner.":".");
+    msg.innerHTML=nbsp(s)+"<br><b>À retenir :</b> V pour l'acier, U pour l'alu, crans pour le fourré ; poussé-tiré pour l'alu long.";
+  }
+  $$("#m5b .btn").forEach(b=>b.addEventListener("click",()=>{k=b.dataset.w;setOn("#m5b",b);draw();}));
+  sL.addEventListener("input",draw);
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   Quiz, check-list, sommaire, thème
+   ========================================================= */
+(function(){
+  const box=$("#quiz");if(!box)return;
+  const Q=[
+    {q:"Que désigne le numéro 136 de l'ISO 4063 ?",o:["MIG à fil plein","MAG avec fil fourré de flux","MAG avec fil fourré de poudre métallique","fil fourré autoprotecteur"],c:1,e:"131 MIG ; 135 MAG ; <b>136 MAG avec fil fourré de flux</b> ; 138 MAG avec fil fourré de poudre métallique ; 114 fil fourré autoprotecteur."},
+    {q:"En MIG-MAG sur source à tension constante, qu'est-ce qui règle le courant ?",o:["un bouton d'intensité","la longueur de la buse","la vitesse de fil","le débit de gaz"],c:2,e:"Le courant s'établit à la valeur qui fond le fil aussi vite qu'il arrive : plus de fil, plus de courant. La tension règle la longueur d'arc."},
+    {q:"À vitesse de fil égale, le soudeur allonge le fil sorti. Le courant :",o:["monte","ne change pas","s'annule","baisse, car l'effet Joule préchauffe davantage le fil"],c:3,e:"WFS = α·I + β·ℓ·I² : avec ℓ plus grand, un courant plus faible suffit. Dans le modèle, 240 A à 15 mm deviennent 205 A à 25 mm."},
+    {q:"Le métal déposé en MIG-MAG dépend :",o:["de la tension","seulement de la vitesse et du diamètre du fil","du gaz","du fil sorti"],c:1,e:"Tout le fil dévidé fond : 8 m/min de fil de 1,2 mm (8,88 g/m) déposent environ 4,3 kg/h."},
+    {q:"Le régime court-circuit convient surtout :",o:["aux fortes épaisseurs à plat","à l'aluminium épais","au soudage sous CO₂ à 400 A","aux tôles minces, aux positions et aux racines"],c:3,e:"Faible courant, arc court, petit bain qui se fige vite : tôle mince, positions, racines. Sur tôle épaisse, risque de collage."},
+    {q:"En court-circuit, une self trop faible donne :",o:["des projections, car le courant monte trop vite et le pont explose","des collages","un arc trop long","un meilleur mouillage"],c:0,e:"« Self courte, ça crache ; self longue, ça colle »."},
+    {q:"Quel défaut grave peut cacher un beau cordon MAG en court-circuit sur tôle épaisse ?",o:["un collage, ou manque de fusion","une morsure","une inclusion de tungstène","une fissure de solidification"],c:0,e:"Le faible apport de chaleur peut laisser le cordon posé sur la tôle sans la fondre : défaut invisible à l'œil."},
+    {q:"Pour obtenir la pulvérisation axiale avec un fil d'acier de 1,2 mm, il faut :",o:["CO₂ pur et 150 A","n'importe quel gaz au-dessus de 100 A","un gaz riche en argon et plus d'environ 230 A, sous une tension assez haute","une self maximale"],c:2,e:"Au-delà du courant de transition (environ 230 A pour 1,2 mm) et avec au moins environ 80 % d'argon."},
+    {q:"Pourquoi évite-t-on la pulvérisation axiale en montante ?",o:["elle projette","elle ne pénètre pas","elle exige du CO₂","son bain gros et fluide coule"],c:3,e:"Fort dépôt et bain fluide : à plat ou en angle à plat seulement. En position : court-circuit ou pulsé."},
+    {q:"Le MAG pulsé permet :",o:["de transférer en pulvérisation avec un courant moyen inférieur au courant de transition","de souder sans gaz","de supprimer le dévidoir","d'augmenter le courant de pic au-delà de 1 000 A"],c:0,e:"Les impulsions dépassent le courant de transition et détachent une goutte chacune ; la base garde un courant moyen bas."},
+    {q:"En pulsé synergique, quand le soudeur augmente la vitesse de fil, la source :",o:["baisse la tension","coupe le pulsé","augmente la fréquence des impulsions pour garder des gouttes de la taille du fil","augmente le débit de gaz"],c:2,e:"Le volume de chaque goutte vaut WFS·S/f : plus de fil, plus de fréquence, même taille de goutte."},
+    {q:"Pour un fil d'aluminium de 1,2 mm dans un faisceau de 8 m, on choisit :",o:["galets en V lisses et gaine acier","galets en U, gaine plastique et dévidage poussé-tiré","galets crantés serrés au maximum","un faisceau le plus long possible"],c:1,e:"L'aluminium est mou : galets en U, gaine en PTFE ou graphite, poussé-tiré sur les grandes longueurs."}
+  ];
+  let score=0,done=0;const sc=$("#qzScore");
+  function upd(){let t="Score : "+score+" / "+Q.length;if(done===Q.length)t+=score>=10?"  ·  🎉 prêt pour le cours 4":score>=7?"  ·  relis les explications":"  ·  refais un tour des chapitres";sc.textContent=t;}
+  function render(){box.innerHTML="";score=0;done=0;
+    Q.forEach((it,n)=>{const d=document.createElement("div");d.className="qz";
+      d.innerHTML='<p class="qz-q"><b>'+(n+1)+".</b> "+it.q+'</p><div class="qz-o"></div><div class="qz-e" hidden></div>';
+      const o=d.querySelector(".qz-o"),ex=d.querySelector(".qz-e");let answered=false;
+      it.o.forEach((txt,i)=>{const b=document.createElement("button");b.type="button";b.className="qz-b";b.innerHTML=String.fromCharCode(65+i)+". "+txt;
+        b.addEventListener("click",()=>{if(answered)return;answered=true;done++;const ok=i===it.c;if(ok)score++;b.classList.add(ok?"ok":"ko");o.children[it.c].classList.add("ok");ex.hidden=false;ex.innerHTML=(ok?"✅ <b>Bien joué.</b> ":"❌ <b>Pas tout à fait.</b> ")+it.e;upd();});
+        o.appendChild(b);});
+      box.appendChild(d);});
+    upd();}
+  $("#qzReset").addEventListener("click",render);render();
+})();
+(function(){
+  const boxes=$$("#checklist input[type=checkbox]"),msg=$("#checkMsg"),KEY="arc-gaz-cours3-check";
+  if(!boxes.length)return;
+  let saved=[];try{saved=JSON.parse(localStorage.getItem(KEY)||"[]")||[];}catch(e){saved=[];}
+  boxes.forEach(b=>{b.checked=saved.indexOf(b.dataset.c)>=0;});
+  function upd(){const on=boxes.filter(b=>b.checked).map(b=>b.dataset.c);try{localStorage.setItem(KEY,JSON.stringify(on));}catch(e){}
+    msg.innerHTML=on.length===boxes.length?"🎉 <b>Tout est coché : tu es prêt pour le cours 4 !</b>":on.length+" / "+boxes.length+" : reviens sur les points non cochés (les manipulations sont faites pour ça).";}
+  boxes.forEach(b=>b.addEventListener("change",upd));upd();
+})();
+(function(){/* impression de la fiche mémoire seule */
+  const b=$("#printFiche");if(!b)return;
+  b.addEventListener("click",()=>{document.body.classList.add("print-fiche");window.print();});
+  window.addEventListener("afterprint",()=>document.body.classList.remove("print-fiche"));
+})();
+(function(){
+  const links=$$(".toc a"),tin=$(".toc-in");
+  if(!links.length||!("IntersectionObserver" in window))return;
+  const map={};links.forEach(a=>{map[a.getAttribute("href").slice(1)]=a;});
+  const obs=new IntersectionObserver(ents=>{ents.forEach(en=>{if(!en.isIntersecting)return;const a=map[en.target.id];if(!a)return;
+    links.forEach(l=>l.classList.toggle("on",l===a));
+    if(tin){const tgt=a.offsetLeft-tin.clientWidth/2+a.offsetWidth/2;try{tin.scrollTo({left:tgt,behavior:RM?"auto":"smooth"});}catch(e){tin.scrollLeft=tgt;}}});},{rootMargin:"-45% 0px -50% 0px"});
+  Object.keys(map).forEach(id=>{const s=document.getElementById(id);if(s)obs.observe(s);});
+})();
+(function(){
+  const b=$("#themeBtn");if(!b)return;const KEY="arc-gaz-theme",root=document.documentElement;
+  const lab={auto:"◐ Thème : automatique",light:"☀️ Thème : clair",dark:"🌙 Thème : sombre"};
+  let t="auto";try{t=localStorage.getItem(KEY)||"auto";}catch(e){}
+  function apply(){if(t==="auto")root.removeAttribute("data-theme");else root.setAttribute("data-theme",t);b.textContent=lab[t];}
+  b.addEventListener("click",()=>{t=t==="auto"?"light":t==="light"?"dark":"auto";try{localStorage.setItem(KEY,t);}catch(e){}apply();});
+  apply();
+})();
+
+})();
+</script>
+</body>
+</html>

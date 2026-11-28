@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Arc sous gaz, cours 2 : le soudage TIG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@500;600;700&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+
+
+
+:root{
+  --paper:#F3F6F9; --paper-2:#E6ECF2; --card:#FFFFFF; --ink:#17212B; --muted:#56626F; --line:#C5CFD9;
+  --grid:rgba(40,90,160,.075);
+  --sig:#CF2438; --tau:#8A34B6; --eps:#1B5ED3; --gam:#06849A; --frc:#D46A00; --mat:#26844A; --weld:#9A5B12;
+  --ok:#26844A; --warn:#B86E00; --bad:#C62828;
+  --lv2:#E4EBF2; --hl:#FFF3B0;
+  --font-body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-head:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --font-math:"STIX Two Text","Cambria Math","Cambria","Times New Roman",serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+    --grid:rgba(120,160,220,.07);
+    --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+    --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+  --grid:rgba(120,160,220,.07);
+  --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+  --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+  color-scheme: dark;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0;color:var(--ink);font-family:var(--font-body);font-size:17.5px;line-height:1.62;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;overflow-x:hidden;
+}
+img,svg{max-width:100%}
+.wrap{max-width:800px;margin:0 auto;padding:0 20px}
+.wide{max-width:980px}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.1;margin:0}
+h3{font-size:1.65rem;font-weight:600;margin:2rem 0 .6rem}
+h4{font-size:1.3rem;font-weight:600;margin:1.4rem 0 .4rem}
+p{margin:.7em 0}
+a{color:var(--eps)}
+b,strong{font-weight:700}
+small{font-size:.8em}
+sub{font-size:.72em}
+.m{font-family:var(--font-math);font-size:1.08em;white-space:nowrap}
+.sig{color:var(--sig)} .tau{color:var(--tau)} .eps{color:var(--eps)} .gam{color:var(--gam)} .frc{color:var(--frc)} .mat{color:var(--mat)} .mut{color:var(--muted)} .wcol{color:var(--weld)}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .12em;line-height:1.1}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 .2em .08em}
+.frac>span:last-child{padding:.08em .2em 0}
+ul,ol{padding-left:1.4em}
+li{margin:.25em 0}
+
+/* ---------- en-tête ---------- */
+.hero{padding:34px 0 10px}
+.title-block{border:2.5px solid var(--ink);background:var(--card);display:grid;grid-template-columns:1fr 300px}
+.tb-main{padding:22px 24px;border-right:2.5px solid var(--ink);display:flex;flex-direction:column;justify-content:space-between;gap:14px}
+.tb-series{margin:0 0 .5rem;color:var(--muted);font-size:.95rem}
+.hero h1{font-size:clamp(2.3rem,6vw,4rem);font-weight:700;letter-spacing:-.01em}
+.tb-cells{display:grid;grid-template-rows:repeat(4,auto)}
+.tb-cells>div{padding:9px 16px;border-bottom:1.5px solid var(--ink);display:flex;flex-direction:column;justify-content:center}
+.tb-cells>div:last-child{border-bottom:0}
+.tb-cells small{color:var(--muted);font-size:.78rem}
+.tb-cells b{font-family:var(--font-head);font-size:1.25rem;font-weight:600;line-height:1.15}
+.lede{font-size:1.13rem;max-width:760px;margin:1.2rem 0}
+.theme-btn{align-self:flex-start;font-family:var(--font-body);font-size:.85rem;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
+@media (max-width:760px){.title-block{grid-template-columns:1fr}.tb-main{border-right:0;border-bottom:2.5px solid var(--ink)}.tb-cells{grid-template-rows:none;grid-template-columns:1fr 1fr}.tb-cells>div:nth-child(odd){border-right:1.5px solid var(--ink)}.tb-cells>div:nth-child(3){border-bottom:0}}
+@media (max-width:420px){.tb-cells{grid-template-columns:1fr}.tb-cells>div:nth-child(odd){border-right:0}.tb-cells>div:nth-child(3){border-bottom:1.5px solid var(--ink)}}
+
+/* code couleur */
+.cc{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:stretch;margin:1rem 0 .4rem}
+.cc-box{background:var(--card);border:2px solid var(--line);padding:12px 14px;border-radius:4px}
+.cc-cause{border-color:var(--sig)} .cc-link{border-color:var(--mat)} .cc-eff{border-color:var(--eps)}
+.cc-box small{display:block;color:var(--muted);font-size:.82rem;line-height:1.3}
+.cc-syms{font-family:var(--font-math);font-size:1.7rem;line-height:1.25;display:flex;flex-wrap:wrap;gap:.1em .45em;margin:.2rem 0}
+.cc-box p{margin:0;font-size:.9rem;line-height:1.35}
+.cc-arrow{align-self:center;font-size:1.8rem;color:var(--muted)}
+@media (max-width:700px){.cc{grid-template-columns:1fr}.cc-arrow{transform:rotate(90deg);justify-self:center;line-height:1}}
+.cc-more{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:.5rem 0}
+.cc-more>div{border:2px solid var(--line);background:var(--card);border-radius:4px;padding:6px 10px;font-size:.9rem}
+@media (max-width:640px){.cc-more{grid-template-columns:1fr}}
+
+/* ---------- sommaire ---------- */
+.toc{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-bottom:1.5px solid var(--line);padding-top:env(safe-area-inset-top,0px);margin-top:18px}
+.toc-in{display:flex;gap:6px;overflow-x:auto;padding:9px 20px;max-width:980px;margin:0 auto;scrollbar-width:thin}
+.toc a{flex:none;text-decoration:none;color:var(--ink);font-size:.88rem;padding:4px 11px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);white-space:nowrap}
+.toc a.on{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.toc a:focus-visible,.btn:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--eps);outline-offset:2px}
+
+/* ---------- sections ---------- */
+section.chap{padding:46px 0 10px}
+.cartouche{display:grid;grid-template-columns:86px 1fr 250px;border:2.5px solid var(--ink);background:var(--card);margin-bottom:1.4rem}
+.c-num{font-family:var(--font-head);font-size:3.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;border-right:2.5px solid var(--ink)}
+.c-title{padding:14px 18px;border-right:2.5px solid var(--ink)}
+.c-title h2{font-size:2.1rem;font-weight:700}
+.c-title p{margin:.25rem 0 0;color:var(--muted)}
+.c-img{padding:12px 14px;display:flex;gap:12px;align-items:center;background:var(--paper-2)}
+.c-img .ico{font-size:2.3rem;line-height:1}
+.c-img small{display:block;color:var(--muted);font-size:.78rem}
+.c-img span{font-size:.95rem;line-height:1.3}
+@media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
+
+/* gabarit court : approfondissement replié, à retenir, prédiction */
+details.deep{margin:1.2rem 0;padding:0 18px;background:var(--lv2);border-left:6px solid var(--ink);border-radius:4px}
+details.deep>summary{font-family:var(--font-head);font-size:1.2rem;font-weight:600;padding:9px 0}
+details.deep[open]{padding-bottom:10px}
+.retenir{margin:1.4rem 0 .4rem;padding:8px 18px 6px;background:var(--card);border:2px solid var(--ink);border-radius:4px}
+.retenir>b:first-child{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.retenir ul{margin:.3rem 0 .3rem}
+.predict{display:block;margin-top:.35rem;color:var(--ink);font-weight:700}
+@media (max-width:520px){details.deep{padding:0 12px}.retenir{padding:8px 12px 6px}}
+
+/* formules et encadrés */
+.fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:600px;text-align:center;border-radius:3px;overflow-x:auto}
+.fx .big{font-family:var(--font-math);font-size:1.9rem;line-height:1.4}
+.fx .cap{font-size:.85rem;color:var(--muted);margin:.3rem 0 0}
+.fx .row{display:flex;flex-wrap:wrap;justify-content:center;gap:.2em 1.4em}
+.syms{margin:.6rem 0;display:grid;grid-template-columns:auto 1fr;gap:.35rem 1rem;align-items:baseline}
+.syms dt{font-family:var(--font-math);font-size:1.25rem;text-align:right;white-space:nowrap}
+.syms dd{margin:0}
+.def{margin:.9rem 0;padding:.5rem .9rem;border-left:3px dotted var(--muted);font-size:.96rem;background:color-mix(in srgb,var(--card) 60%,transparent)}
+.def>b:first-child{font-family:var(--font-head);font-size:1.08rem;font-weight:600}
+.tip{margin:1rem 0;padding:.7rem 1rem;border:1.5px dashed var(--mat);border-radius:4px;font-size:.97rem}
+.warn{margin:1rem 0;padding:.7rem 1rem;border:2px solid var(--bad);border-radius:4px;font-size:.97rem;background:color-mix(in srgb,var(--bad) 7%,transparent)}
+.mnemo{margin:1rem 0;padding:.7rem 1rem;background:var(--hl);border-radius:4px;font-size:.98rem}
+.fun{margin:1.2rem 0;padding:.8rem 1rem;border:2px dashed var(--muted);border-radius:10px;background:var(--card);font-size:.98rem}
+.fun-h{display:block;margin-bottom:.35rem;font-family:var(--font-head);font-size:1.15rem;font-weight:600;letter-spacing:.02em}
+.meta{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--frc);border-radius:4px;background:color-mix(in srgb,var(--frc) 6%,transparent)}
+.weld{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--weld);border-radius:4px;background:color-mix(in srgb,var(--weld) 7%,transparent)}
+.weld>b:first-child{font-family:var(--font-head);font-size:1.15rem;font-weight:600;color:var(--weld)}
+.hp{display:inline-block;font-size:.72rem;font-weight:700;padding:1px 7px;border-radius:9px;background:var(--weld);color:var(--card);vertical-align:middle;margin-left:4px;white-space:nowrap}
+.recall{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:1rem 0}
+.recall>div{background:var(--card);border:1.5px solid var(--line);border-radius:4px;padding:8px 12px;font-size:.92rem}
+.recall .f{font-family:var(--font-math);font-size:1.2rem;margin-bottom:.2rem}
+@media (max-width:640px){.recall{grid-template-columns:1fr}}
+.hist{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:1rem 0}
+.hist>div{background:var(--card);border:1.5px solid var(--weld);border-radius:4px;padding:8px 12px;font-size:.93rem}
+.hist .yr{font-family:var(--font-head);font-size:1.6rem;font-weight:700;color:var(--weld);line-height:1}
+@media (max-width:720px){.hist{grid-template-columns:1fr}}
+
+/* manipulations */
+.lab{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:14px 16px 12px;margin:1.4rem 0}
+.lab-h{font-family:var(--font-head);font-size:1.3rem;font-weight:600;margin:0 0 .2rem}
+.lab-sub{margin:0 0 .6rem;color:var(--muted);font-size:.92rem}
+.lab svg{display:block;width:100%;height:auto;color:var(--ink);font-family:var(--font-body);touch-action:pan-y}
+.ctrl{display:grid;grid-template-columns:minmax(110px,auto) 1fr minmax(92px,auto);gap:4px 12px;align-items:center;margin:.5rem 0}
+.ctrl label{font-size:.95rem}
+.ctrl output{font-family:var(--font-math);font-size:1.08rem;text-align:right;white-space:nowrap}
+@media (max-width:520px){.ctrl{grid-template-columns:1fr auto}.ctrl input[type=range]{grid-column:1/-1;grid-row:2}}
+input[type=range]{width:100%;accent-color:var(--ink);height:28px;margin:0}
+input.r-sig{accent-color:var(--sig)} input.r-tau{accent-color:var(--tau)} input.r-frc{accent-color:var(--frc)} input.r-mat{accent-color:var(--mat)} input.r-eps{accent-color:var(--eps)}
+.btns{display:flex;flex-wrap:wrap;gap:6px;margin:.5rem 0}
+.btn{font-family:var(--font-body);font-size:.9rem;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 13px;cursor:pointer;line-height:1.3}
+.btn:hover{background:var(--paper-2)}
+.btn.on{background:var(--ink);color:var(--paper)}
+.btn.play{border-color:var(--eps);color:var(--eps);font-weight:700}
+.btn:disabled{opacity:.45;cursor:default}
+.readout{font-family:var(--font-math);font-size:1.08rem;background:var(--paper-2);border-radius:4px;padding:.5rem .8rem;margin:.5rem 0;overflow-x:auto;display:flex;flex-wrap:wrap;gap:.2em 1.3em}
+.readout>span{white-space:nowrap}
+.status{font-size:.97rem;margin:.5rem 0;padding:.5rem .8rem;border-left:4px solid var(--eps);background:color-mix(in srgb,var(--eps) 6%,transparent);border-radius:0 4px 4px 0;min-height:2.6em}
+.radios{display:flex;flex-wrap:wrap;gap:6px 14px;margin:.4rem 0;font-size:.95rem}
+.radios label{display:inline-block;cursor:pointer}
+.radios input{margin:0 6px 0 0;vertical-align:middle}
+
+/* svg */
+svg text{fill:currentColor;font-size:13px}
+svg .lbl{font-size:12.5px;fill:var(--muted)}
+svg .mth{font-family:var(--font-math);font-size:16px}
+svg .ttl{font-family:var(--font-head);font-size:15px;font-weight:600}
+svg .axis{stroke:var(--ink);stroke-width:1.4;fill:none}
+svg .tick{stroke:var(--muted);stroke-width:1}
+svg .gridbg{stroke:var(--line);stroke-width:1}
+svg .ref{stroke:var(--muted);stroke-width:1.3;stroke-dasharray:4 3;fill:none}
+.arr line{stroke:currentColor}
+.arr polygon{fill:currentColor}
+
+/* tableaux */
+.tbl-wrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch}
+table.data{border-collapse:collapse;width:100%;font-size:.94rem;background:var(--card)}
+table.data th,table.data td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:middle}
+table.data th{font-family:var(--font-head);font-weight:600;font-size:1.05rem;background:var(--paper-2)}
+table.data td.n{font-family:var(--font-math);white-space:nowrap}
+table.data tr.now td{background:var(--hl)}
+
+/* parcours */
+.route{list-style:none;padding:0;margin:1rem 0;position:relative}
+.route::before{content:"";position:absolute;left:17px;top:10px;bottom:10px;width:4px;background:var(--line);border-radius:2px}
+.route li{position:relative;padding:0 0 14px 52px;margin:0}
+.route li .dot{position:absolute;left:4px;top:0;width:30px;height:30px;border-radius:50%;border:3px solid var(--ink);background:var(--card);font-family:var(--font-head);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+.route li b{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.route li p{margin:.1rem 0 0;font-size:.95rem}
+.series{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:.8rem 0}
+.series>div{background:var(--card);border:1.5px solid var(--line);padding:8px 10px;border-radius:4px;font-size:.88rem}
+.series>div.here{border:2.5px solid var(--ink)}
+.series b{display:block;font-family:var(--font-head);font-size:1.05rem}
+@media (max-width:700px){.series{grid-template-columns:1fr 1fr}}
+
+/* exercices et quiz */
+.exo{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--ink);padding:6px 20px 12px;margin:1.2rem 0;border-radius:4px}
+.exo.defi{border-left-color:var(--weld)}
+.exo h4{margin-top:.8rem}
+.exo .lvtag{font-family:var(--font-body);font-size:.85rem;font-weight:400;color:var(--muted);margin-left:.4rem}
+.exo .q{margin:.25rem 0}
+details{margin:.6rem 0}
+summary{cursor:pointer;font-weight:700;padding:4px 0}
+details .sol{padding:.4rem .9rem;border-left:3px solid var(--mat);margin:.4rem 0}
+details .sol p{margin:.45em 0}
+.qz{background:var(--card);border:1.5px solid var(--line);border-radius:6px;padding:10px 16px;margin:.8rem 0}
+.qz-q{margin:.3rem 0 .6rem}
+.qz-o{display:flex;flex-direction:column;gap:6px}
+.qz-b{text-align:left;font-family:var(--font-body);font-size:.97rem;padding:8px 12px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:5px;cursor:pointer}
+.qz-b:hover{border-color:var(--ink)}
+.qz-b.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--card))}
+.qz-b.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--card))}
+.qz-e{font-size:.94rem;margin:.6rem 0 .2rem}
+.score{position:sticky;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);display:inline-block;background:var(--ink);color:var(--paper);padding:6px 14px;border-radius:999px;font-size:.95rem;margin:.6rem 0}
+
+/* fiche mémoire */
+.fiche{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:2.5px solid var(--ink);background:var(--card);margin:1rem 0}
+.fiche>div{padding:12px 14px;border-right:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}
+.fiche>div:nth-child(3n){border-right:0}
+.fiche>div:nth-last-child(-n+3){border-bottom:0}
+.fiche .ic{font-size:1.9rem;line-height:1}
+.fiche h4{margin:.3rem 0 .2rem;font-size:1.15rem}
+.fiche .f{font-family:var(--font-math);font-size:1.1rem;margin:.2rem 0}
+.fiche p{margin:.2rem 0 0;font-size:.88rem;color:var(--muted)}
+@media (max-width:720px){.fiche{grid-template-columns:1fr 1fr}.fiche>div{border-right:1.5px solid var(--ink)!important;border-bottom:1.5px solid var(--ink)!important}.fiche>div:nth-child(2n){border-right:0!important}.fiche>div:last-child{border-bottom:0!important}}
+@media (max-width:440px){.fiche{grid-template-columns:1fr}.fiche>div{border-right:0!important}}
+.gloss{display:grid;grid-template-columns:minmax(150px,230px) 1fr;gap:0;border-top:1.5px solid var(--line);margin:1rem 0}
+.gloss dt,.gloss dd{border-bottom:1.5px solid var(--line);padding:7px 8px;margin:0}
+.gloss dt{font-weight:700}
+.gloss dd{font-size:.95rem}
+@media (max-width:600px){.gloss{grid-template-columns:1fr}.gloss dt{border-bottom:0;padding-bottom:0}}
+.check label{display:flex;gap:10px;align-items:flex-start;padding:5px 0;cursor:pointer}
+.check input{margin-top:.35em;width:18px;height:18px;accent-color:var(--mat);flex:none}
+footer{padding:40px 0 60px;color:var(--muted);font-size:.9rem}
+hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
+@media (max-width:700px){.m{white-space:normal}.fx{padding:12px 10px}.fx .big{font-size:1.4rem}}
+@media (max-width:400px){body{font-size:16.5px}.wrap{padding:0 14px}.lab{padding:12px 10px}}
+
+/* compléments de la série Rupture */
+.btn.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,var(--card))}
+.btn.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--card))}
+.ctrl[hidden]{display:none}
+
+/* impression : le cours sur papier clair, ou la fiche mémoire seule sur une page */
+@media print{
+  :root,:root[data-theme]{--paper:#fff!important;--paper-2:#EEF2F6!important;--card:#fff!important;--ink:#111!important;--muted:#444!important;--line:#999!important;--grid:transparent!important;--lv2:#F2F5F8!important;--hl:#FFF3B0!important;color-scheme:light}
+  body{background:#fff;font-size:11pt}
+  .toc,.theme-btn,.btns,.ctrl,#qzReset,.score{display:none!important}
+  section.chap{padding:14px 0 4px}
+  .lab,.fx,.retenir,details.deep,.fiche>div,.exo{break-inside:avoid}
+  body.print-fiche header,body.print-fiche main>section:not(#fiche),body.print-fiche footer{display:none!important}
+  body.print-fiche #fiche .cartouche{margin-bottom:.6rem}
+  body.print-fiche .fiche>div{padding:8px 10px}
+}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="wrap wide">
+  <div class="title-block">
+    <div class="tb-main">
+      <div>
+        <p class="tb-series">Soudage sous protection gazeuse : TIG, MIG-MAG et plasma</p>
+        <h1>Le soudage TIG : l'électrode qui ne fond pas</h1>
+      </div>
+      <button class="theme-btn" id="themeBtn" type="button" aria-label="Changer de thème">◐ Thème : automatique</button>
+    </div>
+    <div class="tb-cells">
+      <div><small>Cours</small><b>2 sur 5 : le procédé 141, de la racine de tuyauterie à l'orbital</b></div>
+      <div><small>Durée conseillée</small><b>≈ 1 h 20 avec les exercices</b></div>
+      <div><small>Prérequis</small><b>cours 1 de la série (argon, hélium, gaz d'envers) ; l'arc électrique et les sources de courant (Fondamentaux des procédés, cours 2 et 3 : polarité, courant constant, pulsé, amorçage HF)</b></div>
+      <div><small>À la fin tu sais</small><b>décrire le procédé 141, ses atouts et ses limites, et dire où il s'impose ; choisir la polarité, régler la balance d'un alternatif carré et le pulsé ; choisir, désigner et affûter une électrode de tungstène ; régler courant, longueur d'arc, vitesse et apport, et calculer l'énergie de soudage ; reconnaître les défauts propres au TIG et choisir une variante (fil chaud, chanfrein étroit, A-TIG, orbital)</b></div>
+    </div>
+  </div>
+  <p class="lede">Une électrode de tungstène qui ne fond pas, un arc sous argon, un fil d'apport amené à part ou pas de fil du tout : le TIG sépare la chaleur et le métal, et c'est ce qui fait sa qualité. Il soude tous les métaux, sans projection ni laitier, et donne la plus belle racine qui soit. Mais il est lent. Ce cours explique où il s'impose, comment régler sa polarité, son alternatif et son électrode, comment conduire le bain, quels défauts guetter et quelles variantes le rendent plus productif.</p>
+
+  <h4>Le code couleur de la série</h4>
+  <div class="cc" role="img" aria-label="Code couleur : les causes en rouge et violet, les paramètres en vert, les effets en bleu et bleu-vert">
+    <div class="cc-box cc-cause"><small>Les causes</small><div class="cc-syms"><span class="sig">air</span><span class="sig">vent</span><span class="tau">porosité</span><span class="tau">oxydation</span></div><p><span class="sig">rouge</span> : ce qui menace le bain (air, vent, humidité) ; <span class="tau">violet</span> : les défauts (porosités, oxydes, projections, fissures)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-link"><small>Les paramètres</small><div class="cc-syms"><span class="mat">Ar</span><span class="mat">He</span><span class="mat">CO<sub>2</sub></span><span class="mat">Q</span></div><p>en <span class="mat">vert</span> : ce qu'on choisit (composition du gaz, débit, buse)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-eff"><small>Les effets</small><div class="cc-syms"><span class="eps">U</span><span class="eps">p</span><span class="eps">S</span><span class="gam">arc</span><span class="gam">[H]</span></div><p><span class="eps">bleu</span> : ce qu'on mesure ou calcule (tension d'arc, pénétration, solubilité, indice d'oxydation) ; <span class="gam">bleu-vert</span> : l'arc et ce qui se dissout dans le métal</p></div>
+  </div>
+  <div class="cc-more">
+    <div><b class="frc">Orange</b> : ce qui s'écoule et se déplace (jet de gaz, gouttes, courant d'air).</div>
+    <div><b>Noir</b> : la géométrie dessinée (torche, buse, pièce, cordon).</div>
+    <div><b class="wcol">Bronze</b> : le métal fondu et les encadrés « métier » 🔥.</div>
+  </div>
+</div>
+</header>
+
+<nav class="toc" aria-label="Sommaire">
+  <div class="toc-in">
+    <a href="#avant">Avant de commencer</a>
+    <a href="#c1">1 Le procédé 141</a>
+    <a href="#c2">2 Polarité et alternatif</a>
+    <a href="#c3">3 L'électrode</a>
+    <a href="#c4">4 Régler le bain</a>
+    <a href="#c5">5 Défauts et variantes</a>
+    <a href="#exos">Exercices</a>
+    <a href="#quiz-s">Quiz</a>
+    <a href="#fiche">Fiche mémoire</a>
+    <a href="#gloss">Glossaire</a>
+    <a href="#check">Check-list</a>
+  </div>
+</nav>
+
+<main>
+<section class="chap" id="avant">
+<div class="wrap">
+  <h3 style="margin-top:0">Avant de commencer</h3>
+  <h4>Ce qu'il faut avoir en tête, en trois cases</h4>
+  <div class="recall">
+    <div><div class="f">CC− : ⅔ à la pièce</div>La cathode se refroidit en émettant ; l'anode, bombardée, chauffe. Un tungstène au pôle − reste froid (Fondamentaux des procédés, cours 2).</div>
+    <div><div class="f">source à courant constant</div>En TIG, la main tient la longueur d'arc et le poste tient le courant ; l'amorçage se fait en HF ou en lift-arc (Fondamentaux, cours 3).</div>
+    <div><div class="f">I1 · I3 · R1</div>Argon, argon-hélium, argon-hydrogène pour l'inox austénitique ; jamais d'oxydant en TIG (cours 1).</div>
+  </div>
+
+  <div class="def"><b>📘 Le sujet</b> : <b>1.7 « Soudage TIG »</b> du planning et du référentiel de l'IIW (<i>International Institute of Welding</i>) ; il prépare l'étude de cas TIG orbital. Attendus de l'IWE (<i>International Welding Engineer</i>, ingénieur international en soudage) : expliquer le principe du procédé et ses méthodes d'amorçage ; choisir et justifier le type de courant, la polarité, le gaz et l'électrode (dopants, diamètre, affûtage) ; prévoir l'influence des paramètres sur le cordon ; analyser les défauts propres au procédé ; connaître ses variantes et leurs applications.</div>
+
+  <div class="def"><b>📖 Normes et sigles</b>. <b>ISO 4063</b> : 141 TIG avec métal d'apport en fil plein, 142 TIG sans métal d'apport, 143 TIG avec fil fourré, 145 TIG avec gaz réducteur. <b>ISO 6848</b> : électrodes de tungstène ; <b>ISO 14175</b> : gaz ; <b>EN 1011-1</b> : énergie de soudage ; <b>ISO 14732</b> : qualification des opérateurs de soudage. <b>TIG</b> : <i>tungsten inert gas</i> (GTAW en anglais) ; <b>CC−</b>, <b>CC+</b> : courant continu, électrode au − ou au + ; <b>CA</b> : courant alternatif ; <b>HF</b> : haute fréquence. Les manipulations sont des modèles pédagogiques : tendances et ordres de grandeur.</div>
+
+  <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage</b>
+    <p>La passe de racine d'une tuyauterie sous pression, la soudure d'un réservoir d'aluminium, d'un tube en titane ou d'une cuve inox alimentaire se font presque toujours en TIG. Bien le régler, c'est la différence entre une racine pénétrée et brillante et une inclusion de tungstène qui fait refuser la soudure.</p>
+  </div>
+
+  <h4>La série</h4>
+  <div class="series" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">
+    <div><b>1 Les gaz de protection</b>Protéger, ioniser, façonner : argon, hélium, gaz actifs, métallurgie, ISO 14175.</div>
+    <div class="here"><b>2 Le soudage TIG</b>L'électrode infusible, la polarité, les réglages et les variantes.</div>
+    <div><b>3 MIG-MAG : le procédé</b>Fil fusible, autorégulation et régimes de transfert.</div>
+    <div><b>4 MIG-MAG : fils et soudabilité</b>Fils pleins et fourrés, hydrogène, réglages et défauts.</div>
+    <div><b>5 Le soudage plasma</b>L'arc étranglé et le trou de serrure.</div>
+  </div>
+
+  <h4>Le plan du cours</h4>
+  <ol class="route">
+    <li><span class="dot">1</span><b>Le procédé 141</b><p>Atouts, limites, et la règle de la racine en TIG.</p></li>
+    <li><span class="dot">2</span><b>Polarité, alternatif et pulsé</b><p>Pénétrer ou décaper, et doser entre les deux.</p></li>
+    <li><span class="dot">3</span><b>L'électrode de tungstène</b><p>Nuances, couleurs, diamètre et affûtage.</p></li>
+    <li><span class="dot">4</span><b>Régler le bain</b><p>Courant, longueur d'arc, vitesse, apport et énergie.</p></li>
+    <li><span class="dot">5</span><b>Défauts et variantes</b><p>Inclusions, porosités, et le TIG qui va plus vite.</p></li>
+  </ol>
+</div>
+</section>
+<section class="chap" id="c1">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">1</div>
+    <div class="c-title"><h2>Le procédé 141</h2><p>Séparer la chaleur et le métal : la qualité, au prix de la lenteur</p></div>
+    <div class="c-img"><span class="ico">🖋️</span><span><small>Image à retenir</small>Le stylo-plume : une plume qui ne s'use pas et l'encre amenée à part ; un trait parfait, mais lent</span></div>
+  </div>
+
+  <p>Dans le TIG, l'arc jaillit entre une électrode de <b>tungstène</b>, qui fond vers 3 400 °C et ne se consomme presque pas, et la pièce. Un gaz inerte protège tout. Le soudeur tient la torche d'une main et, s'il en faut, apporte de l'autre une baguette de métal d'apport au bord du bain. La chaleur et le métal sont donc <b>indépendants</b> : on peut fondre sans ajouter, ou ajouter peu, sans laitier ni projections. Le prix : un bain petit et un dépôt lent.</p>
+
+  <div class="def"><b>📖 Carte d'identité du procédé 141 (ISO 4063).</b>
+    <ul>
+      <li><b>Énergie</b> : arc électrique entre électrode infusible et pièce, source à courant constant.</li>
+      <li><b>Protection</b> : gaz inerte (I1, I3), parfois réducteur (R1).</li>
+      <li><b>Apport</b> : baguette ou fil, ou aucun (142, autogène).</li>
+      <li><b>Courants</b> : 20 à 200 A environ en manuel, jusqu'à quelques centaines d'ampères en automatique.</li>
+      <li><b>Épaisseurs</b> : de quelques dixièmes de millimètre à environ 6 mm en une passe.</li>
+      <li><b>Positions</b> : toutes. <b>Métaux</b> : tous, aciers, inox, aluminium, cuivre, titane, nickel.</li>
+      <li><b>Atouts</b> : qualité, pénétration maîtrisée, pas de projections ni de fumées notables, racines.</li>
+      <li><b>Limites</b> : taux de dépôt faible, de l'ordre de 0,3 à 0,5 kg/h en manuel ; lenteur ; soudeur habile ; protection sensible au vent.</li>
+    </ul>
+  </div>
+
+  <div class="fx"><div class="row big"><span><span class="eps">t</span> = <span class="eps">m</span>/<span class="mat">D</span></span><span><span class="eps">m</span> = A·ρ·ℓ</span></div><p class="cap">t : temps d'arc pour une longueur ℓ de joint (h) ; m : masse à déposer (kg) ; D : taux de dépôt du procédé (kg/h) ; A : section du chanfrein (mm²) ; ρ : masse volumique (7,85 g/cm³ pour l'acier).</p></div>
+
+  <div class="lab" id="m1">
+    <p class="lab-h">Manipulation 1 : combien de temps pour remplir un V ?</p>
+    <p class="lab-sub">Règle l'épaisseur d'un chanfrein en V à 60° : la section, la masse à déposer par mètre et le temps d'arc de chaque procédé se calculent.<span class="predict">🔮 Prédis d'abord : pour 20 mm, combien de fois plus long en TIG manuel qu'en MAG ?</span></p>
+    <div class="btns" id="m1b">
+      <button class="btn" data-t="3" type="button">3 mm</button>
+      <button class="btn on" data-t="10" type="button">10 mm</button>
+      <button class="btn" data-t="20" type="button">20 mm</button>
+    </div>
+    <div class="ctrl"><label for="m1t">Épaisseur <b class="mat">t</b></label><input type="range" id="m1t" min="2" max="30" step="1" value="10"><output id="m1to"></output></div>
+    <svg id="m1svg" role="img" aria-label="Chanfrein en V et temps d'arc par mètre pour le TIG manuel, l'électrode enrobée, le TIG fil chaud et le MAG"></svg>
+    <div class="readout" id="m1r"></div>
+    <p class="status" id="m1msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple.</b> V à 60° de 10 mm, talon de 1 mm, écartement de 1,5 mm : <span class="m">A ≈ 9² × tan 30° + 1,5 × 10 ≈ 62 mm²</span>, soit <span class="m">62 × 1 000 × 7,85 × 10<sup>−3</sup> ≈ 485 g</span> par mètre. À 0,4 kg/h, le TIG manuel demande <b>1,2 h d'arc par mètre</b> ; le MAG, à 3 kg/h, <b>10 minutes</b>. D'où la règle des tuyauteries épaisses : <b>racine en TIG</b>, qui garantit une pénétration régulière et un envers propre, puis remplissage à l'électrode enrobée, en MAG ou à l'arc submergé.</p>
+
+  <div class="warn"><b>⚠️ Piège : « le TIG, c'est pour la tôle mince ».</b> Il soude aussi le gros : racines de tuyauteries de 30 mm, TIG automatique en chanfrein étroit sur 100 mm de paroi. Son domaine est la <b>qualité</b> et la <b>maîtrise</b>, pas l'épaisseur.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « racine TIG, remplissage rapide »</b>.</div>
+  <div class="weld"><b>🔥 Où le TIG s'impose :</b> racines de tuyauteries sous pression et nucléaires, inox alimentaire et pharmaceutique, aluminium mince, titane et alliages de nickel, réparations fines d'outillages, tubes en orbital.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : la torche</summary>
+    <p>La torche porte une pince qui serre l'électrode et lui amène le courant, une buse en céramique qui dirige le gaz, et souvent un diffuseur (« lentille de gaz ») qui rend le jet laminaire et permet de sortir davantage l'électrode. Refroidie par le gaz jusqu'à environ 150 à 200 A, elle passe au refroidissement par eau au-delà. Le diamètre de buse suit la règle du cours 1 : environ 1 L/min de gaz par millimètre.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Électrode infusible : chaleur et métal d'apport indépendants.</li>
+      <li>Qualité, tous métaux, toutes positions ; mais 0,3 à 0,5 kg/h en manuel.</li>
+      <li>Racine en TIG, remplissage avec un procédé plus rapide.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c2">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">2</div>
+    <div class="c-title"><h2>Polarité, alternatif et pulsé</h2><p>Pénétrer ou décaper, et doser entre les deux</p></div>
+    <div class="c-img"><span class="ico">⚖️</span><span><small>Image à retenir</small>La balance : d'un côté la pénétration (électrode au −), de l'autre le décapage de l'alumine (électrode au +) ; l'alternatif carré règle le fléau</span></div>
+  </div>
+
+  <p>En TIG, la polarité décide de qui chauffe. Électrode au <b>−</b> (CC−) : le tungstène émet les électrons et reste froid, la pièce reçoit environ 70 % de la chaleur des pôles ; le bain est étroit et profond. Électrode au <b>+</b> (CC+) : c'est le tungstène qui chauffe, il ne tient qu'une dizaine de fois moins de courant ; mais la pièce, devenue cathode, est <b>décapée</b> : ses taches cathodiques cassent l'oxyde de surface. L'aluminium a besoin des deux : pénétrer et casser son alumine. D'où l'<b>alternatif</b>.</p>
+
+  <div class="def"><b>📖 Polarité, alternatif carré, balance.</b>
+    <ul>
+      <li><b>CC−</b> (polarité directe) : 70 % de la chaleur à la pièce, pénétration étroite et profonde, aucun nettoyage. Aciers, inox, cuivre, titane, nickel.</li>
+      <li><b>CC+</b> (polarité inverse) : 30 % à la pièce, électrode surchauffée ; presque inutilisé seul.</li>
+      <li><b>CA</b> : les alternances s'échangent ; en sinus, 50/50, avec une HF permanente pour rallumer l'arc à chaque passage par zéro. Les onduleurs délivrent un <b>créneau</b> dont on règle la <b>balance</b> (part du temps en électrode négative, souvent 65 à 80 %) et la <b>fréquence</b> (50 à 250 Hz environ).</li>
+    </ul>
+  </div>
+
+  <div class="fx"><div class="row big"><span>chaleur à la pièce ≈ 0,7·<span class="mat">b</span> + 0,3·(1 − <span class="mat">b</span>)</span></div><p class="cap">b : balance, part du temps en électrode négative (0,5 à 0,9). Modèle pédagogique, à partir du partage 70/30 de chaque polarité ; le décapage croît avec la part d'électrode positive, 1 − b.</p></div>
+
+  <div class="lab" id="m2">
+    <p class="lab-h">Manipulation 2 : la balance d'un TIG alternatif sur aluminium</p>
+    <p class="lab-sub">Règle la balance et la fréquence : vue de dessus, la bande décapée autour du cordon ; en coupe, la pénétration ; en haut, la pointe de l'électrode.<span class="predict">🔮 Prédis d'abord : en passant de 70 à 85 % d'électrode négative, la bande décapée s'élargit-elle ou rétrécit-elle ?</span></p>
+    <div class="btns" id="m2b">
+      <button class="btn" data-b="50" data-f="50" type="button">Sinus 50/50</button>
+      <button class="btn on" data-b="70" data-f="100" type="button">Créneau 70 %, 100 Hz</button>
+      <button class="btn" data-b="85" data-f="200" type="button">Créneau 85 %, 200 Hz</button>
+    </div>
+    <div class="ctrl"><label for="m2b2">Balance (électrode négative) <b class="mat">b</b></label><input type="range" id="m2b2" min="50" max="90" step="5" value="70"><output id="m2b2o"></output></div>
+    <div class="ctrl"><label for="m2f">Fréquence <b class="mat">f</b></label><input type="range" id="m2f" min="50" max="250" step="10" value="100"><output id="m2fo"></output></div>
+    <svg id="m2svg" role="img" aria-label="Pointe de l'électrode, bande décapée vue de dessus et pénétration en coupe selon la balance et la fréquence"></svg>
+    <div class="readout" id="m2r"></div>
+    <p class="status" id="m2msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> (modèle de la manipulation) : à 70 % d'électrode négative, la pièce reçoit <span class="m">0,7 × 0,7 + 0,3 × 0,3 = 58 %</span> de la chaleur des pôles ; à 85 %, <span class="m">0,7 × 0,85 + 0,3 × 0,15 = 64 %</span> : plus de pénétration, une électrode plus froide, mais une bande décapée plus étroite, à réserver aux tôles propres. Monter la fréquence resserre l'arc, qui pénètre plus et se dirige mieux dans un angle. Le <b>pulsé</b> s'ajoute à tout cela (Fondamentaux, cours 3) : un pic qui fond, une base qui laisse figer, pour souder en position ou sur tôle très mince.</p>
+
+  <div class="warn"><b>⚠️ Piège : chercher le décapage en continu.</b> En CC−, aucun nettoyage : l'alumine reste, le bain ne mouille pas. Le TIG de l'aluminium se fait en alternatif ; le CC− sous hélium pur reste une exception d'automatisme, sur pièces décapées.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « moins pénètre, plus nettoie »</b> : électrode au −, pénétration ; électrode au +, décapage.</div>
+  <div class="weld"><b>🔥 Régler un TIG aluminium :</b> on part de 70 à 75 % de balance et d'environ 100 Hz ; si l'alumine noircit le bain, on donne plus de positif ; si le tungstène fond en boule trop grosse, on rend du négatif.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : la redresse de l'alternatif sinusoïdal</summary>
+    <p>En sinus, l'alternance où la pièce d'aluminium est cathode s'amorce mal : l'alumine émet difficilement les électrons et le courant de cette alternance diminue. Le courant prend une composante continue, qui chauffe le transformateur : c'est l'effet de redresse. Les anciens postes y ajoutaient des condensateurs en série ; les onduleurs à créneau l'éliminent, et leurs passages par zéro, très rapides, dispensent souvent de la HF permanente.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>CC− : 70 % à la pièce, profond, sans nettoyage ; la règle hors aluminium.</li>
+      <li>CA : pénétration et décapage alternés ; la balance règle le partage.</li>
+      <li>Plus de fréquence : arc plus serré et plus pénétrant.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c3">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">3</div>
+    <div class="c-title"><h2>L'électrode de tungstène</h2><p>Nuances, couleurs, diamètre et affûtage</p></div>
+    <div class="c-img"><span class="ico">✏️</span><span><small>Image à retenir</small>La mine de crayon : sa dureté se lit à sa couleur, sa pointe se taille selon le trait voulu ; fine, elle étale ; obtuse, elle creuse</span></div>
+  </div>
+
+  <p>L'électrode n'est pas qu'un support de l'arc : elle en fixe la forme. Un tungstène pur émet mal à froid ; on lui ajoute quelques pour-cent d'oxydes (lanthane, cérium, zirconium, autrefois thorium) qui abaissent son travail de sortie : il amorce mieux, tient plus de courant et s'use moins. Sa <b>couleur</b>, peinte en bout, dit sa nuance. Son <b>diamètre</b> suit le courant. Sa <b>pointe</b>, enfin, est affûtée selon le bain voulu, ou arrondie en boule en alternatif.</p>
+
+  <div class="def"><b>📖 Nuances de l'ISO 6848:2015 et couleur du bout.</b>
+    <ul>
+      <li><b>WP</b>, tungstène pur : vert.</li>
+      <li><b>WCe20</b>, 2 % d'oxyde de cérium : gris.</li>
+      <li><b>WLa10</b>, <b>WLa15</b>, <b>WLa20</b>, 1, 1,5 et 2 % d'oxyde de lanthane : noir, or, bleu.</li>
+      <li><b>WTh10</b>, <b>WTh20</b>, <b>WTh30</b>, oxyde de thorium : jaune, rouge, violet.</li>
+      <li><b>WZr3</b>, <b>WZr8</b>, oxyde de zirconium : marron, blanc.</li>
+    </ul>
+    Le chiffre donne dix fois la teneur en oxyde. Le thorium, radioactif, expose surtout aux poussières d'affûtage : on le remplace par le lanthane ou le cérium.</div>
+
+  <div class="fx"><div class="row big"><span>angle d'affûtage ↗ ⇒ arc plus serré, bain plus profond et plus étroit</span></div><p class="cap">En courant continu électrode négative. Repères de diamètre : environ 2,4 mm pour 150 à 250 A en CC−, beaucoup moins en alternatif et dix fois moins en CC+. Le fabricant donne la plage de chaque nuance.</p></div>
+
+  <div class="lab" id="m3">
+    <p class="lab-h">Manipulation 3 : affûter l'électrode</p>
+    <p class="lab-sub">Règle l'angle de la pointe et la largeur du méplat : l'arc et la coupe du bain se redessinent, avec la durée de vie de la pointe.<span class="predict">🔮 Prédis d'abord : une pointe très fine (20°) donne-t-elle un bain plus profond qu'une pointe à 60° ?</span></p>
+    <div class="btns" id="m3b">
+      <button class="btn" data-ang="20" data-m="0" type="button">20°, pointe vive</button>
+      <button class="btn on" data-ang="45" data-m="0.2" type="button">45°, méplat 0,2 mm</button>
+      <button class="btn" data-ang="90" data-m="0.5" type="button">90°, méplat 0,5 mm</button>
+    </div>
+    <div class="ctrl"><label for="m3a">Angle de la pointe <b class="mat">α</b></label><input type="range" id="m3a" min="15" max="120" step="5" value="45"><output id="m3ao"></output></div>
+    <div class="ctrl"><label for="m3m">Méplat <b class="mat">m</b></label><input type="range" id="m3m" min="0" max="0.8" step="0.1" value="0.2"><output id="m3mo"></output></div>
+    <svg id="m3svg" role="img" aria-label="Pointe de l'électrode, forme de l'arc et coupe du bain selon l'angle et le méplat"></svg>
+    <div class="readout" id="m3r"></div>
+    <p class="status" id="m3msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>En pratique</b> (modèle de la manipulation, à courant égal) : une pointe très fine amorce facilement et convient aux faibles courants, mais son arc s'étale, le bain est large et peu profond, et la pointe fond vite. Un angle de 45 à 60° avec un petit méplat est le compromis courant ; au-delà, l'arc se resserre et creuse, utile en automatique. On meule <b>dans le sens de la longueur</b> de l'électrode : des stries en travers font errer l'arc. En alternatif, la pointe s'arrondit d'elle-même en boule : une boule à peine plus grosse que le diamètre est normale, une boule énorme signale trop de positif.</p>
+
+  <div class="warn"><b>⚠️ Piège : une électrode qui a touché le bain.</b> Elle est polluée : arc instable, inclusions de tungstène dans le cordon suivant. On casse la partie souillée et on réaffûte, toujours.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « vert pur, gris cérium, or-noir-bleu lanthane, rouge thorium »</b>.</div>
+  <div class="weld"><b>🔥 Affûter proprement :</b> meule réservée au tungstène, aspiration des poussières (surtout pour les anciennes thoriées), sens long, longueur de pointe d'environ deux à trois fois le diamètre. Une électrode bleuie en fin de soudure trahit un postgaz trop court.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : pourquoi les oxydes aident</summary>
+    <p>L'émission thermoïonique suit la loi de Richardson (Fondamentaux, cours 2) : à température égale, un travail de sortie plus faible multiplie le courant émis. Les oxydes de lanthane, de cérium ou de thorium, répartis dans le tungstène, migrent vers la pointe chaude et y abaissent le travail de sortie : la pointe émet à plus basse température, se déforme moins et garde sa forme plus longtemps. Le tungstène pur ou zirconié, qui forme une boule stable, reste réservé à l'alternatif.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>ISO 6848 : la couleur du bout dit la nuance ; WLa et WCe remplacent WTh.</li>
+      <li>Angle plus ouvert : arc plus serré, bain plus profond.</li>
+      <li>Affûtage dans le sens long ; électrode polluée, on casse et on réaffûte.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c4">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">4</div>
+    <div class="c-title"><h2>Régler le bain</h2><p>Courant, longueur d'arc, vitesse, apport et énergie</p></div>
+    <div class="c-img"><span class="ico">🍳</span><span><small>Image à retenir</small>La poêle et le beurre : le courant règle le feu, la vitesse le temps passé ; l'apport est le beurre qu'on ajoute au bord, jamais dans la flamme</span></div>
+  </div>
+
+  <p>Le soudeur TIG règle trois choses au poste et deux de la main. Au poste : le <b>courant</b>, qui commande la fusion et la pénétration ; le gaz et le débit ; les rampes de montée et d'évanouissement. De la main : la <b>longueur d'arc</b>, courte, de l'ordre du diamètre de l'électrode, qui fixe la tension ; la <b>vitesse</b> d'avance, et le geste d'apport, qui consiste à tremper la baguette au bord avant du bain, sans toucher l'électrode. Courant, tension et vitesse se résument en une énergie par millimètre.</p>
+
+  <div class="def"><b>📖 Énergie de soudage en TIG (EN 1011-1).</b> L'énergie de l'arc vaut E = U·I/v et l'énergie de soudage Q = k·E, avec <b>k = 0,6</b> pour le procédé 141 : une bonne part de la chaleur de l'arc rayonne ou part dans le gaz. Le courant va de 20 à 200 A environ en manuel ; la vitesse de 60 à 150 mm/min environ ; la tension de 10 à 15 V environ en argon. Le métal d'apport est de la même nuance que la pièce, ou surallié pour des raisons métallurgiques (aciers trempants, inox, hétérogènes).</div>
+
+  <div class="fx"><div class="row big"><span><span class="eps">Q</span> = 0,6 · U · I · 60/(1 000·<span class="mat">v</span>)</span></div><p class="cap">Q en kJ/mm ; U en V ; I en A ; v en mm/min (d'où le facteur 60). Avec v en mm/s : Q = 0,6·U·I/v × 10<sup>−3</sup>.</p></div>
+
+  <div class="lab" id="m4">
+    <p class="lab-h">Manipulation 4 : conduire le bain TIG</p>
+    <p class="lab-sub">Règle courant, longueur d'arc et vitesse sur une tôle d'acier inoxydable de 3 mm : la coupe du cordon et l'énergie se calculent.<span class="predict">🔮 Prédis d'abord : en divisant la vitesse par deux, l'énergie de soudage double-t-elle ?</span></p>
+    <div class="btns" id="m4b">
+      <button class="btn" data-i="80" data-l="2" data-v="100" type="button">Peu de courant : 80 A</button>
+      <button class="btn on" data-i="120" data-l="2" data-v="100" type="button">Pleine pénétration : 120 A</button>
+      <button class="btn" data-i="160" data-l="4" data-v="60" type="button">Trop chaud, arc long</button>
+    </div>
+    <div class="ctrl"><label for="m4i">Courant <b class="eps">I</b></label><input type="range" id="m4i" min="40" max="200" step="5" value="120"><output id="m4io"></output></div>
+    <div class="ctrl"><label for="m4l">Longueur d'arc <b class="mat">L</b></label><input type="range" id="m4l" min="1" max="6" step="0.5" value="2"><output id="m4lo"></output></div>
+    <div class="ctrl"><label for="m4v">Vitesse <b class="mat">v</b></label><input type="range" id="m4v" min="40" max="300" step="10" value="100"><output id="m4vo"></output></div>
+    <svg id="m4svg" role="img" aria-label="Coupe d'une tôle de 3 mm avec le cordon TIG, sa largeur, sa pénétration et l'énergie de soudage"></svg>
+    <div class="readout" id="m4r"></div>
+    <p class="status" id="m4msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple.</b> 120 A, arc de 2 mm (tension d'environ 11,6 V dans le modèle), 100 mm/min : <span class="m">Q = 0,6 × 11,6 × 120 × 60/(1 000 × 100) ≈ 0,50 kJ/mm</span>. À 50 mm/min, l'énergie double, la largeur et la zone affectée aussi, et le risque de percer augmente. Un arc plus long relève la tension, donc l'énergie, mais l'étale : le bain s'élargit sans pénétrer davantage, et la protection gazeuse s'éloigne.</p>
+
+  <div class="warn"><b>⚠️ Piège : apporter le fil dans l'arc.</b> La baguette fond en gouttes qui tombent, s'oxydent ou touchent l'électrode. On la trempe au bord avant du bain, sous la protection du gaz, et on ne la sort jamais de la cloche entre deux apports.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « arc court comme le diamètre »</b>, et « Q = 0,6·U·I/v ».</div>
+  <div class="weld"><b>🔥 Préparer pour le TIG :</b> tout doit être propre, car il n'y a pas de laitier pour épurer : dégraissage, brossage à la brosse inox réservée, décapage de l'alumine juste avant de souder. Les tolérances d'accostage sont serrées : de l'ordre de ±0,5 mm en manuel, ±0,2 mm en automatique.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : rampes, évanouissement, régulation de tension</summary>
+    <p>En fin de cordon, couper net laisse un cratère qui se fissure ou se creuse : on programme une <b>rampe d'évanouissement</b>, qui baisse le courant progressivement pendant que le bain se remplit. En automatique, la longueur d'arc est tenue par une régulation de tension d'arc, le système AVC : la torche monte ou descend pour garder la tension de consigne. Il compense le faux-rond d'un tube en orbital.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Le courant commande la pénétration ; la vitesse l'énergie par millimètre.</li>
+      <li>Q = 0,6·U·I/v : moitié moins vite, deux fois plus d'énergie.</li>
+      <li>Arc court, apport au bord avant du bain, pièces très propres.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c5">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">5</div>
+    <div class="c-title"><h2>Défauts et variantes</h2><p>Les défauts propres au TIG, et le TIG qui va plus vite</p></div>
+    <div class="c-img"><span class="ico">🔥</span><span><small>Image à retenir</small>Le fil qui arrive déjà chaud : l'arc n'a plus qu'à finir de le fondre, et le dépôt double ou triple</span></div>
+  </div>
+
+  <p>Le TIG produit peu de défauts, mais il a les siens. Une électrode qui touche le bain y laisse des <b>inclusions de tungstène</b>, très denses, nettes en radiographie et rédhibitoires. Une protection défaillante donne des <b>porosités</b> et, sur inox ou titane, un cordon <b>oxydé</b> aux couleurs de revenu. Un arc qui erre trahit une électrode mal affûtée, polluée, ou du soufflage. Contre sa lenteur, plusieurs variantes augmentent le dépôt ou la pénétration, presque toutes en automatique.</p>
+
+  <div class="def"><b>📖 Les variantes du TIG.</b>
+    <ul>
+      <li><b>TIG fil chaud</b> : le fil d'apport est préchauffé par effet Joule par une seconde source avant d'entrer dans le bain ; le dépôt est multiplié par deux à trois.</li>
+      <li><b>TIG en chanfrein étroit</b> : torche plate, chanfrein presque droit, pour les fortes épaisseurs (plus de 50 mm) ; moins de métal à déposer, moins de déformations.</li>
+      <li><b>A-TIG</b> : un flux actif étalé sur le joint resserre l'arc et inverse les mouvements du bain ; la pénétration augmente fortement en une passe.</li>
+      <li><b>TIG orbital</b> : la torche tourne autour d'un tube fixe, programmée par secteurs ; soudure répétable, conduite par un opérateur qualifié selon l'ISO 14732.</li>
+      <li><b>TIG multicathode</b>, <b>TIG par points</b>, <b>TIG fil fourré</b> (143, protection de l'envers par le flux du fil), et le <b>plasma</b> (cours 5).</li>
+    </ul>
+  </div>
+
+  <div class="fx"><div class="row big"><span><span class="eps">D</span> ≈ (P<sub>arc→fil</sub> + <span class="mat">R</span>·<span class="mat">I<sub>f</sub></span>²)/h<sub>f</sub></span></div><p class="cap">D : taux de dépôt (kg/s) ; P<sub>arc→fil</sub> : part de l'arc qui fond le fil (W) ; R·I<sub>f</sub>² : puissance de préchauffage du fil chaud (R résistance du fil sorti, I<sub>f</sub> courant de fil) ; h<sub>f</sub> : énergie pour chauffer et fondre l'acier, environ 1,35 MJ/kg.</p></div>
+
+  <div class="lab" id="m5">
+    <p class="lab-h">Manipulation 5 : le TIG fil chaud</p>
+    <p class="lab-sub">Arc de 200 A en automatique : règle le courant de préchauffage du fil et regarde le taux de dépôt et la vitesse de fil.<span class="predict">🔮 Prédis d'abord : avec 120 A de préchauffage, le dépôt double-t-il ?</span></p>
+    <div class="btns" id="m5b">
+      <button class="btn on" data-f="0" type="button">Fil froid</button>
+      <button class="btn" data-f="80" type="button">Fil chaud 80 A</button>
+      <button class="btn" data-f="140" type="button">Fil chaud 140 A</button>
+    </div>
+    <div class="ctrl"><label for="m5f">Courant de fil <b class="mat">I<sub>f</sub></b></label><input type="range" id="m5f" min="0" max="160" step="10" value="0"><output id="m5fo"></output></div>
+    <svg id="m5svg" role="img" aria-label="Torche TIG et fil chaud, puissance apportée au fil et taux de dépôt"></svg>
+    <div class="readout" id="m5r"></div>
+    <p class="status" id="m5msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> (modèle de la manipulation, fil d'acier de 1,2 mm, 30 mm sortis, R ≈ 0,032 Ω, arc de 200 A sous 12 V, un quart de la puissance utile de l'arc dans le fil) : fil froid, <span class="m">(0,25 × 0,6 × 200 × 12)/1,35 × 10<sup>6</sup> ≈ 2,7 × 10<sup>−4</sup> kg/s</span>, soit environ <b>1 kg/h</b> ; avec 120 A dans le fil, <span class="m">0,032 × 120² ≈ 460 W</span> s'ajoutent, et le dépôt passe à environ <b>2,2 kg/h</b>. Le fil chaud ne change pas l'énergie reçue par la pièce : il soude plus vite sans chauffer davantage le joint.</p>
+
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Défaut</th><th>Causes principales</th><th>Remède</th></tr></thead>
+    <tbody>
+      <tr><td>Inclusion de tungstène</td><td>électrode qui touche le bain ou le fil, courant trop fort pour le diamètre, amorçage par contact</td><td>amorçage HF ou lift-arc, diamètre adapté, réaffûtage</td></tr>
+      <tr><td>Porosités</td><td>protection défaillante (vent, débit, buse), pièces sales, gaz humide</td><td>cloche de gaz (cours 1), propreté</td></tr>
+      <tr><td>Oxydation, couleurs</td><td>postgaz court, envers non protégé (inox, titane)</td><td>postgaz, gaz d'envers, traînard pour le titane</td></tr>
+      <tr><td>Arc erratique</td><td>électrode polluée ou striée en travers, soufflage</td><td>réaffûtage dans le sens long, masse</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="warn"><b>⚠️ Piège : « le TIG orbital se passe de soudeur qualifié ».</b> Il remplace le geste du soudeur, pas la qualification : l'opérateur qui règle et conduit la machine se qualifie selon l'ISO 14732, et le mode opératoire selon l'ISO 15614-1.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « le tungstène dans le bain, c'est blanc sur le film »</b> : très dense, l'inclusion de tungstène apparaît claire en radiographie.</div>
+  <div class="weld"><b>🔥 Le titane :</b> au-delà d'environ 400 °C, il absorbe oxygène et azote et devient fragile ; un <b>traînard</b>, sorte de long diffuseur derrière la torche, protège le cordon jusqu'à ce qu'il refroidisse, et l'envers est purgé. Un cordon argenté est bon ; doré, à surveiller ; bleu ou gris, à refaire.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : l'effet Marangoni et l'A-TIG</summary>
+    <p>Le bain est brassé par la variation de sa tension superficielle avec la température. Dans un acier très pur, la tension superficielle baisse quand la température monte : le métal chaud du centre file vers les bords, et le bain est large et peu profond. Quelques dizaines de ppm de soufre ou d'oxygène inversent ce sens : le courant plonge au centre et creuse. Le flux de l'A-TIG apporte cet effet, et c'est aussi pourquoi deux coulées d'inox de même nuance peuvent pénétrer différemment.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Défauts propres : inclusions de tungstène, porosités, oxydation.</li>
+      <li>Fil chaud : dépôt doublé ou triplé, sans chauffer davantage la pièce.</li>
+      <li>Orbital : opérateur qualifié selon l'ISO 14732.</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="exos">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✎</div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Deux exercices : choisir le TIG pour une tuyauterie, puis régler un TIG alternatif sur aluminium</p></div>
+    <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de musculation : on ne progresse qu'en soulevant soi-même</span></div>
+  </div>
+  <p>Cherche chaque question sur papier avant d'ouvrir la correction : écris la relation, puis les valeurs (courants en A, vitesses en mm/min, énergies en kJ/mm, masses en kg). Le premier exercice se vérifie dans les manipulations 1 et 4 ; le second se rejoue dans la manipulation 2.</p>
+
+  <div class="exo">
+    <h4>Exercice 1 : une tuyauterie inox <span class="lvtag">★ application · chapitres 1, 3 et 4</span></h4>
+    <p>Une tuyauterie en 316L de 10 mm d'épaisseur, chanfrein en V à 60°, doit être soudée bout à bout, envers inaccessible.</p>
+    <p class="q"><b>a)</b> Avec le modèle de la manipulation 1, quelle masse déposer par mètre ? Combien de temps d'arc en TIG manuel (0,4 kg/h) et en MAG (3 kg/h) ?</p>
+    <p class="q"><b>b)</b> Quelle stratégie de procédés proposes-tu, et pourquoi ?</p>
+    <p class="q"><b>c)</b> Quelle électrode (nuance ISO 6848, couleur) et quelle polarité pour la racine ?</p>
+    <p class="q"><b>d)</b> La racine se fait à 100 A, 11 V, 80 mm/min. Quelle énergie de soudage ?</p>
+    <p class="q"><b>e)</b> Quel gaz à l'endroit et à l'envers ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">A ≈ (10 − 1)² × tan 30° + 1,5 × 10 ≈ 62 mm²</span> ; <span class="m">m ≈ 62 × 1 000 × 7,85 × 10<sup>−3</sup> ≈ 485 g/m</span>. TIG : <span class="m">0,485/0,4 ≈ 1,2 h</span> ; MAG : <span class="m">0,485/3 ≈ 0,16 h</span>, soit une dizaine de minutes.</p>
+      <p><b>b)</b> Racine en TIG, pour une pénétration régulière et un envers propre sur un joint inaccessible ; remplissage et finition en MAG, à l'électrode enrobée ou en fil fourré, sept fois plus rapides.</p>
+      <p><b>c)</b> Lanthanée ou cériée, par exemple <b>WLa15</b> (bout or) ou <b>WCe20</b> (gris), 2,4 mm, affûtée vers 45° avec un petit méplat ; <b>CC−</b>, pour pénétrer et garder le tungstène froid.</p>
+      <p><b>d)</b> <span class="m">Q = 0,6 × 11 × 100 × 60/(1 000 × 80) ≈ 0,50 kJ/mm</span>.</p>
+      <p><b>e)</b> Endroit : argon (<b>I1</b>), ou argon-hydrogène (R1). Envers : argon ou azote-hydrogène (le 316L n'est pas stabilisé au titane), purge jusqu'à une faible teneur en oxygène avant d'amorcer.</p>
+    </div></details>
+  </div>
+
+  <div class="exo defi">
+    <h4>Exercice 2 : un réservoir en aluminium <span class="lvtag">★★ synthèse · chapitres 2, 3 et 5 · manipulation 2</span></h4>
+    <p>Un réservoir en alliage d'aluminium de 4 mm est soudé en TIG manuel, avec un poste à onduleur à créneau.</p>
+    <p class="q"><b>a)</b> Pourquoi pas de courant continu électrode négative ?</p>
+    <p class="q"><b>b)</b> Le soudeur règle 70 % d'électrode négative. Quelle part de la chaleur des pôles va à la pièce (modèle du chapitre 2) ? Et à 85 % ?</p>
+    <p class="q"><b>c)</b> Le bain se couvre de peau noire et mouille mal. Quel réglage corriger, dans quel sens ?</p>
+    <p class="q"><b>d)</b> Quelle électrode et quelle forme de pointe ?</p>
+    <p class="q"><b>e)</b> Après une semaine, des porosités apparaissent. Quelles causes chercher ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> En CC−, aucun décapage : la couche d'alumine, qui fond vers 2 050 °C, reste sur le bain et l'empêche de mouiller. Il faut des alternances où la pièce est cathode.</p>
+      <p><b>b)</b> <span class="m">0,7 × 0,7 + 0,3 × 0,3 = 58 %</span> ; à 85 % : <span class="m">0,7 × 0,85 + 0,3 × 0,15 = 64 %</span>, plus de pénétration mais une bande décapée plus étroite.</p>
+      <p><b>c)</b> Le décapage manque : baisser la balance vers plus de temps en électrode positive (par exemple de 80 à 70 %), et vérifier la propreté (brossage de l'alumine juste avant de souder).</p>
+      <p><b>d)</b> Tungstène pur (<b>WP</b>, bout vert) ou zirconié (<b>WZr8</b>, blanc), ou lanthané en onduleur ; pointe arrondie en petite boule, à peine plus grosse que le diamètre.</p>
+      <p><b>e)</b> L'hydrogène (cours 1, loi de Sievert) : baguettes ou fil oxydés et humides, pièces mal dégraissées, condensation, gaz humide ou fuite ; puis la protection : débit, buse, courant d'air.</p>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="quiz-s">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">?</div>
+    <div class="c-title"><h2>Quiz : 12 questions éclair</h2><p>Chaque réponse est expliquée, même quand tu as juste</p></div>
+    <div class="c-img"><span class="ico">🎯</span><span><small>Image à retenir</small>La cible : vise 10 sur 12 avant le cours 3</span></div>
+  </div>
+  <div id="quiz"></div>
+  <div class="score" id="qzScore" aria-live="polite">Score : 0 / 12</div>
+  <div class="btns"><button class="btn" id="qzReset" type="button">↺ Recommencer le quiz</button></div>
+</div>
+</section>
+
+<section class="chap" id="fiche">
+<div class="wrap wide">
+  <div class="cartouche">
+    <div class="c-num">★</div>
+    <div class="c-title"><h2>Fiche mémoire du cours 2</h2><p>Neuf cases, neuf images : à photographier, puis à redessiner de tête</p></div>
+    <div class="c-img"><span class="ico">🖋️</span><span><small>Image à retenir</small>Le stylo-plume : une plume qui ne s'use pas et l'encre amenée à part ; un trait parfait, mais lent</span></div>
+  </div>
+  <div class="fiche">
+    <div><div class="ic">🖋️</div><h4>Le procédé</h4><div class="f">141 · 142 autogène · 143 fil fourré · 145 gaz réducteur</div><p>Électrode infusible, gaz inerte, apport indépendant : qualité, tous métaux, toutes positions.</p></div>
+    <div><div class="ic">🐢</div><h4>Sa limite</h4><div class="f">0,3 à 0,5 kg/h en manuel</div><p>10 mm en V : 1,2 h d'arc par mètre en TIG, 10 min en MAG. Racine TIG, remplissage rapide.</p></div>
+    <div><div class="ic">⚖️</div><h4>La polarité</h4><div class="f">CC− : 70 % pièce · CC+ : 30 % pièce</div><p>CC− pour les aciers, inox, cuivre, titane ; l'alternatif pour l'aluminium.</p></div>
+    <div><div class="ic">🎚️</div><h4>Le créneau</h4><div class="f">balance 65 à 80 % · 50 à 250 Hz</div><p>Plus de négatif : pénétration ; plus de positif : décapage. Plus de fréquence : arc serré.</p></div>
+    <div><div class="ic">✏️</div><h4>L'électrode</h4><div class="f">WP vert · WCe20 gris · WLa15 or · WTh20 rouge</div><p>Les oxydes facilitent l'émission ; le thorium, radioactif, est remplacé.</p></div>
+    <div><div class="ic">📐</div><h4>L'affûtage</h4><div class="f">45 à 60° + méplat · sens long</div><p>Angle ouvert : arc serré, bain profond. Pointe polluée : on casse et on réaffûte.</p></div>
+    <div><div class="ic">🍳</div><h4>L'énergie</h4><div class="f">Q = 0,6·U·I/v</div><p>100 A, 11 V, 80 mm/min : 0,50 kJ/mm. Arc court ; apport au bord avant du bain.</p></div>
+    <div><div class="ic">⚠️</div><h4>Les défauts</h4><div class="f">inclusions W · porosités · oxydation</div><p>Contact électrode-bain, protection, postgaz et envers ; arc erratique : électrode ou soufflage.</p></div>
+    <div><div class="ic">🔥</div><h4>Les variantes</h4><div class="f">fil chaud · chanfrein étroit · A-TIG · orbital</div><p>Dépôt ×2 à 3 ; fortes épaisseurs ; pénétration ; tubes, opérateur ISO 14732.</p></div>
+  </div>
+  <div class="btns"><button class="btn" id="printFiche" type="button">🖨 Imprimer la fiche mémoire</button></div>
+  <div class="fun"><span class="fun-h">✈️ Fun fact : né pour souder le magnésium des avions</span>Le TIG a été mis au point au début des années 1940 aux États-Unis pour souder le magnésium et l'aluminium de l'aéronautique : Russell Meredith, chez Northrop, en fait breveter le principe sous le nom de « Heliarc », car l'arc brûlait alors sous hélium (<a href="#c1">chapitre 1</a>). L'argon, moins cher, l'a remplacé ensuite comme gaz de base. (Sources : American Welding Society, histoire du soudage ; brevet US 2 274 631 de R. Meredith, 1942.)</div>
+</div>
+</section>
+
+<section class="chap" id="gloss">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">A–Z</div>
+    <div class="c-title"><h2>Glossaire</h2><p>Les mots, symboles et sigles de ce cours</p></div>
+    <div class="c-img"><span class="ico">📖</span><span><small>Image à retenir</small>Le dictionnaire : un mot flou, un clic</span></div>
+  </div>
+  <dl class="gloss">
+    <dt>A-TIG</dt><dd>TIG avec un flux actif étalé sur le joint, qui resserre l'arc et augmente la pénétration.</dd>
+    <dt>Balance</dt><dd>En alternatif carré, part du temps passé en électrode négative.</dd>
+    <dt>Décapage cathodique</dt><dd>Rupture de l'oxyde de surface (alumine) par les taches cathodiques quand la pièce est au pôle −.</dd>
+    <dt>Électrode infusible</dt><dd>Électrode qui ne fond pas pendant le soudage : le tungstène du TIG.</dd>
+    <dt>Fil chaud</dt><dd>Fil d'apport préchauffé par effet Joule avant d'entrer dans le bain, pour augmenter le dépôt.</dd>
+    <dt>ISO 6848</dt><dd>Norme des électrodes de tungstène : nuances (WP, WCe, WLa, WTh, WZr) et couleur du bout.</dd>
+    <dt>ISO 14732</dt><dd>Norme de qualification des opérateurs de soudage et des régleurs de machines (orbital, robots).</dd>
+    <dt>Lentille de gaz</dt><dd>Diffuseur de torche qui rend le jet de gaz laminaire.</dd>
+    <dt>Méplat</dt><dd>Petite surface plane laissée au bout d'une électrode affûtée, qui la rend plus durable.</dd>
+    <dt>Postgaz</dt><dd>Gaz qui continue de couler après l'extinction de l'arc, pour protéger le bain et l'électrode chauds.</dd>
+    <dt>Rampe d'évanouissement</dt><dd>Baisse progressive du courant en fin de cordon pour remplir le cratère.</dd>
+    <dt>TIG orbital</dt><dd>TIG automatique dont la torche tourne autour d'un tube fixe.</dd>
+    <dt>Traînard</dt><dd>Diffuseur placé derrière la torche pour protéger le cordon chaud (titane, zirconium).</dd>
+    <dt>Tungstène</dt><dd>Métal qui fond vers 3 400 °C, matériau de l'électrode TIG.</dd>
+  </dl>
+</div>
+</section>
+
+<section class="chap" id="check">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✓</div>
+    <div class="c-title"><h2>Suis-je prêt pour la suite ?</h2><p>Dix points à cocher de tête</p></div>
+    <div class="c-img"><span class="ico">🚦</span><span><small>Image à retenir</small>Le feu passe au vert quand tout est coché</span></div>
+  </div>
+  <p>Coche seulement ce que tu sais faire <b>sans regarder</b>. Tes coches restent enregistrées dans ce navigateur.</p>
+  <div class="check" id="checklist">
+    <label><input type="checkbox" data-c="1"> <span>Je sais décrire le procédé 141 et citer ses atouts (qualité, tous métaux, pas de projections) et ses limites (lenteur, faible taux de dépôt, vent).</span></label>
+    <label><input type="checkbox" data-c="2"> <span>Je sais expliquer pourquoi on fait souvent la racine en TIG et le remplissage avec un autre procédé.</span></label>
+    <label><input type="checkbox" data-c="3"> <span>Je sais donner le partage de la chaleur en CC−, en CC+ et en alternatif, et l'effet de chacun sur la pénétration et le nettoyage.</span></label>
+    <label><input type="checkbox" data-c="4"> <span>Je sais régler la balance et la fréquence d'un alternatif carré pour l'aluminium.</span></label>
+    <label><input type="checkbox" data-c="5"> <span>Je sais lire la désignation et la couleur d'une électrode selon l'ISO 6848 (WP, WCe20, WLa10, WLa15, WLa20, WTh20, WZr8).</span></label>
+    <label><input type="checkbox" data-c="6"> <span>Je sais pourquoi le tungstène thorié est remplacé, et comment affûter une électrode (angle, méplat, sens du meulage).</span></label>
+    <label><input type="checkbox" data-c="7"> <span>Je sais calculer l'énergie de soudage en TIG (k = 0,6) et prévoir l'effet du courant et de la vitesse sur le bain.</span></label>
+    <label><input type="checkbox" data-c="8"> <span>Je sais citer les défauts propres au TIG (inclusions de tungstène, porosités, oxydation) et leurs causes.</span></label>
+    <label><input type="checkbox" data-c="9"> <span>Je sais décrire le TIG fil chaud, le chanfrein étroit, l'A-TIG et le TIG orbital, et ce qu'ils apportent.</span></label>
+    <label><input type="checkbox" data-c="10"> <span>Je sais qu'un soudage orbital demande un opérateur qualifié selon l'ISO 14732.</span></label>
+  </div>
+  <p class="status" id="checkMsg"></p>
+
+  <div class="meta">🔭 <b>Au prochain épisode, cours 3 : MIG-MAG, le procédé et ses transferts.</b> Un fil fusible qui devient l'électrode, une source à tension constante, l'autorégulation, puis les régimes de transfert : court-circuit, globulaire, pulvérisation axiale, pulsé, et les transferts pilotés modernes.</div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="wrap">
+  <p>Cours 2 sur 5 de la série « Soudage sous protection gazeuse : TIG, MIG-MAG et plasma » (sujet 1.7 du planning et du référentiel de l'IIW ; il prépare aussi l'étude de cas TIG orbital). Vocabulaire aligné sur l'ISO 4063, l'ISO 6848, l'ISO 14175, l'EN 1011-1, l'ISO 14732 et le référentiel de l'IIW ; pour les notations et les conventions, l'enseignement de ta formation fait foi.</p>
+</div>
+</footer>
+<script>
+(function(){
+"use strict";
+const NS="http://www.w3.org/2000/svg";
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const RM=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function el(tag,attrs,parent){
+  const e=document.createElementNS(NS,tag);
+  if(attrs){for(const k in attrs){const v=attrs[k];if(v===undefined||v===null)continue;
+    if(typeof v==="string"&&v.indexOf("var(")>=0&&k!=="style")e.style.setProperty(k,v);else e.setAttribute(k,v);}}
+  if(parent)parent.appendChild(e);
+  return e;
+}
+function tx(p,x,y,str,attrs){const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);t.textContent=str;return t;}
+function txs(p,x,y,parts,attrs){/* parts: [["σ",""],["max","sub"],[" = 3",""]] */
+  const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);
+  parts.forEach(pt=>{const s=el("tspan",pt[1]==="sub"?{"font-size":"0.72em",dy:"3"}:(pt[2]?{dy:pt[2]}:{}),t);s.textContent=pt[0];
+    if(pt[1]==="sub"){const r=el("tspan",{dy:"-3"},t);r.textContent="\u200b";}});
+  return t;
+}
+function clear(svg){while(svg.firstChild)svg.removeChild(svg.firstChild);}
+function fitText(t,x0,x1,gap){/* garde un texte SVG entre x0 et x1 : il passe de l'autre côté de son repère (écart gap), sinon il glisse */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const a=t.getAttribute("text-anchor")||"start",x=+t.getAttribute("x");
+  if(gap&&a!=="middle"&&(b.x<x0||b.x+b.width>x1)){t.setAttribute("text-anchor",a==="end"?"start":"end");t.setAttribute("x",a==="end"?x+2*gap:x-2*gap);b=t.getBBox();}
+  const nx=+t.getAttribute("x");
+  if(b.x+b.width>x1)t.setAttribute("x",nx-(b.x+b.width-x1));else if(b.x<x0)t.setAttribute("x",nx+(x0-b.x));
+  return t;}
+function arrow(p,x1,y1,x2,y2,color,w,h){
+  w=w||2.4;h=h||10;
+  const g=el("g",{class:"arr"},p);g.style.color=color||"var(--ink)";
+  const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy);
+  if(L<1)return g;
+  const ux=dx/L,uy=dy/L,hh=Math.min(h,L*0.6),bx=x2-ux*hh,by=y2-uy*hh,hw=hh*0.45+w*0.3;
+  el("line",{x1:x1,y1:y1,x2:bx,y2:by,"stroke-width":w,"stroke-linecap":"round"},g);
+  el("polygon",{points:x2+","+y2+" "+(bx-uy*hw)+","+(by+ux*hw)+" "+(bx+uy*hw)+","+(by-ux*hw)},g);
+  return g;
+}
+function darrow(p,x,y1,y2,color,w){/* double flèche verticale */
+  const g=el("g",{},p);const m=(y1+y2)/2;
+  if(Math.abs(y2-y1)<4){el("line",{x1:x-5,y1:y1,x2:x+5,y2:y1,stroke:color,"stroke-width":2},g);return g;}
+  arrow(g,x,m,x,y1,color,w||2,8);arrow(g,x,m,x,y2,color,w||2,8);return g;
+}
+function nf(v,d){
+  if(d===undefined)d=1;
+  if(Math.abs(v)<0.5*Math.pow(10,-d))v=0;
+  return v.toLocaleString("fr-FR",{minimumFractionDigits:d,maximumFractionDigits:d}).replace("-","−").replace(/[\u202f\u2009]/g,"\u00a0");
+}
+const SUP={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function sci(v,d){
+  if(v===0)return "0";
+  if(!isFinite(v))return "∞";
+  let e=Math.floor(Math.log10(Math.abs(v)));
+  let m=v/Math.pow(10,e);
+  const dd=d===undefined?1:d;
+  if(Math.abs(Number(m.toFixed(dd)))>=10){m/=10;e+=1;}
+  return nf(m,dd)+" × 10"+String(e).split("").map(c=>SUP[c]).join("");
+}
+function bigN(v){/* nombre de cycles lisible */
+  if(!isFinite(v))return "∞";
+  if(v===0)return "0";
+  if(v<10)return nf(v,v<1?2:0);
+  if(v<1e5)return nf(Math.round(v),0);
+  return sci(v,1);
+}
+function dur(s){
+  if(!isFinite(s))return "∞";
+  if(s<60)return nf(s,s<10?1:0)+" s";
+  if(s<3600)return nf(s/60,0)+" min";
+  if(s<86400)return nf(s/3600,1)+" h";
+  if(s<86400*365)return nf(s/86400,1)+" jours";
+  return nf(s/(86400*365),1)+" ans";
+}
+function svgW(svg){const r=svg.getBoundingClientRect();return Math.max(290,Math.round(r.width||(svg.parentNode&&svg.parentNode.clientWidth)||600));}
+function setVB(svg,W,H){svg.setAttribute("viewBox","0 0 "+W+" "+H);}
+const redraws=[];
+let rzT=null,lastWW=window.innerWidth;
+window.addEventListener("resize",()=>{if(window.innerWidth===lastWW)return;lastWW=window.innerWidth;clearTimeout(rzT);rzT=setTimeout(()=>redraws.forEach(f=>{try{f();}catch(e){console.error(e);}}),120);});
+
+function niceStep(range,n){const raw=range/(n||5),p=Math.pow(10,Math.floor(Math.log10(raw))),m=raw/p;return (m<1.5?1:m<3?2:m<7?5:10)*p;}
+function setOn(sel,btn){$$(sel+" .btn").forEach(b=>b.classList.toggle("on",b===btn));}
+function fmtmm(mm){return mm<0.1?nf(mm*1000,0)+" µm":mm<10?nf(mm,mm<1?2:1)+" mm":nf(mm,0)+" mm";}
+function axes(svg,x0,x1,y0,y1,xmin,xmax,ymin,ymax,xlab,ylab,xstep,ystep,xfmt,yfmt){
+  const X=v=>x0+(x1-x0)*(v-xmin)/(xmax-xmin),Y=v=>y1-(y1-y0)*(v-ymin)/(ymax-ymin);
+  for(let v=Math.ceil(ymin/ystep-1e-9)*ystep;v<=ymax+1e-9;v+=ystep){el("line",{x1:x0,y1:Y(v),x2:x1,y2:Y(v),class:"gridbg"},svg);tx(svg,x0-5,Y(v)+4,yfmt?yfmt(v):nf(v,ystep<1?1:0),{class:"lbl","text-anchor":"end"});}
+  for(let v=Math.ceil(xmin/xstep-1e-9)*xstep;v<=xmax+1e-9;v+=xstep){el("line",{x1:X(v),y1:y1,x2:X(v),y2:y1+4,class:"tick"},svg);tx(svg,X(v),y1+17,xfmt?xfmt(v):nf(v,xstep<1?1:0),{class:"lbl","text-anchor":"middle"});}
+  el("line",{x1:x0,y1:y1,x2:x1,y2:y1,class:"axis"},svg);el("line",{x1:x0,y1:y0-4,x2:x0,y2:y1,class:"axis"},svg);
+  tx(svg,x0+4,y0-10,ylab,{class:"lbl"});tx(svg,x1,y1+32,xlab,{class:"lbl","text-anchor":"end"});
+  return {X:X,Y:Y};
+}
+function animate(btn,label,dur,onStep,onEnd){/* lecteur pilotable : ▶ lecture ou ⏸ pause, qui reprend où elle s'est arrêtée ; les boutons voisins ⏮ début, ◀ pas et pas ▶ (data-a) la mènent à la main ; un pas avance jusqu'à la prochaine image différente (20 pas au plus) */
+  const box=btn.parentNode,lab=btn.closest(".lab")||box,N=20;let raf=null,run=false,t=0;
+  const go=v=>{t=Math.max(0,Math.min(1,v));onStep(t);};
+  const snap=()=>{let s="";lab.querySelectorAll("svg,.readout,.status").forEach(e=>{s+=e.innerHTML;});return s;};
+  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;btn.textContent=label;}
+  function step(d){stop();const s0=snap();let k=Math.round(t*N);for(let i=0;i<N;i++){k+=d;if(k<0||k>N)break;go(k/N);if(snap()!==s0)break;}}
+  btn.addEventListener("click",()=>{if(run){stop();return;}if(t>=0.999)t=0;
+    if(RM){step(1);if(t>=1&&onEnd)onEnd();return;}
+    run=true;btn.textContent="⏸ Pause";const s0=performance.now()-t*dur;
+    const f=now=>{if(!run)return;go((now-s0)/dur);if(t>=1){stop();if(onEnd)onEnd();return;}raf=requestAnimationFrame(f);};raf=requestAnimationFrame(f);});
+  const pb=a=>box.querySelector('[data-a="'+a+'"]');
+  if(pb("start"))pb("start").addEventListener("click",()=>{stop();go(0);});
+  if(pb("back"))pb("back").addEventListener("click",()=>step(-1));
+  if(pb("fwd"))pb("fwd").addEventListener("click",()=>step(1));
+  /* un réglage fait à la main : la prochaine lecture repart du début */
+  lab.addEventListener("input",()=>{if(!run)t=0;});
+  lab.addEventListener("click",e=>{const b=e.target.closest("button");if(b&&b!==btn&&!b.dataset.a&&!run)t=0;});
+  return {stop:stop,running:()=>run};
+}
+function player(id,o){/* lecteur pilotable : ⏮ début, ◀ pas, ▶ lecture ou ⏸ pause (reprend où elle s'est arrêtée), pas ▶ ; o.get() et o.set(t) avec t de 0 à 1, o.dur (ms), o.steps */
+  const box=$("#"+id),bp=box.querySelector('[data-a="play"]'),lab=bp.textContent,n=o.steps||20;let raf=null,run=false;
+  const cl=t=>Math.max(0,Math.min(1,t));
+  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;bp.textContent=lab;}
+  function step(d){stop();o.set(cl(Math.round(o.get()*n+d)/n));}
+  bp.addEventListener("click",()=>{if(run){stop();return;}let t0=o.get();if(t0>=0.999)t0=0;
+    if(RM){o.set(cl(Math.round(t0*n+1)/n));return;}
+    run=true;bp.textContent="⏸ Pause";const s0=performance.now()-t0*o.dur;
+    const f=now=>{if(!run)return;const t=cl((now-s0)/o.dur);o.set(t);if(t>=1){stop();return;}raf=requestAnimationFrame(f);};raf=requestAnimationFrame(f);});
+  box.querySelector('[data-a="start"]').addEventListener("click",()=>{stop();o.set(0);});
+  box.querySelector('[data-a="back"]').addEventListener("click",()=>step(-1));
+  box.querySelector('[data-a="fwd"]').addEventListener("click",()=>step(1));
+  return {stop:stop};
+}
+
+
+function sig2(v){/* arrondi à deux chiffres significatifs */
+  if(v<=0)return 0;const p=Math.pow(10,Math.floor(Math.log10(v))-1);return Math.round(v/p)*p;}
+function halo(t,svg){/* liseré de fond, puis passage au premier plan */
+  t.setAttribute("paint-order","stroke");t.style.setProperty("stroke","var(--card)");t.setAttribute("stroke-width","4");t.setAttribute("stroke-linejoin","round");if(svg)svg.appendChild(t);return t;}
+function plate(t,svg){/* fond plein derrière une étiquette */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const r=el("rect",{x:b.x-3,y:b.y-1,width:b.width+6,height:b.height+2,fill:"var(--card)",opacity:.92,rx:2});svg.appendChild(r);svg.appendChild(t);return t;}
+function le(n,f){return /^[aeiouyhéèâî]/i.test(n)?"l'"+n:(f?"la ":"le ")+n;}
+function du(n,f){return /^[aeiouyhéèâî]/i.test(n)?"de l'"+n:(f?"de la ":"du ")+n;}
+function fmtG(v){return nf(v,v<0.1?3:2)+" N/m";}
+function fmtPa(p){return p<1000?nf(p,0)+" Pa":p<1e5?nf(p/1000,1)+" kPa":nf(p/1e5,2)+" bar";}
+function fmtLen(m){/* m en mètres */
+  const mm=m*1000;if(mm<1)return nf(mm*1000,0)+" µm";if(mm<10)return nf(mm,1)+" mm";if(mm<1000)return nf(mm,0)+" mm";return nf(m,1)+" m";}
+function fmtT(s){if(!isFinite(s))return "∞";if(s<0.01)return nf(s*1000,1)+" ms";if(s<1)return nf(s,3)+" s";if(s<60)return nf(s,s<10?1:0)+" s";return nf(s/60,s<600?1:0)+" min";}
+
+function spread(items,gap,ymin,ymax){/* écarte verticalement des étiquettes {y} triées */
+  items.sort((a,b)=>a.y-b.y);
+  for(let i=1;i<items.length;i++)if(items[i].y-items[i-1].y<gap)items[i].y=items[i-1].y+gap;
+  if(items.length&&items[items.length-1].y>ymax){items[items.length-1].y=ymax;for(let i=items.length-2;i>=0;i--)if(items[i+1].y-items[i].y<gap)items[i].y=items[i+1].y-gap;}
+  if(items.length&&items[0].y<ymin){items[0].y=ymin;for(let i=1;i<items.length;i++)if(items[i].y-items[i-1].y<gap)items[i].y=items[i-1].y+gap;}
+  return items;}
+function declutter(ts,ymin,ymax){/* décale verticalement les textes qui se chevauchent */
+  const box=t=>{try{return t.getBBox();}catch(e){return null;}};
+  for(let i=1;i<ts.length;i++){const ti=ts[i];if(!ti)continue;
+    for(let pass=0;pass<6;pass++){const bi=box(ti);if(!bi)break;let moved=false;
+      for(let j=0;j<i;j++){const bj=ts[j]&&box(ts[j]);if(!bj)continue;
+        const ix=Math.min(bi.x+bi.width,bj.x+bj.width)-Math.max(bi.x,bj.x),iy=Math.min(bi.y+bi.height,bj.y+bj.height)-Math.max(bi.y,bj.y);
+        if(ix>1&&iy>1){let dy=(bi.y+bi.height/2>=bj.y+bj.height/2)?(bj.y+bj.height-bi.y+1):-(bi.y+bi.height-bj.y+1);
+          if(bi.y+dy<ymin||bi.y+bi.height+dy>ymax)dy=dy>0?-(bi.y+bi.height-bj.y+1):(bj.y+bj.height-bi.y+1);
+          ti.setAttribute("y",+ti.getAttribute("y")+dy);moved=true;break;}}
+      if(!moved)break;}}
+  return ts;}
+const SUPD={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function p10(e){return "10"+String(e).split("").map(c=>SUPD[c]||c).join("");}
+function fmtP(p){/* pression en Pa, lisible */
+  if(p>=1e5)return nf(p/1e5,1)+" bar";if(p>=1000)return nf(p/1000,p<1e4?1:0)+" kPa";if(p>=1)return nf(p,p<10?1:0)+" Pa";return sci(p,1)+" Pa";}
+
+
+
+function rng(seed){/* générateur pseudo-aléatoire reproductible */
+  let a=seed>>>0;return ()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296;};}
+
+
+/* =========================================================
+   Outils communs de la série : formats, couleurs, grains, nuances, modèles
+   ========================================================= */
+const NB=String.fromCharCode(160);
+const nbsp=s=>s.replace(/(\d) (%|°C|mm|µm|nm|MPa|HV|s|ppm|h|J)(?=[\s.,;:)<·/]|$)/g,"$1"+NB+"$2");
+function fitSize(t,maxW,min){/* réduit la police d'un texte SVG trop large (style en ligne, prioritaire sur la feuille de style) */
+  let b;try{b=t.getBBox();}catch(e){return t;}let fs=parseFloat(getComputedStyle(t).fontSize)||13;
+  while(b.width>maxW&&fs>(min||9)){fs-=0.5;t.style.fontSize=fs+"px";b=t.getBBox();}return t;}
+const pts=P=>P.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join(" ");
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const mixc=(c,p,b)=>"color-mix(in srgb,"+c+" "+p+"%,"+(b||"var(--card)")+")";
+const COL={liq:mixc("var(--sig)",24),gam:mixc("var(--gam)",24),alp:mixc("var(--eps)",15),mart:"color-mix(in srgb,var(--eps) 50%,var(--tau))",
+  bain:mixc("var(--gam)",52),fp:mixc("var(--eps)",13),film:mixc("var(--tau)",72)};
+function frame(svg,R){el("rect",{x:R.x0,y:R.y0,width:R.x1-R.x0,height:R.y1-R.y0,fill:"none",stroke:"var(--ink)","stroke-width":1.2},svg);}
+function clipG(svg,id,R){const cp=el("clipPath",{id:id},el("defs",null,svg));el("rect",{x:R.x0,y:R.y0,width:R.x1-R.x0,height:R.y1-R.y0},cp);return el("g",{"clip-path":"url(#"+id+")"},svg);}
+function voronoi(seeds,x0,y0,x1,y1,rmax){/* cellules polygonales ; rmax : distance au-delà de laquelle un voisin est ignoré */
+  const box=[[x0,y0],[x1,y0],[x1,y1],[x0,y1]],r2=rmax?rmax*rmax:Infinity;
+  return seeds.map((s,i)=>{let P=box.slice();
+    for(let j=0;j<seeds.length&&P.length;j++){if(i===j)continue;const q=seeds[j],dx=q[0]-s[0],dy=q[1]-s[1];if(dx*dx+dy*dy>r2)continue;
+      const mx=(s[0]+q[0])/2,my=(s[1]+q[1])/2,out=[];
+      for(let k=0;k<P.length;k++){const a=P[k],b=P[(k+1)%P.length],sa=(a[0]-mx)*dx+(a[1]-my)*dy,sb=(b[0]-mx)*dx+(b[1]-my)*dy;if(sa<=0)out.push(a);
+        if((sa<0&&sb>0)||(sa>0&&sb<0)){const t=sa/(sa-sb);out.push([a[0]+t*(b[0]-a[0]),a[1]+t*(b[1]-a[1])]);}}
+      P=out;}
+    return P;});
+}
+function seedsGrid(x0,y0,x1,y1,s,seed){const r=rng(seed),o=[];for(let y=y0+s/2;y<y1+s/2;y+=s*0.87)for(let x=x0+s/2+((Math.round((y-y0)/(s*0.87))%2)?s/2:0);x<x1+s/2;x+=s)o.push([x+(r()-0.5)*s*0.6,Math.min(y1-1,y+(r()-0.5)*s*0.5)]);return o;}
+function legend(svg,x,y,items,xmax){/* items : [couleur, texte, "o" pour un rond] ; passe à la ligne ; renvoie le bas de la légende */
+  let lx=x,ly=y;
+  items.forEach(q=>{const t=tx(svg,x,y+9.5,q[1],{class:"lbl"});let w=70;try{w=t.getBBox().width;}catch(e){}
+    if(lx>x&&lx+14+w>xmax){lx=x;ly+=16;}
+    t.setAttribute("x",lx+14);t.setAttribute("y",ly+9.5);
+    if(q[2]==="o")el("circle",{cx:lx+5,cy:ly+5,r:4.5,fill:q[0],stroke:"var(--ink)","stroke-width":0.7},svg);
+    else el("rect",{x:lx,y:ly,width:10,height:10,fill:q[0],stroke:"var(--ink)","stroke-width":0.7},svg);
+    lx+=14+w+12;});
+  return ly+12;}
+/* =========================================================
+   M1 : combien de temps pour remplir un V ? (taux de dépôt)
+   ========================================================= */
+(function(){
+  const svg=$("#m1svg");if(!svg)return;
+  const sT=$("#m1t"),ro=$("#m1r"),msg=$("#m1msg");
+  const PR=[["TIG manuel",0.4,"var(--eps)"],["Électrode 111",1.2,"var(--muted)"],["TIG fil chaud",2.0,"var(--gam)"],["MAG 135",3.0,"var(--mat)"]];
+  const sec=t=>Math.pow(Math.max(0,t-1),2)*Math.tan(Math.PI/6)+1.5*t;
+  const fh=h=>h>=1?nf(Math.floor(h),0)+" h "+String(Math.round((h%1)*60)).padStart(2,"0"):nf(h*60,0)+" min";
+  function draw(){
+    const W=svgW(svg),n=W<560,t=+sT.value,A=sec(t),m=A*7.85e-3;clear(svg);
+    $("#m1to").textContent=nf(t,0)+NB+"mm";
+    setOn("#m1b",$$("#m1b .btn").find(b=>+b.dataset.t===t)||null);
+    /* chanfrein à l'échelle */
+    const pw=n?W-20:W*0.42,k=Math.min((pw-20)/(2*t*Math.tan(Math.PI/6)+1.5+24),110/Math.max(t,4)),cx=10+pw/2,y0=26,y1=y0+t*k;
+    const half=(t-1)*Math.tan(Math.PI/6)*k,g=0.75*k;
+    el("polygon",{points:[[10,y0],[cx-g-half,y0],[cx-g,y1-k],[cx-g,y1],[10,y1]].map(a=>a.join(",")).join(" "),fill:mixc("var(--muted)",25),stroke:"var(--ink)","stroke-width":1.2},svg);
+    el("polygon",{points:[[pw+10,y0],[cx+g+half,y0],[cx+g,y1-k],[cx+g,y1],[pw+10,y1]].map(a=>a.join(",")).join(" "),fill:mixc("var(--muted)",25),stroke:"var(--ink)","stroke-width":1.2},svg);
+    el("polygon",{points:[[cx-g-half,y0],[cx+g+half,y0],[cx+g,y1-k],[cx+g,y1],[cx-g,y1],[cx-g,y1-k]].map(a=>a.join(",")).join(" "),fill:mixc("var(--weld)",60),stroke:"none"},svg);
+    {const tt=tx(svg,cx,y1+16,"V à 60° · "+nf(t,0)+" mm · "+nf(A,0)+" mm²",{class:"lbl","text-anchor":"middle"});tt.style.fontSize="11px";fitSize(tt,pw,7);}
+    /* temps d'arc */
+    const bx0=n?16:W*0.5,bx1=W-16,by0=n?y1+46:30,bh=n?22:26,tmax=m/0.4;
+    PR.forEach((p,i)=>{const y=by0+i*(bh+16),h=m/p[1];
+      const lt=tx(svg,bx0,y-3,p[0]+" ("+nf(p[1],1)+" kg/h)",{class:"lbl"});lt.style.fontSize="11px";
+      el("rect",{x:bx0,y:y,width:Math.max(2,(bx1-bx0-60)*h/tmax),height:bh-10,fill:p[2]},svg);
+      const v=tx(svg,bx0+Math.max(2,(bx1-bx0-60)*h/tmax)+6,y+bh-12,fh(h),{class:"lbl","font-weight":"700"});v.style.fontSize="11px";});
+    setVB(svg,W,Math.max(y1+26,by0+4*(bh+16)));
+    ro.innerHTML=nbsp("<span>section ≈ "+nf(A,0)+" mm²</span><span>"+nf(m*1000,0)+" g/m</span><span>TIG : <b class='eps'>"+fh(m/0.4)+"</b>/m</span><span>MAG : "+fh(m/3)+"/m</span>");
+    let s=t<=4?"Sur "+nf(t,0)+" mm, il y a peu à remplir : le TIG reste rapide, et sa qualité l'emporte.":"À "+nf(t,0)+" mm, il faut "+nf(m*1000,0)+" g de métal par mètre : "+fh(m/0.4)+" d'arc en TIG manuel contre "+fh(m/3)+" en MAG, sept fois et demie moins. La racine en TIG, le remplissage avec un procédé rapide.";
+    msg.innerHTML=nbsp(s)+"<br><b>À retenir :</b> la section croît comme le carré de l'épaisseur ; le TIG fait la racine.";
+  }
+  $$("#m1b .btn").forEach(b=>b.addEventListener("click",()=>{sT.value=b.dataset.t;draw();}));
+  sT.addEventListener("input",draw);
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M2 : la balance d'un TIG alternatif sur aluminium
+   ========================================================= */
+(function(){
+  const svg=$("#m2svg");if(!svg)return;
+  const sB=$("#m2b2"),sF=$("#m2f"),ro=$("#m2r"),msg=$("#m2msg");
+  function draw(){
+    const W=svgW(svg),n=W<560,b=+sB.value/100,f=+sF.value,heat=0.7*b+0.3*(1-b),clean=1-b,narrow=0.75+0.25*(250-f)/200;clear(svg);
+    $("#m2b2o").textContent=nf(100*b,0)+NB+"%";$("#m2fo").textContent=nf(f,0)+NB+"Hz";
+    setOn("#m2b",$$("#m2b .btn").find(x=>+x.dataset.b===100*b&&+x.dataset.f===f)||null);
+    const c1=n?W*0.2:W*0.14,c2=n?W*0.62:W*0.45,c3=W*0.8;
+    /* électrode et boule */
+    el("rect",{x:c1-7,y:12,width:14,height:56,fill:mixc("var(--muted)",45),stroke:"var(--ink)","stroke-width":1.2},svg);
+    const rb=7+16*clean;el("circle",{cx:c1,cy:68+rb*0.55,r:rb,fill:mixc("var(--sig)",20+60*clean),stroke:"var(--ink)","stroke-width":1.2},svg);
+    {const t=tx(svg,c1,68+rb*1.6+16,"pointe",{class:"lbl","text-anchor":"middle"});t.style.fontSize="11px";}
+    /* vue de dessus */
+    const tw=n?W*0.34:W*0.24,ty=16,th=90,bw=18*narrow+6*heat;
+    el("rect",{x:c2-tw/2,y:ty,width:tw,height:th,fill:mixc("var(--muted)",28),stroke:"var(--ink)"},svg);
+    const cw=bw+60*clean*(n?0.6:1);
+    el("rect",{x:c2-cw/2,y:ty,width:cw,height:th,fill:"var(--card)",stroke:"none"},svg);
+    el("rect",{x:c2-bw/2,y:ty,width:bw,height:th,fill:mixc("var(--weld)",65)},svg);
+    {const t=tx(svg,c2,ty+th+16,"dessus : bande décapée",{class:"lbl","text-anchor":"middle"});t.style.fontSize="11px";fitSize(t,tw+20,7);}
+    /* coupe */
+    const yc=n?ty+th+40:ty+16,cw2=n?W*0.6:W*0.3,cx=n?W/2:c3,pd=10+40*(heat-0.5)/0.14*0.5*narrow+6,pw=(26+10*heat)*(1.15-0.3*(1-narrow));
+    el("rect",{x:cx-cw2/2,y:yc,width:cw2,height:50,fill:mixc("var(--muted)",22),stroke:"var(--ink)"},svg);
+    el("path",{d:"M"+(cx-pw)+" "+yc+" Q "+cx+" "+(yc+2*Math.min(46,pd))+" "+(cx+pw)+" "+yc+" Z",fill:mixc("var(--weld)",70),stroke:"var(--ink)"},svg);
+    {const t=tx(svg,cx,yc+66,"coupe : pénétration",{class:"lbl","text-anchor":"middle"});t.style.fontSize="11px";}
+    if(!n){/* déplacer la coupe à droite en large */}
+    setVB(svg,W,Math.max(yc+74,ty+th+24,68+2*(7+16*clean)+30));
+    ro.innerHTML=nbsp("<span>électrode − : "+nf(100*b,0)+" %</span><span>chaleur à la pièce <b class='eps'>"+nf(100*heat,0)+" %</b></span><span>décapage "+(clean>=0.4?"fort":clean>=0.25?"moyen":"faible")+"</span><span>"+nf(f,0)+" Hz</span>");
+    let s;
+    if(b<=0.55)s="Presque 50/50 : décapage maximal, mais la pièce ne reçoit que la moitié de la chaleur des pôles et le tungstène chauffe, en grosse boule. Utile sur un aluminium très oxydé.";
+    else if(b<=0.8)s="Compromis courant : "+nf(100*heat,0)+" % de la chaleur des pôles à la pièce, une bande décapée nette autour du cordon, une pointe en petite boule.";
+    else s="Beaucoup d'électrode négative : la pénétration monte ("+nf(100*heat,0)+" %), le tungstène reste froid, mais la bande décapée se réduit : pièces propres seulement.";
+    s+=f>=150?" À "+nf(f,0)+" Hz, l'arc se resserre et pénètre davantage.":" À "+nf(f,0)+" Hz, l'arc reste large et doux.";
+    msg.innerHTML=nbsp(s)+"<br><b>À retenir :</b> plus de négatif pénètre, plus de positif décape.";
+  }
+  $$("#m2b .btn").forEach(x=>x.addEventListener("click",()=>{sB.value=x.dataset.b;sF.value=x.dataset.f;draw();}));
+  [sB,sF].forEach(x=>x.addEventListener("input",draw));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M3 : affûter l'électrode (angle, méplat)
+   ========================================================= */
+(function(){
+  const svg=$("#m3svg");if(!svg)return;
+  const sA=$("#m3a"),sM=$("#m3m"),ro=$("#m3r"),msg=$("#m3msg");
+  function draw(){
+    const W=svgW(svg),n=W<560,a=+sA.value,mm=+sM.value;clear(svg);
+    $("#m3ao").textContent=nf(a,0)+NB+"°";$("#m3mo").textContent=nf(mm,1)+NB+"mm";
+    setOn("#m3b",$$("#m3b .btn").find(b=>+b.dataset.ang===a&&+b.dataset.m===mm)||null);
+    const spread=1.5-0.0075*a-0.25*mm,depth=1/spread,life=(a/45)*(1+1.5*mm);
+    const cx=n?W/2:W*0.3,D=n?22:26,yt=60,L=(D/2)/Math.tan(a*Math.PI/360),flat=Math.min(D/2-1,mm*D/2.4);
+    const ytip=yt+Math.max(4,L-(flat/(D/2))*L);
+    el("polygon",{points:[[cx-D/2,6],[cx+D/2,6],[cx+D/2,yt],[cx+flat,ytip],[cx-flat,ytip],[cx-D/2,yt]].map(p=>p.map(v=>v.toFixed(1)).join(",")).join(" "),fill:mixc("var(--muted)",45),stroke:"var(--ink)","stroke-width":1.2},svg);
+    const yp=ytip+44,wa=(14+40*spread)*(n?0.9:1);
+    [1,0.6].forEach((s,i)=>el("path",{d:"M"+(cx-flat-2)+" "+ytip+" Q "+(cx-wa*s*0.6)+" "+(yp-12)+" "+(cx-wa*s)+" "+yp+" L "+(cx+wa*s)+" "+yp+" Q "+(cx+wa*s*0.6)+" "+(yp-12)+" "+(cx+flat+2)+" "+ytip+" Z",fill:"var(--gam)","fill-opacity":0.18+0.18*i},svg));
+    el("rect",{x:cx-(n?120:140),y:yp,width:(n?240:280),height:56,fill:mixc("var(--muted)",22),stroke:"var(--ink)"},svg);
+    const bw=(20+34*spread)*(n?0.9:1),bd=Math.min(50,18*depth);
+    el("path",{d:"M"+(cx-bw)+" "+yp+" Q "+cx+" "+(yp+2*bd)+" "+(cx+bw)+" "+yp+" Z",fill:mixc("var(--weld)",70),stroke:"var(--ink)"},svg);
+    {const t=tx(svg,cx,yp+72,"coupe du bain",{class:"lbl","text-anchor":"middle"});t.style.fontSize="11px";}
+    /* jauges */
+    const gx0=n?16:W*0.62,gx1=W-16,gy=n?yp+96:40,G=[["profondeur / largeur",bd/(2*bw),0.8,"var(--eps)"],["durée de vie de la pointe",life,4,"var(--mat)"]];
+    G.forEach((g,i)=>{const y=gy+i*44;const t=tx(svg,gx0,y-5,g[0]+" : "+nf(g[1],2),{class:"lbl"});t.style.fontSize="11px";
+      el("rect",{x:gx0,y:y,width:gx1-gx0,height:14,fill:mixc("var(--muted)",15),stroke:"var(--line)"},svg);
+      el("rect",{x:gx0,y:y,width:(gx1-gx0)*Math.min(1,g[1]/g[2]),height:14,fill:g[3]},svg);});
+    setVB(svg,W,n?gy+90:yp+80);
+    ro.innerHTML=nbsp("<span>angle "+nf(a,0)+"° · méplat "+nf(mm,1)+" mm</span><span>p/l ≈ <b class='eps'>"+nf(bd/(2*bw),2)+"</b></span><span>pointe ×"+nf(life,1)+"</span>");
+    let s;
+    if(a<=25)s="Pointe très fine : l'arc s'amorce facilement et convient aux faibles courants, mais il s'étale, le bain est large et peu profond, et la pointe fond vite.";
+    else if(a<=70)s="Compromis courant (45 à 60°) : arc assez serré, pénétration correcte ; un petit méplat évite que la pointe ne fonde et ne tombe dans le bain.";
+    else s="Angle très ouvert : arc serré, bain étroit et profond, pointe durable ; amorçage un peu moins facile. Apprécié en automatique.";
+    msg.innerHTML=nbsp(s)+"<br><b>À retenir :</b> angle ouvert, arc serré et bain profond ; méplat, pointe durable.";
+  }
+  $$("#m3b .btn").forEach(b=>b.addEventListener("click",()=>{sA.value=b.dataset.ang;sM.value=b.dataset.m;draw();}));
+  [sA,sM].forEach(x=>x.addEventListener("input",draw));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M4 : conduire le bain TIG (courant, longueur d'arc, vitesse)
+   ========================================================= */
+(function(){
+  const svg=$("#m4svg");if(!svg)return;
+  const sI=$("#m4i"),sL=$("#m4l"),sV=$("#m4v"),ro=$("#m4r"),msg=$("#m4msg");
+  const T=3;
+  function draw(){
+    const W=svgW(svg),n=W<560,I=+sI.value,L=+sL.value,v=+sV.value;clear(svg);
+    $("#m4io").textContent=nf(I,0)+NB+"A";$("#m4lo").textContent=nf(L,1)+NB+"mm";$("#m4vo").textContent=nf(v,0)+NB+"mm/min";
+    setOn("#m4b",$$("#m4b .btn").find(b=>+b.dataset.i===I&&+b.dataset.l===L&&+b.dataset.v===v)||null);
+    const U=7.2+1.0*L+0.02*I,Q=0.6*U*I*60/(1000*v),p=Math.max(0.2,0.03*(I-20)*Math.pow(100/v,0.4)*(1-0.07*(L-2))),w=3+6*Math.pow(Q,0.6)*(1+0.1*(L-2));
+    const k=n?(W-40)/24:Math.min(26,(W*0.6)/24),cx=n?W/2:W*0.34,y0=34,th=T*k;
+    el("rect",{x:cx-11*k,y:y0,width:22*k,height:th,fill:mixc("var(--muted)",25),stroke:"var(--ink)","stroke-width":1.2},svg);
+    const pd=Math.min(p,T*1.35),hw=w/2*k;
+    if(p>=T){el("path",{d:"M"+(cx-hw)+" "+y0+" Q "+(cx-hw*0.7)+" "+(y0+th)+" "+(cx-hw*0.45)+" "+(y0+th)+" L "+(cx+hw*0.45)+" "+(y0+th)+" Q "+(cx+hw*0.7)+" "+(y0+th)+" "+(cx+hw)+" "+y0+" Q "+cx+" "+(y0-6)+" "+(cx-hw)+" "+y0+" Z",fill:mixc("var(--weld)",70),stroke:"var(--ink)"},svg);
+      if(p>T*1.25){el("path",{d:"M"+(cx-hw*0.4)+" "+(y0+th)+" Q "+cx+" "+(y0+th+0.9*k)+" "+(cx+hw*0.4)+" "+(y0+th),fill:mixc("var(--tau)",50),stroke:"var(--tau)"},svg);}}
+    else el("path",{d:"M"+(cx-hw)+" "+y0+" Q "+cx+" "+(y0+2*pd*k)+" "+(cx+hw)+" "+y0+" Q "+cx+" "+(y0-6)+" "+(cx-hw)+" "+y0+" Z",fill:mixc("var(--weld)",70),stroke:"var(--ink)"},svg);
+    darrow(svg,cx+11*k+10,y0,y0+th,"var(--ink)",1);
+    {const t=tx(svg,cx+11*k+16,y0+th/2+4,"3 mm",{class:"lbl"});t.style.fontSize="11px";fitText(t,0,W-4);}
+    {const t=tx(svg,cx,y0-12,"largeur "+nf(w,1)+" mm",{class:"lbl","text-anchor":"middle"});t.style.fontSize="11px";}
+    /* jauge d'énergie */
+    const gx0=n?16:W*0.68,gx1=W-16,gy=n?y0+th+52:44;
+    {const t=tx(svg,gx0,gy-5,"Q = "+nf(Q,2)+" kJ/mm",{class:"lbl","font-weight":"700"});t.style.fontSize="11.5px";}
+    el("rect",{x:gx0,y:gy,width:gx1-gx0,height:14,fill:mixc("var(--muted)",15),stroke:"var(--line)"},svg);
+    el("rect",{x:gx0,y:gy,width:(gx1-gx0)*Math.min(1,Q/1.5),height:14,fill:"var(--eps)"},svg);
+    setVB(svg,W,n?gy+26:y0+th+40);
+    const verd=p<0.85*T?"manque de pénétration":p<=1.25*T?"pleine pénétration":"trop chaud, risque de percer";
+    ro.innerHTML=nbsp("<span>U ≈ "+nf(U,1)+" V</span><span>Q ≈ <b class='eps'>"+nf(Q,2)+" kJ/mm</b></span><span>p ≈ "+nf(p,1)+" mm</span><span>"+verd+"</span>");
+    let s="Q = 0,6 × "+nf(U,1)+" × "+nf(I,0)+" × 60/(1 000 × "+nf(v,0)+") ≈ "+nf(Q,2)+" kJ/mm. ";
+    s+=p<0.85*T?"Le bain n'atteint pas l'envers : plus de courant, ou moins de vitesse.":p<=1.25*T?"Le bain traverse la tôle et forme un envers régulier.":"Trop d'énergie : le bain s'effondre, l'envers pend ou perce. Moins de courant, plus de vitesse.";
+    if(L>3.5)s+=" L'arc long élargit sans pénétrer et éloigne la protection.";
+    msg.innerHTML=nbsp(s)+"<br><b>À retenir :</b> le courant pénètre, la vitesse dose l'énergie, l'arc reste court.";
+  }
+  $$("#m4b .btn").forEach(b=>b.addEventListener("click",()=>{sI.value=b.dataset.i;sL.value=b.dataset.l;sV.value=b.dataset.v;draw();}));
+  [sI,sL,sV].forEach(x=>x.addEventListener("input",draw));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M5 : le TIG fil chaud (taux de dépôt)
+   ========================================================= */
+(function(){
+  const svg=$("#m5svg");if(!svg)return;
+  const sF=$("#m5f"),ro=$("#m5r"),msg=$("#m5msg");
+  const R=0.032,P0=0.25*0.6*200*12,HF=1.35e6,GM=1.131*7.85;
+  function draw(){
+    const W=svgW(svg),n=W<560,If=+sF.value,Pw=R*If*If,D=(P0+Pw)/HF*3600,vw=D*1000/GM/60;clear(svg);
+    $("#m5fo").textContent=nf(If,0)+NB+"A";
+    setOn("#m5b",$$("#m5b .btn").find(b=>+b.dataset.f===If)||null);
+    const cx=n?W*0.4:W*0.28,yp=120;
+    el("rect",{x:cx-14,y:10,width:28,height:50,rx:4,fill:mixc("var(--muted)",35),stroke:"var(--ink)","stroke-width":1.2},svg);
+    el("polygon",{points:[[cx-5,60],[cx+5,60],[cx,yp-24]].map(a=>a.join(",")).join(" "),fill:mixc("var(--muted)",55),stroke:"var(--ink)"},svg);
+    el("path",{d:"M"+(cx-2)+" "+(yp-24)+" Q "+(cx-20)+" "+(yp-6)+" "+(cx-24)+" "+yp+" L "+(cx+24)+" "+yp+" Q "+(cx+20)+" "+(yp-6)+" "+(cx+2)+" "+(yp-24)+" Z",fill:"var(--gam)","fill-opacity":0.35},svg);
+    el("rect",{x:cx-(n?110:130),y:yp,width:(n?220:260),height:30,fill:mixc("var(--muted)",22),stroke:"var(--ink)"},svg);
+    el("ellipse",{cx:cx+6,cy:yp+2,rx:30,ry:7,fill:mixc("var(--weld)",70),stroke:"var(--ink)"},svg);
+    const hot=Math.min(1,Pw/720);
+    el("line",{x1:cx+110,y1:30,x2:cx+30,y2:yp-2,stroke:hot>0.05?"var(--sig)":"var(--ink)","stroke-width":3,"stroke-opacity":0.5+0.5*hot},svg);
+    if(If>0){const t=tx(svg,cx+86,44,"I_f = "+nf(If,0)+" A",{class:"lbl",fill:"var(--sig)"});t.style.fontSize="11px";fitText(t,0,W-4);}
+    {const t=tx(svg,cx+116,28,"fil 1,2 mm",{class:"lbl"});t.style.fontSize="11px";fitText(t,0,W-4);}
+    const gx0=n?16:W*0.6,gx1=W-16,gy=n?yp+60:40,B=[["puissance dans le fil",(P0+Pw),1200,"W","var(--sig)"],["taux de dépôt",D,3.5,"kg/h","var(--eps)"]];
+    B.forEach((b,i)=>{const y=gy+i*44;const t=tx(svg,gx0,y-5,b[0]+" : "+nf(b[1],b[3]==="W"?0:2)+" "+b[3],{class:"lbl"});t.style.fontSize="11px";
+      el("rect",{x:gx0,y:y,width:gx1-gx0,height:14,fill:mixc("var(--muted)",15),stroke:"var(--line)"},svg);
+      el("rect",{x:gx0,y:y,width:(gx1-gx0)*Math.min(1,b[1]/b[2]),height:14,fill:b[4]},svg);});
+    setVB(svg,W,n?gy+80:yp+40);
+    ro.innerHTML=nbsp("<span>R·I<sub>f</sub>² ≈ "+nf(Pw,0)+" W</span><span>dépôt ≈ <b class='eps'>"+nf(D,2)+" kg/h</b></span><span>fil ≈ "+nf(vw,1)+" m/min</span><span>×"+nf(D/((P0)/HF*3600),1)+" / fil froid</span>");
+    let s=If===0?"Fil froid : seul l'arc le fond, environ "+nf(D,2)+" kg/h en automatique.":"Le courant de fil apporte "+nf(Pw,0)+" W par effet Joule : le fil arrive chaud, l'arc n'a plus qu'à finir de le fondre. Dépôt ≈ "+nf(D,2)+" kg/h, soit ×"+nf(D/((P0)/HF*3600),1)+".";
+    if(If>=150)s+=" Trop chaud, le fil fond avant le bain et s'amorce en arc : on reste sous ce seuil.";
+    msg.innerHTML=nbsp(s)+"<br><b>À retenir :</b> le fil chaud multiplie le dépôt sans chauffer davantage la pièce.";
+  }
+  $$("#m5b .btn").forEach(b=>b.addEventListener("click",()=>{sF.value=b.dataset.f;draw();}));
+  sF.addEventListener("input",draw);
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   Quiz, check-list, sommaire, thème
+   ========================================================= */
+(function(){
+  const box=$("#quiz");if(!box)return;
+  const Q=[
+    {q:"Que désigne le numéro 142 de l'ISO 4063 ?",o:["le TIG autogène, sans métal d'apport","le TIG avec fil plein","le TIG avec fil fourré","le plasma"],c:0,e:"141 : TIG avec produit d'apport plein ; <b>142 : TIG autogène</b> ; 143 : avec produit d'apport fourré ; 145 : avec gaz réducteur."},
+    {q:"Le principal défaut du TIG manuel en production :",o:["les projections","l'impossibilité de souder l'aluminium","le laitier à retirer","un taux de dépôt faible, de l'ordre de 0,3 à 0,5 kg/h"],c:3,e:"Le TIG sépare chaleur et apport : qualité, mais dépôt lent. D'où la racine en TIG et le remplissage avec un procédé plus rapide."},
+    {q:"En CC−, la chaleur des pôles se partage environ :",o:["70 % à l'électrode, 30 % à la pièce","70 % à la pièce, 30 % à l'électrode","50/50","100 % à la pièce"],c:1,e:"La cathode (le tungstène) se refroidit en émettant ; l'anode (la pièce) reçoit environ 70 % : bain étroit et profond."},
+    {q:"Pourquoi soude-t-on l'aluminium en alternatif en TIG ?",o:["pour économiser le tungstène","parce que l'aluminium conduit mal","pour éviter la HF","parce que les alternances où la pièce est cathode décapent l'alumine"],c:3,e:"Les taches cathodiques cassent l'alumine quand la pièce est au pôle − : c'est le décapage cathodique."},
+    {q:"En alternatif carré, augmenter la part d'électrode négative (balance) :",o:["élargit la bande décapée","fond l'électrode en grosse boule","augmente la pénétration et réduit le décapage","coupe l'arc"],c:2,e:"Plus de négatif : plus de chaleur à la pièce, électrode plus froide, mais moins de décapage."},
+    {q:"Une électrode TIG dont le bout est peint en rouge est :",o:["en tungstène pur","au thorium, 2 % (WTh20)","au lanthane","au cérium"],c:1,e:"ISO 6848 : WP vert, WCe20 gris, WLa10 noir, WLa15 or, WLa20 bleu, <b>WTh20 rouge</b>, WZr8 blanc."},
+    {q:"Pourquoi remplace-t-on les électrodes thoriées ?",o:["elles amorcent mal","elles coûtent trop cher","elles fondent en alternatif","le thorium est radioactif, surtout dangereux par les poussières d'affûtage"],c:3,e:"Les oxydes de lanthane ou de cérium donnent des performances voisines sans radioactivité."},
+    {q:"À courant égal en CC−, une pointe affûtée à 90° plutôt qu'à 20° donne :",o:["un arc plus serré et un bain plus profond","un arc plus large et un bain moins profond","aucune différence","un arc instable"],c:0,e:"Un angle plus ouvert resserre l'arc et creuse le bain ; une pointe très fine étale l'arc et s'use vite."},
+    {q:"TIG à 120 A, 12 V, 90 mm/min. L'énergie de soudage (EN 1011-1) vaut environ :",o:["0,58 kJ/mm","0,96 kJ/mm","0,38 kJ/mm","5,8 kJ/mm"],c:0,e:"<span class='m'>Q = 0,6 × 12 × 120 × 60/(1 000 × 90) ≈ 0,58 kJ/mm</span>. Sans le rendement, E ≈ 0,96 kJ/mm."},
+    {q:"Où le soudeur doit-il apporter la baguette en TIG ?",o:["au centre de l'arc","derrière le bain","au bord avant du bain, sous la protection du gaz","sur l'électrode"],c:2,e:"Dans l'arc, la baguette fond en gouttes, s'oxyde ou touche l'électrode ; au bord avant du bain, elle fond proprement."},
+    {q:"Un point clair et très net sur une radiographie de soudure TIG est le plus souvent :",o:["une porosité","un manque de fusion","une inclusion de tungstène","une morsure"],c:2,e:"Le tungstène, très dense, absorbe les rayons : l'inclusion apparaît claire. Les porosités apparaissent sombres."},
+    {q:"Le TIG fil chaud permet surtout :",o:["de souder sans gaz","d'augmenter le taux de dépôt sans chauffer davantage la pièce","de supprimer l'électrode","de souder en courant alternatif"],c:1,e:"Le fil, préchauffé par effet Joule, arrive presque fondu : le dépôt double ou triple, l'énergie reçue par la pièce ne change pas."}
+  ];
+  let score=0,done=0;const sc=$("#qzScore");
+  function upd(){let t="Score : "+score+" / "+Q.length;if(done===Q.length)t+=score>=10?"  ·  🎉 prêt pour le cours 3":score>=7?"  ·  relis les explications":"  ·  refais un tour des chapitres";sc.textContent=t;}
+  function render(){box.innerHTML="";score=0;done=0;
+    Q.forEach((it,n)=>{const d=document.createElement("div");d.className="qz";
+      d.innerHTML='<p class="qz-q"><b>'+(n+1)+".</b> "+it.q+'</p><div class="qz-o"></div><div class="qz-e" hidden></div>';
+      const o=d.querySelector(".qz-o"),ex=d.querySelector(".qz-e");let answered=false;
+      it.o.forEach((txt,i)=>{const b=document.createElement("button");b.type="button";b.className="qz-b";b.innerHTML=String.fromCharCode(65+i)+". "+txt;
+        b.addEventListener("click",()=>{if(answered)return;answered=true;done++;const ok=i===it.c;if(ok)score++;b.classList.add(ok?"ok":"ko");o.children[it.c].classList.add("ok");ex.hidden=false;ex.innerHTML=(ok?"✅ <b>Bien joué.</b> ":"❌ <b>Pas tout à fait.</b> ")+it.e;upd();});
+        o.appendChild(b);});
+      box.appendChild(d);});
+    upd();}
+  $("#qzReset").addEventListener("click",render);render();
+})();
+(function(){
+  const boxes=$$("#checklist input[type=checkbox]"),msg=$("#checkMsg"),KEY="arc-gaz-cours2-check";
+  if(!boxes.length)return;
+  let saved=[];try{saved=JSON.parse(localStorage.getItem(KEY)||"[]")||[];}catch(e){saved=[];}
+  boxes.forEach(b=>{b.checked=saved.indexOf(b.dataset.c)>=0;});
+  function upd(){const on=boxes.filter(b=>b.checked).map(b=>b.dataset.c);try{localStorage.setItem(KEY,JSON.stringify(on));}catch(e){}
+    msg.innerHTML=on.length===boxes.length?"🎉 <b>Tout est coché : tu es prêt pour le cours 3 !</b>":on.length+" / "+boxes.length+" : reviens sur les points non cochés (les manipulations sont faites pour ça).";}
+  boxes.forEach(b=>b.addEventListener("change",upd));upd();
+})();
+(function(){/* impression de la fiche mémoire seule */
+  const b=$("#printFiche");if(!b)return;
+  b.addEventListener("click",()=>{document.body.classList.add("print-fiche");window.print();});
+  window.addEventListener("afterprint",()=>document.body.classList.remove("print-fiche"));
+})();
+(function(){
+  const links=$$(".toc a"),tin=$(".toc-in");
+  if(!links.length||!("IntersectionObserver" in window))return;
+  const map={};links.forEach(a=>{map[a.getAttribute("href").slice(1)]=a;});
+  const obs=new IntersectionObserver(ents=>{ents.forEach(en=>{if(!en.isIntersecting)return;const a=map[en.target.id];if(!a)return;
+    links.forEach(l=>l.classList.toggle("on",l===a));
+    if(tin){const tgt=a.offsetLeft-tin.clientWidth/2+a.offsetWidth/2;try{tin.scrollTo({left:tgt,behavior:RM?"auto":"smooth"});}catch(e){tin.scrollLeft=tgt;}}});},{rootMargin:"-45% 0px -50% 0px"});
+  Object.keys(map).forEach(id=>{const s=document.getElementById(id);if(s)obs.observe(s);});
+})();
+(function(){
+  const b=$("#themeBtn");if(!b)return;const KEY="arc-gaz-theme",root=document.documentElement;
+  const lab={auto:"◐ Thème : automatique",light:"☀️ Thème : clair",dark:"🌙 Thème : sombre"};
+  let t="auto";try{t=localStorage.getItem(KEY)||"auto";}catch(e){}
+  function apply(){if(t==="auto")root.removeAttribute("data-theme");else root.setAttribute("data-theme",t);b.textContent=lab[t];}
+  b.addEventListener("click",()=>{t=t==="auto"?"light":t==="light"?"dark":"auto";try{localStorage.setItem(KEY,t);}catch(e){}apply();});
+  apply();
+})();
+
+})();
+</script>
+</body>
+</html>

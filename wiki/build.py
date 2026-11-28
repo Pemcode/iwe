@@ -10,6 +10,7 @@ from urllib.parse import quote, unquote, urlsplit
 
 from .catalogue import CatalogueError, CourseHTML, load_catalogue
 from .guide import TITLE as GUIDE_TITLE, render_guide
+from .modules import subject_modules
 from .planning import load_planning, render_planning
 
 ASSETS = Path(__file__).resolve().parent.parent / "assets"
@@ -206,14 +207,19 @@ def panel(current, site, here=None):
             context += f'<p class="wiki-here-pager">{"".join(pager)}</p>'
         context += "</div>"
 
-    groups = []
+    groups = {}
     for subject, courses in site["subjects"]:
         overview = "matieres/" + subject["id"] + ".html"
         is_here = here.get("subject", {}).get("id") == subject["id"] or current == overview
         entries = [f'<li><a href="{link(current, overview)}"{mark(overview)}>Vue d’ensemble<span class="wiki-sr"> : {h(subject["titre"])}</span></a></li>']
         for course in courses:
             entries.append(f'<li><a href="{link(current, course["url"])}"{mark(course["url"])}><span class="wiki-num" aria-hidden="true">{course["ordre"]:02d}</span><span>{h(short_title(course, subject))}</span></a></li>')
-        groups.append(f'<li><details{" open" if is_here else ""}><summary><span>{h(subject["titre"])}</span><span class="wiki-count" aria-hidden="true">{len(courses)}</span></summary><ul>{"".join(entries)}</ul></details></li>')
+        groups[subject["id"]] = f'<li><details{" open" if is_here else ""}><summary><span>{h(subject["titre"])}</span><span class="wiki-count" aria-hidden="true">{len(courses)}</span></summary><ul>{"".join(entries)}</ul></details></li>'
+    modules = "".join(
+        f'<h3 class="wiki-panel-module">{h(title)}</h3><ul class="wiki-panel-groups">'
+        + "".join(groups[s["id"]] for s in subjects) + "</ul>"
+        for _, title, subjects in subject_modules([s for s, _ in site["subjects"]])
+    )
     routes = ""
     if site["routes"]:
         on_route = current.startswith("parcours/")
@@ -228,7 +234,7 @@ def panel(current, site, here=None):
 <div class="wiki-panel-scroll">
 <form class="wiki-panel-search" role="search" action="{link(current, "index.html", "rechercher")}" method="get"><label class="wiki-sr" for="wiki-panel-query">Rechercher dans le wiki</label>{icon("search")}<input id="wiki-panel-query" name="q" type="search" placeholder="Rechercher une notion…" autocomplete="off"></form>
 <nav class="wiki-panel-nav" aria-label="Navigation du wiki"><ul class="wiki-panel-quick">{shortcuts}</ul>
-{context}<p class="wiki-panel-label">Matières</p><ul class="wiki-panel-groups">{"".join(groups)}</ul>{routes}</nav>
+{context}<p class="wiki-panel-label">Matières</p>{modules}{routes}</nav>
 </div>
 <div class="wiki-panel-share"><div class="wiki-actions"><button type="button" data-wiki-share="native">Partager</button><button type="button" data-wiki-share="copy">Copier le lien</button></div>
 <span class="wiki-status" role="status" id="wiki-share-status"></span>
@@ -352,7 +358,7 @@ def build(root):
     site = {"planning": bool(plan), "routes": data["parcours"],
             "explorations": [a for a in live_apps if a.get("raccourci")],
             "subjects": [(s, [c for c in available if c["matiere"] == s["id"]]) for s in subjects]}
-    subject_cards = []
+    subject_cards = {}
     for subject in subjects:
         grouped = [c for c in courses if c["matiere"] == subject["id"]]
         count = sum(c["statut"] == "disponible" for c in grouped)
@@ -364,7 +370,12 @@ def build(root):
         write(output, current, shell(current, subject["titre"], body, site))
         playable = sum(a["statut"] == "disponible" for a in subject_apps)
         mention = f" · {playable} application{'s' if playable > 1 else ''}" if playable else ""
-        subject_cards.append(f'<a class="wiki-subject" href="{current}"><span class="wiki-eyebrow">{count} cours disponibles{mention}</span><h3>{h(subject["titre"])}</h3><p>{h(subject.get("description", ""))}</p><span aria-hidden="true">Explorer →</span></a>')
+        subject_cards[subject["id"]] = f'<a class="wiki-subject" href="{current}"><span class="wiki-eyebrow">{count} cours disponibles{mention}</span><h4>{h(subject["titre"])}</h4><p>{h(subject.get("description", ""))}</p><span aria-hidden="true">Explorer →</span></a>'
+    subject_groups = "".join(
+        f'<section class="wiki-module" aria-labelledby="module-{ident}"><h3 id="module-{ident}">{h(title)}</h3><div class="wiki-grid">'
+        + "".join(subject_cards[s["id"]] for s in grouped) + "</div></section>"
+        for ident, title, grouped in subject_modules(subjects)
+    )
     route_cards = []
     for route in data["parcours"]:
         current = f"parcours/{route['id']}.html"
@@ -391,7 +402,7 @@ def build(root):
 <label for="wiki-query">Rechercher une notion, un cours ou une section</label><div class="wiki-search-row"><input id="wiki-query" type="search" placeholder="Préchauffage, Mohr, règle du levier…" autocomplete="off">
 <label class="wiki-sr" for="wiki-subject-filter">Filtrer par matière</label><select id="wiki-subject-filter"><option value="">Toutes les matières</option>{options}</select><button type="submit">Rechercher</button></div></form>
 <p id="wiki-search-status" role="status">Explorez les matières ci-dessous ou recherchez un sujet précis.</p><ul id="wiki-results" class="wiki-results"></ul><noscript>La recherche nécessite JavaScript. Les matières et les cours restent accessibles ci-dessous.</noscript></section>
-<section id="matieres"><div class="wiki-section-title"><h2>Avancer par matière</h2><span>Les bases, dans l’ordre</span></div><div class="wiki-grid">{''.join(subject_cards)}</div></section>
+<section id="matieres"><div class="wiki-section-title"><h2>Avancer par matière</h2><span>Les bases, dans l’ordre</span></div>{subject_groups}</section>
 <section id="parcours"><div class="wiki-section-title"><h2>Faire le lien avec le soudage</h2><span>Des parcours entre les cours</span></div><div class="wiki-grid">{''.join(route_cards)}</div></section>"""
     write(output, "index.html", shell("index.html", "Accueil", body, site))
     write(output, "assistant.html", shell("assistant.html", GUIDE_TITLE, render_guide(), site,

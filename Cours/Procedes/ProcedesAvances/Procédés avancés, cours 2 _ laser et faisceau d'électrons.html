@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Procédés avancés, cours 2 : laser et faisceau d'électrons</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@500;600;700&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+
+
+
+:root{
+  --paper:#F3F6F9; --paper-2:#E6ECF2; --card:#FFFFFF; --ink:#17212B; --muted:#56626F; --line:#C5CFD9;
+  --grid:rgba(40,90,160,.075);
+  --sig:#CF2438; --tau:#8A34B6; --eps:#1B5ED3; --gam:#06849A; --frc:#D46A00; --mat:#26844A; --weld:#9A5B12;
+  --ok:#26844A; --warn:#B86E00; --bad:#C62828;
+  --lv2:#E4EBF2; --hl:#FFF3B0;
+  --font-body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-head:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --font-math:"STIX Two Text","Cambria Math","Cambria","Times New Roman",serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+    --grid:rgba(120,160,220,.07);
+    --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+    --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+  --grid:rgba(120,160,220,.07);
+  --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+  --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+  color-scheme: dark;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0;color:var(--ink);font-family:var(--font-body);font-size:17.5px;line-height:1.62;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;overflow-x:hidden;
+}
+img,svg{max-width:100%}
+.wrap{max-width:800px;margin:0 auto;padding:0 20px}
+.wide{max-width:980px}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.1;margin:0}
+h3{font-size:1.65rem;font-weight:600;margin:2rem 0 .6rem}
+h4{font-size:1.3rem;font-weight:600;margin:1.4rem 0 .4rem}
+p{margin:.7em 0}
+a{color:var(--eps)}
+b,strong{font-weight:700}
+small{font-size:.8em}
+sub{font-size:.72em}
+.m{font-family:var(--font-math);font-size:1.08em;white-space:nowrap}
+.sig{color:var(--sig)} .tau{color:var(--tau)} .eps{color:var(--eps)} .gam{color:var(--gam)} .frc{color:var(--frc)} .mat{color:var(--mat)} .mut{color:var(--muted)} .wcol{color:var(--weld)}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .12em;line-height:1.1}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 .2em .08em}
+.frac>span:last-child{padding:.08em .2em 0}
+ul,ol{padding-left:1.4em}
+li{margin:.25em 0}
+
+/* ---------- en-tête ---------- */
+.hero{padding:34px 0 10px}
+.title-block{border:2.5px solid var(--ink);background:var(--card);display:grid;grid-template-columns:1fr 300px}
+.tb-main{padding:22px 24px;border-right:2.5px solid var(--ink);display:flex;flex-direction:column;justify-content:space-between;gap:14px}
+.tb-series{margin:0 0 .5rem;color:var(--muted);font-size:.95rem}
+.hero h1{font-size:clamp(2.3rem,6vw,4rem);font-weight:700;letter-spacing:-.01em}
+.tb-cells{display:grid;grid-template-rows:repeat(4,auto)}
+.tb-cells>div{padding:9px 16px;border-bottom:1.5px solid var(--ink);display:flex;flex-direction:column;justify-content:center}
+.tb-cells>div:last-child{border-bottom:0}
+.tb-cells small{color:var(--muted);font-size:.78rem}
+.tb-cells b{font-family:var(--font-head);font-size:1.25rem;font-weight:600;line-height:1.15}
+.lede{font-size:1.13rem;max-width:760px;margin:1.2rem 0}
+.theme-btn{align-self:flex-start;font-family:var(--font-body);font-size:.85rem;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
+@media (max-width:760px){.title-block{grid-template-columns:1fr}.tb-main{border-right:0;border-bottom:2.5px solid var(--ink)}.tb-cells{grid-template-rows:none;grid-template-columns:1fr 1fr}.tb-cells>div:nth-child(odd){border-right:1.5px solid var(--ink)}.tb-cells>div:nth-child(3){border-bottom:0}}
+@media (max-width:420px){.tb-cells{grid-template-columns:1fr}.tb-cells>div:nth-child(odd){border-right:0}.tb-cells>div:nth-child(3){border-bottom:1.5px solid var(--ink)}}
+
+/* code couleur */
+.cc{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:stretch;margin:1rem 0 .4rem}
+.cc-box{background:var(--card);border:2px solid var(--line);padding:12px 14px;border-radius:4px}
+.cc-cause{border-color:var(--sig)} .cc-link{border-color:var(--mat)} .cc-eff{border-color:var(--eps)}
+.cc-box small{display:block;color:var(--muted);font-size:.82rem;line-height:1.3}
+.cc-syms{font-family:var(--font-math);font-size:1.7rem;line-height:1.25;display:flex;flex-wrap:wrap;gap:.1em .45em;margin:.2rem 0}
+.cc-box p{margin:0;font-size:.9rem;line-height:1.35}
+.cc-arrow{align-self:center;font-size:1.8rem;color:var(--muted)}
+@media (max-width:700px){.cc{grid-template-columns:1fr}.cc-arrow{transform:rotate(90deg);justify-self:center;line-height:1}}
+.cc-more{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:.5rem 0}
+.cc-more>div{border:2px solid var(--line);background:var(--card);border-radius:4px;padding:6px 10px;font-size:.9rem}
+@media (max-width:640px){.cc-more{grid-template-columns:1fr}}
+
+/* ---------- sommaire ---------- */
+.toc{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-bottom:1.5px solid var(--line);padding-top:env(safe-area-inset-top,0px);margin-top:18px}
+.toc-in{display:flex;gap:6px;overflow-x:auto;padding:9px 20px;max-width:980px;margin:0 auto;scrollbar-width:thin}
+.toc a{flex:none;text-decoration:none;color:var(--ink);font-size:.88rem;padding:4px 11px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);white-space:nowrap}
+.toc a.on{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.toc a:focus-visible,.btn:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--eps);outline-offset:2px}
+
+/* ---------- sections ---------- */
+section.chap{padding:46px 0 10px}
+.cartouche{display:grid;grid-template-columns:86px 1fr 250px;border:2.5px solid var(--ink);background:var(--card);margin-bottom:1.4rem}
+.c-num{font-family:var(--font-head);font-size:3.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;border-right:2.5px solid var(--ink)}
+.c-title{padding:14px 18px;border-right:2.5px solid var(--ink)}
+.c-title h2{font-size:2.1rem;font-weight:700}
+.c-title p{margin:.25rem 0 0;color:var(--muted)}
+.c-img{padding:12px 14px;display:flex;gap:12px;align-items:center;background:var(--paper-2)}
+.c-img .ico{font-size:2.3rem;line-height:1}
+.c-img small{display:block;color:var(--muted);font-size:.78rem}
+.c-img span{font-size:.95rem;line-height:1.3}
+@media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
+
+/* gabarit court : approfondissement replié, à retenir, prédiction */
+details.deep{margin:1.2rem 0;padding:0 18px;background:var(--lv2);border-left:6px solid var(--ink);border-radius:4px}
+details.deep>summary{font-family:var(--font-head);font-size:1.2rem;font-weight:600;padding:9px 0}
+details.deep[open]{padding-bottom:10px}
+.retenir{margin:1.4rem 0 .4rem;padding:8px 18px 6px;background:var(--card);border:2px solid var(--ink);border-radius:4px}
+.retenir>b:first-child{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.retenir ul{margin:.3rem 0 .3rem}
+.predict{display:block;margin-top:.35rem;color:var(--ink);font-weight:700}
+@media (max-width:520px){details.deep{padding:0 12px}.retenir{padding:8px 12px 6px}}
+
+/* formules et encadrés */
+.fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:600px;text-align:center;border-radius:3px;overflow-x:auto}
+.fx .big{font-family:var(--font-math);font-size:1.9rem;line-height:1.4}
+.fx .cap{font-size:.85rem;color:var(--muted);margin:.3rem 0 0}
+.fx .row{display:flex;flex-wrap:wrap;justify-content:center;gap:.2em 1.4em}
+.syms{margin:.6rem 0;display:grid;grid-template-columns:auto 1fr;gap:.35rem 1rem;align-items:baseline}
+.syms dt{font-family:var(--font-math);font-size:1.25rem;text-align:right;white-space:nowrap}
+.syms dd{margin:0}
+.def{margin:.9rem 0;padding:.5rem .9rem;border-left:3px dotted var(--muted);font-size:.96rem;background:color-mix(in srgb,var(--card) 60%,transparent)}
+.def>b:first-child{font-family:var(--font-head);font-size:1.08rem;font-weight:600}
+.tip{margin:1rem 0;padding:.7rem 1rem;border:1.5px dashed var(--mat);border-radius:4px;font-size:.97rem}
+.warn{margin:1rem 0;padding:.7rem 1rem;border:2px solid var(--bad);border-radius:4px;font-size:.97rem;background:color-mix(in srgb,var(--bad) 7%,transparent)}
+.mnemo{margin:1rem 0;padding:.7rem 1rem;background:var(--hl);border-radius:4px;font-size:.98rem}
+.fun{margin:1.2rem 0;padding:.8rem 1rem;border:2px dashed var(--muted);border-radius:10px;background:var(--card);font-size:.98rem}
+.fun-h{display:block;margin-bottom:.35rem;font-family:var(--font-head);font-size:1.15rem;font-weight:600;letter-spacing:.02em}
+.meta{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--frc);border-radius:4px;background:color-mix(in srgb,var(--frc) 6%,transparent)}
+.weld{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--weld);border-radius:4px;background:color-mix(in srgb,var(--weld) 7%,transparent)}
+.weld>b:first-child{font-family:var(--font-head);font-size:1.15rem;font-weight:600;color:var(--weld)}
+.hp{display:inline-block;font-size:.72rem;font-weight:700;padding:1px 7px;border-radius:9px;background:var(--weld);color:var(--card);vertical-align:middle;margin-left:4px;white-space:nowrap}
+.recall{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:1rem 0}
+.recall>div{background:var(--card);border:1.5px solid var(--line);border-radius:4px;padding:8px 12px;font-size:.92rem}
+.recall .f{font-family:var(--font-math);font-size:1.2rem;margin-bottom:.2rem}
+@media (max-width:640px){.recall{grid-template-columns:1fr}}
+.hist{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:1rem 0}
+.hist>div{background:var(--card);border:1.5px solid var(--weld);border-radius:4px;padding:8px 12px;font-size:.93rem}
+.hist .yr{font-family:var(--font-head);font-size:1.6rem;font-weight:700;color:var(--weld);line-height:1}
+@media (max-width:720px){.hist{grid-template-columns:1fr}}
+
+/* manipulations */
+.lab{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:14px 16px 12px;margin:1.4rem 0}
+.lab-h{font-family:var(--font-head);font-size:1.3rem;font-weight:600;margin:0 0 .2rem}
+.lab-sub{margin:0 0 .6rem;color:var(--muted);font-size:.92rem}
+.lab svg{display:block;width:100%;height:auto;color:var(--ink);font-family:var(--font-body);touch-action:pan-y}
+.ctrl{display:grid;grid-template-columns:minmax(110px,auto) 1fr minmax(92px,auto);gap:4px 12px;align-items:center;margin:.5rem 0}
+.ctrl label{font-size:.95rem}
+.ctrl output{font-family:var(--font-math);font-size:1.08rem;text-align:right;white-space:nowrap}
+@media (max-width:520px){.ctrl{grid-template-columns:1fr auto}.ctrl input[type=range]{grid-column:1/-1;grid-row:2}}
+input[type=range]{width:100%;accent-color:var(--ink);height:28px;margin:0}
+input.r-sig{accent-color:var(--sig)} input.r-tau{accent-color:var(--tau)} input.r-frc{accent-color:var(--frc)} input.r-mat{accent-color:var(--mat)} input.r-eps{accent-color:var(--eps)}
+.btns{display:flex;flex-wrap:wrap;gap:6px;margin:.5rem 0}
+.btn{font-family:var(--font-body);font-size:.9rem;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 13px;cursor:pointer;line-height:1.3}
+.btn:hover{background:var(--paper-2)}
+.btn.on{background:var(--ink);color:var(--paper)}
+.btn.play{border-color:var(--eps);color:var(--eps);font-weight:700}
+.btn:disabled{opacity:.45;cursor:default}
+.readout{font-family:var(--font-math);font-size:1.08rem;background:var(--paper-2);border-radius:4px;padding:.5rem .8rem;margin:.5rem 0;overflow-x:auto;display:flex;flex-wrap:wrap;gap:.2em 1.3em}
+.readout>span{white-space:nowrap}
+.status{font-size:.97rem;margin:.5rem 0;padding:.5rem .8rem;border-left:4px solid var(--eps);background:color-mix(in srgb,var(--eps) 6%,transparent);border-radius:0 4px 4px 0;min-height:2.6em}
+.radios{display:flex;flex-wrap:wrap;gap:6px 14px;margin:.4rem 0;font-size:.95rem}
+.radios label{display:inline-block;cursor:pointer}
+.radios input{margin:0 6px 0 0;vertical-align:middle}
+
+/* svg */
+svg text{fill:currentColor;font-size:13px}
+svg .lbl{font-size:12.5px;fill:var(--muted)}
+svg .mth{font-family:var(--font-math);font-size:16px}
+svg .ttl{font-family:var(--font-head);font-size:15px;font-weight:600}
+svg .axis{stroke:var(--ink);stroke-width:1.4;fill:none}
+svg .tick{stroke:var(--muted);stroke-width:1}
+svg .gridbg{stroke:var(--line);stroke-width:1}
+svg .ref{stroke:var(--muted);stroke-width:1.3;stroke-dasharray:4 3;fill:none}
+.arr line{stroke:currentColor}
+.arr polygon{fill:currentColor}
+
+/* tableaux */
+.tbl-wrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch}
+table.data{border-collapse:collapse;width:100%;font-size:.94rem;background:var(--card)}
+table.data th,table.data td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:middle}
+table.data th{font-family:var(--font-head);font-weight:600;font-size:1.05rem;background:var(--paper-2)}
+table.data td.n{font-family:var(--font-math);white-space:nowrap}
+table.data tr.now td{background:var(--hl)}
+
+/* parcours */
+.route{list-style:none;padding:0;margin:1rem 0;position:relative}
+.route::before{content:"";position:absolute;left:17px;top:10px;bottom:10px;width:4px;background:var(--line);border-radius:2px}
+.route li{position:relative;padding:0 0 14px 52px;margin:0}
+.route li .dot{position:absolute;left:4px;top:0;width:30px;height:30px;border-radius:50%;border:3px solid var(--ink);background:var(--card);font-family:var(--font-head);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+.route li b{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.route li p{margin:.1rem 0 0;font-size:.95rem}
+.series{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:.8rem 0}
+.series>div{background:var(--card);border:1.5px solid var(--line);padding:8px 10px;border-radius:4px;font-size:.88rem}
+.series>div.here{border:2.5px solid var(--ink)}
+.series b{display:block;font-family:var(--font-head);font-size:1.05rem}
+@media (max-width:700px){.series{grid-template-columns:1fr 1fr}}
+
+/* exercices et quiz */
+.exo{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--ink);padding:6px 20px 12px;margin:1.2rem 0;border-radius:4px}
+.exo.defi{border-left-color:var(--weld)}
+.exo h4{margin-top:.8rem}
+.exo .lvtag{font-family:var(--font-body);font-size:.85rem;font-weight:400;color:var(--muted);margin-left:.4rem}
+.exo .q{margin:.25rem 0}
+details{margin:.6rem 0}
+summary{cursor:pointer;font-weight:700;padding:4px 0}
+details .sol{padding:.4rem .9rem;border-left:3px solid var(--mat);margin:.4rem 0}
+details .sol p{margin:.45em 0}
+.qz{background:var(--card);border:1.5px solid var(--line);border-radius:6px;padding:10px 16px;margin:.8rem 0}
+.qz-q{margin:.3rem 0 .6rem}
+.qz-o{display:flex;flex-direction:column;gap:6px}
+.qz-b{text-align:left;font-family:var(--font-body);font-size:.97rem;padding:8px 12px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:5px;cursor:pointer}
+.qz-b:hover{border-color:var(--ink)}
+.qz-b.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--card))}
+.qz-b.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--card))}
+.qz-e{font-size:.94rem;margin:.6rem 0 .2rem}
+.score{position:sticky;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);display:inline-block;background:var(--ink);color:var(--paper);padding:6px 14px;border-radius:999px;font-size:.95rem;margin:.6rem 0}
+
+/* fiche mémoire */
+.fiche{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:2.5px solid var(--ink);background:var(--card);margin:1rem 0}
+.fiche>div{padding:12px 14px;border-right:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}
+.fiche>div:nth-child(3n){border-right:0}
+.fiche>div:nth-last-child(-n+3){border-bottom:0}
+.fiche .ic{font-size:1.9rem;line-height:1}
+.fiche h4{margin:.3rem 0 .2rem;font-size:1.15rem}
+.fiche .f{font-family:var(--font-math);font-size:1.1rem;margin:.2rem 0}
+.fiche p{margin:.2rem 0 0;font-size:.88rem;color:var(--muted)}
+@media (max-width:720px){.fiche{grid-template-columns:1fr 1fr}.fiche>div{border-right:1.5px solid var(--ink)!important;border-bottom:1.5px solid var(--ink)!important}.fiche>div:nth-child(2n){border-right:0!important}.fiche>div:last-child{border-bottom:0!important}}
+@media (max-width:440px){.fiche{grid-template-columns:1fr}.fiche>div{border-right:0!important}}
+.gloss{display:grid;grid-template-columns:minmax(150px,230px) 1fr;gap:0;border-top:1.5px solid var(--line);margin:1rem 0}
+.gloss dt,.gloss dd{border-bottom:1.5px solid var(--line);padding:7px 8px;margin:0}
+.gloss dt{font-weight:700}
+.gloss dd{font-size:.95rem}
+@media (max-width:600px){.gloss{grid-template-columns:1fr}.gloss dt{border-bottom:0;padding-bottom:0}}
+.check label{display:flex;gap:10px;align-items:flex-start;padding:5px 0;cursor:pointer}
+.check input{margin-top:.35em;width:18px;height:18px;accent-color:var(--mat);flex:none}
+footer{padding:40px 0 60px;color:var(--muted);font-size:.9rem}
+hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
+@media (max-width:700px){.m{white-space:normal}.fx{padding:12px 10px}.fx .big{font-size:1.4rem}}
+@media (max-width:400px){body{font-size:16.5px}.wrap{padding:0 14px}.lab{padding:12px 10px}}
+
+/* compléments de la série Rupture */
+.btn.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,var(--card))}
+.btn.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--card))}
+.ctrl[hidden]{display:none}
+
+/* impression : le cours sur papier clair, ou la fiche mémoire seule sur une page */
+@media print{
+  :root,:root[data-theme]{--paper:#fff!important;--paper-2:#EEF2F6!important;--card:#fff!important;--ink:#111!important;--muted:#444!important;--line:#999!important;--grid:transparent!important;--lv2:#F2F5F8!important;--hl:#FFF3B0!important;color-scheme:light}
+  body{background:#fff;font-size:11pt}
+  .toc,.theme-btn,.btns,.ctrl,#qzReset,.score{display:none!important}
+  section.chap{padding:14px 0 4px}
+  .lab,.fx,.retenir,details.deep,.fiche>div,.exo{break-inside:avoid}
+  body.print-fiche header,body.print-fiche main>section:not(#fiche),body.print-fiche footer{display:none!important}
+  body.print-fiche #fiche .cartouche{margin-bottom:.6rem}
+  body.print-fiche .fiche>div{padding:8px 10px}
+}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="wrap wide">
+  <div class="title-block">
+    <div class="tb-main">
+      <div>
+        <p class="tb-series">Procédés avancés et automatisation</p>
+        <h1>Laser et faisceau d'électrons : souder par un capillaire de vapeur</h1>
+      </div>
+      <button class="theme-btn" id="themeBtn" type="button" aria-label="Changer de thème">◐ Thème : automatique</button>
+    </div>
+    <div class="tb-cells">
+      <div><small>Cours</small><b>2 sur 6 : les procédés à haute densité d'énergie</b></div>
+      <div><small>Durée conseillée</small><b>≈ 1 h 30 avec les exercices</b></div>
+      <div><small>Prérequis</small><b>Arc sous gaz, cours 5 (échelle des densités de puissance, trou de serrure) ; Procédés avancés, cours 1 (qualification d'un procédé automatisé)</b></div>
+      <div><small>À la fin tu sais</small><b>expliquer conduction et capillaire de vapeur et leur seuil de densité de puissance ; comparer les sources laser (CO₂, solides, fibres, diodes) et l'absorption selon la longueur d'onde ; régler focalisation et position du foyer ; concevoir un joint laser, choisir laser seul, fil froid ou hybride laser-MAG, et maîtriser la sécurité laser ; décrire le canon à électrons, le vide et les paramètres U, I, v ; conduire une soudure FE (régimes, montée en puissance, évanouissement), éviter ses défauts et la qualifier</b></div>
+    </div>
+  </div>
+  <p class="lede">Concentrer quelques kilowatts sur une tache de moins d'un millimètre : le métal ne fond plus seulement, il se vaporise, et un capillaire de vapeur s'enfonce dans la pièce. C'est le principe commun du laser et du faisceau d'électrons, qui soudent en une passe des épaisseurs que l'arc remplirait en dix. Ce cours explique ce capillaire, les sources laser et leur focalisation, le soudage laser et hybride, puis le canon à électrons, le vide et la conduite d'une soudure FE.</p>
+
+  <h4>Le code couleur de la série</h4>
+  <div class="cc" role="img" aria-label="Code couleur : les causes en rouge et violet, les réglages en vert, les efforts et mouvements en orange, les effets en bleu et bleu-vert">
+    <div class="cc-box cc-cause"><small>Les causes</small><div class="cc-syms"><span class="sig">I</span><span class="sig">P</span><span class="tau">collage</span><span class="tau">porosité</span></div><p><span class="sig">rouge</span> : ce qui apporte l'énergie (courant, faisceau, effet Joule) ; <span class="tau">violet</span> : les défauts (collage, crachement, porosités, manques de fusion)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-link"><small>Les réglages</small><div class="cc-syms"><span class="mat">t</span><span class="mat">v</span><span class="mat">d</span><span class="frc">F</span></div><p>en <span class="mat">vert</span> : ce qu'on choisit (temps, vitesse, focalisation, géométrie) ; en <span class="frc">orange</span> : les efforts et les mouvements</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-eff"><small>Les effets</small><div class="cc-syms"><span class="eps">p</span><span class="eps">q</span><span class="gam">T</span><span class="gam">ZF</span></div><p><span class="eps">bleu</span> : ce qu'on mesure ou calcule (pénétration, densité de puissance, diamètre du point, énergie) ; <span class="gam">bleu-vert</span> : la température, le bain et la zone fondue</p></div>
+  </div>
+  <div class="cc-more">
+    <div><b>Noir</b> : la géométrie dessinée (électrodes, tôles, têtes, canons, outils).</div>
+    <div><b class="wcol">Bronze</b> : le cuivre des électrodes et des optiques, le métal soudé et les encadrés « métier » 🔥.</div>
+  </div>
+</div>
+</header>
+
+<nav class="toc" aria-label="Sommaire">
+  <div class="toc-in">
+    <a href="#avant">Avant de commencer</a>
+    <a href="#c1">1 Le capillaire de vapeur</a>
+    <a href="#c2">2 Sources laser et focalisation</a>
+    <a href="#c3">3 Souder au laser</a>
+    <a href="#c4">4 Le canon et le vide</a>
+    <a href="#c5">5 Souder au faisceau d'électrons</a>
+    <a href="#exos">Exercices</a>
+    <a href="#quiz-s">Quiz</a>
+    <a href="#fiche">Fiche mémoire</a>
+    <a href="#gloss">Glossaire</a>
+    <a href="#check">Check-list</a>
+  </div>
+</nav>
+
+<main>
+<section class="chap" id="avant">
+<div class="wrap">
+  <h3 style="margin-top:0">Avant de commencer</h3>
+  <h4>Ce qu'il faut avoir en tête, en trois cases</h4>
+  <div class="recall">
+    <div><div class="f">q = P / S</div>Densité de puissance : la puissance divisée par la surface de la tache ; elle décide si l'on fond en surface ou si l'on perce (Arc sous gaz, cours 5).</div>
+    <div><div class="f">trou de serrure</div>Un trou qui traverse le bain et avance avec la source, le métal fondu se refermant derrière (plasma, Arc sous gaz, cours 5).</div>
+    <div><div class="f">W/cm² · kV · mA</div>Les unités du chapitre : densités en W/cm², tensions d'accélération en kV, courants de faisceau en mA.</div>
+  </div>
+
+  <div class="def"><b>📘 Le sujet</b> : <b>1.12.1 « Laser, faisceau d'électrons, plasma »</b> du planning et du référentiel de l'IIW (<i>International Institute of Welding</i>), partie laser et faisceau d'électrons ; le plasma a son cours dans la série « Soudage sous protection gazeuse ». Attendus de l'IWE (<i>International Welding Engineer</i>, ingénieur international en soudage) : expliquer les principes et l'équipement ; prévoir l'influence des paramètres sur le cordon ; définir les préparations et les difficultés propres à chaque procédé ; comparer laser, faisceau d'électrons et plasma ; reconnaître les risques.</div>
+
+  <div class="def"><b>📖 Normes et sigles</b>. <b>ISO 4063</b> : 51 faisceau d'électrons (511 sous vide, 512 sous atmosphère, 513 avec gaz) ; 52 laser (521 à solide, 522 à gaz, 523 à diodes). <b>ISO 15609-3</b> et <b>-4</b> : descriptifs de mode opératoire FE et laser ; <b>ISO 15614-11</b> : qualification FE et laser ; <b>ISO 13919-1</b> et <b>-2</b> : niveaux de qualité des défauts ; <b>IEC 60825-1</b> : classes de sécurité laser. <b>FE</b> : faisceau d'électrons ; <b>LASER</b> : amplification de lumière par émission stimulée de rayonnement ; <b>λ</b> : longueur d'onde. Les manipulations sont des modèles pédagogiques : tendances et ordres de grandeur.</div>
+
+  <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage</b>
+    <p>Laser et faisceau d'électrons soudent vite, profond et étroit, avec peu de déformation : carrosseries, boîtes de vitesses, aéronautique, nucléaire, réservoirs de lanceurs. En échange, ils exigent une préparation au dixième de millimètre et des modes opératoires qualifiés pièce par pièce. L'ingénieur décide quand ils valent leur prix.</p>
+  </div>
+
+  <h4>La série</h4>
+  <div class="series" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">
+    <div><b>1 Le soudage par résistance</b>Points, molette, bossages, en bout.</div>
+    <div class="here"><b>2 Laser et faisceau d'électrons</b>Les faisceaux à haute densité d'énergie.</div>
+    <div><b>3 Le soudage par friction</b>Souder à l'état solide.</div>
+    <div><b>4 Goujons et autres procédés</b>Goujons, électroslag, ultrasons, explosion…</div>
+    <div><b>5 La robotisation</b>Mécaniser, automatiser, programmer.</div>
+    <div><b>6 Plastiques et composites</b>Assembler ce qui n'est pas métallique.</div>
+  </div>
+
+  <h4>Le plan du cours</h4>
+  <ol class="route">
+    <li><span class="dot">1</span><b>Le capillaire de vapeur</b><p>Conduction ou capillaire : le seuil de densité de puissance.</p></li>
+    <li><span class="dot">2</span><b>Sources laser et focalisation</b><p>CO₂, disque, fibre, diodes ; absorption ; tache et foyer.</p></li>
+    <li><span class="dot">3</span><b>Souder au laser</b><p>Joints, jeu d'accostage, hybride laser-MAG, sécurité.</p></li>
+    <li><span class="dot">4</span><b>Le canon et le vide</b><p>Cathode, tension, courant, focalisation, vide, rayons X.</p></li>
+    <li><span class="dot">5</span><b>Souder au faisceau d'électrons</b><p>Régimes, programme, défauts, préparation, qualification.</p></li>
+  </ol>
+</div>
+</section>
+<section class="chap" id="c1">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">1</div>
+    <div class="c-title"><h2>Le capillaire de vapeur</h2><p>Conduction ou capillaire : le seuil de densité de puissance</p></div>
+    <div class="c-img"><span class="ico">🕳️</span><span><small>Image à retenir</small>Le clou de lumière : un faisceau si concentré qu'il perce un puits de vapeur dans le métal ; le bain s'écoule autour du puits et se referme derrière lui</span></div>
+  </div>
+
+  <p>Un faisceau laser ou d'électrons dépose son énergie à la surface du métal. Si la densité de puissance est modérée, la chaleur diffuse dans la pièce comme sous un arc : c'est le soudage par <b>conduction</b>, large et peu profond. Au-delà d'un seuil, la surface se vaporise plus vite que la chaleur ne s'évacue ; la pression de la vapeur creuse un <b>capillaire</b> (<i>keyhole</i>), étroit et profond, où le faisceau rebondit et se fait absorber sur toute la hauteur. Le capillaire avance avec la source : le métal fondu le contourne et se solidifie derrière, en une soudure plus profonde que large.</p>
+
+  <div class="def"><b>📖 Deux régimes de soudage.</b>
+    <ul>
+      <li><b>Conduction</b> : densité de puissance inférieure à environ 10<sup>5</sup> à 5·10<sup>5</sup> W/cm² ; tache de 1,5 à 3 mm ; zone fondue en cuvette, de 1 à 2 mm de profondeur ; aspect lisse (tôlerie fine, soudures d'aspect).</li>
+      <li><b>Capillaire</b> : au-delà d'environ 10<sup>6</sup> W/cm² ; tache de quelques dixièmes de millimètre ; rapport profondeur sur largeur de 5 à 10 et plus ; une passe pour des épaisseurs de plusieurs millimètres (laser) à plus de 100 mm (FE).</li>
+      <li><b>Entre les deux</b>, un capillaire instable, qui s'ouvre et se referme : pénétration irrégulière, porosités.</li>
+    </ul>
+  </div>
+
+  <div class="fx"><div class="row big"><span><span class="eps">q</span> = <span class="sig">P</span> / (π·<span class="mat">d</span>²/4)</span></div><p class="cap">q : densité de puissance (W/cm²) ; P : puissance du faisceau (W) ; d : diamètre de la tache (cm). La pénétration en capillaire croît presque comme P et décroît lentement avec la vitesse v. Modèle du cours (laser de 1 μm sur acier) : <span class="m">p ≈ 1,54·P·v<sup>−0,3</sup></span>, avec p en mm, P en kW et v en m/min, pour une tache de 0,6 mm.</p></div>
+
+  <div class="lab" id="m1">
+    <p class="lab-h">Manipulation 1 : conduction ou capillaire</p>
+    <p class="lab-sub">Règle la puissance, la vitesse et le diamètre de la tache d'un laser sur acier : la densité de puissance, le régime et la coupe de la soudure suivent.<span class="predict">🔮 Prédis d'abord : à 4 kW, que change le passage d'une tache de 2,5 mm à une tache de 0,6 mm ?</span></p>
+    <div class="btns" id="m1b">
+      <button class="btn" data-p="4" data-v="1" data-d="2.5" type="button">4 kW, tache 2,5 mm</button>
+      <button class="btn on" data-p="4" data-v="2" data-d="0.6" type="button">4 kW, tache 0,6 mm</button>
+      <button class="btn" data-p="12" data-v="1" data-d="0.6" type="button">12 kW, 1 m/min</button>
+    </div>
+    <div class="ctrl"><label for="m1p">Puissance <b class="sig">P</b></label><input type="range" id="m1p" min="0.5" max="16" step="0.5" value="4"><output id="m1po"></output></div>
+    <div class="ctrl"><label for="m1v">Vitesse <b class="mat">v</b></label><input type="range" id="m1v" min="0.5" max="10" step="0.1" value="2"><output id="m1vo"></output></div>
+    <div class="ctrl"><label for="m1d">Diamètre de tache <b class="mat">d</b></label><input type="range" id="m1d" min="0.2" max="3" step="0.05" value="0.6"><output id="m1do"></output></div>
+    <svg id="m1svg" role="img" aria-label="Échelle de densité de puissance avec le seuil du capillaire, et coupe de la soudure en conduction ou en capillaire"></svg>
+    <div class="readout" id="m1r"></div>
+    <p class="status" id="m1msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> (modèle) : 4 kW sur une tache de 2,5 mm donnent <span class="m">q = 4 000/(π × 0,125²) ≈ 8·10<sup>4</sup> W/cm²</span> : conduction, environ 1 mm de pénétration. Les mêmes 4 kW sur 0,6 mm donnent <span class="m">1,4·10<sup>6</sup> W/cm²</span> : capillaire, environ <b>5 mm</b> à 2 m/min. À 12 kW et 1 m/min, le modèle atteint 18,5 mm. La même puissance, concentrée dix-sept fois plus, change de régime.</p>
+
+  <div class="warn"><b>⚠️ Piège : confondre puissance et densité de puissance.</b> Un laser de 4 kW mal focalisé, ou focalisé au mauvais endroit, soude en conduction comme une petite source à l'arc. Ce n'est pas la puissance qui fait le capillaire, c'est sa concentration.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « 10⁵ je fonds, 10⁶ je perce »</b>.</div>
+  <div class="weld"><b>🔥 Ce que le capillaire apporte :</b> une soudure étroite, donc peu de chaleur par millimètre de cordon, une zone affectée mince et des déformations faibles. C'est souvent ce qui justifie le procédé : supprimer le redressage après soudage, ou souder près d'un composant sensible.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : la plume et le plasma</summary>
+    <p>Au-dessus du capillaire, la vapeur métallique s'échappe en une plume. Avec un laser CO<sub>2</sub> de 10,6 μm, cette vapeur s'ionise en un plasma qui absorbe le faisceau et l'empêche d'atteindre la pièce : on la souffle avec de l'hélium, dont le potentiel d'ionisation est élevé. Aux longueurs d'onde voisines de 1 μm (disque, fibre), la plume absorbe beaucoup moins ; un gaz d'argon ou d'azote suffit pour protéger le bain. Sous vide, le faisceau d'électrons n'a pas ce problème, mais la vapeur peut remonter vers le canon.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Conduction sous 10⁵ W/cm² ; capillaire au-delà de 10⁶ W/cm².</li>
+      <li>q = P/S : concentrer la tache fait changer de régime.</li>
+      <li>Capillaire : profond, étroit, peu de déformations.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c2">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">2</div>
+    <div class="c-title"><h2>Sources laser et focalisation</h2><p>CO₂, disque, fibre, diodes ; absorption ; tache et foyer</p></div>
+    <div class="c-img"><span class="ico">⏳</span><span><small>Image à retenir</small>Le sablier de lumière : le faisceau se resserre jusqu'au foyer puis s'évase ; plus le col est fin, plus il est court, et la pièce doit rester dans le col</span></div>
+  </div>
+
+  <p>Un laser amplifie la lumière par émission stimulée : un milieu actif (gaz, cristal, fibre, semi-conducteur), excité par un pompage, émet des photons tous identiques, que deux miroirs font osciller avant d'en laisser sortir une partie. Le faisceau est monochromatique et très peu divergent : on peut le transporter, puis le concentrer sur une tache de quelques dixièmes de millimètre. Pour le soudage, deux grandeurs comptent d'abord : la <b>longueur d'onde</b>, qui fixe l'absorption par le métal et le transport du faisceau, et la <b>qualité du faisceau</b>, qui fixe la finesse et la longueur du foyer.</p>
+
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Source</th><th>λ</th><th>Transport</th><th>Rendement</th><th>Usage</th></tr></thead>
+    <tbody>
+      <tr><td>CO₂ (gaz)</td><td>10,6 μm</td><td>miroirs</td><td>≈ 10 %</td><td>fortes puissances historiques, découpe</td></tr>
+      <tr><td>Nd:YAG pompé par lampes</td><td>1,06 μm</td><td>fibre</td><td>quelques %</td><td>impulsions, petites pièces</td></tr>
+      <tr><td>Disque, fibre (solides pompés par diodes)</td><td>≈ 1,03-1,07 μm</td><td>fibre</td><td>20 à 30 % et plus</td><td>soudage actuel, jusqu'à des dizaines de kW</td></tr>
+      <tr><td>Diodes</td><td>0,8-1 μm</td><td>fibre ou direct</td><td>35 à 50 %</td><td>conduction, brasage, traitements de surface</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="def"><b>📖 Absorption et focalisation.</b>
+    <ul>
+      <li><b>Absorption</b> : un acier poli absorbe environ 30 % à 1 μm et moins de 10 % à 10,6 μm ; l'aluminium et le cuivre réfléchissent presque tout. Une fois le capillaire ouvert, les réflexions multiples dans le puits portent l'absorption au-delà de 80 %.</li>
+      <li><b>Focalisation</b> : la sortie de fibre est l'objet, la tache est son image : <span class="m">d = c·f/f<sub>c</sub></span>, avec c le diamètre du cœur de fibre, f<sub>c</sub> la focale de collimation, f celle de focalisation.</li>
+      <li><b>Profondeur de champ</b> : zone autour du foyer où le diamètre ne grandit pas de plus de 5 % ; la densité de puissance y reste à 10 % près.</li>
+    </ul>
+  </div>
+
+  <div class="fx"><div class="row big"><span><span class="eps">z</span><sub>R</sub> = <span class="mat">d</span>² / (4·BPP)</span></div><p class="cap">Longueur de Rayleigh, distance où l'aire de la tache double : d diamètre au foyer (mm) ; BPP produit paramètre de faisceau, rayon fois demi-divergence (mm·mrad, divisé par 1 000 pour des mm·rad), d'autant plus petit que le faisceau est de bonne qualité. La profondeur de champ à 5 % vaut environ ± 0,32·z<sub>R</sub>.</p></div>
+
+  <div class="lab" id="m2">
+    <p class="lab-h">Manipulation 2 : la tache et le foyer</p>
+    <p class="lab-sub">Laser de 4 kW sortant d'une fibre (ouverture numérique 0,1) : choisis le cœur de fibre et le rapport des focales, puis décale le foyer par rapport à la surface.<span class="predict">🔮 Prédis d'abord : une tache deux fois plus fine a-t-elle une profondeur de champ plus longue ou plus courte ?</span></p>
+    <div class="btns" id="m2b">
+      <button class="btn on" data-c="0.2" data-r="2" type="button">Fibre 200 μm, f/f<sub>c</sub> = 2</button>
+      <button class="btn" data-c="0.1" data-r="2" type="button">Fibre 100 μm</button>
+      <button class="btn" data-c="0.6" data-r="1" type="button">Fibre 600 μm, f/f<sub>c</sub> = 1</button>
+    </div>
+    <div class="ctrl"><label for="m2c">Cœur de fibre <b class="mat">c</b></label><input type="range" id="m2c" min="0.05" max="0.6" step="0.05" value="0.2"><output id="m2co"></output></div>
+    <div class="ctrl"><label for="m2r">Rapport des focales <b class="mat">f/f<sub>c</sub></b></label><input type="range" id="m2r" min="1" max="4" step="0.1" value="2"><output id="m2ro"></output></div>
+    <div class="ctrl"><label for="m2z">Position du foyer <b class="mat">z</b></label><input type="range" id="m2z" min="-6" max="6" step="0.25" value="0"><output id="m2zo"></output></div>
+    <svg id="m2svg" role="img" aria-label="Caustique du faisceau autour du foyer, avec la profondeur de champ et la surface de la pièce, et densité de puissance à la surface"></svg>
+    <div class="readout" id="m2r2"></div>
+    <p class="status" id="m2msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> (modèle) : fibre de 200 μm, <span class="m">f/f<sub>c</sub> = 2</span> : tache de <span class="m">0,2 × 2 = 0,4 mm</span>, BPP = 10 mm·mrad, <span class="m">z<sub>R</sub> = 0,4²/(4 × 0,010) = 4 mm</span>, profondeur de champ d'environ ± 1,3 mm ; densité au foyer 3,2·10<sup>6</sup> W/cm². Décalé de 3 mm, le diamètre passe à 0,5 mm et la densité tombe à 2,0·10<sup>6</sup> W/cm², soit 36 % de moins. Avec une fibre de 100 μm, la tache fait 0,2 mm, mais z<sub>R</sub> n'est plus que de 2 mm.</p>
+
+  <div class="warn"><b>⚠️ Piège : déplacer le foyer sans le savoir.</b> Un montage qui fléchit, une pièce voilée ou une lentille encrassée qui chauffe (dérive thermique) décalent le foyer de quelques dixièmes de millimètre : la pénétration varie fortement. On contrôle la position du foyer et la propreté des optiques, et l'on bride la pièce pour qu'elle reste dans la profondeur de champ.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « col fin, col court »</b> : une tache deux fois plus fine obtenue par la focale divise la profondeur de champ par quatre ; obtenue par une fibre deux fois plus fine, par deux.</div>
+  <div class="weld"><b>🔥 Choisir la source :</b> pour souder de l'acier, de l'inox ou de l'aluminium en production, les lasers à disque et à fibre, transportés par fibre jusqu'au robot, ont remplacé le CO<sub>2</sub> ; pour le cuivre, très réfléchissant à 1 μm, des sources vertes ou bleues se développent.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : pourquoi le CO₂ a reculé</summary>
+    <p>Le faisceau du CO<sub>2</sub>, à 10,6 μm, ne traverse ni le verre ni la silice : il se transporte par miroirs, ce qui complique son installation sur un robot. Il est aussi moins absorbé par les métaux et crée un plasma plus gênant au-dessus du capillaire. Les lasers à disque et à fibre, pompés par diodes, sont plus efficaces, plus compacts, et livrent leur faisceau par une fibre souple de plusieurs dizaines de mètres.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>CO₂ 10,6 μm, miroirs ; disque, fibre, diodes vers 1 μm, fibre.</li>
+      <li>d = c·f/f<sub>c</sub> ; tache fine, profondeur de champ courte.</li>
+      <li>Le capillaire porte l'absorption au-delà de 80 %.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c3">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">3</div>
+    <div class="c-title"><h2>Souder au laser</h2><p>Joints, jeu d'accostage, hybride laser-MAG, sécurité</p></div>
+    <div class="c-img"><span class="ico">🪡</span><span><small>Image à retenir</small>L'aiguille et le fil : le laser seul est une aiguille sans fil, il coud parfaitement deux bords qui se touchent ; dès qu'il y a un jour entre eux, il faut lui donner du fil</span></div>
+  </div>
+
+  <p>Le laser soude sans contact, à grande vitesse, souvent sans métal d'apport : la soudure est faite du métal des bords. C'est sa force et sa faiblesse. Les bords doivent se toucher : avec une tache de quelques dixièmes de millimètre, un jeu de 0,3 mm laisse passer le faisceau, et il manque du métal pour remplir. D'où trois façons de souder : le <b>laser seul</b>, avec des pièces bien préparées et bridées ; le laser avec <b>fil froid</b>, qui apporte du métal ; et l'<b>hybride laser-MAG</b>, où un arc MAG suit ou précède le faisceau dans le même bain.</p>
+
+  <div class="def"><b>📖 Concevoir et conduire une soudure laser.</b>
+    <ul>
+      <li><b>Joints</b> : bout à bout à bords droits, par transparence (à travers la tôle supérieure), à clin, en angle ; pénétration contrôlée ou débouchante.</li>
+      <li><b>Préparation</b> : bords propres, droits, sans calamine ni huile ; jeu de l'ordre de 0,2 à 0,3 mm au plus en laser seul, dénivelé faible ; outillage qui garde la pièce dans la profondeur de champ.</li>
+      <li><b>Gaz</b> : argon ou azote à 1 μm, hélium avec le CO<sub>2</sub> ; protection envers si la soudure débouche.</li>
+      <li><b>Défauts</b> : porosités (capillaire instable, peinture, humidité), caniveaux et manques d'épaisseur (jeu), effondrement, projections, fissuration à chaud des alliages sensibles.</li>
+      <li><b>Variantes</b> : soudage à distance par scanner (<i>remote welding</i>), laser bi-spot, soudobrasage laser des tôles galvanisées.</li>
+    </ul>
+  </div>
+
+  <div class="fx"><div class="row big"><span><span class="eps">s</span> ≈ 0,75·(<span class="mat">g</span>·<span class="mat">e</span> − <span class="mat">S</span><sub>fil</sub>·WFS/<span class="mat">v</span>) / <span class="mat">l</span></span></div><p class="cap">Modèle du cours : s manque d'épaisseur sur la face (mm ; négatif, c'est une surépaisseur) ; g jeu et e épaisseur (mm), dont le produit est le volume à combler par millimètre ; S<sub>fil</sub>·WFS/v la section apportée par le fil ; l largeur du cordon en surface. Le facteur 0,75 traduit qu'une partie du manque se reporte à l'envers.</p></div>
+
+  <div class="lab" id="m3">
+    <p class="lab-h">Manipulation 3 : combler le jeu</p>
+    <p class="lab-sub">Tôles d'acier de 4 mm soudées à 2 m/min : choisis le procédé, puis règle le jeu et la vitesse du fil d'apport. La coupe montre le manque ou la surépaisseur.<span class="predict">🔮 Prédis d'abord : avec 0,5 mm de jeu, le laser seul suffit-il ?</span></p>
+    <div class="btns" id="m3b">
+      <button class="btn on" data-m="laser" type="button">Laser seul</button>
+      <button class="btn" data-m="froid" type="button">Laser + fil froid Ø 1,0</button>
+      <button class="btn" data-m="hybride" type="button">Hybride laser-MAG Ø 1,2</button>
+    </div>
+    <div class="ctrl"><label for="m3g">Jeu <b class="mat">g</b></label><input type="range" id="m3g" min="0" max="1.5" step="0.05" value="0.2"><output id="m3go"></output></div>
+    <div class="ctrl"><label for="m3w">Vitesse de fil <b class="mat">WFS</b></label><input type="range" id="m3w" min="0" max="12" step="0.5" value="0"><output id="m3wo"></output></div>
+    <svg id="m3svg" role="img" aria-label="Coupe d'un joint bout à bout avec jeu, soudé au laser seul, avec fil froid ou en hybride, montrant le manque d'épaisseur ou la surépaisseur"></svg>
+    <div class="readout" id="m3r"></div>
+    <p class="status" id="m3msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> (modèle) : 0,2 mm de jeu en laser seul : <span class="m">0,2 × 4 = 0,8 mm²</span> à combler, environ 0,4 mm de manque d'épaisseur, admissible. À 0,5 mm, le faisceau passe dans le jeu : les bords ne fondent plus. En hybride, un fil de 1,2 mm à 6 m/min apporte <span class="m">1,131 × 6/2 ≈ 3,4 mm²</span> par millimètre de cordon : 1 mm de jeu (4 mm²) est presque comblé, avec un cordon large de 6 mm qui tolère aussi un léger désalignement.</p>
+
+  <div class="warn"><b>⚠️ Piège : protéger ses yeux avec des lunettes de soudeur.</b> Un laser de soudage est de classe 4 selon l'IEC 60825-1 : le faisceau direct ou réfléchi brûle la rétine et la peau, et le rayonnement vers 1 μm est invisible. On travaille en cellule fermée, qui ramène l'ensemble en classe 1, avec verrouillages, hublots filtrants adaptés à la longueur d'onde, et aspiration des fumées. Les lunettes de tôlerie ne protègent pas.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « laser seul, bords qui se touchent ; du jour, du fil »</b>.</div>
+  <div class="weld"><b>🔥 Pourquoi l'hybride :</b> le laser fait la pénétration, l'arc fait le remplissage et la largeur ; l'arc tolère le jeu et le désalignement, le laser stabilise l'arc et accélère tout le procédé. En échange, deux procédés à régler, et plus de paramètres à qualifier (puissance, foyer, tension, vitesse de fil, distance laser-arc, procédé en tête).</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : le soudage à distance</summary>
+    <p>Une tête à miroirs mobiles (scanner), montée sur un robot, dévie le faisceau d'un point à l'autre en quelques millisecondes, à plusieurs dizaines de centimètres de la pièce. Le robot n'a plus à parcourir chaque cordon : le temps de cycle chute, et l'on peut donner aux soudures des formes choisies (courtes lignes, arcs, chevrons) selon le passage des efforts et la tenue en fatigue. Il faut des tôles bien bridées, car aucune buse ne vient plaquer les pièces.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Laser seul : jeu de 0,2 à 0,3 mm au plus, bords propres.</li>
+      <li>Fil froid ou hybride laser-MAG pour combler le jeu.</li>
+      <li>Classe 4 : cellule fermée, hublots adaptés à λ.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c4">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">4</div>
+    <div class="c-title"><h2>Le canon et le vide</h2><p>Cathode, tension, courant, focalisation, vide, rayons X</p></div>
+    <div class="c-img"><span class="ico">📺</span><span><small>Image à retenir</small>Le téléviseur à tube géant : une cathode chaude émet des électrons, une haute tension les lance, des bobines les concentrent et les dirigent ; sous vide, sans quoi ils s'arrêteraient dans l'air</span></div>
+  </div>
+
+  <p>Le faisceau d'électrons naît dans un <b>canon</b>. Une cathode chauffée (tungstène, tantale, hexaborure de lanthane) émet des électrons ; une électrode de commande, le <b>wehnelt</b>, en règle le débit ; une <b>anode</b> portée à une très haute tension par rapport à la cathode les accélère. Le faisceau traverse ensuite une <b>bobine de focalisation</b>, véritable lentille magnétique, puis des <b>bobines de déflexion</b>, qui le dévient ou le font osciller. Les électrons cèdent leur énergie cinétique au métal en le frappant : chaleur, vaporisation, capillaire. Tout cela se passe sous vide, car les électrons seraient dispersés par l'air, la cathode s'oxyderait et la haute tension s'amorcerait en arcs.</p>
+
+  <div class="def"><b>📖 La machine et ses grandeurs.</b>
+    <ul>
+      <li><b>Tension d'accélération</b> U : de quelques dizaines à 150 kV environ ; <b>courant de faisceau</b> I : de quelques dizaines à plusieurs centaines de milliampères ; puissance jusqu'à des dizaines de kilowatts.</li>
+      <li><b>Tache</b> : quelques dixièmes de millimètre à 1 mm ; distance de tir de 100 à 500 mm environ.</li>
+      <li><b>Vide</b> : de l'ordre de 10<sup>−6</sup> à 10<sup>−7</sup> mbar dans le canon, de 10<sup>−3</sup> à 10<sup>−4</sup> mbar dans l'enceinte ; pompage primaire (palettes, Roots) puis secondaire (diffusion, turbomoléculaire, cryogénique) ; temps de pompage croissant avec le volume.</li>
+      <li><b>Rayons X</b> : produits quand les électrons frappent la pièce ; l'enceinte en acier, doublée de plomb si nécessaire, les arrête.</li>
+    </ul>
+  </div>
+
+  <div class="fx"><div class="row big"><span><span class="eps">P</span> = <span class="sig">U</span>·<span class="sig">I</span> · <span class="eps">E</span> = <span class="eps">P</span>/<span class="mat">v</span></span></div><p class="cap">P puissance du faisceau (kW, avec U en kV et I en A ; 60 kV × 333 mA = 20 kW) ; E énergie linéique (kJ/cm avec v en cm/s, ou kJ/mm). Modèle du cours (acier) : <span class="m">p ≈ 8,3·P/√v × (U/60)<sup>0,3</sup></span>, avec p en mm, P en kW, v en cm/min : à puissance égale, une tension plus haute donne un faisceau plus fin et plus pénétrant.</p></div>
+
+  <div class="lab" id="m4">
+    <p class="lab-h">Manipulation 4 : régler le canon</p>
+    <p class="lab-sub">Règle la tension d'accélération, le courant de faisceau et la vitesse : puissance, énergie linéique et pénétration dans l'acier s'affichent.<span class="predict">🔮 Prédis d'abord : 20 kW à 40 kV ou 20 kW à 60 kV, lequel pénètre le plus ?</span></p>
+    <div class="btns" id="m4b">
+      <button class="btn" data-u="40" data-i="500" data-v="30" type="button">40 kV, 500 mA</button>
+      <button class="btn on" data-u="60" data-i="333" data-v="30" type="button">60 kV, 333 mA</button>
+      <button class="btn" data-u="60" data-i="167" data-v="60" type="button">10 kW, 60 cm/min</button>
+    </div>
+    <div class="ctrl"><label for="m4u">Tension <b class="sig">U</b></label><input type="range" id="m4u" min="30" max="150" step="5" value="60"><output id="m4uo"></output></div>
+    <div class="ctrl"><label for="m4i">Courant <b class="sig">I</b></label><input type="range" id="m4i" min="10" max="600" step="1" value="333"><output id="m4io"></output></div>
+    <div class="ctrl"><label for="m4v">Vitesse <b class="mat">v</b></label><input type="range" id="m4v" min="10" max="150" step="1" value="30"><output id="m4vo"></output></div>
+    <svg id="m4svg" role="img" aria-label="Canon à électrons, faisceau focalisé et coupe de la soudure dans une pièce épaisse"></svg>
+    <div class="readout" id="m4r"></div>
+    <p class="status" id="m4msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> (modèle) : 60 kV et 333 mA font 20 kW ; à 30 cm/min (0,5 cm/s), <span class="m">E = 20/0,5 = 40 kJ/cm</span>, soit 4 kJ/mm, et environ <b>30 mm</b> de pénétration dans l'acier. À 40 kV et 500 mA, même puissance, le faisceau est plus large : environ 27 mm. À 10 kW et 60 cm/min, <span class="m">E = 10 kJ/cm</span> et environ 11 mm : la pénétration baisse quand la vitesse monte, à puissance égale.</p>
+
+  <div class="warn"><b>⚠️ Piège : oublier le magnétisme.</b> Un faisceau d'électrons est dévié par un champ magnétique : une pièce aimantée, un outillage ou un bras de manutention magnétique font dériver le faisceau à côté du joint, sans que rien ne se voie. On démagnétise pièces et outillages, on contrôle le champ résiduel, et l'on évite les manutentions par aimant.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « kV pour pousser, mA pour chauffer »</b> : la tension accélère et affine, le courant règle la puissance.</div>
+  <div class="weld"><b>🔥 Le prix du vide :</b> l'enceinte limite la taille des pièces et impose un temps de pompage à chaque chargement, de quelques minutes à bien plus pour les très grandes enceintes. En échange, aucune contamination : c'est le procédé de choix pour le titane, le zirconium et les métaux réfractaires. Des machines à vide partiel ou localisé, et même hors vide (512), existent pour certaines productions.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : pourquoi un wehnelt</summary>
+    <p>Le courant émis par la cathode dépend de sa température et de la haute tension, mais régler l'un ou l'autre perturberait tout le faisceau. Le wehnelt, porté à quelques kilovolts de moins que la cathode, crée un contre-champ qui freine plus ou moins l'émission : il règle le courant sans toucher à la tension d'accélération, comme la grille d'un tube électronique. Sans tension de wehnelt, le canon fonctionne en diode, courant et tension liés.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Cathode, wehnelt, anode, bobines de focalisation et de déflexion.</li>
+      <li>P = U·I ; plus de kV, faisceau plus fin et plus pénétrant.</li>
+      <li>Vide, rayons X, démagnétisation : les trois contraintes du FE.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c5">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">5</div>
+    <div class="c-title"><h2>Souder au faisceau d'électrons</h2><p>Régimes, programme, défauts, préparation, qualification</p></div>
+    <div class="c-img"><span class="ico">⭕</span><span><small>Image à retenir</small>Fermer le cercle : une soudure circulaire démarre en douceur, fait le tour, repasse sur son départ, puis s'éteint en douceur sur du métal déjà soudé</span></div>
+  </div>
+
+  <p>Une soudure FE se conduit comme un programme : la machine fait monter la puissance, avance à vitesse constante, fait osciller le faisceau, puis l'éteint progressivement. Elle se fait <b>débouchante</b>, le capillaire traversant la pièce, ou <b>non débouchante</b>, en pénétration partielle. Les débuts et fins de soudure sont les zones à risque : sur une soudure rectiligne, on les reporte dans des <b>martyrs</b> qu'on retire ensuite ; sur une soudure circulaire, on les loge dans un recouvrement.</p>
+
+  <div class="def"><b>📖 Régimes, défauts et préparation.</b>
+    <ul>
+      <li><b>Débouchant</b> : bon dégazage, pénétration régulière ; mais projections à l'envers (pare-feu) et risque d'effondrement en grande épaisseur à plat.</li>
+      <li><b>Non débouchant</b> : endroit régulier, pas de projections à l'envers ; mais pénétration irrégulière en pointes (<i>spikes</i>), cavités et porosités en fond.</li>
+      <li><b>Défauts propres</b> : spikes, cavités de fin de soudure, déviation du faisceau par magnétisme, retassures, gouttes froides ; plus fissures et porosités.</li>
+      <li><b>Préparation</b> : bords usinés, jeu inférieur au dixième de millimètre, dénivelé faible, propreté, démagnétisation ; accès en ligne droite pour le faisceau ; pas de cavité fermée (trous de dégazage).</li>
+      <li><b>Normes</b> : DMOS selon l'ISO 15609-3 (FE) ou -4 (laser) ; qualification selon l'ISO 15614-11 ; niveaux de qualité B, C, D selon l'ISO 13919-1 (aciers, nickel, titane) et -2 (aluminium, magnésium, cuivre).</li>
+    </ul>
+  </div>
+
+  <div class="fx"><div class="row big"><span>θ<sub>total</sub> = 360° + <span class="mat">θ</span><sub>rec</sub> + <span class="mat">θ</span><sub>év</sub> · <span class="mat">θ</span><sub>rec</sub> ≥ <span class="mat">θ</span><sub>montée</sub></span></div><p class="cap">Programme d'une soudure circulaire : la montée en puissance (θ<sub>montée</sub>) laisse une zone en pénétration partielle, que le recouvrement (θ<sub>rec</sub>) doit reprendre à pleine puissance ; l'évanouissement (θ<sub>év</sub>) éteint le faisceau progressivement sur du métal déjà soudé, pour refermer le capillaire sans cavité. Ces zones font partie de la qualification.</p></div>
+
+  <div class="lab" id="m5">
+    <p class="lab-h">Manipulation 5 : boucler une soudure circulaire</p>
+    <p class="lab-sub">Règle la montée en puissance, le recouvrement et l'évanouissement, puis fais tourner le faisceau autour de la pièce.<span class="predict">🔮 Prédis d'abord : avec 60° de montée et 30° de recouvrement, toute la circonférence est-elle soudée à pleine pénétration ?</span></p>
+    <div class="btns" id="m5b">
+      <button class="btn on" data-m="30" data-r="45" data-e="60" type="button">Programme correct</button>
+      <button class="btn" data-m="60" data-r="30" data-e="60" type="button">Recouvrement court</button>
+      <button class="btn" data-m="30" data-r="45" data-e="10" type="button">Coupure brutale</button>
+    </div>
+    <div class="btns" id="m5pl">
+      <button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button>
+      <button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button>
+      <button class="btn play" data-a="play" type="button">▶ Souder le tour</button>
+      <button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button>
+    </div>
+    <div class="ctrl"><label for="m5m">Montée <b class="mat">θ<sub>montée</sub></b></label><input type="range" id="m5m" min="10" max="90" step="5" value="30"><output id="m5mo"></output></div>
+    <div class="ctrl"><label for="m5r">Recouvrement <b class="mat">θ<sub>rec</sub></b></label><input type="range" id="m5r" min="0" max="90" step="5" value="45"><output id="m5ro"></output></div>
+    <div class="ctrl"><label for="m5e">Évanouissement <b class="mat">θ<sub>év</sub></b></label><input type="range" id="m5e" min="5" max="90" step="5" value="60"><output id="m5eo"></output></div>
+    <svg id="m5svg" role="img" aria-label="Pièce circulaire vue de face avec le faisceau qui tourne et la soudure colorée selon sa pénétration, et courbe de la puissance selon l'angle"></svg>
+    <div class="readout" id="m5r2"></div>
+    <p class="status" id="m5msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> : montée sur 30°, recouvrement de 45°, évanouissement sur 60° : le faisceau parcourt <span class="m">360 + 45 + 60 = 465°</span>. Les 30° du départ, soudés en montée, sont repris à pleine puissance par le recouvrement ; l'évanouissement se fait sur du métal déjà soudé. Avec 60° de montée et seulement 30° de recouvrement, 30° de la circonférence restent en pénétration partielle : un manque de pénétration invisible de l'extérieur.</p>
+
+  <div class="tbl-wrap"><table>
+    <thead><tr><th></th><th>Laser</th><th>Faisceau d'électrons</th></tr></thead>
+    <tbody>
+      <tr><td>Milieu</td><td>air, gaz de protection</td><td>vide (enceinte)</td></tr>
+      <tr><td>Épaisseurs en une passe</td><td>de quelques dixièmes à 20-25 mm</td><td>de quelques millimètres à plus de 150 mm</td></tr>
+      <tr><td>Accès, flexibilité</td><td>fibre, robot, scanner</td><td>pièce dans l'enceinte, faisceau en ligne droite</td></tr>
+      <tr><td>Matériaux réfléchissants</td><td>difficiles (cuivre, aluminium)</td><td>bien soudables</td></tr>
+      <tr><td>Matériaux réactifs</td><td>protection soignée</td><td>idéal (titane, zirconium)</td></tr>
+      <tr><td>Risques</td><td>rayonnement laser (classe 4)</td><td>rayons X, haute tension</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="warn"><b>⚠️ Piège : qualifier la soudure sans ses débuts et fins.</b> La montée en puissance, le recouvrement et l'évanouissement sont les zones les plus exposées aux défauts (cavités, manques de pénétration). La qualification selon l'ISO 15614-11 doit les inclure, avec des coupes longitudinales dans ces zones.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « monter, tourner, recouvrir, s'éteindre »</b>.</div>
+  <div class="weld"><b>🔥 Où on le trouve :</b> pièces aéronautiques et spatiales (réservoirs, carters), trains d'engrenages assemblés, récipients et internes nucléaires épais, échangeurs, assemblages hétérogènes. La pièce est souvent conçue pour le FE : emboîtements, talons, pare-feu intégré.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : faire osciller le faisceau</summary>
+    <p>Les bobines de déflexion déplacent le faisceau en quelques microsecondes : on le fait osciller le long ou en travers du joint, en cercle ou en ellipse, à des centaines de hertz. L'oscillation élargit un peu le capillaire, le stabilise, aide les gaz à s'échapper et réduit spikes et porosités. Elle permet aussi de lisser l'endroit dans une passe cosmétique, ou de partager le faisceau entre plusieurs bains.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Débouchant : dégazage, projections envers ; non débouchant : spikes.</li>
+      <li>Circulaire : recouvrement ≥ montée ; évanouissement sur métal soudé.</li>
+      <li>Jeu &lt; 0,1 mm, démagnétisation ; ISO 15614-11, 13919.</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="exos">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✎</div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Deux exercices : régler un laser pour un raboutage, puis conduire une soudure circulaire au faisceau d'électrons</p></div>
+    <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de musculation : on ne progresse qu'en soulevant soi-même</span></div>
+  </div>
+  <p>Cherche chaque question sur papier avant d'ouvrir la correction : écris la relation, puis les valeurs (W/cm², mm, m/min, kV, mA, kJ/cm). Le premier exercice se vérifie dans les manipulations 1 à 3 ; le second se rejoue dans les manipulations 4 et 5.</p>
+
+  <div class="exo">
+    <h4>Exercice 1 : un raboutage laser <span class="lvtag">★ application · chapitres 1 à 3</span></h4>
+    <p>Une ligne raboute bord à bord des tôles d'acier de 3 mm avec un laser à fibre de 4 kW. Modèles du cours.</p>
+    <p class="q"><b>a)</b> Densité de puissance avec une tache de 0,6 mm, puis de 2 mm. Quel régime dans chaque cas ?</p>
+    <p class="q"><b>b)</b> Avec 0,6 mm, quelle pénétration à 2 m/min ? Jusqu'à quelle vitesse garder 3,5 mm, pour déboucher avec une marge ?</p>
+    <p class="q"><b>c)</b> Fibre de 200 μm et f/f<sub>c</sub> = 2 : tache, longueur de Rayleigh, profondeur de champ ? Les tôles ondulent de ± 1 mm : est-ce acceptable ? Et avec une fibre de 100 μm ?</p>
+    <p class="q"><b>d)</b> Sur une autre ligne (tôles de 4 mm, 2 m/min), le jeu atteint 0,5 mm. Laser seul ? Sinon, quelle vitesse de fil froid de 1,0 mm pour combler le jeu ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">q = 4 000/(π × 0,03²) ≈ 1,4·10<sup>6</sup> W/cm²</span> : <b>capillaire</b>. Avec 2 mm : <span class="m">4 000/(π × 0,1²) ≈ 1,3·10<sup>5</sup> W/cm²</span> : <b>conduction</b>.</p>
+      <p><b>b)</b> <span class="m">p ≈ 1,54 × 4 × 2<sup>−0,3</sup> ≈ 5,0 mm</span>. Pour 3,5 mm : <span class="m">v<sup>−0,3</sup> = 3,5/6,16 ≈ 0,568</span>, soit <span class="m">v ≈ 6,6 m/min</span>.</p>
+      <p><b>c)</b> <span class="m">d = 0,2 × 2 = 0,4 mm</span> ; BPP = 10 mm·mrad ; <span class="m">z<sub>R</sub> = 0,4²/(4 × 0,010) = 4 mm</span> ; profondeur de champ ≈ ± 1,3 mm : ± 1 mm passe, de justesse. Avec 100 μm : tache de 0,2 mm, z<sub>R</sub> = 2 mm, ± 0,64 mm : insuffisant, il faudrait brider ou suivre la surface.</p>
+      <p><b>d)</b> Non : 0,5 mm dépasse les 0,2 à 0,3 mm du laser seul, le faisceau passe dans le jeu. Fil froid : il faut <span class="m">S·WFS/v = g·e</span>, soit <span class="m">WFS = 0,5 × 4 × 2/0,785 ≈ 5,1 m/min</span>, fil bien centré sur le joint.</p>
+    </div></details>
+  </div>
+
+  <div class="exo defi">
+    <h4>Exercice 2 : une virole au faisceau d'électrons <span class="lvtag">★★ synthèse · chapitres 4 et 5 · manipulations 4 et 5</span></h4>
+    <p>Une virole d'acier inoxydable de 30 mm d'épaisseur et 400 mm de diamètre est soudée bout à bout en une passe, débouchante, avec un canon de 60 kV. Modèle du chapitre 4 : p ≈ 8,3·P/√v × (U/60)<sup>0,3</sup>.</p>
+    <p class="q"><b>a)</b> Pour 20 kW, quel courant ? Quelle vitesse pour environ 33 mm de pénétration (débouchant avec marge) ? Énergie linéique ?</p>
+    <p class="q"><b>b)</b> Durée d'un tour, puis du programme complet avec 45° de recouvrement et 60° d'évanouissement ?</p>
+    <p class="q"><b>c)</b> La montée en puissance dure 30°. Le programme est-il correct ? Que se passerait-il avec 15° de recouvrement ?</p>
+    <p class="q"><b>d)</b> Quelles précautions de préparation et de qualification ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">I = 20 000/60 ≈ 333 mA</span>. <span class="m">√v = 8,3 × 20/33 ≈ 5,0</span>, soit <span class="m">v ≈ 25 cm/min</span>. <span class="m">E = 20 × 60/25 ≈ 48 kJ/cm</span>, environ 4,8 kJ/mm.</p>
+      <p><b>b)</b> Circonférence <span class="m">π × 400 ≈ 1 257 mm</span> ; un tour à 250 mm/min dure <span class="m">≈ 5,0 min</span> ; le programme de 465° dure <span class="m">5,0 × 465/360 ≈ 6,5 min</span>.</p>
+      <p><b>c)</b> Oui : recouvrement de 45° ≥ montée de 30°, évanouissement de 60° sur métal déjà soudé. Avec 15° de recouvrement, 15° de la zone de montée restent en pénétration partielle : manque de pénétration interne, invisible.</p>
+      <p><b>d)</b> Bords usinés, jeu inférieur à 0,1 mm, propreté, <b>démagnétisation</b> de la virole et de l'outillage ; pare-feu à l'envers (soudure débouchante) ; DMOS ISO 15609-3, qualification ISO 15614-11 avec coupes dans les zones de montée, de recouvrement et d'évanouissement ; niveau de qualité selon l'ISO 13919-1.</p>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="quiz-s">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">?</div>
+    <div class="c-title"><h2>Quiz : 12 questions éclair</h2><p>Chaque réponse est expliquée, même quand tu as juste</p></div>
+    <div class="c-img"><span class="ico">🎯</span><span><small>Image à retenir</small>La cible : vise 10 sur 12 avant le cours 3</span></div>
+  </div>
+  <div id="quiz"></div>
+  <div class="score" id="qzScore" aria-live="polite">Score : 0 / 12</div>
+  <div class="btns"><button class="btn" id="qzReset" type="button">↺ Recommencer le quiz</button></div>
+</div>
+</section>
+
+<section class="chap" id="fiche">
+<div class="wrap wide">
+  <div class="cartouche">
+    <div class="c-num">★</div>
+    <div class="c-title"><h2>Fiche mémoire du cours 2</h2><p>Neuf cases, neuf images : à photographier, puis à redessiner de tête</p></div>
+    <div class="c-img"><span class="ico">🔦</span><span><small>Image à retenir</small>Le clou de lumière : un faisceau si concentré qu'il perce un puits de vapeur dans le métal ; le bain s'écoule autour du puits et se referme derrière lui</span></div>
+  </div>
+  <div class="fiche">
+    <div><div class="ic">🕳️</div><h4>Deux régimes</h4><div class="f">10⁵ fond · 10⁶ perce (W/cm²)</div><p>Conduction large et peu profonde ; capillaire étroit, p/l de 5 à 10 et plus.</p></div>
+    <div><div class="ic">🎯</div><h4>Densité de puissance</h4><div class="f">q = P/(π·d²/4)</div><p>4 kW sur 0,6 mm : 1,4·10⁶ W/cm² ; sur 2,5 mm : 8·10⁴ W/cm².</p></div>
+    <div><div class="ic">🔦</div><h4>Sources laser</h4><div class="f">CO₂ 10,6 μm · disque, fibre ≈ 1 μm</div><p>Fibre : transport souple, meilleure absorption ; diodes pour la conduction.</p></div>
+    <div><div class="ic">⏳</div><h4>Focalisation</h4><div class="f">d = c·f/f<sub>c</sub> · z<sub>R</sub> = d²/(4·BPP)</div><p>Tache fine, profondeur de champ courte ; foyer à tenir au dixième.</p></div>
+    <div><div class="ic">🪡</div><h4>Souder au laser</h4><div class="f">jeu ≤ 0,2 à 0,3 mm</div><p>Au-delà : fil froid ou hybride laser-MAG. Bords propres, outillage précis.</p></div>
+    <div><div class="ic">🛡️</div><h4>Sécurité laser</h4><div class="f">classe 4 → cellule fermée</div><p>IEC 60825-1 ; rayonnement invisible vers 1 μm ; hublots adaptés, fumées aspirées.</p></div>
+    <div><div class="ic">📺</div><h4>Canon FE</h4><div class="f">P = U·I · E = P/v</div><p>Cathode, wehnelt, anode, bobines ; 60 kV × 333 mA = 20 kW ; vide, rayons X.</p></div>
+    <div><div class="ic">⭕</div><h4>Conduire le FE</h4><div class="f">θ<sub>rec</sub> ≥ θ<sub>montée</sub></div><p>Débouchant ou non ; martyrs, recouvrement, évanouissement sur métal soudé.</p></div>
+    <div><div class="ic">📋</div><h4>Préparer, qualifier</h4><div class="f">ISO 15609-3/-4 · 15614-11 · 13919</div><p>Jeu &lt; 0,1 mm (FE), démagnétisation ; qualifier aussi débuts et fins.</p></div>
+  </div>
+  <div class="btns"><button class="btn" id="printFiche" type="button">🖨 Imprimer la fiche mémoire</button></div>
+  <div class="fun"><span class="fun-h">⚛️ Fun fact : souder le combustible nucléaire</span>Le soudage par faisceau d'électrons est né au milieu des années 1950 dans le nucléaire. Au Commissariat à l'énergie atomique, J. A. Stohr cherchait à souder les gaines en alliage de zirconium du combustible, un métal qu'aucun procédé ne savait souder sans l'oxyder : le vide du faisceau réglait le problème. Presque au même moment, K. H. Steigerwald, chez Zeiss en Allemagne, développait le procédé de son côté (<a href="#c4">chapitre 4</a>). (Sources : Techniques de l'Ingénieur, article B7740, « Soudage par faisceaux à haute énergie » ; pro-beam, <i>History of EB welding</i>.)</div>
+</div>
+</section>
+
+<section class="chap" id="gloss">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">A–Z</div>
+    <div class="c-title"><h2>Glossaire</h2><p>Les mots, symboles et sigles de ce cours</p></div>
+    <div class="c-img"><span class="ico">📖</span><span><small>Image à retenir</small>Le dictionnaire : un mot flou, un clic</span></div>
+  </div>
+  <dl class="gloss">
+    <dt>BPP</dt><dd>Produit paramètre de faisceau : rayon au foyer fois demi-divergence (mm·mrad) ; plus il est petit, meilleur est le faisceau.</dd>
+    <dt>Capillaire</dt><dd>Puits de vapeur creusé dans le métal par un faisceau très dense (<i>keyhole</i>), qui avance avec la source.</dd>
+    <dt>Conduction (soudage par)</dt><dd>Régime où la chaleur diffuse depuis la surface, sans capillaire : zone fondue large et peu profonde.</dd>
+    <dt>Débouchant</dt><dd>Régime où le capillaire traverse toute l'épaisseur.</dd>
+    <dt>Déflexion</dt><dd>Déviation du faisceau d'électrons par des bobines, pour le guider ou le faire osciller.</dd>
+    <dt>Évanouissement</dt><dd>Baisse progressive de la puissance en fin de soudure, pour refermer le capillaire sans cavité.</dd>
+    <dt>Hybride laser-MAG</dt><dd>Laser et arc MAG dans le même bain : pénétration du laser, remplissage et tolérance au jeu de l'arc.</dd>
+    <dt>Longueur de Rayleigh</dt><dd>Distance au foyer où l'aire de la tache double ; elle fixe la profondeur de champ.</dd>
+    <dt>Martyr</dt><dd>Pièce ajoutée en début ou fin de joint pour y loger la montée en puissance et l'évanouissement, puis retirée.</dd>
+    <dt>Montée en puissance</dt><dd>Augmentation progressive de la puissance au départ d'une soudure.</dd>
+    <dt>Profondeur de champ</dt><dd>Zone autour du foyer où le diamètre de la tache ne grandit pas de plus de 5 %.</dd>
+    <dt>Spike</dt><dd>Pointe de pénétration irrégulière, typique du soudage FE non débouchant.</dd>
+    <dt>Tension d'accélération</dt><dd>Haute tension entre cathode et anode qui donne leur vitesse aux électrons (kV).</dd>
+    <dt>Wehnelt</dt><dd>Électrode de commande du canon qui règle le courant de faisceau.</dd>
+  </dl>
+</div>
+</section>
+
+<section class="chap" id="check">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✓</div>
+    <div class="c-title"><h2>Suis-je prêt pour la suite ?</h2><p>Dix points à cocher de tête</p></div>
+    <div class="c-img"><span class="ico">🚦</span><span><small>Image à retenir</small>Le feu passe au vert quand tout est coché</span></div>
+  </div>
+  <p>Coche seulement ce que tu sais faire <b>sans regarder</b>. Tes coches restent enregistrées dans ce navigateur.</p>
+  <div class="check" id="checklist">
+    <label><input type="checkbox" data-c="1"> <span>Je sais distinguer soudage par conduction et par capillaire, et situer le seuil vers 10⁶ W/cm².</span></label>
+    <label><input type="checkbox" data-c="2"> <span>Je sais calculer une densité de puissance à partir de la puissance et du diamètre de la tache.</span></label>
+    <label><input type="checkbox" data-c="3"> <span>Je sais comparer les lasers CO₂, solides (disque, fibre) et à diodes : longueur d'onde, rendement, transport du faisceau.</span></label>
+    <label><input type="checkbox" data-c="4"> <span>Je sais expliquer l'absorption selon le matériau et la longueur d'onde, et le rôle du capillaire.</span></label>
+    <label><input type="checkbox" data-c="5"> <span>Je sais relier diamètre du cœur de fibre, focales, diamètre de tache, profondeur de champ et position du foyer.</span></label>
+    <label><input type="checkbox" data-c="6"> <span>Je sais concevoir un joint laser, respecter le jeu d'accostage et choisir laser seul, fil froid ou hybride laser-MAG.</span></label>
+    <label><input type="checkbox" data-c="7"> <span>Je sais citer les risques laser (classe 4, œil, peau, fumées) et les protections.</span></label>
+    <label><input type="checkbox" data-c="8"> <span>Je sais décrire le canon à électrons, le vide et le rôle de U, I, focalisation et déflexion.</span></label>
+    <label><input type="checkbox" data-c="9"> <span>Je sais distinguer régime débouchant et non débouchant, et programmer montée en puissance et évanouissement.</span></label>
+    <label><input type="checkbox" data-c="10"> <span>Je sais citer les défauts propres au FE, la préparation (jeu, magnétisme) et les normes ISO 15614-11, 15609-3/-4 et 13919.</span></label>
+  </div>
+  <p class="status" id="checkMsg"></p>
+
+  <div class="meta">🔭 <b>Au prochain épisode, cours 3 : le soudage par friction.</b> Souder sans fondre : friction rotative, linéaire et friction-malaxage.</div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="wrap">
+  <p>Cours 2 de la série « Procédés avancés et automatisation » (sujet 1.12.1 du planning et du référentiel de l'IIW, laser et faisceau d'électrons). Vocabulaire aligné sur l'ISO 4063, l'ISO 15614-11, l'ISO 15609-3 et -4, l'ISO 13919-1 et -2, l'IEC 60825-1 et le référentiel de l'IIW ; pour les notations et les conventions, l'enseignement de ta formation fait foi.</p>
+</div>
+</footer>
+<script>
+(function(){
+"use strict";
+const NS="http://www.w3.org/2000/svg";
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const RM=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function el(tag,attrs,parent){
+  const e=document.createElementNS(NS,tag);
+  if(attrs){for(const k in attrs){const v=attrs[k];if(v===undefined||v===null)continue;
+    if(typeof v==="string"&&v.indexOf("var(")>=0&&k!=="style")e.style.setProperty(k,v);else e.setAttribute(k,v);}}
+  if(parent)parent.appendChild(e);
+  return e;
+}
+function tx(p,x,y,str,attrs){const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);t.textContent=str;return t;}
+function txs(p,x,y,parts,attrs){/* parts: [["σ",""],["max","sub"],[" = 3",""]] */
+  const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);
+  parts.forEach(pt=>{const s=el("tspan",pt[1]==="sub"?{"font-size":"0.72em",dy:"3"}:(pt[2]?{dy:pt[2]}:{}),t);s.textContent=pt[0];
+    if(pt[1]==="sub"){const r=el("tspan",{dy:"-3"},t);r.textContent="\u200b";}});
+  return t;
+}
+function clear(svg){while(svg.firstChild)svg.removeChild(svg.firstChild);}
+function fitText(t,x0,x1,gap){/* garde un texte SVG entre x0 et x1 : il passe de l'autre côté de son repère (écart gap), sinon il glisse */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const a=t.getAttribute("text-anchor")||"start",x=+t.getAttribute("x");
+  if(gap&&a!=="middle"&&(b.x<x0||b.x+b.width>x1)){t.setAttribute("text-anchor",a==="end"?"start":"end");t.setAttribute("x",a==="end"?x+2*gap:x-2*gap);b=t.getBBox();}
+  const nx=+t.getAttribute("x");
+  if(b.x+b.width>x1)t.setAttribute("x",nx-(b.x+b.width-x1));else if(b.x<x0)t.setAttribute("x",nx+(x0-b.x));
+  return t;}
+function arrow(p,x1,y1,x2,y2,color,w,h){
+  w=w||2.4;h=h||10;
+  const g=el("g",{class:"arr"},p);g.style.color=color||"var(--ink)";
+  const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy);
+  if(L<1)return g;
+  const ux=dx/L,uy=dy/L,hh=Math.min(h,L*0.6),bx=x2-ux*hh,by=y2-uy*hh,hw=hh*0.45+w*0.3;
+  el("line",{x1:x1,y1:y1,x2:bx,y2:by,"stroke-width":w,"stroke-linecap":"round"},g);
+  el("polygon",{points:x2+","+y2+" "+(bx-uy*hw)+","+(by+ux*hw)+" "+(bx+uy*hw)+","+(by-ux*hw)},g);
+  return g;
+}
+function darrow(p,x,y1,y2,color,w){/* double flèche verticale */
+  const g=el("g",{},p);const m=(y1+y2)/2;
+  if(Math.abs(y2-y1)<4){el("line",{x1:x-5,y1:y1,x2:x+5,y2:y1,stroke:color,"stroke-width":2},g);return g;}
+  arrow(g,x,m,x,y1,color,w||2,8);arrow(g,x,m,x,y2,color,w||2,8);return g;
+}
+function nf(v,d){
+  if(d===undefined)d=1;
+  if(Math.abs(v)<0.5*Math.pow(10,-d))v=0;
+  return v.toLocaleString("fr-FR",{minimumFractionDigits:d,maximumFractionDigits:d}).replace("-","−").replace(/[\u202f\u2009]/g,"\u00a0");
+}
+const SUP={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function sci(v,d){
+  if(v===0)return "0";
+  if(!isFinite(v))return "∞";
+  let e=Math.floor(Math.log10(Math.abs(v)));
+  let m=v/Math.pow(10,e);
+  const dd=d===undefined?1:d;
+  if(Math.abs(Number(m.toFixed(dd)))>=10){m/=10;e+=1;}
+  return nf(m,dd)+" × 10"+String(e).split("").map(c=>SUP[c]).join("");
+}
+function bigN(v){/* nombre de cycles lisible */
+  if(!isFinite(v))return "∞";
+  if(v===0)return "0";
+  if(v<10)return nf(v,v<1?2:0);
+  if(v<1e5)return nf(Math.round(v),0);
+  return sci(v,1);
+}
+function dur(s){
+  if(!isFinite(s))return "∞";
+  if(s<60)return nf(s,s<10?1:0)+" s";
+  if(s<3600)return nf(s/60,0)+" min";
+  if(s<86400)return nf(s/3600,1)+" h";
+  if(s<86400*365)return nf(s/86400,1)+" jours";
+  return nf(s/(86400*365),1)+" ans";
+}
+function svgW(svg){const r=svg.getBoundingClientRect();return Math.max(290,Math.round(r.width||(svg.parentNode&&svg.parentNode.clientWidth)||600));}
+function setVB(svg,W,H){svg.setAttribute("viewBox","0 0 "+W+" "+H);}
+const redraws=[];
+let rzT=null,lastWW=window.innerWidth;
+window.addEventListener("resize",()=>{if(window.innerWidth===lastWW)return;lastWW=window.innerWidth;clearTimeout(rzT);rzT=setTimeout(()=>redraws.forEach(f=>{try{f();}catch(e){console.error(e);}}),120);});
+
+function niceStep(range,n){const raw=range/(n||5),p=Math.pow(10,Math.floor(Math.log10(raw))),m=raw/p;return (m<1.5?1:m<3?2:m<7?5:10)*p;}
+function setOn(sel,btn){$$(sel+" .btn").forEach(b=>b.classList.toggle("on",b===btn));}
+function fmtmm(mm){return mm<0.1?nf(mm*1000,0)+" µm":mm<10?nf(mm,mm<1?2:1)+" mm":nf(mm,0)+" mm";}
+function axes(svg,x0,x1,y0,y1,xmin,xmax,ymin,ymax,xlab,ylab,xstep,ystep,xfmt,yfmt){
+  const X=v=>x0+(x1-x0)*(v-xmin)/(xmax-xmin),Y=v=>y1-(y1-y0)*(v-ymin)/(ymax-ymin);
+  for(let v=Math.ceil(ymin/ystep-1e-9)*ystep;v<=ymax+1e-9;v+=ystep){el("line",{x1:x0,y1:Y(v),x2:x1,y2:Y(v),class:"gridbg"},svg);tx(svg,x0-5,Y(v)+4,yfmt?yfmt(v):nf(v,ystep<1?1:0),{class:"lbl","text-anchor":"end"});}
+  for(let v=Math.ceil(xmin/xstep-1e-9)*xstep;v<=xmax+1e-9;v+=xstep){el("line",{x1:X(v),y1:y1,x2:X(v),y2:y1+4,class:"tick"},svg);tx(svg,X(v),y1+17,xfmt?xfmt(v):nf(v,xstep<1?1:0),{class:"lbl","text-anchor":"middle"});}
+  el("line",{x1:x0,y1:y1,x2:x1,y2:y1,class:"axis"},svg);el("line",{x1:x0,y1:y0-4,x2:x0,y2:y1,class:"axis"},svg);
+  tx(svg,x0+4,y0-10,ylab,{class:"lbl"});tx(svg,x1,y1+32,xlab,{class:"lbl","text-anchor":"end"});
+  return {X:X,Y:Y};
+}
+function animate(btn,label,dur,onStep,onEnd){/* lecteur pilotable : ▶ lecture ou ⏸ pause, qui reprend où elle s'est arrêtée ; les boutons voisins ⏮ début, ◀ pas et pas ▶ (data-a) la mènent à la main ; un pas avance jusqu'à la prochaine image différente (20 pas au plus) */
+  const box=btn.parentNode,lab=btn.closest(".lab")||box,N=20;let raf=null,run=false,t=0;
+  const go=v=>{t=Math.max(0,Math.min(1,v));onStep(t);};
+  const snap=()=>{let s="";lab.querySelectorAll("svg,.readout,.status").forEach(e=>{s+=e.innerHTML;});return s;};
+  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;btn.textContent=label;}
+  function step(d){stop();const s0=snap();let k=Math.round(t*N);for(let i=0;i<N;i++){k+=d;if(k<0||k>N)break;go(k/N);if(snap()!==s0)break;}}
+  btn.addEventListener("click",()=>{if(run){stop();return;}if(t>=0.999)t=0;
+    if(RM){step(1);if(t>=1&&onEnd)onEnd();return;}
+    run=true;btn.textContent="⏸ Pause";const s0=performance.now()-t*dur;
+    const f=now=>{if(!run)return;go((now-s0)/dur);if(t>=1){stop();if(onEnd)onEnd();return;}raf=requestAnimationFrame(f);};raf=requestAnimationFrame(f);});
+  const pb=a=>box.querySelector('[data-a="'+a+'"]');
+  if(pb("start"))pb("start").addEventListener("click",()=>{stop();go(0);});
+  if(pb("back"))pb("back").addEventListener("click",()=>step(-1));
+  if(pb("fwd"))pb("fwd").addEventListener("click",()=>step(1));
+  /* un réglage fait à la main : la prochaine lecture repart du début */
+  lab.addEventListener("input",()=>{if(!run)t=0;});
+  lab.addEventListener("click",e=>{const b=e.target.closest("button");if(b&&b!==btn&&!b.dataset.a&&!run)t=0;});
+  return {stop:stop,running:()=>run};
+}
+function player(id,o){/* lecteur pilotable : ⏮ début, ◀ pas, ▶ lecture ou ⏸ pause (reprend où elle s'est arrêtée), pas ▶ ; o.get() et o.set(t) avec t de 0 à 1, o.dur (ms), o.steps */
+  const box=$("#"+id),bp=box.querySelector('[data-a="play"]'),lab=bp.textContent,n=o.steps||20;let raf=null,run=false;
+  const cl=t=>Math.max(0,Math.min(1,t));
+  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;bp.textContent=lab;}
+  function step(d){stop();o.set(cl(Math.round(o.get()*n+d)/n));}
+  bp.addEventListener("click",()=>{if(run){stop();return;}let t0=o.get();if(t0>=0.999)t0=0;
+    if(RM){o.set(cl(Math.round(t0*n+1)/n));return;}
+    run=true;bp.textContent="⏸ Pause";const s0=performance.now()-t0*o.dur;
+    const f=now=>{if(!run)return;const t=cl((now-s0)/o.dur);o.set(t);if(t>=1){stop();return;}raf=requestAnimationFrame(f);};raf=requestAnimationFrame(f);});
+  box.querySelector('[data-a="start"]').addEventListener("click",()=>{stop();o.set(0);});
+  box.querySelector('[data-a="back"]').addEventListener("click",()=>step(-1));
+  box.querySelector('[data-a="fwd"]').addEventListener("click",()=>step(1));
+  return {stop:stop};
+}
+
+
+function sig2(v){/* arrondi à deux chiffres significatifs */
+  if(v<=0)return 0;const p=Math.pow(10,Math.floor(Math.log10(v))-1);return Math.round(v/p)*p;}
+function halo(t,svg){/* liseré de fond, puis passage au premier plan */
+  t.setAttribute("paint-order","stroke");t.style.setProperty("stroke","var(--card)");t.setAttribute("stroke-width","4");t.setAttribute("stroke-linejoin","round");if(svg)svg.appendChild(t);return t;}
+function plate(t,svg){/* fond plein derrière une étiquette */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const r=el("rect",{x:b.x-3,y:b.y-1,width:b.width+6,height:b.height+2,fill:"var(--card)",opacity:.92,rx:2});svg.appendChild(r);svg.appendChild(t);return t;}
+function le(n,f){return /^[aeiouyhéèâî]/i.test(n)?"l'"+n:(f?"la ":"le ")+n;}
+function du(n,f){return /^[aeiouyhéèâî]/i.test(n)?"de l'"+n:(f?"de la ":"du ")+n;}
+function fmtG(v){return nf(v,v<0.1?3:2)+" N/m";}
+function fmtPa(p){return p<1000?nf(p,0)+" Pa":p<1e5?nf(p/1000,1)+" kPa":nf(p/1e5,2)+" bar";}
+function fmtLen(m){/* m en mètres */
+  const mm=m*1000;if(mm<1)return nf(mm*1000,0)+" µm";if(mm<10)return nf(mm,1)+" mm";if(mm<1000)return nf(mm,0)+" mm";return nf(m,1)+" m";}
+function fmtT(s){if(!isFinite(s))return "∞";if(s<0.01)return nf(s*1000,1)+" ms";if(s<1)return nf(s,3)+" s";if(s<60)return nf(s,s<10?1:0)+" s";return nf(s/60,s<600?1:0)+" min";}
+
+function spread(items,gap,ymin,ymax){/* écarte verticalement des étiquettes {y} triées */
+  items.sort((a,b)=>a.y-b.y);
+  for(let i=1;i<items.length;i++)if(items[i].y-items[i-1].y<gap)items[i].y=items[i-1].y+gap;
+  if(items.length&&items[items.length-1].y>ymax){items[items.length-1].y=ymax;for(let i=items.length-2;i>=0;i--)if(items[i+1].y-items[i].y<gap)items[i].y=items[i+1].y-gap;}
+  if(items.length&&items[0].y<ymin){items[0].y=ymin;for(let i=1;i<items.length;i++)if(items[i].y-items[i-1].y<gap)items[i].y=items[i-1].y+gap;}
+  return items;}
+function declutter(ts,ymin,ymax){/* décale verticalement les textes qui se chevauchent */
+  const box=t=>{try{return t.getBBox();}catch(e){return null;}};
+  for(let i=1;i<ts.length;i++){const ti=ts[i];if(!ti)continue;
+    for(let pass=0;pass<6;pass++){const bi=box(ti);if(!bi)break;let moved=false;
+      for(let j=0;j<i;j++){const bj=ts[j]&&box(ts[j]);if(!bj)continue;
+        const ix=Math.min(bi.x+bi.width,bj.x+bj.width)-Math.max(bi.x,bj.x),iy=Math.min(bi.y+bi.height,bj.y+bj.height)-Math.max(bi.y,bj.y);
+        if(ix>1&&iy>1){let dy=(bi.y+bi.height/2>=bj.y+bj.height/2)?(bj.y+bj.height-bi.y+1):-(bi.y+bi.height-bj.y+1);
+          if(bi.y+dy<ymin||bi.y+bi.height+dy>ymax)dy=dy>0?-(bi.y+bi.height-bj.y+1):(bj.y+bj.height-bi.y+1);
+          ti.setAttribute("y",+ti.getAttribute("y")+dy);moved=true;break;}}
+      if(!moved)break;}}
+  return ts;}
+const SUPD={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function p10(e){return "10"+String(e).split("").map(c=>SUPD[c]||c).join("");}
+function fmtP(p){/* pression en Pa, lisible */
+  if(p>=1e5)return nf(p/1e5,1)+" bar";if(p>=1000)return nf(p/1000,p<1e4?1:0)+" kPa";if(p>=1)return nf(p,p<10?1:0)+" Pa";return sci(p,1)+" Pa";}
+
+
+
+function rng(seed){/* générateur pseudo-aléatoire reproductible */
+  let a=seed>>>0;return ()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296;};}
+
+
+/* =========================================================
+   Outils communs de la série : formats, couleurs, grains, nuances, modèles
+   ========================================================= */
+const NB=String.fromCharCode(160);
+const nbsp=s=>s.replace(/(\d) (%|°C|mm|µm|nm|MPa|HV|s|ppm|h|J)(?=[\s.,;:)<·/]|$)/g,"$1"+NB+"$2");
+function fitSize(t,maxW,min){/* réduit la police d'un texte SVG trop large (style en ligne, prioritaire sur la feuille de style) */
+  let b;try{b=t.getBBox();}catch(e){return t;}let fs=parseFloat(getComputedStyle(t).fontSize)||13;
+  while(b.width>maxW&&fs>(min||9)){fs-=0.5;t.style.fontSize=fs+"px";b=t.getBBox();}return t;}
+const pts=P=>P.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join(" ");
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const mixc=(c,p,b)=>"color-mix(in srgb,"+c+" "+p+"%,"+(b||"var(--card)")+")";
+const COL={liq:mixc("var(--sig)",24),gam:mixc("var(--gam)",24),alp:mixc("var(--eps)",15),mart:"color-mix(in srgb,var(--eps) 50%,var(--tau))",
+  bain:mixc("var(--gam)",52),fp:mixc("var(--eps)",13),film:mixc("var(--tau)",72)};
+function frame(svg,R){el("rect",{x:R.x0,y:R.y0,width:R.x1-R.x0,height:R.y1-R.y0,fill:"none",stroke:"var(--ink)","stroke-width":1.2},svg);}
+function clipG(svg,id,R){const cp=el("clipPath",{id:id},el("defs",null,svg));el("rect",{x:R.x0,y:R.y0,width:R.x1-R.x0,height:R.y1-R.y0},cp);return el("g",{"clip-path":"url(#"+id+")"},svg);}
+function voronoi(seeds,x0,y0,x1,y1,rmax){/* cellules polygonales ; rmax : distance au-delà de laquelle un voisin est ignoré */
+  const box=[[x0,y0],[x1,y0],[x1,y1],[x0,y1]],r2=rmax?rmax*rmax:Infinity;
+  return seeds.map((s,i)=>{let P=box.slice();
+    for(let j=0;j<seeds.length&&P.length;j++){if(i===j)continue;const q=seeds[j],dx=q[0]-s[0],dy=q[1]-s[1];if(dx*dx+dy*dy>r2)continue;
+      const mx=(s[0]+q[0])/2,my=(s[1]+q[1])/2,out=[];
+      for(let k=0;k<P.length;k++){const a=P[k],b=P[(k+1)%P.length],sa=(a[0]-mx)*dx+(a[1]-my)*dy,sb=(b[0]-mx)*dx+(b[1]-my)*dy;if(sa<=0)out.push(a);
+        if((sa<0&&sb>0)||(sa>0&&sb<0)){const t=sa/(sa-sb);out.push([a[0]+t*(b[0]-a[0]),a[1]+t*(b[1]-a[1])]);}}
+      P=out;}
+    return P;});
+}
+function seedsGrid(x0,y0,x1,y1,s,seed){const r=rng(seed),o=[];for(let y=y0+s/2;y<y1+s/2;y+=s*0.87)for(let x=x0+s/2+((Math.round((y-y0)/(s*0.87))%2)?s/2:0);x<x1+s/2;x+=s)o.push([x+(r()-0.5)*s*0.6,Math.min(y1-1,y+(r()-0.5)*s*0.5)]);return o;}
+function legend(svg,x,y,items,xmax){/* items : [couleur, texte, "o" pour un rond] ; passe à la ligne ; renvoie le bas de la légende */
+  let lx=x,ly=y;
+  items.forEach(q=>{const t=tx(svg,x,y+9.5,q[1],{class:"lbl"});let w=70;try{w=t.getBBox().width;}catch(e){}
+    if(lx>x&&lx+14+w>xmax){lx=x;ly+=16;}
+    t.setAttribute("x",lx+14);t.setAttribute("y",ly+9.5);
+    if(q[2]==="o")el("circle",{cx:lx+5,cy:ly+5,r:4.5,fill:q[0],stroke:"var(--ink)","stroke-width":0.7},svg);
+    else el("rect",{x:lx,y:ly,width:10,height:10,fill:q[0],stroke:"var(--ink)","stroke-width":0.7},svg);
+    lx+=14+w+12;});
+  return ly+12;}
+/* Modèles du cours (acier, ordres de grandeur pédagogiques) */
+const lisse=(x,a,b)=>{const t=Math.max(0,Math.min(1,(x-a)/(b-a)));return t*t*(3-2*t);};
+/* M1 : conduction ou capillaire (P kW, v m/min, d mm, laser 1 µm sur acier) */
+function laser(P,v,d){
+  const q=P*1000/(Math.PI*Math.pow(d/20,2)),lq=Math.log10(q),f=lisse(lq,5.3,6.0);
+  const pk=1.54*P*Math.pow(v,-0.3)*Math.pow(0.6/d,0.3),pc=0.5*Math.sqrt(P)*Math.pow(v,-0.5);
+  const p=f*pk+(1-f)*pc,w=f*(1.3*d+0.06*pk)+(1-f)*(d+1.2*pc);
+  return {q:q,lq:lq,f:f,p:p,w:w,reg:lq<5.3?"conduction":lq<6?"transition":"capillaire"};
+}
+/* M2 : focalisation d'un faisceau issu d'une fibre (c cœur mm, r = f/fc, z décalage mm), P = 4 kW, ON = 0,1 */
+function foyer(c,r,z){
+  const d0=c*r,bpp=c*50,w0=d0/2,th=bpp/w0,zR=w0/(th/1000),w=w0*Math.sqrt(1+Math.pow(z/zR,2));
+  const q=4000/(Math.PI*Math.pow(w/10,2));
+  return {d0:d0,bpp:bpp,th:th,zR:zR,dof:2*0.32*zR,w:w,d:2*w,q:q};
+}
+/* M3 : jeu d'accostage, tôles de 4 mm à 2 m/min */
+const MODES={laser:{n:"laser seul",S:0,wt:g=>Math.max(1.6,1.2+g),gl:0.3},froid:{n:"laser + fil froid",S:0.785,wt:()=>2.5,gl:0.6},hybride:{n:"hybride laser-MAG",S:1.131,wt:()=>6,gl:1.2}};
+function jeu(mode,g,wfs){
+  const m=MODES[mode],e=4,v=2,Ag=g*e,Ad=m.S*(mode==="laser"?0:wfs)/v,w=m.wt(g),s=0.75*(Ag-Ad)/w;
+  const gl=(mode!=="laser"&&wfs===0)?0.3:m.gl,etat=g>gl?"traverse":s>0.15*e?"caniveau":s<-0.2*e?"bombe":"ok";
+  return {Ag:Ag,Ad:Ad,w:w,s:s,etat:etat,gl:gl};
+}
+/* M4 : canon à électrons (U kV, I mA, v cm/min), acier */
+function canon(U,I,v){
+  const P=U*I/1000,E=P*60/v,p=8.3*P/Math.sqrt(v)*Math.pow(U/60,0.3),d=0.6*Math.sqrt(60/U);
+  return {P:P,E:E,p:p,d:d};
+}
+/* M5 : programme d'une soudure circulaire (angles en degrés) */
+function boucle(am,rec,ev){
+  const tot=360+rec+ev;
+  const P=th=>th<am?th/am:th<360+rec?1:Math.max(0,1-(th-360-rec)/ev);
+  const okRep=rec>=am,okEv=ev>=30;
+  return {tot:tot,P:P,okRep:okRep,okEv:okEv};
+}
+
+const fr=s=>nbsp(s).replace(/ ([;:!?])/g,NB+"$1");
+const lbl=(svg,x,y,s,o)=>{const t=tx(svg,x,y,s,Object.assign({class:"lbl"},o||{}));t.style.fontSize=(o&&o.fs?o.fs:11)+"px";return t;};
+const poly=(svg,pts,a)=>el("polygon",Object.assign({points:pts.map(p=>p.join(",")).join(" ")},a),svg);
+const sciE=v=>{const e=Math.floor(Math.log10(v)),m=v/Math.pow(10,e);return nf(m,1)+"·10"+String(e).split("").map(c=>"⁰¹²³⁴⁵⁶⁷⁸⁹"[+c]).join("");};
+
+/* =========================================================
+   M1 : conduction ou capillaire
+   ========================================================= */
+(function(){
+  const svg=$("#m1svg");if(!svg)return;
+  const sP=$("#m1p"),sV=$("#m1v"),sD=$("#m1d"),ro=$("#m1r"),msg=$("#m1msg");
+  function draw(){
+    const W=svgW(svg),n=W<560,P=+sP.value,v=+sV.value,d=+sD.value,r=laser(P,v,d);clear(svg);
+    $("#m1po").textContent=nf(P,1)+NB+"kW";$("#m1vo").textContent=nf(v,1)+NB+"m/min";$("#m1do").textContent=nf(d,2)+NB+"mm";
+    setOn("#m1b",$$("#m1b .btn").find(b=>+b.dataset.p===P&&+b.dataset.v===v&&+b.dataset.d===d)||null);
+    /* échelle des densités */
+    const x0=16,x1=W-16,X=l=>x0+(x1-x0)*(l-4)/4,y=30;
+    lbl(svg,x0,14,"Densité de puissance (W/cm²)",{"font-weight":"700",fs:11});
+    el("rect",{x:X(4),y:y,width:X(5.3)-X(4),height:16,fill:mixc("var(--gam)",30)},svg);
+    el("rect",{x:X(5.3),y:y,width:X(6)-X(5.3),height:16,fill:mixc("var(--tau)",25)},svg);
+    el("rect",{x:X(6),y:y,width:X(8)-X(6),height:16,fill:mixc("var(--eps)",30)},svg);
+    [[4.65,"conduction"],[6.9,"capillaire"]].forEach(p=>{const t=lbl(svg,X(p[0]),y+12,p[1],{"text-anchor":"middle",fs:10,"font-weight":"700"});fitText(t,x0,x1);});
+    for(let e=4;e<=8;e++)lbl(svg,X(e),y+30,"10"+"⁰¹²³⁴⁵⁶⁷⁸⁹"[e],{"text-anchor":"middle",fs:10,fill:"var(--muted)"});
+    const lq=Math.max(4,Math.min(8,r.lq));poly(svg,[[X(lq),y+16],[X(lq)-7,y+28],[X(lq)+7,y+28]],{fill:"var(--sig)"});
+    /* coupe de la soudure */
+    const T=Math.max(8,Math.ceil((r.p+3)/4)*4),hz=n?170:190,k=hz/T,cx=W/2,yT=y+64;
+    el("rect",{x:cx-Math.min(W/2-20,T*k*0.9),y:yT,width:2*Math.min(W/2-20,T*k*0.9),height:T*k,fill:mixc("var(--muted)",28),stroke:"var(--ink)"},svg);
+    const half=r.w/2*k,pd=r.p*k;
+    if(r.f<0.5)el("path",{d:"M"+(cx-half)+" "+yT+" Q "+(cx-half)+" "+(yT+pd*1.3)+" "+cx+" "+(yT+pd)+" Q "+(cx+half)+" "+(yT+pd*1.3)+" "+(cx+half)+" "+yT+" Z",fill:mixc("var(--gam)",70),stroke:"var(--gam)"},svg);
+    else{el("path",{d:"M"+(cx-half*1.4)+" "+yT+" Q "+(cx-half*0.6)+" "+(yT+pd*0.15)+" "+(cx-half*0.55)+" "+(yT+pd*0.5)+" L "+(cx-half*0.3)+" "+(yT+pd)+" L "+(cx+half*0.3)+" "+(yT+pd)+" L "+(cx+half*0.55)+" "+(yT+pd*0.5)+" Q "+(cx+half*0.6)+" "+(yT+pd*0.15)+" "+(cx+half*1.4)+" "+yT+" Z",fill:mixc("var(--gam)",70),stroke:"var(--gam)"},svg);
+      el("line",{x1:cx,y1:yT,x2:cx,y2:yT+pd*0.92,stroke:"var(--card)","stroke-width":Math.max(1.5,half*0.25),"stroke-dasharray":"3 2"},svg);}
+    poly(svg,[[cx-Math.max(4,d/2*k*3),yT-28],[cx+Math.max(4,d/2*k*3),yT-28],[cx+Math.max(1.5,d/2*k),yT],[cx-Math.max(1.5,d/2*k),yT]],{fill:"var(--sig)","fill-opacity":0.35});
+    darrow(svg,cx+Math.max(half*1.4,12)+14,yT,yT+pd,"var(--eps)");
+    {const t=lbl(svg,cx+Math.max(half*1.4,12)+20,yT+pd/2+4,"p ≈ "+nf(r.p,1)+" mm",{fs:11,"font-weight":"700",fill:"var(--eps)"});fitText(t,4,W-4);halo(t,svg);}
+    {const t=lbl(svg,cx-Math.min(W/2-20,T*k*0.9)+4,yT+T*k-6,"tôle, échelle "+T+" mm",{fs:9.5,fill:"var(--muted)"});fitText(t,4,W-4);}
+    setVB(svg,W,yT+T*k+10);
+    ro.innerHTML=fr("<span>q ≈ <b class='eps'>"+sciE(r.q)+" W/cm²</b></span><span>régime : "+r.reg+"</span><span>p ≈ "+nf(r.p,1)+" mm</span><span>l ≈ "+nf(r.w,1)+" mm</span><span>p/l ≈ "+nf(r.p/r.w,1)+"</span>");
+    const M={conduction:"Densité trop faible pour vaporiser : la chaleur diffuse depuis la surface, la zone fondue reste en cuvette, environ "+nf(r.p,1)+" mm de profondeur.",
+      transition:"Zone de transition : le capillaire s'ouvre et se referme, la pénétration devient irrégulière et des porosités menacent. Concentre davantage la tache ou monte la puissance.",
+      capillaire:"Capillaire de vapeur : le faisceau pénètre d'environ "+nf(r.p,1)+" mm pour "+nf(r.w,1)+" mm de large. "+(v>4?"La vitesse élevée réduit la pénétration, mais lentement (v⁻⁰·³).":"Ralentir augmente la pénétration, mais aussi l'énergie apportée.")};
+    msg.innerHTML=fr(M[r.reg])+"<br><b>À retenir :</b> 10⁵ je fonds, 10⁶ je perce ; c'est la concentration qui compte.";
+  }
+  $$("#m1b .btn").forEach(b=>b.addEventListener("click",()=>{sP.value=b.dataset.p;sV.value=b.dataset.v;sD.value=b.dataset.d;draw();}));
+  [sP,sV,sD].forEach(x=>x.addEventListener("input",draw));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M2 : la tache et le foyer
+   ========================================================= */
+(function(){
+  const svg=$("#m2svg");if(!svg)return;
+  const sC=$("#m2c"),sR=$("#m2r"),sZ=$("#m2z"),ro=$("#m2r2"),msg=$("#m2msg");
+  function draw(){
+    const W=svgW(svg),n=W<560,c=+sC.value,r=+sR.value,z=+sZ.value,o=foyer(c,r,z),o0=foyer(c,r,0);clear(svg);
+    $("#m2co").textContent=nf(c*1000,0)+NB+"μm";$("#m2ro").textContent=nf(r,1);$("#m2zo").textContent=(z>0?"+":"")+nf(z,2)+NB+"mm";
+    setOn("#m2b",$$("#m2b .btn").find(b=>+b.dataset.c===c&&+b.dataset.r===r)||null);
+    const x0=24,x1=W-16,ky=(n?70:80)/1.2,cy=46+ky*1.3,X=zz=>x0+(x1-x0)*(zz+8)/16;
+    lbl(svg,x0,16,"Caustique du faisceau autour du foyer (rayon agrandi)",{"font-weight":"700",fs:n?10:11});
+    el("rect",{x:X(-o.dof/2),y:cy-ky*1.25,width:X(o.dof/2)-X(-o.dof/2),height:2*ky*1.25,fill:mixc("var(--gam)",15)},svg);
+    let up="",dn="";for(let zz=-8;zz<=8.001;zz+=0.1){const w=o0.d0/2*Math.sqrt(1+Math.pow(zz/o.zR,2)),wy=Math.min(1.25,w)*ky;up+=(up?"L":"M")+X(zz).toFixed(1)+" "+(cy-wy).toFixed(1)+" ";dn=" L "+X(zz).toFixed(1)+" "+(cy+wy).toFixed(1)+dn;}
+    el("path",{d:up+dn.replace(/^ L/," L")+" Z",fill:"var(--sig)","fill-opacity":0.3,stroke:"var(--sig)","stroke-width":1.2},svg);
+    el("line",{x1:X(0),y1:cy-ky*1.3,x2:X(0),y2:cy+ky*1.3,stroke:"var(--muted)","stroke-dasharray":"3 3"},svg);
+    lbl(svg,X(0),cy+ky*1.3+14,"foyer",{"text-anchor":"middle",fs:10,fill:"var(--muted)"});
+    el("rect",{x:X(z),y:cy-ky*1.3,width:Math.max(6,x1-X(z)),height:2*ky*1.3,fill:mixc("var(--muted)",35),stroke:"var(--ink)"},svg);
+    {const t=lbl(svg,Math.min(X(z)+6,x1-4),cy-ky*1.3+14,"pièce",{fs:10,fill:"var(--ink)","font-weight":"700"});fitText(t,x0,x1);}
+    {const t=lbl(svg,(X(-o.dof/2)+X(o.dof/2))/2,cy-ky*1.3-6,"± "+nf(o.dof/2,2)+" mm",{"text-anchor":"middle",fs:10,fill:"var(--gam)","font-weight":"700"});fitText(t,x0,x1);halo(t,svg);}
+    for(let zz=-8;zz<=8;zz+=4)lbl(svg,X(zz),cy+ky*1.3+30,(zz>0?"+":"")+zz+" mm",{"text-anchor":"middle",fs:9.5,fill:"var(--muted)"});
+    setVB(svg,W,cy+ky*1.3+40);
+    ro.innerHTML=fr("<span>tache au foyer "+nf(o.d0,2)+" mm</span><span>z<sub>R</sub> = "+nf(o.zR,2)+" mm</span><span>profondeur de champ ± "+nf(o.dof/2,2)+" mm</span><span>surface : d = "+nf(o.d,2)+" mm</span><span>q = <b class='eps'>"+sciE(o.q)+" W/cm²</b></span>");
+    const perte=1-o.q/o0.q;
+    let m="Fibre de "+nf(c*1000,0)+" μm, f/f<sub>c</sub> = "+nf(r,1)+" : tache de "+nf(o.d0,2)+" mm, longueur de Rayleigh "+nf(o.zR,1)+" mm. ";
+    m+=Math.abs(z)<0.01?"La surface est au foyer : densité maximale, "+sciE(o.q)+" W/cm².":Math.abs(z)<=o.dof/2?"La surface est dans la profondeur de champ : densité au moins "+nf(100*(1-perte),0)+" % de celle du foyer.":"La surface est hors de la profondeur de champ : la densité a perdu "+nf(100*perte,0)+" %"+(o.q<1e6?", et passe sous le seuil du capillaire.":".");
+    msg.innerHTML=fr(m)+"<br><b>À retenir :</b> col fin, col court ; la pièce doit rester dans le col.";
+  }
+  $$("#m2b .btn").forEach(b=>b.addEventListener("click",()=>{sC.value=b.dataset.c;sR.value=b.dataset.r;draw();}));
+  [sC,sR,sZ].forEach(x=>x.addEventListener("input",draw));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M3 : combler le jeu
+   ========================================================= */
+(function(){
+  const svg=$("#m3svg");if(!svg)return;
+  const sG=$("#m3g"),sW=$("#m3w"),ro=$("#m3r"),msg=$("#m3msg");let mode="laser";
+  const NOM={ok:"cordon conforme",caniveau:"manque d'épaisseur",bombe:"surépaisseur excessive",traverse:"le faisceau passe dans le jeu"};
+  function draw(){
+    const W=svgW(svg),n=W<560,g=+sG.value,wfs=mode==="laser"?0:+sW.value,j=jeu(mode,g,wfs);clear(svg);
+    $("#m3go").textContent=nf(g,2)+NB+"mm";$("#m3wo").textContent=mode==="laser"?"sans fil":nf(wfs,1)+NB+"m/min";
+    sW.disabled=mode==="laser";
+    const e=4,k=Math.min(n?22:30,(W-40)/16),cx=W/2,yT=40,H=e*k,gx=g*k/2,pl=7*k;
+    lbl(svg,16,18,MODES[mode].n+" · tôles de 4 mm à 2 m/min",{"font-weight":"700",fs:11});
+    [-1,1].forEach(sg=>el("rect",{x:sg<0?cx-gx-pl:cx+gx,y:yT,width:pl,height:H,fill:mixc("var(--muted)",30),stroke:"var(--ink)"},svg));
+    if(j.etat==="traverse"){poly(svg,[[cx-Math.max(1.5,0.15*k),yT-30],[cx+Math.max(1.5,0.15*k),yT-30],[cx+Math.max(1.5,0.15*k),yT+H+20],[cx-Math.max(1.5,0.15*k),yT+H+20]],{fill:"var(--sig)","fill-opacity":0.55});
+      [-1,1].forEach(sg=>el("rect",{x:sg<0?cx-gx-3:cx+gx,y:yT,width:3,height:H,fill:"var(--tau)"},svg));}
+    else{const hw=j.w/2*k,hb=Math.max(gx+0.3*k,hw*0.45),s=j.s*k;
+      const top="M"+(cx-hw)+" "+yT+" Q "+cx+" "+(yT+2*s)+" "+(cx+hw)+" "+yT;
+      el("path",{d:top+" L "+(cx+hb)+" "+(yT+H)+" L "+(cx-hb)+" "+(yT+H)+" Z",fill:mixc("var(--gam)",70),stroke:"var(--gam)"},svg);
+      if(j.s>0)el("path",{d:top+" Z",fill:"var(--card)",stroke:"none"},svg);
+      el("path",{d:top,fill:"none",stroke:j.etat==="ok"?"var(--gam)":"var(--tau)","stroke-width":2},svg);
+      poly(svg,[[cx-Math.max(1.5,0.15*k),yT-30],[cx+Math.max(1.5,0.15*k),yT-30],[cx+Math.max(1,0.1*k),yT],[cx-Math.max(1,0.1*k),yT]],{fill:"var(--sig)","fill-opacity":0.5});
+      if(mode!=="laser"&&wfs>0)el("line",{x1:cx-60,y1:yT-40,x2:cx-6,y2:yT-4,stroke:"var(--weld)","stroke-width":mode==="hybride"?3:2.4},svg);}
+    {const t=lbl(svg,cx,yT+H+(j.etat==="traverse"?38:22),NOM[j.etat]+(j.etat==="traverse"?"":" : s = "+(j.s>0?"":"+")+nf(Math.abs(j.s),2)+" mm"+(j.s>0?" de creux":" de bombé")),{"text-anchor":"middle",fs:11.5,"font-weight":"700",fill:j.etat==="ok"?"var(--gam)":"var(--tau)"});fitSize(t,W-20,7);}
+    setVB(svg,W,yT+H+48);
+    ro.innerHTML=fr("<span>à combler "+nf(j.Ag,2)+" mm²</span><span>fil "+nf(j.Ad,2)+" mm²</span><span>largeur "+nf(j.w,1)+" mm</span><span>jeu max ≈ "+nf(j.gl,1)+" mm</span>");
+    const M={traverse:"Le jeu de "+nf(g,2)+" mm dépasse ce que "+(mode==="laser"||wfs===0?"le laser seul":"ce procédé")+" peut combler (≈ "+nf(j.gl,1)+" mm) : le faisceau passe dans le jeu, les bords ne fondent plus ensemble."+(mode==="laser"?" Il faut du fil.":wfs===0?" Donne du fil !":""),
+      caniveau:"Il manque "+nf(j.Ag-j.Ad,2)+" mm² par millimètre : la face se creuse de "+nf(j.s,2)+" mm. Augmente la vitesse de fil ou réduis le jeu.",
+      bombe:"Le fil apporte trop : surépaisseur de "+nf(-j.s,2)+" mm. Réduis la vitesse de fil.",
+      ok:j.s>0?"Le jeu est comblé à "+nf(100*Math.min(1,j.Ad/Math.max(j.Ag,1e-9)),0)+" % : creux de "+nf(j.s,2)+" mm, admissible dans le modèle.":"Le fil comble le jeu, avec une légère surépaisseur de "+nf(-j.s,2)+" mm."};
+    msg.innerHTML=fr(M[j.etat])+"<br><b>À retenir :</b> laser seul, bords qui se touchent ; du jour, du fil.";
+  }
+  $$("#m3b .btn").forEach(b=>b.addEventListener("click",()=>{mode=b.dataset.m;setOn("#m3b",b);if(mode!=="laser"&&+sW.value===0)sW.value=mode==="hybride"?6:3;draw();}));
+  [sG,sW].forEach(x=>x.addEventListener("input",draw));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M4 : régler le canon
+   ========================================================= */
+(function(){
+  const svg=$("#m4svg");if(!svg)return;
+  const sU=$("#m4u"),sI=$("#m4i"),sV=$("#m4v"),ro=$("#m4r"),msg=$("#m4msg");
+  function draw(){
+    const W=svgW(svg),n=W<560,U=+sU.value,I=+sI.value,v=+sV.value,c=canon(U,I,v);clear(svg);
+    $("#m4uo").textContent=nf(U,0)+NB+"kV";$("#m4io").textContent=nf(I,0)+NB+"mA";$("#m4vo").textContent=nf(v,0)+NB+"cm/min";
+    setOn("#m4b",$$("#m4b .btn").find(b=>+b.dataset.u===U&&+b.dataset.i===I&&+b.dataset.v===v)||null);
+    /* canon */
+    const y0=14,pw=n?W*0.84:W*0.6,px=(W-pw)/2,pcx=W/2,gx=pcx;
+    el("rect",{x:gx-26,y:y0,width:52,height:110,rx:8,fill:mixc("var(--muted)",18),stroke:"var(--ink)"},svg);
+    el("rect",{x:gx-5,y:y0+8,width:10,height:10,fill:"var(--sig)"},svg);lbl(svg,gx+30,y0+18,"cathode",{fs:9.5});
+    el("path",{d:"M"+(gx-16)+" "+(y0+24)+" L "+(gx-6)+" "+(y0+32)+" M "+(gx+16)+" "+(y0+24)+" L "+(gx+6)+" "+(y0+32),stroke:"var(--ink)","stroke-width":3},svg);lbl(svg,gx+30,y0+32,"wehnelt",{fs:9.5});
+    el("rect",{x:gx-18,y:y0+44,width:12,height:6,fill:"var(--ink)"},svg);el("rect",{x:gx+6,y:y0+44,width:12,height:6,fill:"var(--ink)"},svg);lbl(svg,gx+30,y0+50,"anode "+nf(U,0)+" kV",{fs:9.5,fill:"var(--sig)"});
+    [y0+70,y0+92].forEach((yy,i)=>{el("rect",{x:gx-24,y:yy-6,width:10,height:12,fill:mixc("var(--weld)",70),stroke:"var(--ink)"},svg);el("rect",{x:gx+14,y:yy-6,width:10,height:12,fill:mixc("var(--weld)",70),stroke:"var(--ink)"},svg);lbl(svg,gx+30,yy+4,i?"déflexion":"focalisation",{fs:9.5});});
+    /* pièce et soudure */
+    const yP=y0+140,T=80,k=(n?120:130)/T;
+    const bw=Math.max(1.5,c.d*k*2);
+        el("line",{x1:gx,y1:y0+50,x2:pcx,y2:yP,stroke:"var(--sig)","stroke-width":bw*0.6},svg);
+    el("rect",{x:px,y:yP,width:pw,height:T*k,fill:mixc("var(--muted)",28),stroke:"var(--ink)"},svg);
+    const pd=Math.min(c.p,T)*k,hw=Math.max(2,(0.9+0.05*c.p)*k*(0.6/c.d)**-0.5);
+    el("path",{d:"M"+(pcx-hw*1.6)+" "+yP+" Q "+(pcx-hw*0.7)+" "+(yP+pd*0.1)+" "+(pcx-hw*0.6)+" "+(yP+pd*0.4)+" L "+(pcx-hw*0.35)+" "+(yP+pd)+" L "+(pcx+hw*0.35)+" "+(yP+pd)+" L "+(pcx+hw*0.6)+" "+(yP+pd*0.4)+" Q "+(pcx+hw*0.7)+" "+(yP+pd*0.1)+" "+(pcx+hw*1.6)+" "+yP+" Z",fill:mixc("var(--gam)",70),stroke:"var(--gam)"},svg);
+    darrow(svg,pcx+hw*1.6+12,yP,yP+pd,"var(--eps)");
+    {const t=lbl(svg,pcx+hw*1.6+18,yP+pd/2+4,"p ≈ "+nf(c.p,0)+" mm"+(c.p>T?" (traverse)":""),{fs:11,"font-weight":"700",fill:"var(--eps)"});fitText(t,4,W-4);halo(t,svg);}
+    lbl(svg,px+4,yP+T*k-6,"acier, 80 mm",{fs:9.5,fill:"var(--muted)"});
+    setVB(svg,W,yP+T*k+10);
+    ro.innerHTML=fr("<span>P = <b class='eps'>"+nf(c.P,1)+" kW</b></span><span>E = "+nf(c.E,1)+" kJ/cm</span><span>tache ≈ "+nf(c.d,2)+" mm</span><span>p ≈ "+nf(c.p,0)+" mm</span>");
+    let m=nf(U,0)+" kV × "+nf(I,0)+" mA = "+nf(c.P,1)+" kW ; à "+nf(v,0)+" cm/min, "+nf(c.E,1)+" kJ/cm et environ "+nf(c.p,0)+" mm de pénétration dans l'acier. ";
+    m+=U>=100?"Haute tension : faisceau fin et pénétrant, mais rayons X plus durs, à arrêter par l'enceinte.":U<=45?"Tension basse : pour la même puissance, faisceau plus large et moins pénétrant.":"Tension moyenne, compromis courant.";
+    msg.innerHTML=fr(m)+"<br><b>À retenir :</b> kV pour pousser, mA pour chauffer ; plus vite, moins profond.";
+  }
+  $$("#m4b .btn").forEach(b=>b.addEventListener("click",()=>{sU.value=b.dataset.u;sI.value=b.dataset.i;sV.value=b.dataset.v;draw();}));
+  [sU,sI,sV].forEach(x=>x.addEventListener("input",draw));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M5 : boucler une soudure circulaire
+   ========================================================= */
+(function(){
+  const svg=$("#m5svg");if(!svg)return;
+  const sM=$("#m5m"),sR=$("#m5r"),sE=$("#m5e"),ro=$("#m5r2"),msg=$("#m5msg");let tt=1;
+  function draw(){
+    const W=svgW(svg),n=W<560,am=+sM.value,rec=+sR.value,ev=+sE.value,b=boucle(am,rec,ev),th=tt*b.tot;clear(svg);
+    $("#m5mo").textContent=am+"°";$("#m5ro").textContent=rec+"°";$("#m5eo").textContent=ev+"°";
+    setOn("#m5b",$$("#m5b .btn").find(x=>+x.dataset.m===am&&+x.dataset.r===rec&&+x.dataset.e===ev)||null);
+    /* état de chaque degré de la circonférence */
+    const best=new Array(360).fill(0);for(let t=0;t<=th;t+=1){const i=Math.floor(t)%360;best[i]=Math.max(best[i],b.P(t));}
+    const cx=n?W/2:W*0.26,cy=n?110:120,R=n?78:90;
+    el("circle",{cx:cx,cy:cy,r:R+12,fill:mixc("var(--muted)",25),stroke:"var(--ink)"},svg);
+    el("circle",{cx:cx,cy:cy,r:R-12,fill:"var(--card)",stroke:"var(--ink)"},svg);
+    for(let i=0;i<360;i+=2){if(best[i]<=0)continue;const a0=(i-90)*Math.PI/180,a1=(i+2-90)*Math.PI/180,col=best[i]>=0.9?"var(--gam)":"var(--tau)";
+      el("path",{d:"M"+(cx+(R-8)*Math.cos(a0))+" "+(cy+(R-8)*Math.sin(a0))+" L "+(cx+(R+8)*Math.cos(a0))+" "+(cy+(R+8)*Math.sin(a0))+" L "+(cx+(R+8)*Math.cos(a1))+" "+(cy+(R+8)*Math.sin(a1))+" L "+(cx+(R-8)*Math.cos(a1))+" "+(cy+(R-8)*Math.sin(a1))+" Z",fill:col,"fill-opacity":0.85},svg);}
+    const fin=(360+rec+ev)%360;if(tt>=1&&!b.okEv){const a=(fin-90)*Math.PI/180;el("circle",{cx:cx+R*Math.cos(a),cy:cy+R*Math.sin(a),r:6,fill:"var(--sig)"},svg);}
+    const ab=(th%360-90)*Math.PI/180;if(tt<1){el("circle",{cx:cx+R*Math.cos(ab),cy:cy+R*Math.sin(ab),r:7,fill:"var(--sig)",stroke:"var(--card)","stroke-width":2},svg);}
+    lbl(svg,cx,cy-R-18,"départ 0°",{"text-anchor":"middle",fs:10});
+    {const t=lbl(svg,cx,cy+4,nf(Math.min(th,b.tot),0)+"° / "+b.tot+"°",{"text-anchor":"middle",fs:12,"font-weight":"700"});}
+    /* courbe de puissance */
+    const gx0=n?44:W*0.52,gx1=W-14,gy0=n?cy+R+44:30,gy1=gy0+(n?110:150);
+    const A=axes(svg,gx0,gx1,gy0,gy1,0,540,0,1.1,"angle parcouru (°)","P / P nominale",n?180:90,0.5);
+    let d="";for(let t=0;t<=b.tot;t+=2)d+=(d?"L":"M")+A.X(t).toFixed(1)+" "+A.Y(b.P(t)).toFixed(1)+" ";
+    el("path",{d:d,fill:"none",stroke:"var(--sig)","stroke-width":2.4},svg);
+    el("line",{x1:A.X(360),y1:gy0,x2:A.X(360),y2:gy1,stroke:"var(--muted)","stroke-dasharray":"3 3"},svg);
+    {const t=lbl(svg,A.X(360)+3,gy0+10,"un tour",{fs:9.5,fill:"var(--muted)"});fitText(t,gx0,gx1);}
+    el("line",{x1:A.X(Math.min(th,b.tot)),y1:gy0,x2:A.X(Math.min(th,b.tot)),y2:gy1,stroke:"var(--frc)","stroke-width":1.5},svg);
+    setVB(svg,W,Math.max(gy1+38,cy+R+30));
+    const part=best.filter(x=>x>0&&x<0.9).length,non=best.filter(x=>x<=0).length;
+    ro.innerHTML=fr("<span>angle "+nf(Math.min(th,b.tot),0)+"°</span><span>P = "+nf(100*b.P(Math.min(th,b.tot-0.01)),0)+" %</span><span>pleine pénétration : "+(360-part-non)+"°</span>"+(tt>=1?"<span>partielle : "+part+"°</span>":""));
+    let m;
+    if(tt<1)m=th<am?"Montée en puissance : le capillaire se forme, la pénétration n'est pas encore complète.":th<360?"Puissance nominale : le faisceau soude à pleine pénétration.":th<360+rec?"Recouvrement : le faisceau repasse sur le départ, qui avait été soudé en montée.":"Évanouissement : la puissance baisse sur du métal déjà soudé, le capillaire se referme.";
+    else if(!b.okRep)m="Recouvrement trop court ("+rec+"° pour "+am+"° de montée) : "+part+"° de la circonférence restent en pénétration partielle, un manque de pénétration interne invisible.";
+    else if(!b.okEv)m="Évanouissement trop bref ("+ev+"°) : le capillaire se referme d'un coup et laisse une cavité ou une retassure en fin de soudure (point rouge).";
+    else m="Programme correct : toute la circonférence est à pleine pénétration, le départ repris par le recouvrement, la fin éteinte en douceur sur du métal soudé.";
+    msg.innerHTML=fr(m)+"<br><b>À retenir :</b> recouvrement ≥ montée ; évanouissement progressif sur métal soudé.";
+  }
+  player("m5pl",{get:()=>tt,set:v=>{tt=v;draw();},dur:6000,steps:12});
+  $$("#m5b .btn").forEach(b=>b.addEventListener("click",()=>{sM.value=b.dataset.m;sR.value=b.dataset.r;sE.value=b.dataset.e;tt=1;draw();}));
+  [sM,sR,sE].forEach(x=>x.addEventListener("input",()=>{tt=1;draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   Quiz, check-list, sommaire, thème
+   ========================================================= */
+(function(){
+  const box=$("#quiz");if(!box)return;
+  const Q=[
+    {q:"À partir de quelle densité de puissance environ se forme le capillaire de vapeur ?",o:["10³ W/cm²","10⁴ W/cm²","10⁶ W/cm²","10⁹ W/cm²"],c:2,e:"Sous 10⁵ W/cm², conduction ; vers 10⁶ W/cm², la vaporisation creuse un capillaire. C'est la concentration, pas la puissance seule, qui compte."},
+    {q:"Un laser de 4 kW focalisé sur une tache de 2,5 mm soude :",o:["en capillaire profond","en coupant la tôle","sans fondre","en conduction, peu profond"],c:3,e:"q ≈ 8·10⁴ W/cm² : conduction, environ 1 mm de pénétration. Sur 0,6 mm, la même puissance passe en capillaire."},
+    {q:"Pourquoi les lasers à fibre et à disque ont-ils remplacé le CO₂ en soudage ?",o:["leur faisceau est plus divergent","ils émettent à 10,6 μm","ils n'ont pas besoin d'électricité","longueur d'onde mieux absorbée, transport par fibre, meilleur rendement"],c:3,e:"Vers 1 μm, l'acier absorbe mieux, le faisceau passe dans une fibre souple jusqu'au robot, et le rendement est meilleur. Le CO₂ (10,6 μm) se transporte par miroirs."},
+    {q:"La tache au foyer d'un faisceau sortant d'une fibre vaut :",o:["c·f/f_c","f/c","c + f","f_c/f"],c:0,e:"La tache est l'image du cœur de fibre : d = c·f/f_c. Fibre de 200 μm et f/f_c = 2 : 0,4 mm."},
+    {q:"En réduisant la tache par une focale plus courte, la profondeur de champ :",o:["augmente","ne change pas","diminue fortement","devient infinie"],c:2,e:"z_R = d²/(4·BPP) : à BPP égal, une tache deux fois plus fine divise la profondeur de champ par quatre."},
+    {q:"Quel jeu d'accostage tolère environ le soudage laser sans métal d'apport ?",o:["2 à 3 mm","0,2 à 0,3 mm","5 mm","aucun jeu, jamais"],c:1,e:"Au-delà, le faisceau passe dans le jeu et il manque du métal. Fil froid ou hybride laser-MAG pour des jeux plus grands."},
+    {q:"Dans le soudage hybride laser-MAG :",o:["l'arc remplace le laser","le laser fait la pénétration, l'arc le remplissage et la tolérance au jeu","le laser préchauffe seulement","on n'utilise pas de gaz"],c:1,e:"Le laser pénètre et stabilise l'arc ; l'arc apporte le métal et élargit le cordon. Plus de paramètres à qualifier."},
+    {q:"Comment travaille-t-on avec un laser de soudage de classe 4 ?",o:["avec des lunettes de soudeur à l'arc","à découvert si le faisceau est invisible","en cellule fermée, verrouillée, avec hublots adaptés à la longueur d'onde","sans protection, le faisceau est trop fin"],c:2,e:"La cellule fermée ramène l'ensemble en classe 1 (IEC 60825-1). Le rayonnement vers 1 μm est invisible et brûle la rétine."},
+    {q:"Dans un canon à électrons, à quoi sert le wehnelt ?",o:["à accélérer les électrons","à faire le vide","à refroidir la cathode","à régler le courant de faisceau sans changer la tension d'accélération"],c:3,e:"Porté à quelques kV sous la cathode, il crée un contre-champ qui règle l'émission, comme la grille d'un tube."},
+    {q:"Pourquoi souder au faisceau d'électrons sous vide ?",o:["parce que les électrons seraient dispersés par l'air, la cathode s'oxyderait et la haute tension s'amorcerait","pour refroidir la pièce","pour souder plus lentement","pour éviter les rayons X"],c:0,e:"Le vide protège aussi le métal : idéal pour le titane et le zirconium. Les rayons X, eux, sont arrêtés par l'enceinte."},
+    {q:"Une pièce légèrement aimantée en soudage FE risque :",o:["une meilleure pénétration","une dérive du faisceau à côté du joint","un vide plus poussé","aucun effet"],c:1,e:"Le faisceau d'électrons est dévié par les champs magnétiques : démagnétiser pièces et outillages, éviter les aimants de manutention."},
+    {q:"Sur une soudure circulaire FE, le recouvrement sert à :",o:["reprendre à pleine puissance la zone soudée pendant la montée en puissance","refroidir la pièce","éviter les rayons X","économiser de l'énergie"],c:0,e:"Recouvrement ≥ montée ; puis évanouissement sur métal déjà soudé, pour refermer le capillaire sans cavité."}
+  ];
+  let score=0,done=0;const sc=$("#qzScore");
+  function upd(){let t="Score : "+score+" / "+Q.length;if(done===Q.length)t+=score>=10?"  ·  🎉 prêt pour le cours 3":score>=7?"  ·  relis les explications":"  ·  refais un tour des chapitres";sc.textContent=t;}
+  function render(){box.innerHTML="";score=0;done=0;
+    Q.forEach((it,n)=>{const d=document.createElement("div");d.className="qz";
+      d.innerHTML='<p class="qz-q"><b>'+(n+1)+".</b> "+it.q+'</p><div class="qz-o"></div><div class="qz-e" hidden></div>';
+      const o=d.querySelector(".qz-o"),ex=d.querySelector(".qz-e");let answered=false;
+      it.o.forEach((txt,i)=>{const b=document.createElement("button");b.type="button";b.className="qz-b";b.innerHTML=String.fromCharCode(65+i)+". "+txt;
+        b.addEventListener("click",()=>{if(answered)return;answered=true;done++;const ok=i===it.c;if(ok)score++;b.classList.add(ok?"ok":"ko");o.children[it.c].classList.add("ok");ex.hidden=false;ex.innerHTML=(ok?"✅ <b>Bien joué.</b> ":"❌ <b>Pas tout à fait.</b> ")+it.e;upd();});
+        o.appendChild(b);});
+      box.appendChild(d);});
+    upd();}
+  $("#qzReset").addEventListener("click",render);render();
+})();
+(function(){
+  const boxes=$$("#checklist input[type=checkbox]"),msg=$("#checkMsg"),KEY="procedes-avances-cours2-check";
+  if(!boxes.length)return;
+  let saved=[];try{saved=JSON.parse(localStorage.getItem(KEY)||"[]")||[];}catch(e){saved=[];}
+  boxes.forEach(b=>{b.checked=saved.indexOf(b.dataset.c)>=0;});
+  function upd(){const on=boxes.filter(b=>b.checked).map(b=>b.dataset.c);try{localStorage.setItem(KEY,JSON.stringify(on));}catch(e){}
+    msg.innerHTML=on.length===boxes.length?"🎉 <b>Tout est coché : tu es prêt pour le cours 3 !</b>":on.length+" / "+boxes.length+" : reviens sur les points non cochés (les manipulations sont faites pour ça).";}
+  boxes.forEach(b=>b.addEventListener("change",upd));upd();
+})();
+(function(){/* impression de la fiche mémoire seule */
+  const b=$("#printFiche");if(!b)return;
+  b.addEventListener("click",()=>{document.body.classList.add("print-fiche");window.print();});
+  window.addEventListener("afterprint",()=>document.body.classList.remove("print-fiche"));
+})();
+(function(){
+  const links=$$(".toc a"),tin=$(".toc-in");
+  if(!links.length||!("IntersectionObserver" in window))return;
+  const map={};links.forEach(a=>{map[a.getAttribute("href").slice(1)]=a;});
+  const obs=new IntersectionObserver(ents=>{ents.forEach(en=>{if(!en.isIntersecting)return;const a=map[en.target.id];if(!a)return;
+    links.forEach(l=>l.classList.toggle("on",l===a));
+    if(tin){const tgt=a.offsetLeft-tin.clientWidth/2+a.offsetWidth/2;try{tin.scrollTo({left:tgt,behavior:RM?"auto":"smooth"});}catch(e){tin.scrollLeft=tgt;}}});},{rootMargin:"-45% 0px -50% 0px"});
+  Object.keys(map).forEach(id=>{const s=document.getElementById(id);if(s)obs.observe(s);});
+})();
+(function(){
+  const b=$("#themeBtn");if(!b)return;const KEY="procedes-avances-theme",root=document.documentElement;
+  const lab={auto:"◐ Thème : automatique",light:"☀️ Thème : clair",dark:"🌙 Thème : sombre"};
+  let t="auto";try{t=localStorage.getItem(KEY)||"auto";}catch(e){}
+  function apply(){if(t==="auto")root.removeAttribute("data-theme");else root.setAttribute("data-theme",t);b.textContent=lab[t];}
+  b.addEventListener("click",()=>{t=t==="auto"?"light":t==="light"?"dark":"auto";try{localStorage.setItem(KEY,t);}catch(e){}apply();});
+  apply();
+})();
+
+})();
+</script>
+</body>
+</html>

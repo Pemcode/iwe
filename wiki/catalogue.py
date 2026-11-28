@@ -99,6 +99,9 @@ def load_catalogue(root):
         if not isinstance(data.get(key), list):
             raise CatalogueError(f"liste attendue : {key}")
     subjects = _unique(data["matieres"], "matière")
+    for subject in data["matieres"]:
+        if "module" in subject and not isinstance(subject["module"], str):
+            raise CatalogueError(f"module texte attendu : {subject['id']}")
     identifiers = _unique(data["cours"], "cours")
     _unique(data["parcours"], "parcours")
     files = set()

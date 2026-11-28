@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Arc sous gaz, cours 1 : les gaz de protection</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@500;600;700&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+
+
+
+:root{
+  --paper:#F3F6F9; --paper-2:#E6ECF2; --card:#FFFFFF; --ink:#17212B; --muted:#56626F; --line:#C5CFD9;
+  --grid:rgba(40,90,160,.075);
+  --sig:#CF2438; --tau:#8A34B6; --eps:#1B5ED3; --gam:#06849A; --frc:#D46A00; --mat:#26844A; --weld:#9A5B12;
+  --ok:#26844A; --warn:#B86E00; --bad:#C62828;
+  --lv2:#E4EBF2; --hl:#FFF3B0;
+  --font-body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-head:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --font-math:"STIX Two Text","Cambria Math","Cambria","Times New Roman",serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+    --grid:rgba(120,160,220,.07);
+    --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+    --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+  --grid:rgba(120,160,220,.07);
+  --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+  --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+  color-scheme: dark;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0;color:var(--ink);font-family:var(--font-body);font-size:17.5px;line-height:1.62;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;overflow-x:hidden;
+}
+img,svg{max-width:100%}
+.wrap{max-width:800px;margin:0 auto;padding:0 20px}
+.wide{max-width:980px}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.1;margin:0}
+h3{font-size:1.65rem;font-weight:600;margin:2rem 0 .6rem}
+h4{font-size:1.3rem;font-weight:600;margin:1.4rem 0 .4rem}
+p{margin:.7em 0}
+a{color:var(--eps)}
+b,strong{font-weight:700}
+small{font-size:.8em}
+sub{font-size:.72em}
+.m{font-family:var(--font-math);font-size:1.08em;white-space:nowrap}
+.sig{color:var(--sig)} .tau{color:var(--tau)} .eps{color:var(--eps)} .gam{color:var(--gam)} .frc{color:var(--frc)} .mat{color:var(--mat)} .mut{color:var(--muted)} .wcol{color:var(--weld)}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .12em;line-height:1.1}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 .2em .08em}
+.frac>span:last-child{padding:.08em .2em 0}
+ul,ol{padding-left:1.4em}
+li{margin:.25em 0}
+
+/* ---------- en-tête ---------- */
+.hero{padding:34px 0 10px}
+.title-block{border:2.5px solid var(--ink);background:var(--card);display:grid;grid-template-columns:1fr 300px}
+.tb-main{padding:22px 24px;border-right:2.5px solid var(--ink);display:flex;flex-direction:column;justify-content:space-between;gap:14px}
+.tb-series{margin:0 0 .5rem;color:var(--muted);font-size:.95rem}
+.hero h1{font-size:clamp(2.3rem,6vw,4rem);font-weight:700;letter-spacing:-.01em}
+.tb-cells{display:grid;grid-template-rows:repeat(4,auto)}
+.tb-cells>div{padding:9px 16px;border-bottom:1.5px solid var(--ink);display:flex;flex-direction:column;justify-content:center}
+.tb-cells>div:last-child{border-bottom:0}
+.tb-cells small{color:var(--muted);font-size:.78rem}
+.tb-cells b{font-family:var(--font-head);font-size:1.25rem;font-weight:600;line-height:1.15}
+.lede{font-size:1.13rem;max-width:760px;margin:1.2rem 0}
+.theme-btn{align-self:flex-start;font-family:var(--font-body);font-size:.85rem;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
+@media (max-width:760px){.title-block{grid-template-columns:1fr}.tb-main{border-right:0;border-bottom:2.5px solid var(--ink)}.tb-cells{grid-template-rows:none;grid-template-columns:1fr 1fr}.tb-cells>div:nth-child(odd){border-right:1.5px solid var(--ink)}.tb-cells>div:nth-child(3){border-bottom:0}}
+@media (max-width:420px){.tb-cells{grid-template-columns:1fr}.tb-cells>div:nth-child(odd){border-right:0}.tb-cells>div:nth-child(3){border-bottom:1.5px solid var(--ink)}}
+
+/* code couleur */
+.cc{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:stretch;margin:1rem 0 .4rem}
+.cc-box{background:var(--card);border:2px solid var(--line);padding:12px 14px;border-radius:4px}
+.cc-cause{border-color:var(--sig)} .cc-link{border-color:var(--mat)} .cc-eff{border-color:var(--eps)}
+.cc-box small{display:block;color:var(--muted);font-size:.82rem;line-height:1.3}
+.cc-syms{font-family:var(--font-math);font-size:1.7rem;line-height:1.25;display:flex;flex-wrap:wrap;gap:.1em .45em;margin:.2rem 0}
+.cc-box p{margin:0;font-size:.9rem;line-height:1.35}
+.cc-arrow{align-self:center;font-size:1.8rem;color:var(--muted)}
+@media (max-width:700px){.cc{grid-template-columns:1fr}.cc-arrow{transform:rotate(90deg);justify-self:center;line-height:1}}
+.cc-more{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:.5rem 0}
+.cc-more>div{border:2px solid var(--line);background:var(--card);border-radius:4px;padding:6px 10px;font-size:.9rem}
+@media (max-width:640px){.cc-more{grid-template-columns:1fr}}
+
+/* ---------- sommaire ---------- */
+.toc{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-bottom:1.5px solid var(--line);padding-top:env(safe-area-inset-top,0px);margin-top:18px}
+.toc-in{display:flex;gap:6px;overflow-x:auto;padding:9px 20px;max-width:980px;margin:0 auto;scrollbar-width:thin}
+.toc a{flex:none;text-decoration:none;color:var(--ink);font-size:.88rem;padding:4px 11px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);white-space:nowrap}
+.toc a.on{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.toc a:focus-visible,.btn:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--eps);outline-offset:2px}
+
+/* ---------- sections ---------- */
+section.chap{padding:46px 0 10px}
+.cartouche{display:grid;grid-template-columns:86px 1fr 250px;border:2.5px solid var(--ink);background:var(--card);margin-bottom:1.4rem}
+.c-num{font-family:var(--font-head);font-size:3.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;border-right:2.5px solid var(--ink)}
+.c-title{padding:14px 18px;border-right:2.5px solid var(--ink)}
+.c-title h2{font-size:2.1rem;font-weight:700}
+.c-title p{margin:.25rem 0 0;color:var(--muted)}
+.c-img{padding:12px 14px;display:flex;gap:12px;align-items:center;background:var(--paper-2)}
+.c-img .ico{font-size:2.3rem;line-height:1}
+.c-img small{display:block;color:var(--muted);font-size:.78rem}
+.c-img span{font-size:.95rem;line-height:1.3}
+@media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
+
+/* gabarit court : approfondissement replié, à retenir, prédiction */
+details.deep{margin:1.2rem 0;padding:0 18px;background:var(--lv2);border-left:6px solid var(--ink);border-radius:4px}
+details.deep>summary{font-family:var(--font-head);font-size:1.2rem;font-weight:600;padding:9px 0}
+details.deep[open]{padding-bottom:10px}
+.retenir{margin:1.4rem 0 .4rem;padding:8px 18px 6px;background:var(--card);border:2px solid var(--ink);border-radius:4px}
+.retenir>b:first-child{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.retenir ul{margin:.3rem 0 .3rem}
+.predict{display:block;margin-top:.35rem;color:var(--ink);font-weight:700}
+@media (max-width:520px){details.deep{padding:0 12px}.retenir{padding:8px 12px 6px}}
+
+/* formules et encadrés */
+.fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:600px;text-align:center;border-radius:3px;overflow-x:auto}
+.fx .big{font-family:var(--font-math);font-size:1.9rem;line-height:1.4}
+.fx .cap{font-size:.85rem;color:var(--muted);margin:.3rem 0 0}
+.fx .row{display:flex;flex-wrap:wrap;justify-content:center;gap:.2em 1.4em}
+.syms{margin:.6rem 0;display:grid;grid-template-columns:auto 1fr;gap:.35rem 1rem;align-items:baseline}
+.syms dt{font-family:var(--font-math);font-size:1.25rem;text-align:right;white-space:nowrap}
+.syms dd{margin:0}
+.def{margin:.9rem 0;padding:.5rem .9rem;border-left:3px dotted var(--muted);font-size:.96rem;background:color-mix(in srgb,var(--card) 60%,transparent)}
+.def>b:first-child{font-family:var(--font-head);font-size:1.08rem;font-weight:600}
+.tip{margin:1rem 0;padding:.7rem 1rem;border:1.5px dashed var(--mat);border-radius:4px;font-size:.97rem}
+.warn{margin:1rem 0;padding:.7rem 1rem;border:2px solid var(--bad);border-radius:4px;font-size:.97rem;background:color-mix(in srgb,var(--bad) 7%,transparent)}
+.mnemo{margin:1rem 0;padding:.7rem 1rem;background:var(--hl);border-radius:4px;font-size:.98rem}
+.fun{margin:1.2rem 0;padding:.8rem 1rem;border:2px dashed var(--muted);border-radius:10px;background:var(--card);font-size:.98rem}
+.fun-h{display:block;margin-bottom:.35rem;font-family:var(--font-head);font-size:1.15rem;font-weight:600;letter-spacing:.02em}
+.meta{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--frc);border-radius:4px;background:color-mix(in srgb,var(--frc) 6%,transparent)}
+.weld{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--weld);border-radius:4px;background:color-mix(in srgb,var(--weld) 7%,transparent)}
+.weld>b:first-child{font-family:var(--font-head);font-size:1.15rem;font-weight:600;color:var(--weld)}
+.hp{display:inline-block;font-size:.72rem;font-weight:700;padding:1px 7px;border-radius:9px;background:var(--weld);color:var(--card);vertical-align:middle;margin-left:4px;white-space:nowrap}
+.recall{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:1rem 0}
+.recall>div{background:var(--card);border:1.5px solid var(--line);border-radius:4px;padding:8px 12px;font-size:.92rem}
+.recall .f{font-family:var(--font-math);font-size:1.2rem;margin-bottom:.2rem}
+@media (max-width:640px){.recall{grid-template-columns:1fr}}
+.hist{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:1rem 0}
+.hist>div{background:var(--card);border:1.5px solid var(--weld);border-radius:4px;padding:8px 12px;font-size:.93rem}
+.hist .yr{font-family:var(--font-head);font-size:1.6rem;font-weight:700;color:var(--weld);line-height:1}
+@media (max-width:720px){.hist{grid-template-columns:1fr}}
+
+/* manipulations */
+.lab{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:14px 16px 12px;margin:1.4rem 0}
+.lab-h{font-family:var(--font-head);font-size:1.3rem;font-weight:600;margin:0 0 .2rem}
+.lab-sub{margin:0 0 .6rem;color:var(--muted);font-size:.92rem}
+.lab svg{display:block;width:100%;height:auto;color:var(--ink);font-family:var(--font-body);touch-action:pan-y}
+.ctrl{display:grid;grid-template-columns:minmax(110px,auto) 1fr minmax(92px,auto);gap:4px 12px;align-items:center;margin:.5rem 0}
+.ctrl label{font-size:.95rem}
+.ctrl output{font-family:var(--font-math);font-size:1.08rem;text-align:right;white-space:nowrap}
+@media (max-width:520px){.ctrl{grid-template-columns:1fr auto}.ctrl input[type=range]{grid-column:1/-1;grid-row:2}}
+input[type=range]{width:100%;accent-color:var(--ink);height:28px;margin:0}
+input.r-sig{accent-color:var(--sig)} input.r-tau{accent-color:var(--tau)} input.r-frc{accent-color:var(--frc)} input.r-mat{accent-color:var(--mat)} input.r-eps{accent-color:var(--eps)}
+.btns{display:flex;flex-wrap:wrap;gap:6px;margin:.5rem 0}
+.btn{font-family:var(--font-body);font-size:.9rem;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 13px;cursor:pointer;line-height:1.3}
+.btn:hover{background:var(--paper-2)}
+.btn.on{background:var(--ink);color:var(--paper)}
+.btn.play{border-color:var(--eps);color:var(--eps);font-weight:700}
+.btn:disabled{opacity:.45;cursor:default}
+.readout{font-family:var(--font-math);font-size:1.08rem;background:var(--paper-2);border-radius:4px;padding:.5rem .8rem;margin:.5rem 0;overflow-x:auto;display:flex;flex-wrap:wrap;gap:.2em 1.3em}
+.readout>span{white-space:nowrap}
+.status{font-size:.97rem;margin:.5rem 0;padding:.5rem .8rem;border-left:4px solid var(--eps);background:color-mix(in srgb,var(--eps) 6%,transparent);border-radius:0 4px 4px 0;min-height:2.6em}
+.radios{display:flex;flex-wrap:wrap;gap:6px 14px;margin:.4rem 0;font-size:.95rem}
+.radios label{display:inline-block;cursor:pointer}
+.radios input{margin:0 6px 0 0;vertical-align:middle}
+
+/* svg */
+svg text{fill:currentColor;font-size:13px}
+svg .lbl{font-size:12.5px;fill:var(--muted)}
+svg .mth{font-family:var(--font-math);font-size:16px}
+svg .ttl{font-family:var(--font-head);font-size:15px;font-weight:600}
+svg .axis{stroke:var(--ink);stroke-width:1.4;fill:none}
+svg .tick{stroke:var(--muted);stroke-width:1}
+svg .gridbg{stroke:var(--line);stroke-width:1}
+svg .ref{stroke:var(--muted);stroke-width:1.3;stroke-dasharray:4 3;fill:none}
+.arr line{stroke:currentColor}
+.arr polygon{fill:currentColor}
+
+/* tableaux */
+.tbl-wrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch}
+table.data{border-collapse:collapse;width:100%;font-size:.94rem;background:var(--card)}
+table.data th,table.data td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:middle}
+table.data th{font-family:var(--font-head);font-weight:600;font-size:1.05rem;background:var(--paper-2)}
+table.data td.n{font-family:var(--font-math);white-space:nowrap}
+table.data tr.now td{background:var(--hl)}
+
+/* parcours */
+.route{list-style:none;padding:0;margin:1rem 0;position:relative}
+.route::before{content:"";position:absolute;left:17px;top:10px;bottom:10px;width:4px;background:var(--line);border-radius:2px}
+.route li{position:relative;padding:0 0 14px 52px;margin:0}
+.route li .dot{position:absolute;left:4px;top:0;width:30px;height:30px;border-radius:50%;border:3px solid var(--ink);background:var(--card);font-family:var(--font-head);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+.route li b{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.route li p{margin:.1rem 0 0;font-size:.95rem}
+.series{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:.8rem 0}
+.series>div{background:var(--card);border:1.5px solid var(--line);padding:8px 10px;border-radius:4px;font-size:.88rem}
+.series>div.here{border:2.5px solid var(--ink)}
+.series b{display:block;font-family:var(--font-head);font-size:1.05rem}
+@media (max-width:700px){.series{grid-template-columns:1fr 1fr}}
+
+/* exercices et quiz */
+.exo{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--ink);padding:6px 20px 12px;margin:1.2rem 0;border-radius:4px}
+.exo.defi{border-left-color:var(--weld)}
+.exo h4{margin-top:.8rem}
+.exo .lvtag{font-family:var(--font-body);font-size:.85rem;font-weight:400;color:var(--muted);margin-left:.4rem}
+.exo .q{margin:.25rem 0}
+details{margin:.6rem 0}
+summary{cursor:pointer;font-weight:700;padding:4px 0}
+details .sol{padding:.4rem .9rem;border-left:3px solid var(--mat);margin:.4rem 0}
+details .sol p{margin:.45em 0}
+.qz{background:var(--card);border:1.5px solid var(--line);border-radius:6px;padding:10px 16px;margin:.8rem 0}
+.qz-q{margin:.3rem 0 .6rem}
+.qz-o{display:flex;flex-direction:column;gap:6px}
+.qz-b{text-align:left;font-family:var(--font-body);font-size:.97rem;padding:8px 12px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:5px;cursor:pointer}
+.qz-b:hover{border-color:var(--ink)}
+.qz-b.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--card))}
+.qz-b.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--card))}
+.qz-e{font-size:.94rem;margin:.6rem 0 .2rem}
+.score{position:sticky;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);display:inline-block;background:var(--ink);color:var(--paper);padding:6px 14px;border-radius:999px;font-size:.95rem;margin:.6rem 0}
+
+/* fiche mémoire */
+.fiche{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:2.5px solid var(--ink);background:var(--card);margin:1rem 0}
+.fiche>div{padding:12px 14px;border-right:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}
+.fiche>div:nth-child(3n){border-right:0}
+.fiche>div:nth-last-child(-n+3){border-bottom:0}
+.fiche .ic{font-size:1.9rem;line-height:1}
+.fiche h4{margin:.3rem 0 .2rem;font-size:1.15rem}
+.fiche .f{font-family:var(--font-math);font-size:1.1rem;margin:.2rem 0}
+.fiche p{margin:.2rem 0 0;font-size:.88rem;color:var(--muted)}
+@media (max-width:720px){.fiche{grid-template-columns:1fr 1fr}.fiche>div{border-right:1.5px solid var(--ink)!important;border-bottom:1.5px solid var(--ink)!important}.fiche>div:nth-child(2n){border-right:0!important}.fiche>div:last-child{border-bottom:0!important}}
+@media (max-width:440px){.fiche{grid-template-columns:1fr}.fiche>div{border-right:0!important}}
+.gloss{display:grid;grid-template-columns:minmax(150px,230px) 1fr;gap:0;border-top:1.5px solid var(--line);margin:1rem 0}
+.gloss dt,.gloss dd{border-bottom:1.5px solid var(--line);padding:7px 8px;margin:0}
+.gloss dt{font-weight:700}
+.gloss dd{font-size:.95rem}
+@media (max-width:600px){.gloss{grid-template-columns:1fr}.gloss dt{border-bottom:0;padding-bottom:0}}
+.check label{display:flex;gap:10px;align-items:flex-start;padding:5px 0;cursor:pointer}
+.check input{margin-top:.35em;width:18px;height:18px;accent-color:var(--mat);flex:none}
+footer{padding:40px 0 60px;color:var(--muted);font-size:.9rem}
+hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
+@media (max-width:700px){.m{white-space:normal}.fx{padding:12px 10px}.fx .big{font-size:1.4rem}}
+@media (max-width:400px){body{font-size:16.5px}.wrap{padding:0 14px}.lab{padding:12px 10px}}
+
+/* compléments de la série Rupture */
+.btn.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,var(--card))}
+.btn.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--card))}
+.ctrl[hidden]{display:none}
+
+/* impression : le cours sur papier clair, ou la fiche mémoire seule sur une page */
+@media print{
+  :root,:root[data-theme]{--paper:#fff!important;--paper-2:#EEF2F6!important;--card:#fff!important;--ink:#111!important;--muted:#444!important;--line:#999!important;--grid:transparent!important;--lv2:#F2F5F8!important;--hl:#FFF3B0!important;color-scheme:light}
+  body{background:#fff;font-size:11pt}
+  .toc,.theme-btn,.btns,.ctrl,#qzReset,.score{display:none!important}
+  section.chap{padding:14px 0 4px}
+  .lab,.fx,.retenir,details.deep,.fiche>div,.exo{break-inside:avoid}
+  body.print-fiche header,body.print-fiche main>section:not(#fiche),body.print-fiche footer{display:none!important}
+  body.print-fiche #fiche .cartouche{margin-bottom:.6rem}
+  body.print-fiche .fiche>div{padding:8px 10px}
+}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="wrap wide">
+  <div class="title-block">
+    <div class="tb-main">
+      <div>
+        <p class="tb-series">Soudage sous protection gazeuse : TIG, MIG-MAG et plasma</p>
+        <h1>Les gaz de protection : protéger le bain, façonner l'arc</h1>
+      </div>
+      <button class="theme-btn" id="themeBtn" type="button" aria-label="Changer de thème">◐ Thème : automatique</button>
+    </div>
+    <div class="tb-cells">
+      <div><small>Cours</small><b>1 sur 5 : le gaz, premier réglage des procédés sous gaz</b></div>
+      <div><small>Durée conseillée</small><b>≈ 1 h 20 avec les exercices</b></div>
+      <div><small>Prérequis</small><b>l'arc électrique (Fondamentaux des procédés, cours 2 : ionisation, polarité, striction) ; notions de fissuration à froid (Métallurgie, cours 3)</b></div>
+      <div><small>À la fin tu sais</small><b>expliquer ce que le gaz protège et comment régler son débit ; comparer argon et hélium et prévoir l'effet d'un mélange ; prévoir l'effet du CO<sub>2</sub>, de l'oxygène, de l'hydrogène et de l'azote sur l'arc, le transfert et le cordon ; relier hydrogène, azote et oxygène aux défauts du joint, et appliquer la loi de Sievert ; classer et désigner un gaz selon l'ISO 14175, et choisir gaz de soudage et gaz d'envers</b></div>
+    </div>
+  </div>
+  <p class="lede">Argon, hélium, CO<sub>2</sub>, oxygène, hydrogène, azote : six gaz suffisent à composer presque tous les mélanges de soudage, et chacun change l'arc, la pénétration et la métallurgie du joint. Le gaz n'est donc pas un simple couvercle : c'est le premier réglage du TIG, du MIG-MAG et du plasma. Ce cours explique ce qu'il protège, ce que chaque composant apporte, comment il nourrit ou évite porosités et fissures, et comment le désigner selon l'ISO 14175. Les manipulations règlent le débit sous le vent, dosent l'hélium et le CO<sub>2</sub>, font dissoudre l'hydrogène dans l'aluminium et décodent une bouteille.</p>
+
+  <h4>Le code couleur de la série</h4>
+  <div class="cc" role="img" aria-label="Code couleur : les causes en rouge et violet, les paramètres en vert, les effets en bleu et bleu-vert">
+    <div class="cc-box cc-cause"><small>Les causes</small><div class="cc-syms"><span class="sig">air</span><span class="sig">vent</span><span class="tau">porosité</span><span class="tau">oxydation</span></div><p><span class="sig">rouge</span> : ce qui menace le bain (air, vent, humidité) ; <span class="tau">violet</span> : les défauts (porosités, oxydes, projections, fissures)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-link"><small>Les paramètres</small><div class="cc-syms"><span class="mat">Ar</span><span class="mat">He</span><span class="mat">CO<sub>2</sub></span><span class="mat">Q</span></div><p>en <span class="mat">vert</span> : ce qu'on choisit (composition du gaz, débit, buse)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-eff"><small>Les effets</small><div class="cc-syms"><span class="eps">U</span><span class="eps">p</span><span class="eps">S</span><span class="gam">arc</span><span class="gam">[H]</span></div><p><span class="eps">bleu</span> : ce qu'on mesure ou calcule (tension d'arc, pénétration, solubilité, indice d'oxydation) ; <span class="gam">bleu-vert</span> : l'arc et ce qui se dissout dans le métal</p></div>
+  </div>
+  <div class="cc-more">
+    <div><b class="frc">Orange</b> : ce qui s'écoule et se déplace (jet de gaz, gouttes, courant d'air).</div>
+    <div><b>Noir</b> : la géométrie dessinée (torche, buse, pièce, cordon).</div>
+    <div><b class="wcol">Bronze</b> : le métal fondu et les encadrés « métier » 🔥.</div>
+  </div>
+</div>
+</header>
+
+<nav class="toc" aria-label="Sommaire">
+  <div class="toc-in">
+    <a href="#avant">Avant de commencer</a>
+    <a href="#c1">1 Pourquoi un gaz</a>
+    <a href="#c2">2 Argon et hélium</a>
+    <a href="#c3">3 Gaz actifs</a>
+    <a href="#c4">4 Métallurgie</a>
+    <a href="#c5">5 ISO 14175</a>
+    <a href="#exos">Exercices</a>
+    <a href="#quiz-s">Quiz</a>
+    <a href="#fiche">Fiche mémoire</a>
+    <a href="#gloss">Glossaire</a>
+    <a href="#check">Check-list</a>
+  </div>
+</nav>
+
+<main>
+<section class="chap" id="avant">
+<div class="wrap">
+  <h3 style="margin-top:0">Avant de commencer</h3>
+  <h4>Ce qu'il faut avoir en tête, en trois cases</h4>
+  <div class="recall">
+    <div><div class="f">He 24,6 · Ar 15,8 · Fe 7,9 eV</div>L'arc est un plasma ; un gaz difficile à ioniser demande plus de tension et chauffe davantage (Fondamentaux des procédés, cours 2).</div>
+    <div><div class="f">TIG : électrode au −</div>En TIG, le tungstène reste froid au pôle − ; en MIG-MAG, le fil fond, au pôle + (Fondamentaux, cours 2, chapitre 4).</div>
+    <div><div class="f">H + martensite + contraintes</div>L'hydrogène dissous dans une zone dure et bridée fissure à froid (Métallurgie, cours 3).</div>
+  </div>
+
+  <div class="def"><b>📘 Le sujet</b> : <b>1.6 « Introduction au soudage à l'arc sous protection gazeuse »</b> du planning et du référentiel de l'IIW (<i>International Institute of Welding</i>). Attendus de l'IWE (<i>International Welding Engineer</i>, ingénieur international en soudage) : interpréter les caractéristiques de l'arc associées à chaque gaz ; prévoir l'influence du gaz sur la forme du cordon et sur la métallurgie ; choisir et justifier, pour chaque procédé, le gaz de protection ; spécifier les consommables, dont les gaz.</div>
+
+  <div class="def"><b>📖 Normes et sigles</b>. <b>ISO 14175</b> : gaz et mélanges gazeux pour le soudage par fusion (classification et désignation) ; <b>EN 1011-1</b> : recommandations pour le soudage, dont la protection contre les courants d'air ; <b>ISO 4063</b> : 131 MIG (gaz inerte), 135 MAG (gaz actif), 141 TIG, 15 plasma. <b>MIG</b>, <b>MAG</b>, <b>TIG</b> : <i>metal inert gas</i>, <i>metal active gas</i>, <i>tungsten inert gas</i> ; <b>QMOS</b> : qualification de mode opératoire de soudage ; <b>PREN</b> : indice de résistance à la piqûre ; <b>VLE</b> : valeur limite d'exposition. Compositions en % du volume. Les manipulations sont des modèles pédagogiques : tendances et ordres de grandeur.</div>
+
+  <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage</b>
+    <p>Le même fil, sous argon à 2 % d'oxygène ou sous CO<sub>2</sub> pur, ne donne ni le même arc, ni le même cordon, ni le même métal fondu. Choisir le gaz, c'est choisir une partie de la qualification : une QMOS ne couvre que le gaz qualifié.</p>
+  </div>
+
+  <h4>La série</h4>
+  <div class="series" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">
+    <div class="here"><b>1 Les gaz de protection</b>Protéger, ioniser, façonner : argon, hélium, gaz actifs, métallurgie, ISO 14175.</div>
+    <div><b>2 Le soudage TIG</b>L'électrode infusible, la polarité, les réglages et les variantes.</div>
+    <div><b>3 MIG-MAG : le procédé</b>Fil fusible, autorégulation et régimes de transfert.</div>
+    <div><b>4 MIG-MAG : fils et soudabilité</b>Fils pleins et fourrés, hydrogène, réglages et défauts.</div>
+    <div><b>5 Le soudage plasma</b>L'arc étranglé et le trou de serrure.</div>
+  </div>
+
+  <h4>Le plan du cours</h4>
+  <ol class="route">
+    <li><span class="dot">1</span><b>Pourquoi un gaz</b><p>Ce que l'air ferait au bain, et le débit qui protège.</p></li>
+    <li><span class="dot">2</span><b>Argon et hélium</b><p>Les gaz inertes et leurs mélanges.</p></li>
+    <li><span class="dot">3</span><b>Les gaz actifs</b><p>CO<sub>2</sub>, oxygène, hydrogène, azote.</p></li>
+    <li><span class="dot">4</span><b>Gaz et métallurgie</b><p>Hydrogène, azote, oxygène dans le joint ; la loi de Sievert.</p></li>
+    <li><span class="dot">5</span><b>Désigner et choisir</b><p>L'ISO 14175, le gaz d'envers et les fumées.</p></li>
+  </ol>
+</div>
+</section>
+<section class="chap" id="c1">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">1</div>
+    <div class="c-title"><h2>Pourquoi un gaz</h2><p>Ce que l'air ferait au bain, et le débit qui le protège</p></div>
+    <div class="c-img"><span class="ico">🛡️</span><span><small>Image à retenir</small>La cloche : le gaz pose sur le bain une cloche sans air ; trop faible, le vent la souffle ; trop forte, elle tourbillonne et aspire l'air</span></div>
+  </div>
+
+  <p>Un bain d'acier à plus de 1 500 °C, laissé à l'air, se gâte en quelques secondes. L'<span class="sig">oxygène</span> l'oxyde et forme des inclusions ; l'<span class="sig">azote</span>, que l'arc dissocie, s'y dissout puis ressort en <span class="tau">soufflures</span> ou fragilise le métal ; la vapeur d'eau apporte de l'<span class="sig">hydrogène</span>. Le procédé à l'électrode se protège par son laitier, l'arc submergé par son flux. Les procédés TIG, MIG-MAG et plasma n'ont ni l'un ni l'autre : un gaz doit chasser l'air de la zone de l'arc et du bain. Ce gaz fait aussi deux autres métiers : il devient le plasma de l'arc, et il règle le transfert du métal et la forme du cordon (chapitres 2 et 3).</p>
+
+  <div class="def"><b>📖 Gaz inerte, gaz actif.</b> Un <b>gaz inerte</b> (argon, hélium) ne réagit pas avec le métal : il protège seulement. Un <b>gaz actif</b> réagit : oxydant (CO<sub>2</sub>, O<sub>2</sub>), réducteur (H<sub>2</sub>) ou faiblement réactif (N<sub>2</sub>). D'où les noms : <b>MIG</b> (131) sous gaz inerte, pour l'aluminium et les métaux réactifs ; <b>MAG</b> (135) sous gaz actif, pour les aciers ; <b>TIG</b> (141), toujours sous gaz inerte ou presque, car un oxydant brûlerait le tungstène. Le débit se règle au débitmètre, en litres par minute.</div>
+
+  <div class="fx"><div class="row big"><span><span class="eps">v</span> = <span class="mat">Q</span>/(π·D²/4)</span><span><span class="eps">Re</span> = ρ·v·D/μ</span></div><p class="cap">v : vitesse du gaz à la sortie de la buse (m/s) ; Q : débit (m³/s) ; D : diamètre intérieur de la buse (m) ; Re : nombre de Reynolds, laminaire sous environ 2 000 ; argon à 20 °C : ρ ≈ 1,66 kg/m³, μ ≈ 2,2 × 10<sup>−5</sup> Pa·s.</p></div>
+
+  <div class="lab" id="m1">
+    <p class="lab-h">Manipulation 1 : la cloche de gaz sous le vent</p>
+    <p class="lab-sub">Choisis la buse, règle le débit d'argon et le vent : les filets de gaz se dessinent, avec ce qui atteint le bain.<span class="predict">🔮 Prédis d'abord : avec une buse de 16 mm, protège-t-on mieux à 16 ou à 30 L/min ?</span></p>
+    <div class="btns" id="m1b">
+      <button class="btn" data-d="12" type="button">Buse 12 mm</button>
+      <button class="btn on" data-d="16" type="button">Buse 16 mm</button>
+      <button class="btn" data-d="20" type="button">Buse 20 mm</button>
+    </div>
+    <div class="ctrl"><label for="m1q">Débit <b class="mat">Q</b></label><input type="range" id="m1q" min="4" max="40" step="1" value="16"><output id="m1qo"></output></div>
+    <div class="ctrl"><label for="m1w">Vent <b class="sig">w</b></label><input type="range" id="m1w" min="0" max="5" step="0.1" value="0"><output id="m1wo"></output></div>
+    <svg id="m1svg" role="img" aria-label="Torche, buse et jet de gaz au-dessus du bain, avec le vent et l'air qui pénètre"></svg>
+    <div class="readout" id="m1r"></div>
+    <p class="status" id="m1msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple.</b> Buse de 16 mm, 16 L/min d'argon : <span class="m">v = (16/60 000)/(π × 0,016²/4) ≈ 1,33 m/s</span> et <span class="m">Re = 1,66 × 1,33 × 0,016/2,2 × 10<sup>−5</sup> ≈ 1 600</span> : jet laminaire, bonne cloche. À 30 L/min, Re ≈ 3 000 : le jet devient turbulent et aspire l'air sur ses bords. D'où la règle d'atelier d'environ <b>1 L/min par millimètre de diamètre de buse</b> : comme Re est proportionnel à Q/D, elle garde le jet dans le même régime quelle que soit la buse. Un courant d'air de quelques mètres par seconde, comparable à la vitesse du jet, suffit à le dévier.</p>
+
+  <div class="warn"><b>⚠️ Piège : « des porosités ? Augmente le gaz ».</b> Au-delà du bon débit, le jet tourbillonne et aspire l'air : les porosités augmentent. On cherche d'abord une fuite, un courant d'air, une buse encrassée de projections, ou une buse trop loin de la pièce.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « un litre par millimètre »</b> de diamètre de buse, en argon, à l'abri du vent.</div>
+  <div class="weld"><b>🔥 Sur chantier :</b> paravents ou tente au-delà d'une brise légère, prégaz et postgaz réglés pour que le bain se fige encore sous la cloche, et débit vérifié à la buse : un débitmètre au détendeur ne voit pas une fuite le long du faisceau.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : pourquoi l'hélium demande plus de débit</summary>
+    <p>L'hélium est dix fois plus léger que l'argon (masse volumique 0,178 contre 1,784 kg/m³ à 0 °C, ISO 14175, tableau 1) et sept fois plus léger que l'air. À débit égal, son jet est très laminaire (Re ≈ 180), mais il monte au lieu de retomber sur la pièce : il faut souvent deux à trois fois plus d'hélium que d'argon pour la même protection, surtout à plat. Le CO<sub>2</sub>, plus lourd que l'air, couvre bien le bain à plat.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Le gaz chasse l'air : sans lui, oxydes, soufflures d'azote et hydrogène.</li>
+      <li>Environ 1 L/min par mm de buse : jet laminaire.</li>
+      <li>Trop de gaz tourbillonne ; le vent souffle la cloche.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c2">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">2</div>
+    <div class="c-title"><h2>Argon et hélium</h2><p>Deux gaz inertes, deux arcs différents</p></div>
+    <div class="c-img"><span class="ico">🎈</span><span><small>Image à retenir</small>Le plomb et le ballon : l'argon, lourd et docile, retombe sur le bain et s'allume tout seul ; l'hélium, léger et coûteux, s'envole mais chauffe beaucoup plus</span></div>
+  </div>
+
+  <p>Argon et hélium ne réagissent avec aucun métal : ils conviennent à tous, de l'acier au titane. Mais ils ne font pas le même arc. L'<b>argon</b>, extrait de l'air par distillation, s'ionise facilement : l'arc s'amorce bien, reste stable et calme, sous une tension modérée. L'<b>hélium</b>, extrait de certains gisements de gaz naturel, s'ionise difficilement et conduit très bien la chaleur : l'arc demande plus de tension, il est plus chaud et plus large, et la pénétration plus forte. On les mélange pour profiter des deux.</p>
+
+  <div class="def"><b>📖 Propriétés utiles.</b>
+    <ul>
+      <li><b>Énergie d'ionisation</b> : argon 15,8 eV, hélium 24,6 eV.</li>
+      <li><b>Masse volumique</b> rapportée à l'air (ISO 14175) : argon 1,38, hélium 0,14.</li>
+      <li><b>Conductivité thermique</b> : celle de l'hélium vaut près de neuf fois celle de l'argon à température ambiante, et l'écart persiste dans l'arc.</li>
+    </ul>
+    Le mélange argon-hélium se règle par la teneur en hélium : 20 à 75 % le plus souvent.</div>
+
+  <div class="fx"><div class="row big"><span><span class="eps">P</span> = <span class="eps">U</span>·I</span><span>à I égal : <span class="eps">U</span><sub>He</sub> &gt; <span class="eps">U</span><sub>Ar</sub> ⇒ <span class="eps">P</span><sub>He</sub> &gt; <span class="eps">P</span><sub>Ar</sub></span></div><p class="cap">Le poste TIG règle le courant I ; c'est le gaz, avec la longueur d'arc, qui fixe la tension U, donc la puissance P de l'arc.</p></div>
+
+  <div class="lab" id="m2">
+    <p class="lab-h">Manipulation 2 : doser l'hélium dans l'argon</p>
+    <p class="lab-sub">Règle la teneur en hélium d'un arc TIG de 150 A et 3 mm : la coupe du cordon, la tension, la puissance et le débit à prévoir se mettent à jour.<span class="predict">🔮 Prédis d'abord : à 50 % d'hélium, la puissance de l'arc augmente-t-elle de 5 %, de 25 % ou de 50 % ?</span></p>
+    <div class="btns" id="m2b">
+      <button class="btn on" data-h="0" type="button">Argon pur (I1)</button>
+      <button class="btn" data-h="30" type="button">Ar + 30 % He (I3)</button>
+      <button class="btn" data-h="70" type="button">Ar + 70 % He (I3)</button>
+      <button class="btn" data-h="100" type="button">Hélium pur (I2)</button>
+    </div>
+    <div class="ctrl"><label for="m2h">Hélium <b class="mat">He</b></label><input type="range" id="m2h" min="0" max="100" step="5" value="0"><output id="m2ho"></output></div>
+    <svg id="m2svg" role="img" aria-label="Arc TIG et coupe du cordon selon la teneur en hélium, avec tension, puissance et débit"></svg>
+    <div class="readout" id="m2r"></div>
+    <p class="status" id="m2msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> (modèle de la manipulation) : à 150 A et 3 mm, l'arc TIG prend environ 12,7 V en argon et 19 V en hélium, soit 1,9 et 2,9 kW. À la même vitesse, l'hélium élargit et creuse le bain ; à pénétration égale, il permet de souder plus vite. Il sert donc aux fortes épaisseurs et aux métaux qui évacuent vite la chaleur : aluminium et cuivre, épais. Ses défauts : un amorçage plus difficile (on amorce souvent sous argon), un débit deux à trois fois plus fort et un prix bien plus élevé.</p>
+
+  <div class="warn"><b>⚠️ Piège : croire que l'hélium « augmente le courant ».</b> Le poste TIG tient le courant ; l'hélium augmente la <b>tension</b> de l'arc, donc sa puissance et l'énergie de soudage. Un mode opératoire qualifié sous argon ne couvre pas un mélange argon-hélium : la QMOS est limitée à la composition nominale, à ±10 % relatifs près sur la teneur en hélium (EN ISO 15614-1).</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « argon pour allumer, hélium pour chauffer »</b>.</div>
+  <div class="weld"><b>🔥 Choisir à l'atelier :</b> argon pur par défaut, en TIG sur tous les métaux et en MIG sur l'aluminium mince ; argon-hélium pour l'aluminium et le cuivre épais, le TIG automatique rapide et les passes de racine profondes ; hélium pur pour le TIG de l'aluminium en courant continu, électrode au −, en automatique.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : d'où viennent ces deux gaz</summary>
+    <p>L'air contient environ 0,93 % d'argon ; une colonne de distillation de l'air liquide le sépare de l'azote et de l'oxygène (température d'ébullition : argon −185,9 °C, oxygène −183,0 °C, azote −195,8 °C). L'hélium, présent à l'état de traces dans l'air, se récupère dans certains gaz naturels, où il s'accumule depuis des millions d'années par la radioactivité alpha des roches : une ressource rare, au coût élevé.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Argon : amorçage facile, arc calme, tension basse, peu coûteux.</li>
+      <li>Hélium : tension et puissance plus fortes, bain plus large et plus profond.</li>
+      <li>Hélium : plus de débit, amorçage difficile, cher.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c3">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">3</div>
+    <div class="c-title"><h2>Les gaz actifs</h2><p>CO₂, oxygène, hydrogène, azote : un peu change tout</p></div>
+    <div class="c-img"><span class="ico">🧂</span><span><small>Image à retenir</small>Le sel en cuisine : une pincée d'oxydant relève l'arc et mouille le bain ; trop, et le plat est gâché par les projections et les scories</span></div>
+  </div>
+
+  <p>Sous argon pur, un arc MAG sur acier est instable : il erre sur la surface oxydée et le bain mouille mal les bords. Une pincée d'oxydant, 2 % d'oxygène ou quelques % de CO<sub>2</sub>, ancre l'arc et étale le bain. Davantage de CO<sub>2</sub> creuse un bain plus large et plus profond, au prix de projections et d'un métal oxydé. L'hydrogène et l'azote, eux, servent à des métaux précis et sont proscrits ailleurs. Chaque ajout se dose donc selon le métal et le procédé.</p>
+
+  <div class="def"><b>📖 Ce que fait chaque gaz actif.</b>
+    <ul>
+      <li><b>CO<sub>2</sub></b> : dans l'arc, il se dissocie (CO<sub>2</sub> → CO + O) en absorbant de la chaleur, qu'il rend en se recombinant au contact de la pièce. Il donne une pénétration large et profonde, mais il oxyde le bain et brûle manganèse et silicium. Au-delà d'environ 20 à 25 %, la pulvérisation axiale devient impossible : gouttes grosses et projections.</li>
+      <li><b>O<sub>2</sub></b> (1 à 5 %) : il abaisse la tension superficielle du bain, affine les gouttes et stabilise l'arc ; il oxyde aussi.</li>
+      <li><b>H<sub>2</sub></b> (2 à 10 % en TIG ou en plasma) : réducteur, il rend l'arc plus chaud et le cordon brillant sur les inox austénitiques ; il est interdit sur les aciers trempants (fissuration à froid), l'aluminium (porosités) et le titane (fragilisation).</li>
+      <li><b>N<sub>2</sub></b> (1 à 3 %) : fortement gammagène, il garde l'austénite des inox duplex et super-duplex ; il est proscrit sur les aciers ferritiques et martensitiques, les inox stabilisés au titane et le titane.</li>
+    </ul>
+  </div>
+
+  <div class="fx"><div class="row big"><span><span class="eps">indice d'oxydation</span> ≈ %O<sub>2</sub> + ½·%CO<sub>2</sub></span></div><p class="cap">Indice pédagogique : une molécule de CO<sub>2</sub> libère un atome d'oxygène en se dissociant, une molécule d'O<sub>2</sub> en libère deux. Il compare des mélanges entre eux, il n'est pas normalisé.</p></div>
+
+  <div class="lab" id="m3">
+    <p class="lab-h">Manipulation 3 : doser l'oxydant d'un mélange MAG</p>
+    <p class="lab-sub">Règle le CO<sub>2</sub> et l'oxygène dans l'argon : la coupe du cordon, le transfert possible et les pertes d'éléments se mettent à jour.<span class="predict">🔮 Prédis d'abord : un fil sous CO<sub>2</sub> pur peut-il souder en pulvérisation axiale ?</span></p>
+    <div class="btns" id="m3b">
+      <button class="btn" data-c="0" data-o="2" type="button">Ar + 2 % O₂</button>
+      <button class="btn" data-c="8" data-o="0" type="button">Ar + 8 % CO₂</button>
+      <button class="btn on" data-c="18" data-o="0" type="button">Ar + 18 % CO₂</button>
+      <button class="btn" data-c="100" data-o="0" type="button">CO₂ pur</button>
+    </div>
+    <div class="ctrl"><label for="m3c">CO<sub>2</sub></label><input type="range" id="m3c" min="0" max="100" step="1" value="18"><output id="m3co"></output></div>
+    <div class="ctrl"><label for="m3o">Oxygène</label><input type="range" id="m3o" min="0" max="10" step="0.5" value="0"><output id="m3oo"></output></div>
+    <svg id="m3svg" role="img" aria-label="Coupe du cordon MAG selon la teneur en CO2 et en oxygène, avec le transfert possible et l'indice d'oxydation"></svg>
+    <div class="readout" id="m3r"></div>
+    <p class="status" id="m3msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple.</b> Le mélange le plus répandu pour les aciers, argon + 18 % CO<sub>2</sub> (M21), a un indice d'oxydation de <span class="m">0 + 18/2 = 9</span> : il permet la pulvérisation axiale aux forts courants et le court-circuit sur tôle mince, avec peu de projections. Le CO<sub>2</sub> pur (C1), indice 50, pénètre largement et coûte peu, mais il impose le court-circuit ou le globulaire et projette davantage. Plus le gaz oxyde, plus le fil doit apporter de manganèse et de silicium, qui désoxydent le bain : c'est pourquoi les fils MAG courants en contiennent 1,3 à 1,9 % et 0,7 à 1,2 % (fils 3Si1 et 4Si1 de l'ISO 14341-A), et pourquoi les îlots de silicates vitreux grossissent sur le cordon.</p>
+
+  <div class="warn"><b>⚠️ Piège : du CO<sub>2</sub> sur un inox à bas carbone.</b> Le CO<sub>2</sub> peut carburer le bain d'un 304L ou d'un 316L et oxyder son chrome. Pour les inox en MAG, on limite l'oxydant (argon + 2 % CO<sub>2</sub> ou 1 à 2 % O<sub>2</sub>) ; en TIG, jamais d'oxydant, qui brûlerait le tungstène.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « O<sub>2</sub> mouille, CO<sub>2</sub> creuse, H<sub>2</sub> chauffe l'inox, N<sub>2</sub> garde le duplex »</b>.</div>
+  <div class="weld"><b>🔥 Le gaz du MAG en pratique :</b> M21 (Ar + 15 à 25 % CO<sub>2</sub>) pour la plupart des aciers ; M20 (Ar + 5 à 15 % CO<sub>2</sub>) pour les pulsés et la tôle mince ; C1 (CO<sub>2</sub> pur) pour la charpente lourde et certains fils fourrés ; M12 ou M13 (Ar + peu de CO<sub>2</sub> ou d'O<sub>2</sub>) pour les inox.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : la chaleur du CO₂, l'hydrogène atomique</summary>
+    <p>La dissociation du CO<sub>2</sub> et celle de l'hydrogène absorbent de l'énergie dans le cœur chaud de l'arc ; les fragments se recombinent au contact de la pièce, plus froide, et y rendent cette énergie. L'arc paraît plus « chaud » sur la pièce et plus contracté : c'est le principe de l'ancien soudage à l'hydrogène atomique de Langmuir. La conductivité thermique de ces gaz moléculaires, très élevée aux températures de dissociation, resserre la colonne et creuse le bain.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Un peu d'oxydant stabilise l'arc MAG et mouille le bain.</li>
+      <li>Au-delà d'environ 20 à 25 % de CO<sub>2</sub>, plus de pulvérisation axiale.</li>
+      <li>H<sub>2</sub> pour l'inox austénitique, N<sub>2</sub> pour le duplex ; ailleurs, proscrits.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c4">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">4</div>
+    <div class="c-title"><h2>Gaz et métallurgie</h2><p>Hydrogène, azote, oxygène : ce que le gaz laisse dans le joint</p></div>
+    <div class="c-img"><span class="ico">🥤</span><span><small>Image à retenir</small>La bouteille de soda : liquide, le métal garde le gaz dissous ; en se figeant, il ne peut plus le garder, et les bulles restent piégées</span></div>
+  </div>
+
+  <p>Un métal liquide dissout les gaz bien mieux qu'un métal solide, comme une boisson gazeuse sous pression garde son gaz. Quand le bain se fige, l'excédent doit ressortir. S'il n'a pas le temps de s'échapper, il reste en <span class="tau">soufflures</span>, ou se loge dans le réseau et le fragilise. Les gaz diatomiques de l'air ou du gaz de protection, H<sub>2</sub> et N<sub>2</sub>, ne se dissolvent pas en molécules : ils se dissocient en atomes à la surface du bain. C'est ce qui donne la loi de Sievert.</p>
+
+  <div class="def"><b>📖 Loi de Sievert.</b> La quantité S d'un gaz diatomique dissous dans un métal est proportionnelle à la racine carrée de sa pression partielle p, avec une constante qui croît avec la température et chute brutalement à la solidification. Pour l'hydrogène dans l'aluminium, sous 1 bar : environ 0,69 mL/100 g dans le liquide à 660 °C, 0,036 mL/100 g dans le solide à la même température, vingt fois moins (Ransley et Neufeld).</div>
+
+  <div class="fx"><div class="row big"><span><span class="eps">S</span> = K(<span class="sig">T</span>)·√<span class="mat">p</span></span><span>Al liquide : log S = 2,796 − 2 760/T</span><span>Al solide : log S = 0,788 − 2 080/T</span></div><p class="cap">S en mL d'hydrogène (conditions normales) pour 100 g de métal, sous p = 1 bar ; T en K ; pour une autre pression, multiplier par √p (p en bar).</p></div>
+
+  <div class="lab" id="m4">
+    <p class="lab-h">Manipulation 4 : l'hydrogène dans un bain d'aluminium</p>
+    <p class="lab-sub">Règle la pression partielle d'hydrogène au-dessus du bain (humidité, graisse, oxyde hydraté) et la température : la courbe donne ce que le métal peut dissoudre, liquide puis solide.<span class="predict">🔮 Prédis d'abord : si la pression d'hydrogène est divisée par 100, la quantité dissoute est-elle divisée par 100 ou par 10 ?</span></p>
+    <div class="btns" id="m4b">
+      <button class="btn" data-p="1" type="button">1 bar (cas d'école)</button>
+      <button class="btn on" data-p="0.01" type="button">0,01 bar (fil humide)</button>
+      <button class="btn" data-p="0.0001" type="button">0,0001 bar (gaz sec)</button>
+    </div>
+    <div class="ctrl"><label for="m4p">Pression d'hydrogène <b class="mat">p</b></label><input type="range" id="m4p" min="-4" max="0" step="0.1" value="-2"><output id="m4po"></output></div>
+    <div class="ctrl"><label for="m4t">Température du bain <b class="sig">T</b></label><input type="range" id="m4t" min="500" max="900" step="10" value="700"><output id="m4to"></output></div>
+    <svg id="m4svg" role="img" aria-label="Solubilité de l'hydrogène dans l'aluminium en fonction de la température, avec la chute à la solidification"></svg>
+    <div class="readout" id="m4r"></div>
+    <p class="status" id="m4msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple.</b> Bain d'aluminium à 700 °C (973 K) sous 1 bar d'hydrogène : <span class="m">log S = 2,796 − 2 760/973 ≈ −0,041</span>, soit <span class="m">S ≈ 0,91 mL/100 g</span>. Le solide, à 660 °C, n'en garde que 0,036 : plus de 95 % doit sortir en quelques secondes. Sous 0,01 bar, tout est divisé par √100 = 10, pas par 100 : un peu d'humidité suffit. D'où les porosités de l'aluminium, et le remède : dégraisser, brosser l'oxyde hydraté juste avant de souder, fil et gaz secs.</p>
+
+  <p><b>Dans les aciers.</b> L'<b>hydrogène</b> se dissout aussi beaucoup plus dans le liquide et dans l'austénite que dans la ferrite ; piégé dans une ZAT dure et bridée, il donne la fissuration à froid. On le combat par des gaz sans hydrogène sur les aciers trempants et par des consommables secs. L'<b>azote</b>, au-delà de quelques centaines de ppm dans le métal fondu, crée des soufflures et fait chuter la résilience par vieillissement : c'est le signe d'une protection insuffisante. L'<b>oxygène</b> forme des inclusions d'oxydes qui abaissent la ténacité ; les désoxydants du fil (Mn, Si, parfois Ti et Al) les limitent.</p>
+
+  <div class="warn"><b>⚠️ Piège : les inox duplex sous argon pur.</b> L'azote du métal de base s'échappe du bain : le métal fondu manque d'austénite et de résistance à la piqûre (PREN = Cr + 3,3 Mo + 16 N). On ajoute 1 à 2 % d'azote au gaz TIG (groupe N2 de l'ISO 14175) ou l'on choisit un apport surallié en nickel.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « racine de p »</b> : cent fois moins de pression, seulement dix fois moins de gaz dissous.</div>
+  <div class="weld"><b>🔥 Une porosité soudaine en MIG aluminium :</b> on pense hydrogène avant tout. Fil oxydé ou humide, gaine encrassée, gaz humide (raccord poreux, flexible perméable), tôle mal dégraissée, condensation sur une pièce froide.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : pourquoi la racine carrée</summary>
+    <p>La réaction de dissolution s'écrit H<sub>2</sub>(gaz) ⇄ 2 [H](dissous). À l'équilibre, la constante K = [H]²/p<sub>H2</sub> ne dépend que de la température, d'où [H] = √(K·p<sub>H2</sub>). Dans l'arc, une partie de l'hydrogène est déjà dissociée en atomes, que le bain absorbe bien plus facilement : la quantité dissoute dépasse alors l'équilibre de Sievert, ce qui rend le soudage encore plus sensible à la moindre humidité.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>S = K(T)·√p : gaz dissous selon la racine de la pression partielle.</li>
+      <li>Aluminium : vingt fois moins d'hydrogène dans le solide, d'où les porosités.</li>
+      <li>Duplex : de l'azote dans le gaz ; acier trempant : pas d'hydrogène.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c5">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">5</div>
+    <div class="c-title"><h2>Désigner et choisir un gaz</h2><p>L'ISO 14175, le gaz d'envers et les fumées</p></div>
+    <div class="c-img"><span class="ico">🏷️</span><span><small>Image à retenir</small>L'étiquette de la bouteille : une lettre pour le comportement, un chiffre pour la famille, puis la recette ; c'est elle qu'on recopie dans le mode opératoire</span></div>
+  </div>
+
+  <p>Sur une bouteille, le nom commercial varie d'un fournisseur à l'autre ; la désignation normalisée, non. L'ISO 14175 classe chaque gaz selon son <b>comportement chimique</b> : une lettre et un chiffre de groupe, un chiffre de sous-groupe, puis les symboles des composants et leurs teneurs. C'est cette désignation que reprennent le descriptif de mode opératoire et la qualification. Reste à choisir : un gaz de soudage par métal et par procédé, et, pour certains métaux, un gaz pour protéger l'envers.</p>
+
+  <div class="def"><b>📖 Classification de l'ISO 14175:2008.</b>
+    <ul>
+      <li><b>I</b>, inertes : I1 argon, I2 hélium, I3 argon-hélium.</li>
+      <li><b>M1, M2, M3</b>, mélanges oxydants à base d'argon, du moins au plus oxydant : M12 Ar + 0,5 à 5 % CO<sub>2</sub> ; M13 Ar + 0,5 à 3 % O<sub>2</sub> ; M20 Ar + 5 à 15 % CO<sub>2</sub> ; M21 Ar + 15 à 25 % CO<sub>2</sub> ; M31 Ar + 25 à 50 % CO<sub>2</sub>…</li>
+      <li><b>C</b>, très oxydants : C1 CO<sub>2</sub> pur.</li>
+      <li><b>R</b>, réducteurs : R1 Ar + 0,5 à 15 % H<sub>2</sub>.</li>
+      <li><b>N</b>, contenant de l'azote : N2 Ar + 0,5 à 5 % N<sub>2</sub>, N5 N<sub>2</sub> + H<sub>2</sub>…</li>
+      <li><b>O</b>, oxygène ; <b>Z</b>, tout le reste.</li>
+    </ul>
+    Désignation : ISO 14175 – M21 – ArC – 18 pour 18 % de CO<sub>2</sub> dans l'argon. Les composants s'écrivent par teneur décroissante (A argon, C CO<sub>2</sub>, O oxygène, H hydrogène, N azote, He hélium).</div>
+
+  <div class="fx"><div class="row big"><span>ISO 14175 – <span class="mat">M21</span> – <span class="mat">ArC</span> – <span class="mat">18</span></span></div><p class="cap">Groupe et sous-groupe ; gaz de base puis composants ; teneurs nominales en % du volume. Tolérance de fabrication (ISO 14175, tableau 3) : ±10 % de la valeur au-dessus de 5 %, ±0,5 point de 1 à 5 %.</p></div>
+
+  <div class="lab" id="m5">
+    <p class="lab-h">Manipulation 5 : décoder et coder une bouteille</p>
+    <p class="lab-sub">Compose un mélange d'argon, de CO<sub>2</sub> et d'oxygène, ou choisis un gaz particulier : la classification et la désignation de l'ISO 14175 s'écrivent.<span class="predict">🔮 Prédis d'abord : argon + 6 % de CO<sub>2</sub> + 4 % d'oxygène, quel sous-groupe ?</span></p>
+    <div class="btns" id="m5x">
+      <button class="btn" data-g="Ar" type="button">Argon</button>
+      <button class="btn" data-g="ArHe30" type="button">Ar + 30 % He</button>
+      <button class="btn" data-g="ArH5" type="button">Ar + 5 % H₂</button>
+      <button class="btn" data-g="ArN2" type="button">Ar + 2 % N₂</button>
+      <button class="btn" data-g="CO2" type="button">CO₂ pur</button>
+    </div>
+    <div class="ctrl"><label for="m5c">CO<sub>2</sub> dans l'argon</label><input type="range" id="m5c" min="0" max="50" step="1" value="18"><output id="m5co"></output></div>
+    <div class="ctrl"><label for="m5o">Oxygène dans l'argon</label><input type="range" id="m5o" min="0" max="15" step="0.5" value="0"><output id="m5oo"></output></div>
+    <svg id="m5svg" role="img" aria-label="Étiquette de bouteille avec la désignation ISO 14175 et carte des sous-groupes selon le CO2 et l'oxygène"></svg>
+    <div class="readout" id="m5r"></div>
+    <p class="status" id="m5msg" aria-live="polite"></p>
+  </div>
+
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Métal</th><th>TIG (141)</th><th>MIG-MAG (13x)</th><th>Envers</th></tr></thead>
+    <tbody>
+      <tr><td>Aciers non et faiblement alliés</td><td>I1</td><td>M21, M20 ; C1</td><td>en général inutile</td></tr>
+      <tr><td>Inox austénitiques</td><td>I1 ; R1 (Ar + H<sub>2</sub>)</td><td>M12, M13</td><td>I1, ou N5 (N<sub>2</sub> + H<sub>2</sub>), sauf inox stabilisés au titane</td></tr>
+      <tr><td>Inox duplex</td><td>I1 ; N2 (Ar + N<sub>2</sub>)</td><td>M12, M13</td><td>I1 ou Ar + N<sub>2</sub>, jamais d'hydrogène</td></tr>
+      <tr><td>Aluminium</td><td>I1 ; I3</td><td>I1 ; I3</td><td>inutile</td></tr>
+      <tr><td>Titane, zirconium</td><td>I1, très pur</td><td>I1</td><td>indispensable, avec traînard</td></tr>
+    </tbody>
+  </table></div>
+
+  <p><b>Gaz et qualification.</b> Une QMOS selon l'EN ISO 15614-1 est limitée à la composition nominale du gaz qualifié, avec ±20 % relatifs sur la teneur en CO<sub>2</sub> en MIG-MAG et ±10 % sur l'hélium en TIG. Les <b>fumées</b>, enfin, dépendent du gaz : un mélange riche en argon et un transfert stable en émettent moins que le CO<sub>2</sub> pur. Les fumées de soudage sont classées cancérogènes pour l'homme par le CIRC depuis 2017 ; le chrome hexavalent des inox et le manganèse des aciers en sont les composants les plus surveillés : captage à la source et ventilation s'imposent.</p>
+
+  <div class="warn"><b>⚠️ Piège : changer de fournisseur, c'est peut-être changer de gaz.</b> Deux noms commerciaux différents peuvent couvrir la même désignation, ou deux désignations voisines : seule la désignation ISO 14175 sur l'étiquette dit si la QMOS reste valable.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « I inerte, M mélange, C carbonique, R réducteur, N nitrogène »</b>, et le chiffre monte avec l'oxydant.</div>
+  <div class="weld"><b>🔥 Protéger l'envers :</b> sur un inox, un titane ou un duplex, l'envers d'une passe de racine non protégé se colore et se dégrade (rochage, voir Inox, cours 4). On purge la tuyauterie à l'argon jusqu'à une teneur en oxygène mesurée, bouchons et vessies en place, avant d'amorcer.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : tous les sous-groupes oxydants</summary>
+    <p>Pour CO<sub>2</sub> et O<sub>2</sub> réunis, l'ISO 14175:2008 prévoit M14 (CO<sub>2</sub> 0,5 à 5 et O<sub>2</sub> 0,5 à 3), M22 (O<sub>2</sub> 3 à 10), M23 (CO<sub>2</sub> 0,5 à 5, O<sub>2</sub> 3 à 10), M24 (CO<sub>2</sub> 5 à 15, O<sub>2</sub> 0,5 à 3), M25 (CO<sub>2</sub> 5 à 15, O<sub>2</sub> 3 à 10), M26 et M27 (CO<sub>2</sub> 15 à 25, avec O<sub>2</sub> 0,5 à 3 ou 3 à 10), M32 (O<sub>2</sub> 10 à 15), M33 (CO<sub>2</sub> 25 à 50, O<sub>2</sub> 2 à 10), M34 et M35 (O<sub>2</sub> 10 à 15 avec CO<sub>2</sub> 5 à 25 ou 25 à 50), et C2 (CO<sub>2</sub> + 0,5 à 30 % O<sub>2</sub>). Une partie de l'argon peut être remplacée par de l'hélium sans changer de sous-groupe. Un mélange hors de ces plages est classé Z.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>ISO 14175 : lettre et chiffres du comportement, puis composants et teneurs.</li>
+      <li>M21 – ArC – 18 : le gaz MAG courant des aciers.</li>
+      <li>La QMOS couvre le gaz nominal qualifié ; l'envers se protège sur inox et titane.</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="exos">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✎</div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Deux exercices : régler la protection d'un chantier, puis choisir et désigner les gaz d'un atelier</p></div>
+    <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de musculation : on ne progresse qu'en soulevant soi-même</span></div>
+  </div>
+  <p>Cherche chaque question sur papier avant d'ouvrir la correction : écris la relation, puis les valeurs (débits en L/min, vitesses en m/s, tensions en V, teneurs en % du volume). Le premier exercice se vérifie dans les manipulations 1 et 2 ; le second se rejoue dans la manipulation 5.</p>
+
+  <div class="exo">
+    <h4>Exercice 1 : protéger un chantier <span class="lvtag">★ application · chapitres 1 et 2</span></h4>
+    <p>Un soudeur TIG travaille sur une passerelle, buse de 16 mm, argon.</p>
+    <p class="q"><b>a)</b> À 16 L/min, quelles sont la vitesse du gaz à la sortie de la buse et son nombre de Reynolds ?</p>
+    <p class="q"><b>b)</b> Gêné par des porosités, il monte à 30 L/min. Que devient le jet, et pourquoi n'est-ce pas le bon remède ?</p>
+    <p class="q"><b>c)</b> Le vent souffle à 3 m/s. Compare à la vitesse du gaz et propose une solution.</p>
+    <p class="q"><b>d)</b> Pour une pièce plus épaisse, il passe à argon + 50 % d'hélium, à 150 A et 3 mm d'arc. Avec le modèle de la manipulation 2, quelles tension et puissance ? Quel débit prévoir ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> Section : <span class="m">π × 0,016²/4 ≈ 2,01 × 10<sup>−4</sup> m²</span> ; débit : <span class="m">16/60 000 ≈ 2,67 × 10<sup>−4</sup> m³/s</span> ; <span class="m">v ≈ 1,33 m/s</span>. <span class="m">Re = 1,66 × 1,33 × 0,016/2,2 × 10<sup>−5</sup> ≈ 1 600</span> : laminaire.</p>
+      <p><b>b)</b> À 30 L/min, <span class="m">v ≈ 2,5 m/s</span> et <span class="m">Re ≈ 3 000</span> : le jet devient turbulent et aspire l'air sur ses bords. Les porosités ont une autre cause : fuite, courant d'air, buse encrassée ou trop éloignée.</p>
+      <p><b>c)</b> 3 m/s dépassent la vitesse du jet (1,3 m/s) : le vent emporte la cloche. Paravent ou tente, et non un débit plus fort.</p>
+      <p><b>d)</b> <span class="m">U = 12,7 + 6,3 × 0,5 ≈ 15,9 V</span> ; <span class="m">P = 15,9 × 150 ≈ 2,4 kW</span>, environ 25 % de plus qu'en argon. L'hélium étant léger, on prévoit plus de débit : environ <span class="m">16 × (1 + 1,5 × 0,5) = 28 L/min</span> dans le modèle.</p>
+    </div></details>
+  </div>
+
+  <div class="exo defi">
+    <h4>Exercice 2 : les gaz d'un atelier <span class="lvtag">★★ synthèse · chapitres 3 à 5 · manipulation 5</span></h4>
+    <p>Un atelier soude des charpentes en S355 en MAG, des tuyauteries en 316L en TIG et en MAG, et quelques pièces en duplex 2205 en TIG.</p>
+    <p class="q"><b>a)</b> Quel gaz pour la charpente, en pulvérisation axiale ? Écris sa désignation. Pourquoi pas du CO<sub>2</sub> pur ?</p>
+    <p class="q"><b>b)</b> Quels gaz pour le 316L, à l'endroit et à l'envers, en TIG et en MAG ?</p>
+    <p class="q"><b>c)</b> Un fournisseur propose un mélange d'argon, de 6 % de CO<sub>2</sub> et de 4 % d'oxygène. Classe-le et désigne-le.</p>
+    <p class="q"><b>d)</b> Une livraison de « M21 – ArC – 18 » contient en réalité 16 % de CO<sub>2</sub>. Est-ce conforme à l'ISO 14175 ? La QMOS qualifiée à 18 % la couvre-t-elle ?</p>
+    <p class="q"><b>e)</b> Quels gaz pour le duplex, à l'endroit et à l'envers ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> Argon + 18 % CO<sub>2</sub> : <b>ISO 14175 – M21 – ArC – 18</b>. Le CO<sub>2</sub> pur (C1) interdit la pulvérisation axiale (au-delà d'environ 20 à 25 % de CO<sub>2</sub>), projette davantage et oxyde plus le bain.</p>
+      <p><b>b)</b> TIG : <b>I1</b> (argon), ou R1 (argon + 2 à 5 % H<sub>2</sub>) pour un cordon plus brillant et plus rapide. MAG : <b>M12</b> (argon + 2 % CO<sub>2</sub>, soit ISO 14175 – M12 – ArC – 2) ou M13 (argon + 1 à 2 % O<sub>2</sub>). Envers : argon, ou N5 (azote + hydrogène), le 316L n'étant pas stabilisé au titane.</p>
+      <p><b>c)</b> CO<sub>2</sub> entre 5 et 15 %, O<sub>2</sub> entre 3 et 10 % : <b>M25</b>. Désignation <b>ISO 14175 – M25 – ArCO – 6/4</b>.</p>
+      <p><b>d)</b> Tolérance de fabrication (ISO 14175, tableau 3) : ±10 % de 18, soit <span class="m">16,2 à 19,8 %</span> : à 16 %, la bouteille <b>n'est pas conforme</b>. La QMOS (EN ISO 15614-1, ±20 % relatifs sur le CO<sub>2</sub>) couvre <span class="m">14,4 à 21,6 %</span> : le mode opératoire resterait valable, mais on réclame un gaz conforme.</p>
+      <p><b>e)</b> TIG : argon, ou <b>N2</b> (argon + 1 à 2 % N<sub>2</sub>) pour compenser la perte d'azote du bain. Envers : argon ou argon + azote, <b>jamais d'hydrogène</b>, qui fragiliserait la ferrite.</p>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="quiz-s">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">?</div>
+    <div class="c-title"><h2>Quiz : 12 questions éclair</h2><p>Chaque réponse est expliquée, même quand tu as juste</p></div>
+    <div class="c-img"><span class="ico">🎯</span><span><small>Image à retenir</small>La cible : vise 10 sur 12 avant le cours 2</span></div>
+  </div>
+  <div id="quiz"></div>
+  <div class="score" id="qzScore" aria-live="polite">Score : 0 / 12</div>
+  <div class="btns"><button class="btn" id="qzReset" type="button">↺ Recommencer le quiz</button></div>
+</div>
+</section>
+
+<section class="chap" id="fiche">
+<div class="wrap wide">
+  <div class="cartouche">
+    <div class="c-num">★</div>
+    <div class="c-title"><h2>Fiche mémoire du cours 1</h2><p>Neuf cases, neuf images : à photographier, puis à redessiner de tête</p></div>
+    <div class="c-img"><span class="ico">🛡️</span><span><small>Image à retenir</small>La cloche : le gaz pose sur le bain une cloche sans air, et sa composition décide de la chaleur, de la forme et de la métallurgie du cordon</span></div>
+  </div>
+  <div class="fiche">
+    <div><div class="ic">🛡️</div><h4>Trois métiers</h4><div class="f">protéger · ioniser · façonner</div><p>Chasser O, N et H de l'air ; former le plasma ; régler transfert et forme du cordon.</p></div>
+    <div><div class="ic">💨</div><h4>Le débit</h4><div class="f">≈ 1 L/min par mm de buse · Re &lt; 2 000</div><p>16 mm : 16 L/min, 1,3 m/s. Trop : turbulence ; vent de quelques m/s : cloche soufflée.</p></div>
+    <div><div class="ic">🎈</div><h4>Argon, hélium</h4><div class="f">Ar 15,8 eV, 1,38 × air · He 24,6 eV, 0,14 × air</div><p>L'hélium relève tension et puissance, élargit le bain, demande plus de débit, coûte cher.</p></div>
+    <div><div class="ic">🧂</div><h4>Les oxydants</h4><div class="f">indice ≈ %O<sub>2</sub> + ½·%CO<sub>2</sub></div><p>Un peu stabilise et mouille ; au-delà de 20 à 25 % de CO<sub>2</sub>, plus de pulvérisation axiale.</p></div>
+    <div><div class="ic">⚗️</div><h4>H<sub>2</sub> et N<sub>2</sub></h4><div class="f">H<sub>2</sub> : inox austénitique · N<sub>2</sub> : duplex</div><p>H<sub>2</sub> interdit sur aciers trempants, aluminium, titane ; N<sub>2</sub> interdit sur ferritiques, stabilisés Ti, titane.</p></div>
+    <div><div class="ic">🥤</div><h4>Sievert</h4><div class="f">S = K(T)·√p</div><p>Aluminium : 0,69 mL/100 g liquide, 0,036 solide à 660 °C ; d'où les porosités.</p></div>
+    <div><div class="ic">🏷️</div><h4>ISO 14175</h4><div class="f">I · M1 M2 M3 · C · R · N · O · Z</div><p>M21 – ArC – 18 : argon + 18 % CO<sub>2</sub> ; I1 argon ; C1 CO<sub>2</sub> ; R1 argon + H<sub>2</sub>.</p></div>
+    <div><div class="ic">🧪</div><h4>Choisir</h4><div class="f">acier M21 · inox M12 / I1 · Al I1, I3</div><p>Envers : argon ou N5 sur austénitique ; argon ± N<sub>2</sub> sur duplex ; argon pur sur titane.</p></div>
+    <div><div class="ic">📋</div><h4>Gaz et QMOS</h4><div class="f">CO<sub>2</sub> ±20 % relatifs · He ±10 %</div><p>La QMOS couvre la composition nominale ; la bouteille, ±10 % de la teneur au-delà de 5 %.</p></div>
+  </div>
+  <div class="btns"><button class="btn" id="printFiche" type="button">🖨 Imprimer la fiche mémoire</button></div>
+  <div class="fun"><span class="fun-h">🧪 Fun fact : l'argon, le « paresseux » de l'air</span>L'argon a été découvert en 1894 par Lord Rayleigh et William Ramsay, intrigués par un azote tiré de l'air un peu plus lourd que celui tiré des composés chimiques. Le gaz caché ne réagissait avec rien : ils l'ont nommé d'après le grec <i>argos</i>, « paresseux ». Ce désintérêt pour la chimie est exactement ce qu'on lui demande sur un bain de soudage (<a href="#c2">chapitre 2</a>). (Sources : Royal Society of Chemistry, « Argon » ; Fondation Nobel, prix 1904 de Rayleigh et de Ramsay.)</div>
+</div>
+</section>
+
+<section class="chap" id="gloss">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">A–Z</div>
+    <div class="c-title"><h2>Glossaire</h2><p>Les mots, symboles et sigles de ce cours</p></div>
+    <div class="c-img"><span class="ico">📖</span><span><small>Image à retenir</small>Le dictionnaire : un mot flou, un clic</span></div>
+  </div>
+  <dl class="gloss">
+    <dt>Débitmètre</dt><dd>Appareil qui règle et affiche le débit de gaz, en litres par minute.</dd>
+    <dt>Gaz actif</dt><dd>Gaz qui réagit avec le métal : oxydant (CO<sub>2</sub>, O<sub>2</sub>), réducteur (H<sub>2</sub>) ou faiblement réactif (N<sub>2</sub>).</dd>
+    <dt>Gaz d'envers</dt><dd>Gaz qui protège la racine d'une soudure côté envers (argon, azote-hydrogène, argon-azote).</dd>
+    <dt>Gaz inerte</dt><dd>Gaz qui ne réagit avec aucun métal : argon, hélium et leurs mélanges.</dd>
+    <dt>Indice d'oxydation</dt><dd>Indice pédagogique de ce cours, %O<sub>2</sub> + ½·%CO<sub>2</sub>, pour comparer le pouvoir oxydant de mélanges.</dd>
+    <dt>ISO 14175</dt><dd>Norme qui classe et désigne les gaz de soudage par leur comportement chimique (I, M1 à M3, C, R, N, O, Z).</dd>
+    <dt>Loi de Sievert</dt><dd>La quantité d'un gaz diatomique dissous dans un métal est proportionnelle à la racine carrée de sa pression partielle.</dd>
+    <dt>MAG, MIG</dt><dd>Soudage à l'arc avec fil fusible sous gaz actif (135) ou inerte (131).</dd>
+    <dt>Nombre de Reynolds</dt><dd>Nombre sans dimension qui dit si un écoulement est laminaire (sous environ 2 000) ou turbulent.</dd>
+    <dt>Postgaz, prégaz</dt><dd>Gaz envoyé après l'extinction de l'arc, pour protéger le bain qui se fige, et avant l'amorçage, pour purger la buse.</dd>
+    <dt>PREN</dt><dd>Indice de résistance à la piqûre d'un inox : Cr + 3,3 Mo + 16 N (en %).</dd>
+    <dt>Pulvérisation axiale</dt><dd>Transfert en fines gouttes projetées dans l'axe, possible en MIG-MAG à fort courant sous mélange riche en argon.</dd>
+    <dt>QMOS</dt><dd>Qualification de mode opératoire de soudage (EN ISO 15614-1) ; elle couvre le gaz de composition nominale qualifié.</dd>
+    <dt>Soufflure</dt><dd>Cavité de gaz piégée dans le métal fondu.</dd>
+    <dt>Tension superficielle</dt><dd>Force de surface du bain liquide ; l'oxygène l'abaisse et améliore le mouillage.</dd>
+    <dt>TIG</dt><dd>Soudage à l'arc avec électrode de tungstène infusible sous gaz inerte (141).</dd>
+  </dl>
+</div>
+</section>
+
+<section class="chap" id="check">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✓</div>
+    <div class="c-title"><h2>Suis-je prêt pour la suite ?</h2><p>Dix points à cocher de tête</p></div>
+    <div class="c-img"><span class="ico">🚦</span><span><small>Image à retenir</small>Le feu passe au vert quand tout est coché</span></div>
+  </div>
+  <p>Coche seulement ce que tu sais faire <b>sans regarder</b>. Tes coches restent enregistrées dans ce navigateur.</p>
+  <div class="check" id="checklist">
+    <label><input type="checkbox" data-c="1"> <span>Je sais dire ce que l'oxygène, l'azote et l'hydrogène de l'air font à un bain non protégé.</span></label>
+    <label><input type="checkbox" data-c="2"> <span>Je sais régler un débit de gaz selon la buse et justifier la règle d'environ 1 L/min par millimètre de diamètre.</span></label>
+    <label><input type="checkbox" data-c="3"> <span>Je sais comparer argon et hélium (ionisation, masse volumique, conductivité, tension d'arc, coût) et dire quand ajouter de l'hélium.</span></label>
+    <label><input type="checkbox" data-c="4"> <span>Je sais expliquer pourquoi le CO<sub>2</sub> oxyde le métal et pourquoi les fils MAG contiennent plus de manganèse et de silicium.</span></label>
+    <label><input type="checkbox" data-c="5"> <span>Je sais dire au-delà de quelle teneur en CO<sub>2</sub> la pulvérisation axiale devient impossible, et ce que change l'oxygène.</span></label>
+    <label><input type="checkbox" data-c="6"> <span>Je sais quand l'hydrogène et l'azote sont utiles et quand ils sont interdits (aciers trempants, aluminium, titane, inox stabilisés, duplex).</span></label>
+    <label><input type="checkbox" data-c="7"> <span>Je sais appliquer la loi de Sievert et expliquer les porosités de l'aluminium.</span></label>
+    <label><input type="checkbox" data-c="8"> <span>Je sais lire et écrire une désignation ISO 14175 (I1, M21, C1, R1, N2…).</span></label>
+    <label><input type="checkbox" data-c="9"> <span>Je sais choisir un gaz pour un acier, un inox et un aluminium, en TIG et en MIG-MAG, et un gaz d'envers.</span></label>
+    <label><input type="checkbox" data-c="10"> <span>Je sais pourquoi une QMOS précise le gaz, et ce que l'ISO 14175 tolère comme écart de composition.</span></label>
+  </div>
+  <p class="status" id="checkMsg"></p>
+
+  <div class="meta">🔭 <b>Au prochain épisode, cours 2 : le soudage TIG.</b> L'électrode de tungstène qui ne fond pas, la polarité et l'alternatif carré, le choix de l'électrode et son affûtage, les réglages et les défauts propres au TIG, puis le fil chaud, l'orbital et le TIG à trou de serrure.</div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="wrap">
+  <p>Cours 1 sur 5 de la série « Soudage sous protection gazeuse : TIG, MIG-MAG et plasma » (sujet 1.6 du planning et du référentiel de l'IIW). Vocabulaire aligné sur l'ISO 14175, l'EN 1011-1 et le référentiel de l'IIW ; pour les notations et les conventions, l'enseignement de ta formation fait foi.</p>
+</div>
+</footer>
+<script>
+(function(){
+"use strict";
+const NS="http://www.w3.org/2000/svg";
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const RM=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function el(tag,attrs,parent){
+  const e=document.createElementNS(NS,tag);
+  if(attrs){for(const k in attrs){const v=attrs[k];if(v===undefined||v===null)continue;
+    if(typeof v==="string"&&v.indexOf("var(")>=0&&k!=="style")e.style.setProperty(k,v);else e.setAttribute(k,v);}}
+  if(parent)parent.appendChild(e);
+  return e;
+}
+function tx(p,x,y,str,attrs){const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);t.textContent=str;return t;}
+function txs(p,x,y,parts,attrs){/* parts: [["σ",""],["max","sub"],[" = 3",""]] */
+  const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);
+  parts.forEach(pt=>{const s=el("tspan",pt[1]==="sub"?{"font-size":"0.72em",dy:"3"}:(pt[2]?{dy:pt[2]}:{}),t);s.textContent=pt[0];
+    if(pt[1]==="sub"){const r=el("tspan",{dy:"-3"},t);r.textContent="\u200b";}});
+  return t;
+}
+function clear(svg){while(svg.firstChild)svg.removeChild(svg.firstChild);}
+function fitText(t,x0,x1,gap){/* garde un texte SVG entre x0 et x1 : il passe de l'autre côté de son repère (écart gap), sinon il glisse */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const a=t.getAttribute("text-anchor")||"start",x=+t.getAttribute("x");
+  if(gap&&a!=="middle"&&(b.x<x0||b.x+b.width>x1)){t.setAttribute("text-anchor",a==="end"?"start":"end");t.setAttribute("x",a==="end"?x+2*gap:x-2*gap);b=t.getBBox();}
+  const nx=+t.getAttribute("x");
+  if(b.x+b.width>x1)t.setAttribute("x",nx-(b.x+b.width-x1));else if(b.x<x0)t.setAttribute("x",nx+(x0-b.x));
+  return t;}
+function arrow(p,x1,y1,x2,y2,color,w,h){
+  w=w||2.4;h=h||10;
+  const g=el("g",{class:"arr"},p);g.style.color=color||"var(--ink)";
+  const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy);
+  if(L<1)return g;
+  const ux=dx/L,uy=dy/L,hh=Math.min(h,L*0.6),bx=x2-ux*hh,by=y2-uy*hh,hw=hh*0.45+w*0.3;
+  el("line",{x1:x1,y1:y1,x2:bx,y2:by,"stroke-width":w,"stroke-linecap":"round"},g);
+  el("polygon",{points:x2+","+y2+" "+(bx-uy*hw)+","+(by+ux*hw)+" "+(bx+uy*hw)+","+(by-ux*hw)},g);
+  return g;
+}
+function darrow(p,x,y1,y2,color,w){/* double flèche verticale */
+  const g=el("g",{},p);const m=(y1+y2)/2;
+  if(Math.abs(y2-y1)<4){el("line",{x1:x-5,y1:y1,x2:x+5,y2:y1,stroke:color,"stroke-width":2},g);return g;}
+  arrow(g,x,m,x,y1,color,w||2,8);arrow(g,x,m,x,y2,color,w||2,8);return g;
+}
+function nf(v,d){
+  if(d===undefined)d=1;
+  if(Math.abs(v)<0.5*Math.pow(10,-d))v=0;
+  return v.toLocaleString("fr-FR",{minimumFractionDigits:d,maximumFractionDigits:d}).replace("-","−").replace(/[\u202f\u2009]/g,"\u00a0");
+}
+const SUP={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function sci(v,d){
+  if(v===0)return "0";
+  if(!isFinite(v))return "∞";
+  let e=Math.floor(Math.log10(Math.abs(v)));
+  let m=v/Math.pow(10,e);
+  const dd=d===undefined?1:d;
+  if(Math.abs(Number(m.toFixed(dd)))>=10){m/=10;e+=1;}
+  return nf(m,dd)+" × 10"+String(e).split("").map(c=>SUP[c]).join("");
+}
+function bigN(v){/* nombre de cycles lisible */
+  if(!isFinite(v))return "∞";
+  if(v===0)return "0";
+  if(v<10)return nf(v,v<1?2:0);
+  if(v<1e5)return nf(Math.round(v),0);
+  return sci(v,1);
+}
+function dur(s){
+  if(!isFinite(s))return "∞";
+  if(s<60)return nf(s,s<10?1:0)+" s";
+  if(s<3600)return nf(s/60,0)+" min";
+  if(s<86400)return nf(s/3600,1)+" h";
+  if(s<86400*365)return nf(s/86400,1)+" jours";
+  return nf(s/(86400*365),1)+" ans";
+}
+function svgW(svg){const r=svg.getBoundingClientRect();return Math.max(290,Math.round(r.width||(svg.parentNode&&svg.parentNode.clientWidth)||600));}
+function setVB(svg,W,H){svg.setAttribute("viewBox","0 0 "+W+" "+H);}
+const redraws=[];
+let rzT=null,lastWW=window.innerWidth;
+window.addEventListener("resize",()=>{if(window.innerWidth===lastWW)return;lastWW=window.innerWidth;clearTimeout(rzT);rzT=setTimeout(()=>redraws.forEach(f=>{try{f();}catch(e){console.error(e);}}),120);});
+
+function niceStep(range,n){const raw=range/(n||5),p=Math.pow(10,Math.floor(Math.log10(raw))),m=raw/p;return (m<1.5?1:m<3?2:m<7?5:10)*p;}
+function setOn(sel,btn){$$(sel+" .btn").forEach(b=>b.classList.toggle("on",b===btn));}
+function fmtmm(mm){return mm<0.1?nf(mm*1000,0)+" µm":mm<10?nf(mm,mm<1?2:1)+" mm":nf(mm,0)+" mm";}
+function axes(svg,x0,x1,y0,y1,xmin,xmax,ymin,ymax,xlab,ylab,xstep,ystep,xfmt,yfmt){
+  const X=v=>x0+(x1-x0)*(v-xmin)/(xmax-xmin),Y=v=>y1-(y1-y0)*(v-ymin)/(ymax-ymin);
+  for(let v=Math.ceil(ymin/ystep-1e-9)*ystep;v<=ymax+1e-9;v+=ystep){el("line",{x1:x0,y1:Y(v),x2:x1,y2:Y(v),class:"gridbg"},svg);tx(svg,x0-5,Y(v)+4,yfmt?yfmt(v):nf(v,ystep<1?1:0),{class:"lbl","text-anchor":"end"});}
+  for(let v=Math.ceil(xmin/xstep-1e-9)*xstep;v<=xmax+1e-9;v+=xstep){el("line",{x1:X(v),y1:y1,x2:X(v),y2:y1+4,class:"tick"},svg);tx(svg,X(v),y1+17,xfmt?xfmt(v):nf(v,xstep<1?1:0),{class:"lbl","text-anchor":"middle"});}
+  el("line",{x1:x0,y1:y1,x2:x1,y2:y1,class:"axis"},svg);el("line",{x1:x0,y1:y0-4,x2:x0,y2:y1,class:"axis"},svg);
+  tx(svg,x0+4,y0-10,ylab,{class:"lbl"});tx(svg,x1,y1+32,xlab,{class:"lbl","text-anchor":"end"});
+  return {X:X,Y:Y};
+}
+function animate(btn,label,dur,onStep,onEnd){/* lecteur pilotable : ▶ lecture ou ⏸ pause, qui reprend où elle s'est arrêtée ; les boutons voisins ⏮ début, ◀ pas et pas ▶ (data-a) la mènent à la main ; un pas avance jusqu'à la prochaine image différente (20 pas au plus) */
+  const box=btn.parentNode,lab=btn.closest(".lab")||box,N=20;let raf=null,run=false,t=0;
+  const go=v=>{t=Math.max(0,Math.min(1,v));onStep(t);};
+  const snap=()=>{let s="";lab.querySelectorAll("svg,.readout,.status").forEach(e=>{s+=e.innerHTML;});return s;};
+  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;btn.textContent=label;}
+  function step(d){stop();const s0=snap();let k=Math.round(t*N);for(let i=0;i<N;i++){k+=d;if(k<0||k>N)break;go(k/N);if(snap()!==s0)break;}}
+  btn.addEventListener("click",()=>{if(run){stop();return;}if(t>=0.999)t=0;
+    if(RM){step(1);if(t>=1&&onEnd)onEnd();return;}
+    run=true;btn.textContent="⏸ Pause";const s0=performance.now()-t*dur;
+    const f=now=>{if(!run)return;go((now-s0)/dur);if(t>=1){stop();if(onEnd)onEnd();return;}raf=requestAnimationFrame(f);};raf=requestAnimationFrame(f);});
+  const pb=a=>box.querySelector('[data-a="'+a+'"]');
+  if(pb("start"))pb("start").addEventListener("click",()=>{stop();go(0);});
+  if(pb("back"))pb("back").addEventListener("click",()=>step(-1));
+  if(pb("fwd"))pb("fwd").addEventListener("click",()=>step(1));
+  /* un réglage fait à la main : la prochaine lecture repart du début */
+  lab.addEventListener("input",()=>{if(!run)t=0;});
+  lab.addEventListener("click",e=>{const b=e.target.closest("button");if(b&&b!==btn&&!b.dataset.a&&!run)t=0;});
+  return {stop:stop,running:()=>run};
+}
+function player(id,o){/* lecteur pilotable : ⏮ début, ◀ pas, ▶ lecture ou ⏸ pause (reprend où elle s'est arrêtée), pas ▶ ; o.get() et o.set(t) avec t de 0 à 1, o.dur (ms), o.steps */
+  const box=$("#"+id),bp=box.querySelector('[data-a="play"]'),lab=bp.textContent,n=o.steps||20;let raf=null,run=false;
+  const cl=t=>Math.max(0,Math.min(1,t));
+  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;bp.textContent=lab;}
+  function step(d){stop();o.set(cl(Math.round(o.get()*n+d)/n));}
+  bp.addEventListener("click",()=>{if(run){stop();return;}let t0=o.get();if(t0>=0.999)t0=0;
+    if(RM){o.set(cl(Math.round(t0*n+1)/n));return;}
+    run=true;bp.textContent="⏸ Pause";const s0=performance.now()-t0*o.dur;
+    const f=now=>{if(!run)return;const t=cl((now-s0)/o.dur);o.set(t);if(t>=1){stop();return;}raf=requestAnimationFrame(f);};raf=requestAnimationFrame(f);});
+  box.querySelector('[data-a="start"]').addEventListener("click",()=>{stop();o.set(0);});
+  box.querySelector('[data-a="back"]').addEventListener("click",()=>step(-1));
+  box.querySelector('[data-a="fwd"]').addEventListener("click",()=>step(1));
+  return {stop:stop};
+}
+
+
+function sig2(v){/* arrondi à deux chiffres significatifs */
+  if(v<=0)return 0;const p=Math.pow(10,Math.floor(Math.log10(v))-1);return Math.round(v/p)*p;}
+function halo(t,svg){/* liseré de fond, puis passage au premier plan */
+  t.setAttribute("paint-order","stroke");t.style.setProperty("stroke","var(--card)");t.setAttribute("stroke-width","4");t.setAttribute("stroke-linejoin","round");if(svg)svg.appendChild(t);return t;}
+function plate(t,svg){/* fond plein derrière une étiquette */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const r=el("rect",{x:b.x-3,y:b.y-1,width:b.width+6,height:b.height+2,fill:"var(--card)",opacity:.92,rx:2});svg.appendChild(r);svg.appendChild(t);return t;}
+function le(n,f){return /^[aeiouyhéèâî]/i.test(n)?"l'"+n:(f?"la ":"le ")+n;}
+function du(n,f){return /^[aeiouyhéèâî]/i.test(n)?"de l'"+n:(f?"de la ":"du ")+n;}
+function fmtG(v){return nf(v,v<0.1?3:2)+" N/m";}
+function fmtPa(p){return p<1000?nf(p,0)+" Pa":p<1e5?nf(p/1000,1)+" kPa":nf(p/1e5,2)+" bar";}
+function fmtLen(m){/* m en mètres */
+  const mm=m*1000;if(mm<1)return nf(mm*1000,0)+" µm";if(mm<10)return nf(mm,1)+" mm";if(mm<1000)return nf(mm,0)+" mm";return nf(m,1)+" m";}
+function fmtT(s){if(!isFinite(s))return "∞";if(s<0.01)return nf(s*1000,1)+" ms";if(s<1)return nf(s,3)+" s";if(s<60)return nf(s,s<10?1:0)+" s";return nf(s/60,s<600?1:0)+" min";}
+
+function spread(items,gap,ymin,ymax){/* écarte verticalement des étiquettes {y} triées */
+  items.sort((a,b)=>a.y-b.y);
+  for(let i=1;i<items.length;i++)if(items[i].y-items[i-1].y<gap)items[i].y=items[i-1].y+gap;
+  if(items.length&&items[items.length-1].y>ymax){items[items.length-1].y=ymax;for(let i=items.length-2;i>=0;i--)if(items[i+1].y-items[i].y<gap)items[i].y=items[i+1].y-gap;}
+  if(items.length&&items[0].y<ymin){items[0].y=ymin;for(let i=1;i<items.length;i++)if(items[i].y-items[i-1].y<gap)items[i].y=items[i-1].y+gap;}
+  return items;}
+function declutter(ts,ymin,ymax){/* décale verticalement les textes qui se chevauchent */
+  const box=t=>{try{return t.getBBox();}catch(e){return null;}};
+  for(let i=1;i<ts.length;i++){const ti=ts[i];if(!ti)continue;
+    for(let pass=0;pass<6;pass++){const bi=box(ti);if(!bi)break;let moved=false;
+      for(let j=0;j<i;j++){const bj=ts[j]&&box(ts[j]);if(!bj)continue;
+        const ix=Math.min(bi.x+bi.width,bj.x+bj.width)-Math.max(bi.x,bj.x),iy=Math.min(bi.y+bi.height,bj.y+bj.height)-Math.max(bi.y,bj.y);
+        if(ix>1&&iy>1){let dy=(bi.y+bi.height/2>=bj.y+bj.height/2)?(bj.y+bj.height-bi.y+1):-(bi.y+bi.height-bj.y+1);
+          if(bi.y+dy<ymin||bi.y+bi.height+dy>ymax)dy=dy>0?-(bi.y+bi.height-bj.y+1):(bj.y+bj.height-bi.y+1);
+          ti.setAttribute("y",+ti.getAttribute("y")+dy);moved=true;break;}}
+      if(!moved)break;}}
+  return ts;}
+const SUPD={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function p10(e){return "10"+String(e).split("").map(c=>SUPD[c]||c).join("");}
+function fmtP(p){/* pression en Pa, lisible */
+  if(p>=1e5)return nf(p/1e5,1)+" bar";if(p>=1000)return nf(p/1000,p<1e4?1:0)+" kPa";if(p>=1)return nf(p,p<10?1:0)+" Pa";return sci(p,1)+" Pa";}
+
+
+
+function rng(seed){/* générateur pseudo-aléatoire reproductible */
+  let a=seed>>>0;return ()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296;};}
+
+
+/* =========================================================
+   Outils communs de la série : formats, couleurs, grains, nuances, modèles
+   ========================================================= */
+const NB=String.fromCharCode(160);
+const nbsp=s=>s.replace(/(\d) (%|°C|mm|µm|nm|MPa|HV|s|ppm|h|J)(?=[\s.,;:)<·/]|$)/g,"$1"+NB+"$2");
+function fitSize(t,maxW,min){/* réduit la police d'un texte SVG trop large (style en ligne, prioritaire sur la feuille de style) */
+  let b;try{b=t.getBBox();}catch(e){return t;}let fs=parseFloat(getComputedStyle(t).fontSize)||13;
+  while(b.width>maxW&&fs>(min||9)){fs-=0.5;t.style.fontSize=fs+"px";b=t.getBBox();}return t;}
+const pts=P=>P.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join(" ");
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const mixc=(c,p,b)=>"color-mix(in srgb,"+c+" "+p+"%,"+(b||"var(--card)")+")";
+const COL={liq:mixc("var(--sig)",24),gam:mixc("var(--gam)",24),alp:mixc("var(--eps)",15),mart:"color-mix(in srgb,var(--eps) 50%,var(--tau))",
+  bain:mixc("var(--gam)",52),fp:mixc("var(--eps)",13),film:mixc("var(--tau)",72)};
+function frame(svg,R){el("rect",{x:R.x0,y:R.y0,width:R.x1-R.x0,height:R.y1-R.y0,fill:"none",stroke:"var(--ink)","stroke-width":1.2},svg);}
+function clipG(svg,id,R){const cp=el("clipPath",{id:id},el("defs",null,svg));el("rect",{x:R.x0,y:R.y0,width:R.x1-R.x0,height:R.y1-R.y0},cp);return el("g",{"clip-path":"url(#"+id+")"},svg);}
+function voronoi(seeds,x0,y0,x1,y1,rmax){/* cellules polygonales ; rmax : distance au-delà de laquelle un voisin est ignoré */
+  const box=[[x0,y0],[x1,y0],[x1,y1],[x0,y1]],r2=rmax?rmax*rmax:Infinity;
+  return seeds.map((s,i)=>{let P=box.slice();
+    for(let j=0;j<seeds.length&&P.length;j++){if(i===j)continue;const q=seeds[j],dx=q[0]-s[0],dy=q[1]-s[1];if(dx*dx+dy*dy>r2)continue;
+      const mx=(s[0]+q[0])/2,my=(s[1]+q[1])/2,out=[];
+      for(let k=0;k<P.length;k++){const a=P[k],b=P[(k+1)%P.length],sa=(a[0]-mx)*dx+(a[1]-my)*dy,sb=(b[0]-mx)*dx+(b[1]-my)*dy;if(sa<=0)out.push(a);
+        if((sa<0&&sb>0)||(sa>0&&sb<0)){const t=sa/(sa-sb);out.push([a[0]+t*(b[0]-a[0]),a[1]+t*(b[1]-a[1])]);}}
+      P=out;}
+    return P;});
+}
+function seedsGrid(x0,y0,x1,y1,s,seed){const r=rng(seed),o=[];for(let y=y0+s/2;y<y1+s/2;y+=s*0.87)for(let x=x0+s/2+((Math.round((y-y0)/(s*0.87))%2)?s/2:0);x<x1+s/2;x+=s)o.push([x+(r()-0.5)*s*0.6,Math.min(y1-1,y+(r()-0.5)*s*0.5)]);return o;}
+function legend(svg,x,y,items,xmax){/* items : [couleur, texte, "o" pour un rond] ; passe à la ligne ; renvoie le bas de la légende */
+  let lx=x,ly=y;
+  items.forEach(q=>{const t=tx(svg,x,y+9.5,q[1],{class:"lbl"});let w=70;try{w=t.getBBox().width;}catch(e){}
+    if(lx>x&&lx+14+w>xmax){lx=x;ly+=16;}
+    t.setAttribute("x",lx+14);t.setAttribute("y",ly+9.5);
+    if(q[2]==="o")el("circle",{cx:lx+5,cy:ly+5,r:4.5,fill:q[0],stroke:"var(--ink)","stroke-width":0.7},svg);
+    else el("rect",{x:lx,y:ly,width:10,height:10,fill:q[0],stroke:"var(--ink)","stroke-width":0.7},svg);
+    lx+=14+w+12;});
+  return ly+12;}
+/* =========================================================
+   Classification ISO 14175:2008 d'un mélange argon + CO2 + O2 (partagée par m3 et m5)
+   ========================================================= */
+const fr=v=>String(Math.round(v*10)/10).replace(".",",");
+function iso14175(c,o){
+  const z=v=>v>0&&v<0.5;
+  const des=(g)=>{if(g==="Z")return "Z";const parts=[["C",c],["O",o]].filter(p=>p[1]>0).sort((a,b)=>b[1]-a[1]);
+    return g+" – Ar"+parts.map(p=>p[0]).join("")+" – "+parts.map(p=>fr(p[1])).join("/");};
+  if(c===0&&o===0)return {g:"I1",d:"I1 – Ar",t:"inerte"};
+  if(c>50){if(c===100&&o===0)return {g:"C1",d:"C1 – C",t:"très oxydant"};
+    if(Math.abs(c+o-100)<1e-9&&o>=0.5&&o<=30)return {g:"C2",d:"C2 – CO – "+fr(o),t:"très oxydant"};return {g:"Z",d:"Z",t:"hors des plages"};}
+  if(z(c)||z(o))return {g:"Z",d:"Z – Ar"+(c>0?"C":"")+(o>0?"O":"")+" – "+[c,o].filter(v=>v>0).map(fr).join("/"),t:"hors des plages"};
+  let g="Z";
+  if(o===0)g=c<=5?"M12":c<=15?"M20":c<=25?"M21":"M31";
+  else if(c===0)g=o<=3?"M13":o<=10?"M22":"M32";
+  else if(c<=5&&o<=3)g="M14";else if(c<=5&&o<=10)g="M23";
+  else if(c<=15&&o<=3)g="M24";else if(c<=15&&o<=10)g="M25";
+  else if(c<=25&&o<=3)g="M26";else if(c<=25&&o<=10)g="M27";
+  else if(c>25&&o>=2&&o<=10)g="M33";else if(c>5&&c<=25&&o>10)g="M34";else if(c>25&&o>10)g="M35";
+  return {g:g,d:g==="Z"?"Z":des(g),t:g==="Z"?"hors des plages":"mélange oxydant"};
+}
+
+/* =========================================================
+   M1 : la cloche de gaz sous le vent (vitesse, Reynolds)
+   ========================================================= */
+(function(){
+  const svg=$("#m1svg");if(!svg)return;
+  const sQ=$("#m1q"),sW=$("#m1w"),ro=$("#m1r"),msg=$("#m1msg");
+  const RHO=1.66,MU=2.2e-5;let D=16;
+  function draw(){
+    const W=svgW(svg),n=W<560,Q=+sQ.value,w=+sW.value;clear(svg);
+    $("#m1qo").textContent=nf(Q,0)+NB+"L/min";$("#m1wo").textContent=nf(w,1)+NB+"m/s";
+    const v=(Q/60000)/(Math.PI*Math.pow(D/1000,2)/4),Re=RHO*v*(D/1000)/MU;
+    const turb=Math.max(0,Math.min(1,(Re-2000)/1500)),wind=Math.max(0,Math.min(1,(w/v-0.5)/0.7)),low=Math.max(0,Math.min(1,(0.6-v)/0.4));
+    const bad=Math.max(turb,wind,low);
+    const cx=n?W*0.42:W*0.38,k=n?5:6,nw=D*k/2,yN=70,yP=yN+(n?70:80),H=yP+60;
+    /* torche et buse */
+    el("rect",{x:cx-nw-10,y:8,width:2*nw+20,height:30,rx:6,fill:mixc("var(--muted)",35),stroke:"var(--ink)","stroke-width":1.2},svg);
+    el("polygon",{points:[[cx-nw-10,38],[cx+nw+10,38],[cx+nw,yN],[cx-nw,yN]].map(a=>a.join(",")).join(" "),fill:mixc("var(--muted)",20),stroke:"var(--ink)","stroke-width":1.2},svg);
+    el("line",{x1:cx,y1:20,x2:cx,y2:yN+12,stroke:"var(--ink)","stroke-width":2.5},svg);
+    /* pièce et cordon */
+    el("rect",{x:6,y:yP,width:W-12,height:22,fill:mixc("var(--muted)",22),stroke:"var(--ink)","stroke-width":1.2},svg);
+    el("path",{d:"M"+(cx-30)+" "+yP+" Q "+cx+" "+(yP-10)+" "+(cx+30)+" "+yP+" Z",fill:mixc("var(--weld)",70),stroke:"var(--ink)","stroke-width":0.8},svg);
+    /* filets de gaz */
+    const sk=Math.atan2(w,v)*0.9,r=rng(3);
+    for(let i=0;i<7;i++){const x0=cx-nw+(i+0.5)*2*nw/7;let d="M"+x0.toFixed(1)+" "+yN;
+      for(let j=1;j<=12;j++){const f=j/12,y=yN+f*(yP-yN-2),spread=(x0-cx)*(1+1.6*f*f),wob=turb*6*Math.sin(j*1.7+i*2.1)*(0.3+f),dx=Math.tan(sk)*(y-yN)*(0.6+0.8*f);
+        d+=" L"+(cx+spread+dx+wob).toFixed(1)+" "+y.toFixed(1);}
+      el("path",{d:d,fill:"none",stroke:"var(--frc)","stroke-width":1.6,"stroke-opacity":0.85-0.4*low},svg);}
+    /* vent */
+    if(w>0.05)for(let j=0;j<3;j++){const y=yN+8+j*(yP-yN-16)/2;arrow(svg,8,y,8+Math.min(70,14+12*w),y,"var(--sig)",2,7);}
+    {const t=tx(svg,10,yN-4,w>0.05?"vent "+nf(w,1)+" m/s":"",{class:"lbl",fill:"var(--sig)"});t.style.fontSize="11px";}
+    /* air aspiré et porosités */
+    if(bad>0.05){for(let j=0;j<Math.round(2+4*bad);j++){const s=j%2?1:-1,x=cx+s*(nw+16+r()*18),y=yN+10+r()*(yP-yN-24);arrow(svg,x+s*14,y,x,y+6,"var(--sig)",1.4,5);}
+      for(let j=0;j<Math.round(10*bad);j++){el("circle",{cx:cx-22+r()*44,cy:yP+4+r()*12,r:1.6+r()*2,fill:"var(--card)",stroke:"var(--tau)","stroke-width":1.4},svg);}}
+    {const t=tx(svg,cx+nw+14,yN-16,"buse "+D+" mm",{class:"lbl"});t.style.fontSize="11px";fitText(t,4,W-4);}
+    setVB(svg,W,H);
+    const reg=Re>2300?"turbulent":Re>2000?"transition":"laminaire",prot=bad<0.15?"bonne":bad<0.5?"douteuse":"insuffisante";
+    ro.innerHTML=nbsp("<span>v = <b class='eps'>"+nf(v,2)+" m/s</b></span><span>Re ≈ "+nf(Math.round(Re/10)*10,0)+" ("+reg+")</span><span>protection "+prot+"</span>");
+    let m;
+    if(low>0.3)m="Le jet ne sort qu'à "+nf(v,2)+" m/s : trop faible, l'air diffuse jusqu'au bain. Il faut plus de débit.";
+    else if(wind>0.3)m="Le vent ("+nf(w,1)+" m/s) est comparable ou supérieur à la vitesse du jet ("+nf(v,2)+" m/s) : la cloche est emportée, l'air atteint le bain. Paravent, pas plus de gaz.";
+    else if(turb>0.3)m="Re ≈ "+nf(Math.round(Re/10)*10,0)+" : le jet est devenu turbulent et aspire l'air sur ses bords. Trop de gaz donne aussi des porosités.";
+    else m="Jet laminaire à "+nf(v,2)+" m/s (Re ≈ "+nf(Math.round(Re/10)*10,0)+") : la cloche couvre le bain. Environ 1 L/min par millimètre de buse garde ce régime.";
+    msg.innerHTML=nbsp(m)+"<br><b>À retenir :</b> un litre par minute et par millimètre de buse, à l'abri du vent.";
+  }
+  $$("#m1b .btn").forEach(b=>b.addEventListener("click",()=>{D=+b.dataset.d;setOn("#m1b",b);draw();}));
+  [sQ,sW].forEach(x=>x.addEventListener("input",draw));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M2 : doser l'hélium dans l'argon (tension, puissance, bain)
+   ========================================================= */
+(function(){
+  const svg=$("#m2svg");if(!svg)return;
+  const sH=$("#m2h"),ro=$("#m2r"),msg=$("#m2msg");
+  function draw(){
+    const W=svgW(svg),n=W<560,h=+sH.value,x=h/100,U=12.7+6.3*x,P=U*150,Q=16*(1+1.5*x),r=P/1905;clear(svg);
+    $("#m2ho").textContent=nf(h,0)+NB+"%";
+    setOn("#m2b",$$("#m2b .btn").find(b=>+b.dataset.h===h)||null);
+    const cx=n?W/2:W*0.32,ye=56,yp=ye+48,k=n?1:1.2;
+    /* électrode, arc */
+    el("polygon",{points:[[cx-8,6],[cx+8,6],[cx+8,ye-12],[cx,ye],[cx-8,ye-12]].map(a=>a.join(",")).join(" "),fill:mixc("var(--muted)",45),stroke:"var(--ink)","stroke-width":1.2},svg);
+    const bw=(14+22*x)*k;
+    [1,0.66,0.33].forEach((s,i)=>{el("path",{d:"M"+(cx-4*s)+" "+ye+" Q "+(cx-bw*s)+" "+(yp-6)+" "+(cx-bw*s*1.05)+" "+yp+" L "+(cx+bw*s*1.05)+" "+yp+" Q "+(cx+bw*s)+" "+(yp-6)+" "+(cx+4*s)+" "+ye+" Z",fill:"var(--gam)","fill-opacity":0.16+0.16*i},svg);});
+    /* pièce et bain en coupe */
+    el("rect",{x:cx-(n?130:150),y:yp,width:(n?260:300),height:70,fill:mixc("var(--muted)",22),stroke:"var(--ink)","stroke-width":1.2},svg);
+    const wb=(36+26*(r-1)*1.6)*k,db=(16+24*(r-1)*1.2)*k;
+    el("path",{d:"M"+(cx-wb/2)+" "+yp+" Q "+cx+" "+(yp+2*db)+" "+(cx+wb/2)+" "+yp+" Z",fill:mixc("var(--weld)",70),stroke:"var(--ink)","stroke-width":1},svg);
+    {const t=tx(svg,cx,yp+db+28,"coupe du bain",{class:"lbl","text-anchor":"middle"});t.style.fontSize="11px";halo(t,svg);}
+    /* barres */
+    const bx0=n?16:W*0.6,bx1=W-16,by0=n?yp+86:24,bh=16;
+    const bars=[["tension",U,20,"V"],["puissance à 150 A",P/1000,3,"kW"],["débit conseillé",Q,45,"L/min"]];
+    bars.forEach((b,i)=>{const y=by0+i*40;const t=tx(svg,bx0,y-4,b[0]+" : "+(b[3]==="kW"?nf(b[1],2):nf(b[1],b[3]==="V"?1:0))+" "+b[3],{class:"lbl"});t.style.fontSize="11px";
+      el("rect",{x:bx0,y:y,width:bx1-bx0,height:bh,fill:mixc("var(--muted)",15),stroke:"var(--line)"},svg);
+      el("rect",{x:bx0,y:y,width:(bx1-bx0)*Math.min(1,b[1]/b[2]),height:bh,fill:i===2?"var(--mat)":"var(--eps)"},svg);});
+    setVB(svg,W,Math.max(yp+80,by0+3*40));
+    const grp=h===0?"I1":h===100?"I2":"I3";
+    ro.innerHTML=nbsp("<span>ISO 14175 – "+grp+"</span><span>U ≈ <b class='eps'>"+nf(U,1)+" V</b></span><span>P ≈ "+nf(P/1000,2)+" kW (+"+nf(100*(r-1),0)+" %)</span><span>débit ≈ "+nf(Q,0)+" L/min</span>");
+    let m;
+    if(h===0)m="Argon pur : arc calme qui s'amorce sans peine, 12,7 V pour 3 mm à 150 A. Le gaz de référence du TIG.";
+    else if(h<100)m="Avec "+nf(h,0)+" % d'hélium, la tension monte à "+nf(U,1)+" V : "+nf(100*(r-1),0)+" % de puissance en plus au même courant, un bain plus large et plus profond. Il faut environ "+nf(Q,0)+" L/min, et l'amorçage devient plus délicat.";
+    else m="Hélium pur : 19 V, la puissance la plus forte, mais un débit deux fois et demie plus élevé, un amorçage difficile et un coût élevé. Réservé aux cas où il faut toute la chaleur.";
+    msg.innerHTML=nbsp(m)+"<br><b>À retenir :</b> l'hélium relève la tension, donc la puissance, au même courant.";
+  }
+  $$("#m2b .btn").forEach(b=>b.addEventListener("click",()=>{sH.value=b.dataset.h;draw();}));
+  sH.addEventListener("input",draw);
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M3 : doser l'oxydant d'un mélange MAG
+   ========================================================= */
+(function(){
+  const svg=$("#m3svg");if(!svg)return;
+  const sC=$("#m3c"),sO=$("#m3o"),ro=$("#m3r"),msg=$("#m3msg");
+  function draw(){
+    const W=svgW(svg),n=W<560,c=+sC.value,o=+sO.value,oi=o+c/2,iso=iso14175(c,o),spray=(100-c-o)>=75&&c<=25;clear(svg);
+    $("#m3co").textContent=nf(c,0)+NB+"%";$("#m3oo").textContent=nf(o,1)+NB+"%";
+    setOn("#m3b",$$("#m3b .btn").find(b=>+b.dataset.c===c&&+b.dataset.o===o)||null);
+    const cx=n?W/2:W*0.34,yp=40,k=n?0.9:1.1,r=rng(5);
+    el("rect",{x:cx-(n?140:160),y:yp,width:(n?280:320),height:96,fill:mixc("var(--muted)",22),stroke:"var(--ink)","stroke-width":1.2},svg);
+    /* forme : doigt de gant sous argon riche, cuvette large sous CO2 */
+    const f=Math.min(1,c/60),w=(62+30*f)*k,dBowl=(14+22*f)*k,finger=spray?(1-f*1.6)*34*k:0,fw=10*k;
+    let d="M"+(cx-w/2)+" "+yp+" Q "+(cx-w/2)+" "+(yp+dBowl)+" "+(cx-fw)+" "+(yp+dBowl);
+    if(finger>2)d+=" Q "+(cx-fw*0.6)+" "+(yp+dBowl+finger)+" "+cx+" "+(yp+dBowl+finger)+" Q "+(cx+fw*0.6)+" "+(yp+dBowl+finger)+" "+(cx+fw)+" "+(yp+dBowl);
+    else d+=" Q "+cx+" "+(yp+dBowl*1.25)+" "+(cx+fw)+" "+(yp+dBowl);
+    d+=" Q "+(cx+w/2)+" "+(yp+dBowl)+" "+(cx+w/2)+" "+yp+" Q "+cx+" "+(yp-14)+" "+(cx-w/2)+" "+yp+" Z";
+    el("path",{d:d,fill:mixc("var(--weld)",70),stroke:"var(--ink)","stroke-width":1},svg);
+    /* îlots de silicates */
+    for(let i=0;i<Math.round(oi/4);i++)el("ellipse",{cx:cx-w/3+r()*w*0.66,cy:yp-8-r()*3,rx:3+r()*3,ry:1.6,fill:mixc("var(--gam)",60),stroke:"var(--ink)","stroke-width":0.5},svg);
+    /* projections */
+    for(let i=0;i<Math.round(c/6);i++){const s=r()<0.5?-1:1;el("circle",{cx:cx+s*(w/2+8+r()*50),cy:yp-2-r()*8,r:1.5+r()*1.8,fill:"var(--tau)"},svg);}
+    {const t=tx(svg,cx,yp+118,finger>2?"pénétration en doigt de gant":"pénétration en cuvette",{class:"lbl","text-anchor":"middle"});t.style.fontSize="11px";halo(t,svg);}
+    /* jauge de l'indice */
+    const gx0=n?16:W*0.64,gx1=W-16,gy=n?yp+140:44;
+    {const t=tx(svg,gx0,gy-8,"indice d'oxydation : "+nf(oi,1),{class:"lbl"});t.style.fontSize="11px";}
+    el("rect",{x:gx0,y:gy,width:gx1-gx0,height:14,fill:mixc("var(--muted)",15),stroke:"var(--line)"},svg);
+    el("rect",{x:gx0,y:gy,width:(gx1-gx0)*Math.min(1,oi/50),height:14,fill:"var(--eps)"},svg);
+    {const t=tx(svg,gx0,gy+34,"transfert : "+(spray?"pulvérisation possible":"court-circuit, globulaire"),{class:"lbl",fill:spray?"var(--eps)":"var(--tau)"});t.style.fontSize="11px";fitSize(t,gx1-gx0,8);
+     const u=tx(svg,gx0,gy+54,"ISO 14175 – "+iso.d,{class:"lbl","font-weight":"700"});u.style.fontSize="11.5px";fitSize(u,gx1-gx0,8);}
+    setVB(svg,W,n?gy+64:yp+130);
+    ro.innerHTML=nbsp("<span>argon "+nf(Math.max(0,100-c-o),1)+" %</span><span>indice <b class='eps'>"+nf(oi,1)+"</b></span><span>"+iso.g+"</span><span>"+(spray?"pulvérisation possible":"pas de pulvérisation")+"</span>");
+    let m;
+    if(c+o>100)m="La somme dépasse 100 % : réduis l'oxygène.";
+    else if(oi===0)m="Argon pur sur un acier : arc instable qui erre sur la surface oxydée, bain qui mouille mal. En MAG, on ajoute toujours un peu d'oxydant.";
+    else if(spray&&oi<=12)m="Mélange riche en argon (indice "+nf(oi,1)+") : pulvérisation axiale possible au-dessus du courant de transition, pénétration centrale en doigt de gant, peu de projections et de silicates.";
+    else if(spray)m="Encore assez d'argon pour la pulvérisation, mais plus oxydant (indice "+nf(oi,1)+") : davantage de silicates en surface et de pertes en manganèse et silicium.";
+    else m="Avec "+nf(c,0)+" % de CO₂, la pulvérisation axiale n'est plus possible : court-circuit ou globulaire, projections, mais une pénétration large et ronde. Le fil doit être riche en Mn et Si.";
+    msg.innerHTML=nbsp(m)+"<br><b>À retenir :</b> un peu d'oxydant stabilise ; beaucoup de CO₂ creuse en cuvette et interdit la pulvérisation.";
+  }
+  $$("#m3b .btn").forEach(b=>b.addEventListener("click",()=>{sC.value=b.dataset.c;sO.value=b.dataset.o;draw();}));
+  [sC,sO].forEach(x=>x.addEventListener("input",draw));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M4 : l'hydrogène dans un bain d'aluminium (loi de Sievert)
+   ========================================================= */
+(function(){
+  const svg=$("#m4svg");if(!svg)return;
+  const sP=$("#m4p"),sT=$("#m4t"),ro=$("#m4r"),msg=$("#m4msg");
+  const TF=660,SL=T=>Math.pow(10,2.796-2760/(T+273.15)),SS=T=>Math.pow(10,0.788-2080/(T+273.15));
+  const fp=p=>p>=0.01?nf(p,2):p>=0.001?nf(p,3):nf(p,4);
+  function draw(){
+    const W=svgW(svg),n=W<560,lp=+sP.value,p=Math.pow(10,lp),T=+sT.value,rp=Math.sqrt(p);clear(svg);
+    $("#m4po").textContent=fp(p)+NB+"bar";$("#m4to").textContent=nf(T,0)+NB+"°C";
+    setOn("#m4b",$$("#m4b .btn").find(b=>Math.abs(Math.log10(+b.dataset.p)-lp)<0.01)||null);
+    const x0=n?52:62,x1=W-16,y0=26,y1=n?190:220,LY=v=>Math.log10(Math.max(1e-5,v));
+    const A=axes(svg,x0,x1,y0,y1,500,900,-5,1,"température (°C)","H dissous (mL/100 g)",100,1,null,v=>v===0?"1":v===1?"10":"10"+["⁻⁵","⁻⁴","⁻³","⁻²","⁻¹"][v+5]);
+    el("rect",{x:A.X(TF),y:y0,width:x1-A.X(TF),height:y1-y0,fill:mixc("var(--weld)",8)},svg);
+    {const t=tx(svg,A.X(TF)+4,y0+12,"liquide",{class:"lbl",fill:"var(--weld)"});t.style.fontSize="11px";const u=tx(svg,A.X(TF)-4,y0+12,"solide",{class:"lbl","text-anchor":"end"});u.style.fontSize="11px";}
+    el("line",{x1:A.X(TF),y1:y0,x2:A.X(TF),y2:y1,stroke:"var(--ink)","stroke-width":1,"stroke-dasharray":"4 3"},svg);
+    let d="";for(let t=500;t<=TF;t+=5)d+=(d?"L":"M")+A.X(t).toFixed(1)+" "+A.Y(LY(SS(t)*rp)).toFixed(1)+" ";
+    el("path",{d:d,fill:"none",stroke:"var(--gam)","stroke-width":2.6},svg);
+    d="";for(let t=TF;t<=900;t+=5)d+=(d?"L":"M")+A.X(t).toFixed(1)+" "+A.Y(LY(SL(t)*rp)).toFixed(1)+" ";
+    el("path",{d:d,fill:"none",stroke:"var(--gam)","stroke-width":2.6},svg);
+    arrow(svg,A.X(TF)+2,A.Y(LY(SL(TF)*rp)),A.X(TF)+2,A.Y(LY(SS(TF)*rp))-2,"var(--tau)",2,7);
+    {const t=tx(svg,A.X(TF)+8,(A.Y(LY(SL(TF)*rp))+A.Y(LY(SS(TF)*rp)))/2,"÷ 19 à la solidification",{class:"lbl",fill:"var(--tau)"});t.style.fontSize="11px";halo(t,svg);fitText(t,x0,x1);}
+    const S=T>=TF?SL(T)*rp:SS(T)*rp;
+    el("circle",{cx:A.X(T),cy:A.Y(LY(S)),r:5.5,fill:"var(--eps)",stroke:"var(--card)","stroke-width":1.5},svg);
+    setVB(svg,W,y1+40);
+    const sl=SL(Math.max(T,TF))*rp,ss=SS(TF)*rp,ex=Math.max(0,sl-ss);
+    const f3=v=>v>=0.1?nf(v,2):v>=0.01?nf(v,3):nf(v,4);
+    ro.innerHTML=nbsp("<span>p = "+fp(p)+" bar (√p = "+f3(rp)+")</span><span>"+(T>=TF?"liquide":"solide")+" à "+nf(T,0)+" °C : <b class='eps'>"+f3(S)+"</b> mL/100 g</span><span>solide à 660 °C : "+f3(ss)+"</span><span>à rejeter : "+f3(ex)+"</span>");
+    let m=(T>=TF?"Le bain liquide à "+nf(T,0)+" °C dissout "+f3(S)+" mL/100 g ; ":"À "+nf(T,0)+" °C, le métal est solide et ne garde que "+f3(S)+" mL/100 g ; ")+"en se figeant, l'aluminium ne peut garder que "+f3(ss)+" mL/100 g : l'excédent, "+f3(ex)+" mL/100 g, doit sortir en bulles avant que le métal ne se fige, sinon il reste en porosités.";
+    m+=" Divise la pression par 100 : tout est divisé par 10 seulement.";
+    msg.innerHTML=nbsp(m)+"<br><b>À retenir :</b> S = K(T)·√p ; l'aluminium solide garde vingt fois moins d'hydrogène que le liquide.";
+  }
+  $$("#m4b .btn").forEach(b=>b.addEventListener("click",()=>{sP.value=Math.log10(+b.dataset.p);draw();}));
+  [sP,sT].forEach(x=>x.addEventListener("input",draw));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M5 : décoder et coder une bouteille (ISO 14175)
+   ========================================================= */
+(function(){
+  const svg=$("#m5svg");if(!svg)return;
+  const sC=$("#m5c"),sO=$("#m5o"),ro=$("#m5r"),msg=$("#m5msg");
+  const SP={Ar:{g:"I1",d:"I1 – Ar",t:"inerte",m:"Argon pur : groupe I (inerte), sous-groupe 1. Le gaz de référence du TIG et du MIG de l'aluminium."},
+    ArHe30:{g:"I3",d:"I3 – ArHe – 30",t:"inerte",m:"Argon et 30 % d'hélium : toujours inerte, sous-groupe 3 (0,5 à 95 % d'hélium dans l'argon)."},
+    ArH5:{g:"R1",d:"R1 – ArH – 5",t:"réducteur",m:"Argon et 5 % d'hydrogène : réducteur, R1 (0,5 à 15 % d'H₂). TIG et plasma des inox austénitiques."},
+    ArN2:{g:"N2",d:"N2 – ArN – 2",t:"faiblement réactif",m:"Argon et 2 % d'azote : groupe N, sous-groupe 2 (0,5 à 5 % de N₂). TIG des inox duplex."},
+    CO2:{g:"C1",d:"C1 – C",t:"très oxydant",m:"CO₂ pur : très oxydant, C1. MAG en court-circuit ou globulaire, fils fourrés."}};
+  let sp=null;
+  const ZONES=[["M12",0.5,5,0,0.5],["M20",5,15,0,0.5],["M21",15,25,0,0.5],["M31",25,50,0,0.5],
+    ["M14",0.5,5,0.5,3],["M23",0.5,5,3,10],["M24",5,15,0.5,3],["M25",5,15,3,10],["M26",15,25,0.5,3],["M27",15,25,3,10],["M33",25,50,2,10],["M34",5,25,10,15],["M35",25,50,10,15],["M13",0,0.5,0.5,3],["M22",0,0.5,3,10],["M32",0,0.5,10,15]];
+  function draw(){
+    const W=svgW(svg),n=W<560,c=+sC.value,o=+sO.value;clear(svg);
+    $("#m5co").textContent=nf(c,0)+NB+"%";$("#m5oo").textContent=nf(o,1)+NB+"%";
+    const r=sp?SP[sp]:Object.assign({m:""},iso14175(c,o));
+    setOn("#m5x",sp?$$("#m5x .btn").find(b=>b.dataset.g===sp):null);
+    /* étiquette */
+    const lw=Math.min(W-20,n?W-20:300),lx=10;
+    el("rect",{x:lx,y:8,width:lw,height:56,rx:8,fill:mixc("var(--mat)",12),stroke:"var(--mat)","stroke-width":1.6},svg);
+    {const t=tx(svg,lx+12,28,"ISO 14175",{class:"lbl"});t.style.fontSize="11px";
+     const u=tx(svg,lx+12,52,r.d,{"font-weight":"700",fill:"var(--ink)"});u.style.fontSize="18px";fitSize(u,lw-24,10);}
+    /* carte des sous-groupes */
+    const x0=n?40:Math.max(lx+lw+46,W*0.45),x1=W-14,y0=n?100:24,y1=y0+(n?150:170);
+    const bx=16,by=20,X=v=>v<=0.5?x0+bx*v/0.5:x0+bx+(x1-x0-bx)*(v-0.5)/49.5,Y=v=>v<=0.5?y1-by*v/0.5:y1-by-(y1-y0-by)*(v-0.5)/14.5,A={X:X,Y:Y};
+    el("line",{x1:x0,y1:y1,x2:x1,y2:y1,class:"axis"},svg);el("line",{x1:x0,y1:y0-4,x2:x0,y2:y1,class:"axis"},svg);
+    [0,10,20,30,40,50].forEach(v=>{const t=tx(svg,X(v),y1+15,nf(v,0),{class:"lbl","text-anchor":"middle"});t.style.fontSize="10.5px";});
+    [0,5,10,15].forEach(v=>{const t=tx(svg,x0-5,Y(v)+4,nf(v,0),{class:"lbl","text-anchor":"end"});t.style.fontSize="10.5px";});
+    {const t=tx(svg,x1,y1+30,"CO₂ (%)",{class:"lbl","text-anchor":"end"});t.style.fontSize="10.5px";const u=tx(svg,x0+4,y0-10,"O₂ (%) · bandes dilatées sous 0,5 %",{class:"lbl"});u.style.fontSize="10.5px";fitSize(u,x1-x0,7);}
+    ZONES.forEach((z,i)=>{const on=r.g===z[0];el("rect",{x:A.X(z[1]),y:A.Y(z[4]),width:Math.max(1,A.X(z[2])-A.X(z[1])),height:Math.max(1,A.Y(z[3])-A.Y(z[4])),fill:on?mixc("var(--eps)",45):mixc("var(--eps)",6+3*(i%3)),stroke:"var(--card)","stroke-width":1},svg);
+      const wz=A.X(z[2])-A.X(z[1]),hz=A.Y(z[3])-A.Y(z[4]);if(wz>24&&hz>11){const t=tx(svg,(A.X(z[1])+A.X(z[2]))/2,(A.Y(z[3])+A.Y(z[4]))/2+4,z[0],{"text-anchor":"middle","font-weight":on?"700":"400"});t.style.fontSize="10px";}});
+    if(!sp){el("circle",{cx:A.X(Math.min(50,c)),cy:A.Y(Math.min(15,o)),r:5.5,fill:"var(--sig)",stroke:"var(--card)","stroke-width":1.5},svg);}
+    setVB(svg,W,y1+38);
+    ro.innerHTML=nbsp("<span>"+(sp?"gaz choisi":"Ar + "+nf(c,0)+" % CO₂ + "+nf(o,1)+" % O₂")+"</span><span>classe <b class='eps'>"+r.g+"</b></span><span>"+r.t+"</span>");
+    let m=sp?r.m:(r.g==="Z"?"Ce mélange sort des plages du tableau 2 de l'ISO 14175 : il est classé Z, et deux gaz Z ne sont pas forcément interchangeables.":r.g==="I1"?"Sans CO₂ ni oxygène : argon pur, I1.":"Mélange oxydant à base d'argon : "+r.g+". Désignation ISO 14175 – "+r.d+", composants par teneur décroissante.");
+    msg.innerHTML=nbsp(m)+"<br><b>À retenir :</b> la lettre dit le comportement, les chiffres la famille, puis la recette.";
+  }
+  $$("#m5x .btn").forEach(b=>b.addEventListener("click",()=>{sp=b.dataset.g;draw();}));
+  [sC,sO].forEach(x=>x.addEventListener("input",()=>{sp=null;draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   Quiz, check-list, sommaire, thème
+   ========================================================= */
+(function(){
+  const box=$("#quiz");if(!box)return;
+  const Q=[
+    {q:"En TIG et en MIG-MAG, le gaz de protection sert à :",o:["refroidir la torche seulement","apporter du métal","chasser l'air du bain, former le plasma de l'arc et régler transfert et forme du cordon","remplacer le laitier pour le contrôle"],c:2,e:"Le gaz protège le bain de l'oxygène, de l'azote et de l'hydrogène de l'air ; il devient le plasma de l'arc et influe sur le transfert et la pénétration."},
+    {q:"Avec une buse de 16 mm, un débit d'argon raisonnable est d'environ :",o:["4 L/min","16 L/min","40 L/min","100 L/min"],c:1,e:"Environ <b>1 L/min par millimètre</b> de diamètre de buse : jet laminaire (Re ≈ 1 600)."},
+    {q:"Monter le débit de 16 à 35 L/min sur une buse de 16 mm :",o:["rend le jet turbulent, qui aspire l'air","protège toujours mieux","n'a aucun effet","refroidit le bain et supprime les porosités"],c:0,e:"Le nombre de Reynolds dépasse 2 000 : le jet tourbillonne et entraîne l'air. Trop de gaz donne aussi des porosités."},
+    {q:"À courant et longueur d'arc égaux, l'hélium par rapport à l'argon :",o:["abaisse la tension d'arc","ne change rien","relève la tension, donc la puissance, et élargit le bain","remplace le CO₂"],c:2,e:"Plus difficile à ioniser et meilleur conducteur de la chaleur, l'hélium relève la tension : environ 19 V contre 12,7 V dans le modèle du cours."},
+    {q:"Pourquoi faut-il plus de débit d'hélium que d'argon ?",o:["parce qu'il est plus lourd","parce qu'il s'ionise mieux","à cause de la norme","parce qu'il est environ dix fois plus léger et s'envole au lieu de couvrir le bain"],c:3,e:"Masse volumique : 0,178 contre 1,784 kg/m³ à 0 °C (ISO 14175). L'hélium monte : deux à trois fois plus de débit."},
+    {q:"Au-delà de quelle teneur en CO₂ dans l'argon la pulvérisation axiale devient-elle impossible ?",o:["environ 20 à 25 %","2 %","50 %","elle est toujours possible"],c:0,e:"Au-delà d'environ 20 à 25 % de CO<sub>2</sub>, le transfert reste globulaire ou en court-circuit : M21 (jusqu'à 25 %) est la limite pratique."},
+    {q:"Pourquoi les fils MAG contiennent-ils 1,3 à 1,9 % de manganèse et 0,7 à 1,2 % de silicium ?",o:["pour durcir le cordon","pour faciliter le dévidage","pour baisser la tension","pour désoxyder le bain, oxydé par le CO₂ et l'O₂ du gaz"],c:3,e:"Le gaz oxyde une partie de Mn et Si ; ceux qui restent désoxydent le métal fondu. D'où les îlots de silicates à la surface du cordon."},
+    {q:"Un mélange argon + 5 % d'hydrogène convient au TIG :",o:["des aciers trempants","de l'aluminium","du titane","des inox austénitiques"],c:3,e:"Réducteur et plus chaud, il convient aux <b>inox austénitiques</b>. Il est proscrit sur les aciers trempants (fissuration à froid), l'aluminium (porosités) et le titane (fragilisation)."},
+    {q:"Selon la loi de Sievert, si la pression d'hydrogène au-dessus du bain est divisée par 100, l'hydrogène dissous est divisé par :",o:["10","100","50","1, il ne change pas"],c:0,e:"<span class='m'>S = K·√p</span> : √100 = 10. Un peu d'humidité suffit donc à charger le bain."},
+    {q:"Pourquoi ajoute-t-on 1 à 2 % d'azote au gaz TIG d'un inox duplex ?",o:["pour l'oxyder","pour compenser la perte d'azote du bain, qui garde l'austénite et la résistance à la piqûre","pour éviter les porosités","pour réduire le coût"],c:1,e:"L'azote, fortement gammagène, maintient l'équilibre ferrite-austénite et le PREN (Cr + 3,3 Mo + 16 N)."},
+    {q:"Que désigne « ISO 14175 – M21 – ArC – 18 » ?",o:["argon pur","argon avec 18 % d'hélium","argon avec 18 % de CO₂, mélange oxydant du sous-groupe M21","CO₂ avec 18 % d'argon"],c:2,e:"M2 : mélange oxydant ; sous-groupe 1 : 15 à 25 % de CO<sub>2</sub> ; ArC – 18 : argon et 18 % de CO<sub>2</sub>."},
+    {q:"Une QMOS en MAG a été qualifiée sous M21 – ArC – 18. Selon l'EN ISO 15614-1, elle couvre :",o:["tout gaz M2","la composition nominale, avec ±20 % relatifs sur la teneur en CO₂","n'importe quel gaz actif","seulement la bouteille de l'épreuve"],c:1,e:"La qualification est limitée à la composition nominale ; un écart de ±20 % relatif sur le CO<sub>2</sub> est admis (14,4 à 21,6 % ici)."}
+  ];
+  let score=0,done=0;const sc=$("#qzScore");
+  function upd(){let t="Score : "+score+" / "+Q.length;if(done===Q.length)t+=score>=10?"  ·  🎉 prêt pour le cours 2":score>=7?"  ·  relis les explications":"  ·  refais un tour des chapitres";sc.textContent=t;}
+  function render(){box.innerHTML="";score=0;done=0;
+    Q.forEach((it,n)=>{const d=document.createElement("div");d.className="qz";
+      d.innerHTML='<p class="qz-q"><b>'+(n+1)+".</b> "+it.q+'</p><div class="qz-o"></div><div class="qz-e" hidden></div>';
+      const o=d.querySelector(".qz-o"),ex=d.querySelector(".qz-e");let answered=false;
+      it.o.forEach((txt,i)=>{const b=document.createElement("button");b.type="button";b.className="qz-b";b.innerHTML=String.fromCharCode(65+i)+". "+txt;
+        b.addEventListener("click",()=>{if(answered)return;answered=true;done++;const ok=i===it.c;if(ok)score++;b.classList.add(ok?"ok":"ko");o.children[it.c].classList.add("ok");ex.hidden=false;ex.innerHTML=(ok?"✅ <b>Bien joué.</b> ":"❌ <b>Pas tout à fait.</b> ")+it.e;upd();});
+        o.appendChild(b);});
+      box.appendChild(d);});
+    upd();}
+  $("#qzReset").addEventListener("click",render);render();
+})();
+(function(){
+  const boxes=$$("#checklist input[type=checkbox]"),msg=$("#checkMsg"),KEY="arc-gaz-cours1-check";
+  if(!boxes.length)return;
+  let saved=[];try{saved=JSON.parse(localStorage.getItem(KEY)||"[]")||[];}catch(e){saved=[];}
+  boxes.forEach(b=>{b.checked=saved.indexOf(b.dataset.c)>=0;});
+  function upd(){const on=boxes.filter(b=>b.checked).map(b=>b.dataset.c);try{localStorage.setItem(KEY,JSON.stringify(on));}catch(e){}
+    msg.innerHTML=on.length===boxes.length?"🎉 <b>Tout est coché : tu es prêt pour le cours 2 !</b>":on.length+" / "+boxes.length+" : reviens sur les points non cochés (les manipulations sont faites pour ça).";}
+  boxes.forEach(b=>b.addEventListener("change",upd));upd();
+})();
+(function(){/* impression de la fiche mémoire seule */
+  const b=$("#printFiche");if(!b)return;
+  b.addEventListener("click",()=>{document.body.classList.add("print-fiche");window.print();});
+  window.addEventListener("afterprint",()=>document.body.classList.remove("print-fiche"));
+})();
+(function(){
+  const links=$$(".toc a"),tin=$(".toc-in");
+  if(!links.length||!("IntersectionObserver" in window))return;
+  const map={};links.forEach(a=>{map[a.getAttribute("href").slice(1)]=a;});
+  const obs=new IntersectionObserver(ents=>{ents.forEach(en=>{if(!en.isIntersecting)return;const a=map[en.target.id];if(!a)return;
+    links.forEach(l=>l.classList.toggle("on",l===a));
+    if(tin){const tgt=a.offsetLeft-tin.clientWidth/2+a.offsetWidth/2;try{tin.scrollTo({left:tgt,behavior:RM?"auto":"smooth"});}catch(e){tin.scrollLeft=tgt;}}});},{rootMargin:"-45% 0px -50% 0px"});
+  Object.keys(map).forEach(id=>{const s=document.getElementById(id);if(s)obs.observe(s);});
+})();
+(function(){
+  const b=$("#themeBtn");if(!b)return;const KEY="arc-gaz-theme",root=document.documentElement;
+  const lab={auto:"◐ Thème : automatique",light:"☀️ Thème : clair",dark:"🌙 Thème : sombre"};
+  let t="auto";try{t=localStorage.getItem(KEY)||"auto";}catch(e){}
+  function apply(){if(t==="auto")root.removeAttribute("data-theme");else root.setAttribute("data-theme",t);b.textContent=lab[t];}
+  b.addEventListener("click",()=>{t=t==="auto"?"light":t==="light"?"dark":"auto";try{localStorage.setItem(KEY,t);}catch(e){}apply();});
+  apply();
+})();
+
+})();
+</script>
+</body>
+</html>

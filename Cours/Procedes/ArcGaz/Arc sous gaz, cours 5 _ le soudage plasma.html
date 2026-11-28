@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Arc sous gaz, cours 5 : le soudage plasma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@500;600;700&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+
+
+
+:root{
+  --paper:#F3F6F9; --paper-2:#E6ECF2; --card:#FFFFFF; --ink:#17212B; --muted:#56626F; --line:#C5CFD9;
+  --grid:rgba(40,90,160,.075);
+  --sig:#CF2438; --tau:#8A34B6; --eps:#1B5ED3; --gam:#06849A; --frc:#D46A00; --mat:#26844A; --weld:#9A5B12;
+  --ok:#26844A; --warn:#B86E00; --bad:#C62828;
+  --lv2:#E4EBF2; --hl:#FFF3B0;
+  --font-body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-head:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --font-math:"STIX Two Text","Cambria Math","Cambria","Times New Roman",serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+    --grid:rgba(120,160,220,.07);
+    --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+    --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10161D; --paper-2:#1B242E; --card:#161E27; --ink:#E4EBF2; --muted:#9AA8B6; --line:#2F3B48;
+  --grid:rgba(120,160,220,.07);
+  --sig:#FF5D6E; --tau:#C987F0; --eps:#5E9DFF; --gam:#37C7DB; --frc:#FFA23D; --mat:#5CCB7A; --weld:#E7A95A;
+  --ok:#5CCB7A; --warn:#FFB84D; --bad:#FF6B6B; --lv2:#1C2631; --hl:#4A4214;
+  color-scheme: dark;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0;color:var(--ink);font-family:var(--font-body);font-size:17.5px;line-height:1.62;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;overflow-x:hidden;
+}
+img,svg{max-width:100%}
+.wrap{max-width:800px;margin:0 auto;padding:0 20px}
+.wide{max-width:980px}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.1;margin:0}
+h3{font-size:1.65rem;font-weight:600;margin:2rem 0 .6rem}
+h4{font-size:1.3rem;font-weight:600;margin:1.4rem 0 .4rem}
+p{margin:.7em 0}
+a{color:var(--eps)}
+b,strong{font-weight:700}
+small{font-size:.8em}
+sub{font-size:.72em}
+.m{font-family:var(--font-math);font-size:1.08em;white-space:nowrap}
+.sig{color:var(--sig)} .tau{color:var(--tau)} .eps{color:var(--eps)} .gam{color:var(--gam)} .frc{color:var(--frc)} .mat{color:var(--mat)} .mut{color:var(--muted)} .wcol{color:var(--weld)}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .12em;line-height:1.1}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 .2em .08em}
+.frac>span:last-child{padding:.08em .2em 0}
+ul,ol{padding-left:1.4em}
+li{margin:.25em 0}
+
+/* ---------- en-tête ---------- */
+.hero{padding:34px 0 10px}
+.title-block{border:2.5px solid var(--ink);background:var(--card);display:grid;grid-template-columns:1fr 300px}
+.tb-main{padding:22px 24px;border-right:2.5px solid var(--ink);display:flex;flex-direction:column;justify-content:space-between;gap:14px}
+.tb-series{margin:0 0 .5rem;color:var(--muted);font-size:.95rem}
+.hero h1{font-size:clamp(2.3rem,6vw,4rem);font-weight:700;letter-spacing:-.01em}
+.tb-cells{display:grid;grid-template-rows:repeat(4,auto)}
+.tb-cells>div{padding:9px 16px;border-bottom:1.5px solid var(--ink);display:flex;flex-direction:column;justify-content:center}
+.tb-cells>div:last-child{border-bottom:0}
+.tb-cells small{color:var(--muted);font-size:.78rem}
+.tb-cells b{font-family:var(--font-head);font-size:1.25rem;font-weight:600;line-height:1.15}
+.lede{font-size:1.13rem;max-width:760px;margin:1.2rem 0}
+.theme-btn{align-self:flex-start;font-family:var(--font-body);font-size:.85rem;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
+@media (max-width:760px){.title-block{grid-template-columns:1fr}.tb-main{border-right:0;border-bottom:2.5px solid var(--ink)}.tb-cells{grid-template-rows:none;grid-template-columns:1fr 1fr}.tb-cells>div:nth-child(odd){border-right:1.5px solid var(--ink)}.tb-cells>div:nth-child(3){border-bottom:0}}
+@media (max-width:420px){.tb-cells{grid-template-columns:1fr}.tb-cells>div:nth-child(odd){border-right:0}.tb-cells>div:nth-child(3){border-bottom:1.5px solid var(--ink)}}
+
+/* code couleur */
+.cc{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:stretch;margin:1rem 0 .4rem}
+.cc-box{background:var(--card);border:2px solid var(--line);padding:12px 14px;border-radius:4px}
+.cc-cause{border-color:var(--sig)} .cc-link{border-color:var(--mat)} .cc-eff{border-color:var(--eps)}
+.cc-box small{display:block;color:var(--muted);font-size:.82rem;line-height:1.3}
+.cc-syms{font-family:var(--font-math);font-size:1.7rem;line-height:1.25;display:flex;flex-wrap:wrap;gap:.1em .45em;margin:.2rem 0}
+.cc-box p{margin:0;font-size:.9rem;line-height:1.35}
+.cc-arrow{align-self:center;font-size:1.8rem;color:var(--muted)}
+@media (max-width:700px){.cc{grid-template-columns:1fr}.cc-arrow{transform:rotate(90deg);justify-self:center;line-height:1}}
+.cc-more{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:.5rem 0}
+.cc-more>div{border:2px solid var(--line);background:var(--card);border-radius:4px;padding:6px 10px;font-size:.9rem}
+@media (max-width:640px){.cc-more{grid-template-columns:1fr}}
+
+/* ---------- sommaire ---------- */
+.toc{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-bottom:1.5px solid var(--line);padding-top:env(safe-area-inset-top,0px);margin-top:18px}
+.toc-in{display:flex;gap:6px;overflow-x:auto;padding:9px 20px;max-width:980px;margin:0 auto;scrollbar-width:thin}
+.toc a{flex:none;text-decoration:none;color:var(--ink);font-size:.88rem;padding:4px 11px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);white-space:nowrap}
+.toc a.on{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.toc a:focus-visible,.btn:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--eps);outline-offset:2px}
+
+/* ---------- sections ---------- */
+section.chap{padding:46px 0 10px}
+.cartouche{display:grid;grid-template-columns:86px 1fr 250px;border:2.5px solid var(--ink);background:var(--card);margin-bottom:1.4rem}
+.c-num{font-family:var(--font-head);font-size:3.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;border-right:2.5px solid var(--ink)}
+.c-title{padding:14px 18px;border-right:2.5px solid var(--ink)}
+.c-title h2{font-size:2.1rem;font-weight:700}
+.c-title p{margin:.25rem 0 0;color:var(--muted)}
+.c-img{padding:12px 14px;display:flex;gap:12px;align-items:center;background:var(--paper-2)}
+.c-img .ico{font-size:2.3rem;line-height:1}
+.c-img small{display:block;color:var(--muted);font-size:.78rem}
+.c-img span{font-size:.95rem;line-height:1.3}
+@media (max-width:700px){.cartouche{grid-template-columns:64px 1fr}.c-num{font-size:2.6rem}.c-title{border-right:0}.c-img{grid-column:1/-1;border-top:2px solid var(--ink)}.c-title h2{font-size:1.7rem}}
+
+/* gabarit court : approfondissement replié, à retenir, prédiction */
+details.deep{margin:1.2rem 0;padding:0 18px;background:var(--lv2);border-left:6px solid var(--ink);border-radius:4px}
+details.deep>summary{font-family:var(--font-head);font-size:1.2rem;font-weight:600;padding:9px 0}
+details.deep[open]{padding-bottom:10px}
+.retenir{margin:1.4rem 0 .4rem;padding:8px 18px 6px;background:var(--card);border:2px solid var(--ink);border-radius:4px}
+.retenir>b:first-child{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.retenir ul{margin:.3rem 0 .3rem}
+.predict{display:block;margin-top:.35rem;color:var(--ink);font-weight:700}
+@media (max-width:520px){details.deep{padding:0 12px}.retenir{padding:8px 12px 6px}}
+
+/* formules et encadrés */
+.fx{margin:1.1rem auto;background:var(--card);border:2.5px solid var(--ink);padding:14px 18px;max-width:600px;text-align:center;border-radius:3px;overflow-x:auto}
+.fx .big{font-family:var(--font-math);font-size:1.9rem;line-height:1.4}
+.fx .cap{font-size:.85rem;color:var(--muted);margin:.3rem 0 0}
+.fx .row{display:flex;flex-wrap:wrap;justify-content:center;gap:.2em 1.4em}
+.syms{margin:.6rem 0;display:grid;grid-template-columns:auto 1fr;gap:.35rem 1rem;align-items:baseline}
+.syms dt{font-family:var(--font-math);font-size:1.25rem;text-align:right;white-space:nowrap}
+.syms dd{margin:0}
+.def{margin:.9rem 0;padding:.5rem .9rem;border-left:3px dotted var(--muted);font-size:.96rem;background:color-mix(in srgb,var(--card) 60%,transparent)}
+.def>b:first-child{font-family:var(--font-head);font-size:1.08rem;font-weight:600}
+.tip{margin:1rem 0;padding:.7rem 1rem;border:1.5px dashed var(--mat);border-radius:4px;font-size:.97rem}
+.warn{margin:1rem 0;padding:.7rem 1rem;border:2px solid var(--bad);border-radius:4px;font-size:.97rem;background:color-mix(in srgb,var(--bad) 7%,transparent)}
+.mnemo{margin:1rem 0;padding:.7rem 1rem;background:var(--hl);border-radius:4px;font-size:.98rem}
+.fun{margin:1.2rem 0;padding:.8rem 1rem;border:2px dashed var(--muted);border-radius:10px;background:var(--card);font-size:.98rem}
+.fun-h{display:block;margin-bottom:.35rem;font-family:var(--font-head);font-size:1.15rem;font-weight:600;letter-spacing:.02em}
+.meta{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--frc);border-radius:4px;background:color-mix(in srgb,var(--frc) 6%,transparent)}
+.weld{margin:1.2rem 0;padding:.8rem 1rem;border:2px solid var(--weld);border-radius:4px;background:color-mix(in srgb,var(--weld) 7%,transparent)}
+.weld>b:first-child{font-family:var(--font-head);font-size:1.15rem;font-weight:600;color:var(--weld)}
+.hp{display:inline-block;font-size:.72rem;font-weight:700;padding:1px 7px;border-radius:9px;background:var(--weld);color:var(--card);vertical-align:middle;margin-left:4px;white-space:nowrap}
+.recall{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:1rem 0}
+.recall>div{background:var(--card);border:1.5px solid var(--line);border-radius:4px;padding:8px 12px;font-size:.92rem}
+.recall .f{font-family:var(--font-math);font-size:1.2rem;margin-bottom:.2rem}
+@media (max-width:640px){.recall{grid-template-columns:1fr}}
+.hist{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:1rem 0}
+.hist>div{background:var(--card);border:1.5px solid var(--weld);border-radius:4px;padding:8px 12px;font-size:.93rem}
+.hist .yr{font-family:var(--font-head);font-size:1.6rem;font-weight:700;color:var(--weld);line-height:1}
+@media (max-width:720px){.hist{grid-template-columns:1fr}}
+
+/* manipulations */
+.lab{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:14px 16px 12px;margin:1.4rem 0}
+.lab-h{font-family:var(--font-head);font-size:1.3rem;font-weight:600;margin:0 0 .2rem}
+.lab-sub{margin:0 0 .6rem;color:var(--muted);font-size:.92rem}
+.lab svg{display:block;width:100%;height:auto;color:var(--ink);font-family:var(--font-body);touch-action:pan-y}
+.ctrl{display:grid;grid-template-columns:minmax(110px,auto) 1fr minmax(92px,auto);gap:4px 12px;align-items:center;margin:.5rem 0}
+.ctrl label{font-size:.95rem}
+.ctrl output{font-family:var(--font-math);font-size:1.08rem;text-align:right;white-space:nowrap}
+@media (max-width:520px){.ctrl{grid-template-columns:1fr auto}.ctrl input[type=range]{grid-column:1/-1;grid-row:2}}
+input[type=range]{width:100%;accent-color:var(--ink);height:28px;margin:0}
+input.r-sig{accent-color:var(--sig)} input.r-tau{accent-color:var(--tau)} input.r-frc{accent-color:var(--frc)} input.r-mat{accent-color:var(--mat)} input.r-eps{accent-color:var(--eps)}
+.btns{display:flex;flex-wrap:wrap;gap:6px;margin:.5rem 0}
+.btn{font-family:var(--font-body);font-size:.9rem;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 13px;cursor:pointer;line-height:1.3}
+.btn:hover{background:var(--paper-2)}
+.btn.on{background:var(--ink);color:var(--paper)}
+.btn.play{border-color:var(--eps);color:var(--eps);font-weight:700}
+.btn:disabled{opacity:.45;cursor:default}
+.readout{font-family:var(--font-math);font-size:1.08rem;background:var(--paper-2);border-radius:4px;padding:.5rem .8rem;margin:.5rem 0;overflow-x:auto;display:flex;flex-wrap:wrap;gap:.2em 1.3em}
+.readout>span{white-space:nowrap}
+.status{font-size:.97rem;margin:.5rem 0;padding:.5rem .8rem;border-left:4px solid var(--eps);background:color-mix(in srgb,var(--eps) 6%,transparent);border-radius:0 4px 4px 0;min-height:2.6em}
+.radios{display:flex;flex-wrap:wrap;gap:6px 14px;margin:.4rem 0;font-size:.95rem}
+.radios label{display:inline-block;cursor:pointer}
+.radios input{margin:0 6px 0 0;vertical-align:middle}
+
+/* svg */
+svg text{fill:currentColor;font-size:13px}
+svg .lbl{font-size:12.5px;fill:var(--muted)}
+svg .mth{font-family:var(--font-math);font-size:16px}
+svg .ttl{font-family:var(--font-head);font-size:15px;font-weight:600}
+svg .axis{stroke:var(--ink);stroke-width:1.4;fill:none}
+svg .tick{stroke:var(--muted);stroke-width:1}
+svg .gridbg{stroke:var(--line);stroke-width:1}
+svg .ref{stroke:var(--muted);stroke-width:1.3;stroke-dasharray:4 3;fill:none}
+.arr line{stroke:currentColor}
+.arr polygon{fill:currentColor}
+
+/* tableaux */
+.tbl-wrap{overflow-x:auto;margin:1rem 0;-webkit-overflow-scrolling:touch}
+table.data{border-collapse:collapse;width:100%;font-size:.94rem;background:var(--card)}
+table.data th,table.data td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:middle}
+table.data th{font-family:var(--font-head);font-weight:600;font-size:1.05rem;background:var(--paper-2)}
+table.data td.n{font-family:var(--font-math);white-space:nowrap}
+table.data tr.now td{background:var(--hl)}
+
+/* parcours */
+.route{list-style:none;padding:0;margin:1rem 0;position:relative}
+.route::before{content:"";position:absolute;left:17px;top:10px;bottom:10px;width:4px;background:var(--line);border-radius:2px}
+.route li{position:relative;padding:0 0 14px 52px;margin:0}
+.route li .dot{position:absolute;left:4px;top:0;width:30px;height:30px;border-radius:50%;border:3px solid var(--ink);background:var(--card);font-family:var(--font-head);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+.route li b{font-family:var(--font-head);font-size:1.2rem;font-weight:600}
+.route li p{margin:.1rem 0 0;font-size:.95rem}
+.series{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:.8rem 0}
+.series>div{background:var(--card);border:1.5px solid var(--line);padding:8px 10px;border-radius:4px;font-size:.88rem}
+.series>div.here{border:2.5px solid var(--ink)}
+.series b{display:block;font-family:var(--font-head);font-size:1.05rem}
+@media (max-width:700px){.series{grid-template-columns:1fr 1fr}}
+
+/* exercices et quiz */
+.exo{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--ink);padding:6px 20px 12px;margin:1.2rem 0;border-radius:4px}
+.exo.defi{border-left-color:var(--weld)}
+.exo h4{margin-top:.8rem}
+.exo .lvtag{font-family:var(--font-body);font-size:.85rem;font-weight:400;color:var(--muted);margin-left:.4rem}
+.exo .q{margin:.25rem 0}
+details{margin:.6rem 0}
+summary{cursor:pointer;font-weight:700;padding:4px 0}
+details .sol{padding:.4rem .9rem;border-left:3px solid var(--mat);margin:.4rem 0}
+details .sol p{margin:.45em 0}
+.qz{background:var(--card);border:1.5px solid var(--line);border-radius:6px;padding:10px 16px;margin:.8rem 0}
+.qz-q{margin:.3rem 0 .6rem}
+.qz-o{display:flex;flex-direction:column;gap:6px}
+.qz-b{text-align:left;font-family:var(--font-body);font-size:.97rem;padding:8px 12px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:5px;cursor:pointer}
+.qz-b:hover{border-color:var(--ink)}
+.qz-b.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--card))}
+.qz-b.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--card))}
+.qz-e{font-size:.94rem;margin:.6rem 0 .2rem}
+.score{position:sticky;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);display:inline-block;background:var(--ink);color:var(--paper);padding:6px 14px;border-radius:999px;font-size:.95rem;margin:.6rem 0}
+
+/* fiche mémoire */
+.fiche{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:2.5px solid var(--ink);background:var(--card);margin:1rem 0}
+.fiche>div{padding:12px 14px;border-right:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}
+.fiche>div:nth-child(3n){border-right:0}
+.fiche>div:nth-last-child(-n+3){border-bottom:0}
+.fiche .ic{font-size:1.9rem;line-height:1}
+.fiche h4{margin:.3rem 0 .2rem;font-size:1.15rem}
+.fiche .f{font-family:var(--font-math);font-size:1.1rem;margin:.2rem 0}
+.fiche p{margin:.2rem 0 0;font-size:.88rem;color:var(--muted)}
+@media (max-width:720px){.fiche{grid-template-columns:1fr 1fr}.fiche>div{border-right:1.5px solid var(--ink)!important;border-bottom:1.5px solid var(--ink)!important}.fiche>div:nth-child(2n){border-right:0!important}.fiche>div:last-child{border-bottom:0!important}}
+@media (max-width:440px){.fiche{grid-template-columns:1fr}.fiche>div{border-right:0!important}}
+.gloss{display:grid;grid-template-columns:minmax(150px,230px) 1fr;gap:0;border-top:1.5px solid var(--line);margin:1rem 0}
+.gloss dt,.gloss dd{border-bottom:1.5px solid var(--line);padding:7px 8px;margin:0}
+.gloss dt{font-weight:700}
+.gloss dd{font-size:.95rem}
+@media (max-width:600px){.gloss{grid-template-columns:1fr}.gloss dt{border-bottom:0;padding-bottom:0}}
+.check label{display:flex;gap:10px;align-items:flex-start;padding:5px 0;cursor:pointer}
+.check input{margin-top:.35em;width:18px;height:18px;accent-color:var(--mat);flex:none}
+footer{padding:40px 0 60px;color:var(--muted);font-size:.9rem}
+hr.sep{border:0;border-top:1.5px solid var(--line);margin:2rem 0}
+@media (max-width:700px){.m{white-space:normal}.fx{padding:12px 10px}.fx .big{font-size:1.4rem}}
+@media (max-width:400px){body{font-size:16.5px}.wrap{padding:0 14px}.lab{padding:12px 10px}}
+
+/* compléments de la série Rupture */
+.btn.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,var(--card))}
+.btn.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--card))}
+.ctrl[hidden]{display:none}
+
+/* impression : le cours sur papier clair, ou la fiche mémoire seule sur une page */
+@media print{
+  :root,:root[data-theme]{--paper:#fff!important;--paper-2:#EEF2F6!important;--card:#fff!important;--ink:#111!important;--muted:#444!important;--line:#999!important;--grid:transparent!important;--lv2:#F2F5F8!important;--hl:#FFF3B0!important;color-scheme:light}
+  body{background:#fff;font-size:11pt}
+  .toc,.theme-btn,.btns,.ctrl,#qzReset,.score{display:none!important}
+  section.chap{padding:14px 0 4px}
+  .lab,.fx,.retenir,details.deep,.fiche>div,.exo{break-inside:avoid}
+  body.print-fiche header,body.print-fiche main>section:not(#fiche),body.print-fiche footer{display:none!important}
+  body.print-fiche #fiche .cartouche{margin-bottom:.6rem}
+  body.print-fiche .fiche>div{padding:8px 10px}
+}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="wrap wide">
+  <div class="title-block">
+    <div class="tb-main">
+      <div>
+        <p class="tb-series">Soudage sous protection gazeuse : TIG, MIG-MAG et plasma</p>
+        <h1>Le plasma : l'arc TIG étranglé</h1>
+      </div>
+      <button class="theme-btn" id="themeBtn" type="button" aria-label="Changer de thème">◐ Thème : automatique</button>
+    </div>
+    <div class="tb-cells">
+      <div><small>Cours</small><b>5 sur 5 : constriction, arcs, trou de serrure, torche et variantes</b></div>
+      <div><small>Durée conseillée</small><b>≈ 1 h 20 avec les exercices</b></div>
+      <div><small>Prérequis</small><b>cours 2 de la série (TIG : électrode, polarité, amorçage) ; cours 1 (argon, hélium, hydrogène) ; Fondamentaux des procédés, cours 2 (plasma d'arc)</b></div>
+      <div><small>À la fin tu sais</small><b>expliquer la constriction de l'arc et ses effets sur la densité de puissance et la tolérance à la distance ; distinguer gaz plasmagène et gaz de protection, arc transféré, non transféré et arc pilote ; situer microplasma, plasma mou et trou de serrure par l'épaisseur et le courant ; régler la fenêtre du trou de serrure ; choisir torche, préparation et nombre de passes ; comparer plasma, TIG, laser et faisceau d'électrons, et citer les variantes et les risques</b></div>
+    </div>
+  </div>
+  <p class="lede">Prends un arc TIG et force-le à traverser un orifice de quelques millimètres dans une tuyère de cuivre refroidie : il se resserre, se raidit et chauffe beaucoup plus fort. C'est le soudage plasma, à mi-chemin entre le TIG et les faisceaux. Ce cours explique la constriction, les deux gaz et les trois façons d'allumer l'arc, puis le trou de serrure qui soude 6 mm d'inox en une passe, la torche, les préparations et les variantes du procédé.</p>
+
+  <h4>Le code couleur de la série</h4>
+  <div class="cc" role="img" aria-label="Code couleur : les causes en rouge et violet, les paramètres en vert, les effets en bleu et bleu-vert">
+    <div class="cc-box cc-cause"><small>Les causes</small><div class="cc-syms"><span class="sig">air</span><span class="sig">vent</span><span class="tau">porosité</span><span class="tau">oxydation</span></div><p><span class="sig">rouge</span> : ce qui menace le bain (air, vent, humidité) ; <span class="tau">violet</span> : les défauts (porosités, oxydes, projections, fissures)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-link"><small>Les paramètres</small><div class="cc-syms"><span class="mat">Ar</span><span class="mat">He</span><span class="mat">CO<sub>2</sub></span><span class="mat">Q</span></div><p>en <span class="mat">vert</span> : ce qu'on choisit (composition du gaz, débit, buse)</p></div>
+    <div class="cc-arrow">→</div>
+    <div class="cc-box cc-eff"><small>Les effets</small><div class="cc-syms"><span class="eps">U</span><span class="eps">p</span><span class="eps">S</span><span class="gam">arc</span><span class="gam">[H]</span></div><p><span class="eps">bleu</span> : ce qu'on mesure ou calcule (tension d'arc, pénétration, solubilité, indice d'oxydation) ; <span class="gam">bleu-vert</span> : l'arc et ce qui se dissout dans le métal</p></div>
+  </div>
+  <div class="cc-more">
+    <div><b class="frc">Orange</b> : ce qui s'écoule et se déplace (jet de gaz, gouttes, courant d'air).</div>
+    <div><b>Noir</b> : la géométrie dessinée (torche, buse, pièce, cordon).</div>
+    <div><b class="wcol">Bronze</b> : le métal fondu et les encadrés « métier » 🔥.</div>
+  </div>
+</div>
+</header>
+
+<nav class="toc" aria-label="Sommaire">
+  <div class="toc-in">
+    <a href="#avant">Avant de commencer</a>
+    <a href="#c1">1 Étrangler l'arc</a>
+    <a href="#c2">2 Deux gaz, trois arcs</a>
+    <a href="#c3">3 Micro, mou ou trou de serrure</a>
+    <a href="#c4">4 Torche et préparations</a>
+    <a href="#c5">5 Variantes et comparaisons</a>
+    <a href="#exos">Exercices</a>
+    <a href="#quiz-s">Quiz</a>
+    <a href="#fiche">Fiche mémoire</a>
+    <a href="#gloss">Glossaire</a>
+    <a href="#check">Check-list</a>
+  </div>
+</nav>
+
+<main>
+<section class="chap" id="avant">
+<div class="wrap">
+  <h3 style="margin-top:0">Avant de commencer</h3>
+  <h4>Ce qu'il faut avoir en tête, en trois cases</h4>
+  <div class="recall">
+    <div><div class="f">TIG : CC−, tungstène</div>L'électrode ne fond pas ; au pôle −, elle chauffe peu et la pièce reçoit l'essentiel de la chaleur (cours 2 de la série).</div>
+    <div><div class="f">plasma d'arc ≈ 10 000 K et plus</div>Un gaz ionisé qui conduit le courant ; plus il est confiné, plus il est chaud (Fondamentaux, cours 2).</div>
+    <div><div class="f">Q = k·U·I/v</div>Énergie de soudage de l'EN 1011-1 ; k = 0,6 pour le TIG comme pour le plasma.</div>
+  </div>
+
+  <div class="def"><b>📘 Le sujet</b> : <b>1.12.1 « Laser, faisceau d'électrons, plasma »</b> du planning et du référentiel de l'IIW (<i>International Institute of Welding</i>), partie plasma ; le laser et le faisceau d'électrons ont leur propre cours. Attendus de l'IWE (<i>International Welding Engineer</i>, ingénieur international en soudage) : décrire le principe, l'équipement et ses accessoires ; prévoir l'influence des paramètres sur le cordon ; définir les préparations et les difficultés à surmonter ; comparer le plasma aux autres procédés à forte densité d'énergie ; reconnaître les risques.</div>
+
+  <div class="def"><b>📖 Normes et sigles</b>. <b>ISO 4063</b> : 15 soudage plasma, 151 plasma-MIG, 152 plasma avec poudre, 153 à arc transféré, 154 à arc non transféré, 155 à arc semi-transféré ; 83 coupage plasma, 88 gougeage plasma ; <b>ISO 14175</b> : gaz (R1 argon-hydrogène) ; <b>EN 1011-1</b> : énergie de soudage. <b>PAW</b> : soudage plasma (<i>plasma arc welding</i>) ; <b>PTA</b> : plasma à poudre (<i>plasma transferred arc</i>). Les manipulations sont des modèles pédagogiques : tendances et ordres de grandeur.</div>
+
+  <div class="weld"><b>🔥 Pourquoi ce cours compte en soudage</b>
+    <p>Le plasma soude en une passe, bord à bord et sans reprise envers, des tôles d'inox ou de titane qui demanderaient plusieurs passes en TIG : réservoirs, tubes, aéronautique, nucléaire. Ses réglages sont nombreux et sa fenêtre étroite : l'ingénieur doit savoir pourquoi il marche, et pourquoi il échoue.</p>
+  </div>
+
+  <h4>La série</h4>
+  <div class="series" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">
+    <div><b>1 Les gaz de protection</b>Protéger, ioniser, façonner : argon, hélium, gaz actifs, métallurgie, ISO 14175.</div>
+    <div><b>2 Le soudage TIG</b>L'électrode infusible, la polarité, les réglages et les variantes.</div>
+    <div><b>3 MIG-MAG : le procédé</b>Fil fusible, autorégulation et régimes de transfert.</div>
+    <div><b>4 MIG-MAG : fils et soudabilité</b>Fils pleins et fourrés, hydrogène, réglages et défauts.</div>
+    <div class="here"><b>5 Le soudage plasma</b>L'arc étranglé et le trou de serrure.</div>
+  </div>
+
+  <h4>Le plan du cours</h4>
+  <ol class="route">
+    <li><span class="dot">1</span><b>Étrangler l'arc</b><p>La tuyère resserre l'arc : plus dense, plus raide, moins sensible à la distance.</p></li>
+    <li><span class="dot">2</span><b>Deux gaz, trois arcs</b><p>Gaz plasmagène et protection ; arc transféré, non transféré, arc pilote.</p></li>
+    <li><span class="dot">3</span><b>Micro, mou ou trou de serrure</b><p>Trois régimes selon le courant et l'épaisseur ; la fenêtre du trou.</p></li>
+    <li><span class="dot">4</span><b>Torche et préparations</b><p>Tuyère, électrode en retrait, double arc ; bord à bord ou à grand talon.</p></li>
+    <li><span class="dot">5</span><b>Variantes et comparaisons</b><p>Plasma-MIG, poudre, coupage ; plasma face au laser ; risques.</p></li>
+  </ol>
+</div>
+</section>
+<section class="chap" id="c1">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">1</div>
+    <div class="c-title"><h2>Étrangler l'arc</h2><p>La tuyère resserre l'arc : plus dense, plus raide, moins sensible à la distance</p></div>
+    <div class="c-img"><span class="ico">🚿</span><span><small>Image à retenir</small>Le pouce sur le tuyau d'arrosage : en serrant la sortie, le même débit devient un jet dur et droit, qui porte loin et perce</span></div>
+  </div>
+
+  <p>L'arc TIG s'épanouit en cloche : sa tache sur la pièce grandit vite quand la torche s'éloigne. En soudage plasma, l'électrode de tungstène est enfermée, en retrait, dans une <b>tuyère</b> de cuivre refroidie à l'eau, percée d'un orifice de quelques millimètres. L'arc doit passer par ce trou : il se resserre, sa tension monte, sa température aussi, et il sort en une colonne presque cylindrique. Même courant, même électrode, mais une source de chaleur plus concentrée et plus raide.</p>
+
+  <div class="def"><b>📖 La constriction de l'arc.</b>
+    <ul>
+      <li><b>Mécanique</b> : l'orifice de la tuyère limite le diamètre de la colonne d'arc.</li>
+      <li><b>Par le gaz</b> : le gaz plasmagène, qui traverse l'orifice, refroidit la périphérie de l'arc, qui conduit moins et pousse le courant vers l'axe.</li>
+      <li><b>Effets</b> : tension d'arc plus haute à courant égal, densité de puissance plus forte, colonne presque cylindrique, arc plus long (environ 3 à 15 mm contre 1,5 à 3 mm en TIG).</li>
+    </ul>
+  </div>
+
+  <div class="fx"><div class="row big"><span><span class="eps">q</span> = <span class="mat">k</span>·<span class="sig">U</span>·<span class="sig">I</span> / (π·<span class="mat">r</span>²)</span></div><p class="cap">q : densité de puissance reçue par la pièce (W/mm² ; × 100 pour des W/cm²) ; k : rendement thermique (0,6 pour le TIG et le plasma, EN 1011-1) ; U et I : tension et courant d'arc ; r : rayon de la tache sur la pièce (mm). Modèle du cours : en TIG, r = 0,5 + 0,55·L ; en plasma, r ≈ d/2 × (1 + 0,03·L), avec L la longueur d'arc et d le diamètre de l'orifice.</p></div>
+
+  <div class="lab" id="m1">
+    <p class="lab-h">Manipulation 1 : TIG ou plasma, même courant</p>
+    <p class="lab-sub">Choisis l'arc, puis règle le courant et la distance à la pièce : la tache, la densité de puissance et sa sensibilité à 1 mm de distance en plus s'affichent.<span class="predict">🔮 Prédis d'abord : si la torche s'éloigne de 1 mm, la densité de puissance baisse-t-elle davantage en TIG ou en plasma ?</span></p>
+    <div class="btns" id="m1b">
+      <button class="btn on" data-m="tig" type="button">TIG</button>
+      <button class="btn" data-m="3.2" type="button">Plasma, orifice 3,2 mm</button>
+      <button class="btn" data-m="2.4" type="button">Plasma, orifice 2,4 mm</button>
+    </div>
+    <div class="ctrl"><label for="m1i">Courant <b class="sig">I</b></label><input type="range" id="m1i" min="50" max="300" step="10" value="200"><output id="m1io"></output></div>
+    <div class="ctrl"><label for="m1l">Longueur d'arc <b class="mat">L</b></label><input type="range" id="m1l" min="1" max="15" step="1" value="3"><output id="m1lo"></output></div>
+    <svg id="m1svg" role="img" aria-label="Arc TIG en cloche ou arc plasma en colonne, tache sur la pièce, et densité de puissance en fonction de la longueur d'arc"></svg>
+    <div class="readout" id="m1r"></div>
+    <p class="status" id="m1msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> (modèle, 200 A) : en TIG à 3 mm, <span class="m">U ≈ 14,2 V</span>, tache de 2,15 mm de rayon, <span class="m">q = 0,6 × 14,2 × 200/(π × 2,15²) ≈ 117 W/mm²</span>, soit 1,2 × 10<sup>4</sup> W/cm². En plasma, orifice de 2,4 mm, à 6 mm : <span class="m">U ≈ 25,6 V</span>, rayon 1,42 mm, <span class="m">q ≈ 490 W/mm²</span>, environ 4 fois plus. Éloigner la torche de 1 mm fait perdre environ 30 % de densité en TIG, moins de 3 % en plasma : la pénétration reste stable quand la pièce ondule.</p>
+
+  <div class="warn"><b>⚠️ Piège : « le plasma est un TIG plus chaud ».</b> Ce n'est pas la température de l'arc qui fait la différence pour la pièce, mais sa concentration et sa raideur : même puissance sur une tache plus petite, et une tache qui ne change presque pas avec la distance.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « cloche pour le TIG, colonne pour le plasma »</b>.</div>
+  <div class="weld"><b>🔥 Conséquence d'atelier :</b> l'électrode, cachée dans la tuyère, ne peut plus toucher le bain ni le fil : pas d'inclusion de tungstène, et une électrode qui dure. En revanche, la torche est plus grosse, et l'arc étroit exige un guidage précis sur le joint : le plasma est surtout un procédé mécanisé.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : pourquoi la tension monte</summary>
+    <p>À courant égal, une colonne plus étroite a une section conductrice plus faible : il faut un champ électrique plus fort pour y faire passer le courant, donc plus de volts par millimètre. Le gaz froid qui la gaine lui retire aussi de la chaleur, qu'elle compense en chauffant davantage son cœur. La puissance U·I grandit, et elle se dépose sur une tache plus petite : la densité de puissance gagne deux fois.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Tuyère : arc resserré, tension plus haute, densité de puissance plus forte.</li>
+      <li>Colonne presque cylindrique : peu sensible à la distance.</li>
+      <li>Électrode protégée dans la tuyère : pas d'inclusion de tungstène.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c2">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">2</div>
+    <div class="c-title"><h2>Deux gaz, trois arcs</h2><p>Gaz plasmagène et protection ; arc transféré, non transféré, arc pilote</p></div>
+    <div class="c-img"><span class="ico">🕯️</span><span><small>Image à retenir</small>La veilleuse de la chaudière : une petite flamme pilote brûle en permanence dans la torche ; elle allume le grand arc, puis s'efface ou reste pour le tenir</span></div>
+  </div>
+
+  <p>Une torche plasma fait circuler deux gaz. Le <b>gaz plasmagène</b> traverse l'orifice avec l'arc : faible débit, souvent argon, il devient le jet de plasma. Le <b>gaz de protection</b>, annulaire, sort autour de la tuyère et couvre le bain. Côté électricité, l'électrode est au pôle −, et la question est : où est le pôle + ? Sur la pièce, l'arc est <b>transféré</b> ; sur la tuyère, il est <b>non transféré</b>, et seul le jet chaud atteint la pièce.</p>
+
+  <div class="def"><b>📖 Les gaz et les arcs.</b>
+    <ul>
+      <li><b>Gaz plasmagène</b> : argon le plus souvent, de 0,2 à quelques litres par minute ; argon-hydrogène (R1) pour plus d'énergie sur les inox austénitiques ; argon-hélium pour le titane.</li>
+      <li><b>Gaz de protection</b> : une dizaine de litres par minute d'argon, d'argon-hydrogène (inox, nickel) ou d'argon-hélium. Pas d'hydrogène sur les aciers trempants ni sur le titane.</li>
+      <li><b>Arc transféré (153)</b> : électrode → pièce ; la pièce est dans le circuit et reçoit l'essentiel de la chaleur. C'est le mode du soudage.</li>
+      <li><b>Arc non transféré (154)</b>, ou soufflé : électrode → tuyère ; le jet chaud est soufflé sur une pièce hors circuit, même isolante. Projection thermique, certains coupages, microsoudage.</li>
+      <li><b>Arc pilote</b> : petit arc électrode-tuyère, amorcé par haute fréquence, qui ionise le passage ; on le coupe une fois l'arc transféré établi, ou on le garde aux très faibles courants (semi-transféré, 155).</li>
+    </ul>
+  </div>
+
+  <div class="fx"><div class="row big"><span>électrode (−) → <span class="sig">pièce (+)</span> : transféré · électrode (−) → <span class="frc">tuyère (+)</span> : non transféré</span></div><p class="cap">Source à caractéristique plongeante (courant constant), comme en TIG, en courant continu électrode au pôle −. L'alternatif ou la polarité variable servent à l'aluminium, avec des courants limités pour ménager la tuyère.</p></div>
+
+  <div class="lab" id="m2">
+    <p class="lab-h">Manipulation 2 : l'allumage d'une torche plasma</p>
+    <p class="lab-sub">Choisis le mode, puis fais défiler la séquence : pré-gaz, arc pilote, transfert. Les courants s'allument là où ils passent.<span class="predict">🔮 Prédis d'abord : en arc non transféré, la pièce doit-elle être conductrice ?</span></p>
+    <div class="btns" id="m2b">
+      <button class="btn on" data-k="tr" type="button">Soudage, arc transféré</button>
+      <button class="btn" data-k="micro" type="button">Microplasma, pilote maintenu</button>
+      <button class="btn" data-k="nt" type="button">Arc non transféré</button>
+    </div>
+    <div class="btns" id="m2pl">
+      <button class="btn" data-a="start" type="button" aria-label="Revenir au début">⏮ Début</button>
+      <button class="btn" data-a="back" type="button" aria-label="Reculer d'un pas">◀ Pas</button>
+      <button class="btn play" data-a="play" type="button">▶ Allumer</button>
+      <button class="btn" data-a="fwd" type="button" aria-label="Avancer d'un pas">Pas ▶</button>
+    </div>
+    <svg id="m2svg" role="img" aria-label="Coupe de la torche plasma : électrode, tuyère, gaz plasmagène et de protection, circuits de l'arc pilote et de l'arc principal"></svg>
+    <div class="readout" id="m2r"></div>
+    <p class="status" id="m2msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> : pour souder un tube d'inox de 3 mm en arc transféré, argon plasmagène à environ 1 L/min, protection argon + 5 % d'hydrogène, électrode au pôle −. L'arc pilote, d'une dizaine d'ampères, s'allume par haute fréquence entre électrode et tuyère ; son jet ionise l'espace jusqu'au tube, l'arc principal s'y amorce sans contact, et le pilote se coupe. Pour recharger une pièce en céramique, impossible de la mettre dans le circuit : arc non transféré.</p>
+
+  <div class="warn"><b>⚠️ Piège : confondre les deux gaz.</b> Le débit plasmagène est petit et précis, car il règle la raideur du jet : trop fort, il creuse et chasse le bain ; trop faible, la tuyère chauffe. Le débit de protection, lui, se règle comme en TIG. Les augmenter « pour mieux protéger » n'a pas le même effet.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « transféré, la pièce est dans le fil ; soufflé, elle ne voit que le jet »</b>.</div>
+  <div class="weld"><b>🔥 L'avantage de la veilleuse :</b> l'arc pilote rend l'amorçage sûr et répétable, sans contact ni haute fréquence pendant le soudage, ce qui compte en automatique et près d'électronique sensible. Il permet aussi des arcs stables à 0,1 A.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : l'aluminium en plasma</summary>
+    <p>Comme en TIG, l'aluminium demande un décapage cathodique de son oxyde, donc des instants où la pièce est au pôle −. Les sources à polarité variable dosent séparément la durée et le courant des deux alternances : longue alternance électrode négative pour pénétrer, brève alternance électrode positive pour décaper. La tuyère, qui chauffe pendant l'alternance positive, limite le courant admissible.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Plasmagène : petit débit, fait le jet ; protection : couvre le bain.</li>
+      <li>Transféré : pièce dans le circuit ; non transféré : jet soufflé.</li>
+      <li>Arc pilote : allume sans contact, se coupe ou se maintient.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c3">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">3</div>
+    <div class="c-title"><h2>Micro, mou ou trou de serrure</h2><p>Trois régimes selon le courant et l'épaisseur ; la fenêtre du trou</p></div>
+    <div class="c-img"><span class="ico">🔑</span><span><small>Image à retenir</small>Le trou de serrure : le jet perce la tôle de part en part, le métal fondu contourne le trou et se referme derrière lui, comme l'eau derrière une pile de pont</span></div>
+  </div>
+
+  <p>Le même procédé couvre trois mondes. À quelques ampères, le <b>microplasma</b> soude des feuilles de quelques centièmes de millimètre que le TIG percerait. Vers 15 à 200 A, le <b>plasma mou</b> soude comme un TIG, plus vite et plus régulièrement. Au-delà, avec plus de courant et de débit plasmagène, le jet devient assez raide pour percer la tôle : c'est le <b>trou de serrure</b> (<i>keyhole</i>). Le trou avance avec la torche ; le métal fondu s'écoule autour de lui et se referme derrière, en une passe pleine pénétration, sans chanfrein.</p>
+
+  <div class="def"><b>📖 Les trois régimes.</b>
+    <ul>
+      <li><b>Microplasma</b> : environ 0,1 à 15 A ; tôles de quelques centièmes à environ 0,6 mm ; arc pilote maintenu ; instruments, soufflets, capteurs.</li>
+      <li><b>Plasma mou</b> : environ 15 à 200 A ; de 0,6 à 3 mm environ, ou en passes de remplissage ; comme le TIG, en conduction.</li>
+      <li><b>Trou de serrure</b> : environ 100 à 400 A ; bord à bord, en une passe, d'environ 2,5 à 3 mm jusqu'à 8 à 10 mm selon le métal ; surtout à plat.</li>
+    </ul>
+  </div>
+
+  <div class="fx"><div class="row big"><span>trou stable si <span class="sig">I</span> ≥ I<sub>min</sub>(<span class="mat">t</span>) et 0,75 ≤ <span class="eps">Q</span>/Q<sub>t</sub> ≤ 1,35</span></div><p class="cap">Modèle du cours, inox : t épaisseur (mm) ; Q = 0,6·U·I/v énergie de soudage (J/mm), avec U ≈ 24,5 + 0,04·I ; Q<sub>t</sub> = 45·t<sup>1,6</sup> J/mm énergie juste nécessaire ; I<sub>min</sub> = 50 + 22·t (A) courant minimal pour que le jet perce. Trop peu d'énergie : pénétration partielle ; trop : le bain, trop gros, s'effondre.</p></div>
+
+  <div class="lab" id="m3">
+    <p class="lab-h">Manipulation 3 : la fenêtre du trou de serrure</p>
+    <p class="lab-sub">Choisis l'épaisseur d'inox, puis règle courant et vitesse : le point se place dans la fenêtre, et la coupe montre le trou.<span class="predict">🔮 Prédis d'abord : à 240 A sur 6 mm, que se passe-t-il si le soudeur ralentit de 36 à 25 cm/min ?</span></p>
+    <div class="btns" id="m3b">
+      <button class="btn" data-t="3" type="button">3 mm</button>
+      <button class="btn on" data-t="6" type="button">6 mm</button>
+      <button class="btn" data-t="8" type="button">8 mm</button>
+      <button class="btn" data-t="10" type="button">10 mm</button>
+    </div>
+    <div class="ctrl"><label for="m3i">Courant <b class="sig">I</b></label><input type="range" id="m3i" min="80" max="380" step="5" value="240"><output id="m3io"></output></div>
+    <div class="ctrl"><label for="m3v">Vitesse d'avance <b class="mat">v</b></label><input type="range" id="m3v" min="10" max="90" step="1" value="36"><output id="m3vo"></output></div>
+    <svg id="m3svg" role="img" aria-label="Carte courant-vitesse avec la fenêtre du trou de serrure, et coupe longitudinale du bain autour du trou"></svg>
+    <div class="readout" id="m3r"></div>
+    <p class="status" id="m3msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> (modèle, inox de 6 mm) : à 240 A, <span class="m">U ≈ 34,1 V</span> ; à 36 cm/min (6 mm/s), <span class="m">Q = 0,6 × 34,1 × 240/6 ≈ 0,82 kJ/mm</span>, pour <span class="m">Q<sub>t</sub> = 45 × 6<sup>1,6</sup> ≈ 0,79 kJ/mm</span> : rapport 1,03, trou stable. À 25 cm/min, Q monte à 1,18 kJ/mm (rapport 1,49) : le bain devient trop lourd et tombe. À 55 cm/min, 0,54 kJ/mm (0,68) : le trou ne débouche plus. La fenêtre est étroite : quelques centimètres par minute séparent la bonne soudure des deux échecs.</p>
+
+  <div class="warn"><b>⚠️ Piège : fermer le trou n'importe comment.</b> En fin de cordon, couper le courant d'un coup laisse un trou ou un cratère creux. On réduit progressivement courant et débit plasmagène (évanouissement) pour repasser en fusion simple avant d'éteindre ; sur un tube, on prévoit un recouvrement du départ.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « trop lent, ça tombe ; trop vite, ça ne perce pas »</b>.</div>
+  <div class="weld"><b>🔥 Pourquoi l'industrie l'aime :</b> une passe au lieu de plusieurs, pas de chanfrein à usiner, pas de reprise envers, des gaz qui s'échappent par le trou (peu de porosités), un retrait et une déformation angulaire faibles. En échange : réglages nombreux, tolérances serrées, et presque toujours un soudage mécanisé.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : l'équilibre du trou</summary>
+    <p>Le trou tient parce que trois pressions s'équilibrent : celle du jet de plasma, qui le creuse, contre la tension superficielle du métal liquide et le poids du bain, qui tendent à le refermer. La tension superficielle retient le bain d'autant mieux que le trou est étroit et la tôle mince : au-delà de 8 à 10 mm, le bain devient trop lourd pour tenir au-dessus du vide. Le pulsé et un débit plasmagène bien réglé élargissent la fenêtre, et permettent quelques positions.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Micro : quelques ampères ; mou : comme le TIG ; trou : bord à bord.</li>
+      <li>Trou de serrure : une passe d'environ 3 à 8-10 mm.</li>
+      <li>Fenêtre étroite : trop lent, effondrement ; trop vite, pas de trou.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c4">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">4</div>
+    <div class="c-title"><h2>Torche et préparations</h2><p>Tuyère, électrode en retrait, double arc ; bord à bord ou à grand talon</p></div>
+    <div class="c-img"><span class="ico">🏺</span><span><small>Image à retenir</small>Les poupées russes : électrode dans la tuyère, tuyère dans la buse ; chaque enveloppe a son gaz, et l'arc ne doit traverser que la première</span></div>
+  </div>
+
+  <p>Une torche plasma emboîte trois pièces. Au centre, l'<b>électrode</b> de tungstène, en retrait dans la tuyère ; autour, la <b>tuyère</b> de cuivre, refroidie à l'eau, qui calibre l'arc par son orifice ; à l'extérieur, la <b>buse</b> qui guide le gaz de protection. Les réglages s'ajoutent à ceux du TIG : diamètre et forme de l'orifice, retrait de l'électrode, débit plasmagène, distance tuyère-pièce. C'est ce qui rend le procédé puissant, et exigeant.</p>
+
+  <div class="def"><b>📖 La torche et ses réglages.</b>
+    <ul>
+      <li><b>Électrode</b> : tungstène allié (cérium, lanthane), affûtée et centrée ; son retrait dans l'orifice règle la constriction.</li>
+      <li><b>Tuyère</b> : orifice de 1 à 4 mm environ selon le courant ; parfois des orifices latéraux qui aplatissent le jet le long du joint. Chaque tuyère a un courant maximal.</li>
+      <li><b>Double arc</b> : si le courant dépasse ce que l'orifice supporte, si la tuyère touche ou s'encrasse, l'arc passe par elle : électrode → tuyère → pièce. Il la détruit en quelques secondes.</li>
+      <li><b>Préparation</b> : bord à bord sans jeu jusqu'à 8 mm environ en trou de serrure ; au-delà, chanfrein en Y à grand talon (environ 5 à 6 mm), racine en trou de serrure puis remplissage. Accostage et alignement serrés.</li>
+    </ul>
+  </div>
+
+  <div class="fx"><div class="row big"><span>passes ≈ 1 + <span class="eps">A</span><sub>reste</sub> / <span class="mat">a</span><sub>passe</sub></span></div><p class="cap">A<sub>reste</sub> : section du chanfrein à remplir après la racine (mm²) ; a<sub>passe</sub> : section déposée par passe (environ 12 mm² en TIG manuel, 15 mm² en remplissage mécanisé dans le modèle). Un V à 60° de talon c a pour section (t − c)²·tan 30°, plus le jeu.</p></div>
+
+  <div class="lab" id="m4">
+    <p class="lab-h">Manipulation 4 : la même tôle, en TIG et en plasma</p>
+    <p class="lab-sub">Règle l'épaisseur d'une tôle d'inox : les deux préparations se dessinent, avec la technique plasma et le nombre de passes.<span class="predict">🔮 Prédis d'abord : pour 12 mm, combien de passes le plasma économise-t-il sur le TIG ?</span></p>
+    <div class="btns" id="m4b">
+      <button class="btn" data-t="0.3" type="button">Feuille de 0,3 mm</button>
+      <button class="btn on" data-t="6" type="button">Tôle de 6 mm</button>
+      <button class="btn" data-t="12" type="button">Tôle de 12 mm</button>
+    </div>
+    <div class="ctrl"><label for="m4t">Épaisseur <b class="mat">t</b></label><input type="range" id="m4t" min="0.3" max="20" step="0.1" value="6"><output id="m4to"></output></div>
+    <svg id="m4svg" role="img" aria-label="Préparations comparées en TIG et en plasma pour l'épaisseur choisie, avec les passes"></svg>
+    <div class="readout" id="m4r"></div>
+    <p class="status" id="m4msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> (modèle) : 12 mm d'inox. En TIG, un V à 60° avec talon de 1,5 mm et 1 mm de jeu : <span class="m">(12 − 1,5)² × tan 30° + 12 ≈ 76 mm²</span>, soit une racine et 6 passes de remplissage, <b>7 passes</b>. En plasma, un Y à talon de 6 mm : racine en trou de serrure, puis <span class="m">(12 − 6)² × tan 30° ≈ 21 mm²</span> à remplir, 2 passes : <b>3 passes</b>, et un chanfrein bien plus petit à usiner.</p>
+
+  <div class="warn"><b>⚠️ Piège : monter le courant sans changer de tuyère.</b> Chaque orifice a son courant maximal : au-delà, ou avec un débit plasmagène trop faible, l'arc se dédouble par la tuyère. Le symptôme est un arc qui change brutalement de forme, puis une tuyère fondue : on choisit l'orifice pour le courant, et on surveille son usure.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « une tuyère, un courant »</b>.</div>
+  <div class="weld"><b>🔥 Mise en œuvre :</b> le plasma tolère mal un jeu ou un dénivelé entre les bords, car l'arc est étroit : on usine ou on découpe proprement les bords, on bride, et l'on suit le joint mécaniquement. La tuyère se contrôle et se nettoie régulièrement, comme un outil de coupe.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : la torche, organe de refroidissement</summary>
+    <p>L'arc traverse un orifice de cuivre de quelques millimètres à des milliers de degrés : seule une circulation d'eau intense, au plus près de l'orifice, empêche la tuyère de fondre. Une gaine de gaz plasmagène plus froid isole aussi l'arc de la paroi. C'est pourquoi une coupure d'eau doit arrêter le soudage aussitôt, et pourquoi le facteur de marche d'une torche plasma dépend autant de son refroidissement que de la source.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>Électrode en retrait, tuyère refroidie, buse de protection.</li>
+      <li>Double arc : courant trop fort pour l'orifice, tuyère détruite.</li>
+      <li>Bord à bord jusqu'à 8 mm environ ; au-delà, Y à grand talon.</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section class="chap" id="c5">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">5</div>
+    <div class="c-title"><h2>Variantes et comparaisons</h2><p>Plasma-MIG, poudre, coupage ; plasma face au laser ; risques</p></div>
+    <div class="c-img"><span class="ico">📏</span><span><small>Image à retenir</small>L'échelle des chaleurs : de la flamme au faisceau, chaque marche multiplie la densité de puissance par dix, et la soudure devient plus profonde que large</span></div>
+  </div>
+
+  <p>Le jet de plasma sert à bien plus que souder bord à bord. On y injecte un fil, une poudre, on en fait un outil de coupe ou de brasage. Et sur l'échelle des densités de puissance, il occupe une marche à lui : au-dessus du TIG, au-dessous du laser et du faisceau d'électrons. On l'appelle parfois « le laser du pauvre » : une partie de la pénétration des faisceaux, avec l'équipement et la tolérance d'un procédé à l'arc.</p>
+
+  <div class="def"><b>📖 Les variantes du plasma (ISO 4063).</b>
+    <ul>
+      <li><b>Plasma avec métal d'apport</b> : fil froid ou chaud, en remplissage ; plasma suivi d'un TIG en tandem pour lisser le cordon.</li>
+      <li><b>Plasma-MIG (151)</b> : un fil fusible traverse le jet de plasma ; fort dépôt, arc stable.</li>
+      <li><b>Plasma avec poudre (152, PTA)</b> : rechargement par des poudres dures (carbures, alliages de cobalt ou de nickel) impossibles à tréfiler, avec une faible dilution.</li>
+      <li><b>Soudobrasage plasma (975)</b> : tôles galvanisées fines, sans projections.</li>
+      <li><b>Coupage (83) et gougeage (88) plasma</b> : le jet, plus raide et plus chaud, chasse le métal fondu (cours de coupage).</li>
+    </ul>
+  </div>
+
+  <div class="fx"><div class="row big"><span><span class="eps">q</span> : flamme ~10<sup>3</sup> · TIG ~10<sup>4</sup> · plasma ~10<sup>4,5</sup>–10<sup>5</sup> · faisceaux 10<sup>6</sup>–10<sup>7</sup> W/cm²</span></div><p class="cap">Ordres de grandeur de la densité de puissance. Le soudage par fusion se situe entre 10<sup>3</sup> et 10<sup>6</sup> W/cm² environ : en dessous, la chaleur diffuse avant de fondre ; au-delà, le métal se vaporise et un trou se forme, qu'exploitent les faisceaux.</p></div>
+
+  <div class="lab" id="m5">
+    <p class="lab-h">Manipulation 5 : l'échelle des densités de puissance</p>
+    <p class="lab-sub">Choisis une source de chaleur : elle se place sur l'échelle, et la forme de sa zone fondue se dessine.<span class="predict">🔮 Prédis d'abord : le plasma en trou de serrure fait-il une zone fondue plus large ou plus profonde que large ?</span></p>
+    <div class="btns" id="m5b">
+      <button class="btn" data-k="flamme" type="button">Flamme</button>
+      <button class="btn" data-k="tig" type="button">TIG</button>
+      <button class="btn" data-k="mou" type="button">Plasma mou</button>
+      <button class="btn on" data-k="serrure" type="button">Plasma, trou de serrure</button>
+      <button class="btn" data-k="faisceau" type="button">Laser ou faisceau</button>
+    </div>
+    <svg id="m5svg" role="img" aria-label="Échelle logarithmique des densités de puissance des sources de chaleur, et forme de la zone fondue de la source choisie"></svg>
+    <div class="readout" id="m5r"></div>
+    <p class="status" id="m5msg" aria-live="polite"></p>
+  </div>
+
+  <p><b>Exemple</b> : pour souder bord à bord 6 mm d'inox, le TIG demande un chanfrein et 2 ou 3 passes, avec une zone fondue en cuvette, plus large que profonde ; le plasma en trou de serrure le fait en une passe, avec une zone fondue à peu près aussi profonde que large ; un laser de quelques kilowatts le ferait plus vite encore, avec un cordon étroit comme un trait, mais un accostage serré au dixième de millimètre et un équipement bien plus coûteux.</p>
+
+  <div class="warn"><b>⚠️ Piège : oublier les risques propres au plasma.</b> Rayonnement ultraviolet intense (écran adapté, protections de la peau), bruit fort surtout en coupage, haute fréquence d'amorçage, fumées et ozone, circuit d'eau de refroidissement et tension à vide élevée en coupage : chaque poste se prépare comme une installation, pas comme une simple torche.</div>
+  <div class="mnemo"><b>🧠 Mnémotechnique : « 3, 4, 5, 6-7 »</b> : les puissances de dix de la flamme, du TIG, du plasma et des faisceaux, en W/cm².</div>
+  <div class="weld"><b>🔥 Où on le trouve :</b> tubes et réservoirs en inox, aéronautique, nucléaire, soufflets et capteurs en microplasma, rechargement PTA de soupapes et d'outils, et la grande majorité des coupeuses de tôles. Pour des épaisseurs moyennes en grande série, il se compare au laser : moins cher et plus tolérant, mais plus lent.</div>
+
+  <details class="deep"><summary>🔍 Pour aller plus loin : profondeur contre largeur</summary>
+    <p>Une source peu dense chauffe longtemps : la chaleur diffuse sur les côtés avant que le métal fonde en profondeur, d'où des zones fondues larges, des zones affectées étendues et des déformations. Une source dense fond avant que la chaleur ait le temps de fuir : la zone fondue s'approfondit, la zone affectée se resserre. Au-delà d'environ 10<sup>6</sup> W/cm², la vaporisation ouvre un capillaire, et le rapport profondeur sur largeur peut dépasser 5 à 10 : c'est le domaine du laser et du faisceau d'électrons.</p>
+  </details>
+
+  <div class="retenir"><b>✅ À retenir</b>
+    <ul>
+      <li>151 plasma-MIG, 152 poudre (PTA), 975 soudobrasage, 83 coupage.</li>
+      <li>Densités : flamme 10³, TIG 10⁴, plasma 10⁵, faisceaux 10⁶-10⁷ W/cm².</li>
+      <li>Risques : UV, bruit, HF, fumées, eau, tension à vide.</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="exos">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✎</div>
+    <div class="c-title"><h2>Exercices corrigés</h2><p>Deux exercices : comparer TIG et plasma, puis régler un trou de serrure sur de l'inox</p></div>
+    <div class="c-img"><span class="ico">🏋️</span><span><small>Image à retenir</small>La salle de musculation : on ne progresse qu'en soulevant soi-même</span></div>
+  </div>
+  <p>Cherche chaque question sur papier avant d'ouvrir la correction : écris la relation, puis les valeurs (V, W/mm², J/mm, mm²). Le premier exercice se vérifie dans les manipulations 1 et 2 ; le second se rejoue dans les manipulations 3 et 4.</p>
+
+  <div class="exo">
+    <h4>Exercice 1 : TIG ou plasma pour une ligne de tubes <span class="lvtag">★ application · chapitres 1 et 2</span></h4>
+    <p>Une ligne automatique soude des tubes d'inox à 200 A. Les tubes sont légèrement ovalisés : la distance torche-pièce varie de ± 1 mm. Modèle du chapitre 1.</p>
+    <p class="q"><b>a)</b> En TIG, arc de 3 mm : tension, rayon de tache et densité de puissance ?</p>
+    <p class="q"><b>b)</b> En plasma, orifice de 2,4 mm, arc de 6 mm : mêmes grandeurs ? Rapport avec le TIG ?</p>
+    <p class="q"><b>c)</b> Que devient la densité si la distance augmente de 1 mm, dans chaque cas ? Conclusion pour la ligne ?</p>
+    <p class="q"><b>d)</b> Quel mode d'arc, et comment s'amorce-t-il sans toucher le tube ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">U = 7,2 + 3 + 0,02 × 200 = 14,2 V</span> ; <span class="m">r = 0,5 + 0,55 × 3 = 2,15 mm</span> ; <span class="m">q = 0,6 × 14,2 × 200/(π × 2,15²) ≈ 117 W/mm²</span>, soit environ 1,2 × 10<sup>4</sup> W/cm².</p>
+      <p><b>b)</b> <span class="m">U = 18 + 0,6 × 6 + 4 = 25,6 V</span> ; <span class="m">r = 1,2 × (1 + 0,18) ≈ 1,42 mm</span> ; <span class="m">q = 0,6 × 25,6 × 200/(π × 1,42²) ≈ 490 W/mm²</span> : environ <b>4 fois</b> plus.</p>
+      <p><b>c)</b> TIG à 4 mm : <span class="m">r = 2,7 mm, U = 15,2 V, q ≈ 80 W/mm²</span>, soit <b>−32 %</b>. Plasma à 7 mm : <span class="m">r ≈ 1,45 mm, U = 26,2 V, q ≈ 475 W/mm²</span>, soit <b>−3 %</b>. La pénétration du TIG suivrait l'ovalisation ; celle du plasma reste stable : plasma, ou TIG avec un asservissement de hauteur d'arc.</p>
+      <p><b>d)</b> <b>Arc transféré</b> (153), électrode au pôle −, tube au pôle +. Un arc pilote, amorcé par haute fréquence entre électrode et tuyère, ionise l'espace ; l'arc principal s'établit vers le tube, puis le pilote se coupe.</p>
+    </div></details>
+  </div>
+
+  <div class="exo defi">
+    <h4>Exercice 2 : régler un trou de serrure <span class="lvtag">★★ synthèse · chapitres 3 et 4 · manipulations 3 et 4</span></h4>
+    <p>Virole d'inox austénitique de 6 mm, soudée bord à bord à plat en trou de serrure, puis une virole de 12 mm. Modèle du chapitre 3 : U ≈ 24,5 + 0,04·I ; Q<sub>t</sub> = 45·t<sup>1,6</sup> J/mm ; I<sub>min</sub> = 50 + 22·t.</p>
+    <p class="q"><b>a)</b> À 240 A et 36 cm/min : tension, énergie de soudage, rapport Q/Q<sub>t</sub> ? Le trou est-il stable ?</p>
+    <p class="q"><b>b)</b> Un opérateur ralentit à 25 cm/min. Puis un autre accélère à 55 cm/min. Que se passe-t-il ?</p>
+    <p class="q"><b>c)</b> Quels gaz proposer, plasmagène et protection ?</p>
+    <p class="q"><b>d)</b> Pour 12 mm : préparation, nombre de passes en plasma et en TIG (V à 60°, talon 1,5 mm, jeu 1 mm) ?</p>
+    <details><summary>Voir la correction</summary><div class="sol">
+      <p><b>a)</b> <span class="m">U = 24,5 + 9,6 = 34,1 V</span> ; <span class="m">v = 360/60 = 6 mm/s</span> ; <span class="m">Q = 0,6 × 34,1 × 240/6 ≈ 818 J/mm</span> ; <span class="m">Q<sub>t</sub> = 45 × 6<sup>1,6</sup> ≈ 791 J/mm</span> : rapport <b>1,03</b>, et <span class="m">I = 240 ≥ I<sub>min</sub> = 182 A</span> : <b>trou stable</b>.</p>
+      <p><b>b)</b> À 25 cm/min : <span class="m">Q ≈ 1 178 J/mm</span>, rapport 1,49 &gt; 1,35 : le bain trop gros <b>s'effondre</b>. À 55 cm/min : <span class="m">Q ≈ 536 J/mm</span>, rapport 0,68 &lt; 0,75 : le trou ne débouche plus, <b>pénétration partielle</b>. La vitesse est une variable à tenir serré.</p>
+      <p><b>c)</b> Plasmagène : argon, éventuellement argon + quelques % d'hydrogène (R1) ; protection : argon + hydrogène, qui convient aux inox austénitiques ; protection envers à l'argon.</p>
+      <p><b>d)</b> Plasma : Y à talon de 6 mm, racine en trou de serrure, puis <span class="m">(12 − 6)² × tan 30° ≈ 21 mm²</span>, 2 passes : <b>3 passes</b>. TIG : <span class="m">(12 − 1,5)² × tan 30° + 12 ≈ 76 mm²</span>, racine plus 6 passes : <b>7 passes</b>.</p>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<section class="chap" id="quiz-s">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">?</div>
+    <div class="c-title"><h2>Quiz : 12 questions éclair</h2><p>Chaque réponse est expliquée, même quand tu as juste</p></div>
+    <div class="c-img"><span class="ico">🎯</span><span><small>Image à retenir</small>La cible : vise 10 sur 12 avant la suite</span></div>
+  </div>
+  <div id="quiz"></div>
+  <div class="score" id="qzScore" aria-live="polite">Score : 0 / 12</div>
+  <div class="btns"><button class="btn" id="qzReset" type="button">↺ Recommencer le quiz</button></div>
+</div>
+</section>
+
+<section class="chap" id="fiche">
+<div class="wrap wide">
+  <div class="cartouche">
+    <div class="c-num">★</div>
+    <div class="c-title"><h2>Fiche mémoire du cours 5</h2><p>Neuf cases, neuf images : à photographier, puis à redessiner de tête</p></div>
+    <div class="c-img"><span class="ico">🎯</span><span><small>Image à retenir</small>Le pouce sur le tuyau d'arrosage : en serrant la sortie, le même débit devient un jet dur et droit, qui porte loin et perce</span></div>
+  </div>
+  <div class="fiche">
+    <div><div class="ic">🚿</div><h4>Constriction</h4><div class="f">q = k·U·I / (π·r²)</div><p>La tuyère resserre l'arc : U monte, r baisse ; ≈ 4 fois le TIG à 200 A dans le modèle.</p></div>
+    <div><div class="ic">📐</div><h4>Colonne, pas cloche</h4><div class="f">+1 mm : TIG −30 % · plasma −3 %</div><p>Arc de 3 à 15 mm, peu sensible à la distance : idéal en mécanisé.</p></div>
+    <div><div class="ic">💨</div><h4>Deux gaz</h4><div class="f">plasmagène · protection</div><p>Plasmagène Ar (petit débit, fait le jet) ; protection Ar, Ar-H<sub>2</sub> (inox), Ar-He (titane).</p></div>
+    <div><div class="ic">🔌</div><h4>Trois arcs</h4><div class="f">153 transféré · 154 non transféré · 155</div><p>Électrode au pôle − ; pièce au + (soudage) ou tuyère au + (jet soufflé).</p></div>
+    <div><div class="ic">🕯️</div><h4>Arc pilote</h4><div class="f">HF → pilote → transfert</div><p>Amorçage sans contact ; maintenu en microplasma, dès 0,1 A.</p></div>
+    <div><div class="ic">🔑</div><h4>Trou de serrure</h4><div class="f">0,75 ≤ Q/Q<sub>t</sub> ≤ 1,35</div><p>Bord à bord, une passe, d'environ 3 à 8-10 mm ; trop lent, effondrement ; trop vite, pas de trou.</p></div>
+    <div><div class="ic">🏺</div><h4>Torche</h4><div class="f">une tuyère, un courant</div><p>Électrode en retrait, tuyère refroidie ; double arc si courant trop fort ou tuyère sale.</p></div>
+    <div><div class="ic">✂️</div><h4>Préparations</h4><div class="f">I ≤ 8 mm · Y à grand talon au-delà</div><p>12 mm : 3 passes en plasma contre 7 en TIG dans le modèle.</p></div>
+    <div><div class="ic">📏</div><h4>Densités</h4><div class="f">10³ · 10⁴ · 10⁵ · 10⁶-10⁷ W/cm²</div><p>Flamme, TIG, plasma, faisceaux. Variantes : 151, 152 (PTA), 975, 83, 88.</p></div>
+  </div>
+  <div class="btns"><button class="btn" id="printFiche" type="button">🖨 Imprimer la fiche mémoire</button></div>
+  <div class="fun"><span class="fun-h">🚀 Fun fact : le plasma de la navette spatiale</span>Le grand réservoir externe orange de la navette spatiale américaine, en alliage d'aluminium, a été soudé à la NASA Marshall par un plasma à polarité variable, en trou de serrure : de longues soudures en une passe, avec très peu de défauts internes à reprendre comparé au TIG qu'il a en partie remplacé. Le procédé reprend le décapage de l'aluminium du TIG alternatif (<a href="#c2">chapitre 2</a>). (Sources : P. M. Munafo, A. P. Biddle, W. A. Wilson, <i>Welding Journal</i>, vol. 63, septembre 1984 ; rapports NASA d'A. C. Nunes et al., 1984.)</div>
+</div>
+</section>
+
+<section class="chap" id="gloss">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">A–Z</div>
+    <div class="c-title"><h2>Glossaire</h2><p>Les mots, symboles et sigles de ce cours</p></div>
+    <div class="c-img"><span class="ico">📖</span><span><small>Image à retenir</small>Le dictionnaire : un mot flou, un clic</span></div>
+  </div>
+  <dl class="gloss">
+    <dt>Arc non transféré</dt><dd>Arc entre l'électrode et la tuyère ; la pièce, hors circuit, ne reçoit que le jet (154).</dd>
+    <dt>Arc pilote</dt><dd>Petit arc électrode-tuyère, amorcé par haute fréquence, qui allume l'arc principal et peut le stabiliser.</dd>
+    <dt>Arc transféré</dt><dd>Arc entre l'électrode et la pièce, qui est dans le circuit (153) : le mode du soudage.</dd>
+    <dt>Constriction</dt><dd>Resserrement de l'arc par l'orifice de la tuyère et par le gaz plasmagène.</dd>
+    <dt>Densité de puissance</dt><dd>Puissance reçue par unité de surface de la tache (W/cm²).</dd>
+    <dt>Double arc</dt><dd>Arc qui passe par la tuyère (électrode → tuyère → pièce) et la détruit.</dd>
+    <dt>Gaz plasmagène</dt><dd>Gaz qui traverse l'orifice avec l'arc et forme le jet de plasma ; petit débit.</dd>
+    <dt>Microplasma</dt><dd>Soudage plasma de quelques dixièmes à une quinzaine d'ampères, pour feuilles et pièces fines.</dd>
+    <dt>PAW</dt><dd>Soudage plasma (<i>plasma arc welding</i>).</dd>
+    <dt>Plasma mou</dt><dd>Réglage du plasma en simple fusion, comme un TIG plus raide.</dd>
+    <dt>PTA</dt><dd>Plasma avec poudre (<i>plasma transferred arc</i>, 152) : rechargement par poudres dures.</dd>
+    <dt>Semi-transféré</dt><dd>Arc transféré avec arc pilote maintenu (155).</dd>
+    <dt>Trou de serrure</dt><dd>Technique où le jet perce la tôle de part en part ; le bain se referme derrière le trou (<i>keyhole</i>).</dd>
+    <dt>Tuyère</dt><dd>Pièce de cuivre refroidie à l'eau, percée de l'orifice qui resserre l'arc.</dd>
+  </dl>
+</div>
+</section>
+
+<section class="chap" id="check">
+<div class="wrap">
+  <div class="cartouche">
+    <div class="c-num">✓</div>
+    <div class="c-title"><h2>Suis-je prêt pour la suite ?</h2><p>Dix points à cocher de tête</p></div>
+    <div class="c-img"><span class="ico">🚦</span><span><small>Image à retenir</small>Le feu passe au vert quand tout est coché</span></div>
+  </div>
+  <p>Coche seulement ce que tu sais faire <b>sans regarder</b>. Tes coches restent enregistrées dans ce navigateur.</p>
+  <div class="check" id="checklist">
+    <label><input type="checkbox" data-c="1"> <span>Je sais expliquer ce que fait la tuyère à l'arc : constriction, tension plus haute, densité de puissance plus forte.</span></label>
+    <label><input type="checkbox" data-c="2"> <span>Je sais pourquoi l'arc plasma tolère mieux qu'un arc TIG les variations de distance.</span></label>
+    <label><input type="checkbox" data-c="3"> <span>Je sais distinguer le gaz plasmagène et le gaz de protection, et choisir des gaz pour l'inox, l'acier et le titane.</span></label>
+    <label><input type="checkbox" data-c="4"> <span>Je sais distinguer arc transféré, non transféré et semi-transféré, et décrire le rôle de l'arc pilote.</span></label>
+    <label><input type="checkbox" data-c="5"> <span>Je sais situer microplasma, plasma mou et trou de serrure par le courant et l'épaisseur.</span></label>
+    <label><input type="checkbox" data-c="6"> <span>Je sais expliquer le trou de serrure et sa fenêtre : trop peu d'énergie, pas de trou ; trop, effondrement.</span></label>
+    <label><input type="checkbox" data-c="7"> <span>Je sais décrire la torche plasma et ses réglages, et reconnaître le double arc.</span></label>
+    <label><input type="checkbox" data-c="8"> <span>Je sais choisir une préparation et estimer le gain de passes du plasma sur le TIG.</span></label>
+    <label><input type="checkbox" data-c="9"> <span>Je sais situer plasma, TIG, flamme, laser et faisceau d'électrons sur l'échelle des densités de puissance.</span></label>
+    <label><input type="checkbox" data-c="10"> <span>Je sais citer les variantes (plasma-MIG, poudre, soudobrasage, coupage) et les risques du procédé.</span></label>
+  </div>
+  <p class="status" id="checkMsg"></p>
+
+  <div class="meta">🏁 <b>Fin de la série « Soudage sous protection gazeuse ».</b> Tu as parcouru les gaz, le TIG, le MIG-MAG et ses fils, puis le plasma. Pour réviser, refais les quiz des cinq cours et rejoue les manipulations clés : carte ISO 14175, balance du TIG, régimes de transfert, coupe du cordon et trou de serrure.</div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="wrap">
+  <p>Cours 5 sur 5 de la série « Soudage sous protection gazeuse : TIG, MIG-MAG et plasma » (sujet 1.12.1 du planning et du référentiel de l'IIW). Vocabulaire aligné sur l'ISO 4063, l'ISO 14175, l'EN 1011-1 et le référentiel de l'IIW ; pour les notations et les conventions, l'enseignement de ta formation fait foi.</p>
+</div>
+</footer>
+<script>
+(function(){
+"use strict";
+const NS="http://www.w3.org/2000/svg";
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const RM=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function el(tag,attrs,parent){
+  const e=document.createElementNS(NS,tag);
+  if(attrs){for(const k in attrs){const v=attrs[k];if(v===undefined||v===null)continue;
+    if(typeof v==="string"&&v.indexOf("var(")>=0&&k!=="style")e.style.setProperty(k,v);else e.setAttribute(k,v);}}
+  if(parent)parent.appendChild(e);
+  return e;
+}
+function tx(p,x,y,str,attrs){const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);t.textContent=str;return t;}
+function txs(p,x,y,parts,attrs){/* parts: [["σ",""],["max","sub"],[" = 3",""]] */
+  const t=el("text",Object.assign({x:x,y:y},attrs||{}),p);
+  parts.forEach(pt=>{const s=el("tspan",pt[1]==="sub"?{"font-size":"0.72em",dy:"3"}:(pt[2]?{dy:pt[2]}:{}),t);s.textContent=pt[0];
+    if(pt[1]==="sub"){const r=el("tspan",{dy:"-3"},t);r.textContent="\u200b";}});
+  return t;
+}
+function clear(svg){while(svg.firstChild)svg.removeChild(svg.firstChild);}
+function fitText(t,x0,x1,gap){/* garde un texte SVG entre x0 et x1 : il passe de l'autre côté de son repère (écart gap), sinon il glisse */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const a=t.getAttribute("text-anchor")||"start",x=+t.getAttribute("x");
+  if(gap&&a!=="middle"&&(b.x<x0||b.x+b.width>x1)){t.setAttribute("text-anchor",a==="end"?"start":"end");t.setAttribute("x",a==="end"?x+2*gap:x-2*gap);b=t.getBBox();}
+  const nx=+t.getAttribute("x");
+  if(b.x+b.width>x1)t.setAttribute("x",nx-(b.x+b.width-x1));else if(b.x<x0)t.setAttribute("x",nx+(x0-b.x));
+  return t;}
+function arrow(p,x1,y1,x2,y2,color,w,h){
+  w=w||2.4;h=h||10;
+  const g=el("g",{class:"arr"},p);g.style.color=color||"var(--ink)";
+  const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy);
+  if(L<1)return g;
+  const ux=dx/L,uy=dy/L,hh=Math.min(h,L*0.6),bx=x2-ux*hh,by=y2-uy*hh,hw=hh*0.45+w*0.3;
+  el("line",{x1:x1,y1:y1,x2:bx,y2:by,"stroke-width":w,"stroke-linecap":"round"},g);
+  el("polygon",{points:x2+","+y2+" "+(bx-uy*hw)+","+(by+ux*hw)+" "+(bx+uy*hw)+","+(by-ux*hw)},g);
+  return g;
+}
+function darrow(p,x,y1,y2,color,w){/* double flèche verticale */
+  const g=el("g",{},p);const m=(y1+y2)/2;
+  if(Math.abs(y2-y1)<4){el("line",{x1:x-5,y1:y1,x2:x+5,y2:y1,stroke:color,"stroke-width":2},g);return g;}
+  arrow(g,x,m,x,y1,color,w||2,8);arrow(g,x,m,x,y2,color,w||2,8);return g;
+}
+function nf(v,d){
+  if(d===undefined)d=1;
+  if(Math.abs(v)<0.5*Math.pow(10,-d))v=0;
+  return v.toLocaleString("fr-FR",{minimumFractionDigits:d,maximumFractionDigits:d}).replace("-","−").replace(/[\u202f\u2009]/g,"\u00a0");
+}
+const SUP={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function sci(v,d){
+  if(v===0)return "0";
+  if(!isFinite(v))return "∞";
+  let e=Math.floor(Math.log10(Math.abs(v)));
+  let m=v/Math.pow(10,e);
+  const dd=d===undefined?1:d;
+  if(Math.abs(Number(m.toFixed(dd)))>=10){m/=10;e+=1;}
+  return nf(m,dd)+" × 10"+String(e).split("").map(c=>SUP[c]).join("");
+}
+function bigN(v){/* nombre de cycles lisible */
+  if(!isFinite(v))return "∞";
+  if(v===0)return "0";
+  if(v<10)return nf(v,v<1?2:0);
+  if(v<1e5)return nf(Math.round(v),0);
+  return sci(v,1);
+}
+function dur(s){
+  if(!isFinite(s))return "∞";
+  if(s<60)return nf(s,s<10?1:0)+" s";
+  if(s<3600)return nf(s/60,0)+" min";
+  if(s<86400)return nf(s/3600,1)+" h";
+  if(s<86400*365)return nf(s/86400,1)+" jours";
+  return nf(s/(86400*365),1)+" ans";
+}
+function svgW(svg){const r=svg.getBoundingClientRect();return Math.max(290,Math.round(r.width||(svg.parentNode&&svg.parentNode.clientWidth)||600));}
+function setVB(svg,W,H){svg.setAttribute("viewBox","0 0 "+W+" "+H);}
+const redraws=[];
+let rzT=null,lastWW=window.innerWidth;
+window.addEventListener("resize",()=>{if(window.innerWidth===lastWW)return;lastWW=window.innerWidth;clearTimeout(rzT);rzT=setTimeout(()=>redraws.forEach(f=>{try{f();}catch(e){console.error(e);}}),120);});
+
+function niceStep(range,n){const raw=range/(n||5),p=Math.pow(10,Math.floor(Math.log10(raw))),m=raw/p;return (m<1.5?1:m<3?2:m<7?5:10)*p;}
+function setOn(sel,btn){$$(sel+" .btn").forEach(b=>b.classList.toggle("on",b===btn));}
+function fmtmm(mm){return mm<0.1?nf(mm*1000,0)+" µm":mm<10?nf(mm,mm<1?2:1)+" mm":nf(mm,0)+" mm";}
+function axes(svg,x0,x1,y0,y1,xmin,xmax,ymin,ymax,xlab,ylab,xstep,ystep,xfmt,yfmt){
+  const X=v=>x0+(x1-x0)*(v-xmin)/(xmax-xmin),Y=v=>y1-(y1-y0)*(v-ymin)/(ymax-ymin);
+  for(let v=Math.ceil(ymin/ystep-1e-9)*ystep;v<=ymax+1e-9;v+=ystep){el("line",{x1:x0,y1:Y(v),x2:x1,y2:Y(v),class:"gridbg"},svg);tx(svg,x0-5,Y(v)+4,yfmt?yfmt(v):nf(v,ystep<1?1:0),{class:"lbl","text-anchor":"end"});}
+  for(let v=Math.ceil(xmin/xstep-1e-9)*xstep;v<=xmax+1e-9;v+=xstep){el("line",{x1:X(v),y1:y1,x2:X(v),y2:y1+4,class:"tick"},svg);tx(svg,X(v),y1+17,xfmt?xfmt(v):nf(v,xstep<1?1:0),{class:"lbl","text-anchor":"middle"});}
+  el("line",{x1:x0,y1:y1,x2:x1,y2:y1,class:"axis"},svg);el("line",{x1:x0,y1:y0-4,x2:x0,y2:y1,class:"axis"},svg);
+  tx(svg,x0+4,y0-10,ylab,{class:"lbl"});tx(svg,x1,y1+32,xlab,{class:"lbl","text-anchor":"end"});
+  return {X:X,Y:Y};
+}
+function animate(btn,label,dur,onStep,onEnd){/* lecteur pilotable : ▶ lecture ou ⏸ pause, qui reprend où elle s'est arrêtée ; les boutons voisins ⏮ début, ◀ pas et pas ▶ (data-a) la mènent à la main ; un pas avance jusqu'à la prochaine image différente (20 pas au plus) */
+  const box=btn.parentNode,lab=btn.closest(".lab")||box,N=20;let raf=null,run=false,t=0;
+  const go=v=>{t=Math.max(0,Math.min(1,v));onStep(t);};
+  const snap=()=>{let s="";lab.querySelectorAll("svg,.readout,.status").forEach(e=>{s+=e.innerHTML;});return s;};
+  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;btn.textContent=label;}
+  function step(d){stop();const s0=snap();let k=Math.round(t*N);for(let i=0;i<N;i++){k+=d;if(k<0||k>N)break;go(k/N);if(snap()!==s0)break;}}
+  btn.addEventListener("click",()=>{if(run){stop();return;}if(t>=0.999)t=0;
+    if(RM){step(1);if(t>=1&&onEnd)onEnd();return;}
+    run=true;btn.textContent="⏸ Pause";const s0=performance.now()-t*dur;
+    const f=now=>{if(!run)return;go((now-s0)/dur);if(t>=1){stop();if(onEnd)onEnd();return;}raf=requestAnimationFrame(f);};raf=requestAnimationFrame(f);});
+  const pb=a=>box.querySelector('[data-a="'+a+'"]');
+  if(pb("start"))pb("start").addEventListener("click",()=>{stop();go(0);});
+  if(pb("back"))pb("back").addEventListener("click",()=>step(-1));
+  if(pb("fwd"))pb("fwd").addEventListener("click",()=>step(1));
+  /* un réglage fait à la main : la prochaine lecture repart du début */
+  lab.addEventListener("input",()=>{if(!run)t=0;});
+  lab.addEventListener("click",e=>{const b=e.target.closest("button");if(b&&b!==btn&&!b.dataset.a&&!run)t=0;});
+  return {stop:stop,running:()=>run};
+}
+function player(id,o){/* lecteur pilotable : ⏮ début, ◀ pas, ▶ lecture ou ⏸ pause (reprend où elle s'est arrêtée), pas ▶ ; o.get() et o.set(t) avec t de 0 à 1, o.dur (ms), o.steps */
+  const box=$("#"+id),bp=box.querySelector('[data-a="play"]'),lab=bp.textContent,n=o.steps||20;let raf=null,run=false;
+  const cl=t=>Math.max(0,Math.min(1,t));
+  function stop(){run=false;if(raf)cancelAnimationFrame(raf);raf=null;bp.textContent=lab;}
+  function step(d){stop();o.set(cl(Math.round(o.get()*n+d)/n));}
+  bp.addEventListener("click",()=>{if(run){stop();return;}let t0=o.get();if(t0>=0.999)t0=0;
+    if(RM){o.set(cl(Math.round(t0*n+1)/n));return;}
+    run=true;bp.textContent="⏸ Pause";const s0=performance.now()-t0*o.dur;
+    const f=now=>{if(!run)return;const t=cl((now-s0)/o.dur);o.set(t);if(t>=1){stop();return;}raf=requestAnimationFrame(f);};raf=requestAnimationFrame(f);});
+  box.querySelector('[data-a="start"]').addEventListener("click",()=>{stop();o.set(0);});
+  box.querySelector('[data-a="back"]').addEventListener("click",()=>step(-1));
+  box.querySelector('[data-a="fwd"]').addEventListener("click",()=>step(1));
+  return {stop:stop};
+}
+
+
+function sig2(v){/* arrondi à deux chiffres significatifs */
+  if(v<=0)return 0;const p=Math.pow(10,Math.floor(Math.log10(v))-1);return Math.round(v/p)*p;}
+function halo(t,svg){/* liseré de fond, puis passage au premier plan */
+  t.setAttribute("paint-order","stroke");t.style.setProperty("stroke","var(--card)");t.setAttribute("stroke-width","4");t.setAttribute("stroke-linejoin","round");if(svg)svg.appendChild(t);return t;}
+function plate(t,svg){/* fond plein derrière une étiquette */
+  let b;try{b=t.getBBox();}catch(e){return t;}if(!b.width)return t;
+  const r=el("rect",{x:b.x-3,y:b.y-1,width:b.width+6,height:b.height+2,fill:"var(--card)",opacity:.92,rx:2});svg.appendChild(r);svg.appendChild(t);return t;}
+function le(n,f){return /^[aeiouyhéèâî]/i.test(n)?"l'"+n:(f?"la ":"le ")+n;}
+function du(n,f){return /^[aeiouyhéèâî]/i.test(n)?"de l'"+n:(f?"de la ":"du ")+n;}
+function fmtG(v){return nf(v,v<0.1?3:2)+" N/m";}
+function fmtPa(p){return p<1000?nf(p,0)+" Pa":p<1e5?nf(p/1000,1)+" kPa":nf(p/1e5,2)+" bar";}
+function fmtLen(m){/* m en mètres */
+  const mm=m*1000;if(mm<1)return nf(mm*1000,0)+" µm";if(mm<10)return nf(mm,1)+" mm";if(mm<1000)return nf(mm,0)+" mm";return nf(m,1)+" m";}
+function fmtT(s){if(!isFinite(s))return "∞";if(s<0.01)return nf(s*1000,1)+" ms";if(s<1)return nf(s,3)+" s";if(s<60)return nf(s,s<10?1:0)+" s";return nf(s/60,s<600?1:0)+" min";}
+
+function spread(items,gap,ymin,ymax){/* écarte verticalement des étiquettes {y} triées */
+  items.sort((a,b)=>a.y-b.y);
+  for(let i=1;i<items.length;i++)if(items[i].y-items[i-1].y<gap)items[i].y=items[i-1].y+gap;
+  if(items.length&&items[items.length-1].y>ymax){items[items.length-1].y=ymax;for(let i=items.length-2;i>=0;i--)if(items[i+1].y-items[i].y<gap)items[i].y=items[i+1].y-gap;}
+  if(items.length&&items[0].y<ymin){items[0].y=ymin;for(let i=1;i<items.length;i++)if(items[i].y-items[i-1].y<gap)items[i].y=items[i-1].y+gap;}
+  return items;}
+function declutter(ts,ymin,ymax){/* décale verticalement les textes qui se chevauchent */
+  const box=t=>{try{return t.getBBox();}catch(e){return null;}};
+  for(let i=1;i<ts.length;i++){const ti=ts[i];if(!ti)continue;
+    for(let pass=0;pass<6;pass++){const bi=box(ti);if(!bi)break;let moved=false;
+      for(let j=0;j<i;j++){const bj=ts[j]&&box(ts[j]);if(!bj)continue;
+        const ix=Math.min(bi.x+bi.width,bj.x+bj.width)-Math.max(bi.x,bj.x),iy=Math.min(bi.y+bi.height,bj.y+bj.height)-Math.max(bi.y,bj.y);
+        if(ix>1&&iy>1){let dy=(bi.y+bi.height/2>=bj.y+bj.height/2)?(bj.y+bj.height-bi.y+1):-(bi.y+bi.height-bj.y+1);
+          if(bi.y+dy<ymin||bi.y+bi.height+dy>ymax)dy=dy>0?-(bi.y+bi.height-bj.y+1):(bj.y+bj.height-bi.y+1);
+          ti.setAttribute("y",+ti.getAttribute("y")+dy);moved=true;break;}}
+      if(!moved)break;}}
+  return ts;}
+const SUPD={"-":"⁻","0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+function p10(e){return "10"+String(e).split("").map(c=>SUPD[c]||c).join("");}
+function fmtP(p){/* pression en Pa, lisible */
+  if(p>=1e5)return nf(p/1e5,1)+" bar";if(p>=1000)return nf(p/1000,p<1e4?1:0)+" kPa";if(p>=1)return nf(p,p<10?1:0)+" Pa";return sci(p,1)+" Pa";}
+
+
+
+function rng(seed){/* générateur pseudo-aléatoire reproductible */
+  let a=seed>>>0;return ()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296;};}
+
+
+/* =========================================================
+   Outils communs de la série : formats, couleurs, grains, nuances, modèles
+   ========================================================= */
+const NB=String.fromCharCode(160);
+const nbsp=s=>s.replace(/(\d) (%|°C|mm|µm|nm|MPa|HV|s|ppm|h|J)(?=[\s.,;:)<·/]|$)/g,"$1"+NB+"$2");
+function fitSize(t,maxW,min){/* réduit la police d'un texte SVG trop large (style en ligne, prioritaire sur la feuille de style) */
+  let b;try{b=t.getBBox();}catch(e){return t;}let fs=parseFloat(getComputedStyle(t).fontSize)||13;
+  while(b.width>maxW&&fs>(min||9)){fs-=0.5;t.style.fontSize=fs+"px";b=t.getBBox();}return t;}
+const pts=P=>P.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join(" ");
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const mixc=(c,p,b)=>"color-mix(in srgb,"+c+" "+p+"%,"+(b||"var(--card)")+")";
+const COL={liq:mixc("var(--sig)",24),gam:mixc("var(--gam)",24),alp:mixc("var(--eps)",15),mart:"color-mix(in srgb,var(--eps) 50%,var(--tau))",
+  bain:mixc("var(--gam)",52),fp:mixc("var(--eps)",13),film:mixc("var(--tau)",72)};
+function frame(svg,R){el("rect",{x:R.x0,y:R.y0,width:R.x1-R.x0,height:R.y1-R.y0,fill:"none",stroke:"var(--ink)","stroke-width":1.2},svg);}
+function clipG(svg,id,R){const cp=el("clipPath",{id:id},el("defs",null,svg));el("rect",{x:R.x0,y:R.y0,width:R.x1-R.x0,height:R.y1-R.y0},cp);return el("g",{"clip-path":"url(#"+id+")"},svg);}
+function voronoi(seeds,x0,y0,x1,y1,rmax){/* cellules polygonales ; rmax : distance au-delà de laquelle un voisin est ignoré */
+  const box=[[x0,y0],[x1,y0],[x1,y1],[x0,y1]],r2=rmax?rmax*rmax:Infinity;
+  return seeds.map((s,i)=>{let P=box.slice();
+    for(let j=0;j<seeds.length&&P.length;j++){if(i===j)continue;const q=seeds[j],dx=q[0]-s[0],dy=q[1]-s[1];if(dx*dx+dy*dy>r2)continue;
+      const mx=(s[0]+q[0])/2,my=(s[1]+q[1])/2,out=[];
+      for(let k=0;k<P.length;k++){const a=P[k],b=P[(k+1)%P.length],sa=(a[0]-mx)*dx+(a[1]-my)*dy,sb=(b[0]-mx)*dx+(b[1]-my)*dy;if(sa<=0)out.push(a);
+        if((sa<0&&sb>0)||(sa>0&&sb<0)){const t=sa/(sa-sb);out.push([a[0]+t*(b[0]-a[0]),a[1]+t*(b[1]-a[1])]);}}
+      P=out;}
+    return P;});
+}
+function seedsGrid(x0,y0,x1,y1,s,seed){const r=rng(seed),o=[];for(let y=y0+s/2;y<y1+s/2;y+=s*0.87)for(let x=x0+s/2+((Math.round((y-y0)/(s*0.87))%2)?s/2:0);x<x1+s/2;x+=s)o.push([x+(r()-0.5)*s*0.6,Math.min(y1-1,y+(r()-0.5)*s*0.5)]);return o;}
+function legend(svg,x,y,items,xmax){/* items : [couleur, texte, "o" pour un rond] ; passe à la ligne ; renvoie le bas de la légende */
+  let lx=x,ly=y;
+  items.forEach(q=>{const t=tx(svg,x,y+9.5,q[1],{class:"lbl"});let w=70;try{w=t.getBBox().width;}catch(e){}
+    if(lx>x&&lx+14+w>xmax){lx=x;ly+=16;}
+    t.setAttribute("x",lx+14);t.setAttribute("y",ly+9.5);
+    if(q[2]==="o")el("circle",{cx:lx+5,cy:ly+5,r:4.5,fill:q[0],stroke:"var(--ink)","stroke-width":0.7},svg);
+    else el("rect",{x:lx,y:ly,width:10,height:10,fill:q[0],stroke:"var(--ink)","stroke-width":0.7},svg);
+    lx+=14+w+12;});
+  return ly+12;}
+/* Modèles du cours (ordres de grandeur pédagogiques) */
+/* M1 : constriction et densité de puissance. mode "tig" ou diamètre de tuyère d (mm) */
+function source(mode,I,L){
+  const tig=mode==="tig",d=tig?0:+mode;
+  const r=tig?0.5+0.55*L:d/2*(1+0.03*L);
+  const U=tig?7.2+L+0.02*I:18+0.6*L+0.02*I;
+  const P=0.6*U*I,q=P/(Math.PI*r*r);
+  return {r:r,U:U,P:P,q:q,qcm:q*100};
+}
+function sensib(mode,I,L){return source(mode,I,L+1).q/source(mode,I,L).q-1;}
+
+/* M3 : fenêtre du trou de serrure, acier inoxydable (t mm, I A, v cm/min) */
+function serrure(t,I,v){
+  const U=24.5+0.04*I,vs=v/6,Q=0.6*U*I/vs,Qm=45*Math.pow(t,1.6),Imin=50+22*t,r=Q/Qm;
+  let e;
+  if(t>8.5)e="hors";else if(I<Imin)e=r<0.75?"partiel":"mou";else if(r<0.75)e="partiel";else if(r>1.35)e="effondre";else e="ok";
+  return {U:U,Q:Q,Qm:Qm,Imin:Imin,r:r,e:e};
+}
+
+/* M4 : préparation et passes, TIG ou plasma (t mm) */
+function prep(t){
+  const tan30=Math.tan(Math.PI/6);
+  let tig;if(t<=3)tig={p:"I",A:0,n:1};else{const A=Math.pow(t-1.5,2)*tan30+t;tig={p:"V",A:A,n:1+Math.ceil(Math.max(0,A-6)/12)};}
+  let pl;
+  if(t<0.6)pl={p:"I",tech:"microplasma",n:1,A:0};
+  else if(t<3)pl={p:"I",tech:"plasma mou",n:1,A:0};
+  else if(t<=8)pl={p:"I",tech:"trou de serrure",n:1,A:0};
+  else{const A=Math.pow(t-6,2)*tan30;pl={p:"Y",tech:"trou de serrure + remplissage",n:1+Math.ceil(A/15),A:A};}
+  return {tig:tig,pl:pl};
+}
+
+/* M5 : densités de puissance (W/cm², log10) et forme de zone fondue */
+const SRC=[
+  {k:"flamme",n:"flamme oxyacétylénique",q:[2.7,3.5],pl:0.25,zat:"très large",acc:"large"},
+  {k:"tig",n:"arc TIG",q:[3.7,4.5],pl:0.4,zat:"large",acc:"moyenne"},
+  {k:"mou",n:"plasma mou",q:[4.2,5],pl:0.5,zat:"moyenne",acc:"moyenne"},
+  {k:"serrure",n:"plasma trou de serrure",q:[4.6,5.4],pl:1.2,zat:"étroite",acc:"serrée"},
+  {k:"faisceau",n:"laser ou faisceau d'électrons",q:[6,7.5],pl:6,zat:"très étroite",acc:"très serrée"}];
+
+const fr=s=>nbsp(s).replace(/ ([;:!?])/g,NB+"$1");
+const lbl=(svg,x,y,s,o)=>{const t=tx(svg,x,y,s,Object.assign({class:"lbl"},o||{}));t.style.fontSize=(o&&o.fs?o.fs:11)+"px";return t;};
+const sciU=v=>{const e=Math.floor(Math.log10(v)),m=v/Math.pow(10,e);return nf(m,1)+" × 10"+String(e).split("").map(c=>"⁰¹²³⁴⁵⁶⁷⁸⁹"[+c]).join("");};
+
+/* =========================================================
+   M1 : TIG ou plasma, même courant
+   ========================================================= */
+(function(){
+  const svg=$("#m1svg");if(!svg)return;
+  const sI=$("#m1i"),sL=$("#m1l"),ro=$("#m1r"),msg=$("#m1msg");let mode="tig";
+  const COL={tig:"var(--tau)","3.2":"var(--gam)","2.4":"var(--eps)"},NOM={tig:"TIG","3.2":"plasma 3,2 mm","2.4":"plasma 2,4 mm"};
+  function draw(){
+    const W=svgW(svg),n=W<560,I=+sI.value,L=+sL.value,s=source(mode,I,L),ds=sensib(mode,I,L);clear(svg);
+    $("#m1io").textContent=nf(I,0)+NB+"A";$("#m1lo").textContent=nf(L,0)+NB+"mm";
+    /* vue de la torche */
+    const vx=n?W/2:W*0.2,k=8,yP=36+15*k,yT=yP-L*k;
+    el("rect",{x:vx-70,y:yP,width:140,height:14,fill:mixc("var(--muted)",30),stroke:"var(--ink)"},svg);
+    if(mode==="tig"){
+      el("rect",{x:vx-16,y:yT-58,width:32,height:40,rx:4,fill:mixc("var(--muted)",45),stroke:"var(--ink)"},svg);
+      el("rect",{x:vx-3,y:yT-30,width:6,height:24,fill:"var(--muted)",stroke:"var(--ink)"},svg);
+      el("polygon",{points:[[vx-3,yT-6],[vx+3,yT-6],[vx,yT]].map(p=>p.join(",")).join(" "),fill:"var(--muted)",stroke:"var(--ink)"},svg);
+    }else{
+      el("rect",{x:vx-22,y:yT-58,width:44,height:40,rx:4,fill:mixc("var(--muted)",30),stroke:"var(--ink)"},svg);
+      const ro2=(+mode)/2*k;
+      el("polygon",{points:[[vx-18,yT-26],[vx-ro2,yT],[vx-ro2-4,yT],[vx-22,yT-26]].map(p=>p.join(",")).join(" "),fill:mixc("var(--weld)",70),stroke:"var(--ink)"},svg);
+      el("polygon",{points:[[vx+18,yT-26],[vx+ro2,yT],[vx+ro2+4,yT],[vx+22,yT-26]].map(p=>p.join(",")).join(" "),fill:mixc("var(--weld)",70),stroke:"var(--ink)"},svg);
+      el("rect",{x:vx-3,y:yT-40,width:6,height:22,fill:"var(--muted)",stroke:"var(--ink)"},svg);
+      lbl(svg,vx+26,yT-8,"tuyère",{fs:10,fill:"var(--weld)"});
+    }
+    const rk=s.r*k,r0=mode==="tig"?0.5*k:(+mode)/2*k;
+    el("polygon",{points:[[vx-r0,yT],[vx+r0,yT],[vx+rk,yP],[vx-rk,yP]].map(p=>p.join(",")).join(" "),fill:COL[mode],"fill-opacity":0.35,stroke:COL[mode]},svg);
+    el("line",{x1:vx-rk,y1:yP+20,x2:vx+rk,y2:yP+20,stroke:"var(--eps)","stroke-width":2},svg);
+    {const t=lbl(svg,vx,yP+34,"tache Ø "+nf(2*s.r,1)+" mm",{"text-anchor":"middle",fill:"var(--eps)","font-weight":"700",fs:11});fitText(t,4,W-4);}
+    /* courbe q(L) */
+    const gx0=n?48:W*0.42,gx1=W-16,gy0=n?yP+64:24,gy1=gy0+(n?160:190);
+    const qmax=100*Math.ceil(Math.max(source("2.4",I,1).q,source("tig",I,1).q)/100);
+    const A=axes(svg,gx0,gx1,gy0,gy1,1,15,0,qmax,"longueur d'arc L (mm)","q (W/mm²)",n?2:1,niceStep(qmax,4));
+    ["tig","3.2","2.4"].forEach(m=>{let d="";const l0=m==="tig"?1:3,l1=m==="tig"?6:15;for(let l=l0;l<=l1;l+=0.25){d+=(d?"L":"M")+A.X(l).toFixed(1)+" "+A.Y(source(m,I,l).q).toFixed(1)+" ";}
+      el("path",{d:d,fill:"none",stroke:COL[m],"stroke-width":m===mode?3:1.3,"stroke-dasharray":m===mode?"":"5 4"},svg);
+      const le=m==="tig"?6:15,t=lbl(svg,A.X(le)-2,A.Y(source(m,I,le).q)-6,NOM[m],{"text-anchor":"end",fill:COL[m],fs:10});halo(t,svg);});
+    el("circle",{cx:A.X(L),cy:A.Y(s.q),r:6,fill:COL[mode],stroke:"var(--card)","stroke-width":1.5},svg);
+    setVB(svg,W,Math.max(n?gy1+38:yP+44,gy1+38));
+    ro.innerHTML=fr("<span>U ≈ "+nf(s.U,1)+" V</span><span>P ≈ "+nf(s.P/1000,2)+" kW</span><span>q ≈ <b class='eps'>"+nf(s.q,0)+" W/mm²</b> ("+sciU(s.qcm)+" W/cm²)</span><span>+1 mm : "+nf(100*ds,0)+" %</span>");
+    let m;
+    if(mode==="tig")m="Arc TIG en cloche : à "+nf(L,0)+" mm, la tache fait "+nf(2*s.r,1)+" mm et chaque millimètre de plus retire "+nf(-100*ds,0)+" % de densité de puissance."+(L>5?" Au-delà de 5 mm, l'arc TIG devient instable : réglage peu réaliste.":"");
+    else m="Arc plasma en colonne : à "+nf(L,0)+" mm, tache de "+nf(2*s.r,1)+" mm, "+nf(s.q,0)+" W/mm², environ "+nf(s.q/source("tig",I,3).q,1)+" fois le TIG à 3 mm ; 1 mm de plus ne retire que "+nf(-100*ds,1)+" %."+(L<3?" Sous 3 mm, la tuyère frôle la pièce : risque de double arc.":"");
+    msg.innerHTML=fr(m)+"<br><b>À retenir :</b> cloche pour le TIG, colonne pour le plasma.";
+  }
+  $$("#m1b .btn").forEach(b=>b.addEventListener("click",()=>{mode=b.dataset.m;setOn("#m1b",b);if(mode!=="tig"&&+sL.value<4)sL.value=6;if(mode==="tig"&&+sL.value>6)sL.value=3;draw();}));
+  [sI,sL].forEach(x=>x.addEventListener("input",draw));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M2 : l'allumage d'une torche plasma
+   ========================================================= */
+(function(){
+  const svg=$("#m2svg");if(!svg)return;
+  const ro=$("#m2r"),msg=$("#m2msg");let k="tr",tt=1;
+  const PH=["Pré-gaz","Haute fréquence et arc pilote","Transfert","Régime établi"];
+  function draw(){
+    const W=svgW(svg),n=W<560;clear(svg);
+    const ph=Math.min(3,Math.floor(tt*4+1e-9));
+    const cx=n?W*0.42:W*0.36,yT=110,yP=200;
+    /* pièce, buse, tuyère, électrode */
+    const pieceIn=k!=="nt";
+    el("rect",{x:cx-110,y:yP,width:220,height:16,fill:pieceIn?mixc("var(--muted)",35):mixc("var(--muted)",15),stroke:"var(--ink)","stroke-dasharray":pieceIn?"":"4 3"},svg);
+    el("path",{d:"M"+(cx-46)+" 30 L "+(cx-46)+" "+(yT-14)+" L "+(cx-30)+" "+(yT+6)+" M "+(cx+46)+" 30 L "+(cx+46)+" "+(yT-14)+" L "+(cx+30)+" "+(yT+6),fill:"none",stroke:"var(--muted)","stroke-width":5},svg);
+    el("polygon",{points:[[cx-32,30],[cx-32,yT-24],[cx-6,yT],[cx-6,yT+4],[cx-36,yT-20],[cx-36,30]].map(p=>p.join(",")).join(" "),fill:mixc("var(--weld)",70),stroke:"var(--ink)"},svg);
+    el("polygon",{points:[[cx+32,30],[cx+32,yT-24],[cx+6,yT],[cx+6,yT+4],[cx+36,yT-20],[cx+36,30]].map(p=>p.join(",")).join(" "),fill:mixc("var(--weld)",70),stroke:"var(--ink)"},svg);
+    el("rect",{x:cx-4,y:22,width:8,height:yT-36,fill:"var(--muted)",stroke:"var(--ink)"},svg);
+    el("polygon",{points:[[cx-4,yT-14],[cx+4,yT-14],[cx,yT-6]].map(p=>p.join(",")).join(" "),fill:"var(--muted)",stroke:"var(--ink)"},svg);
+    /* gaz */
+    [[-20,"var(--gam)"],[20,"var(--gam)"]].forEach(g=>arrow(svg,cx+g[0]*0.6,40,cx+g[0]*0.3,yT-30,g[1],1.4,6));
+    [[-40],[40]].forEach(g=>arrow(svg,cx+g[0],yT-4,cx+g[0]*1.1,yT+26,"var(--mat)",1.4,6));
+    /* arcs */
+    const pilot=(ph===1||ph===2||(ph===3&&k!=="tr")),main=(ph>=2&&k!=="nt");
+    if(pilot){el("path",{d:"M"+cx+" "+(yT-6)+" Q "+(cx-6)+" "+(yT-2)+" "+(cx-8)+" "+(yT+1)+" M "+cx+" "+(yT-6)+" Q "+(cx+6)+" "+(yT-2)+" "+(cx+8)+" "+(yT+1),stroke:"var(--frc)","stroke-width":2.5,fill:"none"},svg);}
+    if(ph>=2&&(k==="nt"||!main||ph===2)){const len=k==="nt"&&ph===3?yP-yT-4:28;el("polygon",{points:[[cx-5,yT+4],[cx+5,yT+4],[cx+(k==="nt"&&ph===3?14:8),yT+4+len],[cx-(k==="nt"&&ph===3?14:8),yT+4+len]].map(p=>p.join(",")).join(" "),fill:"var(--frc)","fill-opacity":0.3},svg);}
+    if(main){const wv=ph===2?2:k==="micro"?3:7;el("polygon",{points:[[cx-4,yT-6],[cx+4,yT-6],[cx+wv,yP],[cx-wv,yP]].map(p=>p.join(",")).join(" "),fill:"var(--sig)","fill-opacity":ph===2?0.4:0.75},svg);}
+    /* source et circuits */
+    const sx=n?W-46:W*0.78,sy=120;
+    el("rect",{x:sx-30,y:sy-34,width:60,height:68,rx:6,fill:mixc("var(--muted)",15),stroke:"var(--ink)"},svg);
+    lbl(svg,sx,sy-14,"source",{"text-anchor":"middle",fs:10});lbl(svg,sx-18,sy+24,"−",{fs:16,"font-weight":"700"});lbl(svg,sx+10,sy+24,"+",{fs:16,"font-weight":"700"});
+    const cP=pilot?"var(--frc)":mixc("var(--muted)",60),cM=main?"var(--sig)":mixc("var(--muted)",60);
+    el("path",{d:"M"+(sx-18)+" "+(sy+34)+" L "+(sx-18)+" "+(sy+50)+" L "+(cx+70)+" "+(sy+50)+" M "+(cx+70)+" 14 L "+cx+" 14 L "+cx+" 22",fill:"none",stroke:pilot||main?"var(--ink)":mixc("var(--muted)",60),"stroke-width":2},svg);
+    el("line",{x1:cx+70,y1:sy+50,x2:cx+70,y2:14,stroke:pilot||main?"var(--ink)":mixc("var(--muted)",60),"stroke-width":2},svg);
+    el("path",{d:"M"+(sx+10)+" "+(sy-34)+" L "+(sx+10)+" 50 L "+(cx+36)+" 50",fill:"none",stroke:cP,"stroke-width":pilot?3:1.5},svg);
+    lbl(svg,(sx+cx)/2+10,44,"pilote",{"text-anchor":"middle",fill:cP,fs:10});
+    el("path",{d:"M"+(sx+10)+" "+(sy+34)+" L "+(sx+10)+" "+(yP+8)+" L "+(cx+110)+" "+(yP+8),fill:"none",stroke:cM,"stroke-width":main?3:1.5,"stroke-dasharray":k==="nt"?"4 3":""},svg);
+    {const t=lbl(svg,(sx+cx)/2+30,yP+24,k==="nt"?"pièce hors circuit":"arc principal",{"text-anchor":"middle",fill:cM,fs:10});fitText(t,4,W-4);}
+    {const t=lbl(svg,6,yP+44,(ph+1)+". "+PH[ph],{"font-weight":"700",fs:11.5});fitSize(t,W-12,8);}
+    setVB(svg,W,yP+56);
+    const Ip=pilot?(k==="micro"&&ph===3?5:12):0,Ipc=main?(ph===2?20:k==="micro"?5:150):0;
+    ro.innerHTML=fr("<span>étape "+(ph+1)+" / 4 : "+PH[ph]+"</span><span>pilote : "+Ip+" A</span><span>pièce : <b class='sig'>"+Ipc+" A</b></span><span>pièce dans le circuit : "+(k==="nt"?"non":"oui")+"</span>");
+    const M=[
+      "Les deux gaz s'établissent : plasmagène par l'orifice, protection autour de la tuyère. Aucun courant ne passe encore.",
+      "Une impulsion de haute fréquence allume un petit arc pilote entre l'électrode (−) et la tuyère (+), à l'intérieur de la torche.",
+      k==="nt"?"L'arc reste entre électrode et tuyère : le gaz plasmagène souffle le plasma hors de l'orifice.":"Le jet du pilote ionise l'espace jusqu'à la pièce : l'arc principal s'y amorce, sans contact.",
+      k==="tr"?"Arc transféré établi : la pièce reçoit l'essentiel de la chaleur ; le pilote est coupé.":k==="micro"?"Microplasma : le pilote reste allumé et stabilise un arc transféré de quelques ampères (semi-transféré).":"Arc non transféré : seul le jet chaud atteint la pièce, qui peut être isolante ; rendement plus faible."];
+    msg.innerHTML=fr(M[ph])+"<br><b>À retenir :</b> transféré, la pièce est dans le circuit ; soufflé, elle ne voit que le jet.";
+  }
+  player("m2pl",{get:()=>tt,set:v=>{tt=v;draw();},dur:4000,steps:4});
+  $$("#m2b .btn").forEach(b=>b.addEventListener("click",()=>{k=b.dataset.k;setOn("#m2b",b);tt=1;draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M3 : la fenêtre du trou de serrure
+   ========================================================= */
+(function(){
+  const svg=$("#m3svg");if(!svg)return;
+  const sI=$("#m3i"),sV=$("#m3v"),ro=$("#m3r"),msg=$("#m3msg");let t=6;
+  const COL={ok:"var(--gam)",partiel:"var(--muted)",effondre:"var(--sig)",mou:"var(--tau)",hors:"var(--frc)"};
+  const NOM={ok:"trou stable",partiel:"pas de trou",effondre:"effondrement",mou:"jet trop mou",hors:"hors domaine"};
+  function draw(){
+    const W=svgW(svg),n=W<560,I=+sI.value,v=+sV.value,s=serrure(t,I,v);clear(svg);
+    $("#m3io").textContent=nf(I,0)+NB+"A";$("#m3vo").textContent=nf(v,0)+NB+"cm/min";
+    setOn("#m3b",$$("#m3b .btn").find(b=>+b.dataset.t===t)||null);
+    const x0=n?44:52,x1=n?W-14:W*0.64,y0=26,y1=n?210:236;
+    const A=axes(svg,x0,x1,y0,y1,10,90,80,380,"vitesse v (cm/min)","courant I (A)",n?20:10,50);
+    const nx=32,ny=30;
+    for(let a=0;a<nx;a++)for(let b=0;b<ny;b++){const vv=10+(a+0.5)*80/nx,ii=80+(b+0.5)*300/ny,e=serrure(t,ii,vv).e;
+      el("rect",{x:A.X(10+a*80/nx),y:A.Y(80+(b+1)*300/ny),width:(x1-x0)/nx+0.5,height:(y1-y0)/ny+0.5,fill:mixc(COL[e],e==="ok"?45:20),stroke:"none"},svg);}
+    el("circle",{cx:A.X(v),cy:A.Y(I),r:6.5,fill:COL[s.e],stroke:"var(--card)","stroke-width":2},svg);
+    /* coupe longitudinale */
+    const bx0=n?40:W*0.70,bx1=n?W-40:W-14,by=n?y1+70:90,th=Math.min(60,6*t),bw=bx1-bx0,mx=(bx0+bx1)/2;
+    {const tl=lbl(svg,bx0,by-30,"Coupe le long du joint ("+nf(t,0)+" mm)",{"font-weight":"700",fs:10.5});fitSize(tl,bw,7);}
+    arrow(svg,bx0,by-14,bx0+40,by-14,"var(--frc)",1.4,6);
+    el("rect",{x:bx0,y:by,width:bw,height:th,fill:mixc("var(--muted)",30),stroke:"var(--ink)"},svg);
+    el("rect",{x:bx0,y:by,width:mx-bx0-8,height:th,fill:mixc("var(--weld)",50)},svg);
+    const jet=(d)=>el("polygon",{points:[[mx+4,by-26],[mx+12,by-26],[mx+10,by+d],[mx+6,by+d]].map(p=>p.join(",")).join(" "),fill:"var(--sig)","fill-opacity":0.7},svg);
+    if(s.e==="ok"){el("path",{d:"M"+(mx-14)+" "+by+" Q "+(mx-22)+" "+(by+th/2)+" "+(mx-14)+" "+(by+th)+" L "+(mx+18)+" "+(by+th)+" Q "+(mx+24)+" "+(by+th/2)+" "+(mx+18)+" "+by+" Z",fill:mixc("var(--weld)",85),stroke:"var(--weld)"},svg);el("rect",{x:mx+4,y:by,width:8,height:th,fill:"var(--card)"},svg);jet(th+8);}
+    else if(s.e==="effondre"){el("path",{d:"M"+(mx-26)+" "+by+" Q "+(mx-30)+" "+(by+th)+" "+(mx-8)+" "+(by+th+16)+" Q "+(mx+8)+" "+(by+th+22)+" "+(mx+26)+" "+(by+th)+" L "+(mx+28)+" "+by+" Z",fill:mixc("var(--weld)",85),stroke:"var(--sig)"},svg);jet(th);}
+    else if(s.e==="hors"){el("path",{d:"M"+(mx-16)+" "+by+" Q "+(mx-18)+" "+(by+th*0.7)+" "+mx+" "+(by+th*0.75)+" Q "+(mx+18)+" "+(by+th*0.7)+" "+(mx+18)+" "+by+" Z",fill:mixc("var(--weld)",85),stroke:"var(--weld)"},svg);jet(th*0.6);}
+    else{const dp=s.e==="mou"?Math.min(0.45,0.3*s.r):Math.min(0.85,0.85*s.r/0.75),wd=s.e==="mou"?30:16;el("path",{d:"M"+(mx-wd)+" "+by+" Q "+(mx-wd)+" "+(by+th*dp)+" "+(mx+8)+" "+(by+th*dp)+" Q "+(mx+wd+8)+" "+(by+th*dp)+" "+(mx+wd+8)+" "+by+" Z",fill:mixc("var(--weld)",85),stroke:"var(--weld)"},svg);jet(th*dp*0.6);}
+    {const tl=lbl(svg,mx,by+th+(s.e==="effondre"?40:20),NOM[s.e],{"text-anchor":"middle","font-weight":"700",fill:COL[s.e],fs:11.5});fitText(tl,bx0,bx1);halo(tl,svg);}
+    setVB(svg,W,Math.max(y1+38,by+th+52));
+    ro.innerHTML=fr("<span>U ≈ "+nf(s.U,1)+" V</span><span>Q ≈ "+nf(s.Q,0)+" J/mm</span><span>Q/Q<sub>t</sub> = <b class='eps'>"+nf(s.r,2)+"</b></span><span>I<sub>min</sub> = "+nf(s.Imin,0)+" A</span><span><b>"+NOM[s.e]+"</b></span>");
+    const M={ok:"Le jet perce la tôle, le bain contourne le trou et se referme derrière lui : une passe pleine pénétration.",
+      partiel:"Pas assez d'énergie par millimètre : le jet ne débouche pas, la pénétration reste partielle. Ralentir ou monter le courant.",
+      effondre:"Trop d'énergie par millimètre : le bain devient trop gros, la tension superficielle ne le retient plus, il tombe. Accélérer ou baisser le courant.",
+      mou:"Le courant est trop faible pour que le jet perce cette épaisseur : même lent, on reste en fusion simple, large, comme en plasma mou.",
+      hors:"Au-delà de 8 à 10 mm, le bain est trop lourd pour tenir au-dessus du trou : chanfrein en Y à grand talon, racine en trou de serrure, puis remplissage."};
+    msg.innerHTML=fr(M[s.e])+"<br><b>À retenir :</b> trop lent, ça tombe ; trop vite, ça ne perce pas.";
+  }
+  $$("#m3b .btn").forEach(b=>b.addEventListener("click",()=>{t=+b.dataset.t;draw();}));
+  [sI,sV].forEach(x=>x.addEventListener("input",draw));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M4 : la même tôle, en TIG et en plasma
+   ========================================================= */
+(function(){
+  const svg=$("#m4svg");if(!svg)return;
+  const sT=$("#m4t"),ro=$("#m4r"),msg=$("#m4msg");
+  function joint(x0,x1,y0,t,s,p,c,gap,titre,col,np){
+    const mx=(x0+x1)/2,H=t*s,tan30=Math.tan(Math.PI/6),g=gap*s/2;
+    {const tt0=lbl(svg,mx,y0-12,titre,{"text-anchor":"middle","font-weight":"700",fs:11,fill:col});fitSize(tt0,x1-x0,7);}
+    let ow=0;if(p!=="I")ow=(t-c)*tan30*s;
+    const L=[[x0,y0],[mx-g-ow,y0],[mx-g,y0+(t-c)*s],[mx-g,y0+H],[x0,y0+H]],R=[[x1,y0],[mx+g+ow,y0],[mx+g,y0+(t-c)*s],[mx+g,y0+H],[x1,y0+H]];
+    if(p==="I"){L[1]=[mx-g,y0];L[2]=[mx-g,y0];R[1]=[mx+g,y0];R[2]=[mx+g,y0];}
+    [L,R].forEach(P=>el("polygon",{points:P.map(q=>q.join(",")).join(" "),fill:mixc("var(--muted)",30),stroke:"var(--ink)"},svg));
+    const Wd=[[mx-g-ow,y0],[mx+g+ow,y0],[mx+g,y0+(t-c)*s],[mx+g,y0+H],[mx-g,y0+H],[mx-g,y0+(t-c)*s]];
+    if(p==="I")el("rect",{x:mx-Math.max(2,g+2),y:y0,width:2*Math.max(2,g+2),height:H,fill:mixc("var(--weld)",75),stroke:"var(--weld)"},svg);
+    else{el("polygon",{points:Wd.map(q=>q.join(",")).join(" "),fill:mixc("var(--weld)",75),stroke:"var(--weld)"},svg);
+      for(let i=1;i<np;i++){const yy=y0+(t-c)*s*(1-i/np);const w=g+(yy-y0>=0?(1-(yy-y0)/((t-c)*s))*ow:0);el("line",{x1:mx-w,y1:yy,x2:mx+w,y2:yy,stroke:"var(--weld)","stroke-width":1},svg);}}
+    lbl(svg,mx,y0+H+18,np+" passe"+(np>1?"s":""),{"text-anchor":"middle",fs:11.5,"font-weight":"700",fill:col});
+  }
+  function draw(){
+    const W=svgW(svg),n=W<560,t=+sT.value,P=prep(t);clear(svg);
+    $("#m4to").textContent=nf(t,1)+NB+"mm";
+    setOn("#m4b",$$("#m4b .btn").find(b=>+b.dataset.t===t)||null);
+    const s=Math.min(150/t,14),y0=34;
+    joint(8,W/2-8,y0,t,s,P.tig.p,1.5,P.tig.p==="I"?0:1,"TIG","var(--tau)",P.tig.n);
+    joint(W/2+8,W-8,y0,t,s,P.pl.p,6,0,"Plasma : "+P.pl.tech,"var(--eps)",P.pl.n);
+    setVB(svg,W,y0+t*s+30);
+    ro.innerHTML=fr("<span>TIG : "+(P.tig.p==="I"?"bord à bord":"V 60°, "+nf(P.tig.A,0)+" mm²")+", <b>"+P.tig.n+"</b> passe"+(P.tig.n>1?"s":"")+"</span><span>plasma : "+P.pl.tech+(P.pl.p==="Y"?", Y talon 6 mm":", bord à bord")+", <b class='eps'>"+P.pl.n+"</b> passe"+(P.pl.n>1?"s":"")+"</span>");
+    let m;
+    if(t<0.6)m="Feuille de "+nf(t,1)+" mm : le TIG la percerait facilement ; le microplasma, à quelques ampères, la soude avec un arc stable et étroit.";
+    else if(t<3)m="De 0,6 à 3 mm, plasma mou et TIG soudent tous deux bord à bord en une passe ; le plasma va plus vite et tolère mieux les variations de distance.";
+    else if(t<=8)m="Le trou de serrure soude "+nf(t,1)+" mm bord à bord en une passe, sans chanfrein ; le TIG demande un V et "+P.tig.n+" passes.";
+    else m="Au-delà de 8 mm, le plasma garde un talon de 6 mm soudé en trou de serrure et remplit le reste : "+P.pl.n+" passes contre "+P.tig.n+" en TIG.";
+    msg.innerHTML=fr(m)+"<br><b>À retenir :</b> bord à bord jusqu'à 8 mm environ ; au-delà, Y à grand talon.";
+  }
+  $$("#m4b .btn").forEach(b=>b.addEventListener("click",()=>{sT.value=b.dataset.t;draw();}));
+  sT.addEventListener("input",draw);
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   M5 : l'échelle des densités de puissance
+   ========================================================= */
+(function(){
+  const svg=$("#m5svg");if(!svg)return;
+  const ro=$("#m5r"),msg=$("#m5msg");let k="serrure";
+  function draw(){
+    const W=svgW(svg),n=W<560,q=SRC.find(s=>s.k===k);clear(svg);
+    const x0=n?16:24,x1=W-16,X=v=>x0+(x1-x0)*(v-2)/6,y0=34,rh=20;
+    lbl(svg,x0,16,"Densité de puissance (W/cm², échelle logarithmique)",{"font-weight":"700",fs:n?10:11.5});
+    el("rect",{x:X(3),y:y0-6,width:X(6)-X(3),height:SRC.length*rh+8,fill:mixc("var(--gam)",10),stroke:"none"},svg);
+    SRC.forEach((s,i)=>{const on=s.k===k,y=y0+i*rh;
+      el("rect",{x:X(s.q[0]),y:y,width:X(s.q[1])-X(s.q[0]),height:rh-6,rx:4,fill:on?mixc("var(--eps)",75):mixc("var(--muted)",28),stroke:on?"var(--eps)":"none"},svg);
+      const t=lbl(svg,X(s.q[1])+4,y+rh/2+1,s.n,{fill:on?"var(--eps)":"var(--muted)","font-weight":on?"700":"400",fs:n?9.5:10.5});
+      if(X(s.q[1])+4+t.getComputedTextLength()>x1){t.setAttribute("x",X(s.q[0])-4);t.setAttribute("text-anchor","end");}});
+    const yb=y0+SRC.length*rh+6;
+    el("line",{x1:x0,y1:yb,x2:x1,y2:yb,class:"axis"},svg);
+    for(let e=2;e<=8;e++){el("line",{x1:X(e),y1:yb,x2:X(e),y2:yb+4,class:"tick"},svg);lbl(svg,X(e),yb+16,"10"+"⁰¹²³⁴⁵⁶⁷⁸⁹"[e],{"text-anchor":"middle",fs:10.5});}
+    {const t=lbl(svg,(X(3)+X(6))/2,yb+30,"domaine du soudage par fusion",{"text-anchor":"middle",fill:"var(--gam)",fs:10});fitText(t,x0,x1);}
+    /* zone fondue */
+    const zy=yb+56,mx=W/2,wz=Math.min(140,(x1-x0)*0.5),hz=Math.min(150,wz*q.pl*0.5);
+    el("rect",{x:mx-wz,y:zy,width:2*wz,height:Math.max(hz,40)+22,fill:mixc("var(--muted)",28),stroke:"var(--ink)"},svg);
+    const half=wz*0.5/Math.max(1,q.pl/1.5);
+    el("path",{d:"M"+(mx-half)+" "+zy+" Q "+(mx-half)+" "+(zy+hz)+" "+mx+" "+(zy+hz)+" Q "+(mx+half)+" "+(zy+hz)+" "+(mx+half)+" "+zy+" Z",fill:mixc("var(--weld)",80),stroke:"var(--weld)"},svg);
+    {const t=lbl(svg,mx,zy+Math.max(hz,40)+38,"zone fondue : profondeur / largeur ≈ "+nf(q.pl,q.pl<1?2:1),{"text-anchor":"middle","font-weight":"700",fs:11});fitSize(t,W-12,7);}
+    setVB(svg,W,zy+Math.max(hz,40)+48);
+    ro.innerHTML=fr("<span>"+q.n+"</span><span>10<sup>"+nf(q.q[0],1)+"</sup> à 10<sup>"+nf(q.q[1],1)+"</sup> W/cm²</span><span>p/l ≈ "+nf(q.pl,q.pl<1?2:1)+"</span><span>ZAT "+q.zat+"</span><span>accostage : tolérance "+q.acc+"</span>");
+    const M={flamme:"La flamme chauffe large et lentement : la chaleur diffuse avant de fondre, zone fondue en cuvette, zone affectée étendue, fortes déformations.",
+      tig:"L'arc TIG concentre dix fois plus : zone fondue plus large que profonde, en conduction, tolérant à l'accostage.",
+      mou:"Le plasma mou fond comme un TIG plus raide : un peu plus profond, plus régulier, moins sensible à la distance.",
+      serrure:"En trou de serrure, le jet perce : la zone fondue devient à peu près aussi profonde que large, en une passe, avec une zone affectée resserrée.",
+      faisceau:"Au-delà de 10⁶ W/cm², le métal se vaporise et un capillaire s'ouvre : soudures étroites et très profondes, mais accostage serré au dixième de millimètre."};
+    msg.innerHTML=fr(M[k])+"<br><b>À retenir :</b> flamme 10³, TIG 10⁴, plasma 10⁵, faisceaux 10⁶-10⁷ W/cm².";
+  }
+  $$("#m5b .btn").forEach(b=>b.addEventListener("click",()=>{k=b.dataset.k;setOn("#m5b",b);draw();}));
+  redraws.push(draw);draw();
+})();
+
+/* =========================================================
+   Quiz, check-list, sommaire, thème
+   ========================================================= */
+(function(){
+  const box=$("#quiz");if(!box)return;
+  const Q=[
+    {q:"Quel est le numéro ISO 4063 du soudage plasma ?",o:["141","15","83","131"],c:1,e:"15 : soudage plasma (153 arc transféré, 154 non transféré, 155 semi-transféré, 151 plasma-MIG, 152 poudre). 83 est le coupage plasma."},
+    {q:"Que fait la tuyère à l'arc ?",o:["elle le refroidit jusqu'à l'éteindre","elle le resserre : tension plus haute, densité de puissance plus forte","elle apporte le métal d'apport","elle remplace l'électrode"],c:1,e:"La constriction mécanique et par le gaz plasmagène resserre l'arc en une colonne : à courant égal, la tension et la densité de puissance augmentent."},
+    {q:"Pourquoi l'arc plasma tolère-t-il mieux les variations de distance que l'arc TIG ?",o:["il est plus froid","il utilise de l'hélium","il est en colonne presque cylindrique, sa tache change peu avec la distance","il est en courant alternatif"],c:2,e:"L'arc TIG s'ouvre en cloche : sa tache grandit avec la distance. La colonne plasma garde presque le même diamètre : environ −3 % de densité pour 1 mm de plus, contre −30 % en TIG dans le modèle."},
+    {q:"Quel est le rôle du gaz plasmagène ?",o:["protéger le bain sur une large surface","refroidir la buse extérieure","décaper l'oxyde d'aluminium","traverser l'orifice avec l'arc et former le jet de plasma"],c:3,e:"Petit débit, précis : il forme le jet et règle sa raideur. Le gaz de protection, annulaire, couvre le bain."},
+    {q:"En arc non transféré, l'arc jaillit entre :",o:["l'électrode et la tuyère","l'électrode et la pièce","la buse et la pièce","le fil et la pièce"],c:0,e:"Électrode (−) → tuyère (+) : la pièce est hors circuit et ne reçoit que le jet chaud. Elle peut même être isolante."},
+    {q:"À quoi sert l'arc pilote ?",o:["à préchauffer la pièce","à couper le métal","à amorcer l'arc principal sans contact, et à le stabiliser aux très faibles courants","à remplacer le gaz de protection"],c:2,e:"Allumé par haute fréquence entre électrode et tuyère, il ionise le passage ; on le coupe après le transfert, ou on le garde en microplasma (semi-transféré)."},
+    {q:"Quel régime soude bord à bord, en une passe, de l'inox de 6 mm ?",o:["le microplasma","le plasma mou","le non transféré","le trou de serrure"],c:3,e:"Le jet perce la tôle, le bain contourne le trou et se referme derrière : une passe pleine pénétration, d'environ 3 à 8-10 mm."},
+    {q:"En trou de serrure, le soudeur ralentit nettement sans changer le courant. Risque principal ?",o:["effondrement du bain, trop lourd","pénétration partielle","inclusion de tungstène","double arc"],c:0,e:"Plus d'énergie par millimètre : le bain grossit et tombe. Trop vite, au contraire, le trou ne débouche plus."},
+    {q:"Qu'est-ce que le double arc ?",o:["deux torches en tandem","l'arc pilote et l'arc principal ensemble","un arc alternatif","l'arc qui passe par la tuyère : électrode → tuyère → pièce"],c:3,e:"Courant trop fort pour l'orifice, débit plasmagène trop faible ou tuyère encrassée : l'arc se dédouble par la tuyère, qui fond en quelques secondes."},
+    {q:"Au-delà d'environ 8 mm, quelle préparation en plasma ?",o:["bord à bord avec un grand jeu","chanfrein en Y à grand talon : racine en trou de serrure, puis remplissage","chanfrein en X symétrique","rien, le trou de serrure passe toujours"],c:1,e:"Le talon de 5 à 6 mm est soudé en trou de serrure ; le reste se remplit en quelques passes, bien moins qu'en TIG."},
+    {q:"Ordre de grandeur de la densité de puissance d'un arc plasma ?",o:["10⁴,⁵ à 10⁵ W/cm²","10² W/cm²","10⁷ W/cm²","10⁹ W/cm²"],c:0,e:"Flamme ~10³, TIG ~10⁴, plasma ~10⁵, laser et faisceau d'électrons 10⁶ à 10⁷ W/cm²."},
+    {q:"Quel procédé recharge une soupape avec une poudre dure impossible à tréfiler ?",o:["151 plasma-MIG","83 coupage plasma","152 plasma avec poudre (PTA)","975 soudobrasage plasma"],c:2,e:"Le PTA injecte la poudre dans le jet de plasma : dépôt dense, dilution faible."}
+  ];
+  let score=0,done=0;const sc=$("#qzScore");
+  function upd(){let t="Score : "+score+" / "+Q.length;if(done===Q.length)t+=score>=10?"  ·  🎉 prêt pour la suite":score>=7?"  ·  relis les explications":"  ·  refais un tour des chapitres";sc.textContent=t;}
+  function render(){box.innerHTML="";score=0;done=0;
+    Q.forEach((it,n)=>{const d=document.createElement("div");d.className="qz";
+      d.innerHTML='<p class="qz-q"><b>'+(n+1)+".</b> "+it.q+'</p><div class="qz-o"></div><div class="qz-e" hidden></div>';
+      const o=d.querySelector(".qz-o"),ex=d.querySelector(".qz-e");let answered=false;
+      it.o.forEach((txt,i)=>{const b=document.createElement("button");b.type="button";b.className="qz-b";b.innerHTML=String.fromCharCode(65+i)+". "+txt;
+        b.addEventListener("click",()=>{if(answered)return;answered=true;done++;const ok=i===it.c;if(ok)score++;b.classList.add(ok?"ok":"ko");o.children[it.c].classList.add("ok");ex.hidden=false;ex.innerHTML=(ok?"✅ <b>Bien joué.</b> ":"❌ <b>Pas tout à fait.</b> ")+it.e;upd();});
+        o.appendChild(b);});
+      box.appendChild(d);});
+    upd();}
+  $("#qzReset").addEventListener("click",render);render();
+})();
+(function(){
+  const boxes=$$("#checklist input[type=checkbox]"),msg=$("#checkMsg"),KEY="arc-gaz-cours5-check";
+  if(!boxes.length)return;
+  let saved=[];try{saved=JSON.parse(localStorage.getItem(KEY)||"[]")||[];}catch(e){saved=[];}
+  boxes.forEach(b=>{b.checked=saved.indexOf(b.dataset.c)>=0;});
+  function upd(){const on=boxes.filter(b=>b.checked).map(b=>b.dataset.c);try{localStorage.setItem(KEY,JSON.stringify(on));}catch(e){}
+    msg.innerHTML=on.length===boxes.length?"🎉 <b>Tout est coché : tu es prêt pour la suite !</b>":on.length+" / "+boxes.length+" : reviens sur les points non cochés (les manipulations sont faites pour ça).";}
+  boxes.forEach(b=>b.addEventListener("change",upd));upd();
+})();
+(function(){/* impression de la fiche mémoire seule */
+  const b=$("#printFiche");if(!b)return;
+  b.addEventListener("click",()=>{document.body.classList.add("print-fiche");window.print();});
+  window.addEventListener("afterprint",()=>document.body.classList.remove("print-fiche"));
+})();
+(function(){
+  const links=$$(".toc a"),tin=$(".toc-in");
+  if(!links.length||!("IntersectionObserver" in window))return;
+  const map={};links.forEach(a=>{map[a.getAttribute("href").slice(1)]=a;});
+  const obs=new IntersectionObserver(ents=>{ents.forEach(en=>{if(!en.isIntersecting)return;const a=map[en.target.id];if(!a)return;
+    links.forEach(l=>l.classList.toggle("on",l===a));
+    if(tin){const tgt=a.offsetLeft-tin.clientWidth/2+a.offsetWidth/2;try{tin.scrollTo({left:tgt,behavior:RM?"auto":"smooth"});}catch(e){tin.scrollLeft=tgt;}}});},{rootMargin:"-45% 0px -50% 0px"});
+  Object.keys(map).forEach(id=>{const s=document.getElementById(id);if(s)obs.observe(s);});
+})();
+(function(){
+  const b=$("#themeBtn");if(!b)return;const KEY="arc-gaz-theme",root=document.documentElement;
+  const lab={auto:"◐ Thème : automatique",light:"☀️ Thème : clair",dark:"🌙 Thème : sombre"};
+  let t="auto";try{t=localStorage.getItem(KEY)||"auto";}catch(e){}
+  function apply(){if(t==="auto")root.removeAttribute("data-theme");else root.setAttribute("data-theme",t);b.textContent=lab[t];}
+  b.addEventListener("click",()=>{t=t==="auto"?"light":t==="light"?"dark":"auto";try{localStorage.setItem(KEY,t);}catch(e){}apply();});
+  apply();
+})();
+
+})();
+</script>
+</body>
+</html>
